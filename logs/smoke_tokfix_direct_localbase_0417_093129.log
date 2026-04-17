@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/hydra/core/utils.py", line 74, in _save_config
+    with open(str(output_dir / filename), "w", encoding="utf-8") as file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 122] Disk quota exceeded
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

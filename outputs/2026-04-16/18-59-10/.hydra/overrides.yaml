@@ -1,0 +1,14 @@
+- run_name=rl_grpo_logic_ckpt8000_smoke_0416_185903
+- model.path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_logic_cot_lr1e-4_b1_seed3407/checkpoint-8000
+- grpo.train_steps=1
+- grpo.num_prompts=8
+- grpo.num_rollouts=8
+- data.train_samples=128
+- data.val_samples=64
+- eval.external_enabled=false
+- eval.synthetic_samples_per_step=5
+- eval.generation_batch_size=400
+- validation.before_train=true
+- validation.eval_every=1
+- validation.save_every=1
+- log_generations.num_samples=4

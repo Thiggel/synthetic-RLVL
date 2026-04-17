@@ -1,0 +1,78 @@
+seed: 3408
+run_name: sft_samples_n5000_seed3408
+output_dir: ${oc.env:WORK,${oc.env:HOME}}/synthetic-RLVL/runs/${run_name}
+model:
+  name: allenai/Olmo-3-1025-7B
+  bf16: true
+  lora:
+    enabled: true
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - up_proj
+    - down_proj
+    - gate_proj
+task:
+  template: logic
+  prefill: none
+  distractor_ratio: 0.5
+  train_min_step: 1
+  train_max_step: 5
+  val_min_step: 1
+  val_max_step: 10
+data:
+  source: materialized
+  train_samples: 5000
+  eval_samples: 512
+  max_length: 2048
+  materialized:
+    dataset_id: flaitenberger/LogicalReasoning
+    local_root: null
+    train_subset: auto
+    eval_subset: auto
+train:
+  per_device_batch_size: 1
+  per_device_eval_batch_size: 1
+  grad_accum: 16
+  lr: 3.0e-05
+  max_steps: 10000
+  warmup_steps: 50
+  logging_steps: 10
+  eval_steps: 500
+  save_steps: 1000
+  save_total_limit: 3
+validation:
+  eval_steps: 500
+  step_min: 1
+  step_max: 20
+  samples_per_step: 20
+  max_new_tokens: 512
+external_eval:
+  enabled: false
+  benchmarks:
+  - proofwriter
+  - folio
+  - prontoqa
+  - proverqa
+  - logiqa2
+  - bbh
+  - mmlu_philosophy
+  - mmlu_formal_logic
+  - strategyqa
+  limit_per_benchmark: 20
+  max_new_tokens: 256
+constrained_eval:
+  enabled: false
+  samples_per_step: 4
+  max_lines: 32
+log_generations:
+  num_samples: 8
+  max_chars: 2000
+logging:
+  report_to:
+  - wandb

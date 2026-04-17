@@ -1,0 +1,15 @@
+- run_name=test_grpo_smoke_v2
+- output_dir=/tmp/synthrlvl_grpo_smoke_v2
+- data.train_samples=8
+- data.val_samples=4
+- grpo.train_steps=1
+- grpo.num_prompts=1
+- grpo.num_rollouts=1
+- grpo.max_prompt_length=128
+- grpo.max_response_length=64
+- grpo.max_num_batched_tokens=1024
+- validation.eval_every=1
+- validation.save_every=1
+- eval.enabled=false
+- log_generations.num_samples=0
+- system.ray_cpus=2

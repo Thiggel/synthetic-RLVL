@@ -1,0 +1,21 @@
+=== JOB_STATISTICS ===
+=== current date     : Tue Apr 14 11:17:10 CEST 2026
+= Job-ID             : 3539181 on alex as 3539166_4
+= Job-Name           : sft_formal_then_nl_lr
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/sweeps/sft/formal_then_nl_lr_coarse.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 1-00:00:00
+= Elapsed runtime    : 00:03:32
+= Total RAM usage    : 0.0 GiB of assigned  GiB (%)
+= Node list          : a0831
+= Subm/Elig/Start/End: 2026-04-14T11:09:40 / 2026-04-14T11:09:41 / 2026-04-14T11:13:35 / 2026-04-14T11:17:07
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           36.9G   104.9G   209.7G        N/A  39,529      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  1874.7G     0.0K     0.0K        N/A     285K                          N/A    
+======================

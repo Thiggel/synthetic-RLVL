@@ -1,0 +1,16 @@
+[2026-04-13 19:12:13,170][accelerate.utils.modeling][INFO] - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+[2026-04-13 19:12:49,879][accelerate.utils.other][WARNING] - [RANK 0] Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+[2026-04-14 17:03:06,888][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: b5c251e0-7147-42a1-8718-6eb2f9158f47)')' thrown while requesting HEAD https://huggingface.co/allenai/Olmo-3-1025-7B/resolve/main/config.json
+[2026-04-14 17:03:06,890][huggingface_hub.utils._http][WARNING] - Retrying in 1s [Retry 1/5].
+[2026-04-14 17:03:08,022][huggingface_hub.utils._http][WARNING] - HTTP Error 503 thrown while requesting HEAD https://huggingface.co/allenai/Olmo-3-1025-7B/resolve/main/config.json
+[2026-04-14 17:03:08,023][huggingface_hub.utils._http][WARNING] - Retrying in 2s [Retry 2/5].
+[2026-04-14 17:03:20,036][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 5220397c-3a06-4440-96a1-4a4214de4fe9)')' thrown while requesting HEAD https://huggingface.co/allenai/Olmo-3-1025-7B/resolve/main/config.json
+[2026-04-14 17:03:20,037][huggingface_hub.utils._http][WARNING] - Retrying in 4s [Retry 3/5].
+[2026-04-14 17:03:34,070][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: ee2faba2-85df-4981-95c2-8db9bde78607)')' thrown while requesting HEAD https://huggingface.co/allenai/Olmo-3-1025-7B/resolve/main/config.json
+[2026-04-14 17:03:34,071][huggingface_hub.utils._http][WARNING] - Retrying in 8s [Retry 4/5].
+[2026-04-14 17:03:52,103][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 36670373-a026-4361-8789-ddb309724675)')' thrown while requesting HEAD https://huggingface.co/allenai/Olmo-3-1025-7B/resolve/main/config.json
+[2026-04-14 17:03:52,104][huggingface_hub.utils._http][WARNING] - Retrying in 8s [Retry 5/5].
+[2026-04-14 17:04:12,072][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 424e6099-eae7-4f01-90a9-85e54106d77d)')' thrown while requesting HEAD https://huggingface.co/allenai/Olmo-3-1025-7B/resolve/main/config.json
+[2026-04-14 17:04:12,073][huggingface_hub.utils._http][WARNING] - Retrying in 1s [Retry 1/5].
+[2026-04-14 17:04:23,107][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: ad90abf5-5319-44a6-9cd4-4bf57fb91379)')' thrown while requesting HEAD https://huggingface.co/allenai/Olmo-3-1025-7B/resolve/main/config.json
+[2026-04-14 17:04:23,108][huggingface_hub.utils._http][WARNING] - Retrying in 2s [Retry 2/5].

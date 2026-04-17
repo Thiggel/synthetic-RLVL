@@ -1,0 +1,1347 @@
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 68.85ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 226.82ba/s]
+2026-04-15 17:49:27,272	INFO worker.py:2004 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2026-04-15 17:49:27,275	WARNING working_dir.py:86 -- Directory '__pycache__' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-15 17:49:29,685	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-15 17:49:29,808	INFO packaging.py:691 -- Creating a file package for local module '/home/hpc/c107fa/c107fa12/synthetic-RLVL'.
+2026-04-15 17:49:30,752	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-15 17:49:30,814	INFO packaging.py:463 -- Pushing file package 'gcs://_ray_pkg_718e579bddf8a0d8.zip' (52.34MiB) to Ray cluster...
+2026-04-15 17:49:30,899	INFO packaging.py:476 -- Successfully pushed file package 'gcs://_ray_pkg_718e579bddf8a0d8.zip'.
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py:2052: FutureWarning: Tip: In future versions of Ray, Ray will no longer override accelerator visible devices env var if num_gpus=0 or num_gpus=None (default). To enable this behavior and turn off this error message, set RAY_ACCEL_ENV_VAR_OVERRIDE_ON_ZERO=0
+  warnings.warn(
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-15 17:49:53,185:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(TaskRunner pid=2596077)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(TaskRunner pid=2596077)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(TaskRunner pid=2596077)[0m   warnings.warn(
+[36m(TaskRunner pid=2596077)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(TaskRunner pid=2596077)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(TaskRunner pid=2596077)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(TaskRunner pid=2596077)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(TaskRunner pid=2596077)[0m Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 2048 examples [00:00, 89210.85 examples/s]
+[36m(TaskRunner pid=2596077)[0m Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 256 examples [00:00, 26452.06 examples/s]
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-15 17:50:29,844:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-15 17:50:42,162:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `torch_dtype` is deprecated! Use `dtype` instead!
+[36m(WorkerDict pid=2598518)[0m Fetching 3 files:   0%|          | 0/3 [00:00<?, ?it/s]
+[36m(WorkerDict pid=2598518)[0m Fetching 3 files:  33%|███▎      | 1/3 [01:32<03:04, 92.49s/it]
+[36m(WorkerDict pid=2598518)[0m Fetching 3 files:  67%|██████▋   | 2/3 [01:34<00:39, 39.24s/it]Fetching 3 files: 100%|██████████| 3/3 [01:34<00:00, 31.49s/it]
+[36m(WorkerDict pid=2598518)[0m Flash Attention 2 only supports torch.float16 and torch.bfloat16 dtypes, but the current dype in Olmo3ForCausalLM is torch.float32. You should run training or inference using Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` decorator, or load the model with the `dtype` argument. Example: `model = AutoModel.from_pretrained("openai/whisper-tiny", attn_implementation="flash_attention_2", dtype=torch.float16)`
+[36m(WorkerDict pid=2598518)[0m Flash Attention 2 only supports torch.float16 and torch.bfloat16 dtypes, but the current dype in Olmo3Model is torch.float32. You should run training or inference using Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` decorator, or load the model with the `dtype` argument. Example: `model = AutoModel.from_pretrained("openai/whisper-tiny", attn_implementation="flash_attention_2", dtype=torch.float16)`
+[36m(WorkerDict pid=2598518)[0m Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]
+[36m(WorkerDict pid=2598518)[0m Loading checkpoint shards:  33%|███▎      | 1/3 [00:25<00:51, 25.87s/it]
+[36m(WorkerDict pid=2598518)[0m Loading checkpoint shards:  67%|██████▋   | 2/3 [00:29<00:12, 12.83s/it]
+[36m(WorkerDict pid=2598518)[0m Loading checkpoint shards: 100%|██████████| 3/3 [00:32<00:00,  8.46s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:32<00:00, 10.95s/it]
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_init_utils.py:430: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth. This may affect multimodal processing
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(WorkerDict pid=2598518)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:675: FutureWarning: FSDP.state_dict_type() and FSDP.set_state_dict_type() are being deprecated. Please use APIs, get_state_dict() and set_state_dict(), which can support different parallelisms, FSDP1, FSDP2, DDP. API doc: https://pytorch.org/docs/stable/distributed.checkpoint.html#torch.distributed.checkpoint.state_dict.get_state_dict .Tutorial: https://pytorch.org/tutorials/recipes/distributed_checkpoint_recipe.html .
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-15 17:53:30,851:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.[32m [repeated 2x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-15 17:53:37,591:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m WARNING:2026-04-15 17:53:38,995:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(pid=2605105)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(pid=2605105)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(pid=2605105)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=2605105)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth, siglip_visual_tokenizer, aimv2_visual_tokenizer. This may affect multimodal processing
+[36m(vLLMHttpServer pid=2605105)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(vLLMHttpServer pid=2605105)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(vLLMHttpServer pid=2605105)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(vLLMHttpServer pid=2605105)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=2605105)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=2605105)[0m WARNING:2026-04-15 17:54:07,527:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(vLLMHttpServer pid=2605105)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=2605105)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=2605105)[0m WARNING:2026-04-15 17:54:12,511:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(vLLMHttpServer pid=2605105)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=2605105)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=2605105)[0m WARNING:2026-04-15 17:54:27,544:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(vLLMHttpServer pid=2605105)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(vLLMHttpServer pid=2605105)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(vLLMHttpServer pid=2605105)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=2605105)[0m [1;36m(Worker pid=2607753)[0;0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   0%|          | 0/102 [00:00<?, ?it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   1%|          | 1/102 [00:00<01:10,  1.42it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   3%|▎         | 3/102 [00:00<00:23,  4.18it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   5%|▍         | 5/102 [00:01<00:15,  6.44it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   7%|▋         | 7/102 [00:01<00:11,  8.23it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   9%|▉         | 9/102 [00:01<00:09,  9.60it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  11%|█         | 11/102 [00:01<00:08, 10.62it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  13%|█▎        | 13/102 [00:01<00:07, 11.38it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  15%|█▍        | 15/102 [00:01<00:07, 11.35it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  17%|█▋        | 17/102 [00:01<00:07, 11.92it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  19%|█▊        | 19/102 [00:02<00:06, 12.47it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  21%|██        | 21/102 [00:02<00:06, 12.89it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  23%|██▎       | 23/102 [00:02<00:05, 13.18it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  25%|██▍       | 25/102 [00:02<00:05, 13.42it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  26%|██▋       | 27/102 [00:02<00:05, 13.56it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  28%|██▊       | 29/102 [00:02<00:05, 13.68it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  30%|███       | 31/102 [00:02<00:05, 13.75it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  32%|███▏      | 33/102 [00:03<00:04, 13.84it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  34%|███▍      | 35/102 [00:03<00:06, 10.69it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  36%|███▋      | 37/102 [00:03<00:05, 11.67it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  38%|███▊      | 39/102 [00:03<00:05, 12.42it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  40%|████      | 41/102 [00:03<00:04, 13.06it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  42%|████▏     | 43/102 [00:03<00:04, 13.56it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  44%|████▍     | 45/102 [00:04<00:04, 13.89it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  46%|████▌     | 47/102 [00:04<00:03, 14.13it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  48%|████▊     | 49/102 [00:04<00:03, 14.33it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  50%|█████     | 51/102 [00:04<00:03, 14.47it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  52%|█████▏    | 53/102 [00:04<00:03, 14.54it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  54%|█████▍    | 55/102 [00:04<00:03, 14.62it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  56%|█████▌    | 57/102 [00:04<00:03, 14.18it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  58%|█████▊    | 59/102 [00:05<00:03, 14.30it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  60%|█████▉    | 61/102 [00:05<00:02, 14.34it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  62%|██████▏   | 63/102 [00:05<00:02, 14.45it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  64%|██████▎   | 65/102 [00:05<00:02, 14.45it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  66%|██████▌   | 67/102 [00:05<00:02, 13.77it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  68%|██████▊   | 69/102 [00:05<00:02, 13.27it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  70%|██████▉   | 71/102 [00:05<00:02, 13.64it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  72%|███████▏  | 73/102 [00:06<00:02, 13.88it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  74%|███████▎  | 75/102 [00:06<00:01, 13.98it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  75%|███████▌  | 77/102 [00:06<00:01, 14.22it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  77%|███████▋  | 79/102 [00:06<00:01, 14.36it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  79%|███████▉  | 81/102 [00:06<00:01, 14.49it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  81%|████████▏ | 83/102 [00:06<00:01, 14.59it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  83%|████████▎ | 85/102 [00:06<00:01, 14.69it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  85%|████████▌ | 87/102 [00:06<00:01, 14.78it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  87%|████████▋ | 89/102 [00:07<00:00, 14.76it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  89%|████████▉ | 91/102 [00:07<00:00, 14.81it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  91%|█████████ | 93/102 [00:07<00:00, 14.81it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  93%|█████████▎| 95/102 [00:07<00:00, 14.90it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  95%|█████████▌| 97/102 [00:07<00:00, 14.97it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  97%|█████████▋| 99/102 [00:07<00:00, 14.97it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  99%|█████████▉| 101/102 [00:08<00:00, 11.79it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE): 100%|██████████| 102/102 [00:08<00:00, 12.63it/s]
+[36m(vLLMHttpServer pid=2605105)[0m [1;36m(Worker pid=2607753)[0;0m Capturing CUDA graphs (decode, FULL):   0%|          | 0/102 [00:00<?, ?it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):   1%|          | 1/102 [00:00<00:18,  5.37it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):   3%|▎         | 3/102 [00:00<00:11,  8.52it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):   5%|▍         | 5/102 [00:00<00:09,  9.86it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):   7%|▋         | 7/102 [00:00<00:08, 10.56it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):   9%|▉         | 9/102 [00:00<00:08, 10.97it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  11%|█         | 11/102 [00:01<00:08, 11.29it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  13%|█▎        | 13/102 [00:01<00:07, 11.52it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  15%|█▍        | 15/102 [00:01<00:07, 11.68it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  17%|█▋        | 17/102 [00:01<00:07, 12.00it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  19%|█▊        | 19/102 [00:01<00:06, 12.38it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  21%|██        | 21/102 [00:01<00:06, 12.68it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  23%|██▎       | 23/102 [00:01<00:06, 12.96it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  25%|██▍       | 25/102 [00:02<00:05, 13.21it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  26%|██▋       | 27/102 [00:02<00:05, 13.39it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  28%|██▊       | 29/102 [00:02<00:05, 13.48it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  30%|███       | 31/102 [00:02<00:05, 13.65it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  32%|███▏      | 33/102 [00:02<00:05, 13.73it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  34%|███▍      | 35/102 [00:02<00:04, 14.09it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  36%|███▋      | 37/102 [00:02<00:04, 14.38it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  38%|███▊      | 39/102 [00:03<00:04, 14.60it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  40%|████      | 41/102 [00:03<00:04, 14.77it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  42%|████▏     | 43/102 [00:03<00:03, 14.90it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  44%|████▍     | 45/102 [00:03<00:03, 14.91it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  46%|████▌     | 47/102 [00:03<00:03, 15.01it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  48%|████▊     | 49/102 [00:03<00:03, 15.05it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  50%|█████     | 51/102 [00:03<00:03, 15.15it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  52%|█████▏    | 53/102 [00:04<00:03, 15.26it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  54%|█████▍    | 55/102 [00:04<00:03, 15.33it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  56%|█████▌    | 57/102 [00:04<00:02, 15.40it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  58%|█████▊    | 59/102 [00:04<00:02, 15.39it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  60%|█████▉    | 61/102 [00:04<00:02, 15.48it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  62%|██████▏   | 63/102 [00:04<00:02, 15.45it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  64%|██████▎   | 65/102 [00:04<00:02, 15.50it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  66%|██████▌   | 67/102 [00:04<00:02, 15.48it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  68%|██████▊   | 69/102 [00:05<00:02, 15.52it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  70%|██████▉   | 71/102 [00:05<00:02, 15.44it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  72%|███████▏  | 73/102 [00:05<00:01, 15.45it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  74%|███████▎  | 75/102 [00:05<00:01, 15.50it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  75%|███████▌  | 77/102 [00:05<00:01, 15.59it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  77%|███████▋  | 79/102 [00:05<00:01, 15.69it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  79%|███████▉  | 81/102 [00:05<00:01, 15.77it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  81%|████████▏ | 83/102 [00:05<00:01, 15.84it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  83%|████████▎ | 85/102 [00:06<00:01, 15.69it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  85%|████████▌ | 87/102 [00:06<00:00, 15.62it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  87%|████████▋ | 89/102 [00:06<00:00, 15.73it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  89%|████████▉ | 91/102 [00:06<00:00, 15.85it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  91%|█████████ | 93/102 [00:06<00:00, 15.98it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  93%|█████████▎| 95/102 [00:06<00:00, 16.03it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  95%|█████████▌| 97/102 [00:06<00:00, 16.12it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  97%|█████████▋| 99/102 [00:06<00:00, 16.08it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL):  99%|█████████▉| 101/102 [00:07<00:00, 16.09it/s]
+[36m(vLLMHttpServer pid=2605105)[0m Capturing CUDA graphs (decode, FULL): 100%|██████████| 102/102 [00:07<00:00, 14.33it/s]
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[36m(TaskRunner pid=2596077)[0m wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+[33m(raylet)[0m WARNING:2026-04-15 17:55:50,965:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.[32m [repeated 3x across cluster][0m
+[33m(raylet)[0m   warnings.warn([32m [repeated 3x across cluster][0m
+[36m(TaskRunner pid=2596077)[0m wandb: Currently logged in as: filipelaitenberger to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+[36m(TaskRunner pid=2596077)[0m wandb: setting up run 3xypqv4y
+[36m(TaskRunner pid=2596077)[0m wandb: Tracking run with wandb version 0.25.1
+[36m(TaskRunner pid=2596077)[0m wandb: Run data is saved locally in /home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb/wandb/run-20260415_175551-3xypqv4y
+[36m(TaskRunner pid=2596077)[0m wandb: Run `wandb offline` to turn off syncing.
+[36m(TaskRunner pid=2596077)[0m wandb: Syncing run rl_grpo_logic_lr1e4_seed3407_ckpt_test_3543029
+[36m(TaskRunner pid=2596077)[0m wandb: ⭐️ View project at https://wandb.ai/filipelaitenberger/synthetic-rlvl
+[36m(TaskRunner pid=2596077)[0m wandb: 🚀 View run at https://wandb.ai/filipelaitenberger/synthetic-rlvl/runs/3xypqv4y
+[36m(TaskRunner pid=2596077)[0m wandb: Detected [openai] in use.
+[36m(TaskRunner pid=2596077)[0m wandb: Use W&B Weave for improved LLM call tracing. Install Weave with `pip install weave` then add `import weave` to the top of your script.
+[36m(TaskRunner pid=2596077)[0m wandb: For more information, check out the docs at: https://weave-docs.wandb.ai/
+[33m(raylet)[0m WARNING:2026-04-15 17:55:56,581:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 2x across cluster][0m
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[33m(raylet)[0m WARNING:2026-04-15 17:56:04,702:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 2x across cluster][0m
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.[32m [repeated 2x across cluster][0m
+[36m(WorkerDict pid=2598518)[0m   warnings.warn([32m [repeated 4x across cluster][0m
+[33m(raylet)[0m WARNING:2026-04-15 17:56:11,432:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 3x across cluster][0m
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=2608728)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=2608728)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=2608728)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=2608728)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth, siglip_visual_tokenizer, aimv2_visual_tokenizer. This may affect multimodal processing
+[36m(AgentLoopWorker pid=2608728)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=2608728)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=2608728)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=2608725)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=2608725)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=2608725)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=2608723)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=2608723)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=2608723)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=2608723)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth, siglip_visual_tokenizer, aimv2_visual_tokenizer. This may affect multimodal processing[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=2608723)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=2608725)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=2608725)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=2608723)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=2608723)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=2608731)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.[32m [repeated 4x across cluster][0m
+[36m(AgentLoopWorker pid=2608731)[0m We recommend installing via `pip install torch-c-dlpack-ext`[32m [repeated 4x across cluster][0m
+[36m(AgentLoopWorker pid=2608731)[0m   warnings.warn([32m [repeated 4x across cluster][0m
+[36m(AgentLoopWorker pid=2608731)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth, siglip_visual_tokenizer, aimv2_visual_tokenizer. This may affect multimodal processing[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=2608731)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=2608731)[0m `rope_scaling`'s beta_fast field must be a float, got 32[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=2608731)[0m `rope_scaling`'s beta_slow field must be a float, got 1[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=2608730)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=2608730)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=2608730)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=2608725)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(AgentLoopWorker pid=2608730)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth, siglip_visual_tokenizer, aimv2_visual_tokenizer. This may affect multimodal processing[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=2608730)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=2608730)[0m `rope_scaling`'s beta_fast field must be a float, got 32[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=2608730)[0m `rope_scaling`'s beta_slow field must be a float, got 1[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=2608730)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.[32m [repeated 6x across cluster][0m
+[36m(TaskRunner pid=2596077)[0m Training Progress:   0%|          | 0/160 [00:00<?, ?it/s]
+[36m(AgentLoopWorker pid=2608729)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   1%|          | 1/160 [01:43<4:35:18, 103.89s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   1%|▏         | 2/160 [02:35<3:13:21, 73.43s/it] 
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   2%|▏         | 3/160 [03:26<2:44:13, 62.76s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   2%|▎         | 4/160 [04:07<2:21:00, 54.23s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   3%|▎         | 5/160 [04:57<2:16:21, 52.79s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   4%|▍         | 6/160 [05:48<2:14:08, 52.26s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   4%|▍         | 7/160 [06:35<2:08:35, 50.43s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   5%|▌         | 8/160 [07:26<2:08:42, 50.81s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   6%|▌         | 9/160 [08:09<2:01:00, 48.08s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   6%|▋         | 10/160 [08:55<1:59:02, 47.62s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   7%|▋         | 11/160 [09:28<1:47:01, 43.10s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   8%|▊         | 12/160 [10:17<1:50:48, 44.92s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   8%|▊         | 13/160 [11:03<1:51:07, 45.36s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   9%|▉         | 14/160 [11:51<1:51:41, 45.90s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:   9%|▉         | 15/160 [12:40<1:53:29, 46.96s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  10%|█         | 16/160 [13:27<1:52:51, 47.02s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  11%|█         | 17/160 [14:15<1:52:25, 47.17s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  11%|█▏        | 18/160 [15:06<1:54:29, 48.38s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  12%|█▏        | 19/160 [15:42<1:45:16, 44.80s/it]
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  12%|█▎        | 20/160 [17:47<2:40:20, 68.72s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  13%|█▎        | 21/160 [18:36<2:25:50, 62.96s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  14%|█▍        | 22/160 [19:09<2:03:33, 53.72s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  14%|█▍        | 23/160 [19:54<1:57:16, 51.36s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  15%|█▌        | 24/160 [20:39<1:51:31, 49.20s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  16%|█▌        | 25/160 [21:25<1:49:03, 48.47s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  16%|█▋        | 26/160 [22:15<1:49:24, 48.99s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  17%|█▋        | 27/160 [23:02<1:47:00, 48.27s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  18%|█▊        | 28/160 [23:49<1:45:04, 47.76s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  18%|█▊        | 29/160 [24:29<1:39:13, 45.45s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  19%|█▉        | 30/160 [25:17<1:40:36, 46.44s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  19%|█▉        | 31/160 [26:06<1:40:55, 46.94s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  20%|██        | 32/160 [26:53<1:40:16, 47.00s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  21%|██        | 33/160 [27:22<1:28:31, 41.82s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  21%|██▏       | 34/160 [28:00<1:24:58, 40.46s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  22%|██▏       | 35/160 [28:31<1:18:16, 37.57s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  22%|██▎       | 36/160 [29:18<1:23:35, 40.45s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  23%|██▎       | 37/160 [29:54<1:20:10, 39.11s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  24%|██▍       | 38/160 [30:30<1:17:43, 38.22s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  24%|██▍       | 39/160 [31:17<1:22:16, 40.79s/it]
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  25%|██▌       | 40/160 [32:59<1:58:28, 59.23s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  26%|██▌       | 41/160 [33:30<1:40:51, 50.85s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  26%|██▋       | 42/160 [34:17<1:37:37, 49.64s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  27%|██▋       | 43/160 [34:49<1:26:19, 44.27s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  28%|██▊       | 44/160 [35:21<1:18:20, 40.52s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  28%|██▊       | 45/160 [35:53<1:13:18, 38.25s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  29%|██▉       | 46/160 [36:42<1:18:18, 41.21s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  29%|██▉       | 47/160 [37:13<1:12:00, 38.23s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  30%|███       | 48/160 [37:49<1:10:11, 37.60s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  31%|███       | 49/160 [38:26<1:09:10, 37.39s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  31%|███▏      | 50/160 [38:56<1:04:24, 35.13s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  32%|███▏      | 51/160 [39:24<1:00:04, 33.06s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  32%|███▎      | 52/160 [39:53<57:03, 31.70s/it]  
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  33%|███▎      | 53/160 [40:43<1:06:18, 37.19s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  34%|███▍      | 54/160 [41:10<1:00:22, 34.17s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  34%|███▍      | 55/160 [41:49<1:02:40, 35.81s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  35%|███▌      | 56/160 [42:18<58:24, 33.70s/it]  
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  36%|███▌      | 57/160 [42:50<56:43, 33.04s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  36%|███▋      | 58/160 [43:38<1:03:59, 37.64s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  37%|███▋      | 59/160 [44:07<58:49, 34.94s/it]  
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  38%|███▊      | 60/160 [46:04<1:39:25, 59.65s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  38%|███▊      | 61/160 [46:32<1:22:46, 50.17s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  39%|███▉      | 62/160 [46:58<1:10:17, 43.04s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  39%|███▉      | 63/160 [47:33<1:05:30, 40.52s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  40%|████      | 64/160 [48:00<58:29, 36.56s/it]  
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  41%|████      | 65/160 [48:46<1:02:03, 39.20s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  41%|████▏     | 66/160 [49:13<55:43, 35.57s/it]  
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  42%|████▏     | 67/160 [49:48<54:47, 35.35s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  42%|████▎     | 68/160 [50:20<52:50, 34.46s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  43%|████▎     | 69/160 [50:48<49:16, 32.49s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  44%|████▍     | 70/160 [51:17<47:25, 31.61s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  44%|████▍     | 71/160 [51:47<45:57, 30.98s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  45%|████▌     | 72/160 [52:35<52:45, 35.97s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  46%|████▌     | 73/160 [53:14<53:27, 36.87s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  46%|████▋     | 74/160 [53:43<49:38, 34.63s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  47%|████▋     | 75/160 [54:20<50:02, 35.32s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  48%|████▊     | 76/160 [54:52<47:57, 34.26s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  48%|████▊     | 77/160 [55:25<47:12, 34.13s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  49%|████▉     | 78/160 [55:53<43:45, 32.01s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  49%|████▉     | 79/160 [56:40<49:26, 36.62s/it]
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  50%|█████     | 80/160 [58:26<1:16:37, 57.47s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  51%|█████     | 81/160 [58:56<1:04:58, 49.35s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  51%|█████▏    | 82/160 [59:44<1:03:18, 48.70s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  52%|█████▏    | 83/160 [1:00:14<55:22, 43.14s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  52%|█████▎    | 84/160 [1:00:40<48:01, 37.91s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  53%|█████▎    | 85/160 [1:01:15<46:33, 37.25s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  54%|█████▍    | 86/160 [1:01:44<42:52, 34.77s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  54%|█████▍    | 87/160 [1:02:14<40:23, 33.19s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  55%|█████▌    | 88/160 [1:02:40<37:29, 31.25s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  56%|█████▌    | 89/160 [1:03:29<43:07, 36.45s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  56%|█████▋    | 90/160 [1:03:59<40:09, 34.41s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  57%|█████▋    | 91/160 [1:04:28<37:58, 33.03s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  57%|█████▊    | 92/160 [1:05:07<39:26, 34.80s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  58%|█████▊    | 93/160 [1:05:36<36:45, 32.91s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  59%|█████▉    | 94/160 [1:06:03<34:25, 31.29s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  59%|█████▉    | 95/160 [1:06:35<33:56, 31.34s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  60%|██████    | 96/160 [1:07:02<32:10, 30.17s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  61%|██████    | 97/160 [1:07:31<31:08, 29.67s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  61%|██████▏   | 98/160 [1:08:00<30:26, 29.46s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  62%|██████▏   | 99/160 [1:08:28<29:39, 29.18s/it]
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  62%|██████▎   | 100/160 [1:10:11<51:09, 51.16s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  63%|██████▎   | 101/160 [1:10:40<43:50, 44.59s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  64%|██████▍   | 102/160 [1:11:11<39:09, 40.52s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  64%|██████▍   | 103/160 [1:11:41<35:25, 37.30s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  65%|██████▌   | 104/160 [1:12:30<38:13, 40.95s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  66%|██████▌   | 105/160 [1:13:00<34:28, 37.60s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  66%|██████▋   | 106/160 [1:13:34<32:46, 36.43s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  67%|██████▋   | 107/160 [1:14:02<30:02, 34.01s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  68%|██████▊   | 108/160 [1:14:31<28:13, 32.58s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  68%|██████▊   | 109/160 [1:14:59<26:21, 31.01s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  69%|██████▉   | 110/160 [1:15:26<24:48, 29.77s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  69%|██████▉   | 111/160 [1:15:55<24:15, 29.70s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  70%|███████   | 112/160 [1:16:27<24:23, 30.48s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  71%|███████   | 113/160 [1:16:57<23:39, 30.20s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  71%|███████▏  | 114/160 [1:17:27<23:04, 30.11s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  72%|███████▏  | 115/160 [1:17:56<22:26, 29.91s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  72%|███████▎  | 116/160 [1:18:22<20:57, 28.57s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  73%|███████▎  | 117/160 [1:18:52<20:44, 28.95s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  74%|███████▍  | 118/160 [1:19:22<20:33, 29.38s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  74%|███████▍  | 119/160 [1:19:53<20:21, 29.79s/it]
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  75%|███████▌  | 120/160 [1:21:33<33:57, 50.94s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  76%|███████▌  | 121/160 [1:22:03<28:59, 44.60s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  76%|███████▋  | 122/160 [1:22:30<24:56, 39.38s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  77%|███████▋  | 123/160 [1:22:59<22:21, 36.26s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  78%|███████▊  | 124/160 [1:23:28<20:26, 34.06s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  78%|███████▊  | 125/160 [1:23:58<19:05, 32.72s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  79%|███████▉  | 126/160 [1:24:27<18:02, 31.83s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  79%|███████▉  | 127/160 [1:24:55<16:50, 30.64s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  80%|████████  | 128/160 [1:25:30<17:02, 31.96s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  81%|████████  | 129/160 [1:26:02<16:29, 31.94s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  81%|████████▏ | 130/160 [1:26:34<15:59, 31.99s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  82%|████████▏ | 131/160 [1:27:03<15:03, 31.15s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  82%|████████▎ | 132/160 [1:27:33<14:21, 30.78s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  83%|████████▎ | 133/160 [1:28:00<13:20, 29.66s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  84%|████████▍ | 134/160 [1:28:29<12:45, 29.46s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  84%|████████▍ | 135/160 [1:29:01<12:36, 30.25s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  85%|████████▌ | 136/160 [1:29:30<11:51, 29.65s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  86%|████████▌ | 137/160 [1:30:08<12:20, 32.20s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  86%|████████▋ | 138/160 [1:30:45<12:20, 33.64s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  87%|████████▋ | 139/160 [1:31:13<11:09, 31.89s/it]
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  88%|████████▊ | 140/160 [1:33:03<18:27, 55.37s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  88%|████████▊ | 141/160 [1:33:29<14:44, 46.58s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  89%|████████▉ | 142/160 [1:33:56<12:15, 40.83s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  89%|████████▉ | 143/160 [1:34:25<10:32, 37.18s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  90%|█████████ | 144/160 [1:34:56<09:27, 35.46s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  91%|█████████ | 145/160 [1:35:26<08:27, 33.83s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  91%|█████████▏| 146/160 [1:35:56<07:37, 32.65s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  92%|█████████▏| 147/160 [1:36:24<06:46, 31.31s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  92%|█████████▎| 148/160 [1:36:51<06:00, 30.01s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  93%|█████████▎| 149/160 [1:37:20<05:25, 29.56s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  94%|█████████▍| 150/160 [1:37:50<04:56, 29.62s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  94%|█████████▍| 151/160 [1:38:16<04:18, 28.70s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  95%|█████████▌| 152/160 [1:38:43<03:43, 27.99s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  96%|█████████▌| 153/160 [1:39:12<03:18, 28.29s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  96%|█████████▋| 154/160 [1:39:44<02:57, 29.56s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  97%|█████████▋| 155/160 [1:40:31<02:53, 34.66s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  98%|█████████▊| 156/160 [1:40:57<02:08, 32.13s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  98%|█████████▊| 157/160 [1:41:23<01:30, 30.26s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  99%|█████████▉| 158/160 [1:41:49<00:58, 29.07s/it]
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress:  99%|█████████▉| 159/160 [1:42:19<00:29, 29.40s/it]
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=2598518)[0m   warnings.warn(
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=2598518)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=2596077)[0m Training Progress: 100%|██████████| 160/160 [1:44:10<00:00, 53.69s/it]Training Progress: 100%|██████████| 160/160 [1:44:10<00:00, 39.06s/it]
+[36m(TaskRunner pid=2596077)[0m wandb: uploading data; uploading artifact run-3xypqv4y-valgenerations--x_5nA; updating run metadata
+[36m(TaskRunner pid=2596077)[0m wandb: uploading data; uploading artifact run-3xypqv4y-valgenerations--x_5nA
+[36m(TaskRunner pid=2596077)[0m wandb: uploading artifact run-3xypqv4y-valgenerations--x_5nA; uploading history steps 159-159, summary
+[36m(TaskRunner pid=2596077)[0m wandb: uploading history steps 159-159, summary; uploading config.yaml; uploading media/table/val/generations_160_249eee4fef6e3b3b5170.table.json; uploading wandb-summary.json
+[36m(TaskRunner pid=2596077)[0m wandb: uploading history steps 159-159, summary
+[36m(TaskRunner pid=2596077)[0m wandb: uploading history steps 160-160, summary
+[36m(TaskRunner pid=2596077)[0m wandb: 
+[36m(TaskRunner pid=2596077)[0m wandb: Run history:
+[36m(TaskRunner pid=2596077)[0m wandb:           actor/entropy ▇▇▇▆▇█▇█▆▆▅█▃▅▇▆▆▅▆▅▅▆▄▅▇▅▆▄▁▇▇▆▄▇▄▇▇▅▄▅
+[36m(TaskRunner pid=2596077)[0m wandb:         actor/grad_norm ▂▂▂▂▂▄▄▂▃▃▄▃▃▄▄▂▃▃▄▂▆▃▂▄▂▃▃▃█▃▁▂▂▃▄▂▃▃▄▅
+[36m(TaskRunner pid=2596077)[0m wandb:           actor/kl_loss ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+[36m(TaskRunner pid=2596077)[0m wandb:                actor/lr ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+[36m(TaskRunner pid=2596077)[0m wandb:       actor/pg_clipfrac ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+[36m(TaskRunner pid=2596077)[0m wandb: actor/pg_clipfrac_lower ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+[36m(TaskRunner pid=2596077)[0m wandb:           actor/pg_loss ▅█▆▇▅▂▃▃▄▄▄▅▅▂▃▂▂▁█▃▃▃▂▂▂▄▃▂▃▄▂▄▂▂▃▁▁▂▂▂
+[36m(TaskRunner pid=2596077)[0m wandb:            actor/ppo_kl ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+[36m(TaskRunner pid=2596077)[0m wandb:   critic/advantages/max ▁▄▄▆█▃█▄▆█▆█▄▂█▄██▄▃▆▆█▆▄▂▃▄▃▆▄▁▃▄▂▆▃▄▁█
+[36m(TaskRunner pid=2596077)[0m wandb:  critic/advantages/mean ▇▄▅▄▅▆▄▃▅▇▃▅▅▇▃▆▇▇▅▇▅▆▁▆▇▄▅▆▆▇▅█▆▇▄▇▇▇▇▇
+[36m(TaskRunner pid=2596077)[0m wandb:                     +92 ...
+[36m(TaskRunner pid=2596077)[0m wandb: 
+[36m(TaskRunner pid=2596077)[0m wandb: Run summary:
+[36m(TaskRunner pid=2596077)[0m wandb:           actor/entropy 0.57013
+[36m(TaskRunner pid=2596077)[0m wandb:         actor/grad_norm 0.11861
+[36m(TaskRunner pid=2596077)[0m wandb:           actor/kl_loss 0
+[36m(TaskRunner pid=2596077)[0m wandb:                actor/lr 0.0
+[36m(TaskRunner pid=2596077)[0m wandb:       actor/pg_clipfrac 0
+[36m(TaskRunner pid=2596077)[0m wandb: actor/pg_clipfrac_lower 0
+[36m(TaskRunner pid=2596077)[0m wandb:           actor/pg_loss -0.0019
+[36m(TaskRunner pid=2596077)[0m wandb:            actor/ppo_kl 0
+[36m(TaskRunner pid=2596077)[0m wandb:   critic/advantages/max 0.35355
+[36m(TaskRunner pid=2596077)[0m wandb:  critic/advantages/mean 0.0019
+[36m(TaskRunner pid=2596077)[0m wandb:                     +92 ...
+[36m(TaskRunner pid=2596077)[0m wandb: 
+[36m(TaskRunner pid=2596077)[0m wandb: 🚀 View run rl_grpo_logic_lr1e4_seed3407_ckpt_test_3543029 at: https://wandb.ai/filipelaitenberger/synthetic-rlvl/runs/3xypqv4y
+[36m(TaskRunner pid=2596077)[0m wandb: ⭐️ View project at: https://wandb.ai/filipelaitenberger/synthetic-rlvl
+[36m(TaskRunner pid=2596077)[0m wandb: Synced 4 W&B file(s), 17 media file(s), 34 artifact file(s) and 0 other file(s)
+[36m(TaskRunner pid=2596077)[0m wandb: Find logs at: /home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb/wandb/run-20260415_175551-3xypqv4y/logs
+[36m(TaskRunner pid=2596077)[0m Exception ignored in atexit callback: <function _start_and_connect_service.<locals>.teardown_atexit at 0x14cb08bcb6a0>
+[36m(TaskRunner pid=2596077)[0m Traceback (most recent call last):
+[36m(TaskRunner pid=2596077)[0m   File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/wandb/sdk/lib/service/service_connection.py", line 73, in teardown_atexit
+[36m(TaskRunner pid=2596077)[0m     conn.teardown(hooks.exit_code)
+[36m(TaskRunner pid=2596077)[0m   File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/wandb/sdk/lib/service/service_connection.py", line 344, in teardown
+[36m(TaskRunner pid=2596077)[0m     self._asyncer.run(publish_teardown_and_close)
+[36m(TaskRunner pid=2596077)[0m   File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/wandb/sdk/lib/asyncio_manager.py", line 137, in run
+[36m(TaskRunner pid=2596077)[0m     return future.result()
+[36m(TaskRunner pid=2596077)[0m            ^^^^^^^^^^^^^^^
+[36m(TaskRunner pid=2596077)[0m   File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+[36m(TaskRunner pid=2596077)[0m     return self.__get_result()
+[36m(TaskRunner pid=2596077)[0m            ^^^^^^^^^^^^^^^^^^^
+[36m(TaskRunner pid=2596077)[0m   File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+[36m(TaskRunner pid=2596077)[0m     raise self._exception
+[36m(TaskRunner pid=2596077)[0m   File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/wandb/sdk/lib/asyncio_manager.py", line 220, in _wrap
+[36m(TaskRunner pid=2596077)[0m     return await fn()
+[36m(TaskRunner pid=2596077)[0m            ^^^^^^^^^^
+[36m(TaskRunner pid=2596077)[0m   File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/wandb/sdk/lib/service/service_connection.py", line 342, in publish_teardown_and_close
+[36m(TaskRunner pid=2596077)[0m     await self._client.close()
+[36m(TaskRunner pid=2596077)[0m   File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/wandb/sdk/lib/service/service_client.py", line 123, in close
+[36m(TaskRunner pid=2596077)[0m     await self._writer.wait_closed()
+[36m(TaskRunner pid=2596077)[0m   File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/asyncio/streams.py", line 364, in wait_closed

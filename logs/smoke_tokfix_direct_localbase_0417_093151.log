@@ -1,0 +1,14 @@
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 973.38ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 1177.18ba/s]
+[posttrain] model bootstrap: raw_model_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/localbase_adapter_ckpt8000 effective_model_path=/home/atuin/c107fa/c107fa12/RLVL/finetune/olmo3-7b-logic-lora-full-1ep-lr5e-4-seed101-v4-merged effective_tokenizer_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/localbase_adapter_ckpt8000 lora_adapter_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/localbase_adapter_ckpt8000
+[2026-04-17 09:32:56,870][torchao][WARNING] - Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+2026-04-17 09:33:23,175	INFO worker.py:2004 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2026-04-17 09:33:23,178	WARNING working_dir.py:86 -- Directory '__pycache__' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-17 09:33:24,424	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-17 09:33:24,481	INFO packaging.py:691 -- Creating a file package for local module '/home/hpc/c107fa/c107fa12/synthetic-RLVL'.
+2026-04-17 09:33:25,628	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-17 09:33:25,702	INFO packaging.py:463 -- Pushing file package 'gcs://_ray_pkg_0e6f31ceced45234.zip' (55.18MiB) to Ray cluster...
+2026-04-17 09:33:25,792	INFO packaging.py:476 -- Successfully pushed file package 'gcs://_ray_pkg_0e6f31ceced45234.zip'.
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py:2052: FutureWarning: Tip: In future versions of Ray, Ray will no longer override accelerator visible devices env var if num_gpus=0 or num_gpus=None (default). To enable this behavior and turn off this error message, set RAY_ACCEL_ENV_VAR_OVERRIDE_ON_ZERO=0
+  warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-17 09:33:49,440:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).

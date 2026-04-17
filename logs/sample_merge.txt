@@ -1,0 +1,51 @@
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+WARNING:2026-04-17 10:22:27,876:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+`torch_dtype` is deprecated! Use `dtype` instead!
+`rope_scaling`'s beta_fast field must be a float, got 32
+`rope_scaling`'s beta_slow field must be a float, got 1
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.03it/s]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.02it/s]Loading checkpoint shards: 100%|██████████| 3/3 [00:02<00:00,  1.02it/s]Loading checkpoint shards: 100%|██████████| 3/3 [00:02<00:00,  1.02it/s]
+The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+=== PROMPT (exact) ===
+<question>
+1. Nina is new.
+2. All things that are new are relaxed.
+3. All things that are relaxed are new.
+What mood does Nina have?
+</question>
+
+
+=== COMPLETION (exact decoded) ===
+<formal>
+<constants>
+a = Nina
+b = David
+c = Clara
+d = Eva
+e = Xavier
+f = Tina
+g = Paula
+</constants>
+<predicates>
+Ax: x is new
+Bx: x is relaxed
+</predicates>
+<premises>
+Aa
+Aa -> Ba
+Ba -> Aa
+</premises>
+<proof>
+Aa ; R,1
+Ba ; ->E,2,4
+</proof>
+<conclusion>
+Ba
+</conclusion>
+<answer>
+relaxed
+</answer>
+</formal>
+=== COMPLETION (repr) ===
+'<formal>\n<constants>\na = Nina\nb = David\nc = Clara\nd = Eva\ne = Xavier\nf = Tina\ng = Paula\n</constants>\n<predicates>\nAx: x is new\nBx: x is relaxed\n</predicates>\n<premises>\nAa\nAa -> Ba\nBa -> Aa\n</premises>\n<proof>\nAa ; R,1\nBa ; ->E,2,4\n</proof>\n<conclusion>\nBa\n</conclusion>\n<answer>\nrelaxed\n</answer>\n</formal>'

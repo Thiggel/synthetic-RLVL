@@ -1,0 +1,402 @@
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 116.50ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 527.65ba/s]
+2026-04-13 15:08:33,626	INFO worker.py:2004 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2026-04-13 15:08:33,631	WARNING working_dir.py:86 -- Directory '__pycache__' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-13 15:08:34,742	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-13 15:08:34,838	INFO packaging.py:691 -- Creating a file package for local module '/home/hpc/c107fa/c107fa12/synthetic-RLVL'.
+2026-04-13 15:08:35,359	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-13 15:08:35,395	INFO packaging.py:463 -- Pushing file package 'gcs://_ray_pkg_6925c1982da625d7.zip' (5.10MiB) to Ray cluster...
+2026-04-13 15:08:35,406	INFO packaging.py:476 -- Successfully pushed file package 'gcs://_ray_pkg_6925c1982da625d7.zip'.
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py:2052: FutureWarning: Tip: In future versions of Ray, Ray will no longer override accelerator visible devices env var if num_gpus=0 or num_gpus=None (default). To enable this behavior and turn off this error message, set RAY_ACCEL_ENV_VAR_OVERRIDE_ON_ZERO=0
+  warnings.warn(
+[36m(pid=3513243)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(pid=3513243)[0m   warnings.warn(
+[36m(pid=3513243)[0m WARNING:2026-04-13 15:08:53,367:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(TaskRunner pid=3513243)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(TaskRunner pid=3513243)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(TaskRunner pid=3513243)[0m   warnings.warn(
+[36m(TaskRunner pid=3513243)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(TaskRunner pid=3513243)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(TaskRunner pid=3513243)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(TaskRunner pid=3513243)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(TaskRunner pid=3513243)[0m Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1024 examples [00:00, 54627.36 examples/s]
+[36m(TaskRunner pid=3513243)[0m Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 128 examples [00:00, 19239.93 examples/s]
+[36m(pid=3513561)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(pid=3513561)[0m   warnings.warn(
+[36m(pid=3513561)[0m WARNING:2026-04-13 15:09:41,732:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3513561)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(WorkerDict pid=3513561)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3513561)[0m `torch_dtype` is deprecated! Use `dtype` instead!
+[36m(WorkerDict pid=3513561)[0m Flash Attention 2 only supports torch.float16 and torch.bfloat16 dtypes, but the current dype in Olmo3ForCausalLM is torch.float32. You should run training or inference using Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` decorator, or load the model with the `dtype` argument. Example: `model = AutoModel.from_pretrained("openai/whisper-tiny", attn_implementation="flash_attention_2", dtype=torch.float16)`
+[36m(WorkerDict pid=3513561)[0m Flash Attention 2 only supports torch.float16 and torch.bfloat16 dtypes, but the current dype in Olmo3Model is torch.float32. You should run training or inference using Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` decorator, or load the model with the `dtype` argument. Example: `model = AutoModel.from_pretrained("openai/whisper-tiny", attn_implementation="flash_attention_2", dtype=torch.float16)`
+[36m(WorkerDict pid=3513561)[0m Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]
+[36m(WorkerDict pid=3513561)[0m Loading checkpoint shards:  33%|███▎      | 1/3 [00:07<00:14,  7.00s/it]
+[36m(WorkerDict pid=3513561)[0m Loading checkpoint shards:  67%|██████▋   | 2/3 [00:14<00:07,  7.07s/it]
+[36m(WorkerDict pid=3513561)[0m Loading checkpoint shards: 100%|██████████| 3/3 [00:20<00:00,  6.85s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:20<00:00,  6.90s/it]
+[36m(WorkerDict pid=3513561)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_init_utils.py:430: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+[36m(WorkerDict pid=3513561)[0m   warnings.warn(
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3513561)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(WorkerDict pid=3513561)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3513561)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(WorkerDict pid=3513561)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(WorkerDict pid=3513561)[0m   warnings.warn(
+[36m(WorkerDict pid=3513561)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:675: FutureWarning: FSDP.state_dict_type() and FSDP.set_state_dict_type() are being deprecated. Please use APIs, get_state_dict() and set_state_dict(), which can support different parallelisms, FSDP1, FSDP2, DDP. API doc: https://pytorch.org/docs/stable/distributed.checkpoint.html#torch.distributed.checkpoint.state_dict.get_state_dict .Tutorial: https://pytorch.org/tutorials/recipes/distributed_checkpoint_recipe.html .
+[36m(WorkerDict pid=3513561)[0m   warnings.warn(
+[36m(pid=3513814)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(pid=3513814)[0m   warnings.warn(
+[36m(pid=3513815)[0m   warnings.warn(
+[36m(pid=3513815)[0m WARNING:2026-04-13 15:10:35,760:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(pid=3513822)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.[32m [repeated 2x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(pid=3513822)[0m   warnings.warn(
+[36m(pid=3513814)[0m WARNING:2026-04-13 15:10:42,707:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 2x across cluster][0m
+[36m(pid=3513822)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(pid=3513822)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(pid=3513822)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=3513822)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(vLLMHttpServer pid=3513822)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(vLLMHttpServer pid=3513822)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(vLLMHttpServer pid=3513822)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(vLLMHttpServer pid=3513822)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(vLLMHttpServer pid=3513822)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(vLLMHttpServer pid=3513822)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(vLLMHttpServer pid=3513822)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(vLLMHttpServer pid=3513822)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=3513822)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=3513822)[0m Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(vLLMHttpServer pid=3513822)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=3513822)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=3513822)[0m Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(vLLMHttpServer pid=3513822)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(vLLMHttpServer pid=3513822)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(vLLMHttpServer pid=3513822)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=3513822)[0m [1;36m(Worker pid=3514174)[0;0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   0%|          | 0/102 [00:00<?, ?it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   1%|          | 1/102 [00:00<00:34,  2.89it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   3%|▎         | 3/102 [00:00<00:14,  6.81it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   5%|▍         | 5/102 [00:00<00:10,  9.03it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   7%|▋         | 7/102 [00:00<00:09, 10.40it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   9%|▉         | 9/102 [00:00<00:08, 11.29it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  11%|█         | 11/102 [00:01<00:07, 11.81it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  13%|█▎        | 13/102 [00:01<00:07, 12.21it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  15%|█▍        | 15/102 [00:01<00:07, 12.34it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  17%|█▋        | 17/102 [00:01<00:06, 12.61it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  19%|█▊        | 19/102 [00:01<00:06, 12.95it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  21%|██        | 21/102 [00:01<00:06, 13.22it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  23%|██▎       | 23/102 [00:02<00:05, 13.42it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  25%|██▍       | 25/102 [00:02<00:05, 13.55it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  26%|██▋       | 27/102 [00:02<00:05, 13.62it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  28%|██▊       | 29/102 [00:02<00:05, 13.69it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  30%|███       | 31/102 [00:02<00:05, 13.73it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  32%|███▏      | 33/102 [00:02<00:05, 13.77it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  34%|███▍      | 35/102 [00:02<00:05, 12.76it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  36%|███▋      | 37/102 [00:03<00:04, 13.25it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  38%|███▊      | 39/102 [00:03<00:04, 13.66it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  40%|████      | 41/102 [00:03<00:04, 13.93it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  42%|████▏     | 43/102 [00:03<00:04, 14.12it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  44%|████▍     | 45/102 [00:03<00:04, 14.24it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  46%|████▌     | 47/102 [00:03<00:03, 14.31it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  48%|████▊     | 49/102 [00:03<00:03, 14.43it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  50%|█████     | 51/102 [00:04<00:03, 14.50it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  52%|█████▏    | 53/102 [00:04<00:03, 14.52it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  54%|█████▍    | 55/102 [00:04<00:03, 14.60it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  56%|█████▌    | 57/102 [00:04<00:03, 14.23it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  58%|█████▊    | 59/102 [00:04<00:03, 14.27it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  60%|█████▉    | 61/102 [00:04<00:02, 14.30it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  62%|██████▏   | 63/102 [00:04<00:02, 14.39it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  64%|██████▎   | 65/102 [00:04<00:02, 14.39it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  66%|██████▌   | 67/102 [00:05<00:02, 13.72it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  68%|██████▊   | 69/102 [00:05<00:02, 13.30it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  70%|██████▉   | 71/102 [00:05<00:02, 13.63it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  72%|███████▏  | 73/102 [00:05<00:02, 13.88it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  74%|███████▎  | 75/102 [00:05<00:01, 13.98it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  75%|███████▌  | 77/102 [00:05<00:01, 14.17it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  77%|███████▋  | 79/102 [00:05<00:01, 14.31it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  79%|███████▉  | 81/102 [00:06<00:01, 14.45it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  81%|████████▏ | 83/102 [00:06<00:01, 14.54it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  83%|████████▎ | 85/102 [00:06<00:01, 14.62it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  85%|████████▌ | 87/102 [00:06<00:01, 14.67it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  87%|████████▋ | 89/102 [00:06<00:00, 14.58it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  89%|████████▉ | 91/102 [00:06<00:00, 14.64it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  91%|█████████ | 93/102 [00:06<00:00, 14.68it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  93%|█████████▎| 95/102 [00:07<00:00, 14.79it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  95%|█████████▌| 97/102 [00:07<00:00, 14.87it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  97%|█████████▋| 99/102 [00:07<00:00, 14.84it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  99%|█████████▉| 101/102 [00:07<00:00, 13.01it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE): 100%|██████████| 102/102 [00:07<00:00, 13.43it/s]
+[36m(vLLMHttpServer pid=3513822)[0m [1;36m(Worker pid=3514174)[0;0m Capturing CUDA graphs (decode, FULL):   0%|          | 0/102 [00:00<?, ?it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):   1%|          | 1/102 [00:00<00:18,  5.35it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):   3%|▎         | 3/102 [00:00<00:12,  8.21it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):   5%|▍         | 5/102 [00:00<00:10,  9.66it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):   7%|▋         | 7/102 [00:00<00:09, 10.43it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):   9%|▉         | 9/102 [00:00<00:08, 10.90it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  11%|█         | 11/102 [00:01<00:08, 11.23it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  13%|█▎        | 13/102 [00:01<00:07, 11.48it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  15%|█▍        | 15/102 [00:01<00:07, 11.64it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  17%|█▋        | 17/102 [00:01<00:07, 11.97it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  19%|█▊        | 19/102 [00:01<00:06, 12.36it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  21%|██        | 21/102 [00:01<00:06, 12.67it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  23%|██▎       | 23/102 [00:02<00:06, 12.95it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  25%|██▍       | 25/102 [00:02<00:05, 13.11it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  26%|██▋       | 27/102 [00:02<00:05, 13.32it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  28%|██▊       | 29/102 [00:02<00:05, 13.43it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  30%|███       | 31/102 [00:02<00:05, 13.60it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  32%|███▏      | 33/102 [00:02<00:05, 13.70it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  34%|███▍      | 35/102 [00:02<00:04, 14.04it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  36%|███▋      | 37/102 [00:02<00:04, 14.30it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  38%|███▊      | 39/102 [00:03<00:04, 14.50it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  40%|████      | 41/102 [00:03<00:04, 14.65it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  42%|████▏     | 43/102 [00:03<00:03, 14.77it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  44%|████▍     | 45/102 [00:03<00:03, 14.80it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  46%|████▌     | 47/102 [00:03<00:03, 14.91it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  48%|████▊     | 49/102 [00:03<00:03, 14.98it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  50%|█████     | 51/102 [00:03<00:03, 15.07it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  52%|█████▏    | 53/102 [00:04<00:03, 15.16it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  54%|█████▍    | 55/102 [00:04<00:03, 15.22it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  56%|█████▌    | 57/102 [00:04<00:02, 15.29it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  58%|█████▊    | 59/102 [00:04<00:02, 15.29it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  60%|█████▉    | 61/102 [00:04<00:02, 15.37it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  62%|██████▏   | 63/102 [00:04<00:02, 15.43it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  64%|██████▎   | 65/102 [00:04<00:02, 15.45it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  66%|██████▌   | 67/102 [00:04<00:02, 15.38it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  68%|██████▊   | 69/102 [00:05<00:02, 15.41it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  70%|██████▉   | 71/102 [00:05<00:02, 15.37it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  72%|███████▏  | 73/102 [00:05<00:01, 14.51it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  74%|███████▎  | 75/102 [00:05<00:01, 14.83it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  75%|███████▌  | 77/102 [00:05<00:01, 15.04it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  77%|███████▋  | 79/102 [00:05<00:01, 15.22it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  79%|███████▉  | 81/102 [00:05<00:01, 15.39it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  81%|████████▏ | 83/102 [00:06<00:01, 15.51it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  83%|████████▎ | 85/102 [00:06<00:01, 15.52it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  85%|████████▌ | 87/102 [00:06<00:00, 15.64it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  87%|████████▋ | 89/102 [00:06<00:00, 15.75it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  89%|████████▉ | 91/102 [00:06<00:00, 15.87it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  91%|█████████ | 93/102 [00:06<00:00, 15.98it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  93%|█████████▎| 95/102 [00:06<00:00, 16.04it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  95%|█████████▌| 97/102 [00:06<00:00, 16.08it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  97%|█████████▋| 99/102 [00:07<00:00, 16.05it/s]
+[36m(vLLMHttpServer pid=3513822)[0m Capturing CUDA graphs (decode, FULL):  99%|█████████▉| 101/102 [00:07<00:00, 16.07it/s]Capturing CUDA graphs (decode, FULL): 100%|██████████| 102/102 [00:07<00:00, 14.21it/s]
+[36m(pid=3514515)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(pid=3514515)[0m   warnings.warn(
+[36m(pid=3514515)[0m WARNING:2026-04-13 15:12:21,611:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(pid=3514521)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.[32m [repeated 6x across cluster][0m
+[36m(pid=3514521)[0m   warnings.warn([32m [repeated 6x across cluster][0m
+[36m(TaskRunner pid=3513243)[0m wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+[36m(TaskRunner pid=3513243)[0m wandb: Currently logged in as: filipelaitenberger to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+[36m(TaskRunner pid=3513243)[0m wandb: setting up run vidumxh7
+[36m(TaskRunner pid=3513243)[0m wandb: Tracking run with wandb version 0.25.1
+[36m(TaskRunner pid=3513243)[0m wandb: Run data is saved locally in /home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb/wandb/run-20260413_151224-vidumxh7
+[36m(TaskRunner pid=3513243)[0m wandb: Run `wandb offline` to turn off syncing.
+[36m(TaskRunner pid=3513243)[0m wandb: Syncing run rl_grpo_base_smoke_3537279
+[36m(TaskRunner pid=3513243)[0m wandb: ⭐️ View project at https://wandb.ai/filipelaitenberger/synthetic-rlvl
+[36m(TaskRunner pid=3513243)[0m wandb: 🚀 View run at https://wandb.ai/filipelaitenberger/synthetic-rlvl/runs/vidumxh7
+[36m(TaskRunner pid=3513243)[0m wandb: Detected [openai] in use.
+[36m(TaskRunner pid=3513243)[0m wandb: Use W&B Weave for improved LLM call tracing. Install Weave with `pip install weave` then add `import weave` to the top of your script.
+[36m(TaskRunner pid=3513243)[0m wandb: For more information, check out the docs at: https://weave-docs.wandb.ai/
+[36m(pid=3514521)[0m WARNING:2026-04-13 15:12:26,647:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 5x across cluster][0m
+[36m(WorkerDict pid=3513561)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=3513561)[0m   warnings.warn(
+[36m(WorkerDict pid=3513561)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=3513561)[0m   warnings.warn(
+[36m(pid=3514514)[0m WARNING:2026-04-13 15:12:31,750:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(pid=3514517)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(pid=3514517)[0m   warnings.warn(
+[36m(pid=3514517)[0m WARNING:2026-04-13 15:12:51,015:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(AgentLoopWorker pid=3514521)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=3514521)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=3514521)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=3514521)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514521)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514521)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514521)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514521)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=3514521)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=3514521)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514521)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514520)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=3514520)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=3514520)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=3514521)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(AgentLoopWorker pid=3514520)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514520)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514520)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514520)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514520)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=3514520)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=3514520)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514520)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514514)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=3514514)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=3514514)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=3514520)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(AgentLoopWorker pid=3514514)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514514)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514514)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514514)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514514)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=3514514)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=3514514)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514514)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514513)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=3514513)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=3514513)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=3514514)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(AgentLoopWorker pid=3514513)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514513)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514513)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514513)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514513)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=3514513)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=3514513)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514513)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514519)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=3514519)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=3514519)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=3514513)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(AgentLoopWorker pid=3514519)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514519)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514519)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514519)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514519)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=3514519)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=3514519)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514519)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514515)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=3514515)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=3514515)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=3514519)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(AgentLoopWorker pid=3514515)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514515)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514515)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514515)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514515)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=3514515)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=3514515)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514515)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514517)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=3514517)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=3514517)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=3514515)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(AgentLoopWorker pid=3514517)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514517)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514517)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514517)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514517)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=3514517)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=3514517)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514517)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514516)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=3514516)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=3514516)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=3514517)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(AgentLoopWorker pid=3514516)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514516)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514516)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514516)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514516)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=3514516)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=3514516)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=3514516)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=3514516)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(TaskRunner pid=3513243)[0m Training Progress:   0%|          | 0/120 [00:00<?, ?it/s]
+[36m(WorkerDict pid=3513561)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=3513561)[0m   warnings.warn(
+[36m(WorkerDict pid=3513561)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=3513561)[0m   warnings.warn(
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   1%|          | 1/120 [01:05<2:09:03, 65.07s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   2%|▏         | 2/120 [02:04<2:01:13, 61.64s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   2%|▎         | 3/120 [03:06<2:00:42, 61.90s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   3%|▎         | 4/120 [04:05<1:57:14, 60.65s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   4%|▍         | 5/120 [05:10<1:59:18, 62.24s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   5%|▌         | 6/120 [06:05<1:54:00, 60.01s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   6%|▌         | 7/120 [07:03<1:51:18, 59.10s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   7%|▋         | 8/120 [08:01<1:49:49, 58.83s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   8%|▊         | 9/120 [09:01<1:49:17, 59.07s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   8%|▊         | 10/120 [10:06<1:51:43, 60.94s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:   9%|▉         | 11/120 [11:06<1:50:17, 60.71s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  10%|█         | 12/120 [12:08<1:50:11, 61.21s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  11%|█         | 13/120 [13:15<1:51:53, 62.74s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  12%|█▏        | 14/120 [14:17<1:50:35, 62.60s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  12%|█▎        | 15/120 [15:12<1:45:33, 60.32s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  13%|█▎        | 16/120 [16:14<1:45:35, 60.92s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  14%|█▍        | 17/120 [17:16<1:45:12, 61.29s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  15%|█▌        | 18/120 [18:17<1:44:06, 61.24s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  16%|█▌        | 19/120 [19:19<1:43:11, 61.30s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  17%|█▋        | 20/120 [20:17<1:40:30, 60.30s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  18%|█▊        | 21/120 [21:16<1:39:09, 60.10s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  18%|█▊        | 22/120 [22:19<1:39:12, 60.74s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  19%|█▉        | 23/120 [23:20<1:38:16, 60.78s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  20%|██        | 24/120 [24:22<1:37:52, 61.17s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  21%|██        | 25/120 [25:23<1:36:45, 61.11s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  22%|██▏       | 26/120 [26:21<1:34:22, 60.24s/it]
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3513561)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(TaskRunner pid=3513243)[0m Training Progress:  22%|██▎       | 27/120 [27:24<1:34:49, 61.18s/it]
+[2026-04-13T15:48:05.392] error: *** JOB 3537279 ON a0531 CANCELLED AT 2026-04-13T15:48:05 DUE to SIGNAL Terminated ***

@@ -1,0 +1,7 @@
+<question>
+1. Nina is new.
+2. All things that are new are relaxed.
+3. All things that are relaxed are new.
+What mood does Nina have?
+</question>
+

@@ -1,0 +1,87 @@
+seed: 3407
+run_name: rl_grpo_logic_ckpt8000_smoke_0416_185903
+output_dir: ${oc.env:WORK,${oc.env:HOME}}/synthetic-RLVL/runs
+allow_base_model: false
+model:
+  path: /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_logic_cot_lr1e-4_b1_seed3407/checkpoint-8000
+  lora_rank: 16
+  lora_alpha: 16
+task:
+  template: logic
+  prefill: none
+  distractor_ratio: 0.5
+  train_min_step: 1
+  train_max_step: 10
+  val_min_step: 1
+  val_max_step: 20
+data:
+  source: materialized
+  train_samples: 128
+  val_samples: 64
+  materialized:
+    dataset_id: flaitenberger/LogicalReasoning
+    local_root: ${oc.env:WORK,${oc.env:HOME}}/synthetic-RLVL/datasets/materialized_logic
+    train_subset: auto
+    val_subset: auto
+reward:
+  schema: correct_plus_valid_plus_0p1_format
+grpo:
+  train_steps: 1
+  rollout_backend: vllm
+  num_prompts: 8
+  num_rollouts: 8
+  max_prompt_length: 1024
+  max_response_length: 768
+  max_model_len: null
+  max_num_batched_tokens: 12288
+  temperature: 1.0
+  gpu_memory_utilization: 0.5
+optim:
+  lr: 1.0e-06
+  weight_decay: 0.01
+  warmup_steps: 0
+  micro_batch_size: 1
+  logprob_micro_batch_size: 1
+  kl_coef: 0.0
+validation:
+  enabled: true
+  before_train: true
+  eval_every: 1
+  save_every: 1
+  run_verl_validation: false
+eval:
+  enabled: true
+  synthetic_step_min: 1
+  synthetic_step_max: 20
+  synthetic_samples_per_step: 5
+  max_new_tokens: 1024
+  generation_backend: vllm
+  generation_batch_size: 400
+  vllm_gpu_memory_utilization: 0.5
+  external_enabled: false
+  external_benchmarks:
+  - proofwriter
+  - folio
+  - prontoqa
+  - proverqa
+  - logiqa2
+  - bbh
+  - mmlu_philosophy
+  - mmlu_formal_logic
+  - strategyqa
+  external_limit_per_benchmark: 20
+  constrained_enabled: false
+  constrained_samples_per_step: 4
+  constrained_max_lines: 32
+logging:
+  project: synthetic-rlvl
+  entity: null
+system:
+  ray_cpus: 12
+  reward_num_workers: 2
+log_generations:
+  num_samples: 4
+  train_every: 100
+  train_num_samples: 4
+  train_max_chars: 2000
+  train_dump_jsonl: false

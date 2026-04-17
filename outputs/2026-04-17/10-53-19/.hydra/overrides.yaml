@@ -1,0 +1,8 @@
+- run_name=rl_grpo_logic_lr1e4_seed3407_first
+- seed=3407
+- model.path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke
+- task.template=logic
+- task.prefill=none
+- reward.schema=correct_plus_0p1_format
+- grpo.num_prompts=8
+- grpo.num_rollouts=8

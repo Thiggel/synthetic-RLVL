@@ -1,0 +1,392 @@
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 10.24ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 213.97ba/s]
+2026-04-16 09:06:56,078	INFO worker.py:2004 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2026-04-16 09:06:56,081	WARNING working_dir.py:86 -- Directory '__pycache__' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-16 09:07:04,293	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-16 09:07:04,557	INFO packaging.py:691 -- Creating a file package for local module '/home/hpc/c107fa/c107fa12/synthetic-RLVL'.
+2026-04-16 09:07:05,519	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-16 09:07:05,579	INFO packaging.py:463 -- Pushing file package 'gcs://_ray_pkg_f3b9d960bcbdfe57.zip' (53.21MiB) to Ray cluster...
+2026-04-16 09:07:05,670	INFO packaging.py:476 -- Successfully pushed file package 'gcs://_ray_pkg_f3b9d960bcbdfe57.zip'.
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py:2052: FutureWarning: Tip: In future versions of Ray, Ray will no longer override accelerator visible devices env var if num_gpus=0 or num_gpus=None (default). To enable this behavior and turn off this error message, set RAY_ACCEL_ENV_VAR_OVERRIDE_ON_ZERO=0
+  warnings.warn(
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-16 09:07:29,278:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(SynthTaskRunner pid=3599257)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(SynthTaskRunner pid=3599257)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(SynthTaskRunner pid=3599257)[0m   warnings.warn(
+[36m(SynthTaskRunner pid=3599257)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(SynthTaskRunner pid=3599257)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(SynthTaskRunner pid=3599257)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(SynthTaskRunner pid=3599257)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(SynthTaskRunner pid=3599257)[0m Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 2048 examples [00:00, 86286.77 examples/s]
+[36m(SynthTaskRunner pid=3599257)[0m Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 256 examples [00:00, 26333.34 examples/s]
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-16 09:08:17,502:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-16 09:08:29,530:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(WorkerDict pid=3773595)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `torch_dtype` is deprecated! Use `dtype` instead!
+[36m(WorkerDict pid=3773595)[0m Flash Attention 2 only supports torch.float16 and torch.bfloat16 dtypes, but the current dype in Olmo3ForCausalLM is torch.float32. You should run training or inference using Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` decorator, or load the model with the `dtype` argument. Example: `model = AutoModel.from_pretrained("openai/whisper-tiny", attn_implementation="flash_attention_2", dtype=torch.float16)`
+[36m(WorkerDict pid=3773595)[0m Flash Attention 2 only supports torch.float16 and torch.bfloat16 dtypes, but the current dype in Olmo3Model is torch.float32. You should run training or inference using Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` decorator, or load the model with the `dtype` argument. Example: `model = AutoModel.from_pretrained("openai/whisper-tiny", attn_implementation="flash_attention_2", dtype=torch.float16)`
+[36m(WorkerDict pid=3773595)[0m Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]
+[36m(WorkerDict pid=3773595)[0m Loading checkpoint shards:  33%|███▎      | 1/3 [00:08<00:17,  8.59s/it]
+[36m(WorkerDict pid=3773595)[0m Loading checkpoint shards:  67%|██████▋   | 2/3 [00:21<00:11, 11.11s/it]
+[36m(WorkerDict pid=3773595)[0m Loading checkpoint shards: 100%|██████████| 3/3 [00:29<00:00,  9.78s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:29<00:00,  9.89s/it]
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_init_utils.py:430: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+[36m(WorkerDict pid=3773595)[0m   warnings.warn(
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth. This may affect multimodal processing
+[36m(WorkerDict pid=3773595)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(WorkerDict pid=3773595)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(WorkerDict pid=3773595)[0m   warnings.warn(
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:675: FutureWarning: FSDP.state_dict_type() and FSDP.set_state_dict_type() are being deprecated. Please use APIs, get_state_dict() and set_state_dict(), which can support different parallelisms, FSDP1, FSDP2, DDP. API doc: https://pytorch.org/docs/stable/distributed.checkpoint.html#torch.distributed.checkpoint.state_dict.get_state_dict .Tutorial: https://pytorch.org/tutorials/recipes/distributed_checkpoint_recipe.html .
+[36m(WorkerDict pid=3773595)[0m   warnings.warn(
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-16 09:09:40,982:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m WARNING:2026-04-16 09:09:45,426:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-16 09:09:50,498:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(pid=3988382)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(pid=3988382)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(pid=3988382)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=3988382)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth, siglip_visual_tokenizer, aimv2_visual_tokenizer. This may affect multimodal processing
+[36m(vLLMHttpServer pid=3988382)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(vLLMHttpServer pid=3988382)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(vLLMHttpServer pid=3988382)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(vLLMHttpServer pid=3988382)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=3988382)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=3988382)[0m WARNING:2026-04-16 09:10:14,635:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(vLLMHttpServer pid=3988382)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=3988382)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=3988382)[0m WARNING:2026-04-16 09:10:19,616:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(vLLMHttpServer pid=3988382)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=3988382)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=3988382)[0m WARNING:2026-04-16 09:10:31,285:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(vLLMHttpServer pid=3988382)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(vLLMHttpServer pid=3988382)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(vLLMHttpServer pid=3988382)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=3988382)[0m [1;36m(Worker pid=4123318)[0;0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   0%|          | 0/102 [00:00<?, ?it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   1%|          | 1/102 [00:01<02:38,  1.57s/it]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   3%|▎         | 3/102 [00:01<00:46,  2.13it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   5%|▍         | 5/102 [00:01<00:26,  3.72it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   7%|▋         | 7/102 [00:02<00:17,  5.33it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   9%|▉         | 9/102 [00:02<00:13,  6.85it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  11%|█         | 11/102 [00:02<00:11,  8.05it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  13%|█▎        | 13/102 [00:02<00:09,  9.23it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  15%|█▍        | 15/102 [00:02<00:08, 10.17it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  17%|█▋        | 17/102 [00:02<00:07, 10.96it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  19%|█▊        | 19/102 [00:02<00:07, 11.60it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  21%|██        | 21/102 [00:03<00:06, 12.18it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  23%|██▎       | 23/102 [00:03<00:06, 12.53it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  25%|██▍       | 25/102 [00:03<00:06, 12.75it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  26%|██▋       | 27/102 [00:03<00:05, 13.02it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  28%|██▊       | 29/102 [00:03<00:05, 13.21it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  30%|███       | 31/102 [00:03<00:05, 13.35it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  32%|███▏      | 33/102 [00:04<00:05, 13.50it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  34%|███▍      | 35/102 [00:04<00:10,  6.19it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  36%|███▋      | 37/102 [00:04<00:08,  7.48it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  38%|███▊      | 39/102 [00:05<00:07,  8.76it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  40%|████      | 41/102 [00:05<00:06,  9.95it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  42%|████▏     | 43/102 [00:05<00:05, 11.00it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  44%|████▍     | 45/102 [00:05<00:04, 11.85it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  46%|████▌     | 47/102 [00:05<00:04, 12.55it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  48%|████▊     | 49/102 [00:05<00:04, 13.09it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  50%|█████     | 51/102 [00:05<00:03, 13.38it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  52%|█████▏    | 53/102 [00:05<00:03, 13.62it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  54%|█████▍    | 55/102 [00:06<00:03, 13.87it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  56%|█████▌    | 57/102 [00:06<00:03, 13.62it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  58%|█████▊    | 59/102 [00:06<00:03, 13.82it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  60%|█████▉    | 61/102 [00:06<00:02, 13.95it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  62%|██████▏   | 63/102 [00:06<00:02, 14.11it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  64%|██████▎   | 65/102 [00:06<00:02, 14.16it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  66%|██████▌   | 67/102 [00:07<00:03,  9.95it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  68%|██████▊   | 69/102 [00:07<00:04,  7.14it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  70%|██████▉   | 71/102 [00:07<00:03,  8.39it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  72%|███████▏  | 73/102 [00:07<00:03,  9.59it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  74%|███████▎  | 75/102 [00:08<00:02, 10.61it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  75%|███████▌  | 77/102 [00:08<00:02, 11.55it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  77%|███████▋  | 79/102 [00:08<00:01, 12.30it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  79%|███████▉  | 81/102 [00:08<00:01, 12.85it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  81%|████████▏ | 83/102 [00:08<00:01, 13.17it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  83%|████████▎ | 85/102 [00:08<00:01, 13.56it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  85%|████████▌ | 87/102 [00:08<00:01, 13.89it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  87%|████████▋ | 89/102 [00:09<00:00, 14.09it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  89%|████████▉ | 91/102 [00:09<00:00, 14.27it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  91%|█████████ | 93/102 [00:09<00:00, 12.79it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  93%|█████████▎| 95/102 [00:09<00:00, 13.36it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  95%|█████████▌| 97/102 [00:09<00:00, 13.80it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  97%|█████████▋| 99/102 [00:09<00:00, 14.05it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  99%|█████████▉| 101/102 [00:10<00:00,  9.80it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE): 100%|██████████| 102/102 [00:10<00:00, 10.04it/s]
+[36m(vLLMHttpServer pid=3988382)[0m [1;36m(Worker pid=4123318)[0;0m Capturing CUDA graphs (decode, FULL):   0%|          | 0/102 [00:00<?, ?it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):   1%|          | 1/102 [00:00<00:42,  2.36it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):   3%|▎         | 3/102 [00:00<00:17,  5.58it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):   5%|▍         | 5/102 [00:00<00:12,  7.59it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):   7%|▋         | 7/102 [00:00<00:10,  8.89it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):   9%|▉         | 9/102 [00:01<00:09,  9.78it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  11%|█         | 11/102 [00:01<00:08, 10.42it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  13%|█▎        | 13/102 [00:01<00:08, 10.87it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  15%|█▍        | 15/102 [00:01<00:07, 11.19it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  17%|█▋        | 17/102 [00:01<00:07, 11.61it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  19%|█▊        | 19/102 [00:01<00:06, 12.07it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  21%|██        | 21/102 [00:02<00:06, 12.42it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  23%|██▎       | 23/102 [00:02<00:06, 12.72it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  25%|██▍       | 25/102 [00:02<00:05, 12.97it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  26%|██▋       | 27/102 [00:02<00:05, 13.09it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  28%|██▊       | 29/102 [00:02<00:05, 13.20it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  30%|███       | 31/102 [00:02<00:05, 13.37it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  32%|███▏      | 33/102 [00:02<00:05, 13.51it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  34%|███▍      | 35/102 [00:03<00:04, 13.84it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  36%|███▋      | 37/102 [00:03<00:04, 14.11it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  38%|███▊      | 39/102 [00:03<00:04, 14.33it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  40%|████      | 41/102 [00:03<00:04, 14.48it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  42%|████▏     | 43/102 [00:03<00:04, 14.55it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  44%|████▍     | 45/102 [00:03<00:03, 14.58it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  46%|████▌     | 47/102 [00:03<00:03, 14.69it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  48%|████▊     | 49/102 [00:04<00:03, 14.76it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  50%|█████     | 51/102 [00:04<00:03, 14.84it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  52%|█████▏    | 53/102 [00:04<00:03, 14.95it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  54%|█████▍    | 55/102 [00:04<00:03, 15.02it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  56%|█████▌    | 57/102 [00:04<00:02, 15.09it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  58%|█████▊    | 59/102 [00:04<00:02, 15.06it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  60%|█████▉    | 61/102 [00:04<00:02, 15.12it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  62%|██████▏   | 63/102 [00:04<00:02, 15.17it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  64%|██████▎   | 65/102 [00:05<00:02, 15.19it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  66%|██████▌   | 67/102 [00:05<00:02, 15.17it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  68%|██████▊   | 69/102 [00:05<00:02, 15.10it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  70%|██████▉   | 71/102 [00:05<00:02, 15.03it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  72%|███████▏  | 73/102 [00:05<00:01, 15.05it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  74%|███████▎  | 75/102 [00:05<00:01, 15.12it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  75%|███████▌  | 77/102 [00:05<00:01, 15.22it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  77%|███████▋  | 79/102 [00:06<00:01, 15.31it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  79%|███████▉  | 81/102 [00:06<00:01, 15.37it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  81%|████████▏ | 83/102 [00:06<00:01, 15.41it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  83%|████████▎ | 85/102 [00:06<00:01, 15.34it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  85%|████████▌ | 87/102 [00:06<00:00, 15.40it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  87%|████████▋ | 89/102 [00:06<00:00, 15.49it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  89%|████████▉ | 91/102 [00:06<00:00, 15.55it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  91%|█████████ | 93/102 [00:06<00:00, 15.63it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  93%|█████████▎| 95/102 [00:07<00:00, 15.68it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  95%|█████████▌| 97/102 [00:07<00:00, 15.75it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  97%|█████████▋| 99/102 [00:07<00:00, 15.69it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL):  99%|█████████▉| 101/102 [00:07<00:00, 15.69it/s]
+[36m(vLLMHttpServer pid=3988382)[0m Capturing CUDA graphs (decode, FULL): 100%|██████████| 102/102 [00:07<00:00, 13.63it/s]
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[36m(SynthTaskRunner pid=3599257)[0m wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+[36m(SynthTaskRunner pid=3599257)[0m wandb: Currently logged in as: filipelaitenberger to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+[36m(SynthTaskRunner pid=3599257)[0m wandb: setting up run 3p4otghg
+[36m(SynthTaskRunner pid=3599257)[0m wandb: Tracking run with wandb version 0.25.1
+[36m(SynthTaskRunner pid=3599257)[0m wandb: Run data is saved locally in /home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb/wandb/run-20260416_091215-3p4otghg
+[36m(SynthTaskRunner pid=3599257)[0m wandb: Run `wandb offline` to turn off syncing.
+[36m(SynthTaskRunner pid=3599257)[0m wandb: Syncing run rl_grpo_logic_lr1e4_seed3407_ckpt_test_3543568
+[36m(SynthTaskRunner pid=3599257)[0m wandb: ⭐️ View project at https://wandb.ai/filipelaitenberger/synthetic-rlvl
+[36m(SynthTaskRunner pid=3599257)[0m wandb: 🚀 View run at https://wandb.ai/filipelaitenberger/synthetic-rlvl/runs/3p4otghg
+[36m(SynthTaskRunner pid=3599257)[0m wandb: Detected [openai] in use.
+[36m(SynthTaskRunner pid=3599257)[0m wandb: Use W&B Weave for improved LLM call tracing. Install Weave with `pip install weave` then add `import weave` to the top of your script.
+[36m(SynthTaskRunner pid=3599257)[0m wandb: For more information, check out the docs at: https://weave-docs.wandb.ai/
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-16 09:12:20,133:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.[32m [repeated 2x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[33m(raylet)[0m   warnings.warn([32m [repeated 2x across cluster][0m
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[33m(raylet)[0m WARNING:2026-04-16 09:12:25,169:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 3x across cluster][0m
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.[32m [repeated 2x across cluster][0m
+[33m(raylet)[0m   warnings.warn([32m [repeated 4x across cluster][0m
+[33m(raylet)[0m WARNING:2026-04-16 09:12:30,907:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m WARNING:2026-04-16 09:12:32,357:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.[32m [repeated 2x across cluster][0m
+[33m(raylet)[0m   warnings.warn([32m [repeated 2x across cluster][0m
+[33m(raylet)[0m WARNING:2026-04-16 09:12:37,854:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=221918)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.
+[36m(AgentLoopWorker pid=221918)[0m We recommend installing via `pip install torch-c-dlpack-ext`
+[36m(AgentLoopWorker pid=221918)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=221918)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth, siglip_visual_tokenizer, aimv2_visual_tokenizer. This may affect multimodal processing
+[36m(AgentLoopWorker pid=221918)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=221918)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=221918)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=221844)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=221987)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.[32m [repeated 4x across cluster][0m
+[36m(AgentLoopWorker pid=221987)[0m We recommend installing via `pip install torch-c-dlpack-ext`[32m [repeated 4x across cluster][0m
+[36m(AgentLoopWorker pid=221987)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth, siglip_visual_tokenizer, aimv2_visual_tokenizer. This may affect multimodal processing[32m [repeated 4x across cluster][0m
+[36m(AgentLoopWorker pid=221987)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)[32m [repeated 4x across cluster][0m
+[36m(AgentLoopWorker pid=221915)[0m `rope_scaling`'s beta_fast field must be a float, got 32[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=221915)[0m `rope_scaling`'s beta_slow field must be a float, got 1[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=221987)[0m   warnings.warn([32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=221935)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/tvm_ffi/_optional_torch_c_dlpack.py:181: UserWarning: Failed to JIT torch c dlpack extension, EnvTensorAllocator will not be enabled.[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=221935)[0m We recommend installing via `pip install torch-c-dlpack-ext`[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=221918)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(AgentLoopWorker pid=221935)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unrecognized model in /home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final. Should have a `model_type` key in its config.json, or contain one of the following strings in its name: aimv2, aimv2_vision_model, albert, align, altclip, apertus, arcee, aria, aria_text, audio-spectrogram-transformer, autoformer, aya_vision, bamba, bark, bart, beit, bert, bert-generation, big_bird, bigbird_pegasus, biogpt, bit, bitnet, blenderbot, blenderbot-small, blip, blip-2, blip_2_qformer, bloom, blt, bridgetower, bros, camembert, canine, chameleon, chinese_clip, chinese_clip_vision_model, clap, clip, clip_text_model, clip_vision_model, clipseg, clvp, code_llama, codegen, cohere, cohere2, cohere2_vision, colpali, colqwen2, conditional_detr, convbert, convnext, convnextv2, cpmant, csm, ctrl, cvt, d_fine, dab-detr, dac, data2vec-audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth, siglip_visual_tokenizer, aimv2_visual_tokenizer. This may affect multimodal processing[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=221935)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=221917)[0m `rope_scaling`'s beta_fast field must be a float, got 32[32m [repeated 4x across cluster][0m
+[36m(AgentLoopWorker pid=221917)[0m `rope_scaling`'s beta_slow field must be a float, got 1[32m [repeated 4x across cluster][0m
+[36m(AgentLoopWorker pid=221935)[0m   warnings.warn([32m [repeated 3x across cluster][0m
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   0%|          | 0/160 [00:00<?, ?it/s]
+[36m(AgentLoopWorker pid=221917)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.[32m [repeated 7x across cluster][0m
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=3773595)[0m   warnings.warn(
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=3773595)[0m   warnings.warn(
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   1%|          | 1/160 [01:47<4:45:46, 107.84s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   1%|▏         | 2/160 [02:38<3:15:33, 74.26s/it] 
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   2%|▏         | 3/160 [03:30<2:48:04, 64.23s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   2%|▎         | 4/160 [04:20<2:32:24, 58.62s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   3%|▎         | 5/160 [05:12<2:25:05, 56.17s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   4%|▍         | 6/160 [06:05<2:20:56, 54.91s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   4%|▍         | 7/160 [06:57<2:17:30, 53.92s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   5%|▌         | 8/160 [07:52<2:17:51, 54.42s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   6%|▌         | 9/160 [08:36<2:08:24, 51.03s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   6%|▋         | 10/160 [09:12<1:56:32, 46.62s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   7%|▋         | 11/160 [10:04<1:59:49, 48.25s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   8%|▊         | 12/160 [10:53<1:58:59, 48.24s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   8%|▊         | 13/160 [11:42<1:59:10, 48.65s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   9%|▉         | 14/160 [12:12<1:44:40, 43.01s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:   9%|▉         | 15/160 [12:52<1:41:32, 42.02s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:  10%|█         | 16/160 [13:21<1:31:53, 38.29s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:  11%|█         | 17/160 [14:00<1:31:27, 38.38s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:  11%|█▏        | 18/160 [14:30<1:24:40, 35.78s/it]
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m Training Progress:  12%|█▏        | 19/160 [15:19<1:33:16, 39.69s/it]
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=3773595)[0m   warnings.warn(
+[36m(WorkerDict pid=3773595)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=3773595)[0m   warnings.warn(
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=3773595)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/rl_grpo_logic_lr1e4_seed3407_ckpt_test_3543568/global_step_20/actor/huggingface' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(SynthTaskRunner pid=3599257)[0m `torch_dtype` is deprecated! Use `dtype` instead!
+[36m(SynthTaskRunner pid=3599257)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(SynthTaskRunner pid=3599257)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=3599257)[0m 
+[36m(SynthTaskRunner pid=3599257)[0m Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s][A
+[36m(SynthTaskRunner pid=3599257)[0m 
+[36m(SynthTaskRunner pid=3599257)[0m Loading checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.02it/s][A
+[36m(SynthTaskRunner pid=3599257)[0m 
+[36m(SynthTaskRunner pid=3599257)[0m Loading checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.01it/s][ALoading checkpoint shards: 100%|██████████| 3/3 [00:02<00:00,  1.49it/s]
+[36m(SynthTaskRunner pid=3599257)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/peft/config.py:225: UserWarning: The configuration file contains a `runtime_config` key. This is ignored. Runtime configurations are only valid at runtime.
+[36m(SynthTaskRunner pid=3599257)[0m   warnings.warn(
+[2026-04-16T10:00:58.859] error: *** JOB 3543568 ON a0533 CANCELLED AT 2026-04-16T10:00:58 DUE to SIGNAL Terminated ***

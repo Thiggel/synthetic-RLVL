@@ -1,0 +1,175 @@
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra._internal.core_plugins.basic_launcher.BasicLauncher
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+    params: null
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+
+      '
+    footer: 'Powered by Hydra (https://hydra.cc)
+
+      Use --hydra-help to view Hydra specific help
+
+      '
+    template: '${hydra.help.header}
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (group=option)
+
+
+      $APP_CONFIG_GROUPS
+
+
+      == Config ==
+
+      Override anything in the config (foo.bar=value)
+
+
+      $CONFIG
+
+
+      ${hydra.help.footer}
+
+      '
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+
+      See https://hydra.cc for more info.
+
+
+      == Flags ==
+
+      $FLAGS_HELP
+
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (For example, append hydra/job_logging=disabled
+      to command line)
+
+
+      $HYDRA_CONFIG_GROUPS
+
+
+      Use ''--cfg hydra'' to Show the Hydra config.
+
+      '
+    hydra_help: ???
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers:
+      - console
+    loggers:
+      logging_example:
+        level: DEBUG
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(name)s][%(levelname)s] - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers:
+      - console
+      - file
+    disable_existing_loggers: false
+  env: {}
+  mode: RUN
+  searchpath: []
+  callbacks: {}
+  output_subdir: .hydra
+  overrides:
+    hydra:
+    - hydra.mode=RUN
+    task:
+    - run_name=rl_grpo_interactive_patchcheck3_0416_164052
+    - model.path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final
+    - grpo.train_steps=3
+    - grpo.max_response_length=1024
+    - grpo.num_prompts=8
+    - grpo.num_rollouts=8
+    - validation.before_train=true
+    - validation.eval_every=40
+    - validation.save_every=40
+    - validation.run_verl_validation=false
+    - eval.enabled=true
+    - eval.external_enabled=false
+    - eval.constrained_enabled=false
+    - eval.synthetic_samples_per_step=20
+    - eval.max_new_tokens=1024
+    - eval.generation_batch_size=1024
+    - log_generations.num_samples=8
+    - log_generations.train_every=20
+    - log_generations.train_num_samples=6
+    - log_generations.train_max_chars=1600
+    - log_generations.train_dump_jsonl=false
+  job:
+    name: posttrain_grpo_verl
+    chdir: null
+    override_dirname: eval.constrained_enabled=false,eval.enabled=true,eval.external_enabled=false,eval.generation_batch_size=1024,eval.max_new_tokens=1024,eval.synthetic_samples_per_step=20,grpo.max_response_length=1024,grpo.num_prompts=8,grpo.num_rollouts=8,grpo.train_steps=3,log_generations.num_samples=8,log_generations.train_dump_jsonl=false,log_generations.train_every=20,log_generations.train_max_chars=1600,log_generations.train_num_samples=6,model.path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final,run_name=rl_grpo_interactive_patchcheck3_0416_164052,validation.before_train=true,validation.eval_every=40,validation.run_verl_validation=false,validation.save_every=40
+    id: ???
+    num: ???
+    config_name: posttrain_grpo
+    env_set: {}
+    env_copy: []
+    config:
+      override_dirname:
+        kv_sep: '='
+        item_sep: ','
+        exclude_keys: []
+  runtime:
+    version: 1.3.2
+    version_base: '1.3'
+    cwd: /home/hpc/c107fa/c107fa12/synthetic-RLVL
+    config_sources:
+    - path: hydra.conf
+      schema: pkg
+      provider: hydra
+    - path: /home/hpc/c107fa/c107fa12/synthetic-RLVL/conf
+      schema: file
+      provider: main
+    - path: ''
+      schema: structured
+      provider: schema
+    output_dir: /home/hpc/c107fa/c107fa12/synthetic-RLVL/outputs/2026-04-16/16-40-57
+    choices:
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: basic
+      hydra/output: default
+  verbose: false

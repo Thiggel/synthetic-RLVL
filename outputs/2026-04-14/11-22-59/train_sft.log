@@ -1,0 +1,6 @@
+[2026-04-14 11:23:01,060][accelerate.utils.modeling][INFO] - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+[2026-04-14 11:23:41,638][accelerate.utils.other][WARNING] - [RANK 0] Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+[2026-04-14 17:02:17,413][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: f9688d84-7753-42cb-ac3e-0902d1405886)')' thrown while requesting HEAD https://huggingface.co/allenai/Olmo-3-1025-7B/resolve/main/config.json
+[2026-04-14 17:02:17,415][huggingface_hub.utils._http][WARNING] - Retrying in 1s [Retry 1/5].
+[2026-04-14 17:02:28,448][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: d5203712-764f-4867-b2a7-540a066437b6)')' thrown while requesting HEAD https://huggingface.co/allenai/Olmo-3-1025-7B/resolve/main/config.json
+[2026-04-14 17:02:28,449][huggingface_hub.utils._http][WARNING] - Retrying in 2s [Retry 2/5].

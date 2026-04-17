@@ -1,0 +1,50 @@
+### Starting TaskPrologue of job 3543665 on a0531 at Thu Apr 16 10:02:28 CEST 2026
+Running on cores 112-127 with governor ondemand
+Thu Apr 16 10:02:28 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:D1:00.0 Off |                    0 |
+| N/A   42C    P0             64W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+=== JOB_STATISTICS ===
+=== current date     : Thu Apr 16 13:12:29 CEST 2026
+= Job-ID             : 3543665 on alex
+= Job-Name           : posttrain_grpo_ckpt_test
+= Job-Command        : /tmp/resubmit_posttrain_grpo_ckpt_test_v2.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 03:11:04
+= Total RAM usage    : 138.3 GiB of assigned  GiB (%)
+= Node list          : a0531
+= Subm/Elig/Start/End: 2026-04-16T10:00:58 / 2026-04-16T10:00:58 / 2026-04-16T10:01:16 / 2026-04-16T13:12:20
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+!!! /home/hpc          190.4G   104.9G   209.7G  -29145days  40,654      500K   1,000K        N/A !!!
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  2219.5G     0.0K     0.0K        N/A     287K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A100-SXM4-80GB, 00000000:D1:00.0, 385280, 0 %, 0 %, 57138 MiB, 11239000 ms
+NVIDIA A100-SXM4-80GB, 00000000:D1:00.0, 384874, 44 %, 1 %, 12144 MiB, 11302898 ms
+NVIDIA A100-SXM4-80GB, 00000000:D1:00.0, 386119, 5 %, 4 %, 42610 MiB, 11118790 ms

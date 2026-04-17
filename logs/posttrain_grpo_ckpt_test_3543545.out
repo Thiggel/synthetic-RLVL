@@ -1,0 +1,21 @@
+=== JOB_STATISTICS ===
+=== current date     : Thu Apr 16 08:53:48 CEST 2026
+= Job-ID             : 3543545 on alex
+= Job-Name           : posttrain_grpo_ckpt_test
+= Job-Command        : /tmp/resubmit_posttrain_grpo_ckpt_test_v2.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:00:43
+= Total RAM usage    : 0.0 GiB of assigned  GiB (%)
+= Node list          : a0536
+= Subm/Elig/Start/End: 2026-04-16T08:22:07 / 2026-04-16T08:22:07 / 2026-04-16T08:47:40 / 2026-04-16T08:48:23
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+!!! /home/hpc          190.3G   104.9G   209.7G  -29145days  40,616      500K   1,000K        N/A !!!
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  2190.3G     0.0K     0.0K        N/A     287K                          N/A    
+======================
