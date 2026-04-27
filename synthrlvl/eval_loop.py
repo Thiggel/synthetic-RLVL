@@ -14,7 +14,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, PreTrainedModel, P
 from logic_engine import LogicEngine
 
 from .config import EvalLoopConfig
+from .evaluation.pass_at_k import score_pass_at_k
 from .external_eval import evaluate_external_benchmarks_with_generate_fn
+from .generation import ConstrainedProofGenerationConfig, ConstrainedProofGenerator
 from .metrics import OutputEvaluator
 from .task import TaskBuilder
 from .types import StepRange, TaskConfig, TemplateName
@@ -75,6 +77,44 @@ class _HFTextGenerator:
                 text = self._tokenizer.decode(out_ids[row_idx][prompt_len:], skip_special_tokens=True)
                 outputs.append(text)
         return outputs
+
+    @torch.no_grad()
+    def generate_many(
+        self,
+        prompts: Sequence[str],
+        *,
+        max_new_tokens: int,
+        num_samples: int,
+        temperature: float,
+    ) -> list[list[str]]:
+        n = max(1, int(num_samples))
+        if n == 1:
+            return [[text] for text in self.generate(prompts, max_new_tokens=max_new_tokens, do_sample=True, temperature=temperature)]
+
+        grouped: list[list[str]] = []
+        prompt_batch_size = max(1, self._batch_size // n)
+        for i in range(0, len(prompts), prompt_batch_size):
+            chunk = list(prompts[i : i + prompt_batch_size])
+            toks = self._tokenizer(chunk, return_tensors="pt", padding=True).to(self._device)
+            out_ids = self._model.generate(
+                **toks,
+                max_new_tokens=max_new_tokens,
+                do_sample=True,
+                temperature=float(temperature),
+                top_p=0.95,
+                num_return_sequences=n,
+                pad_token_id=self._pad_token_id,
+            )
+            prompt_lens = toks["attention_mask"].sum(dim=1).tolist()
+            for row_idx in range(len(chunk)):
+                samples: list[str] = []
+                prompt_len = int(prompt_lens[row_idx])
+                for sample_idx in range(n):
+                    out_idx = row_idx * n + sample_idx
+                    text = self._tokenizer.decode(out_ids[out_idx][prompt_len:], skip_special_tokens=True)
+                    samples.append(text)
+                grouped.append(samples)
+        return grouped
 
 
 class _VLLMTextGenerator:
@@ -144,6 +184,76 @@ class _VLLMTextGenerator:
                 outputs.append(text)
         return outputs
 
+    def generate_many(
+        self,
+        prompts: Sequence[str],
+        *,
+        max_new_tokens: int,
+        num_samples: int,
+        temperature: float,
+    ) -> list[list[str]]:
+        from vllm import SamplingParams
+
+        n = max(1, int(num_samples))
+        if self._lora_request is None:
+            sampling = SamplingParams(
+                n=n,
+                max_tokens=int(max_new_tokens),
+                temperature=float(temperature),
+                top_p=0.95,
+            )
+            grouped: list[list[str]] = []
+            prompt_batch_size = max(1, self._batch_size // n)
+            for i in range(0, len(prompts), prompt_batch_size):
+                chunk = list(prompts[i : i + prompt_batch_size])
+                print(
+                    f"[syntheval] sampled vLLM chunk {i // prompt_batch_size + 1}/"
+                    f"{(len(prompts) + prompt_batch_size - 1) // prompt_batch_size} "
+                    f"({len(chunk)} prompts x n={n})",
+                    flush=True,
+                )
+                req_outputs = self._llm.generate(
+                    chunk,
+                    sampling_params=sampling,
+                    use_tqdm=False,
+                    lora_request=None,
+                )
+                for req in req_outputs:
+                    grouped.append([out.text for out in req.outputs])
+            return grouped
+
+        sampling = SamplingParams(
+            n=1,
+            max_tokens=int(max_new_tokens),
+            temperature=float(temperature),
+            top_p=0.95,
+        )
+        grouped: list[list[str]] = [[] for _ in prompts]
+        expanded: list[tuple[int, str]] = [
+            (prompt_idx, prompt)
+            for prompt_idx, prompt in enumerate(prompts)
+            for _ in range(n)
+        ]
+        for i in range(0, len(expanded), self._batch_size):
+            chunk_pairs = expanded[i : i + self._batch_size]
+            chunk = [prompt for _, prompt in chunk_pairs]
+            print(
+                f"[syntheval] sampled vLLM chunk {i // self._batch_size + 1}/"
+                f"{(len(expanded) + self._batch_size - 1) // self._batch_size} "
+                f"({len(chunk)} sequences, n={n})",
+                flush=True,
+            )
+            req_outputs = self._llm.generate(
+                chunk,
+                sampling_params=sampling,
+                use_tqdm=False,
+                lora_request=self._lora_request,
+            )
+            for (prompt_idx, _), req in zip(chunk_pairs, req_outputs, strict=True):
+                text = req.outputs[0].text if req.outputs else ""
+                grouped[prompt_idx].append(text)
+        return grouped
+
 
 class UnifiedEvaluator:
     def __init__(self):
@@ -188,7 +298,7 @@ class UnifiedEvaluator:
 
         metrics: Dict[str, float] = {}
         samples: List[dict] = []
-        vals_by_step: dict[int, dict[str, list[float]]] = defaultdict(lambda: {"format": [], "correct": [], "valid": []})
+        vals_by_step: dict[int, dict[str, list[float]]] = defaultdict(lambda: {"syntactic": [], "format": [], "correct": [], "valid": []})
         for rec, gen in zip(records, generations, strict=True):
             score = self.output_eval.evaluate(
                 gen,
@@ -199,6 +309,7 @@ class UnifiedEvaluator:
                 prefill=rec.prefill,
                 gold_first_modality_lines=rec.gold_first_modality_lines,
             )
+            vals_by_step[rec.step]["syntactic"].append(score.syntactic)
             vals_by_step[rec.step]["format"].append(score.format_ok)
             vals_by_step[rec.step]["correct"].append(score.correct)
             vals_by_step[rec.step]["valid"].append(score.valid)
@@ -210,6 +321,7 @@ class UnifiedEvaluator:
                         "prompt": rec.prompt,
                         "generation": gen,
                         "gold_answer": rec.gold_answer,
+                        "syntactic": score.syntactic,
                         "format_ok": score.format_ok,
                         "correct": score.correct,
                         "valid": score.valid,
@@ -217,49 +329,10 @@ class UnifiedEvaluator:
                 )
 
         for step in range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1):
-            vals = vals_by_step.get(step, {"format": [], "correct": [], "valid": []})
-            for key in ("format", "correct", "valid"):
+            vals = vals_by_step.get(step, {"syntactic": [], "format": [], "correct": [], "valid": []})
+            for key in ("syntactic", "format", "correct", "valid"):
                 metrics[f"synthetic/step_{step}/{key}"] = sum(vals[key]) / max(1, len(vals[key]))
         return metrics, samples
-
-    def _constrained_logic_proof_validity(
-        self,
-        *,
-        generate_one: Callable[[str, int, bool, float], str],
-        prompt: str,
-        premises: str,
-        target_conclusion: str,
-        max_lines: int,
-    ) -> bool:
-        accepted: list[str] = []
-        for _ in range(max_lines):
-            ptxt = (
-                prompt
-                + "\nGenerate only the next proof line in the format: FORMULA ; JUSTIFICATION\n"
-                + "Current proof:\n"
-                + "\n".join(accepted)
-                + "\nNext line:\n"
-            )
-            raw = generate_one(ptxt, 64, True, 0.8)
-            cand = raw.strip().splitlines()[0].strip() if raw.strip() else ""
-            if not cand or ";" not in cand:
-                continue
-
-            trial = accepted + [cand]
-            report = self.engine.analyze_proof(premises=premises, conclusion=None, proof="\n".join(trial))
-            if not report.lines:
-                continue
-            last = report.lines[-1]
-            if not last.valid:
-                continue
-            accepted.append(cand)
-            try:
-                formula = cand.split(";", 1)[0].strip()
-                if self.engine.are_equivalent(formula, target_conclusion):
-                    return True
-            except Exception:
-                pass
-        return False
 
     def _evaluate_with_generator(
         self,
@@ -268,6 +341,7 @@ class UnifiedEvaluator:
         eval_cfg: EvalLoopConfig,
         collect_samples: int,
         generate_texts: Callable[[Sequence[str], int, bool, float], list[str]],
+        generate_samples: Callable[[Sequence[str], int, int, float], list[list[str]]] | None = None,
     ) -> tuple[Dict[str, float], List[dict]]:
         records_by_step = self._build_synthetic_records(task_cfg=task_cfg, eval_cfg=eval_cfg)
         records = [r for step in range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1) for r in records_by_step[step]]
@@ -279,22 +353,134 @@ class UnifiedEvaluator:
             collect_samples=collect_samples,
         )
 
-        if eval_cfg.constrained_enabled and task_cfg.template == TemplateName.LOGIC:
-            c_metrics: dict[str, float] = {}
-            for step in range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1):
-                c_records = records_by_step[step][: max(1, eval_cfg.constrained_samples_per_step)]
-                c_valid: list[float] = []
-                for rec in c_records:
-                    ok = self._constrained_logic_proof_validity(
-                        generate_one=lambda p, t, ds, temp: generate_texts([p], t, ds, temp)[0],
-                        prompt=rec.prompt,
-                        premises=rec.gold_logic_premises,
-                        target_conclusion=rec.gold_logic_conclusion,
-                        max_lines=eval_cfg.constrained_max_lines,
+        if eval_cfg.sampled_enabled:
+            sample_n = max(1, int(eval_cfg.sampled_num_generations))
+            k_values = [int(k) for k in eval_cfg.sampled_k_values if int(k) <= sample_n]
+            if k_values:
+                prompts = [r.prompt for r in records]
+                if generate_samples is None:
+                    sampled_generations = self._generate_samples_by_repetition(
+                        prompts=prompts,
+                        num_samples=sample_n,
+                        max_new_tokens=eval_cfg.max_new_tokens,
+                        temperature=eval_cfg.sampled_temperature,
+                        generate_texts=generate_texts,
                     )
-                    c_valid.append(1.0 if ok else 0.0)
-                c_metrics[f"synthetic_constrained/step_{step}/valid"] = sum(c_valid) / max(1, len(c_valid))
-            metrics.update(c_metrics)
+                else:
+                    sampled_generations = generate_samples(
+                        prompts,
+                        eval_cfg.max_new_tokens,
+                        sample_n,
+                        eval_cfg.sampled_temperature,
+                    )
+                train_max = int(task_cfg.train_steps.max_step)
+                band_predicates = {
+                    "train": lambda step, train_max=train_max: step <= train_max,
+                    "ood": lambda step, train_max=train_max: step > train_max,
+                    "hard_tail": lambda step: step >= 15,
+                }
+                metrics.update(
+                    score_pass_at_k(
+                        records=records,
+                        generations_by_record=sampled_generations,
+                        output_eval=self.output_eval,
+                        k_values=k_values,
+                        band_predicates=band_predicates,
+                    )
+                )
+
+        if eval_cfg.constrained_enabled and task_cfg.template == TemplateName.LOGIC:
+            constrained_records = [
+                rec
+                for step in range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1)
+                for rec in records_by_step[step][: max(1, int(eval_cfg.constrained_samples_per_step))]
+            ]
+            if constrained_records:
+                constrained_many = generate_samples
+                if constrained_many is None:
+                    constrained_many = lambda prompts, max_tokens, num_samples, temperature: self._generate_samples_by_repetition(
+                        prompts=prompts,
+                        num_samples=num_samples,
+                        max_new_tokens=max_tokens,
+                        temperature=temperature,
+                        generate_texts=generate_texts,
+                    )
+                constrained = ConstrainedProofGenerator(generate_many=constrained_many)
+                constrained_config = ConstrainedProofGenerationConfig(
+                    num_generations=max(1, int(eval_cfg.constrained_num_generations)),
+                    candidates_per_line=max(1, int(eval_cfg.constrained_candidates_per_line)),
+                    max_lines=max(1, int(eval_cfg.constrained_max_lines)),
+                    max_line_tokens=max(1, int(eval_cfg.constrained_max_line_tokens)),
+                    suffix_max_tokens=max(1, int(eval_cfg.constrained_suffix_max_tokens)),
+                    temperature=float(eval_cfg.constrained_temperature),
+                )
+                constrained_generations, constrained_traces = constrained.generate_many(
+                    [r.prompt for r in constrained_records],
+                    max_new_tokens=eval_cfg.max_new_tokens,
+                    config=constrained_config,
+                )
+                constrained_k = [
+                    int(k)
+                    for k in eval_cfg.constrained_k_values
+                    if 1 <= int(k) <= constrained_config.num_generations
+                ]
+                if constrained_k:
+                    train_max = int(task_cfg.train_steps.max_step)
+                    metrics.update(
+                        score_pass_at_k(
+                            records=constrained_records,
+                            generations_by_record=constrained_generations,
+                            output_eval=self.output_eval,
+                            k_values=constrained_k,
+                            metric_prefix="synthetic_constrained_sampled",
+                            band_predicates={
+                                "train": lambda step, train_max=train_max: step <= train_max,
+                                "ood": lambda step, train_max=train_max: step > train_max,
+                                "hard_tail": lambda step: step >= 15,
+                            },
+                        )
+                    )
+                for rec, generations_for_rec, traces_for_rec in zip(
+                    constrained_records,
+                    constrained_generations,
+                    constrained_traces,
+                    strict=True,
+                ):
+                    if len(samples) >= collect_samples:
+                        break
+                    if not generations_for_rec:
+                        continue
+                    score = self.output_eval.evaluate(
+                        generations_for_rec[0],
+                        template=rec.template,
+                        gold_answer=rec.gold_answer,
+                        gold_logic_premises=rec.gold_logic_premises,
+                        gold_logic_conclusion=rec.gold_logic_conclusion,
+                        prefill=rec.prefill,
+                        gold_first_modality_lines=rec.gold_first_modality_lines,
+                    )
+                    trace = traces_for_rec[0] if traces_for_rec else None
+                    samples.append(
+                        {
+                            "source": "synthetic_constrained",
+                            "step": rec.step,
+                            "prompt": rec.prompt,
+                            "generation": generations_for_rec[0],
+                            "gold_answer": rec.gold_answer,
+                            "syntactic": score.syntactic,
+                            "format_ok": score.format_ok,
+                            "correct": score.correct,
+                            "valid": score.valid,
+                            "constrained_trace": None
+                            if trace is None
+                            else {
+                                "used_constrained_proof": trace.used_constrained_proof,
+                                "proof_lines": trace.proof_lines,
+                                "candidate_calls": trace.candidate_calls,
+                                "best_scores": list(trace.best_scores),
+                            },
+                        }
+                    )
 
         if eval_cfg.external_enabled:
             ext_metrics, ext_samples = evaluate_external_benchmarks_with_generate_fn(
@@ -309,6 +495,24 @@ class UnifiedEvaluator:
             samples.extend(ext_samples)
 
         return metrics, samples
+
+    def _generate_samples_by_repetition(
+        self,
+        *,
+        prompts: Sequence[str],
+        num_samples: int,
+        max_new_tokens: int,
+        temperature: float,
+        generate_texts: Callable[[Sequence[str], int, bool, float], list[str]],
+    ) -> list[list[str]]:
+        grouped: list[list[str]] = [[] for _ in prompts]
+        for _ in range(max(1, int(num_samples))):
+            generations = generate_texts(prompts, max_new_tokens, True, temperature)
+            if len(generations) != len(prompts):
+                raise RuntimeError(f"Sampled generation returned {len(generations)} outputs for {len(prompts)} prompts")
+            for idx, gen in enumerate(generations):
+                grouped[idx].append(gen)
+        return grouped
 
     @torch.no_grad()
     def evaluate_model(
@@ -339,18 +543,29 @@ class UnifiedEvaluator:
                     do_sample=do_sample,
                     temperature=temperature,
                 ),
+                generate_samples=lambda prompts, max_tokens, num_samples, temperature: generator.generate_many(
+                    prompts,
+                    max_new_tokens=max_tokens,
+                    num_samples=num_samples,
+                    temperature=temperature,
+                ),
             )
         finally:
             model.train()
 
     def _resolve_checkpoint_paths(self, checkpoint_dir: str | Path) -> tuple[str, str, Path | None]:
-        checkpoint_path = Path(str(checkpoint_dir)).resolve()
+        raw_checkpoint = str(checkpoint_dir)
+        checkpoint_path = Path(raw_checkpoint).expanduser()
         adapter_dir: Path | None = None
-        tokenizer_path: str = str(checkpoint_path)
-        model_path: str = str(checkpoint_path)
+        tokenizer_path: str = raw_checkpoint
+        model_path: str = raw_checkpoint
 
         # VERL actor checkpoints store tokenizer/config under `huggingface/`
         # and LoRA weights under `lora_adapter/`.
+        if checkpoint_path.exists():
+            checkpoint_path = checkpoint_path.resolve()
+            tokenizer_path = str(checkpoint_path)
+            model_path = str(checkpoint_path)
         if checkpoint_path.is_dir():
             actor_hf = checkpoint_path / "huggingface"
             actor_lora = checkpoint_path / "lora_adapter"
@@ -438,6 +653,12 @@ class UnifiedEvaluator:
                     prompts,
                     max_new_tokens=max_tokens,
                     do_sample=do_sample,
+                    temperature=temperature,
+                ),
+                generate_samples=lambda prompts, max_tokens, num_samples, temperature: generator.generate_many(
+                    prompts,
+                    max_new_tokens=max_tokens,
+                    num_samples=num_samples,
                     temperature=temperature,
                 ),
             )

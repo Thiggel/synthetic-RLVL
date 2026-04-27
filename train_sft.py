@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import os
 import inspect
+import shutil
+from pathlib import Path
 
 import hydra
 import torch
 import wandb
+from huggingface_hub import HfApi
 from omegaconf import DictConfig, OmegaConf
 from peft import LoraConfig, get_peft_model
 from transformers import (
@@ -208,7 +211,39 @@ def main(cfg: DictConfig):
     )
 
     trainer.train()
-    trainer.save_model(os.path.join(cfg.output_dir, "final"))
+    final_dir = Path(cfg.output_dir) / "final"
+    trainer.save_model(str(final_dir))
+    tokenizer.save_pretrained(str(final_dir))
+
+    hub_cfg = cfg.get("hub")
+    if hub_cfg is not None and bool(hub_cfg.get("push_final", False)):
+        repo_id_raw = hub_cfg.get("repo_id")
+        repo_id = str(repo_id_raw).strip() if repo_id_raw is not None else ""
+        if not repo_id or repo_id.lower() in {"none", "null"}:
+            raise ValueError("hub.push_final=true requires hub.repo_id to be set.")
+
+        token_env = str(hub_cfg.get("token_env", "HF_TOKEN"))
+        token = os.environ.get(token_env) or os.environ.get("HF_TOKEN") or os.environ.get("HUGGINGFACE_HUB_TOKEN")
+        if not token:
+            raise ValueError(
+                f"hub.push_final=true but no token found in ${token_env}, HF_TOKEN, or HUGGINGFACE_HUB_TOKEN."
+            )
+
+        path_in_repo = str(hub_cfg.get("path_in_repo", "") or "").strip()
+        private = bool(hub_cfg.get("private", True))
+        api = HfApi(token=token)
+        api.create_repo(repo_id=repo_id, private=private, exist_ok=True)
+        api.upload_folder(
+            repo_id=repo_id,
+            folder_path=str(final_dir),
+            path_in_repo=path_in_repo,
+            commit_message=f"SFT final checkpoint for {cfg.run_name}",
+        )
+        print(f"[sft] Uploaded final checkpoint to hf://{repo_id}/{path_in_repo}".rstrip("/"))
+
+        if bool(hub_cfg.get("cleanup_local_output", False)):
+            shutil.rmtree(str(Path(cfg.output_dir)), ignore_errors=True)
+            print(f"[sft] Removed local output_dir after upload: {cfg.output_dir}")
 
 
 if __name__ == "__main__":

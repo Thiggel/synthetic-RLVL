@@ -1,0 +1,50 @@
+### Starting TaskPrologue of job 3555124 on a0534 at Tue Apr 21 16:44:42 CEST 2026
+Running on cores 16-31 with governor ondemand
+Tue Apr 21 16:44:42 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:13:00.0 Off |                    0 |
+| N/A   35C    P0             68W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[posttrain] model bootstrap: raw_model_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3408_remerge_20260421 effective_model_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3408_remerge_20260421 effective_tokenizer_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3408_remerge_20260421 lora_adapter_path=None
+[2026-04-21 16:47:46,300][torchao][WARNING] - Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+ray init kwargs: {'num_cpus': 12, 'runtime_env': {'env_vars': {'NCCL_DEBUG': 'WARN', 'VLLM_LOGGING_LEVEL': 'WARN', 'VLLM_ALLOW_RUNTIME_LORA_UPDATING': 'true', 'CUDA_DEVICE_MAX_CONNECTIONS': '1', 'NCCL_CUMEM_ENABLE': '0', 'VLLM_DISABLE_COMPILE_CACHE': '1', 'HCCL_HOST_SOCKET_PORT_RANGE': 'auto', 'HCCL_NPU_SOCKET_PORT_RANGE': 'auto', 'HOME': '/home/hpc/c107fa/c107fa12', 'WORK': '/home/atuin/c107fa/c107fa12', 'XDG_CACHE_HOME': '/home/atuin/c107fa/c107fa12/.cache', 'HF_HOME': '/home/atuin/c107fa/c107fa12/.cache/hf', 'HF_DATASETS_CACHE': '/home/atuin/c107fa/c107fa12/.cache/hf/datasets', 'HUGGINGFACE_HUB_CACHE': '/home/atuin/c107fa/c107fa12/.cache/hf/hub', 'TRANSFORMERS_CACHE': '/home/atuin/c107fa/c107fa12/.cache/hf/hub', 'HF_MODULES_CACHE': '/home/atuin/c107fa/c107fa12/.cache/hf/modules', 'HF_HUB_DISABLE_XET': '1', 'WANDB_PROJECT': 'synthetic-rlvl', 'WANDB_GROUP': 'posttrain/grpo_np8_nr32', 'WANDB_RUN_GROUP': 'posttrain/grpo_np8_nr32', 'WANDB_DIR': '/home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb', 'WANDB_CACHE_DIR': '/home/atuin/c107fa/c107fa12/.cache/wandb', 'WANDB_ARTIFACT_DIR': '/home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb_artifacts', 'TVM_FFI_CACHE_DIR': '/home/atuin/c107fa/c107fa12/.cache/tvm-ffi', 'TVM_FFI_DISABLE_TORCH_C_DLPACK': '1', 'http_proxy': 'http://proxy:80', 'https_proxy': 'http://proxy:80', 'no_proxy': 'localhost,127.0.0.1', 'HTTP_PROXY': 'http://proxy:80', 'HTTPS_PROXY': 'http://proxy:80', 'NO_PROXY': 'localhost,127.0.0.1'}, 'working_dir': '/home/hpc/c107fa/c107fa12/synthetic-RLVL'}}
+=== JOB_STATISTICS ===
+=== current date     : Tue Apr 21 16:49:41 CEST 2026
+= Job-ID             : 3555124 on alex as 3555102_21
+= Job-Name           : posttrain_remain_2seed
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/jobs/posttrain_remaining_seeds_2026-04-21.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 1-00:00:00
+= Elapsed runtime    : 00:05:15
+= Total RAM usage    : 2.5 GiB of assigned  GiB (%)
+= Node list          : a0534
+= Subm/Elig/Start/End: 2026-04-21T16:44:25 / 2026-04-21T16:44:25 / 2026-04-21T16:44:26 / 2026-04-21T16:49:41
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           36.7G   104.9G   209.7G        N/A  44,607      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  2119.4G     0.0K     0.0K        N/A     227K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

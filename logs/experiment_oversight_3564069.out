@@ -1,0 +1,63 @@
+### Starting TaskPrologue of job 3564069 on a0631 at Sun Apr 26 21:08:51 CEST 2026
+Running on cores 96-111 with governor ondemand
+Sun Apr 26 21:08:51 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:CC:00.0 Off |                    0 |
+| N/A   34C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+Monitored the experiments and updated both docs with a 2026-04-26 21:10 CEST status note.
+
+No resubmission or cancellation was needed.
+
+Current state:
+- `3563089_0` completed and wrote its final actor at `global_step_1500`.
+- `3563089_1`, `_2`, `_3` are actively progressing.
+- `3564075_12` is progressing after the prior idle retry was cancelled.
+- `3564076_12` and `3564344_12` remain dependency-held.
+- Reward pass@k `3564081` is progressing; rows `24-35` completed, `36/37` running.
+- Full pass@k `3561188` remains correctly dependency-held.
+- No active idle-GPU/Ray-packaging hang or uncovered failed recovery row was found.
+
+Updated:
+- [docs/current_system_state.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/current_system_state.md)
+- [docs/posttrain_recovery_passk_checklist_2026-04-24.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/posttrain_recovery_passk_checklist_2026-04-24.md)
+=== JOB_STATISTICS ===
+=== current date     : Sun Apr 26 21:11:04 CEST 2026
+= Job-ID             : 3564069 on alex
+= Job-Name           : experiment_oversight
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/codex/experiment_oversight.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:02:26
+= Total RAM usage    : 0.4 GiB of assigned  GiB (%)
+= Node list          : a0631
+= Subm/Elig/Start/End: 2026-04-26T13:08:38 / 2026-04-26T21:08:38 / 2026-04-26T21:08:38 / 2026-04-26T21:11:04
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           38.7G   104.9G   209.7G        N/A  46,122      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  4028.2G     0.0K     0.0K        N/A     232K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

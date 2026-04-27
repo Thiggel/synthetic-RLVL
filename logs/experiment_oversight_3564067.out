@@ -1,0 +1,68 @@
+### Starting TaskPrologue of job 3564067 on a0631 at Sun Apr 26 13:08:43 CEST 2026
+Running on cores 80-95 with governor ondemand
+Sun Apr 26 13:08:43 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:96:00.0 Off |                    0 |
+| N/A   34C    P0             67W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+Monitored and took one action.
+
+Active recovery jobs are progressing, not idle:
+- `3563089_0`: about `1086/1500`
+- `3563089_1`: about `555/1500`
+- `3563089_2`: about `31/1500`, expected slow prompts64 pace
+
+Found one missing final actor with no live retry: `rl_grpo_merge_ablate_prompts8_rollouts64_seed3408`. Its old task `3557214_22` timed out after reaching about step `553/1500`, so I added it to the catch-up manifest and submitted chained continuation waves:
+
+- `3564074 -> 3564075 -> 3564076`
+- `3564074_12` is running
+- `3564075_12` and `3564076_12` are dependency-held
+
+Updated pass@k job `3561188` to wait for the existing recovery waves plus the new ones.
+
+Updated:
+- [docs/current_system_state.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/current_system_state.md)
+- [docs/posttrain_recovery_passk_checklist_2026-04-24.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/posttrain_recovery_passk_checklist_2026-04-24.md)
+- [docs/manifests/posttrain_catchup_2026-04-24.tsv](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/manifests/posttrain_catchup_2026-04-24.tsv)
+
+No active recovery job showed the prior idle-GPU/Ray-packaging hang pattern in the checked logs.
+=== JOB_STATISTICS ===
+=== current date     : Sun Apr 26 13:13:35 CEST 2026
+= Job-ID             : 3564067 on alex
+= Job-Name           : experiment_oversight
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/codex/experiment_oversight.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:04:56
+= Total RAM usage    : 0.3 GiB of assigned  GiB (%)
+= Node list          : a0631
+= Subm/Elig/Start/End: 2026-04-26T13:08:38 / 2026-04-26T13:08:38 / 2026-04-26T13:08:39 / 2026-04-26T13:13:35
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           38.3G   104.9G   209.7G        N/A  45,982      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  3798.0G     0.0K     0.0K        N/A     231K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

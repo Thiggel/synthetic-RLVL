@@ -22,7 +22,7 @@ export VIRTUAL_ENV="${VENV_PATH}"
 export PATH="${VENV_PATH}/bin:${PATH}"
 hash -r 2>/dev/null || true
 
-SFT_CKPT_DEFAULT="/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke"
+SFT_CKPT_DEFAULT="/home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_lr_lr1e-4_seed3407/final"
 SFT_CKPT="${SFT_CHECKPOINT:-$SFT_CKPT_DEFAULT}"
 if [[ ! -d "${SFT_CKPT}" ]]; then
   echo "SFT checkpoint not found: ${SFT_CKPT}" >&2

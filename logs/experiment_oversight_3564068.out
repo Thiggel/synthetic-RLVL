@@ -1,0 +1,60 @@
+### Starting TaskPrologue of job 3564068 on a0833 at Sun Apr 26 17:08:43 CEST 2026
+Running on cores 80-95 with governor ondemand
+Sun Apr 26 17:08:43 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:97:00.0 Off |                    0 |
+| N/A   34C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+Monitored the experiments and took one recovery action.
+
+`3564074_12` was idle after Ray package upload for nearly 4 hours, with only about 9 CPU-minutes and no `SynthTaskRunner` progress. I cancelled it. Its dependent retry `3564075_12` started immediately and reached `SynthTaskRunner`, so it is no longer showing the same idle pattern.
+
+I submitted one extra dependent continuation wave for the same row:
+
+`3564344` with `--array=12-12%1`, dependent on `3564076`.
+
+I also updated `3561188` so full merge/eval waits on `3564344` as well. Reward-only pass@k `3564081` is progressing normally, and the main recovery wave `3563089` is still making training progress.
+
+Updated:
+- [docs/current_system_state.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/current_system_state.md)
+- [docs/posttrain_recovery_passk_checklist_2026-04-24.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/posttrain_recovery_passk_checklist_2026-04-24.md)
+=== JOB_STATISTICS ===
+=== current date     : Sun Apr 26 17:13:10 CEST 2026
+= Job-ID             : 3564068 on alex
+= Job-Name           : experiment_oversight
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/codex/experiment_oversight.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:04:28
+= Total RAM usage    : 0.3 GiB of assigned  GiB (%)
+= Node list          : a0833
+= Subm/Elig/Start/End: 2026-04-26T13:08:38 / 2026-04-26T17:08:38 / 2026-04-26T17:08:42 / 2026-04-26T17:13:10
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           38.8G   104.9G   209.7G        N/A  46,100      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  3912.9G     0.0K     0.0K        N/A     232K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

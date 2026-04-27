@@ -1,0 +1,22 @@
+Creating parquet from Arrow format:   0%|          | 0/3 [00:00<?, ?ba/s]Creating parquet from Arrow format:  33%|███▎      | 1/3 [00:00<00:00,  3.71ba/s]Creating parquet from Arrow format:  67%|██████▋   | 2/3 [00:00<00:00,  3.72ba/s]Creating parquet from Arrow format: 100%|██████████| 3/3 [00:00<00:00,  4.85ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 88.96ba/s]
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-04-27 11:46:53,344	INFO node.py:375 -- Failed to get node info b'GCS cannot find the node with node ID bd9b5dd5896d1ae0d9be17bcd0053a2e2f911e4e0c853c08a55517fb. The node registration may not be complete yet before the timeout. Try increase the RAY_raylet_start_wait_time_s config.'
+Error executing job with overrides: ['run_name=rl_grpo_merge_ablate_prompts16_rollouts8_seed3409', 'reward.schema=correct_plus_valid_plus_0p1_format', 'grpo.num_prompts=16', 'grpo.num_rollouts=8', 'seed=3409', 'model.path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3409_remerge_20260421', 'model.merge_adapter_for_rollout=false', 'task.template=logic', 'task.prefill=none', 'validation.enabled=true', 'eval.sampled_enabled=false', 'data.train_samples=120000', 'grpo.max_num_batched_tokens=16384', 'optim.micro_batch_size=4', 'optim.logprob_micro_batch_size=4', 'resume.mode=auto']
+Traceback (most recent call last):
+  File "/home/hpc/c107fa/c107fa12/synthetic-RLVL/posttrain_grpo_verl.py", line 509, in main
+    run_ppo(migrate_legacy_reward_impl(verl_cfg), task_runner_class=remote_task_runner)
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/trainer/main_ppo.py", line 77, in run_ppo
+    ray.init(**OmegaConf.to_container(ray_init_kwargs))
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py", line 1908, in init
+    _global_node = ray._private.node.Node(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/node.py", line 377, in __init__
+    raise Exception(
+Exception: The current node timed out during startup. This could happen because some of the raylet failed to startup or the GCS has become overloaded.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

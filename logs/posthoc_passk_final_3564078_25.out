@@ -1,0 +1,52 @@
+### Starting TaskPrologue of job 3564080 on a0633 at Sun Apr 26 13:13:50 CEST 2026
+Running on cores 64-79 with governor ondemand
+Sun Apr 26 13:13:50 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:90:00.0 Off |                    0 |
+| N/A   38C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[passk] row=25 sweep=reward kind=reward value=indicator_correct_and_format seed=3407 run=rl_reward_indicator_correct_and_format_seed3407_mrg group=posttrain/reward_indicator_correct_and_format
+[merge] base=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3407_remerge_20260421
+[merge] adapter=/home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/rl_reward_indicator_correct_and_format_seed3407_mrg/global_step_1500/actor/lora_adapter
+[merge] output=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_actor_rl_reward_indicator_correct_and_format_seed3407_mrg_final.tmp
+=== JOB_STATISTICS ===
+=== current date     : Sun Apr 26 13:17:41 CEST 2026
+= Job-ID             : 3564080 on alex as 3564078_25
+= Job-Name           : posthoc_passk_final
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/jobs/posthoc_merge_eval_passk_2026-04-24.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 12:00:00
+= Elapsed runtime    : 00:03:48
+= Total RAM usage    : 11.7 GiB of assigned  GiB (%)
+= Node list          : a0633
+= Subm/Elig/Start/End: 2026-04-26T13:13:49 / 2026-04-26T13:13:49 / 2026-04-26T13:13:50 / 2026-04-26T13:17:38
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           38.2G   104.9G   209.7G        N/A  45,987      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  3798.5G     0.0K     0.0K        N/A     231K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A100-SXM4-80GB, 00000000:90:00.0, 2252610, 0 %, 0 %, 13554 MiB, 213731 ms

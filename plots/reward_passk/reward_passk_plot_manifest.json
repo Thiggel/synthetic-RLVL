@@ -1,0 +1,49 @@
+{
+  "best_validity_scale_schema_by_ood_joint_pass@64": "correct_plus_0p25_valid_plus_0p1_format",
+  "ablations": {
+    "validity_scaling": [
+      "correct_plus_0p1_format",
+      "correct_plus_0p25_valid_plus_0p1_format",
+      "correct_plus_0p5_valid_plus_0p1_format",
+      "correct_plus_0p75_valid_plus_0p1_format",
+      "correct_plus_valid_plus_0p1_format"
+    ],
+    "sparse_vs_dense_no_validity": [
+      "indicator_correct_and_format",
+      "correct_plus_0p1_format"
+    ],
+    "sparse_vs_dense_with_validity": [
+      "indicator_all",
+      "correct_plus_valid_plus_0p1_format"
+    ],
+    "sparse_validity_ablation": [
+      "indicator_correct_and_format",
+      "indicator_all"
+    ],
+    "no_validity_vs_best_validity_scale": [
+      "correct_plus_0p1_format",
+      "correct_plus_0p25_valid_plus_0p1_format"
+    ]
+  },
+  "k_values": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64
+  ],
+  "bands": [
+    "band_train",
+    "band_ood",
+    "band_hard_tail"
+  ],
+  "metrics": [
+    "correct",
+    "valid",
+    "joint",
+    "valid_given_correct",
+    "format"
+  ]
+}

@@ -1,0 +1,379 @@
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 11.18ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 119.34ba/s]
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-04-17 18:02:32,654	INFO worker.py:2004 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2026-04-17 18:02:32,658	WARNING working_dir.py:86 -- Directory '.git' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-17 18:02:32,658	WARNING working_dir.py:86 -- Directory '__pycache__' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-17 18:02:32,666	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-17 18:02:33,041	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-17 18:02:33,115	INFO packaging.py:691 -- Creating a file package for local module '/home/hpc/c107fa/c107fa12/synthetic-RLVL'.
+2026-04-17 18:02:33,117	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-17 18:02:33,382	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-17 18:02:33,456	INFO packaging.py:463 -- Pushing file package 'gcs://_ray_pkg_f447802550ab5651.zip' (53.11MiB) to Ray cluster...
+2026-04-17 18:02:33,542	INFO packaging.py:476 -- Successfully pushed file package 'gcs://_ray_pkg_f447802550ab5651.zip'.
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py:2052: FutureWarning: Tip: In future versions of Ray, Ray will no longer override accelerator visible devices env var if num_gpus=0 or num_gpus=None (default). To enable this behavior and turn off this error message, set RAY_ACCEL_ENV_VAR_OVERRIDE_ON_ZERO=0
+  warnings.warn(
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-17 18:02:57,352:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(SynthTaskRunner pid=1020418)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(SynthTaskRunner pid=1020418)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(SynthTaskRunner pid=1020418)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=1020418)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(SynthTaskRunner pid=1020418)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(SynthTaskRunner pid=1020418)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=1020418)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(SynthTaskRunner pid=1020418)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(SynthTaskRunner pid=1020418)[0m Generating train split: 0 examples [00:00, ? examples/s]
+[36m(SynthTaskRunner pid=1020418)[0m Generating train split: 20000 examples [00:00, 143846.47 examples/s]
+[36m(SynthTaskRunner pid=1020418)[0m Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 512 examples [00:00, 29784.79 examples/s]
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-17 18:03:17,376:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-17 18:03:30,655:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(WorkerDict pid=1020727)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=1020727)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=1020727)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(WorkerDict pid=1020727)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=1020727)[0m `torch_dtype` is deprecated! Use `dtype` instead!
+[36m(WorkerDict pid=1020727)[0m Flash Attention 2 only supports torch.float16 and torch.bfloat16 dtypes, but the current dype in Olmo3ForCausalLM is torch.float32. You should run training or inference using Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` decorator, or load the model with the `dtype` argument. Example: `model = AutoModel.from_pretrained("openai/whisper-tiny", attn_implementation="flash_attention_2", dtype=torch.float16)`
+[36m(WorkerDict pid=1020727)[0m Flash Attention 2 only supports torch.float16 and torch.bfloat16 dtypes, but the current dype in Olmo3Model is torch.float32. You should run training or inference using Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` decorator, or load the model with the `dtype` argument. Example: `model = AutoModel.from_pretrained("openai/whisper-tiny", attn_implementation="flash_attention_2", dtype=torch.float16)`
+[36m(WorkerDict pid=1020727)[0m Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]
+[36m(WorkerDict pid=1020727)[0m Loading checkpoint shards:  33%|███▎      | 1/3 [00:02<00:04,  2.13s/it]
+[36m(WorkerDict pid=1020727)[0m Loading checkpoint shards:  67%|██████▋   | 2/3 [00:04<00:02,  2.18s/it]
+[36m(WorkerDict pid=1020727)[0m Loading checkpoint shards: 100%|██████████| 3/3 [00:06<00:00,  2.10s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:06<00:00,  2.12s/it]
+[36m(WorkerDict pid=1020727)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_init_utils.py:430: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+[36m(WorkerDict pid=1020727)[0m   warnings.warn(
+[36m(WorkerDict pid=1020727)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=1020727)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=1020727)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(WorkerDict pid=1020727)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=1020727)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=1020727)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:675: FutureWarning: FSDP.state_dict_type() and FSDP.set_state_dict_type() are being deprecated. Please use APIs, get_state_dict() and set_state_dict(), which can support different parallelisms, FSDP1, FSDP2, DDP. API doc: https://pytorch.org/docs/stable/distributed.checkpoint.html#torch.distributed.checkpoint.state_dict.get_state_dict .Tutorial: https://pytorch.org/tutorials/recipes/distributed_checkpoint_recipe.html .
+[36m(WorkerDict pid=1020727)[0m   warnings.warn(
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-17 18:04:03,056:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.[32m [repeated 2x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[33m(raylet)[0m   warnings.warn([32m [repeated 2x across cluster][0m
+[33m(raylet)[0m WARNING:2026-04-17 18:04:09,630:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 2x across cluster][0m
+[36m(vLLMHttpServer pid=1021013)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(vLLMHttpServer pid=1021013)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(vLLMHttpServer pid=1021013)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(vLLMHttpServer pid=1021013)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(vLLMHttpServer pid=1021013)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(vLLMHttpServer pid=1021013)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(vLLMHttpServer pid=1021013)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(vLLMHttpServer pid=1021013)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(vLLMHttpServer pid=1021013)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(vLLMHttpServer pid=1021013)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(vLLMHttpServer pid=1021013)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(vLLMHttpServer pid=1021013)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=1021013)[0m   warnings.warn(
+[36m(RewardLoopWorker pid=1020992)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(vLLMHttpServer pid=1021013)[0m WARNING:2026-04-17 18:04:19,117:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(vLLMHttpServer pid=1021013)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=1021013)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=1021013)[0m WARNING:2026-04-17 18:04:23,984:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(vLLMHttpServer pid=1021013)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[36m(vLLMHttpServer pid=1021013)[0m   warnings.warn(
+[36m(vLLMHttpServer pid=1021013)[0m WARNING:2026-04-17 18:04:31,222:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m [2026-04-17 18:04:52,642 E 1019422 1019422] (raylet) worker_pool.cc:582: Some workers of the worker process(1020991) have not registered within the timeout. The process is still alive, probably it's hanging during start.
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-17 18:05:02,296:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(RewardLoopWorker pid=1021495)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(vLLMHttpServer pid=1021013)[0m [1;36m(Worker pid=1021333)[0;0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   0%|          | 0/102 [00:00<?, ?it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   1%|          | 1/102 [00:00<00:33,  3.03it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   3%|▎         | 3/102 [00:00<00:14,  7.01it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   5%|▍         | 5/102 [00:00<00:10,  9.18it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   7%|▋         | 7/102 [00:00<00:09, 10.51it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   9%|▉         | 9/102 [00:00<00:08, 11.33it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  11%|█         | 11/102 [00:01<00:07, 11.86it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  13%|█▎        | 13/102 [00:01<00:07, 12.22it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  15%|█▍        | 15/102 [00:01<00:07, 12.41it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  17%|█▋        | 17/102 [00:01<00:06, 12.63it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  19%|█▊        | 19/102 [00:01<00:06, 12.85it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  21%|██        | 21/102 [00:01<00:06, 13.10it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  23%|██▎       | 23/102 [00:02<00:05, 13.25it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  25%|██▍       | 25/102 [00:02<00:05, 13.39it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  26%|██▋       | 27/102 [00:02<00:05, 13.48it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  28%|██▊       | 29/102 [00:02<00:05, 13.54it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  30%|███       | 31/102 [00:02<00:05, 13.58it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  32%|███▏      | 33/102 [00:02<00:05, 13.60it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  34%|███▍      | 35/102 [00:02<00:05, 12.50it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  36%|███▋      | 37/102 [00:03<00:05, 12.99it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  38%|███▊      | 39/102 [00:03<00:04, 13.38it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  40%|████      | 41/102 [00:03<00:04, 13.70it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  42%|████▏     | 43/102 [00:03<00:04, 13.91it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  44%|████▍     | 45/102 [00:03<00:04, 13.98it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  46%|████▌     | 47/102 [00:03<00:03, 14.10it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  48%|████▊     | 49/102 [00:03<00:03, 14.23it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  50%|█████     | 51/102 [00:04<00:03, 14.29it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  52%|█████▏    | 53/102 [00:04<00:03, 14.34it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  54%|█████▍    | 55/102 [00:04<00:03, 14.45it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  56%|█████▌    | 57/102 [00:04<00:03, 14.11it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  58%|█████▊    | 59/102 [00:04<00:03, 14.20it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  60%|█████▉    | 61/102 [00:04<00:02, 14.23it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  62%|██████▏   | 63/102 [00:04<00:02, 14.32it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  64%|██████▎   | 65/102 [00:05<00:02, 14.31it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  66%|██████▌   | 67/102 [00:05<00:02, 13.43it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  68%|██████▊   | 69/102 [00:05<00:02, 13.05it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  70%|██████▉   | 71/102 [00:05<00:02, 13.37it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  72%|███████▏  | 73/102 [00:05<00:02, 13.64it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  74%|███████▎  | 75/102 [00:05<00:01, 13.75it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  75%|███████▌  | 77/102 [00:05<00:01, 14.00it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  77%|███████▋  | 79/102 [00:06<00:01, 14.17it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  79%|███████▉  | 81/102 [00:06<00:01, 14.32it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  81%|████████▏ | 83/102 [00:06<00:01, 14.43it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  83%|████████▎ | 85/102 [00:06<00:01, 14.54it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  85%|████████▌ | 87/102 [00:06<00:01, 14.61it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  87%|████████▋ | 89/102 [00:06<00:00, 14.59it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  89%|████████▉ | 91/102 [00:06<00:00, 14.65it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  91%|█████████ | 93/102 [00:07<00:00, 14.55it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  93%|█████████▎| 95/102 [00:07<00:00, 14.62it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  95%|█████████▌| 97/102 [00:07<00:00, 14.72it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  97%|█████████▋| 99/102 [00:07<00:00, 14.70it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  99%|█████████▉| 101/102 [00:07<00:00, 12.64it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE): 100%|██████████| 102/102 [00:07<00:00, 13.31it/s]
+[36m(vLLMHttpServer pid=1021013)[0m [1;36m(Worker pid=1021333)[0;0m Capturing CUDA graphs (decode, FULL):   0%|          | 0/102 [00:00<?, ?it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):   1%|          | 1/102 [00:00<00:18,  5.37it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):   3%|▎         | 3/102 [00:00<00:11,  8.27it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):   5%|▍         | 5/102 [00:00<00:10,  9.69it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):   7%|▋         | 7/102 [00:00<00:09, 10.43it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):   9%|▉         | 9/102 [00:00<00:08, 10.86it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  11%|█         | 11/102 [00:01<00:08, 11.19it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  13%|█▎        | 13/102 [00:01<00:07, 11.43it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  15%|█▍        | 15/102 [00:01<00:07, 11.61it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  17%|█▋        | 17/102 [00:01<00:07, 11.92it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  19%|█▊        | 19/102 [00:01<00:06, 12.33it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  21%|██        | 21/102 [00:01<00:06, 12.63it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  23%|██▎       | 23/102 [00:02<00:06, 12.89it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  25%|██▍       | 25/102 [00:02<00:05, 13.11it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  26%|██▋       | 27/102 [00:02<00:05, 13.21it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  28%|██▊       | 29/102 [00:02<00:05, 13.30it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  30%|███       | 31/102 [00:02<00:05, 13.48it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  32%|███▏      | 33/102 [00:02<00:05, 13.61it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  34%|███▍      | 35/102 [00:02<00:04, 13.94it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  36%|███▋      | 37/102 [00:03<00:04, 14.13it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  38%|███▊      | 39/102 [00:03<00:04, 14.34it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  40%|████      | 41/102 [00:03<00:04, 14.48it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  42%|████▏     | 43/102 [00:03<00:04, 14.60it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  44%|████▍     | 45/102 [00:03<00:03, 14.65it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  46%|████▌     | 47/102 [00:03<00:03, 14.72it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  48%|████▊     | 49/102 [00:03<00:03, 14.81it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  50%|█████     | 51/102 [00:03<00:03, 14.88it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  52%|█████▏    | 53/102 [00:04<00:03, 14.97it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  54%|█████▍    | 55/102 [00:04<00:03, 15.04it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  56%|█████▌    | 57/102 [00:04<00:02, 15.13it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  58%|█████▊    | 59/102 [00:04<00:02, 15.15it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  60%|█████▉    | 61/102 [00:04<00:02, 15.24it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  62%|██████▏   | 63/102 [00:04<00:02, 15.32it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  64%|██████▎   | 65/102 [00:04<00:02, 15.35it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  66%|██████▌   | 67/102 [00:04<00:02, 15.31it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  68%|██████▊   | 69/102 [00:05<00:02, 15.25it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  70%|██████▉   | 71/102 [00:05<00:02, 15.18it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  72%|███████▏  | 73/102 [00:05<00:01, 15.20it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  74%|███████▎  | 75/102 [00:05<00:01, 15.25it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  75%|███████▌  | 77/102 [00:05<00:01, 15.35it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  77%|███████▋  | 79/102 [00:05<00:01, 15.44it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  79%|███████▉  | 81/102 [00:05<00:01, 15.47it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  81%|████████▏ | 83/102 [00:06<00:01, 15.47it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  83%|████████▎ | 85/102 [00:06<00:01, 15.42it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  85%|████████▌ | 87/102 [00:06<00:00, 15.53it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  87%|████████▋ | 89/102 [00:06<00:00, 15.62it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  89%|████████▉ | 91/102 [00:06<00:00, 15.70it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  91%|█████████ | 93/102 [00:06<00:00, 15.81it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  93%|█████████▎| 95/102 [00:06<00:00, 15.88it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  95%|█████████▌| 97/102 [00:06<00:00, 15.92it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  97%|█████████▋| 99/102 [00:07<00:00, 15.87it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL):  99%|█████████▉| 101/102 [00:07<00:00, 15.89it/s]
+[36m(vLLMHttpServer pid=1021013)[0m Capturing CUDA graphs (decode, FULL): 100%|██████████| 102/102 [00:07<00:00, 14.14it/s]
+[36m(vLLMHttpServer pid=1021013)[0m [1;36m(EngineCore_DP0 pid=1021233)[0;0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[36m(SynthTaskRunner pid=1020418)[0m wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[36m(SynthTaskRunner pid=1020418)[0m wandb: Currently logged in as: filipelaitenberger to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+[33m(raylet)[0m WARNING:2026-04-17 18:05:40,647:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(SynthTaskRunner pid=1020418)[0m wandb: setting up run z8r354bx
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[36m(SynthTaskRunner pid=1020418)[0m wandb: Tracking run with wandb version 0.25.1
+[36m(SynthTaskRunner pid=1020418)[0m wandb: Run data is saved locally in /home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb/wandb/run-20260417_180540-z8r354bx
+[36m(SynthTaskRunner pid=1020418)[0m wandb: Run `wandb offline` to turn off syncing.
+[36m(SynthTaskRunner pid=1020418)[0m wandb: Syncing run rl_grpo_merge_ablate_prompts64_rollouts8_seed3407
+[36m(SynthTaskRunner pid=1020418)[0m wandb: ⭐️ View project at https://wandb.ai/filipelaitenberger/synthetic-rlvl
+[36m(SynthTaskRunner pid=1020418)[0m wandb: 🚀 View run at https://wandb.ai/filipelaitenberger/synthetic-rlvl/runs/z8r354bx
+[36m(SynthTaskRunner pid=1020418)[0m wandb: Detected [openai] in use.
+[36m(SynthTaskRunner pid=1020418)[0m wandb: Use W&B Weave for improved LLM call tracing. Install Weave with `pip install weave` then add `import weave` to the top of your script.
+[36m(SynthTaskRunner pid=1020418)[0m wandb: For more information, check out the docs at: https://weave-docs.wandb.ai/
+[33m(raylet)[0m WARNING:2026-04-17 18:05:46,333:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 2x across cluster][0m
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.[32m [repeated 3x across cluster][0m
+[33m(raylet)[0m   warnings.warn([32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=1022242)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(AgentLoopWorker pid=1022242)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=1022242)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=1020727)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:763: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(WorkerDict pid=1020727)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/torch/distributed/fsdp/_state_dict_utils.py:701: UserWarning: When using ``NO_SHARD`` for ``ShardingStrategy``, full_state_dict will be returned.
+[36m(AgentLoopWorker pid=1022242)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(AgentLoopWorker pid=1022242)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=1022242)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=1022242)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=1022242)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=1022242)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=1022242)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[33m(raylet)[0m WARNING:2026-04-17 18:05:47,152:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 2x across cluster][0m
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn([32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=1022241)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=1022241)[0m `rope_scaling`'s beta_fast field must be a float, got 32[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=1022241)[0m `rope_scaling`'s beta_slow field must be a float, got 1[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=1022241)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=1022241)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=1022245)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=1022245)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[33m(raylet)[0m WARNING:2026-04-17 18:05:58,585:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=1022244)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.[32m [repeated 6x across cluster][0m
+[36m(AgentLoopWorker pid=1022244)[0m `rope_scaling`'s beta_fast field must be a float, got 32[32m [repeated 9x across cluster][0m
+[36m(AgentLoopWorker pid=1022244)[0m `rope_scaling`'s beta_slow field must be a float, got 1[32m [repeated 9x across cluster][0m
+[36m(AgentLoopWorker pid=1022244)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=1022244)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)[32m [repeated 2x across cluster][0m
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[36m(AgentLoopWorker pid=1022240)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=1022240)[0m `rope_scaling`'s beta_fast field must be a float, got 32[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=1022240)[0m `rope_scaling`'s beta_slow field must be a float, got 1[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=1022240)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=1022240)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=1022246)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=1022246)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[33m(raylet)[0m WARNING:2026-04-17 18:06:13,360:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(AgentLoopWorker pid=1022246)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=1022246)[0m `rope_scaling`'s beta_fast field must be a float, got 32[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=1022246)[0m `rope_scaling`'s beta_slow field must be a float, got 1[32m [repeated 3x across cluster][0m
+[36m(AgentLoopWorker pid=1022239)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(AgentLoopWorker pid=1022239)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=1022239)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=1022239)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(AgentLoopWorker pid=1022239)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=1022239)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=1022239)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(AgentLoopWorker pid=1022239)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(AgentLoopWorker pid=1022239)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(AgentLoopWorker pid=1022239)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(AgentLoopWorker pid=1022242)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(AgentLoopWorker pid=1022245)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=1022240)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.[32m [repeated 2x across cluster][0m
+[36m(AgentLoopWorker pid=1022244)[0m You're using a GPT2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[36m(SynthTaskRunner pid=1020418)[0m Training Progress:   0%|          | 0/1500 [00:00<?, ?it/s]
+Error executing job with overrides: ['run_name=rl_grpo_merge_ablate_prompts64_rollouts8_seed3407', 'seed=3407', 'model.path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_final_lr1e4_smoke', 'model.merge_adapter_for_rollout=false', 'task.template=logic', 'task.prefill=none', 'reward.schema=correct_plus_valid_plus_0p1_format', 'grpo.max_num_batched_tokens=16384', 'optim.micro_batch_size=4', 'optim.logprob_micro_batch_size=4', 'grpo.num_prompts=64', 'grpo.num_rollouts=8']
+Traceback (most recent call last):
+  File "/home/hpc/c107fa/c107fa12/synthetic-RLVL/posttrain_grpo_verl.py", line 485, in main
+    run_ppo(migrate_legacy_reward_impl(verl_cfg), task_runner_class=remote_task_runner)
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/trainer/main_ppo.py", line 99, in run_ppo
+    ray.get(runner.run.remote(config))
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py", line 2981, in get
+    values, debugger_breakpoint = worker.get_objects(
+                                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py", line 1012, in get_objects
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(EngineDeadError): [36mray::SynthTaskRunner.run()[39m (pid=1020418, ip=10.28.53.143, actor_id=7ade070ce92208390f9a72dc01000000, repr=<posttrain_grpo_verl.SynthTaskRunner object at 0x1512ac071f70>)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hpc/c107fa/c107fa12/synthetic-RLVL/posttrain_grpo_verl.py", line 482, in run
+    return super().run(config)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/trainer/main_ppo.py", line 359, in run
+    trainer.fit()
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/trainer/ppo/ray_trainer.py", line 1312, in fit
+    gen_batch_output = self.async_rollout_manager.generate_sequences(gen_batch_output)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/ray_utils.py", line 123, in wrapper
+    return asyncio.run(coro)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/experimental/agent_loop/agent_loop.py", line 965, in generate_sequences
+    outputs = await asyncio.gather(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py", line 684, in _wrap_awaitable
+    return await awaitable
+           ^^^^^^^^^^^^^^^
+ray.exceptions.RayTaskError(EngineDeadError): [36mray::AgentLoopWorker.generate_sequences()[39m (pid=1022243, ip=10.28.53.143, actor_id=20b52bac9c562cb9305ce83e01000000, repr=<verl.experimental.agent_loop.agent_loop.AgentLoopWorker object at 0x14ae940c1760>)
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/experimental/agent_loop/agent_loop.py", line 476, in generate_sequences
+    outputs = await asyncio.gather(*tasks)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/experimental/agent_loop/agent_loop.py", line 513, in _run_agent_loop
+    output: AgentLoopOutput = await agent_loop.run(sampling_params, **kwargs)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/experimental/agent_loop/single_turn_agent_loop.py", line 53, in run
+    output = await self.server_manager.generate(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/rollout_trace.py", line 191, in async_wrapper
+    return await func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/experimental/agent_loop/agent_loop.py", line 121, in generate
+    output = await server.generate.remote(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ray.exceptions.RayTaskError(EngineDeadError): [36mray::vLLMHttpServer.generate()[39m (pid=1021013, ip=10.28.53.143, actor_id=6260c34cb71495819d44b7d201000000, repr=<verl.workers.rollout.vllm_rollout.vllm_async_server.vLLMHttpServer object at 0x151b71265820>)
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/workers/rollout/vllm_rollout/vllm_async_server.py", line 554, in generate
+    lora_loaded = VLLM_LORA_INT_ID in await self.engine.list_loras()
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 704, in list_loras
+    return await self.engine_core.list_loras_async()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 980, in list_loras_async
+    return await self.call_utility_async("list_loras")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 924, in call_utility_async
+    return await self._call_utility_async(method, *args, engine=self.core_engine)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 936, in _call_utility_async
+    await self._send_input_message(message, engine, args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 905, in _send_input_message
+    self.ensure_alive()
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 558, in ensure_alive
+    raise EngineDeadError()
+vllm.v1.engine.exceptions.EngineDeadError: EngineCore encountered an issue. See stack trace (above) for the root cause.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

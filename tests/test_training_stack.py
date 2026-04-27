@@ -20,7 +20,7 @@ def test_task_builder_emits_tagged_targets():
     builder = TaskBuilder(make_task())
     sample = builder.sample(0, train=True)
     assert sample.prompt
-    assert "<logic>" in sample.target
+    assert "<formal>" in sample.target
     assert "<answer>" in sample.target
 
 
@@ -62,6 +62,37 @@ def test_reward_schema_indicator_all():
     )
     assert reward == 1.0
     assert parts.valid == 1.0
+
+
+def test_reward_schema_line_valid_fraction_partial_credit():
+    cfg = make_task()
+    builder = TaskBuilder(cfg)
+    sample = builder.sample(6, train=False)
+    rewarder = RewardComputer(OutputEvaluator())
+
+    formal = sample.target.split("<answer>", 1)[0]
+    proof = formal.split("<proof>", 1)[1].split("</proof>", 1)[0].strip()
+    proof_lines = [ln for ln in proof.splitlines() if ln.strip()]
+    assert len(proof_lines) >= 2
+    # Force one clearly invalid line via forward citation while keeping the rest intact.
+    proof_lines[0] = "Aa ; ->E,2,999"
+    bad_target = sample.target.replace(proof, "\n".join(proof_lines), 1)
+
+    reward, parts = rewarder.reward(
+        bad_target,
+        schema=RewardSchema.CORRECT_PLUS_LINE_VALID_PLUS_0P1_FORMAT,
+        template=cfg.template,
+        gold_answer=sample.answer,
+        gold_logic_premises=sample.logic_premises,
+        gold_logic_conclusion=sample.logic_conclusion,
+        prefill=cfg.prefill,
+        gold_first_modality_lines=sample.gold_first_modality_lines,
+    )
+    # Reward must include partial line-valid credit, strictly between correctness-only
+    # and correctness+full-validity for this corrupted proof.
+    assert parts.correct == 1.0
+    assert reward > 1.0
+    assert reward < 2.1
 
 
 def test_natural_template_has_format_and_answer():

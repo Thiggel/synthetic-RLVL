@@ -1,0 +1,52 @@
+### Starting TaskPrologue of job 3565222 on a0731 at Mon Apr 27 11:37:12 CEST 2026
+Running on cores 64-79 with governor ondemand
+Mon Apr 27 11:37:12 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:91:00.0 Off |                    0 |
+| N/A   42C    P0             67W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[catchup] row=6 sweep=prompts kind=prompts value=16 seed=3409 action=rerun run=rl_grpo_merge_ablate_prompts16_rollouts8_seed3409
+[ray-startup] jitter_sleep_s=113 max=240
+[posttrain] model bootstrap: raw_model_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3409_remerge_20260421 effective_model_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3409_remerge_20260421 effective_tokenizer_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3409_remerge_20260421 lora_adapter_path=None
+[2026-04-27 11:41:02,659][torchao][WARNING] - Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+ray init kwargs: {'num_cpus': 12, 'include_dashboard': False, 'runtime_env': {'env_vars': {'NCCL_DEBUG': 'WARN', 'VLLM_LOGGING_LEVEL': 'WARN', 'VLLM_ALLOW_RUNTIME_LORA_UPDATING': 'true', 'CUDA_DEVICE_MAX_CONNECTIONS': '1', 'NCCL_CUMEM_ENABLE': '0', 'VLLM_DISABLE_COMPILE_CACHE': '1', 'HCCL_HOST_SOCKET_PORT_RANGE': 'auto', 'HCCL_NPU_SOCKET_PORT_RANGE': 'auto', 'HOME': '/home/hpc/c107fa/c107fa12', 'WORK': '/home/atuin/c107fa/c107fa12', 'XDG_CACHE_HOME': '/home/atuin/c107fa/c107fa12/.cache', 'HF_HOME': '/home/atuin/c107fa/c107fa12/.cache/hf', 'HF_DATASETS_CACHE': '/home/atuin/c107fa/c107fa12/.cache/hf/datasets', 'HUGGINGFACE_HUB_CACHE': '/home/atuin/c107fa/c107fa12/.cache/hf/hub', 'TRANSFORMERS_CACHE': '/home/atuin/c107fa/c107fa12/.cache/hf/hub', 'HF_MODULES_CACHE': '/home/atuin/c107fa/c107fa12/.cache/hf/modules', 'HF_HUB_DISABLE_XET': '1', 'WANDB_PROJECT': 'synthetic-rlvl', 'WANDB_GROUP': 'posttrain/grpo_np16_nr8', 'WANDB_RUN_GROUP': 'posttrain/grpo_np16_nr8', 'WANDB_DIR': '/home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb', 'WANDB_CACHE_DIR': '/home/atuin/c107fa/c107fa12/.cache/wandb', 'WANDB_ARTIFACT_DIR': '/home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb_artifacts', 'TVM_FFI_CACHE_DIR': '/home/atuin/c107fa/c107fa12/.cache/tvm-ffi', 'TVM_FFI_DISABLE_TORCH_C_DLPACK': '1', 'http_proxy': 'http://proxy:80', 'https_proxy': 'http://proxy:80', 'no_proxy': 'localhost,127.0.0.1', 'HTTP_PROXY': 'http://proxy:80', 'HTTPS_PROXY': 'http://proxy:80', 'NO_PROXY': 'localhost,127.0.0.1'}, 'working_dir': '/home/hpc/c107fa/c107fa12/synthetic-RLVL', 'excludes': ['.git/**', '.pytest_cache/**', '__pycache__/**', '**/__pycache__/**', 'logs/**', 'wandb/**', 'wandb_artifacts/**', 'passk_eval/**', 'runs/**', 'tmp/**', 'datasets/**']}}
+=== JOB_STATISTICS ===
+=== current date     : Mon Apr 27 11:46:58 CEST 2026
+= Job-ID             : 3565222 on alex as 3563089_6
+= Job-Name           : posttrain_catchup_final
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/jobs/posttrain_catchup_final_2026-04-24.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 1-00:00:00
+= Elapsed runtime    : 00:10:30
+= Total RAM usage    : 5.7 GiB of assigned  GiB (%)
+= Node list          : a0731
+= Subm/Elig/Start/End: 2026-04-25T12:53:09 / 2026-04-27T11:36:23 / 2026-04-27T11:36:28 / 2026-04-27T11:46:58
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           38.6G   104.9G   209.7G        N/A  46,174      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  4259.2G     0.0K     0.0K        N/A     233K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

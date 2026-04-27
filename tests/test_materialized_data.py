@@ -67,6 +67,6 @@ def test_task_sample_from_materialized_row():
         "metadata": {"depth": 1},
     }
     sample = task_sample_from_materialized_row(row, cfg=_task_cfg())
-    assert "<logic>" in sample.target
+    assert "<formal>" in sample.target
     assert "<answer>" in sample.target
     assert sample.answer == "blue"

@@ -41,7 +41,7 @@ grpo:
   max_prompt_length: 1024
   max_response_length: 768
   max_model_len: null
-  max_num_batched_tokens: 12288
+  max_num_batched_tokens: 16384
   temperature: 1.0
   gpu_memory_utilization: 0.5
 
@@ -49,8 +49,8 @@ optim:
   lr: 1e-6
   weight_decay: 0.01
   warmup_steps: 0
-  micro_batch_size: 1
-  logprob_micro_batch_size: 1
+  micro_batch_size: 4
+  logprob_micro_batch_size: 4
   kl_coef: 0.0
 
 validation:
@@ -69,16 +69,30 @@ eval:
   generation_backend: vllm
   generation_batch_size: 1024
   vllm_gpu_memory_utilization: 0.5
+  sampled_enabled: false
+  sampled_num_generations: 64
+  sampled_k_values: [1, 2, 4, 8, 16, 32, 64]
+  sampled_temperature: 1.0
   external_enabled: true
   external_benchmarks: [proofwriter, folio, prontoqa, proverqa, logiqa2, bbh, mmlu_philosophy, mmlu_formal_logic, strategyqa]
   external_limit_per_benchmark: 20
   constrained_enabled: false
   constrained_samples_per_step: 4
+  constrained_num_generations: 8
+  constrained_candidates_per_line: 8
+  constrained_k_values: [1, 2, 4, 8]
   constrained_max_lines: 32
+  constrained_max_line_tokens: 48
+  constrained_suffix_max_tokens: 256
+  constrained_temperature: 1.0
 
 logging:
   project: synthetic-rlvl
   entity: null
+
+resume:
+  mode: disable # {disable,auto,resume_path}
+  from_path: null
 
 system:
   ray_cpus: 12

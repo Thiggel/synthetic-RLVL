@@ -283,7 +283,10 @@ def _build_verl_cfg(cfg: DictConfig, train_file: Path, val_file: Path) -> DictCo
         base.trainer.test_freq = int(cfg.validation.eval_every) if validation_enabled else int(cfg.grpo.train_steps) + 10
         base.trainer.val_before_train = bool(cfg.validation.get("before_train", True)) if validation_enabled else False
         base.trainer.default_local_dir = str(out_dir)
-        base.trainer.resume_mode = "disable"
+        base.trainer.resume_mode = str(cfg.resume.get("mode", "disable"))
+        resume_from_path = cfg.resume.get("from_path")
+        if resume_from_path is not None and str(resume_from_path).strip().lower() not in {"", "none", "null"}:
+            base.trainer.resume_from_path = str(resume_from_path)
         base.trainer.log_val_generations = int(cfg.log_generations.num_samples) if validation_enabled else 0
         train_gen_every = int(cfg.log_generations.get("train_every", 0) or 0)
         train_dump_jsonl = bool(cfg.log_generations.get("train_dump_jsonl", False))
@@ -291,9 +294,28 @@ def _build_verl_cfg(cfg: DictConfig, train_file: Path, val_file: Path) -> DictCo
             base.trainer.rollout_data_dir = str(out_dir / "train_rollout_data")
 
         base.ray_kwargs.ray_init.num_cpus = int(cfg.system.ray_cpus)
+        # The Ray dashboard is not needed for batch Slurm jobs and its
+        # MetricsHead startup has caused otherwise valid GPU allocations to
+        # fail before training starts on this cluster.
+        base.ray_kwargs.ray_init.include_dashboard = False
         if "runtime_env" not in base.ray_kwargs.ray_init or base.ray_kwargs.ray_init.runtime_env is None:
             base.ray_kwargs.ray_init.runtime_env = {}
         base.ray_kwargs.ray_init.runtime_env.working_dir = str(Path(__file__).resolve().parent)
+        # Keep Ray's runtime package small. Large local artifacts/logs can make
+        # Ray startup appear alive while no GPU workers are created.
+        base.ray_kwargs.ray_init.runtime_env.excludes = [
+            ".git/**",
+            ".pytest_cache/**",
+            "__pycache__/**",
+            "**/__pycache__/**",
+            "logs/**",
+            "wandb/**",
+            "wandb_artifacts/**",
+            "passk_eval/**",
+            "runs/**",
+            "tmp/**",
+            "datasets/**",
+        ]
         if "env_vars" not in base.ray_kwargs.ray_init.runtime_env or base.ray_kwargs.ray_init.runtime_env.env_vars is None:
             base.ray_kwargs.ray_init.runtime_env.env_vars = {}
         for key in (
@@ -308,6 +330,8 @@ def _build_verl_cfg(cfg: DictConfig, train_file: Path, val_file: Path) -> DictCo
             "HF_HUB_DISABLE_XET",
             "WANDB_PROJECT",
             "WANDB_ENTITY",
+            "WANDB_GROUP",
+            "WANDB_RUN_GROUP",
             "WANDB_DIR",
             "WANDB_CACHE_DIR",
             "WANDB_ARTIFACT_DIR",

@@ -61,6 +61,7 @@ def _is_answer_match(pred_answer: str, gold_answer: str) -> bool:
 
 @dataclass(frozen=True)
 class EvalResult:
+    syntactic: float
     format_ok: float
     correct: float
     valid: float
@@ -175,11 +176,18 @@ class OutputEvaluator:
         if not answer:
             format_ok = 0.0
 
+        syntactic = 0.0
         valid = 0.0
         if wants_logic:
             premises, proof, conclusion = self._extract_logic_components(output_text, logic_tag)
             if premises and proof and conclusion:
-                valid = float(self.engine.validate_proof(premises=premises, conclusion=conclusion, proof=proof))
+                report = self.engine.analyze_proof(premises=premises, conclusion=conclusion, proof=proof)
+                syntactic = float(
+                    bool(report.lines)
+                    and all(p.syntax_valid for p in report.premises)
+                    and all(line.syntax_valid for line in report.lines)
+                )
+                valid = float(report.ok)
 
         line_match = 0.0
         if prefill == PrefillMode.LINE_REWARD and gold_first_modality_lines:
@@ -194,12 +202,36 @@ class OutputEvaluator:
                     hits += 1
             line_match = hits / max(1, len(wanted))
 
-        return EvalResult(format_ok=format_ok, correct=correct, valid=valid, line_match=line_match)
+        return EvalResult(syntactic=syntactic, format_ok=format_ok, correct=correct, valid=valid, line_match=line_match)
 
 
 class RewardComputer:
     def __init__(self, evaluator: OutputEvaluator):
         self.evaluator = evaluator
+
+    def _line_valid_fraction(self, output_text: str, *, template: TemplateName) -> float:
+        wants_logic = template in (
+            TemplateName.LOGIC,
+            TemplateName.LOGIC_NATURAL,
+            TemplateName.NATURAL_LOGIC,
+            TemplateName.FORMAL_THINK,
+            TemplateName.THINK_FORMAL,
+        )
+        if not wants_logic:
+            return 0.0
+        logic_tag = self.evaluator._logic_block_tag(template)
+        premises, proof, conclusion = self.evaluator._extract_logic_components(output_text, logic_tag)
+        if not premises or not proof or not conclusion:
+            return 0.0
+        try:
+            report = self.evaluator.engine.analyze_proof(premises=premises, conclusion=conclusion, proof=proof)
+            total = len(report.lines)
+            if total == 0:
+                return 0.0
+            valid = sum(1 for line in report.lines if line.valid)
+            return float(valid / total)
+        except Exception:
+            return 0.0
 
     def reward(
         self,
@@ -229,6 +261,8 @@ class RewardComputer:
             value = float(m.correct > 0 and m.format_ok > 0)
         elif schema == RewardSchema.CORRECT_PLUS_VALID_PLUS_0P1_FORMAT:
             value = m.correct + m.valid + 0.1 * m.format_ok
+        elif schema == RewardSchema.CORRECT_PLUS_LINE_VALID_PLUS_0P1_FORMAT:
+            value = m.correct + self._line_valid_fraction(output_text, template=template) + 0.1 * m.format_ok
         elif schema == RewardSchema.CORRECT_PLUS_0P75_VALID_PLUS_0P1_FORMAT:
             value = m.correct + 0.75 * m.valid + 0.1 * m.format_ok
         elif schema == RewardSchema.CORRECT_PLUS_0P5_VALID_PLUS_0P1_FORMAT:

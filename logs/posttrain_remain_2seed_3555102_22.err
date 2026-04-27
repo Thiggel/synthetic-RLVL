@@ -1,0 +1,26 @@
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 10.19ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 95.58ba/s]
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-04-21 16:49:01,764	ERROR services.py:1361 -- Failed to start the dashboard 
+2026-04-21 16:49:01,765	ERROR services.py:1386 -- Error should be written to 'dashboard.log' or 'dashboard.err'. We are printing the last 20 lines for you. See 'https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure' to find where the log file is.
+2026-04-21 16:49:01,766	ERROR services.py:1396 -- Couldn't read dashboard.log file. Error: [Errno 2] No such file or directory: '/tmp/3555125.alex/ray/session_2026-04-21_16-48-00_147302_3671304/logs/dashboard.log'. It means the dashboard is broken even before it initializes the logger (mostly dependency issues). Reading the dashboard.err file which contains stdout/stderr.
+2026-04-21 16:49:01,766	ERROR services.py:1430 -- Failed to read dashboard.err file: [Errno 2] No such file or directory: '/tmp/3555125.alex/ray/session_2026-04-21_16-48-00_147302_3671304/logs/dashboard.err'. It is unexpected. Please report an issue to Ray github. https://github.com/ray-project/ray/issues
+2026-04-21 16:49:35,188	INFO node.py:375 -- Failed to get node info b'RPC error: Deadline Exceeded'
+Error executing job with overrides: ['run_name=rl_grpo_merge_ablate_prompts8_rollouts64_seed3408', 'reward.schema=correct_plus_valid_plus_0p1_format', 'grpo.num_prompts=8', 'grpo.num_rollouts=64', 'seed=3408', 'model.path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3408_remerge_20260421', 'model.merge_adapter_for_rollout=false', 'task.template=logic', 'task.prefill=none', 'grpo.max_num_batched_tokens=16384', 'optim.micro_batch_size=4', 'optim.logprob_micro_batch_size=4']
+Traceback (most recent call last):
+  File "/home/hpc/c107fa/c107fa12/synthetic-RLVL/posttrain_grpo_verl.py", line 490, in main
+    run_ppo(migrate_legacy_reward_impl(verl_cfg), task_runner_class=remote_task_runner)
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/trainer/main_ppo.py", line 77, in run_ppo
+    ray.init(**OmegaConf.to_container(ray_init_kwargs))
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py", line 1908, in init
+    _global_node = ray._private.node.Node(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/node.py", line 377, in __init__
+    raise Exception(
+Exception: The current node timed out during startup. This could happen because some of the raylet failed to startup or the GCS has become overloaded.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

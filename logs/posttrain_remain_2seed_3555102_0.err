@@ -1,0 +1,43 @@
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00,  8.88ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00,  8.84ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 114.93ba/s]
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-04-21 16:49:33,179	ERROR services.py:1361 -- Failed to start the dashboard 
+2026-04-21 16:49:33,180	ERROR services.py:1386 -- Error should be written to 'dashboard.log' or 'dashboard.err'. We are printing the last 20 lines for you. See 'https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure' to find where the log file is.
+2026-04-21 16:49:33,181	ERROR services.py:1430 -- 
+The last 20 lines of /tmp/3555103.alex/ray/session_2026-04-21_16-48-30_169379_1781752/logs/dashboard.log (it contains the error message from the dashboard): 
+2026-04-21 16:49:24,033	INFO utils.py:340 -- Available modules: [<class 'ray.dashboard.modules.usage_stats.usage_stats_head.UsageStatsHead'>]
+2026-04-21 16:49:24,033	INFO head.py:235 -- DashboardHeadModules to load: None.
+2026-04-21 16:49:24,033	INFO head.py:238 -- Loading DashboardHeadModule: <class 'ray.dashboard.modules.usage_stats.usage_stats_head.UsageStatsHead'>.
+2026-04-21 16:49:24,033	INFO head.py:242 -- Loaded 1 dashboard head modules: [<ray.dashboard.modules.usage_stats.usage_stats_head.UsageStatsHead object at 0x14d7c8df8f20>].
+2026-04-21 16:49:24,033	INFO utils.py:307 -- Get all modules by type: SubprocessModule
+2026-04-21 16:49:24,046	INFO utils.py:340 -- Available modules: [<class 'ray.dashboard.modules.metrics.metrics_head.MetricsHead'>, <class 'ray.dashboard.modules.data.data_head.DataHead'>, <class 'ray.dashboard.modules.event.event_head.EventHead'>, <class 'ray.dashboard.modules.job.job_head.JobHead'>, <class 'ray.dashboard.modules.node.node_head.NodeHead'>, <class 'ray.dashboard.modules.reporter.reporter_head.ReportHead'>, <class 'ray.dashboard.modules.serve.serve_head.ServeHead'>, <class 'ray.dashboard.modules.state.state_head.StateHead'>, <class 'ray.dashboard.modules.train.train_head.TrainHead'>]
+2026-04-21 16:49:24,046	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.metrics.metrics_head.MetricsHead'>.
+2026-04-21 16:49:24,046	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.data.data_head.DataHead'>.
+2026-04-21 16:49:24,046	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.event.event_head.EventHead'>.
+2026-04-21 16:49:24,046	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.job.job_head.JobHead'>.
+2026-04-21 16:49:24,046	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.node.node_head.NodeHead'>.
+2026-04-21 16:49:24,046	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.reporter.reporter_head.ReportHead'>.
+2026-04-21 16:49:24,046	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.serve.serve_head.ServeHead'>.
+2026-04-21 16:49:24,046	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.state.state_head.StateHead'>.
+2026-04-21 16:49:24,046	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.train.train_head.TrainHead'>.
+2026-04-21 16:49:24,046	INFO head.py:296 -- Loaded 9 subprocess modules: [<ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14d7c0968c50>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14d7c1366ff0>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14d7c73d08c0>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14d7c2332b40>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14d7bdd925d0>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14d7bf1b89b0>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14d7c5fcea50>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14d7bdd1ba40>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14d7bdd38bc0>].
+
+2026-04-21 16:50:05,655	INFO node.py:375 -- Failed to get node info b'RPC error: Deadline Exceeded'
+Error executing job with overrides: ['run_name=rl_grpo_merge_ablate_prompts8_rollouts8_seed3407', 'reward.schema=correct_plus_valid_plus_0p1_format', 'grpo.num_prompts=8', 'grpo.num_rollouts=8', 'seed=3407', 'model.path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3407_remerge_20260421', 'model.merge_adapter_for_rollout=false', 'task.template=logic', 'task.prefill=none', 'grpo.max_num_batched_tokens=16384', 'optim.micro_batch_size=4', 'optim.logprob_micro_batch_size=4']
+Traceback (most recent call last):
+  File "/home/hpc/c107fa/c107fa12/synthetic-RLVL/posttrain_grpo_verl.py", line 490, in main
+    run_ppo(migrate_legacy_reward_impl(verl_cfg), task_runner_class=remote_task_runner)
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/trainer/main_ppo.py", line 77, in run_ppo
+    ray.init(**OmegaConf.to_container(ray_init_kwargs))
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py", line 1908, in init
+    _global_node = ray._private.node.Node(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/node.py", line 377, in __init__
+    raise Exception(
+Exception: The current node timed out during startup. This could happen because some of the raylet failed to startup or the GCS has become overloaded.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

@@ -1,0 +1,138 @@
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 10.96ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 126.31ba/s]
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-04-18 08:01:35,401	ERROR services.py:1361 -- Failed to start the dashboard , return code 1
+2026-04-18 08:01:35,402	ERROR services.py:1386 -- Error should be written to 'dashboard.log' or 'dashboard.err'. We are printing the last 20 lines for you. See 'https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure' to find where the log file is.
+2026-04-18 08:01:35,402	ERROR services.py:1430 -- 
+The last 20 lines of /tmp/3548421.alex/ray/session_2026-04-18_08-01-01_599001_494090/logs/dashboard.log (it contains the error message from the dashboard): 
+2026-04-18 08:01:04,958	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.reporter.reporter_head.ReportHead'>.
+2026-04-18 08:01:04,958	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.serve.serve_head.ServeHead'>.
+2026-04-18 08:01:04,958	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.state.state_head.StateHead'>.
+2026-04-18 08:01:04,958	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.train.train_head.TrainHead'>.
+2026-04-18 08:01:04,958	INFO head.py:296 -- Loaded 9 subprocess modules: [<ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x1526799c8bf0>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x1526796a6630>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x1526794a6c90>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x15267331eb40>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x15266b77e5d0>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x1526745b3110>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x1526745b31a0>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x1526745b3260>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x1526745b3290>].
+2026-04-18 08:01:35,037	ERROR dashboard.py:308 -- The dashboard on node a0934.nhr.fau.de failed with the following error:
+Traceback (most recent call last):
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/dashboard/dashboard.py", line 297, in <module>
+    loop.run_until_complete(dashboard.run())
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/dashboard/dashboard.py", line 98, in run
+    await self.dashboard_head.run()
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/dashboard/head.py", line 405, in run
+    handle.wait_for_module_ready()
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/dashboard/subprocesses/handle.py", line 153, in wait_for_module_ready
+    raise RuntimeError(
+RuntimeError: Module MetricsHead failed to start. Timeout after 30.0 seconds.
+2026-04-18 08:01:37,613	INFO worker.py:2013 -- Started a local Ray instance.
+2026-04-18 08:01:37,616	WARNING working_dir.py:86 -- Directory '.git' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-18 08:01:37,617	WARNING working_dir.py:86 -- Directory '__pycache__' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-18 08:01:37,626	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-18 08:01:41,452	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-18 08:01:41,610	INFO packaging.py:691 -- Creating a file package for local module '/home/hpc/c107fa/c107fa12/synthetic-RLVL'.
+2026-04-18 08:01:41,611	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-18 08:01:41,938	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-18 08:01:42,015	INFO packaging.py:463 -- Pushing file package 'gcs://_ray_pkg_72eaf69cc80da211.zip' (63.21MiB) to Ray cluster...
+2026-04-18 08:01:42,119	INFO packaging.py:476 -- Successfully pushed file package 'gcs://_ray_pkg_72eaf69cc80da211.zip'.
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py:2052: FutureWarning: Tip: In future versions of Ray, Ray will no longer override accelerator visible devices env var if num_gpus=0 or num_gpus=None (default). To enable this behavior and turn off this error message, set RAY_ACCEL_ENV_VAR_OVERRIDE_ON_ZERO=0
+  warnings.warn(
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-18 08:02:07,735:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(SynthTaskRunner pid=501063)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3407' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(SynthTaskRunner pid=501063)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(SynthTaskRunner pid=501063)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=501063)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3407' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(SynthTaskRunner pid=501063)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(SynthTaskRunner pid=501063)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(SynthTaskRunner pid=501063)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(SynthTaskRunner pid=501063)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(SynthTaskRunner pid=501063)[0m Generating train split: 0 examples [00:00, ? examples/s]
+[36m(SynthTaskRunner pid=501063)[0m Generating train split: 20000 examples [00:00, 155682.77 examples/s]
+[36m(SynthTaskRunner pid=501063)[0m Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 512 examples [00:00, 34953.10 examples/s]
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-18 08:02:30,648:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[33m(raylet)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+[33m(raylet)[0m   warnings.warn(
+[33m(raylet)[0m WARNING:2026-04-18 08:02:43,430:Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[36m(WorkerDict pid=507167)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3407' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(WorkerDict pid=507167)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=507167)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=507167)[0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3407' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[36m(WorkerDict pid=507167)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=507167)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=507167)[0m /home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/utils/tokenizer.py:109: UserWarning: Failed to create processor: Unsupported processor type: GPT2TokenizerFast. This may affect multimodal processing
+[36m(WorkerDict pid=507167)[0m   warnings.warn(f"Failed to create processor: {e}. This may affect multimodal processing", stacklevel=1)
+[36m(WorkerDict pid=507167)[0m `rope_scaling`'s beta_fast field must be a float, got 32
+[36m(WorkerDict pid=507167)[0m `rope_scaling`'s beta_slow field must be a float, got 1
+[36m(WorkerDict pid=507167)[0m `torch_dtype` is deprecated! Use `dtype` instead!
+Error executing job with overrides: ['run_name=rl_grpo_merge_ablate_prompts8_rollouts16_seed3407', 'seed=3407', 'model.path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3407', 'model.merge_adapter_for_rollout=false', 'task.template=logic', 'task.prefill=none', 'reward.schema=correct_plus_valid_plus_0p1_format', 'grpo.max_num_batched_tokens=16384', 'optim.micro_batch_size=4', 'optim.logprob_micro_batch_size=4', 'grpo.num_prompts=8', 'grpo.num_rollouts=16']
+Traceback (most recent call last):
+  File "/home/hpc/c107fa/c107fa12/synthetic-RLVL/posttrain_grpo_verl.py", line 485, in main
+    run_ppo(migrate_legacy_reward_impl(verl_cfg), task_runner_class=remote_task_runner)
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/trainer/main_ppo.py", line 99, in run_ppo
+    ray.get(runner.run.remote(config))
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py", line 2981, in get
+    values, debugger_breakpoint = worker.get_objects(
+                                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py", line 1012, in get_objects
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(OSError): [36mray::SynthTaskRunner.run()[39m (pid=501063, ip=10.28.53.172, actor_id=50af0cbcb463dbe11c76281701000000, repr=<posttrain_grpo_verl.SynthTaskRunner object at 0x154374cfdf40>)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hpc/c107fa/c107fa12/synthetic-RLVL/posttrain_grpo_verl.py", line 482, in run
+    return super().run(config)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/trainer/main_ppo.py", line 356, in run
+    trainer.init_workers()
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/trainer/ppo/ray_trainer.py", line 798, in init_workers
+    self.actor_rollout_wg.init_model()
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/single_controller/ray/base.py", line 55, in __call__
+    output = ray.get(output)
+             ^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^
+                                  ^^^^^^^^^^^^^^^^^^^
+ray.exceptions.RayTaskError(OSError): [36mray::WorkerDict.actor_rollout_init_model()[39m (pid=507167, ip=10.28.53.172, actor_id=b4d0a0bb7ef2767f75aab51901000000, repr=<verl.single_controller.ray.base.WorkerDict object at 0x15081c13be60>)
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+           ^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/single_controller/ray/base.py", line 932, in func
+    return getattr(self.worker_dict[key], name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/single_controller/base/decorator.py", line 456, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/workers/fsdp_workers.py", line 882, in init_model
+    ) = self._build_model_optimizer(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/workers/fsdp_workers.py", line 459, in _build_model_optimizer
+    actor_module = actor_module_class.from_pretrained(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4900, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/modeling_utils.py", line 989, in _get_resolved_checkpoint_files
+    raise OSError(
+OSError: Error no file named pytorch_model.bin, model.safetensors, tf_model.h5, model.ckpt.index or flax_model.msgpack found in directory /home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3407.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

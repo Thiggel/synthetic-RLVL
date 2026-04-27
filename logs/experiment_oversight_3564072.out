@@ -1,0 +1,60 @@
+### Starting TaskPrologue of job 3564072 on a0831 at Mon Apr 27 09:08:56 CEST 2026
+Running on cores 16-31 with governor ondemand
+Mon Apr 27 09:08:56 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:13:00.0 Off |                    0 |
+| N/A   34C    P0             60W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+Monitoring pass complete. No cancellation or resubmission was needed.
+
+Updated:
+- [docs/current_system_state.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/current_system_state.md)
+- [docs/posttrain_recovery_passk_checklist_2026-04-24.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/posttrain_recovery_passk_checklist_2026-04-24.md)
+
+Current status at `2026-04-27 09:10 CEST`:
+- Recovery jobs are healthy and progressing: `3563089_1 ~1365/1500`, `3563089_2 ~488/1500`, `3563089_4 ~709/1500`, `3564075_12 ~872/1500`.
+- Long prompts64/rollouts64 rows are slow but active, so I left them running.
+- No new failed/cancelled/timeout/OOM jobs since `05:00`.
+- No current idle-GPU or Ray startup hang pattern found.
+- Reward pass@k remains complete with 24 metrics files and 24 samples files.
+- Full merge/eval `3561188` remains correctly dependency-held.
+=== JOB_STATISTICS ===
+=== current date     : Mon Apr 27 09:10:52 CEST 2026
+= Job-ID             : 3564072 on alex
+= Job-Name           : experiment_oversight
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/codex/experiment_oversight.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:01:57
+= Total RAM usage    : 0.4 GiB of assigned  GiB (%)
+= Node list          : a0831
+= Subm/Elig/Start/End: 2026-04-26T13:08:38 / 2026-04-27T09:08:38 / 2026-04-27T09:08:54 / 2026-04-27T09:10:51
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           38.8G   104.9G   209.7G        N/A  46,164      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  4229.9G     0.0K     0.0K        N/A     233K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

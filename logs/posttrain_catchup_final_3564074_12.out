@@ -1,0 +1,51 @@
+### Starting TaskPrologue of job 3564074 on a0633 at Sun Apr 26 13:11:38 CEST 2026
+Running on cores 0-15 with governor ondemand
+Sun Apr 26 13:11:38 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:0E:00.0 Off |                    0 |
+| N/A   36C    P0             60W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[catchup] row=12 sweep=rollouts kind=rollouts value=64 seed=3408 action=continue run=rl_grpo_merge_ablate_prompts8_rollouts64_seed3408
+[ray-startup] jitter_sleep_s=116 max=180
+[posttrain] model bootstrap: raw_model_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3408_remerge_20260421 effective_model_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3408_remerge_20260421 effective_tokenizer_path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3408_remerge_20260421 lora_adapter_path=None
+[2026-04-26 13:14:15,194][torchao][WARNING] - Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+=== JOB_STATISTICS ===
+=== current date     : Sun Apr 26 17:09:59 CEST 2026
+= Job-ID             : 3564074 on alex as 3564074_12
+= Job-Name           : posttrain_catchup_final
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/jobs/posttrain_catchup_final_2026-04-24.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 1-00:00:00
+= Elapsed runtime    : 03:58:19
+= Total RAM usage    : 4.9 GiB of assigned  GiB (%)
+= Node list          : a0633
+= Subm/Elig/Start/End: 2026-04-26T13:11:36 / 2026-04-26T13:11:36 / 2026-04-26T13:11:37 / 2026-04-26T17:09:56
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           38.8G   104.9G   209.7G        N/A  46,092      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  3912.6G     0.0K     0.0K        N/A     232K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

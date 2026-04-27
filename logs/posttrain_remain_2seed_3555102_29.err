@@ -1,0 +1,38 @@
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 11.24ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 115.61ba/s]
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-04-21 16:46:34,051	ERROR services.py:1361 -- Failed to start the dashboard 
+2026-04-21 16:46:34,052	ERROR services.py:1386 -- Error should be written to 'dashboard.log' or 'dashboard.err'. We are printing the last 20 lines for you. See 'https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure' to find where the log file is.
+2026-04-21 16:46:34,052	ERROR services.py:1430 -- 
+The last 20 lines of /tmp/3555102.alex/ray/session_2026-04-21_16-45-32_457254_1440873/logs/dashboard.log (it contains the error message from the dashboard): 
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/actors> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c129440>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/jobs> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c129620>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/nodes> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c129800>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/placement_groups> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c1299e0>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/workers> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c129bc0>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/tasks> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c129da0>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/objects> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c129f80>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/runtime_envs> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c12a160>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/logs> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c12a340>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <DynamicResource  /api/v0/logs/{media_type}> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c12a520>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/tasks/summarize> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c12a700>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/actors/summarize> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c12a8e0>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/objects/summarize> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c12aac0>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/v0/tasks/timeline> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c12aca0>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <DynamicResource  /api/v0/delay/{delay_s}> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c12ade0>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/train/v2/runs/v1> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c12b6a0>
+2026-04-21 16:46:33,958	INFO http_server_head.py:408 -- <ResourceRoute [GET] <PlainResource  /api/train/v2/runs> -> <function SubprocessRouteTable._register_route.<locals>._wrapper.<locals>.parent_side_handler at 0x15426c12bb00>
+2026-04-21 16:46:33,958	INFO http_server_head.py:409 -- Registered 62 routes.
+2026-04-21 16:46:33,958	INFO head.py:440 -- http server initialized at 127.0.0.1:8265
+2026-04-21 16:46:38,289	INFO worker.py:2013 -- Started a local Ray instance.
+2026-04-21 16:46:38,293	WARNING working_dir.py:86 -- Directory '.git' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-21 16:46:38,293	WARNING working_dir.py:86 -- Directory '__pycache__' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-21 16:46:38,300	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-21 16:46:40,231	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-21 16:46:40,370	INFO packaging.py:691 -- Creating a file package for local module '/home/hpc/c107fa/c107fa12/synthetic-RLVL'.
+2026-04-21 16:46:40,371	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-21 16:46:41,489	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-21 16:46:41,674	INFO packaging.py:463 -- Pushing file package 'gcs://_ray_pkg_7a311cec590d86ff.zip' (330.20MiB) to Ray cluster...
+2026-04-21 16:46:42,204	INFO packaging.py:476 -- Successfully pushed file package 'gcs://_ray_pkg_7a311cec590d86ff.zip'.
+[2026-04-22T15:21:19.575] error: *** JOB 3555102 ON a0631 CANCELLED AT 2026-04-22T15:21:19 DUE to SIGNAL Terminated ***

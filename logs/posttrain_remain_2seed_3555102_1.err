@@ -1,0 +1,19 @@
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00,  8.73ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00,  8.72ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 87.54ba/s]
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-04-21 16:47:46,934	ERROR services.py:1361 -- Failed to start the dashboard 
+2026-04-21 16:47:46,935	ERROR services.py:1386 -- Error should be written to 'dashboard.log' or 'dashboard.err'. We are printing the last 20 lines for you. See 'https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure' to find where the log file is.
+2026-04-21 16:47:46,935	ERROR services.py:1396 -- Couldn't read dashboard.log file. Error: [Errno 2] No such file or directory: '/tmp/3555104.alex/ray/session_2026-04-21_16-46-45_119519_3674830/logs/dashboard.log'. It means the dashboard is broken even before it initializes the logger (mostly dependency issues). Reading the dashboard.err file which contains stdout/stderr.
+2026-04-21 16:47:46,935	ERROR services.py:1430 -- Failed to read dashboard.err file: [Errno 2] No such file or directory: '/tmp/3555104.alex/ray/session_2026-04-21_16-46-45_119519_3674830/logs/dashboard.err'. It is unexpected. Please report an issue to Ray github. https://github.com/ray-project/ray/issues
+2026-04-21 16:47:50,230	INFO worker.py:2013 -- Started a local Ray instance.
+2026-04-21 16:47:50,233	WARNING working_dir.py:86 -- Directory '.git' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-21 16:47:50,234	WARNING working_dir.py:86 -- Directory '__pycache__' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-21 16:47:50,242	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-21 16:47:53,701	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-21 16:47:53,805	INFO packaging.py:691 -- Creating a file package for local module '/home/hpc/c107fa/c107fa12/synthetic-RLVL'.
+2026-04-21 16:47:53,807	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-21 16:47:55,118	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-21 16:47:57,381	INFO packaging.py:463 -- Pushing file package 'gcs://_ray_pkg_6d49e92addc24ace.zip' (330.24MiB) to Ray cluster...
+2026-04-21 16:47:57,884	INFO packaging.py:476 -- Successfully pushed file package 'gcs://_ray_pkg_6d49e92addc24ace.zip'.
+[2026-04-22T15:21:19.572] error: *** JOB 3555104 ON a0832 CANCELLED AT 2026-04-22T15:21:19 DUE to SIGNAL Terminated ***

@@ -1,0 +1,20 @@
+source ./scripts/env.sh
+
+WANDB_MODE=disabled \
+$HPCVAULT/.venv_rlvl_posttrain/bin/python scripts/evaluate_checkpoint_passk.py \
+  --checkpoint /home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_actor_rl_reward_correct_plus_line_valid_plus_0p1_format_seed3409_step1500 \
+  --config conf/posttrain_grpo.yaml \
+  --profile grpo \
+  --backend vllm \
+  --step-min 1 \
+  --step-max 20 \
+  --samples-per-step 20 \
+  --num-generations 64 \
+  --k-values 1,2,4,8,16,32,64 \
+  --temperature 1.0 \
+  --max-new-tokens 768 \
+  --batch-size 1024 \
+  --gpu-memory-utilization 0.80 \
+  --disable-external \
+  --collect-samples 8 \
+  --output /home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/rl_reward_correct_plus_line_valid_plus_0p1_format_seed3409_step1500.json

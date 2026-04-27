@@ -1,0 +1,15 @@
+Creating parquet from Arrow format:   0%|          | 0/3 [00:00<?, ?ba/s]Creating parquet from Arrow format:  33%|███▎      | 1/3 [00:00<00:00,  3.23ba/s]Creating parquet from Arrow format:  67%|██████▋   | 2/3 [00:00<00:00,  3.38ba/s]Creating parquet from Arrow format: 100%|██████████| 3/3 [00:00<00:00,  4.46ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 105.36ba/s]
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-04-26 13:14:28,306	INFO worker.py:2013 -- Started a local Ray instance.
+2026-04-26 13:14:28,310	WARNING working_dir.py:86 -- Directory '.git' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-26 13:14:28,311	WARNING working_dir.py:86 -- Directory '__pycache__' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-26 13:14:28,322	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-26 13:14:28,435	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-26 13:14:28,644	INFO packaging.py:691 -- Creating a file package for local module '/home/hpc/c107fa/c107fa12/synthetic-RLVL'.
+2026-04-26 13:14:28,645	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-26 13:14:28,696	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-26 13:14:28,749	INFO packaging.py:463 -- Pushing file package 'gcs://_ray_pkg_c3d9cb468ef64889.zip' (0.39MiB) to Ray cluster...
+2026-04-26 13:14:28,750	INFO packaging.py:476 -- Successfully pushed file package 'gcs://_ray_pkg_c3d9cb468ef64889.zip'.
+[2026-04-26T17:09:56.309] error: *** JOB 3564074 ON a0633 CANCELLED AT 2026-04-26T17:09:56 DUE to SIGNAL Terminated ***

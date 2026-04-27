@@ -1,0 +1,49 @@
+### Starting TaskPrologue of job 3548370 on a0533 at Sat Apr 18 07:52:41 CEST 2026
+Running on cores 16-31 with governor ondemand
+Sat Apr 18 07:52:42 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:13:00.0 Off |                    0 |
+| N/A   33C    P0             65W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[reward_ablation] Merging seed 3407 adapter -> /home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_lr1e-4_seed3407
+=== JOB_STATISTICS ===
+=== current date     : Sat Apr 18 07:54:08 CEST 2026
+= Job-ID             : 3548370 on alex as 3548365_4
+= Job-Name           : posttrain_reward_ablation
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/sweeps/posttrain_reward_ablation.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 1-00:00:00
+= Elapsed runtime    : 00:01:57
+= Total RAM usage    : 27.5 GiB of assigned  GiB (%)
+= Node list          : a0533
+= Subm/Elig/Start/End: 2026-04-18T07:51:36 / 2026-04-18T07:51:37 / 2026-04-18T07:52:06 / 2026-04-18T07:54:03
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           35.8G   104.9G   209.7G        N/A  43,312      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  2519.4G     0.0K     0.0K        N/A     360K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A100-SXM4-80GB, 00000000:13:00.0, 2247886, 0 %, 0 %, 576 MiB, 58834 ms

@@ -1,0 +1,21 @@
+=== JOB_STATISTICS ===
+=== current date     : Sat Apr 18 07:58:41 CEST 2026
+= Job-ID             : 3548365 on alex as 3548365_20
+= Job-Name           : posttrain_reward_ablation
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/sweeps/posttrain_reward_ablation.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 1-00:00:00
+= Elapsed runtime    : 00:01:37
+= Total RAM usage    : 59.7 GiB of assigned  GiB (%)
+= Node list          : a0933
+= Subm/Elig/Start/End: 2026-04-18T07:51:36 / 2026-04-18T07:51:37 / 2026-04-18T07:52:26 / 2026-04-18T07:54:03
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           35.7G   104.9G   209.7G        N/A  43,322      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  2538.5G     0.0K     0.0K        N/A     360K                          N/A    
+======================

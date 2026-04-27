@@ -54,6 +54,10 @@ validation:
   generation_backend: hf
   generation_batch_size: 16
   vllm_gpu_memory_utilization: 0.85
+  sampled_enabled: false
+  sampled_num_generations: 64
+  sampled_k_values: [1, 2, 4, 8, 16, 32, 64]
+  sampled_temperature: 1.0
 
 external_eval:
   enabled: false
@@ -64,7 +68,13 @@ external_eval:
 constrained_eval:
   enabled: false
   samples_per_step: 4
+  num_generations: 8
+  candidates_per_line: 8
+  k_values: [1, 2, 4, 8]
   max_lines: 32
+  max_line_tokens: 48
+  suffix_max_tokens: 256
+  temperature: 1.0
 
 log_generations:
   num_samples: 8
@@ -72,3 +82,11 @@ log_generations:
 
 logging:
   report_to: [wandb]
+
+hub:
+  push_final: false
+  repo_id: null
+  private: true
+  token_env: HF_TOKEN
+  path_in_repo: ""
+  cleanup_local_output: false

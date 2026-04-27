@@ -1,0 +1,38 @@
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 10.82ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 125.60ba/s]
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-04-18 08:01:49,312	ERROR services.py:1361 -- Failed to start the dashboard , return code 1
+2026-04-18 08:01:49,312	ERROR services.py:1386 -- Error should be written to 'dashboard.log' or 'dashboard.err'. We are printing the last 20 lines for you. See 'https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure' to find where the log file is.
+2026-04-18 08:01:49,313	ERROR services.py:1430 -- 
+The last 20 lines of /tmp/3548387.alex/ray/session_2026-04-18_08-01-13_413826_494133/logs/dashboard.log (it contains the error message from the dashboard): 
+2026-04-18 08:01:15,786	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.reporter.reporter_head.ReportHead'>.
+2026-04-18 08:01:15,786	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.serve.serve_head.ServeHead'>.
+2026-04-18 08:01:15,786	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.state.state_head.StateHead'>.
+2026-04-18 08:01:15,786	INFO head.py:292 -- Loading SubprocessModule: <class 'ray.dashboard.modules.train.train_head.TrainHead'>.
+2026-04-18 08:01:15,786	INFO head.py:296 -- Loaded 9 subprocess modules: [<ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14c352914b90>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14c357c13b60>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14c34cf8e960>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14c35611a720>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14c35611a660>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14c34cf385c0>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14c34cfbcdd0>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14c34cfbdd90>, <ray.dashboard.subprocesses.handle.SubprocessModuleHandle object at 0x14c3519c3200>].
+2026-04-18 08:01:46,976	ERROR dashboard.py:308 -- The dashboard on node a0934.nhr.fau.de failed with the following error:
+Traceback (most recent call last):
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/dashboard/dashboard.py", line 297, in <module>
+    loop.run_until_complete(dashboard.run())
+  File "/home/hpc/c107fa/c107fa12/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/dashboard/dashboard.py", line 98, in run
+    await self.dashboard_head.run()
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/dashboard/head.py", line 405, in run
+    handle.wait_for_module_ready()
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/dashboard/subprocesses/handle.py", line 153, in wait_for_module_ready
+    raise RuntimeError(
+RuntimeError: Module DataHead failed to start. Timeout after 30.0 seconds.
+2026-04-18 08:02:00,529	INFO worker.py:2013 -- Started a local Ray instance.
+2026-04-18 08:02:00,531	WARNING working_dir.py:86 -- Directory '.git' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-18 08:02:00,532	WARNING working_dir.py:86 -- Directory '__pycache__' is now ignored by default when packaging the working directory. To disable this behavior, set the `RAY_OVERRIDE_RUNTIME_ENV_DEFAULT_EXCLUDES=''` environment variable.
+2026-04-18 08:02:00,539	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-18 08:02:00,754	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-18 08:02:00,797	INFO packaging.py:691 -- Creating a file package for local module '/home/hpc/c107fa/c107fa12/synthetic-RLVL'.
+2026-04-18 08:02:00,799	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.gitignore')]
+2026-04-18 08:02:01,146	INFO packaging.py:392 -- Ignoring upload to cluster for these files: [PosixPath('/home/hpc/c107fa/c107fa12/synthetic-RLVL/.pytest_cache/.gitignore')]
+2026-04-18 08:02:01,228	INFO packaging.py:463 -- Pushing file package 'gcs://_ray_pkg_61af768d2ac5d157.zip' (63.24MiB) to Ray cluster...
+2026-04-18 08:02:01,345	INFO packaging.py:476 -- Successfully pushed file package 'gcs://_ray_pkg_61af768d2ac5d157.zip'.
+[2026-04-19T08:00:29.007] error: *** JOB 3548387 ON a0934 CANCELLED AT 2026-04-19T08:00:29 DUE TO TIME LIMIT ***

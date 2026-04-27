@@ -1,4 +1,4 @@
-from logic_engine import LogicEngine
+from logic_engine import IncrementalProofValidator, LogicEngine
 
 
 def test_validate_simple_fol_proof():
@@ -69,3 +69,19 @@ R(a) ; R, 3
     assert (1, 4) in report.graph.edges
     assert (2, 4) in report.graph.edges
     assert (3, 5) in report.graph.edges
+
+
+def test_incremental_validator_ranks_candidate_lines():
+    validator = IncrementalProofValidator()
+    state = validator.initial_state("P(a)->Q(a), P(a)")
+
+    invalid = validator.check_next_line(state, "Q(a) ; IE, 1,3")
+    assert invalid.syntactic is True
+    assert invalid.valid is False
+    assert invalid.score == 1
+
+    valid = validator.check_next_line(state, "Q(a) ; IE, 1,2")
+    assert valid.syntactic is True
+    assert valid.valid is True
+    assert valid.novel is True
+    assert valid.score == 3

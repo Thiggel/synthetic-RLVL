@@ -7,6 +7,58 @@ Minimal synthetic logic stack for:
 - RL post-training (VERL + GRPO) with format/correctness/validity rewards
 - Slurm jobs and array sweeps
 
+## Validation Metrics
+
+Validation logs two complementary synthetic evaluation families:
+
+- Greedy `@1` metrics: `synthetic/step_N/{format,correct,valid}`.
+- Sampled pass@k metrics: `synthetic_sampled/step_N/{syntactic,format,correct,valid,joint}_pass@K` and `valid_given_correct@K`.
+- Optional constrained proof-line pass@k metrics: `synthetic_constrained_sampled/step_N/{syntactic,format,correct,valid,joint}_pass@K`.
+
+Full sampled validation is disabled during training by default because it is
+too expensive for frequent online validation. When enabled, default sampled
+settings are `sampled_num_generations=64` and
+`sampled_k_values=[1,2,4,8,16,32,64]`. `joint_pass@K` requires format,
+answer correctness, and proof validity in the same sampled completion. Band
+metrics are also emitted for `band_train`, `band_ood`, and `band_hard_tail`.
+
+Constrained proof-line evaluation is disabled by default and can be enabled
+post hoc with `--constrained-enabled`. It first samples the model's own formal
+prefix, then regenerates proof lines with a fixed number of candidates per
+line. Candidate lines are ranked as random `<` syntactic `<` valid `<`
+valid-and-novel using the logic engine. This is an eval-time decoding option
+only; it does not change normal training or default pass@k evaluation.
+
+Post-hoc checkpoint evaluation:
+
+```bash
+source ./scripts/env.sh
+$HPCVAULT/.venv_rlvl_posttrain/bin/python scripts/evaluate_checkpoint_passk.py \
+  --checkpoint /path/to/checkpoint_or_actor \
+  --config conf/posttrain_grpo.yaml \
+  --profile grpo \
+  --backend vllm \
+  --disable-external \
+  --output /tmp/passk_metrics.json
+```
+
+Constrained smoke/example:
+
+```bash
+$HPCVAULT/.venv_rlvl_posttrain/bin/python scripts/evaluate_checkpoint_passk.py \
+  --checkpoint /path/to/merged_checkpoint \
+  --config conf/posttrain_grpo.yaml \
+  --profile grpo \
+  --backend vllm \
+  --disable-external \
+  --constrained-enabled \
+  --constrained-num-generations 8 \
+  --constrained-candidates-per-line 8 \
+  --constrained-k-values 1,2,4,8 \
+  --output /tmp/passk_constrained_metrics.json \
+  --samples-output /tmp/passk_constrained_samples.jsonl
+```
+
 ## Quick Start
 
 ```bash

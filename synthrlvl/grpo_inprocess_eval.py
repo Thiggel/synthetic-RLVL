@@ -57,7 +57,13 @@ def install_grpo_eval_patch(
         sanity_prompt_path = os.environ.get("SYNTHRLVL_VERL_SANITY_PROMPT_PATH", "").strip()
         sanity_max_new_tokens_env = os.environ.get("SYNTHRLVL_VERL_SANITY_MAX_NEW_TOKENS", "").strip()
 
-        def generate_texts(prompts: list[str], max_new_tokens: int, do_sample: bool, temperature: float) -> list[str]:
+        def generate_with_n(
+            prompts: list[str],
+            max_new_tokens: int,
+            do_sample: bool,
+            temperature: float,
+            num_samples: int,
+        ) -> list[str]:
             nonlocal warned_response_cap
             if not prompts:
                 return []
@@ -80,14 +86,15 @@ def install_grpo_eval_patch(
             val_sampling.top_p = 0.95 if do_sample else 1.0
             val_sampling.top_k = -1
             val_sampling.do_sample = bool(do_sample)
-            val_sampling.n = 1
+            val_sampling.n = max(1, int(num_samples))
 
             generations: list[str] = []
-            num_chunks = (len(prompts) + batch_size - 1) // batch_size
+            prompt_batch_size = max(1, batch_size // max(1, int(num_samples)))
+            num_chunks = (len(prompts) + prompt_batch_size - 1) // prompt_batch_size
             try:
                 for chunk_idx in range(num_chunks):
-                    start = chunk_idx * batch_size
-                    end = min(len(prompts), start + batch_size)
+                    start = chunk_idx * prompt_batch_size
+                    end = min(len(prompts), start + prompt_batch_size)
                     chunk = prompts[start:end]
                     print(f"[syntheval] generating chunk {chunk_idx + 1}/{num_chunks} ({len(chunk)} prompts) at step={step}")
 
@@ -159,6 +166,17 @@ def install_grpo_eval_patch(
                 val_sampling.n = orig_n
 
             return generations
+
+        def generate_texts(prompts: list[str], max_new_tokens: int, do_sample: bool, temperature: float) -> list[str]:
+            return generate_with_n(prompts, max_new_tokens, do_sample, temperature, 1)
+
+        def generate_samples(prompts: list[str], max_new_tokens: int, num_samples: int, temperature: float) -> list[list[str]]:
+            n = max(1, int(num_samples))
+            flat = generate_with_n(prompts, max_new_tokens, True, temperature, n)
+            expected = len(prompts) * n
+            if len(flat) != expected:
+                raise RuntimeError(f"Sampled VERL eval returned {len(flat)} outputs for {len(prompts)} prompts with n={n}")
+            return [flat[i * n : (i + 1) * n] for i in range(len(prompts))]
 
         def run_sanity_probe() -> None:
             sanity_prompt = ""
@@ -245,6 +263,7 @@ def install_grpo_eval_patch(
             eval_cfg=eval_cfg,
             collect_samples=int(collect_samples),
             generate_texts=generate_texts,
+            generate_samples=generate_samples,
         )
         elapsed = time.time() - started
         print(f"[syntheval] completed in {elapsed:.1f}s at step={step}")
