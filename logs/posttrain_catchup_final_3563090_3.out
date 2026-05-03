@@ -1,0 +1,49 @@
+### Starting TaskPrologue of job 3569395 on a0631 at Wed Apr 29 11:49:38 CEST 2026
+Running on cores 64-79 with governor ondemand
+Wed Apr 29 11:49:38 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:90:00.0 Off |                    0 |
+| N/A   35C    P0             66W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[catchup] row=3 sweep=prompts kind=prompts value=16 seed=3408 action=continue run=rl_grpo_merge_ablate_prompts16_rollouts8_seed3408
+[catchup] final actor already exists for rl_grpo_merge_ablate_prompts16_rollouts8_seed3408 at global_step_1500; skipping.
+=== JOB_STATISTICS ===
+=== current date     : Wed Apr 29 11:49:39 CEST 2026
+= Job-ID             : 3569395 on alex as 3563090_3
+= Job-Name           : posttrain_catchup_final
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/jobs/posttrain_catchup_final_2026-04-24.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 1-00:00:00
+= Elapsed runtime    : 00:00:04
+= Total RAM usage    : 0.0 GiB of assigned  GiB (%)
+= Node list          : a0631
+= Subm/Elig/Start/End: 2026-04-25T12:53:09 / 2026-04-29T11:49:21 / 2026-04-29T11:49:34 / 2026-04-29T11:49:38
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           38.7G   104.9G   209.7G        N/A  48,586      500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home  4821.6G     0.0K     0.0K        N/A     235K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

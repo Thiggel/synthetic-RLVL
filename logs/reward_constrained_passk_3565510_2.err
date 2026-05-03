@@ -1,0 +1,64 @@
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_actor_rl_reward_correct_plus_0p1_format_seed3409_mrg_final' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.9.0+cu128).
+[1;36m(EngineCore_DP0 pid=596739)[0;0m Loading safetensors checkpoint shards:   0% Completed | 0/3 [00:00<?, ?it/s]
+[1;36m(EngineCore_DP0 pid=596739)[0;0m Loading safetensors checkpoint shards:  33% Completed | 1/3 [00:11<00:22, 11.25s/it]
+[1;36m(EngineCore_DP0 pid=596739)[0;0m Loading safetensors checkpoint shards:  67% Completed | 2/3 [00:21<00:10, 10.94s/it]
+[1;36m(EngineCore_DP0 pid=596739)[0;0m Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:34<00:00, 11.47s/it]
+[1;36m(EngineCore_DP0 pid=596739)[0;0m Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:34<00:00, 11.36s/it]
+[1;36m(EngineCore_DP0 pid=596739)[0;0m 
+[1;36m(EngineCore_DP0 pid=596739)[0;0m Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   4%|▍         | 2/51 [00:00<00:02, 17.29it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   8%|▊         | 4/51 [00:00<00:02, 17.77it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  12%|█▏        | 6/51 [00:00<00:02, 17.97it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  16%|█▌        | 8/51 [00:00<00:02, 18.12it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  22%|██▏       | 11/51 [00:00<00:02, 19.23it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  25%|██▌       | 13/51 [00:00<00:01, 19.45it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  31%|███▏      | 16/51 [00:00<00:01, 19.94it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  37%|███▋      | 19/51 [00:00<00:01, 21.47it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  43%|████▎     | 22/51 [00:01<00:01, 22.40it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  49%|████▉     | 25/51 [00:01<00:01, 23.06it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  55%|█████▍    | 28/51 [00:01<00:00, 23.68it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  61%|██████    | 31/51 [00:01<00:00, 23.74it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  67%|██████▋   | 34/51 [00:01<00:00, 24.50it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  73%|███████▎  | 37/51 [00:01<00:00, 25.35it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  78%|███████▊  | 40/51 [00:01<00:00, 26.17it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  84%|████████▍ | 43/51 [00:01<00:00, 26.82it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  90%|█████████ | 46/51 [00:01<00:00, 27.05it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  96%|█████████▌| 49/51 [00:02<00:00, 27.59it/s]Capturing CUDA graphs (mixed prefill-decode, PIECEWISE): 100%|██████████| 51/51 [00:02<00:00, 23.50it/s]
+[1;36m(EngineCore_DP0 pid=596739)[0;0m Capturing CUDA graphs (decode, FULL):   0%|          | 0/51 [00:00<?, ?it/s]Capturing CUDA graphs (decode, FULL):   4%|▍         | 2/51 [00:00<00:03, 14.70it/s]Capturing CUDA graphs (decode, FULL):   8%|▊         | 4/51 [00:00<00:03, 15.40it/s]Capturing CUDA graphs (decode, FULL):  12%|█▏        | 6/51 [00:00<00:02, 15.78it/s]Capturing CUDA graphs (decode, FULL):  16%|█▌        | 8/51 [00:00<00:02, 16.08it/s]Capturing CUDA graphs (decode, FULL):  20%|█▉        | 10/51 [00:00<00:02, 16.97it/s]Capturing CUDA graphs (decode, FULL):  24%|██▎       | 12/51 [00:00<00:02, 17.66it/s]Capturing CUDA graphs (decode, FULL):  27%|██▋       | 14/51 [00:00<00:02, 18.27it/s]Capturing CUDA graphs (decode, FULL):  31%|███▏      | 16/51 [00:00<00:01, 18.71it/s]Capturing CUDA graphs (decode, FULL):  37%|███▋      | 19/51 [00:01<00:01, 20.51it/s]Capturing CUDA graphs (decode, FULL):  43%|████▎     | 22/51 [00:01<00:01, 21.96it/s]Capturing CUDA graphs (decode, FULL):  49%|████▉     | 25/51 [00:01<00:01, 23.09it/s]Capturing CUDA graphs (decode, FULL):  55%|█████▍    | 28/51 [00:01<00:00, 24.11it/s]Capturing CUDA graphs (decode, FULL):  61%|██████    | 31/51 [00:01<00:00, 25.01it/s]Capturing CUDA graphs (decode, FULL):  67%|██████▋   | 34/51 [00:01<00:00, 26.27it/s]Capturing CUDA graphs (decode, FULL):  75%|███████▍  | 38/51 [00:01<00:00, 27.99it/s]Capturing CUDA graphs (decode, FULL):  82%|████████▏ | 42/51 [00:01<00:00, 29.70it/s]Capturing CUDA graphs (decode, FULL):  90%|█████████ | 46/51 [00:01<00:00, 30.91it/s]Capturing CUDA graphs (decode, FULL):  98%|█████████▊| 50/51 [00:02<00:00, 32.05it/s]Capturing CUDA graphs (decode, FULL): 100%|██████████| 51/51 [00:02<00:00, 24.09it/s]
+[1;36m(EngineCore_DP0 pid=596739)[0;0m The tokenizer you are loading from '/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_actor_rl_reward_correct_plus_0p1_format_seed3409_mrg_final' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+[rank0]:[W427 21:33:17.814233988 ProcessGroupNCCL.cpp:1524] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: filipelaitenberger to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run l898048e
+wandb: Tracking run with wandb version 0.25.1
+wandb: Run data is saved locally in /home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb/wandb/run-20260427_213322-l898048e
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run reward_constrained_rl_reward_correct_plus_0p1_format_seed3409_mrg_constrained_N8_K8
+wandb: ⭐️ View project at https://wandb.ai/filipelaitenberger/synthetic-rlvl
+wandb: 🚀 View run at https://wandb.ai/filipelaitenberger/synthetic-rlvl/runs/l898048e
+wandb: Detected [openai] in use.
+wandb: Use W&B Weave for improved LLM call tracing. Install Weave with `pip install weave` then add `import weave` to the top of your script.
+wandb: For more information, check out the docs at: https://weave-docs.wandb.ai/
+wandb: WARNING Saving files without folders. If you want to preserve subdirectories pass base_path to wandb.save, i.e. wandb.save("/mnt/folder/file.h5", base_path="/mnt")
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+wandb: updating run metadata; uploading console lines 0-1
+wandb: uploading reward_constrained/reward_constrained_rl_reward_correct_plus_0p1_format_seed3409_mrg_constrained_N8_K8.json
+wandb: 
+wandb: Run history:
+wandb:                posthoc/elapsed_seconds ▁
+wandb:                        posthoc/prompts ▁
+wandb: posthoc/sampled_generations_per_prompt ▁
+wandb:               synthetic/step_1/correct ▁
+wandb:                synthetic/step_1/format ▁
+wandb:             synthetic/step_1/syntactic ▁
+wandb:                 synthetic/step_1/valid ▁
+wandb:              synthetic/step_10/correct ▁
+wandb:               synthetic/step_10/format ▁
+wandb:            synthetic/step_10/syntactic ▁
+wandb:                                 +1,108 ...
+wandb: 
+wandb: Run summary:
+wandb:                posthoc/elapsed_seconds 8922.46307
+wandb:                        posthoc/prompts 400
+wandb: posthoc/sampled_generations_per_prompt 1
+wandb:               synthetic/step_1/correct 1
+wandb:                synthetic/step_1/format 1
+wandb:             synthetic/step_1/syntactic 1
+wandb:                 synthetic/step_1/valid 1
+wandb:              synthetic/step_10/correct 0.95
+wandb:               synthetic/step_10/format 1
+wandb:            synthetic/step_10/syntactic 1
+wandb:                                 +1,108 ...
+wandb: 
+wandb: 🚀 View run reward_constrained_rl_reward_correct_plus_0p1_format_seed3409_mrg_constrained_N8_K8 at: https://wandb.ai/filipelaitenberger/synthetic-rlvl/runs/l898048e
+wandb: ⭐️ View project at: https://wandb.ai/filipelaitenberger/synthetic-rlvl
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 1 other file(s)
+wandb: Find logs at: /home/atuin/c107fa/c107fa12/synthetic-RLVL/wandb/wandb/run-20260427_213322-l898048e/logs

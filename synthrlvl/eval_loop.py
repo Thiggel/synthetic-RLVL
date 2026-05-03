@@ -297,7 +297,7 @@ class UnifiedEvaluator:
             raise RuntimeError(f"Mismatched synthetic eval lengths: {len(records)} records vs {len(generations)} generations")
 
         metrics: Dict[str, float] = {}
-        samples: List[dict] = []
+        sample_candidates_by_step: dict[int, list[dict]] = defaultdict(list)
         vals_by_step: dict[int, dict[str, list[float]]] = defaultdict(lambda: {"syntactic": [], "format": [], "correct": [], "valid": []})
         for rec, gen in zip(records, generations, strict=True):
             score = self.output_eval.evaluate(
@@ -313,8 +313,8 @@ class UnifiedEvaluator:
             vals_by_step[rec.step]["format"].append(score.format_ok)
             vals_by_step[rec.step]["correct"].append(score.correct)
             vals_by_step[rec.step]["valid"].append(score.valid)
-            if len(samples) < collect_samples:
-                samples.append(
+            if collect_samples > 0:
+                sample_candidates_by_step[rec.step].append(
                     {
                         "source": "synthetic",
                         "step": rec.step,
@@ -332,6 +332,25 @@ class UnifiedEvaluator:
             vals = vals_by_step.get(step, {"syntactic": [], "format": [], "correct": [], "valid": []})
             for key in ("syntactic", "format", "correct", "valid"):
                 metrics[f"synthetic/step_{step}/{key}"] = sum(vals[key]) / max(1, len(vals[key]))
+
+        samples: List[dict] = []
+        if collect_samples > 0:
+            steps = list(range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1))
+            offsets = {step: 0 for step in steps}
+            while len(samples) < collect_samples:
+                added = False
+                for step in steps:
+                    candidates = sample_candidates_by_step.get(step, [])
+                    offset = offsets[step]
+                    if offset >= len(candidates):
+                        continue
+                    samples.append(candidates[offset])
+                    offsets[step] = offset + 1
+                    added = True
+                    if len(samples) >= collect_samples:
+                        break
+                if not added:
+                    break
         return metrics, samples
 
     def _evaluate_with_generator(

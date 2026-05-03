@@ -1,0 +1,61 @@
+### Starting TaskPrologue of job 3571437 on a0731 at Thu Apr 30 21:12:27 CEST 2026
+Running on cores 64-79 with governor ondemand
+Thu Apr 30 21:12:27 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:91:00.0 Off |                    0 |
+| N/A   41C    P0             66W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[merge] base=allenai/Olmo-3-1025-7B
+[merge] adapter=/home/atuin/c107fa/c107fa12/synthetic-RLVL/runs/sft_hard_v3_lr1e-4_seed3407/final
+[merge] output=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_hard_v3_seed3407.tmp
+[merge] wrote /home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_hard_v3_seed3407.tmp
+{
+  "seed": 3407,
+  "checkpoint": "/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_hard_v3_seed3407",
+  "prompt_chars": 2248,
+  "completion": "<formal>\n<constants>\na = Xavier\nb = Ben\nc = Tina\nd = Uma\ne = Yara\n</constants>\n<predicates>\nAx: x is rough\nBx: x is earthy\nCx: x is oval\nDx: x is red\nEx: x is polished\nFx: x is mild\nGx: x is observant\nHx: x is gentle\nIx: x is layered\nJx: x is mature\nKx: x is humid\nLx: x is dry\nMx: x is damp\nNx: x is arid\nOx: x is soft\nPx: x is smooth\nQx: x is hard\nRx: x is silky\nSx: x is coarse\nTx: x is firm\nUx: x is gentle-sounding\nVx: x is sharp-sounding\nWx: x is clear\nXx: x is mellow\nYx: x is fragrant\nZx: x is smelly\n</predicates>\n<premises>\nAd\nAd -> Bd\nBd & Ad -> Cd\nCd -> Dd\nDd & Cd -> Ed\nEd -> Fd\nFd",
+  "starts_with_formal": true,
+  "contains_formal": false
+}
+=== JOB_STATISTICS ===
+=== current date     : Thu Apr 30 21:14:54 CEST 2026
+= Job-ID             : 3571437 on alex as 3571291_0
+= Job-Name           : merge_sft_hard_v3
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/jobs/merge_sft_hard_v3_2026-04-30.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 08:00:00
+= Elapsed runtime    : 00:02:32
+= Total RAM usage    : 30.6 GiB of assigned  GiB (%)
+= Node list          : a0731
+= Subm/Elig/Start/End: 2026-04-30T19:07:57 / 2026-04-30T21:12:13 / 2026-04-30T21:12:22 / 2026-04-30T21:14:54
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           48.3G   104.9G   209.7G        N/A      50K     500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home     5.9T     0.0K     0.0K        N/A     241K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A100-SXM4-80GB, 00000000:91:00.0, 10570, 2 %, 0 %, 15234 MiB, 80532 ms
+NVIDIA A100-SXM4-80GB, 00000000:91:00.0, 10921, 13 %, 6 %, 14960 MiB, 37327 ms

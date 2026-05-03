@@ -1,0 +1,217 @@
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 10000 examples [00:00, 88657.82 examples/s]Generating train split: 60000 examples [00:00, 282877.06 examples/s]Generating train split: 100000 examples [00:00, 308099.51 examples/s]Generating train split: 150000 examples [00:00, 321857.09 examples/s]Generating train split: 190000 examples [00:01, 141474.89 examples/s]Generating train split: 250000 examples [00:01, 199681.36 examples/s]Generating train split: 310000 examples [00:01, 141638.26 examples/s]Generating train split: 370000 examples [00:01, 186773.63 examples/s]Generating train split: 430000 examples [00:02, 231651.29 examples/s]Generating train split: 490000 examples [00:02, 160517.32 examples/s]Generating train split: 550000 examples [00:02, 200996.57 examples/s]Generating train split: 610000 examples [00:03, 153133.56 examples/s]Generating train split: 670000 examples [00:03, 192607.28 examples/s]Generating train split: 730000 examples [00:03, 234010.44 examples/s]Generating train split: 790000 examples [00:04, 165003.13 examples/s]Generating train split: 850000 examples [00:04, 209653.55 examples/s]Generating train split: 910000 examples [00:04, 162346.43 examples/s]Generating train split: 970000 examples [00:05, 206390.79 examples/s]Generating train split: 1000000 examples [00:05, 182356.77 examples/s]
+Uploading the dataset shards:   0%|          | 0/7 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.54ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.56ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.61ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.71ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.74ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.68ba/s]
+Uploading the dataset shards:  14%|█▍        | 1/7 [00:07<00:42,  7.06s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.59ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.66ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.69ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.71ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.70ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.69ba/s]
+Uploading the dataset shards:  29%|██▊       | 2/7 [00:13<00:32,  6.54s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.74ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.70ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.67ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.72ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.78ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.74ba/s]
+Uploading the dataset shards:  43%|████▎     | 3/7 [00:17<00:22,  5.67s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.72ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.76ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.66ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.66ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.73ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.71ba/s]
+Uploading the dataset shards:  57%|█████▋    | 4/7 [00:23<00:16,  5.64s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.60ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.65ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.65ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.60ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.60ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.61ba/s]
+Uploading the dataset shards:  71%|███████▏  | 5/7 [00:28<00:10,  5.49s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.57ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.66ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.65ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.69ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.64ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.65ba/s]
+Uploading the dataset shards:  86%|████████▌ | 6/7 [00:35<00:05,  5.86s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.47ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.64ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.68ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.67ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.72ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.68ba/s]
+Uploading the dataset shards: 100%|██████████| 7/7 [00:40<00:00,  5.53s/ shards]Uploading the dataset shards: 100%|██████████| 7/7 [00:40<00:00,  5.73s/ shards]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 10000 examples [00:00, 67451.30 examples/s]Generating train split: 30000 examples [00:00, 124301.74 examples/s]Generating train split: 70000 examples [00:00, 169117.26 examples/s]Generating train split: 100000 examples [00:00, 93184.14 examples/s]Generating train split: 140000 examples [00:01, 133783.57 examples/s]Generating train split: 180000 examples [00:01, 159164.74 examples/s]Generating train split: 210000 examples [00:01, 108916.78 examples/s]Generating train split: 250000 examples [00:01, 140816.30 examples/s]Generating train split: 280000 examples [00:02, 103211.25 examples/s]Generating train split: 320000 examples [00:02, 132839.33 examples/s]Generating train split: 360000 examples [00:02, 160998.58 examples/s]Generating train split: 390000 examples [00:03, 107389.73 examples/s]Generating train split: 430000 examples [00:03, 136194.56 examples/s]Generating train split: 460000 examples [00:03, 101904.62 examples/s]Generating train split: 500000 examples [00:03, 131636.17 examples/s]Generating train split: 540000 examples [00:04, 159973.06 examples/s]Generating train split: 570000 examples [00:04, 106793.07 examples/s]Generating train split: 610000 examples [00:04, 134720.67 examples/s]Generating train split: 640000 examples [00:05, 97206.42 examples/s] Generating train split: 680000 examples [00:05, 125848.94 examples/s]Generating train split: 720000 examples [00:05, 154638.36 examples/s]Generating train split: 750000 examples [00:06, 107028.89 examples/s]Generating train split: 790000 examples [00:06, 135138.02 examples/s]Generating train split: 820000 examples [00:06, 97660.59 examples/s] Generating train split: 860000 examples [00:06, 128179.99 examples/s]Generating train split: 900000 examples [00:07, 161105.22 examples/s]Generating train split: 930000 examples [00:07, 105963.39 examples/s]Generating train split: 970000 examples [00:07, 137279.54 examples/s]Generating train split: 1000000 examples [00:08, 95079.61 examples/s]Generating train split: 1000000 examples [00:08, 119070.80 examples/s]
+Uploading the dataset shards:   0%|          | 0/12 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.33ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.39ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.31ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.29ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:02<00:00,  2.53ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:02<00:00,  2.44ba/s]
+Uploading the dataset shards:   8%|▊         | 1/12 [00:06<01:15,  6.87s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.39ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.35ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.35ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.41ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.65ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.52ba/s]
+Uploading the dataset shards:  17%|█▋        | 2/12 [00:12<01:02,  6.22s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.35ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.41ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.44ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.48ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.77ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.61ba/s]
+Uploading the dataset shards:  25%|██▌       | 3/12 [00:18<00:53,  5.97s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.56ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.56ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.52ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.52ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.80ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.68ba/s]
+Uploading the dataset shards:  33%|███▎      | 4/12 [00:24<00:47,  5.89s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.49ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.48ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.42ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.47ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.74ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.61ba/s]
+Uploading the dataset shards:  42%|████▏     | 5/12 [00:29<00:39,  5.60s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.51ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.52ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.47ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.50ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.79ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.65ba/s]
+Uploading the dataset shards:  50%|█████     | 6/12 [00:34<00:32,  5.47s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.42ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.42ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.50ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.53ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.78ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.64ba/s]
+Uploading the dataset shards:  58%|█████▊    | 7/12 [00:39<00:26,  5.37s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.69ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.62ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.57ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.53ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.79ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.69ba/s]
+Uploading the dataset shards:  67%|██████▋   | 8/12 [00:44<00:20,  5.25s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.57ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.60ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.48ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.41ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.70ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.60ba/s]
+Uploading the dataset shards:  75%|███████▌  | 9/12 [00:49<00:15,  5.20s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.63ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.61ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.59ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.53ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.80ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.69ba/s]
+Uploading the dataset shards:  83%|████████▎ | 10/12 [00:54<00:10,  5.19s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.65ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.62ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.56ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.51ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.80ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.69ba/s]
+Uploading the dataset shards:  92%|█████████▏| 11/12 [01:00<00:05,  5.21s/ shards]
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s][A
+Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  2.57ba/s][A
+Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:01,  2.59ba/s][A
+Creating parquet from Arrow format:  60%|██████    | 3/5 [00:01<00:00,  2.50ba/s][A
+Creating parquet from Arrow format:  80%|████████  | 4/5 [00:01<00:00,  2.53ba/s][A
+Creating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.83ba/s][ACreating parquet from Arrow format: 100%|██████████| 5/5 [00:01<00:00,  2.69ba/s]
+Uploading the dataset shards: 100%|██████████| 12/12 [01:05<00:00,  5.16s/ shards]Uploading the dataset shards: 100%|██████████| 12/12 [01:05<00:00,  5.43s/ shards]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 96536.18 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 161.44ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.63 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.63 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 72188.63 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 75.62ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.52 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.52 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 66977.05 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 69.26ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.30 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.30 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 58880.65 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 45.36ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.60 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.59 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 50952.45 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 40.30ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.41 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.41 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 44463.22 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 36.17ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.38 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.38 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 48213.72 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 32.43ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.40 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.40 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 38891.97 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 24.92ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.35 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.35 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 40723.37 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 26.42ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.54 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.54 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 35781.78 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 23.93ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.49 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.49 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 30881.57 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 22.75ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.47 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.47 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 29326.49 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 18.07ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.34 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.34 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 28624.59 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 19.20ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.50 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.50 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 28875.85 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 16.75ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.32 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.32 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 26136.32 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 14.61ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.32 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.32 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 25897.16 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 15.42ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:01<00:00,  1.06s/ shards]Uploading the dataset shards: 100%|██████████| 1/1 [00:01<00:00,  1.06s/ shards]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 25000.62 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 15.11ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.34 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.34 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 22714.15 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 14.75ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.31 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.31 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 22925.96 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 13.53ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.24 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.24 shards/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1000 examples [00:00, 21844.88 examples/s]
+Uploading the dataset shards:   0%|          | 0/1 [00:00<?, ? shards/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 12.73ba/s]
+Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.29 shards/s]Uploading the dataset shards: 100%|██████████| 1/1 [00:00<00:00,  1.29 shards/s]

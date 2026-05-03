@@ -1,0 +1,110 @@
+<question>
+1. Julia is aged.
+2. All things that are aged are nervous.
+3. All things that are both nervous and aged are mellow.
+4. All things that are mellow are thick.
+5. All things that are both thick and mellow are dim.
+6. All things that are dim are warm.
+7. Alice is friendly.
+8. Iris is reserved.
+9. Gary is outgoing.
+10. Alice is aged.
+11. For Alice, if Alice is aged, then Alice is nervous.
+12. For Alice, if Alice is nervous, then Alice is mellow.
+13. For Alice, if Alice is mellow, then Alice is thick.
+14. For Alice, if Alice is thick, then Alice is dim.
+15. For Alice, if Alice is dim, then Alice is warm.
+16. For Julia, if Julia is aged, then Julia is sad.
+17. For Julia, if Julia is nervous, then Julia is quiet.
+18. For Julia, if Julia is mellow, then Julia is modern.
+19. For Julia, if Julia is thick, then Julia is friendly.
+20. For Julia, if Julia is dim, then Julia is ancient.
+21. For Gary, if Gary is aged, then Gary is nervous.
+22. For Julia, if Julia is both aged and loud, then Julia is nervous.
+23. For Julia, if Julia is both mellow and ancient, then Julia is thick.
+24. For Gary, if Gary is dim, then Gary is warm.
+25. For Julia, if Julia is both dim and proud, then Julia is warm.
+26. For Julia, if Julia is both thick and loud, then Julia is dim.
+What social trait does Julia have?
+</question>
+
+<formal>
+<constants>
+a = Julia
+b = Alice
+c = Iris
+d = Gary
+</constants>
+<predicates>
+Ax: x is aged
+Bx: x is nervous
+Cx: x is mellow
+Dx: x is thick
+Ex: x is dim
+Fx: x is warm
+Gx: x is friendly
+Hx: x is reserved
+Ix: x is outgoing
+Jx: x is young
+Kx: x is old
+Lx: x is ancient
+Mx: x is new
+Nx: x is modern
+Ox: x is fresh
+Px: x is mature
+Qx: x is calm
+Rx: x is happy
+Sx: x is sad
+Tx: x is angry
+Ux: x is proud
+Vx: x is relaxed
+Wx: x is cheerful
+Xx: x is quiet
+Yx: x is loud
+Zx: x is soft-spoken
+</predicates>
+<premises>
+Aa
+Aa -> Ba
+Ba & Aa -> Ca
+Ca -> Da
+Da & Ca -> Ea
+Ea -> Fa
+Gb
+Hc
+Id
+Ab
+Ab -> Bb
+Bb -> Cb
+Cb -> Db
+Db -> Eb
+Eb -> Fb
+Aa -> Sa
+Ba -> Xa
+Ca -> Na
+Da -> Ga
+Ea -> La
+Ad -> Bd
+Aa & Ya -> Ba
+Ca & La -> Da
+Ed -> Fd
+Ea & Ua -> Fa
+Da & Ya -> Ea
+</premises>
+<proof>
+Aa ; R,1
+Ba ; ->E,2,27
+Ba & Aa ; CI,28,27
+Ca ; ->E,3,29
+Da ; ->E,4,30
+Da & Ca ; CI,31,30
+Ea ; ->E,5,32
+Fa ; ->E,6,33
+</proof>
+<conclusion>
+Fa
+</conclusion>
+</formal>
+<answer>
+warm
+</answer>

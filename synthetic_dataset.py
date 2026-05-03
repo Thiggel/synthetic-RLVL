@@ -32,12 +32,22 @@ import json
 class DatasetConfig:
     depth: int
     distractor_ratio: float = 0.5
+    difficulty: str = "standard"
+    branching_factor: int | None = None
+    decoy_chains: int | None = None
+    near_miss_ratio: float | None = None
+    side_chain_depth: int | None = None
+    entity_decoy_ratio: float | None = None
+    answer_decoy_ratio: float | None = None
+    require_unique_solution: bool = True
     min_entities: int = 4
     max_entities: int = 8
     num_attribute_values: int = 8
     seed: int = 0
 
     def __post_init__(self):
+        if self.difficulty not in {"standard", "hard_v1", "hard_v2", "hard_v3"}:
+            raise ValueError("difficulty must be one of: standard, hard_v1, hard_v2, hard_v3")
         if self.depth < 1:
             raise ValueError("depth must be >= 1")
         if not (0.0 <= self.distractor_ratio):
@@ -48,6 +58,87 @@ class DatasetConfig:
             raise ValueError("max_entities cannot exceed 26 because constants use a-z")
         if self.num_attribute_values < 4:
             raise ValueError("num_attribute_values should be at least 4")
+        if self.effective_branching_factor < 1:
+            raise ValueError("branching_factor must be >= 1")
+        if self.effective_side_chain_depth < 0:
+            raise ValueError("side_chain_depth must be >= 0")
+
+    @property
+    def is_hard(self) -> bool:
+        return self.difficulty in {"hard_v1", "hard_v2", "hard_v3"}
+
+    @property
+    def is_hard_v2(self) -> bool:
+        return self.difficulty == "hard_v2"
+
+    @property
+    def is_hard_v3(self) -> bool:
+        return self.difficulty == "hard_v3"
+
+    @property
+    def effective_branching_factor(self) -> int:
+        if self.branching_factor is not None:
+            return int(self.branching_factor)
+        if self.is_hard_v3:
+            return 2
+        if self.difficulty == "hard_v1":
+            return 2
+        return 4 if self.is_hard_v2 else 1
+
+    @property
+    def effective_decoy_chains(self) -> int:
+        if self.decoy_chains is not None:
+            return int(self.decoy_chains)
+        if self.is_hard_v3:
+            return 1
+        if self.difficulty == "hard_v1":
+            return 1
+        return 3 if self.is_hard_v2 else 0
+
+    @property
+    def effective_near_miss_ratio(self) -> float:
+        if self.near_miss_ratio is not None:
+            return float(self.near_miss_ratio)
+        if self.is_hard_v3:
+            return 0.8
+        if self.difficulty == "hard_v1":
+            return 0.35
+        return 0.75 if self.is_hard_v2 else 0.0
+
+    @property
+    def effective_side_chain_depth(self) -> int:
+        if self.side_chain_depth is not None:
+            return int(self.side_chain_depth)
+        if self.is_hard_v3:
+            return 0
+        return 2 if self.is_hard_v2 else 0
+
+    @property
+    def effective_entity_decoy_ratio(self) -> float:
+        if self.entity_decoy_ratio is not None:
+            return float(self.entity_decoy_ratio)
+        if self.is_hard_v3:
+            return 1.0
+        if self.difficulty == "hard_v1":
+            return 0.5
+        return 1.0 if self.is_hard_v2 else 0.0
+
+    @property
+    def effective_answer_decoy_ratio(self) -> float:
+        if self.answer_decoy_ratio is not None:
+            return float(self.answer_decoy_ratio)
+        if self.is_hard_v3:
+            return 1.0
+        if self.difficulty == "hard_v1":
+            return 0.5
+        return 1.0 if self.is_hard_v2 else 0.0
+
+    @property
+    def effective_adversarial_premise_budget(self) -> int | None:
+        """Bound hard-v3 prompt growth while preserving a compact gold proof."""
+        if self.is_hard_v3:
+            return 2 * self.depth + 12
+        return None
 
 
 # ============================================================
@@ -384,12 +475,41 @@ class LogicDatasetGenerator:
         query_const: str,
     ) -> List[str]:
         values = list(chain_values.values())
+        if self.config.is_hard:
+            values.extend(self._hard_extra_values(families, chain_values))
         out, seen = [], set()
         for v in values:
             if v not in seen:
                 out.append(v)
                 seen.add(v)
+            if len(out) >= len(SymbolPool.PREDS):
+                break
         return out
+
+    def _hard_extra_values(self, families: List[AttributeFamily], chain_values: Dict[str, str]) -> list[str]:
+        """Reserve predicate symbols for plausible wrong answers and side-chain traps."""
+        extras: list[str] = []
+        seen = set(chain_values.values())
+
+        def add(value: str) -> None:
+            if value not in seen and len(seen) < len(SymbolPool.PREDS):
+                extras.append(value)
+                seen.add(value)
+
+        # Wrong values from the queried family become explicit answer decoys.
+        if families:
+            for value in families[-1].values:
+                add(value)
+                if len(extras) >= 3:
+                    break
+
+        # Remaining extra predicates are used for near misses and side chains.
+        for fam in families:
+            for value in fam.values:
+                add(value)
+                if len(seen) >= len(SymbolPool.PREDS):
+                    return extras
+        return extras
 
     def _num_support_premises(self) -> int:
         # 1 base fact + one rule per step + one extra fact per conjunction step
@@ -464,12 +584,258 @@ class LogicDatasetGenerator:
                 rules.append(("conjunction", inst))
         return rules
 
+    @staticmethod
+    def _formula_from_line(line: str) -> str:
+        return line.split(". ", 1)[1].strip() if ". " in line else line.strip()
+
+    @staticmethod
+    def _value_for_pred(value_to_pred: Dict[str, str], pred: str) -> str:
+        for value, mapped in value_to_pred.items():
+            if mapped == pred:
+                return value
+        return pred
+
+    @staticmethod
+    def _grounded_implication_nl(entity: str, src_text: str, target_text: str) -> str:
+        return f"For {entity}, if {entity} is {src_text}, then {entity} is {target_text}."
+
+    @staticmethod
+    def _grounded_conjunction_nl(entity: str, left_text: str, right_text: str, target_text: str) -> str:
+        return (
+            f"For {entity}, if {entity} is both {left_text} and {right_text}, "
+            f"then {entity} is {target_text}."
+        )
+
+    @staticmethod
+    def _renumber_numbered_lines(lines: list[str]) -> list[str]:
+        renumbered: list[str] = []
+        for idx, line in enumerate(lines, start=1):
+            text = line.split(". ", 1)[1].strip() if ". " in line else line.strip()
+            renumbered.append(f"{idx}. {text}")
+        return renumbered
+
+    def _shuffle_natural_theory(self, rng: random.Random, premises_nl: list[str]) -> list[str]:
+        """Shuffle only the natural-language prompt theory.
+
+        Formal premises stay canonical because proof citations refer to their
+        numbering. The natural prompt has no citation dependency, so shuffling
+        removes ordering shortcuts without changing the gold proof.
+        """
+        shuffled = list(premises_nl)
+        rng.shuffle(shuffled)
+        return self._renumber_numbered_lines(shuffled)
+
+    def _append_premise(
+        self,
+        *,
+        premises_fol: list[str],
+        premises_nl: list[str],
+        existing: set[str],
+        premise_no: int,
+        formula: str,
+        nl: str,
+    ) -> tuple[int, bool]:
+        if formula in existing:
+            return premise_no, False
+        premises_fol.append(f"{premise_no}. {formula}")
+        premises_nl.append(f"{premise_no}. {nl}")
+        existing.add(formula)
+        return premise_no + 1, True
+
+    def _append_hard_premises(
+        self,
+        *,
+        rng: random.Random,
+        families: list[AttributeFamily],
+        world: World,
+        query_const: str,
+        chain_values: dict[str, str],
+        value_to_pred: dict[str, str],
+        premises_fol: list[str],
+        premises_nl: list[str],
+        premise_no: int,
+    ) -> tuple[int, dict[str, Any]]:
+        """Add adversarial but non-ambiguous premises for hard_v2.
+
+        These premises are intentionally plausible: they create alternative
+        applicable rules, wrong-entity chains, near misses, missing-support
+        conjunctions, and explicit wrong answer values. They should not derive
+        another answer for the queried entity.
+        """
+        existing = {self._formula_from_line(line) for line in premises_fol}
+        preds = list(value_to_pred.values())
+        chain_preds = [value_to_pred[chain_values[fam.name]] for fam in families]
+        chain_pred_set = set(chain_preds)
+        query_final_pred = chain_preds[-1]
+        non_final_preds = [p for p in preds if p != query_final_pred]
+        off_chain_preds = [p for p in preds if p not in chain_pred_set]
+        wrong_entities = [c for c in world.constants if c != query_const]
+        if not wrong_entities:
+            wrong_entities = [query_const]
+
+        counts = {
+            "branch_rules": 0,
+            "near_miss_rules": 0,
+            "wrong_entity_premises": 0,
+            "missing_support_rules": 0,
+            "answer_decoys": 0,
+        }
+        budget = self.config.effective_adversarial_premise_budget
+        total_added = 0
+
+        def can_add() -> bool:
+            return budget is None or total_added < budget
+
+        def add_adversarial_premise(formula: str, nl: str, count_key: str) -> bool:
+            nonlocal premise_no, total_added
+            if not can_add():
+                return False
+            premise_no, added = self._append_premise(
+                premises_fol=premises_fol,
+                premises_nl=premises_nl,
+                existing=existing,
+                premise_no=premise_no,
+                formula=formula,
+                nl=nl,
+            )
+            if added:
+                counts[count_key] += 1
+                total_added += 1
+            return added
+
+        def add_answer_decoys(max_decoys: int = 3) -> None:
+            queried_family = families[-1]
+            wrong_values = [
+                v
+                for v in queried_family.values
+                if v != chain_values[queried_family.name] and v in value_to_pred
+            ]
+            for value, wrong_entity in zip(wrong_values[:max_decoys], wrong_entities * max_decoys):
+                if wrong_entity == query_const:
+                    continue
+                pred = value_to_pred[value]
+                formula = Atom(pred, wrong_entity).render()
+                nl = f"{world.constants[wrong_entity]} is {value}."
+                add_adversarial_premise(formula, nl, "answer_decoys")
+
+        # In compact adversarial mode, make wrong answer labels salient before
+        # spending the limited budget on structural distractors.
+        if self.config.is_hard_v3 and rng.random() < self.config.effective_answer_decoy_ratio:
+            add_answer_decoys(max_decoys=4)
+
+        # Reserve early budget for a complete wrong-entity chain. This is the
+        # most important anti-shortcut distractor: it makes the target answer
+        # derivable for another entity but not for the queried one.
+        if self.config.is_hard_v3:
+            for chain_idx in range(self.config.effective_decoy_chains):
+                if not can_add():
+                    break
+                wrong_entity = wrong_entities[chain_idx % len(wrong_entities)]
+                if wrong_entity == query_const:
+                    continue
+                base_pred = chain_preds[0]
+                base_text = self._value_for_pred(value_to_pred, base_pred)
+                formula = Atom(base_pred, wrong_entity).render()
+                nl = f"{world.constants[wrong_entity]} is {base_text}."
+                add_adversarial_premise(formula, nl, "wrong_entity_premises")
+                for src_pred, target_pred in zip(chain_preds[:-1], chain_preds[1:], strict=True):
+                    if not can_add():
+                        break
+                    src_text = self._value_for_pred(value_to_pred, src_pred)
+                    target_text = self._value_for_pred(value_to_pred, target_pred)
+                    formula = f"{src_pred}{wrong_entity} -> {target_pred}{wrong_entity}"
+                    nl = self._grounded_implication_nl(
+                        world.constants[wrong_entity], src_text, target_text
+                    )
+                    add_adversarial_premise(formula, nl, "wrong_entity_premises")
+
+        # Branching factor: from each gold source predicate, add applicable
+        # wrong transitions for the query entity. They are valid but dead-end.
+        branch_targets = max(0, self.config.effective_branching_factor - 1)
+        for step, src_pred in enumerate(chain_preds[:-1], start=1):
+            if not can_add():
+                break
+            candidates = [p for p in off_chain_preds if p != src_pred]
+            rng.shuffle(candidates)
+            for target_pred in candidates[:branch_targets]:
+                src_text = self._value_for_pred(value_to_pred, src_pred)
+                target_text = self._value_for_pred(value_to_pred, target_pred)
+                formula = f"{src_pred}{query_const} -> {target_pred}{query_const}"
+                nl = self._grounded_implication_nl(
+                    world.constants[query_const], src_text, target_text
+                )
+                add_adversarial_premise(formula, nl, "branch_rules")
+
+        # Near misses differ from gold by entity, source, or missing side fact.
+        near_miss_steps = max(1, round(self.config.depth * self.config.effective_near_miss_ratio))
+        for step in rng.sample(range(1, self.config.depth + 1), k=min(self.config.depth, near_miss_steps)):
+            if not can_add():
+                break
+            src_pred = chain_preds[step - 1]
+            target_pred = chain_preds[step]
+            wrong_entity = rng.choice(wrong_entities)
+            src_text = self._value_for_pred(value_to_pred, src_pred)
+            target_text = self._value_for_pred(value_to_pred, target_pred)
+
+            if wrong_entity != query_const:
+                formula = f"{src_pred}{wrong_entity} -> {target_pred}{wrong_entity}"
+                nl = self._grounded_implication_nl(
+                    world.constants[wrong_entity], src_text, target_text
+                )
+                add_adversarial_premise(formula, nl, "near_miss_rules")
+
+            missing_candidates = [p for p in off_chain_preds if p not in {src_pred, target_pred}]
+            if not missing_candidates:
+                continue
+            missing_pred = rng.choice(missing_candidates)
+            missing_text = self._value_for_pred(value_to_pred, missing_pred)
+            formula = f"{src_pred}{query_const} & {missing_pred}{query_const} -> {target_pred}{query_const}"
+            nl = self._grounded_conjunction_nl(
+                world.constants[query_const], src_text, missing_text, target_text
+            )
+            add_adversarial_premise(formula, nl, "missing_support_rules")
+
+        # Full-looking wrong-entity chains mirror the gold path but for another entity.
+        for chain_idx in ([] if self.config.is_hard_v3 else range(self.config.effective_decoy_chains)):
+            if not can_add():
+                break
+            wrong_entity = wrong_entities[chain_idx % len(wrong_entities)]
+            if wrong_entity == query_const:
+                continue
+            base_pred = chain_preds[0]
+            base_text = self._value_for_pred(value_to_pred, base_pred)
+            formula = Atom(base_pred, wrong_entity).render()
+            nl = f"{world.constants[wrong_entity]} is {base_text}."
+            add_adversarial_premise(formula, nl, "wrong_entity_premises")
+            for src_pred, target_pred in zip(chain_preds[:-1], chain_preds[1:], strict=True):
+                if not can_add():
+                    break
+                src_text = self._value_for_pred(value_to_pred, src_pred)
+                target_text = self._value_for_pred(value_to_pred, target_pred)
+                formula = f"{src_pred}{wrong_entity} -> {target_pred}{wrong_entity}"
+                nl = self._grounded_implication_nl(
+                    world.constants[wrong_entity], src_text, target_text
+                )
+                add_adversarial_premise(formula, nl, "wrong_entity_premises")
+
+        # Explicit wrong answer values appear in premises for wrong entities,
+        # making answer text salient without changing the queried solution.
+        if not self.config.is_hard_v3 and rng.random() < self.config.effective_answer_decoy_ratio:
+            add_answer_decoys(max_decoys=3)
+        counts["total_adversarial_premises"] = total_added
+        counts["adversarial_premise_budget"] = budget
+
+        return premise_no, counts
+
     def generate(self, index: int) -> LogicExample:
         rng = self._rng(index)
         families = self._select_families(rng)
         world, query_const = self._build_world(rng, families)
         chain_values = self._build_chain_values(rng, families, world, query_const)
-        num_distractors = self._num_distractors()
+        # Hard-v2 has adversarial premises that are aware of the gold chain.
+        # The legacy distractor loop can accidentally add query-entity gold
+        # facts, including the final answer, so keep it standard-only.
+        num_distractors = 0 if self.config.is_hard else self._num_distractors()
         active_values = self._collect_active_values(
             families, chain_values, world, query_const
         )
@@ -503,6 +869,7 @@ class LogicDatasetGenerator:
         # Proof line for base fact (use local proof references, remap to global line numbers later)
         proof_entries_fol.append((base_atom, f"R,P{base_premise_no}"))
         proof_entries_nl.append(f"{local_proof_no}. {world.constants[query_const]} is {base_value}.")
+        formula_to_proof_ref = {base_atom: local_proof_no}
         current_formula = base_atom
         current_proof_ref = local_proof_no
         local_proof_no += 1
@@ -529,25 +896,80 @@ class LogicDatasetGenerator:
                 )
                 current_formula = conclusion
                 current_proof_ref = local_proof_no
+                formula_to_proof_ref.setdefault(conclusion, local_proof_no)
                 local_proof_no += 1
 
             else:
-                # Add side fact
+                # Hard mode should not re-prove facts that are already in the
+                # gold proof. Reusing earlier lines keeps the target proof near
+                # shortest-path while distractors carry the difficulty.
                 side_value = rule_inst.source_texts[1]
                 side_pred = rule_inst.source_preds[1]
                 side_atom = Atom(side_pred, query_const).render()
+                if self.config.is_hard and side_atom in formula_to_proof_ref:
+                    side_proof_ref = formula_to_proof_ref[side_atom]
+                else:
+                    side_chain_depth = self.config.effective_side_chain_depth if self.config.is_hard else 0
+                    chain_preds = {symbols.value_to_pred[chain_values[fam.name]] for fam in families}
+                    reserved_preds = chain_preds | {rule_inst.target_pred}
+                    side_intermediates = [
+                        p
+                        for p in symbols.value_to_pred.values()
+                        if p not in reserved_preds
+                    ][:side_chain_depth]
+                    if side_chain_depth > 0 and side_intermediates:
+                        support_preds = side_intermediates + [side_pred]
+                    else:
+                        support_preds = []
 
-                premises_fol.append(f"{premise_no}. {side_atom}")
-                premises_nl.append(f"{premise_no}. {world.constants[query_const]} is {side_value}.")
-                side_fact_premise_no = premise_no
-                premise_no += 1
+                    if support_preds:
+                        side_base_pred = support_preds[0]
+                        side_base_value = self._value_for_pred(symbols.value_to_pred, side_base_pred)
+                        side_base_atom = Atom(side_base_pred, query_const).render()
 
-                proof_entries_fol.append(
-                    (side_atom, f"R,P{side_fact_premise_no}")
-                )
-                proof_entries_nl.append(f"{local_proof_no}. {world.constants[query_const]} is {side_value}.")
-                side_proof_ref = local_proof_no
-                local_proof_no += 1
+                        premises_fol.append(f"{premise_no}. {side_base_atom}")
+                        premises_nl.append(f"{premise_no}. {world.constants[query_const]} is {side_base_value}.")
+                        side_fact_premise_no = premise_no
+                        premise_no += 1
+
+                        proof_entries_fol.append((side_base_atom, f"R,P{side_fact_premise_no}"))
+                        proof_entries_nl.append(f"{local_proof_no}. {world.constants[query_const]} is {side_base_value}.")
+                        side_proof_ref = local_proof_no
+                        formula_to_proof_ref.setdefault(side_base_atom, local_proof_no)
+                        local_proof_no += 1
+
+                        prev_pred = side_base_pred
+                        prev_text = side_base_value
+                        for next_pred in support_preds[1:]:
+                            next_text = self._value_for_pred(symbols.value_to_pred, next_pred)
+                            rule_formula = f"{prev_pred}{query_const} -> {next_pred}{query_const}"
+                            premises_fol.append(f"{premise_no}. {rule_formula}")
+                            premises_nl.append(f"{premise_no}. All things that are {prev_text} are {next_text}.")
+                            side_rule_premise_no = premise_no
+                            premise_no += 1
+
+                            next_atom = Atom(next_pred, query_const).render()
+                            proof_entries_fol.append((next_atom, f"->E,P{side_rule_premise_no},L{side_proof_ref}"))
+                            proof_entries_nl.append(
+                                f"{local_proof_no}. Since {world.constants[query_const]} is {prev_text}, "
+                                f"{world.constants[query_const]} is {next_text}."
+                            )
+                            side_proof_ref = local_proof_no
+                            formula_to_proof_ref.setdefault(next_atom, local_proof_no)
+                            local_proof_no += 1
+                            prev_pred = next_pred
+                            prev_text = next_text
+                    else:
+                        premises_fol.append(f"{premise_no}. {side_atom}")
+                        premises_nl.append(f"{premise_no}. {world.constants[query_const]} is {side_value}.")
+                        side_fact_premise_no = premise_no
+                        premise_no += 1
+
+                        proof_entries_fol.append((side_atom, f"R,P{side_fact_premise_no}"))
+                        proof_entries_nl.append(f"{local_proof_no}. {world.constants[query_const]} is {side_value}.")
+                        side_proof_ref = local_proof_no
+                        formula_to_proof_ref.setdefault(side_atom, local_proof_no)
+                        local_proof_no += 1
 
                 src_left, src_right = rule_inst.source_preds
                 rule_formula = (
@@ -566,6 +988,7 @@ class LogicDatasetGenerator:
                     f"{local_proof_no}. {world.constants[query_const]} is both {rule_inst.source_texts[0]} and {rule_inst.source_texts[1]}."
                 )
                 conjunction_proof_ref = local_proof_no
+                formula_to_proof_ref.setdefault(conjunction_formula, local_proof_no)
                 local_proof_no += 1
 
                 conclusion = Atom(rule_inst.target_pred, query_const).render()
@@ -581,7 +1004,22 @@ class LogicDatasetGenerator:
                 )
                 current_formula = conclusion
                 current_proof_ref = local_proof_no
+                formula_to_proof_ref.setdefault(conclusion, local_proof_no)
                 local_proof_no += 1
+
+        hard_counts: dict[str, Any] = {}
+        if self.config.is_hard:
+            premise_no, hard_counts = self._append_hard_premises(
+                rng=rng,
+                families=families,
+                world=world,
+                query_const=query_const,
+                chain_values=chain_values,
+                value_to_pred=symbols.value_to_pred,
+                premises_fol=premises_fol,
+                premises_nl=premises_nl,
+                premise_no=premise_no,
+            )
 
         # Distractors: clearly structured, same rule templates
         existing_premise_formulas = {
@@ -675,6 +1113,9 @@ class LogicDatasetGenerator:
         question_fol = f"What value of {query_family.name} does {query_const} have?"
         question_nl = query_family.question_template.format(entity=world.constants[query_const])
         answer = chain_values[query_family.name]
+        nl_premises_shuffled = self.config.is_hard_v3
+        if nl_premises_shuffled:
+            premises_nl = self._shuffle_natural_theory(rng, premises_nl)
 
         return LogicExample(
             constants=constants_lines,
@@ -690,6 +1131,15 @@ class LogicDatasetGenerator:
                 "depth": self.config.depth,
                 "distractor_ratio": self.config.distractor_ratio,
                 "num_distractors": added_distractors,
+                "difficulty": self.config.difficulty,
+                "branching_factor": self.config.effective_branching_factor,
+                "decoy_chains": self.config.effective_decoy_chains,
+                "near_miss_ratio": self.config.effective_near_miss_ratio,
+                "side_chain_depth": self.config.effective_side_chain_depth,
+                "entity_decoy_ratio": self.config.effective_entity_decoy_ratio,
+                "answer_decoy_ratio": self.config.effective_answer_decoy_ratio,
+                "hard_counts": hard_counts,
+                "nl_premises_shuffled": nl_premises_shuffled,
                 "query_constant": query_const,
                 "query_entity": world.constants[query_const],
                 "queried_family": query_family.name,
@@ -840,6 +1290,13 @@ class MaterializedDatasetBuilder:
         val_rows_per_step: int = 1_000,
         seed: int = 3407,
         distractor_ratio: float = 0.5,
+        difficulty: str = "standard",
+        branching_factor: int | None = None,
+        decoy_chains: int | None = None,
+        near_miss_ratio: float | None = None,
+        side_chain_depth: int | None = None,
+        entity_decoy_ratio: float | None = None,
+        answer_decoy_ratio: float | None = None,
         chunk_size: int = 10_000,
     ) -> None:
         import pyarrow as pa
@@ -859,7 +1316,17 @@ class MaterializedDatasetBuilder:
             out_file.parent.mkdir(parents=True, exist_ok=True)
             writer: pq.ParquetWriter | None = None
             chunk: list[dict[str, Any]] = []
-            for row in self._records_for_spec(spec=spec, distractor_ratio=float(distractor_ratio)):
+            for row in self._records_for_spec(
+                spec=spec,
+                distractor_ratio=float(distractor_ratio),
+                difficulty=str(difficulty),
+                branching_factor=branching_factor,
+                decoy_chains=decoy_chains,
+                near_miss_ratio=near_miss_ratio,
+                side_chain_depth=side_chain_depth,
+                entity_decoy_ratio=entity_decoy_ratio,
+                answer_decoy_ratio=answer_decoy_ratio,
+            ):
                 chunk.append(row)
                 if len(chunk) >= int(chunk_size):
                     table = pa.Table.from_pylist(chunk)
@@ -878,6 +1345,14 @@ class MaterializedDatasetBuilder:
         manifest = {
             "train_subsets": [self.dataset.train_up_to_5_subset, self.dataset.train_up_to_10_subset],
             "val_subsets": [self.dataset.val_subset_name(i) for i in range(1, 21)],
+            "difficulty": difficulty,
+            "distractor_ratio": distractor_ratio,
+            "branching_factor": branching_factor,
+            "decoy_chains": decoy_chains,
+            "near_miss_ratio": near_miss_ratio,
+            "side_chain_depth": side_chain_depth,
+            "entity_decoy_ratio": entity_decoy_ratio,
+            "answer_decoy_ratio": answer_decoy_ratio,
         }
         (out_root / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
@@ -910,13 +1385,32 @@ class MaterializedDatasetBuilder:
         row["record_index"] = int(index)
         return row
 
-    def _records_for_spec(self, *, spec: MaterializedDatasetSpec, distractor_ratio: float) -> Iterator[dict[str, Any]]:
+    def _records_for_spec(
+        self,
+        *,
+        spec: MaterializedDatasetSpec,
+        distractor_ratio: float,
+        difficulty: str = "standard",
+        branching_factor: int | None = None,
+        decoy_chains: int | None = None,
+        near_miss_ratio: float | None = None,
+        side_chain_depth: int | None = None,
+        entity_decoy_ratio: float | None = None,
+        answer_decoy_ratio: float | None = None,
+    ) -> Iterator[dict[str, Any]]:
         depths = list(range(spec.min_depth, spec.max_depth + 1))
         gens = {
             depth: LogicDatasetGenerator(
                 DatasetConfig(
                     depth=depth,
                     distractor_ratio=distractor_ratio,
+                    difficulty=difficulty,
+                    branching_factor=branching_factor,
+                    decoy_chains=decoy_chains,
+                    near_miss_ratio=near_miss_ratio,
+                    side_chain_depth=side_chain_depth,
+                    entity_decoy_ratio=entity_decoy_ratio,
+                    answer_decoy_ratio=answer_decoy_ratio,
                     seed=spec.seed + depth,
                 )
             )

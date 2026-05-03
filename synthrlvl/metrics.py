@@ -255,6 +255,13 @@ class RewardComputer:
             gold_first_modality_lines=gold_first_modality_lines,
         )
 
+        line_valid = None
+        if schema in {
+            RewardSchema.CORRECT_PLUS_LINE_VALID_PLUS_0P1_FORMAT,
+            RewardSchema.CORRECT_TIMES_LINE_VALID_PLUS_0P1_FORMAT,
+        }:
+            line_valid = self._line_valid_fraction(output_text, template=template)
+
         if schema == RewardSchema.CORRECT_PLUS_0P1_FORMAT:
             value = m.correct + 0.1 * m.format_ok
         elif schema == RewardSchema.INDICATOR_CORRECT_AND_FORMAT:
@@ -262,7 +269,11 @@ class RewardComputer:
         elif schema == RewardSchema.CORRECT_PLUS_VALID_PLUS_0P1_FORMAT:
             value = m.correct + m.valid + 0.1 * m.format_ok
         elif schema == RewardSchema.CORRECT_PLUS_LINE_VALID_PLUS_0P1_FORMAT:
-            value = m.correct + self._line_valid_fraction(output_text, template=template) + 0.1 * m.format_ok
+            value = m.correct + float(line_valid or 0.0) + 0.1 * m.format_ok
+        elif schema == RewardSchema.CORRECT_TIMES_VALID_PLUS_0P1_FORMAT:
+            value = (m.correct * m.valid) + 0.1 * m.format_ok
+        elif schema == RewardSchema.CORRECT_TIMES_LINE_VALID_PLUS_0P1_FORMAT:
+            value = (m.correct * float(line_valid or 0.0)) + 0.1 * m.format_ok
         elif schema == RewardSchema.CORRECT_PLUS_0P75_VALID_PLUS_0P1_FORMAT:
             value = m.correct + 0.75 * m.valid + 0.1 * m.format_ok
         elif schema == RewardSchema.CORRECT_PLUS_0P5_VALID_PLUS_0P1_FORMAT:

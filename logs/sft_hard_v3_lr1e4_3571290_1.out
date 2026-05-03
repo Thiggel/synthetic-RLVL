@@ -1,0 +1,158 @@
+### Starting TaskPrologue of job 3571295 on a0632 at Thu Apr 30 19:08:21 CEST 2026
+Running on cores 0-15 with governor ondemand
+Thu Apr 30 19:08:21 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:0E:00.0 Off |                    0 |
+| N/A   35C    P0             62W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[2026-04-30 19:08:45,308][accelerate.utils.modeling][INFO] - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+[2026-04-30 19:10:44,821][accelerate.utils.other][WARNING] - [RANK 0] Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+{'loss': 1.0098, 'grad_norm': 0.2739750146865845, 'learning_rate': 1.8e-05, 'epoch': 0.0}
+{'loss': 0.9402, 'grad_norm': 0.28720909357070923, 'learning_rate': 3.8e-05, 'epoch': 0.01}
+{'loss': 0.6465, 'grad_norm': 0.3752268850803375, 'learning_rate': 5.8e-05, 'epoch': 0.01}
+{'loss': 0.3868, 'grad_norm': 0.301302045583725, 'learning_rate': 7.800000000000001e-05, 'epoch': 0.01}
+{'loss': 0.2645, 'grad_norm': 0.25090476870536804, 'learning_rate': 9.8e-05, 'epoch': 0.02}
+{'loss': 0.1867, 'grad_norm': 0.24993860721588135, 'learning_rate': 9.905263157894737e-05, 'epoch': 0.02}
+{'loss': 0.1459, 'grad_norm': 0.24566687643527985, 'learning_rate': 9.8e-05, 'epoch': 0.02}
+{'loss': 0.1101, 'grad_norm': 0.24846151471138, 'learning_rate': 9.694736842105264e-05, 'epoch': 0.03}
+{'loss': 0.0932, 'grad_norm': 0.2765994966030121, 'learning_rate': 9.589473684210528e-05, 'epoch': 0.03}
+{'loss': 0.0766, 'grad_norm': 0.28745388984680176, 'learning_rate': 9.48421052631579e-05, 'epoch': 0.03}
+{'loss': 0.0642, 'grad_norm': 0.22232112288475037, 'learning_rate': 9.378947368421053e-05, 'epoch': 0.04}
+{'loss': 0.0589, 'grad_norm': 0.24763618409633636, 'learning_rate': 9.273684210526317e-05, 'epoch': 0.04}
+{'loss': 0.0549, 'grad_norm': 0.20358186960220337, 'learning_rate': 9.16842105263158e-05, 'epoch': 0.04}
+{'loss': 0.0539, 'grad_norm': 0.1722555309534073, 'learning_rate': 9.063157894736842e-05, 'epoch': 0.04}
+{'loss': 0.0484, 'grad_norm': 0.2450970560312271, 'learning_rate': 8.957894736842106e-05, 'epoch': 0.05}
+{'loss': 0.0491, 'grad_norm': 0.19001857936382294, 'learning_rate': 8.852631578947368e-05, 'epoch': 0.05}
+{'loss': 0.0489, 'grad_norm': 0.18729513883590698, 'learning_rate': 8.747368421052632e-05, 'epoch': 0.05}
+{'loss': 0.0439, 'grad_norm': 0.18944935500621796, 'learning_rate': 8.642105263157895e-05, 'epoch': 0.06}
+{'loss': 0.0425, 'grad_norm': 0.2276325672864914, 'learning_rate': 8.536842105263159e-05, 'epoch': 0.06}
+{'loss': 0.0404, 'grad_norm': 0.20934633910655975, 'learning_rate': 8.431578947368422e-05, 'epoch': 0.06}
+{'loss': 0.0392, 'grad_norm': 0.1515541970729828, 'learning_rate': 8.326315789473684e-05, 'epoch': 0.07}
+{'loss': 0.0371, 'grad_norm': 0.17138437926769257, 'learning_rate': 8.221052631578948e-05, 'epoch': 0.07}
+{'loss': 0.0383, 'grad_norm': 0.17464269697666168, 'learning_rate': 8.115789473684211e-05, 'epoch': 0.07}
+{'loss': 0.0379, 'grad_norm': 0.22757795453071594, 'learning_rate': 8.010526315789473e-05, 'epoch': 0.08}
+{'loss': 0.0351, 'grad_norm': 0.2243792712688446, 'learning_rate': 7.905263157894737e-05, 'epoch': 0.08}
+{'loss': 0.0343, 'grad_norm': 0.18143443763256073, 'learning_rate': 7.800000000000001e-05, 'epoch': 0.08}
+{'loss': 0.0335, 'grad_norm': 0.16842550039291382, 'learning_rate': 7.694736842105264e-05, 'epoch': 0.09}
+{'loss': 0.0353, 'grad_norm': 0.10364686697721481, 'learning_rate': 7.589473684210526e-05, 'epoch': 0.09}
+{'loss': 0.0333, 'grad_norm': 0.1556602418422699, 'learning_rate': 7.48421052631579e-05, 'epoch': 0.09}
+{'loss': 0.0333, 'grad_norm': 0.16282245516777039, 'learning_rate': 7.378947368421053e-05, 'epoch': 0.1}
+{'loss': 0.0319, 'grad_norm': 0.17718039453029633, 'learning_rate': 7.273684210526316e-05, 'epoch': 0.1}
+{'loss': 0.0337, 'grad_norm': 0.19690750539302826, 'learning_rate': 7.16842105263158e-05, 'epoch': 0.1}
+{'loss': 0.0331, 'grad_norm': 0.2605708837509155, 'learning_rate': 7.063157894736842e-05, 'epoch': 0.11}
+{'loss': 0.0327, 'grad_norm': 0.1888740211725235, 'learning_rate': 6.957894736842106e-05, 'epoch': 0.11}
+{'loss': 0.0313, 'grad_norm': 0.12582233548164368, 'learning_rate': 6.852631578947369e-05, 'epoch': 0.11}
+{'loss': 0.0313, 'grad_norm': 0.10177122056484222, 'learning_rate': 6.747368421052633e-05, 'epoch': 0.12}
+{'loss': 0.0302, 'grad_norm': 0.14416246116161346, 'learning_rate': 6.642105263157895e-05, 'epoch': 0.12}
+{'loss': 0.0295, 'grad_norm': 0.1957504004240036, 'learning_rate': 6.536842105263158e-05, 'epoch': 0.12}
+{'loss': 0.0305, 'grad_norm': 0.10134150832891464, 'learning_rate': 6.431578947368422e-05, 'epoch': 0.12}
+{'loss': 0.0307, 'grad_norm': 0.10328678041696548, 'learning_rate': 6.326315789473684e-05, 'epoch': 0.13}
+{'loss': 0.0317, 'grad_norm': 0.12326513230800629, 'learning_rate': 6.221052631578947e-05, 'epoch': 0.13}
+{'loss': 0.029, 'grad_norm': 0.11362636834383011, 'learning_rate': 6.115789473684211e-05, 'epoch': 0.13}
+{'loss': 0.0284, 'grad_norm': 0.13416330516338348, 'learning_rate': 6.010526315789474e-05, 'epoch': 0.14}
+{'loss': 0.0291, 'grad_norm': 0.10524158924818039, 'learning_rate': 5.905263157894737e-05, 'epoch': 0.14}
+{'loss': 0.0285, 'grad_norm': 0.08335164934396744, 'learning_rate': 5.8e-05, 'epoch': 0.14}
+{'loss': 0.0275, 'grad_norm': 0.11623204499483109, 'learning_rate': 5.694736842105264e-05, 'epoch': 0.15}
+{'loss': 0.0289, 'grad_norm': 0.13338735699653625, 'learning_rate': 5.5894736842105266e-05, 'epoch': 0.15}
+{'loss': 0.0288, 'grad_norm': 0.09747377783060074, 'learning_rate': 5.484210526315789e-05, 'epoch': 0.15}
+{'loss': 0.027, 'grad_norm': 0.13800610601902008, 'learning_rate': 5.378947368421053e-05, 'epoch': 0.16}
+{'loss': 0.028, 'grad_norm': 0.09685909003019333, 'learning_rate': 5.2736842105263164e-05, 'epoch': 0.16}
+{'eval_loss': 0.03208939731121063, 'eval_runtime': 125.6113, 'eval_samples_per_second': 4.076, 'eval_steps_per_second': 4.076, 'epoch': 0.16}
+{'synthetic/step_1/syntactic': 0.7, 'synthetic/step_1/format': 0.25, 'synthetic/step_1/correct': 0.35, 'synthetic/step_1/valid': 0.65, 'synthetic/step_2/syntactic': 0.15, 'synthetic/step_2/format': 0.1, 'synthetic/step_2/correct': 0.25, 'synthetic/step_2/valid': 0.1, 'synthetic/step_3/syntactic': 0.15, 'synthetic/step_3/format': 0.05, 'synthetic/step_3/correct': 0.1, 'synthetic/step_3/valid': 0.15, 'synthetic/step_4/syntactic': 0.15, 'synthetic/step_4/format': 0.1, 'synthetic/step_4/correct': 0.15, 'synthetic/step_4/valid': 0.15, 'synthetic/step_5/syntactic': 0.1, 'synthetic/step_5/format': 0.05, 'synthetic/step_5/correct': 0.1, 'synthetic/step_5/valid': 0.0, 'synthetic/step_6/syntactic': 0.05, 'synthetic/step_6/format': 0.05, 'synthetic/step_6/correct': 0.05, 'synthetic/step_6/valid': 0.05, 'synthetic/step_7/syntactic': 0.15, 'synthetic/step_7/format': 0.05, 'synthetic/step_7/correct': 0.05, 'synthetic/step_7/valid': 0.0, 'synthetic/step_8/syntactic': 0.25, 'synthetic/step_8/format': 0.1, 'synthetic/step_8/correct': 0.15, 'synthetic/step_8/valid': 0.1, 'synthetic/step_9/syntactic': 0.3, 'synthetic/step_9/format': 0.05, 'synthetic/step_9/correct': 0.1, 'synthetic/step_9/valid': 0.05, 'synthetic/step_10/syntactic': 0.3, 'synthetic/step_10/format': 0.05, 'synthetic/step_10/correct': 0.05, 'synthetic/step_10/valid': 0.15, 'synthetic/step_11/syntactic': 0.2, 'synthetic/step_11/format': 0.1, 'synthetic/step_11/correct': 0.1, 'synthetic/step_11/valid': 0.15, 'synthetic/step_12/syntactic': 0.05, 'synthetic/step_12/format': 0.05, 'synthetic/step_12/correct': 0.05, 'synthetic/step_12/valid': 0.0, 'synthetic/step_13/syntactic': 0.05, 'synthetic/step_13/format': 0.05, 'synthetic/step_13/correct': 0.15, 'synthetic/step_13/valid': 0.05, 'synthetic/step_14/syntactic': 0.25, 'synthetic/step_14/format': 0.05, 'synthetic/step_14/correct': 0.15, 'synthetic/step_14/valid': 0.15, 'synthetic/step_15/syntactic': 0.3, 'synthetic/step_15/format': 0.05, 'synthetic/step_15/correct': 0.35, 'synthetic/step_15/valid': 0.1, 'synthetic/step_16/syntactic': 0.15, 'synthetic/step_16/format': 0.1, 'synthetic/step_16/correct': 0.15, 'synthetic/step_16/valid': 0.0, 'synthetic/step_17/syntactic': 0.3, 'synthetic/step_17/format': 0.05, 'synthetic/step_17/correct': 0.2, 'synthetic/step_17/valid': 0.1, 'synthetic/step_18/syntactic': 0.25, 'synthetic/step_18/format': 0.05, 'synthetic/step_18/correct': 0.05, 'synthetic/step_18/valid': 0.0, 'synthetic/step_19/syntactic': 0.4, 'synthetic/step_19/format': 0.05, 'synthetic/step_19/correct': 0.1, 'synthetic/step_19/valid': 0.15, 'synthetic/step_20/syntactic': 0.4, 'synthetic/step_20/format': 0.1, 'synthetic/step_20/correct': 0.2, 'synthetic/step_20/valid': 0.0, 'epoch': 0.16}
+{'loss': 0.0278, 'grad_norm': 0.13407175242900848, 'learning_rate': 5.168421052631579e-05, 'epoch': 0.16}
+{'loss': 0.028, 'grad_norm': 0.08698979020118713, 'learning_rate': 5.0631578947368416e-05, 'epoch': 0.17}
+{'loss': 0.0289, 'grad_norm': 0.12223754078149796, 'learning_rate': 4.9578947368421055e-05, 'epoch': 0.17}
+{'loss': 0.0282, 'grad_norm': 0.1612841933965683, 'learning_rate': 4.852631578947369e-05, 'epoch': 0.17}
+{'loss': 0.028, 'grad_norm': 0.07033853232860565, 'learning_rate': 4.747368421052632e-05, 'epoch': 0.18}
+{'loss': 0.0295, 'grad_norm': 0.07613600045442581, 'learning_rate': 4.642105263157895e-05, 'epoch': 0.18}
+{'loss': 0.0272, 'grad_norm': 0.12413463741540909, 'learning_rate': 4.536842105263158e-05, 'epoch': 0.18}
+{'loss': 0.0257, 'grad_norm': 0.08762587606906891, 'learning_rate': 4.431578947368421e-05, 'epoch': 0.19}
+{'loss': 0.028, 'grad_norm': 0.08091533929109573, 'learning_rate': 4.3263157894736845e-05, 'epoch': 0.19}
+{'loss': 0.0258, 'grad_norm': 0.12497688084840775, 'learning_rate': 4.221052631578948e-05, 'epoch': 0.19}
+{'loss': 0.0254, 'grad_norm': 0.13207507133483887, 'learning_rate': 4.1157894736842104e-05, 'epoch': 0.2}
+{'loss': 0.0265, 'grad_norm': 0.14265209436416626, 'learning_rate': 4.010526315789474e-05, 'epoch': 0.2}
+{'loss': 0.0264, 'grad_norm': 0.19023163616657257, 'learning_rate': 3.905263157894737e-05, 'epoch': 0.2}
+{'loss': 0.0259, 'grad_norm': 0.06770172715187073, 'learning_rate': 3.8e-05, 'epoch': 0.2}
+{'loss': 0.0259, 'grad_norm': 0.1009749248623848, 'learning_rate': 3.6947368421052635e-05, 'epoch': 0.21}
+{'loss': 0.0259, 'grad_norm': 0.08752984553575516, 'learning_rate': 3.589473684210527e-05, 'epoch': 0.21}
+{'loss': 0.0256, 'grad_norm': 0.1007535308599472, 'learning_rate': 3.48421052631579e-05, 'epoch': 0.21}
+{'loss': 0.0262, 'grad_norm': 0.0790664330124855, 'learning_rate': 3.3789473684210526e-05, 'epoch': 0.22}
+{'loss': 0.025, 'grad_norm': 0.17615681886672974, 'learning_rate': 3.273684210526316e-05, 'epoch': 0.22}
+{'loss': 0.0268, 'grad_norm': 0.12135674804449081, 'learning_rate': 3.168421052631579e-05, 'epoch': 0.22}
+{'loss': 0.0265, 'grad_norm': 0.1397937834262848, 'learning_rate': 3.0631578947368425e-05, 'epoch': 0.23}
+{'loss': 0.0245, 'grad_norm': 0.11574036628007889, 'learning_rate': 2.9578947368421057e-05, 'epoch': 0.23}
+{'loss': 0.0252, 'grad_norm': 0.12841780483722687, 'learning_rate': 2.8526315789473683e-05, 'epoch': 0.23}
+{'loss': 0.027, 'grad_norm': 0.07244359701871872, 'learning_rate': 2.747368421052632e-05, 'epoch': 0.24}
+{'loss': 0.0249, 'grad_norm': 0.08598728477954865, 'learning_rate': 2.6421052631578945e-05, 'epoch': 0.24}
+{'loss': 0.0262, 'grad_norm': 0.11799636483192444, 'learning_rate': 2.536842105263158e-05, 'epoch': 0.24}
+{'loss': 0.0251, 'grad_norm': 0.10855327546596527, 'learning_rate': 2.431578947368421e-05, 'epoch': 0.25}
+{'loss': 0.0244, 'grad_norm': 0.10197477042675018, 'learning_rate': 2.3263157894736844e-05, 'epoch': 0.25}
+{'loss': 0.0241, 'grad_norm': 0.08226357400417328, 'learning_rate': 2.2210526315789476e-05, 'epoch': 0.25}
+{'loss': 0.0244, 'grad_norm': 0.0948377400636673, 'learning_rate': 2.1157894736842106e-05, 'epoch': 0.26}
+{'loss': 0.024, 'grad_norm': 0.08744308352470398, 'learning_rate': 2.010526315789474e-05, 'epoch': 0.26}
+{'loss': 0.0252, 'grad_norm': 0.141816183924675, 'learning_rate': 1.9052631578947368e-05, 'epoch': 0.26}
+{'loss': 0.0237, 'grad_norm': 0.10270638763904572, 'learning_rate': 1.8e-05, 'epoch': 0.27}
+{'loss': 0.0249, 'grad_norm': 0.10490618646144867, 'learning_rate': 1.694736842105263e-05, 'epoch': 0.27}
+{'loss': 0.0245, 'grad_norm': 0.0987737700343132, 'learning_rate': 1.5894736842105266e-05, 'epoch': 0.27}
+{'loss': 0.0248, 'grad_norm': 0.08383386582136154, 'learning_rate': 1.4842105263157895e-05, 'epoch': 0.28}
+{'loss': 0.0241, 'grad_norm': 0.09127075225114822, 'learning_rate': 1.3789473684210526e-05, 'epoch': 0.28}
+{'loss': 0.0237, 'grad_norm': 0.09257963299751282, 'learning_rate': 1.2736842105263157e-05, 'epoch': 0.28}
+{'loss': 0.025, 'grad_norm': 0.06354180723428726, 'learning_rate': 1.168421052631579e-05, 'epoch': 0.28}
+{'loss': 0.0239, 'grad_norm': 0.06266628205776215, 'learning_rate': 1.0631578947368421e-05, 'epoch': 0.29}
+{'loss': 0.0237, 'grad_norm': 0.09695669263601303, 'learning_rate': 9.578947368421052e-06, 'epoch': 0.29}
+{'loss': 0.0249, 'grad_norm': 0.10399904102087021, 'learning_rate': 8.526315789473685e-06, 'epoch': 0.29}
+{'loss': 0.0241, 'grad_norm': 0.08727192133665085, 'learning_rate': 7.473684210526316e-06, 'epoch': 0.3}
+{'loss': 0.0243, 'grad_norm': 0.06486547738313675, 'learning_rate': 6.421052631578947e-06, 'epoch': 0.3}
+{'loss': 0.0233, 'grad_norm': 0.07399151474237442, 'learning_rate': 5.36842105263158e-06, 'epoch': 0.3}
+{'loss': 0.0243, 'grad_norm': 0.070561483502388, 'learning_rate': 4.315789473684211e-06, 'epoch': 0.31}
+{'loss': 0.0246, 'grad_norm': 0.09436235576868057, 'learning_rate': 3.2631578947368423e-06, 'epoch': 0.31}
+{'loss': 0.0235, 'grad_norm': 0.07552815973758698, 'learning_rate': 2.2105263157894738e-06, 'epoch': 0.31}
+{'loss': 0.0248, 'grad_norm': 0.11004135757684708, 'learning_rate': 1.1578947368421055e-06, 'epoch': 0.32}
+{'loss': 0.0246, 'grad_norm': 0.06749461591243744, 'learning_rate': 1.0526315789473685e-07, 'epoch': 0.32}
+{'eval_loss': 0.029964743182063103, 'eval_runtime': 125.6571, 'eval_samples_per_second': 4.075, 'eval_steps_per_second': 4.075, 'epoch': 0.32}
+{'synthetic/step_1/syntactic': 0.5, 'synthetic/step_1/format': 0.35, 'synthetic/step_1/correct': 0.45, 'synthetic/step_1/valid': 0.45, 'synthetic/step_2/syntactic': 0.15, 'synthetic/step_2/format': 0.15, 'synthetic/step_2/correct': 0.15, 'synthetic/step_2/valid': 0.15, 'synthetic/step_3/syntactic': 0.1, 'synthetic/step_3/format': 0.05, 'synthetic/step_3/correct': 0.05, 'synthetic/step_3/valid': 0.1, 'synthetic/step_4/syntactic': 0.25, 'synthetic/step_4/format': 0.1, 'synthetic/step_4/correct': 0.1, 'synthetic/step_4/valid': 0.2, 'synthetic/step_5/syntactic': 0.1, 'synthetic/step_5/format': 0.05, 'synthetic/step_5/correct': 0.05, 'synthetic/step_5/valid': 0.05, 'synthetic/step_6/syntactic': 0.05, 'synthetic/step_6/format': 0.05, 'synthetic/step_6/correct': 0.05, 'synthetic/step_6/valid': 0.05, 'synthetic/step_7/syntactic': 0.05, 'synthetic/step_7/format': 0.05, 'synthetic/step_7/correct': 0.1, 'synthetic/step_7/valid': 0.05, 'synthetic/step_8/syntactic': 0.15, 'synthetic/step_8/format': 0.1, 'synthetic/step_8/correct': 0.25, 'synthetic/step_8/valid': 0.1, 'synthetic/step_9/syntactic': 0.15, 'synthetic/step_9/format': 0.05, 'synthetic/step_9/correct': 0.2, 'synthetic/step_9/valid': 0.1, 'synthetic/step_10/syntactic': 0.3, 'synthetic/step_10/format': 0.05, 'synthetic/step_10/correct': 0.2, 'synthetic/step_10/valid': 0.25, 'synthetic/step_11/syntactic': 0.1, 'synthetic/step_11/format': 0.1, 'synthetic/step_11/correct': 0.1, 'synthetic/step_11/valid': 0.1, 'synthetic/step_12/syntactic': 0.05, 'synthetic/step_12/format': 0.05, 'synthetic/step_12/correct': 0.05, 'synthetic/step_12/valid': 0.05, 'synthetic/step_13/syntactic': 0.1, 'synthetic/step_13/format': 0.05, 'synthetic/step_13/correct': 0.05, 'synthetic/step_13/valid': 0.05, 'synthetic/step_14/syntactic': 0.05, 'synthetic/step_14/format': 0.05, 'synthetic/step_14/correct': 0.1, 'synthetic/step_14/valid': 0.1, 'synthetic/step_15/syntactic': 0.05, 'synthetic/step_15/format': 0.05, 'synthetic/step_15/correct': 0.1, 'synthetic/step_15/valid': 0.0, 'synthetic/step_16/syntactic': 0.15, 'synthetic/step_16/format': 0.1, 'synthetic/step_16/correct': 0.15, 'synthetic/step_16/valid': 0.05, 'synthetic/step_17/syntactic': 0.1, 'synthetic/step_17/format': 0.05, 'synthetic/step_17/correct': 0.1, 'synthetic/step_17/valid': 0.05, 'synthetic/step_18/syntactic': 0.1, 'synthetic/step_18/format': 0.05, 'synthetic/step_18/correct': 0.05, 'synthetic/step_18/valid': 0.0, 'synthetic/step_19/syntactic': 0.1, 'synthetic/step_19/format': 0.05, 'synthetic/step_19/correct': 0.15, 'synthetic/step_19/valid': 0.0, 'synthetic/step_20/syntactic': 0.15, 'synthetic/step_20/format': 0.1, 'synthetic/step_20/correct': 0.15, 'synthetic/step_20/valid': 0.05, 'epoch': 0.32}
+{'train_runtime': 7279.9319, 'train_samples_per_second': 2.198, 'train_steps_per_second': 0.137, 'train_loss': 0.06599045032262803, 'epoch': 0.32}
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33msft_hard_v3_lr1e-4_seed3408[0m at: [34mhttps://wandb.ai/filipelaitenberger/synthetic-rlvl/runs/spni6u44[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../atuin/c107fa/c107fa12/synthetic-RLVL/wandb/wandb/run-20260430_191042-spni6u44/logs[0m
+=== JOB_STATISTICS ===
+=== current date     : Thu Apr 30 21:12:09 CEST 2026
+= Job-ID             : 3571295 on alex as 3571290_1
+= Job-Name           : sft_hard_v3_lr1e4
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/sweeps/sft/hard_v3_lr1e4.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 1-00:00:00
+= Elapsed runtime    : 02:03:49
+= Total RAM usage    : 25.6 GiB of assigned  GiB (%)
+= Node list          : a0632
+= Subm/Elig/Start/End: 2026-04-30T19:07:56 / 2026-04-30T19:07:57 / 2026-04-30T19:08:20 / 2026-04-30T21:12:09
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           48.5G   104.9G   209.7G        N/A      50K     500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home     5.9T     0.0K     0.0K        N/A     241K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A100-SXM4-80GB, 00000000:0E:00.0, 7794, 86 %, 39 %, 57282 MiB, 7409012 ms

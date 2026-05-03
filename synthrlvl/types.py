@@ -25,6 +25,8 @@ class RewardSchema(str, Enum):
     INDICATOR_CORRECT_AND_FORMAT = "indicator_correct_and_format"
     CORRECT_PLUS_VALID_PLUS_0P1_FORMAT = "correct_plus_valid_plus_0p1_format"
     CORRECT_PLUS_LINE_VALID_PLUS_0P1_FORMAT = "correct_plus_line_valid_plus_0p1_format"
+    CORRECT_TIMES_VALID_PLUS_0P1_FORMAT = "correct_times_valid_plus_0p1_format"
+    CORRECT_TIMES_LINE_VALID_PLUS_0P1_FORMAT = "correct_times_line_valid_plus_0p1_format"
     CORRECT_PLUS_0P75_VALID_PLUS_0P1_FORMAT = "correct_plus_0p75_valid_plus_0p1_format"
     CORRECT_PLUS_0P5_VALID_PLUS_0P1_FORMAT = "correct_plus_0p5_valid_plus_0p1_format"
     CORRECT_PLUS_0P25_VALID_PLUS_0P1_FORMAT = "correct_plus_0p25_valid_plus_0p1_format"
@@ -45,3 +47,11 @@ class TaskConfig:
     train_steps: StepRange
     val_steps: StepRange
     seed: int
+    difficulty: str = "standard"
+    branching_factor: int | None = None
+    decoy_chains: int | None = None
+    near_miss_ratio: float | None = None
+    side_chain_depth: int | None = None
+    entity_decoy_ratio: float | None = None
+    answer_decoy_ratio: float | None = None
+    require_unique_solution: bool = True

@@ -1,0 +1,60 @@
+### Starting TaskPrologue of job 3572763 on a0633 at Fri May  1 21:12:57 CEST 2026
+Running on cores 112-127 with governor ondemand
+Fri May  1 21:12:57 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:D1:00.0 Off |                    0 |
+| N/A   45C    P0             63W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+Monitored the experiments and found no recovery action needed.
+
+Status:
+- Hard-v3 first-wave GRPO `3571292_0-6` is still running at the walltime edge and is covered by continuation `3572663`.
+- Hard-v3 second-wave GRPO `3572693_7-14` is actively training with recent progress logs.
+- Final hard-v3 merge/pass@k eval `3572694` is correctly dependency-held.
+- Oversight `3572763` is running; `3572764-3572767` are pending by begin time.
+- No new uncovered failed, cancelled, timed-out, OOM, Ray-startup, or idle-GPU condition required resubmission.
+
+Updated:
+- [docs/current_system_state.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/current_system_state.md:311)
+- [docs/hard_v3_experiment_status_2026-04-30.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/hard_v3_experiment_status_2026-04-30.md:139)
+- [docs/posttrain_recovery_passk_checklist_2026-04-24.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/posttrain_recovery_passk_checklist_2026-04-24.md:299)
+=== JOB_STATISTICS ===
+=== current date     : Fri May  1 21:15:40 CEST 2026
+= Job-ID             : 3572763 on alex
+= Job-Name           : experiment_oversight
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/codex/experiment_oversight.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:03:01
+= Total RAM usage    : 0.4 GiB of assigned  GiB (%)
+= Node list          : a0633
+= Subm/Elig/Start/End: 2026-05-01T19:53:01 / 2026-05-01T19:53:01 / 2026-05-01T21:12:38 / 2026-05-01T21:15:39
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           49.3G   104.9G   209.7G        N/A      50K     500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home     6.3T     0.0K     0.0K        N/A     242K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

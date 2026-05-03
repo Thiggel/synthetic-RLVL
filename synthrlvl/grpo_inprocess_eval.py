@@ -32,6 +32,7 @@ def install_grpo_eval_patch(
         return
 
     original_validate = RayPPOTrainer._validate
+    original_fit = RayPPOTrainer.fit
 
     def _run_rollout_synthetic_eval(self, *, step: int, collect_samples: int, run_dir: Path):
         from .eval_loop import UnifiedEvaluator
@@ -342,4 +343,22 @@ def install_grpo_eval_patch(
         return result
 
     RayPPOTrainer._validate = patched_validate
+    def patched_fit(self):
+        result = original_fit(self)
+        total_steps = int(getattr(self.config.trainer, "total_training_steps", 0) or 0)
+        if total_steps > 0:
+            try:
+                self.global_steps = total_steps
+                patched_validate(self, merged=False)
+            except Exception:
+                run_dir = Path(str(self.config.trainer.default_local_dir))
+                err_path = run_dir / "inprocess_eval_errors.log"
+                err_path.parent.mkdir(parents=True, exist_ok=True)
+                with err_path.open("a", encoding="utf-8") as f:
+                    f.write(f"final_step={total_steps}\n")
+                    f.write(traceback.format_exc())
+                    f.write("\n")
+        return result
+
+    RayPPOTrainer.fit = patched_fit
     RayPPOTrainer._syntheval_patch_installed = True

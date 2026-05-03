@@ -109,6 +109,7 @@ def install_grpo_train_patch(
                 "reward_format",
                 "reward_correct",
                 "reward_valid",
+                "reward_line_valid",
                 "reward_line_match",
             ]
         )
@@ -123,6 +124,7 @@ def install_grpo_train_patch(
                 _at("reward/format", i),
                 _at("reward/correct", i),
                 _at("reward/valid", i),
+                _at("reward/line_valid", i),
                 _at("reward/line_match", i),
             )
         wandb.log({"train/generations": table}, step=step)

@@ -251,3 +251,103 @@ Configured reward ablation set:
   - Reward pass@k output inventory remains complete with 24 reward metrics JSON files and 24 reward samples JSONL files.
 - Action taken:
   - No cancellation or resubmission was needed in this pass.
+
+## 2026-04-27 Hard-v1 Experiment Chain
+
+- Generated and uploaded `flaitenberger/LogicalReasoning-hard-v1` with `train_up_to_5_1m`, `train_up_to_10_1m`, and `val_step_01_1k` through `val_step_20_1k`.
+- Fresh HF reload checks passed for representative subsets; see `docs/hard_v1_experiment_status_2026-04-27.md`.
+- Submitted clean hard-v1 SFT-before-RL chain:
+  - SFT array `3566369`: `scripts/slurm/sweeps/sft/hard_v1_lr1e4.slurm`, seeds `3407/3408/3409`, W&B group `sft_hard_v1/lr1e-4`.
+  - SFT merge/sanity array `3566370`, dependency `afterok:3566369`, outputs `$WORK/synthetic-RLVL/tmp/merged_sft_hard_v1_seed{seed}`.
+  - GRPO reward-ablation array `3566371`, dependency `afterok:3566370`, schemas `correct_plus_0p1_format`, `correct_plus_valid_plus_0p1_format`, `correct_times_valid_plus_0p1_format`, `correct_plus_line_valid_plus_0p1_format`, `correct_times_line_valid_plus_0p1_format`.
+  - Final actor merge + pass@k eval array `3566372`, dependency `afterany:3566371`, outputs under `$WORK/synthetic-RLVL/passk_eval/hard_v1/`.
+
+## 2026-04-29 Hard-v1 Throttle Update
+
+- Increased hard-v1 GRPO reward-ablation array `3566371` from `%2` to `%4` using `scontrol update JobId=3566371 ArrayTaskThrottle=4`.
+- New tasks `3566371_4` and `3566371_5` started alongside already-running `3566371_2` and `3566371_3`.
+
+## 2026-04-29 Hard-v1 Ray Startup Retry
+
+- Hard-v1 GRPO tasks `4-10` in original array `3566371` failed quickly with Ray startup timeout after the temporary `%4` throttle increase.
+- Reduced `3566371` back to `%2` and submitted retry array `3570395` for tasks `4-10` with `%1`, `STARTUP_JITTER_SECONDS=900`, and `RESUME_MODE=auto`.
+- Updated pass@k eval array `3566372` to depend on both `3566371` and `3570395`.
+
+## 2026-04-29 Hard-v1 Staggered Retry Replacement
+
+- Added deterministic startup staggering support to `scripts/slurm/sweeps/posttrain_hard_v1_reward_ablation.slurm` via `STARTUP_STAGGER_SECONDS` and `STARTUP_STAGGER_BASE_ID`.
+- Canceled `%1` retry `3570395` and submitted staggered retry `3570401_[4-10%7]` for failed hard-v1 tasks `4-10` with 10-minute spacing and small jitter.
+- Updated pass@k eval `3566372` to depend on `3566371` and `3570401`.
+
+## Hard-v3 Compact Adversarial Chain (2026-04-30)
+
+- Added and uploaded `flaitenberger/LogicalReasoning-hard-v3`.
+- Cancelled pending synthetic-RLVL hard-v1/catchup/posthoc jobs before submitting the new chain.
+- Submitted hard-v3 chain: SFT `3571150`, SFT merge/sanity `3571151`, GRPO reward ablation `3571152`, final merge+pass@k eval `3571153`.
+- Details and GRPO array mapping: `docs/hard_v3_experiment_status_2026-04-30.md`.
+
+## Hard-v3 Shuffled Natural Theory Update (2026-04-30)
+
+- Updated `hard_v3` generation to deterministically shuffle and renumber only the natural-language theory shown in prompts.
+- Formal target premises remain complete and canonical; proof citations are unchanged.
+- Regenerated and uploaded `flaitenberger/LogicalReasoning-hard-v3` after the shuffle change.
+- Cancelled superseded pre-shuffle chain `3571150`/`3571151`/`3571152`/`3571153`.
+- Submitted active shuffled-NL chain: SFT `3571290`, merge `3571291`, GRPO `3571292`, final merge+pass@k eval `3571293`.
+- Details: `docs/hard_v3_experiment_status_2026-04-30.md`.
+
+## Hard-v3 Runtime Update (2026-05-01)
+
+- SFT `3571290` and merge/sanity `3571291` completed successfully.
+- First GRPO wave `3571292_0` through `3571292_6` is healthy but will likely hit the 24h walltime before step 1500; step-1000 checkpoints exist.
+- Queued continuation arrays `3572663` for tasks `0-6` and `3572664` for tasks `7-14` with `RESUME_MODE=auto`.
+- Cancelled original eval `3571293`; replacement eval `3572665` waits for both continuation arrays.
+
+## Hard-v3 Immediate Second-Wave Start (2026-05-01)
+
+- Cancelled original pending `3571292_7-14`, delayed retry `3572664`, and eval `3572665`.
+- Submitted immediate second-wave GRPO `3572693` for tasks `7-14` with 600s per-index startup stagger and jitter.
+- Submitted replacement eval `3572694`, waiting for `3572663` and `3572693`.
+
+## Hard-v3 Oversight Update (2026-05-01 21:14 CEST)
+
+- Original hard-v3 GRPO rows `3571292_0`-`3571292_6` are still running at the 24h limit with recent progress/checkpoints; continuation array `3572663_[0-6%7]` remains dependency-held and covers these rows after timeout/completion.
+- Immediate second-wave hard-v3 GRPO rows `3572693_7`-`3572693_14` are running and emitting recent `Training Progress` lines. Latest observed progress ranges from about step `31/1500` to `103/1500`, consistent with the configured startup stagger and roughly 57-60s/step runtime.
+- Final hard-v3 merge/pass@k eval `3572694_[0-14%8]` is correctly dependency-held on `3572663` and `3572693`.
+- Oversight job `3572763` is running; `3572764`-`3572767` are pending by begin time.
+- No new monitored `FAILED`, `CANCELLED`, `TIMEOUT`, or `OUT_OF_MEMORY` job was found since midnight in the hard-v3/recovery/eval/oversight set. No Ray startup failure or idle-GPU hang was found in current hard-v3 logs, so no cancellation or resubmission was needed.
+
+## Hard-v3 Oversight Update (2026-05-01 23:54 CEST)
+
+- First-wave task jobs `3571439`-`3571445` timed out at the 24h limit after useful progress; continuation array `3572663_0`-`3572663_6` is now running and resuming rows `0-6`.
+- Second-wave GRPO rows `3572693_7`-`3572693_14` remain healthy and are making steady progress, but their ETA is close to the 24h walltime.
+- Submitted dependent continuation array `3573037_[7-14%8]` for only rows `7-14` with `RESUME_MODE=auto`, 600s per-index startup stagger, and 60s jitter.
+- Updated final hard-v3 merge/pass@k eval `3572694_[0-14%8]` dependency to `afterany:3572663:3572693:3573037`, so eval cannot start before the second-wave continuation opportunity has completed.
+- Latest observed progress: rows `0-6` around `1149`, `1140`, `1129`, `1118`, `1109`, `1097`, `1088`; rows `7-14` around `271`, `262`, `251`, `239`, `225`, `218`, `206`, `196`.
+- Current hard-v3 logs show active `Training Progress` and live resource usage. No fatal Ray startup failure, traceback, OOM, or idle-GPU hang was found. No running jobs were cancelled.
+
+## Hard-v3 Oversight Update (2026-05-02 03:55 CEST)
+
+- Hard-v3 first-wave continuation `3572663_0`-`3572663_6` is running and has progressed rows `0-6` to roughly step `1268`-`1277` of `1500`.
+- Hard-v3 second-wave `3572693_7`-`3572693_14` is running and has progressed rows `7-14` to roughly step `268`-`277` of `1500`.
+- Continuation `3573037_[7-14%8]` remains dependency-held on `3572693`, and final merge/pass@k eval `3572694_[0-14%8]` remains dependency-held on `3572663`, `3572693`, and `3573037`.
+- Oversight jobs `3572763` and `3572764` completed successfully; `3572765` is running; `3572766` and `3572767` remain pending by begin time.
+- Recent hard-v3 logs and `sstat` show active training/resource usage. No fatal Ray startup failure, traceback, OOM, unexpected timeout/cancelled task, or idle-GPU/Ray-packaging hang was found.
+- No recovery resubmission was needed; all non-final hard-v3 rows are covered by live jobs or dependency-held continuation/eval jobs.
+
+## Hard-v3 Oversight Update (2026-05-02 11:03 CEST)
+
+- Hard-v3 first-wave continuation `3572663` completed successfully. Rows `0-6` now have final actors at `global_step_1500`.
+- Hard-v3 second-wave `3572693_7`-`3572693_14` is still running at about 15h40m elapsed. Latest stderr progress is about rows `7-14`: `969`, `959`, `952`, `930`, `907`, `902`, `895`, and `882` of `1500`.
+- Continuation `3573037_[7-14%8]` remains dependency-held on `3572693`. Final hard-v3 merge/pass@k eval `3572694_[0-14%8]` remains dependency-held on `3572693` and `3573037`; `3572663` is fulfilled.
+- Oversight jobs `3572763`-`3572765` completed successfully, `3572766` is running, and `3572767` is pending by begin time.
+- Logs and `sstat` show active training/resource usage for rows `7-14`. No fatal Ray startup failure, OOM, unexpected cancellation, or idle-GPU/Ray-packaging hang was found.
+- No recovery resubmission was needed. The remaining non-final hard-v3 rows are progressing slowly and are covered by live jobs plus checkpointed continuation.
+
+## Hard-v3 Oversight Update (2026-05-02 11:58 CEST)
+
+- Hard-v3 second-wave `3572693_7`-`3572693_14` is still running at about 16h36m elapsed. Latest stderr progress is about rows `7-14`: `1022`, `1013`, `1007`, `989`, `965`, `960`, `952`, and `940` of `1500`.
+- Rows `0-6` have final actors at `global_step_1500`; rows `7-14` do not yet have final actors.
+- Continuation `3573037_[7-14%8]` remains dependency-held on `3572693`. Final hard-v3 merge/pass@k eval `3572694_[0-14%8]` remains dependency-held on `3572693` and `3573037`.
+- Oversight jobs `3572763`-`3572766` completed successfully; `3572767` is running.
+- Logs and `sstat` show active training/resource usage for rows `7-14`. The current scan found only expected tokenizer/Ray/NCCL warnings; no fatal Ray startup failure, OOM, unexpected cancellation, or idle-GPU/Ray-packaging hang was found.
+- No recovery resubmission was needed. The remaining non-final hard-v3 rows are progressing slowly and are covered by live jobs plus checkpointed continuation.

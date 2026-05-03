@@ -125,6 +125,9 @@ def _add_passk_metrics_for_group(
         metrics[f"{prefix}/valid_pass@{kk}"] = valid
         metrics[f"{prefix}/joint_pass@{kk}"] = joint
         metrics[f"{prefix}/valid_given_correct@{kk}"] = joint / correct if correct > 0 else 0.0
+        metrics[f"{prefix}/correct_given_valid@{kk}"] = joint / valid if valid > 0 else 0.0
+        metrics[f"{prefix}/invalid_but_correct@{kk}"] = max(0.0, correct - joint)
+        metrics[f"{prefix}/valid_but_wrong@{kk}"] = max(0.0, valid - joint)
 
 
 def score_pass_at_k(

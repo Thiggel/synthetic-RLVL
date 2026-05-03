@@ -1,0 +1,26 @@
+Creating parquet from Arrow format:   0%|          | 0/5 [00:00<?, ?ba/s]Creating parquet from Arrow format:  20%|██        | 1/5 [00:00<00:01,  3.94ba/s]Creating parquet from Arrow format:  40%|████      | 2/5 [00:00<00:00,  4.28ba/s]Creating parquet from Arrow format:  60%|██████    | 3/5 [00:00<00:00,  4.43ba/s]Creating parquet from Arrow format:  80%|████████  | 4/5 [00:00<00:00,  4.43ba/s]Creating parquet from Arrow format: 100%|██████████| 5/5 [00:00<00:00,  5.32ba/s]
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]Creating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 74.23ba/s]
+/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-04-29 16:33:37,083	ERROR services.py:1361 -- Failed to start the dashboard 
+2026-04-29 16:33:37,084	ERROR services.py:1386 -- Error should be written to 'dashboard.log' or 'dashboard.err'. We are printing the last 20 lines for you. See 'https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure' to find where the log file is.
+2026-04-29 16:33:37,084	ERROR services.py:1396 -- Couldn't read dashboard.log file. Error: [Errno 2] No such file or directory: '/tmp/3570030.alex/ray/session_2026-04-29_16-32-34_912046_1690858/logs/dashboard.log'. It means the dashboard is broken even before it initializes the logger (mostly dependency issues). Reading the dashboard.err file which contains stdout/stderr.
+2026-04-29 16:33:37,085	ERROR services.py:1430 -- Failed to read dashboard.err file: [Errno 2] No such file or directory: '/tmp/3570030.alex/ray/session_2026-04-29_16-32-34_912046_1690858/logs/dashboard.err'. It is unexpected. Please report an issue to Ray github. https://github.com/ray-project/ray/issues
+2026-04-29 16:35:41,322	INFO node.py:375 -- Failed to get node info b'GCS cannot find the node with node ID 1e73f3762b8b8c1d89ca39b21f45758519b1e1310887cfcd1fea5f97. The node registration may not be complete yet before the timeout. Try increase the RAY_raylet_start_wait_time_s config.'
+Error executing job with overrides: ['seed=3408', 'run_name=rl_hard_v1_correct_plus_0p1_format_seed3408_mrg', 'model.path=/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_sft_hard_v1_seed3408', 'model.merge_adapter_for_rollout=false', 'reward.schema=correct_plus_0p1_format', 'logging.project=synthetic-rlvl', 'data.train_samples=120000', 'grpo.train_steps=1500', 'resume.mode=auto']
+Traceback (most recent call last):
+  File "/home/hpc/c107fa/c107fa12/synthetic-RLVL/posttrain_grpo_verl.py", line 509, in main
+    run_ppo(migrate_legacy_reward_impl(verl_cfg), task_runner_class=remote_task_runner)
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/verl/trainer/main_ppo.py", line 77, in run_ppo
+    ray.init(**OmegaConf.to_container(ray_init_kwargs))
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/worker.py", line 1908, in init
+    _global_node = ray._private.node.Node(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vault/c107fa/c107fa12/.venv_rlvl_posttrain/lib/python3.12/site-packages/ray/_private/node.py", line 377, in __init__
+    raise Exception(
+Exception: The current node timed out during startup. This could happen because some of the raylet failed to startup or the GCS has become overloaded.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

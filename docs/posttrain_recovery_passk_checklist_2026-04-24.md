@@ -295,3 +295,89 @@ Post-hoc eval is handled by dependent array `3561188`. For each final merged act
   - Reward pass@k still has the expected 24 reward metrics files and 24 reward samples files.
 - Action taken:
   - No cancellation or resubmission was needed in this pass.
+
+## Oversight Pass (2026-05-01 21:14 CEST)
+
+- Scheduler check:
+  - Active hard-v3 GRPO first wave `3571292_0`-`3571292_6` is still running near the 24h limit; continuation `3572663_[0-6%7]` is dependency-held and covers rows `0-6`.
+  - Hard-v3 second wave `3572693_7`-`3572693_14` is running; final hard-v3 merge/pass@k eval `3572694_[0-14%8]` is dependency-held.
+  - Oversight job `3572763` is running, with `3572764`-`3572767` pending by begin time.
+- Progress check:
+  - First-wave hard-v3 rows have recent checkpoints/progress; latest observed steps for rows `0-6` were `1184`, `1442`, `1148`, `1148`, `1148`, `1184`, and `1148`.
+  - Second-wave hard-v3 rows are actively training after staggered startup; latest observed steps for rows `7-14` were about `103`, `94`, `83`, `72`, `59`, `52`, `41`, and `31`.
+- Failure / idle-GPU check:
+  - No monitored hard-v3/recovery/eval/oversight job has newly entered `FAILED`, `CANCELLED`, `TIMEOUT`, or `OUT_OF_MEMORY` since midnight.
+  - Current hard-v3 logs show no Ray startup failure, fatal traceback, OOM, or idle-GPU hang; running batch steps have nontrivial live CPU/RSS usage.
+- Action taken:
+  - No recovery resubmission was needed. Slow hard-v3 GRPO rows remain covered by live jobs and continuation/eval dependencies.
+
+## Oversight Pass (2026-05-01 23:54 CEST)
+
+- Scheduler check:
+  - Hard-v3 first-wave task jobs `3571439`-`3571445` timed out at walltime after useful progress; continuation `3572663_[0-6%7]` is running and covers rows `0-6`.
+  - Hard-v3 second-wave `3572693_7`-`3572693_14` remains running and healthy.
+  - Added second-wave continuation `3573037_[7-14%8]`, dependency `afterany:3572693`, with `RESUME_MODE=auto` and startup staggering.
+  - Final hard-v3 merge/pass@k eval `3572694_[0-14%8]` now waits on `3572663`, `3572693`, and `3573037`.
+  - Oversight `3572763` completed, `3572764` is running, and `3572765`-`3572767` are pending by begin time.
+- Progress check:
+  - Rows `0-6` latest observed steps were about `1149`, `1140`, `1129`, `1118`, `1109`, `1097`, and `1088`.
+  - Rows `7-14` latest observed steps were about `271`, `262`, `251`, `239`, `225`, `218`, `206`, and `196`.
+- Failure / idle-GPU check:
+  - The first-wave timeouts are expected walltime exits and already have live continuation coverage.
+  - Active hard-v3 logs show current `Training Progress` and live CPU/RSS usage. No fatal Ray startup failure, traceback, OOM, or idle-GPU/Ray-packaging hang was found.
+- Action taken:
+  - Submitted continuation `3573037` for hard-v3 rows `7-14` and updated eval dependency for `3572694`. No running jobs were cancelled.
+
+## Oversight Pass (2026-05-02 03:55 CEST)
+
+- Scheduler check:
+  - Hard-v3 first-wave continuation `3572663_0`-`3572663_6` is running.
+  - Hard-v3 second-wave `3572693_7`-`3572693_14` is running.
+  - Hard-v3 second-wave continuation `3573037_[7-14%8]` remains dependency-held on `3572693`.
+  - Hard-v3 final merge/pass@k eval `3572694_[0-14%8]` remains dependency-held on `3572663`, `3572693`, and `3573037`.
+  - Oversight jobs `3572763` and `3572764` completed successfully; `3572765` is running; `3572766` and `3572767` remain pending by begin time.
+- Progress check:
+  - Rows `0-6` latest observed steps were about `1277`, `1268`, `1268`, `1268`, `1268`, `1277`, and `1268`.
+  - Rows `7-14` latest observed steps were about `268`, `268`, `268`, `277`, `268`, `268`, `268`, and `268`.
+- Failure / idle-GPU check:
+  - The only hard-v3 timeouts in this pass are the expected original first-wave walltime exits, already covered by live continuation `3572663`.
+  - Active hard-v3 logs show training progress and live `sstat` shows nontrivial CPU/RSS usage.
+  - No fatal Ray startup failure, traceback, OOM, unexpected cancellation, or idle-GPU/Ray-packaging hang was found.
+- Action taken:
+  - No cancellation or resubmission was needed. All missing final hard-v3 actors remain covered by live or dependency-held jobs.
+
+## Oversight Pass (2026-05-02 11:03 CEST)
+
+- Scheduler check:
+  - Hard-v3 first-wave continuation `3572663` completed successfully; rows `0-6` have final actors at `global_step_1500`.
+  - Hard-v3 second-wave `3572693_7`-`3572693_14` remains running.
+  - Hard-v3 continuation `3573037_[7-14%8]` remains dependency-held on `3572693`.
+  - Hard-v3 final merge/pass@k eval `3572694_[0-14%8]` remains dependency-held on `3572693` and `3573037`.
+  - Oversight jobs `3572763`-`3572765` completed, `3572766` is running, and `3572767` is pending by begin time.
+- Progress check:
+  - Rows `7-14` latest stderr progress was about `969`, `959`, `952`, `930`, `907`, `902`, `895`, and `882` of `1500`.
+  - Live `sstat` for the running hard-v3 batch steps shows substantial CPU/RSS usage.
+- Failure / idle-GPU check:
+  - First-wave continuation rows logged teardown/DataLoader cleanup errors only after reaching step `1500`; final actor directories exist and Slurm state is `COMPLETED`.
+  - No new fatal Ray startup failure, OOM, unexpected cancellation, or idle-GPU/Ray-packaging hang was found.
+  - Rows `7-14` without final actors remain covered by the live second-wave array and dependency-held continuation `3573037`.
+- Action taken:
+  - No cancellation or resubmission was needed.
+
+## Oversight Pass (2026-05-02 11:58 CEST)
+
+- Scheduler check:
+  - Hard-v3 rows `0-6` have final actors at `global_step_1500`.
+  - Hard-v3 second-wave `3572693_7`-`3572693_14` remains running at about 16h36m elapsed.
+  - Hard-v3 continuation `3573037_[7-14%8]` remains dependency-held on `3572693`.
+  - Hard-v3 final merge/pass@k eval `3572694_[0-14%8]` remains dependency-held on `3572693` and `3573037`.
+  - Oversight jobs `3572763`-`3572766` completed successfully; `3572767` is running.
+- Progress check:
+  - Rows `7-14` latest stderr progress was about `1022`, `1013`, `1007`, `989`, `965`, `960`, `952`, and `940` of `1500`.
+  - Live `sstat` for the running hard-v3 batch steps shows substantial CPU/RSS usage.
+- Failure / idle-GPU check:
+  - Current hard-v3 log scan found only expected tokenizer/Ray/NCCL warnings.
+  - No fatal Ray startup failure, OOM, traceback before checkpoint, unexpected cancellation, or idle-GPU/Ray-packaging hang was found.
+  - Rows `7-14` without final actors remain covered by the live second-wave array and dependency-held continuation `3573037`.
+- Action taken:
+  - No cancellation or resubmission was needed.

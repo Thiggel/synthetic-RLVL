@@ -1,0 +1,64 @@
+### Starting TaskPrologue of job 3572766 on a0532 at Sat May  2 11:01:47 CEST 2026
+Running on cores 16-31 with governor ondemand
+Sat May  2 11:01:47 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:13:00.0 Off |                    0 |
+| N/A   34C    P0             69W /  400W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+Monitoring pass complete.
+
+I checked Slurm state, recent hard-v3 logs, final actor inventory, live `sstat`, and eval dependencies. No recovery action was needed.
+
+Current state:
+- `3572663` completed; hard-v3 rows `0-6` have final `global_step_1500/actor` checkpoints.
+- `3572693_7`-`3572693_14` are still running and progressing, latest observed around `882-969/1500`.
+- `3573037_[7-14%8]` is dependency-held as the continuation coverage for rows `7-14`.
+- `3572694_[0-14%8]` remains dependency-held for final merge/pass@k eval.
+- No new Ray startup failure, OOM, idle-GPU hang, or uncovered failed row was found.
+
+Updated:
+- [docs/current_system_state.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/current_system_state.md)
+- [docs/hard_v3_experiment_status_2026-04-30.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/hard_v3_experiment_status_2026-04-30.md)
+- [docs/posttrain_recovery_passk_checklist_2026-04-24.md](/home/hpc/c107fa/c107fa12/synthetic-RLVL/docs/posttrain_recovery_passk_checklist_2026-04-24.md)
+
+No jobs were cancelled or submitted.
+=== JOB_STATISTICS ===
+=== current date     : Sat May  2 11:04:20 CEST 2026
+= Job-ID             : 3572766 on alex
+= Job-Name           : experiment_oversight
+= Job-Command        : /home/hpc/c107fa/c107fa12/synthetic-RLVL/scripts/slurm/codex/experiment_oversight.slurm
+= Initial workdir    : /home/hpc/c107fa/c107fa12/synthetic-RLVL
+= Queue/Partition    : a100
+= Slurm account      : c107fa with QOS=normal
+= Features           : a100_80&el8
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:03:43
+= Total RAM usage    : 0.3 GiB of assigned  GiB (%)
+= Node list          : a0532
+= Subm/Elig/Start/End: 2026-05-01T19:53:01 / 2026-05-02T07:53:01 / 2026-05-02T11:00:37 / 2026-05-02T11:04:20
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           49.6G   104.9G   209.7G        N/A      50K     500K   1,000K        N/A    
+    /home/vault         42.7G  1048.6G  2097.2G        N/A     101K     200K     400K        N/A    
+    atuin.rrze.uni-erlangen.de:/srv/home     6.8T     0.0K     0.0K        N/A     243K                          N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

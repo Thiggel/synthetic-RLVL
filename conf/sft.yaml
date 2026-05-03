@@ -16,6 +16,14 @@ task:
   template: logic
   prefill: none
   distractor_ratio: 0.5
+  difficulty: standard
+  branching_factor: null
+  decoy_chains: null
+  near_miss_ratio: null
+  side_chain_depth: null
+  entity_decoy_ratio: null
+  answer_decoy_ratio: null
+  require_unique_solution: true
   train_min_step: 1
   train_max_step: 5
   val_min_step: 1

@@ -1,0 +1,91 @@
+{
+  "input_records": [
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_plus_0p1_format_seed3407_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_plus_0p1_format_seed3408_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_plus_0p1_format_seed3409_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_plus_line_valid_plus_0p1_format_seed3407_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_plus_line_valid_plus_0p1_format_seed3408_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_plus_line_valid_plus_0p1_format_seed3409_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_plus_valid_plus_0p1_format_seed3407_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_plus_valid_plus_0p1_format_seed3408_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_plus_valid_plus_0p1_format_seed3409_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_times_line_valid_plus_0p1_format_seed3407_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_times_line_valid_plus_0p1_format_seed3408_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_times_line_valid_plus_0p1_format_seed3409_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_times_valid_plus_0p1_format_seed3407_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_times_valid_plus_0p1_format_seed3408_mrg_passk.json",
+    "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hard_v3/reward_rl_hard_v3_correct_times_valid_plus_0p1_format_seed3409_mrg_passk.json"
+  ],
+  "schemas": [
+    "correct_plus_0p1_format",
+    "correct_plus_valid_plus_0p1_format",
+    "correct_times_valid_plus_0p1_format",
+    "correct_plus_line_valid_plus_0p1_format",
+    "correct_times_line_valid_plus_0p1_format"
+  ],
+  "schema_labels": {
+    "correct_plus_0p1_format": "correct + 0.1 format",
+    "correct_plus_valid_plus_0p1_format": "correct + valid + 0.1 format",
+    "correct_times_valid_plus_0p1_format": "correct * valid + 0.1 format",
+    "correct_plus_line_valid_plus_0p1_format": "correct + line-valid + 0.1 format",
+    "correct_times_line_valid_plus_0p1_format": "correct * line-valid + 0.1 format"
+  },
+  "ablations": {
+    "hard_v3_all_rewards": [
+      "correct_plus_0p1_format",
+      "correct_plus_valid_plus_0p1_format",
+      "correct_times_valid_plus_0p1_format",
+      "correct_plus_line_valid_plus_0p1_format",
+      "correct_times_line_valid_plus_0p1_format"
+    ],
+    "hard_v3_no_validity_vs_binary_validity": [
+      "correct_plus_0p1_format",
+      "correct_plus_valid_plus_0p1_format",
+      "correct_times_valid_plus_0p1_format"
+    ],
+    "hard_v3_no_validity_vs_line_validity": [
+      "correct_plus_0p1_format",
+      "correct_plus_line_valid_plus_0p1_format",
+      "correct_times_line_valid_plus_0p1_format"
+    ],
+    "hard_v3_additive_validity": [
+      "correct_plus_0p1_format",
+      "correct_plus_valid_plus_0p1_format",
+      "correct_plus_line_valid_plus_0p1_format"
+    ],
+    "hard_v3_multiplicative_validity": [
+      "correct_plus_0p1_format",
+      "correct_times_valid_plus_0p1_format",
+      "correct_times_line_valid_plus_0p1_format"
+    ],
+    "hard_v3_binary_vs_line_validity": [
+      "correct_plus_valid_plus_0p1_format",
+      "correct_plus_line_valid_plus_0p1_format",
+      "correct_times_valid_plus_0p1_format",
+      "correct_times_line_valid_plus_0p1_format"
+    ]
+  },
+  "bands": [
+    "band_train",
+    "band_ood",
+    "band_hard_tail"
+  ],
+  "metrics": [
+    "correct",
+    "valid",
+    "joint",
+    "valid_given_correct",
+    "invalid_but_correct",
+    "format",
+    "syntactic"
+  ],
+  "k_values": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64
+  ]
+}

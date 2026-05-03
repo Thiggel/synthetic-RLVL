@@ -42,7 +42,7 @@ def _extract_facts_rules(premises_nl: List[str]) -> tuple[List[str], List[str]]:
     rules: List[str] = []
     for raw in premises_nl:
         text = raw.split(". ", 1)[1].strip() if ". " in raw else raw.strip()
-        if text.startswith("All things"):
+        if text.startswith("All things") or text.startswith("For "):
             rules.append(text)
         else:
             facts.append(text)
@@ -56,7 +56,19 @@ class TaskBuilder:
 
     def _generator(self, depth: int) -> LogicDatasetGenerator:
         if depth not in self._gens:
-            ds_cfg = DatasetConfig(depth=depth, distractor_ratio=self.cfg.distractor_ratio, seed=self.cfg.seed)
+            ds_cfg = DatasetConfig(
+                depth=depth,
+                distractor_ratio=self.cfg.distractor_ratio,
+                difficulty=self.cfg.difficulty,
+                branching_factor=self.cfg.branching_factor,
+                decoy_chains=self.cfg.decoy_chains,
+                near_miss_ratio=self.cfg.near_miss_ratio,
+                side_chain_depth=self.cfg.side_chain_depth,
+                entity_decoy_ratio=self.cfg.entity_decoy_ratio,
+                answer_decoy_ratio=self.cfg.answer_decoy_ratio,
+                require_unique_solution=self.cfg.require_unique_solution,
+                seed=self.cfg.seed,
+            )
             self._gens[depth] = LogicDatasetGenerator(ds_cfg)
         return self._gens[depth]
 

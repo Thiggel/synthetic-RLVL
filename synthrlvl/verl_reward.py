@@ -72,11 +72,13 @@ def compute_score(
             gold_logic_conclusion=gold_logic_conclusion,
             gold_first_modality_lines=gold_first_modality_lines,
         )
+        line_valid = _REWARD._line_valid_fraction(solution_str, template=template)
         return {
             "score": float(score),
             "reward/format": float(comp.format_ok),
             "reward/correct": float(comp.correct),
             "reward/valid": float(comp.valid),
+            "reward/line_valid": float(line_valid),
             "reward/line_match": float(comp.line_match),
         }
     except Exception:

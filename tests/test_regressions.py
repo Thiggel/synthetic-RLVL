@@ -81,6 +81,16 @@ def test_verl_reward_importable_as_standalone_module():
     assert isinstance(out, dict)
     assert "score" in out
 
+    out_joint = module.compute_score(  # type: ignore[attr-defined]
+        data_source="synthetic-rlvl",
+        solution_str="<answer>yes</answer>",
+        ground_truth="yes",
+        extra_info={"template": "logic", "prefill": "none", "schema": "correct_times_valid_plus_0p1_format"},
+    )
+    assert out_joint["reward/correct"] == 1.0
+    assert out_joint["reward/valid"] == 0.0
+    assert out_joint["score"] == 0.0
+
 
 def test_rollout_mode_matches_backend():
     assert _rollout_mode_for_backend("vllm") == "async"

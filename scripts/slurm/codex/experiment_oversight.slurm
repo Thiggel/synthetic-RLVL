@@ -40,10 +40,10 @@ type cs >/dev/null 2>&1 || {
 
 cs exec "Please monitor the Synthetic-RLVL experiments in this repository.
 
-Read docs/current_system_state.md and docs/posttrain_recovery_passk_checklist_2026-04-24.md first. Then:
-- Check Slurm state for active recovery arrays, merge/eval array, and oversight jobs.
+Read docs/current_system_state.md, docs/hard_v3_experiment_status_2026-04-30.md, and docs/posttrain_recovery_passk_checklist_2026-04-24.md first. Then:
+- Check Slurm state for active hard-v3 GRPO arrays, continuation arrays, merge/eval array, and oversight jobs.
 - Check recent logs for failures, GPU-idle jobs, Ray startup failures, and timeout/cancelled tasks.
 - If a recovery task failed and no equivalent live/pending retry exists, debug and resubmit only the missing rows/seeds.
 - If long jobs are merely progressing slowly, do not cancel them; rely on checkpointed continuation waves.
-- Keep docs/current_system_state.md and docs/posttrain_recovery_passk_checklist_2026-04-24.md updated with any actions and job IDs.
+- Keep docs/current_system_state.md, docs/hard_v3_experiment_status_2026-04-30.md, and docs/posttrain_recovery_passk_checklist_2026-04-24.md updated with any actions and job IDs.
 - If everything is healthy and no action is needed, write a concise status note in the docs and exit."
