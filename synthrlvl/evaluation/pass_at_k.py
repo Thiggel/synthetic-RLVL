@@ -14,7 +14,12 @@ class ScoredSample:
     format_ok: float
     correct: float
     valid: float
+    citation_free_valid: float
+    nl_logic_parse: float
+    nl_logic_citation_free_valid: float
     joint: float
+    citation_free_joint: float
+    nl_logic_joint: float
 
     @classmethod
     def from_eval_result(cls, result: EvalResult) -> "ScoredSample":
@@ -22,12 +27,20 @@ class ScoredSample:
         format_ok = float(result.format_ok > 0)
         correct = float(result.correct > 0)
         valid = float(result.valid > 0)
+        citation_free_valid = float(result.citation_free_valid > 0)
+        nl_logic_parse = float(result.nl_logic_parse >= 1.0)
+        nl_logic_citation_free_valid = float(result.nl_logic_citation_free_valid > 0)
         return cls(
             syntactic=syntactic,
             format_ok=format_ok,
             correct=correct,
             valid=valid,
+            citation_free_valid=citation_free_valid,
+            nl_logic_parse=nl_logic_parse,
+            nl_logic_citation_free_valid=nl_logic_citation_free_valid,
             joint=float(format_ok > 0 and correct > 0 and valid > 0),
+            citation_free_joint=float(format_ok > 0 and correct > 0 and citation_free_valid > 0),
+            nl_logic_joint=float(format_ok > 0 and correct > 0 and nl_logic_citation_free_valid > 0),
         )
 
 
@@ -73,6 +86,8 @@ def _score_prompt_samples(
                 gold_answer=rec.gold_answer,
                 gold_logic_premises=rec.gold_logic_premises,
                 gold_logic_conclusion=rec.gold_logic_conclusion,
+                gold_logic_constants=getattr(rec, "gold_logic_constants", ""),
+                gold_logic_predicates=getattr(rec, "gold_logic_predicates", ""),
                 prefill=rec.prefill,
                 gold_first_modality_lines=rec.gold_first_modality_lines,
             )
@@ -87,7 +102,12 @@ def _metric_counts(samples: Sequence[ScoredSample]) -> dict[str, int]:
         "syntactic": sum(1 for s in samples if s.syntactic > 0),
         "correct": sum(1 for s in samples if s.correct > 0),
         "valid": sum(1 for s in samples if s.valid > 0),
+        "citation_free_valid": sum(1 for s in samples if s.citation_free_valid > 0),
+        "nl_logic_parse": sum(1 for s in samples if s.nl_logic_parse > 0),
+        "nl_logic_citation_free_valid": sum(1 for s in samples if s.nl_logic_citation_free_valid > 0),
         "joint": sum(1 for s in samples if s.joint > 0),
+        "citation_free_joint": sum(1 for s in samples if s.citation_free_joint > 0),
+        "nl_logic_joint": sum(1 for s in samples if s.nl_logic_joint > 0),
     }
 
 
@@ -99,7 +119,19 @@ def _add_passk_metrics_for_group(
     k_values: Sequence[int],
 ) -> None:
     by_k: dict[int, dict[str, list[float]]] = {
-        int(k): {"format": [], "syntactic": [], "correct": [], "valid": [], "joint": []} for k in k_values
+        int(k): {
+            "format": [],
+            "syntactic": [],
+            "correct": [],
+            "valid": [],
+            "citation_free_valid": [],
+            "nl_logic_parse": [],
+            "nl_logic_citation_free_valid": [],
+            "joint": [],
+            "citation_free_joint": [],
+            "nl_logic_joint": [],
+        }
+        for k in k_values
     }
 
     for prompt_scores in group_scores:
@@ -116,18 +148,42 @@ def _add_passk_metrics_for_group(
         kk = int(k)
         correct = _mean(by_k[kk]["correct"])
         joint = _mean(by_k[kk]["joint"])
+        citation_free_joint = _mean(by_k[kk]["citation_free_joint"])
+        nl_logic_joint = _mean(by_k[kk]["nl_logic_joint"])
         valid = _mean(by_k[kk]["valid"])
+        citation_free_valid = _mean(by_k[kk]["citation_free_valid"])
+        nl_logic_parse = _mean(by_k[kk]["nl_logic_parse"])
+        nl_logic_citation_free_valid = _mean(by_k[kk]["nl_logic_citation_free_valid"])
         fmt = _mean(by_k[kk]["format"])
         syntactic = _mean(by_k[kk]["syntactic"])
         metrics[f"{prefix}/format_pass@{kk}"] = fmt
         metrics[f"{prefix}/syntactic_pass@{kk}"] = syntactic
         metrics[f"{prefix}/correct_pass@{kk}"] = correct
         metrics[f"{prefix}/valid_pass@{kk}"] = valid
+        metrics[f"{prefix}/citation_free_valid_pass@{kk}"] = citation_free_valid
+        metrics[f"{prefix}/nl_logic_parse_pass@{kk}"] = nl_logic_parse
+        metrics[f"{prefix}/nl_logic_citation_free_valid_pass@{kk}"] = nl_logic_citation_free_valid
         metrics[f"{prefix}/joint_pass@{kk}"] = joint
+        metrics[f"{prefix}/citation_free_joint_pass@{kk}"] = citation_free_joint
+        metrics[f"{prefix}/nl_logic_joint_pass@{kk}"] = nl_logic_joint
         metrics[f"{prefix}/valid_given_correct@{kk}"] = joint / correct if correct > 0 else 0.0
         metrics[f"{prefix}/correct_given_valid@{kk}"] = joint / valid if valid > 0 else 0.0
         metrics[f"{prefix}/invalid_but_correct@{kk}"] = max(0.0, correct - joint)
         metrics[f"{prefix}/valid_but_wrong@{kk}"] = max(0.0, valid - joint)
+        metrics[f"{prefix}/citation_free_valid_given_correct@{kk}"] = (
+            citation_free_joint / correct if correct > 0 else 0.0
+        )
+        metrics[f"{prefix}/nl_logic_valid_given_correct@{kk}"] = (
+            nl_logic_joint / correct if correct > 0 else 0.0
+        )
+        metrics[f"{prefix}/correct_given_citation_free_valid@{kk}"] = (
+            citation_free_joint / citation_free_valid if citation_free_valid > 0 else 0.0
+        )
+        metrics[f"{prefix}/correct_given_nl_logic_valid@{kk}"] = (
+            nl_logic_joint / nl_logic_citation_free_valid if nl_logic_citation_free_valid > 0 else 0.0
+        )
+        metrics[f"{prefix}/citation_free_invalid_but_correct@{kk}"] = max(0.0, correct - citation_free_joint)
+        metrics[f"{prefix}/citation_free_valid_but_wrong@{kk}"] = max(0.0, citation_free_valid - citation_free_joint)
 
 
 def score_pass_at_k(

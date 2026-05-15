@@ -2,18 +2,27 @@ from __future__ import annotations
 
 import argparse
 
-from synthetic_dataset import MaterializedDatasetBuilder
+from synthetic_dataset import MaterializedDatasetBuilder, MaterializedSyntheticDataset
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build and optionally push materialized synthetic logic subsets.")
     parser.add_argument("--output-root", required=True, help="Root directory for subset parquet outputs")
+    parser.add_argument("--train-up-to-3-subset", default="train_up_to_3_1k")
+    parser.add_argument("--train-up-to-5-subset", default="train_up_to_5_1m")
+    parser.add_argument("--train-up-to-10-subset", default="train_up_to_10_1m")
+    parser.add_argument("--train-up-to-15-subset", default="train_up_to_15_120k")
+    parser.add_argument("--train-up-to-3-rows", type=int, default=0)
     parser.add_argument("--train-up-to-5-rows", type=int, default=1_000_000)
     parser.add_argument("--train-up-to-10-rows", type=int, default=1_000_000)
+    parser.add_argument("--train-up-to-15-rows", type=int, default=0)
     parser.add_argument("--val-rows-per-step", type=int, default=1_000)
+    parser.add_argument("--val-max-step", type=int, default=20)
     parser.add_argument("--seed", type=int, default=3407)
     parser.add_argument("--distractor-ratio", type=float, default=0.5)
-    parser.add_argument("--difficulty", choices=["standard", "hard_v1", "hard_v2", "hard_v3"], default="standard")
+    parser.add_argument("--difficulty", choices=["standard", "hard_v1", "hard_v2", "hard_v3", "hard_v5", "hard_fsa", "hard_fsa_schema"], default="standard")
+    parser.add_argument("--train-shortcut-rate", type=float, default=0.0)
+    parser.add_argument("--val-shortcut-rate", type=float, default=0.0)
     parser.add_argument("--branching-factor", type=int, default=None)
     parser.add_argument("--decoy-chains", type=int, default=None)
     parser.add_argument("--near-miss-ratio", type=float, default=None)
@@ -29,15 +38,27 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    builder = MaterializedDatasetBuilder()
+    builder = MaterializedDatasetBuilder(
+        MaterializedSyntheticDataset(
+            train_up_to_3_subset=args.train_up_to_3_subset,
+            train_up_to_5_subset=args.train_up_to_5_subset,
+            train_up_to_10_subset=args.train_up_to_10_subset,
+            train_up_to_15_subset=args.train_up_to_15_subset,
+        )
+    )
     builder.build(
         output_root=args.output_root,
+        train_up_to_3_rows=args.train_up_to_3_rows,
         train_up_to_5_rows=args.train_up_to_5_rows,
         train_up_to_10_rows=args.train_up_to_10_rows,
+        train_up_to_15_rows=args.train_up_to_15_rows,
         val_rows_per_step=args.val_rows_per_step,
+        val_max_step=args.val_max_step,
         seed=args.seed,
         distractor_ratio=args.distractor_ratio,
         difficulty=args.difficulty,
+        train_shortcut_rate=args.train_shortcut_rate,
+        val_shortcut_rate=args.val_shortcut_rate,
         branching_factor=args.branching_factor,
         decoy_chains=args.decoy_chains,
         near_miss_ratio=args.near_miss_ratio,

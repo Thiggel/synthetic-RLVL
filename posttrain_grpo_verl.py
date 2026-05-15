@@ -274,8 +274,12 @@ def _build_verl_cfg(cfg: DictConfig, train_file: Path, val_file: Path) -> DictCo
         base.trainer.project_name = str(cfg.logging.project)
         base.trainer.experiment_name = str(cfg.run_name)
         base.trainer.logger = ["console", "wandb", "file"]
+        n_gpus_per_node = int(cfg.system.get("n_gpus_per_node", 1))
+        if n_gpus_per_node < 1:
+            raise ValueError(f"system.n_gpus_per_node must be >= 1, got {n_gpus_per_node}")
         base.trainer.nnodes = 1
-        base.trainer.n_gpus_per_node = 1
+        base.trainer.n_gpus_per_node = n_gpus_per_node
+        base.actor_rollout_ref.rollout.n_gpus_per_node = n_gpus_per_node
         base.trainer.total_training_steps = int(cfg.grpo.train_steps)
         base.trainer.total_epochs = 1
         validation_enabled = bool(cfg.validation.get("enabled", True))
@@ -283,6 +287,10 @@ def _build_verl_cfg(cfg: DictConfig, train_file: Path, val_file: Path) -> DictCo
         base.trainer.test_freq = int(cfg.validation.eval_every) if validation_enabled else int(cfg.grpo.train_steps) + 10
         base.trainer.val_before_train = bool(cfg.validation.get("before_train", True)) if validation_enabled else False
         base.trainer.default_local_dir = str(out_dir)
+        max_actor_ckpts = cfg.validation.get("max_actor_ckpt_to_keep", None)
+        if max_actor_ckpts is not None and str(max_actor_ckpts).strip().lower() not in {"", "none", "null"}:
+            base.trainer.max_actor_ckpt_to_keep = int(max_actor_ckpts)
+            base.trainer.max_critic_ckpt_to_keep = int(max_actor_ckpts)
         base.trainer.resume_mode = str(cfg.resume.get("mode", "disable"))
         resume_from_path = cfg.resume.get("from_path")
         if resume_from_path is not None and str(resume_from_path).strip().lower() not in {"", "none", "null"}:
@@ -343,12 +351,34 @@ def _build_verl_cfg(cfg: DictConfig, train_file: Path, val_file: Path) -> DictCo
             "HTTP_PROXY",
             "HTTPS_PROXY",
             "NO_PROXY",
+            "RAY_EXPERIMENTAL_NOSET_CUDA_VISIBLE_DEVICES",
         ):
             val = os.environ.get(key)
             if val:
                 base.ray_kwargs.ray_init.runtime_env.env_vars[key] = val
 
     return base
+
+
+def _install_resource_pool_colocation_patch(max_colocate_count: int) -> None:
+    if max_colocate_count < 1:
+        raise ValueError(f"system.ray_max_colocate_count must be >= 1, got {max_colocate_count}")
+    if max_colocate_count == 3:
+        return
+
+    from verl.single_controller.ray import base as ray_base
+
+    def create_resource_pool(self):
+        for resource_pool_name, process_on_nodes in self.resource_pool_spec.items():
+            self.resource_pool_dict[resource_pool_name] = ray_base.RayResourcePool(
+                process_on_nodes=process_on_nodes,
+                use_gpu=True,
+                max_colocate_count=max_colocate_count,
+                name_prefix=resource_pool_name,
+            )
+        self._check_resource_available()
+
+    ray_base.ResourcePoolManager.create_resource_pool = create_resource_pool
 
 
 @hydra.main(config_path="conf", config_name="posttrain_grpo", version_base=None)
@@ -459,6 +489,8 @@ def main(cfg: DictConfig) -> None:
     from verl.experimental.reward_loop import migrate_legacy_reward_impl
     from verl.trainer.main_ppo import run_ppo
 
+    _install_resource_pool_colocation_patch(int(cfg.system.get("ray_max_colocate_count", 3)))
+
     run_verl_validation = bool(cfg.validation.get("run_verl_validation", False))
     install_grpo_eval_patch(
         task_cfg=task_cfg,
@@ -488,9 +520,11 @@ def main(cfg: DictConfig) -> None:
     train_gen_num_samples_remote = int(cfg.log_generations.get("train_num_samples", 0) or 0)
     train_gen_max_chars_remote = int(cfg.log_generations.get("train_max_chars", 2000) or 2000)
     dump_jsonl_remote = bool(cfg.log_generations.get("train_dump_jsonl", False))
+    ray_max_colocate_count_remote = int(cfg.system.get("ray_max_colocate_count", 3))
 
     class SynthTaskRunner(TaskRunner):
         def run(self, config):
+            _install_resource_pool_colocation_patch(ray_max_colocate_count_remote)
             install_grpo_eval_patch(
                 task_cfg=task_cfg_remote,
                 eval_cfg=eval_cfg_remote,

@@ -39,6 +39,7 @@ class DatasetConfig:
     side_chain_depth: int | None = None
     entity_decoy_ratio: float | None = None
     answer_decoy_ratio: float | None = None
+    shortcut_rate: float = 0.0
     require_unique_solution: bool = True
     min_entities: int = 4
     max_entities: int = 8
@@ -46,8 +47,8 @@ class DatasetConfig:
     seed: int = 0
 
     def __post_init__(self):
-        if self.difficulty not in {"standard", "hard_v1", "hard_v2", "hard_v3"}:
-            raise ValueError("difficulty must be one of: standard, hard_v1, hard_v2, hard_v3")
+        if self.difficulty not in {"standard", "hard_v1", "hard_v2", "hard_v3", "hard_v5", "hard_fsa", "hard_fsa_schema"}:
+            raise ValueError("difficulty must be one of: standard, hard_v1, hard_v2, hard_v3, hard_v5, hard_fsa, hard_fsa_schema")
         if self.depth < 1:
             raise ValueError("depth must be >= 1")
         if not (0.0 <= self.distractor_ratio):
@@ -58,6 +59,8 @@ class DatasetConfig:
             raise ValueError("max_entities cannot exceed 26 because constants use a-z")
         if self.num_attribute_values < 4:
             raise ValueError("num_attribute_values should be at least 4")
+        if not (0.0 <= float(self.shortcut_rate) <= 1.0):
+            raise ValueError("shortcut_rate must be between 0 and 1")
         if self.effective_branching_factor < 1:
             raise ValueError("branching_factor must be >= 1")
         if self.effective_side_chain_depth < 0:
@@ -65,7 +68,19 @@ class DatasetConfig:
 
     @property
     def is_hard(self) -> bool:
-        return self.difficulty in {"hard_v1", "hard_v2", "hard_v3"}
+        return self.difficulty in {"hard_v1", "hard_v2", "hard_v3", "hard_v5", "hard_fsa", "hard_fsa_schema"}
+
+    @property
+    def is_hard_v5(self) -> bool:
+        return self.difficulty == "hard_v5"
+
+    @property
+    def is_hard_fsa(self) -> bool:
+        return self.difficulty == "hard_fsa"
+
+    @property
+    def is_hard_fsa_schema(self) -> bool:
+        return self.difficulty == "hard_fsa_schema"
 
     @property
     def is_hard_v2(self) -> bool:
@@ -381,6 +396,27 @@ ENTITY_NAMES = [
     "Uma", "Victor", "Wendy", "Xavier", "Yara", "Zane", "Alice", "Ben", "Clara", "David",
     "Eva", "Felix", "Grace", "Hugo", "Iris", "Julia"
 ]
+
+HARD_V5_STATE_WORDS = [
+    "amber", "cobalt", "ivory", "olive", "ruby", "slate", "coral", "lime",
+    "pearl", "teal", "maple", "cedar", "hazel", "birch", "juniper", "willow",
+    "laurel", "orchid", "violet", "poppy", "elm", "granite", "harbor", "meadow",
+]
+
+HARD_FSA_SCHEMA_FAMILIES = [
+    ("warm", ("amber", "coral", "ruby", "poppy", "orchid", "violet")),
+    ("cool", ("cobalt", "teal", "slate", "harbor", "pearl", "ivory")),
+    ("plant", ("olive", "maple", "cedar", "hazel", "birch")),
+    ("earth", ("lime", "willow", "laurel", "elm", "granite")),
+]
+
+HARD_FSA_SCHEMA_MARKERS = ("north", "south", "east", "west")
+HARD_FSA_TRAIN_TRANSITION_SCHEMA = {
+    "north": (1, 2, 3, 0),
+    "south": (2, 3, 0, 1),
+    "east": (3, 0, 1, 2),
+    "west": (0, 1, 2, 3),
+}
 
 
 # ============================================================
@@ -827,7 +863,621 @@ class LogicDatasetGenerator:
 
         return premise_no, counts
 
+    @staticmethod
+    def _hard_v5_atom(value_to_pred: dict[str, str], state: str, const: str) -> str:
+        return Atom(value_to_pred[state], const).render()
+
+    def _generate_hard_v5(self, index: int) -> LogicExample:
+        """State-passing shortcut task with citation-free gold proofs.
+
+        The formal parser still sees one-letter predicates and constants. The
+        prompt gives normal word meanings, while the proof omits citations so
+        reward/eval can isolate logical derivability from citation bookkeeping.
+        """
+        rng = self._rng(index)
+        depth = int(self.config.depth)
+        fol_constants = SymbolPool.CONSTS[:18]
+        if depth + 3 > len(SymbolPool.PREDS):
+            raise ValueError(f"hard_v5 depth={depth} needs {depth + 3} predicates, but only 26 are available")
+        if depth + 2 > len(HARD_V5_STATE_WORDS):
+            raise ValueError("hard_v5 state word bank is too small for this depth")
+
+        # The parser treats s-z as variables, not constants, so hard-v5 keeps
+        # constants in a-r and wraps for depths above 17. States are randomized
+        # per example so depth/position no longer determines the answer.
+        constants = fol_constants[: min(depth + 1, len(fol_constants))]
+        if depth == 1:
+            state_words = rng.sample(HARD_V5_STATE_WORDS, 3)
+            path_states = state_words[:2]
+            shortcut_states = [path_states[0], state_words[2]]
+        else:
+            state_words = rng.sample(HARD_V5_STATE_WORDS, depth + 1)
+            path_states = state_words[: depth + 1]
+            shortcut_tail = path_states[1:].copy()
+            # A deranged shortcut tail gives an equally long coherent wrong
+            # branch without consuming extra predicate symbols at depth 20.
+            for _ in range(200):
+                rng.shuffle(shortcut_tail)
+                if all(a != b for a, b in zip(shortcut_tail, path_states[1:], strict=True)):
+                    break
+            else:
+                shortcut_tail = shortcut_tail[1:] + shortcut_tail[:1]
+            shortcut_states = [path_states[0]] + shortcut_tail
+        active = "active"
+        dormant = "dormant"
+
+        symbols = SymbolPool()
+        symbols.constant_to_name = {c: c for c in constants}
+        symbols.assign_predicates(path_states + shortcut_states + [active, dormant])
+        atom = lambda state, const: self._hard_v5_atom(symbols.value_to_pred, state, const)
+
+        active_branch_first = rng.random() < self.config.shortcut_rate
+        constants_lines = [f"{c} = {c}" for c in constants]
+        predicates_lines = [f"{p}x: x is {v}" for v, p in symbols.value_to_pred.items()]
+
+        premises_fol: list[str] = []
+        premises_nl: list[str] = []
+
+        def add_premise(formula: str, nl: str) -> None:
+            line_no = len(premises_fol) + 1
+            premises_fol.append(f"{line_no}. {formula}")
+            premises_nl.append(f"{line_no}. {nl}")
+
+        first_const = constants[0]
+        add_premise(atom(path_states[0], first_const), f"{first_const} is {path_states[0]}.")
+        add_premise(atom(active, first_const), f"{first_const} is {active}.")
+
+        shortcut_answers: list[str] = []
+        for step in range(depth):
+            src_const = constants[step % len(constants)]
+            dst_const = constants[(step + 1) % len(constants)]
+            true_src_state = path_states[step]
+            true_state = path_states[step + 1]
+            shortcut_src_state = shortcut_states[step]
+            shortcut_state = shortcut_states[step + 1]
+
+            true_formula = (
+                f"{atom(active, src_const)} & {atom(true_src_state, src_const)} -> "
+                f"{atom(true_state, dst_const)}"
+            )
+            true_nl = (
+                f"If {src_const} is {active} and {src_const} is {true_src_state}, "
+                f"then {dst_const} is {true_state}."
+            )
+            wrong_formula = (
+                f"{atom(dormant, src_const)} & {atom(shortcut_src_state, src_const)} -> "
+                f"{atom(shortcut_state, dst_const)}"
+            )
+            wrong_nl = (
+                f"If {src_const} is {dormant} and {src_const} is {shortcut_src_state}, "
+                f"then {dst_const} is {shortcut_state}."
+            )
+            branch_premises = [(true_formula, true_nl), (wrong_formula, wrong_nl)]
+            if not active_branch_first:
+                branch_premises.reverse()
+            for formula, nl in branch_premises:
+                add_premise(formula, nl)
+
+            if step < depth - 1:
+                add_premise(
+                    f"{atom(true_state, dst_const)} -> {atom(active, dst_const)}",
+                    f"If {dst_const} is {true_state}, then {dst_const} is {active}.",
+                )
+                add_premise(
+                    f"{atom(shortcut_state, dst_const)} -> {atom(dormant, dst_const)}",
+                    f"If {dst_const} is {shortcut_state}, then {dst_const} is {dormant}.",
+                )
+            shortcut_answers.append(shortcut_state)
+
+        total_premises = len(premises_fol)
+        proof_entries: list[tuple[str, str]] = [
+            (atom(path_states[0], first_const), "R"),
+            (atom(active, first_const), "R"),
+        ]
+        proof_nl_entries: list[str] = [
+            f"{first_const} is {path_states[0]}.",
+            f"{first_const} is {active}.",
+        ]
+        for step in range(depth):
+            dst_const = constants[(step + 1) % len(constants)]
+            true_state = path_states[step + 1]
+            proof_entries.append((atom(true_state, dst_const), "->E"))
+            proof_nl_entries.append(f"{dst_const} is {true_state}.")
+            if step < depth - 1:
+                proof_entries.append((atom(active, dst_const), "->E"))
+                proof_nl_entries.append(f"{dst_const} is {active}.")
+
+        proof_fol = [
+            ProofLine(total_premises + idx, formula, justification).render()
+            for idx, (formula, justification) in enumerate(proof_entries, start=1)
+        ]
+        proof_nl = [
+            f"{total_premises + idx}. {text}"
+            for idx, text in enumerate(proof_nl_entries, start=1)
+        ]
+        final_const = constants[depth % len(constants)]
+        answer = path_states[-1]
+
+        return LogicExample(
+            constants=constants_lines,
+            predicates=predicates_lines,
+            premises_fol=premises_fol,
+            premises_nl=premises_nl,
+            proof_fol=proof_fol,
+            proof_nl=proof_nl,
+            question_fol=f"Which state applies to {final_const}?",
+            question_nl=f"Which state applies to {final_const}?",
+            answer=answer,
+            metadata={
+                "depth": depth,
+                "distractor_ratio": self.config.distractor_ratio,
+                "num_distractors": 2 * depth,
+                "difficulty": self.config.difficulty,
+                "shortcut_rate": self.config.shortcut_rate,
+                "shortcut_success": active_branch_first,
+                "active_branch_first": active_branch_first,
+                "shortcut_branch_answer": shortcut_answers[-1] if shortcut_answers else None,
+                "gold_answer": answer,
+                "path_states": path_states,
+                "shortcut_path_states": shortcut_states,
+                "path_constants": [constants[i % len(constants)] for i in range(depth + 1)],
+                "citation_free_gold": True,
+                "query_constant": final_const,
+                "query_entity": final_const,
+                "queried_family": "state",
+            },
+        )
+
+
+    def _generate_hard_fsa(self, index: int) -> LogicExample:
+        """Finite-state automaton task with high-entropy branch ambiguity.
+
+        Each example samples fresh state labels and a fresh transition table.
+        At every depth there are K plausible transitions, but only the current
+        marker/state pair is derivable. Wrong branches remain coherent enough to
+        look locally plausible, while a skipped step changes the required marker
+        and state for all later steps.
+        """
+        rng = self._rng(index)
+        depth = int(self.config.depth)
+        branch_factor = int(self.config.branching_factor or 4)
+        if branch_factor < 2:
+            raise ValueError("hard_fsa requires branching_factor >= 2")
+        fol_constants = SymbolPool.CONSTS[:18]
+        constants = fol_constants[: min(depth + 1, len(fol_constants))]
+        max_state_symbols = min(len(HARD_V5_STATE_WORDS), len(SymbolPool.PREDS) - branch_factor)
+        if branch_factor + 1 > max_state_symbols:
+            raise ValueError(
+                f"hard_fsa branching_factor={branch_factor} needs at least {branch_factor + 1} "
+                f"state predicates plus {branch_factor} marker predicates, but only {len(SymbolPool.PREDS)} "
+                "predicate symbols are available"
+            )
+        # Long OOD depths cannot use a fresh predicate for every hidden state:
+        # the parser has only one-letter predicates. Reusing state predicates at
+        # different constants keeps the formal task valid because atoms are
+        # `(predicate, constant)` pairs; we still forbid repeated output atoms.
+        num_state_symbols = min(max(depth + 1, branch_factor + 1), max_state_symbols)
+
+        states = rng.sample(HARD_V5_STATE_WORDS, num_state_symbols)
+        marker_names = ["north", "south", "east", "west", "open", "closed", "bright", "dim"][:branch_factor]
+
+        initial_state = rng.choice(states)
+        non_initial_states = [state for state in states if state != initial_state]
+        rng.shuffle(non_initial_states)
+        if len(non_initial_states) < branch_factor:
+            raise ValueError("hard_fsa needs enough non-initial states for per-layer branch uniqueness")
+        initial_markers = marker_names.copy()
+        rng.shuffle(initial_markers)
+        for _build_attempt in range(200):
+            branch_states = [[initial_state] for _ in range(branch_factor)]
+            branch_markers = [[initial_markers[branch_idx]] for branch_idx in range(branch_factor)]
+            used_output_atoms: set[tuple[str, str]] = set()
+            ok = True
+
+            for layer_idx in range(depth):
+                # Invariants:
+                # - states are unique within a layer, so `state -> marker`
+                #   premises cannot create duplicate same-layer marker updates;
+                # - no output atom `(state, constant)` is reused, which matters
+                #   when depth > 17 and constants wrap from r back to a;
+                # - every branch has a full coherent continuation.
+                dst_const = constants[(layer_idx + 1) % len(constants)]
+                candidates = [
+                    state
+                    for state in non_initial_states
+                    if (state, dst_const) not in used_output_atoms
+                ]
+                rng.shuffle(candidates)
+                if len(candidates) < branch_factor:
+                    ok = False
+                    break
+                layer_states = candidates[:branch_factor]
+                layer_markers = rng.sample(marker_names, branch_factor)
+                layer_pairs = list(zip(layer_states, layer_markers, strict=True))
+                rng.shuffle(layer_pairs)
+                for branch_idx, (state, marker) in enumerate(layer_pairs):
+                    branch_states[branch_idx].append(state)
+                    branch_markers[branch_idx].append(marker)
+                    used_output_atoms.add((state, dst_const))
+            if ok:
+                break
+        else:
+            raise RuntimeError("failed to build collision-free hard_fsa trajectories")
+
+        symbols = SymbolPool()
+        symbols.constant_to_name = {c: c for c in constants}
+        symbols.assign_predicates(states + marker_names)
+        atom = lambda state, const: self._hard_v5_atom(symbols.value_to_pred, state, const)
+
+        constants_lines = [f"{c} = {c}" for c in constants]
+        predicates_lines = [f"{p}x: x is {v}" for v, p in symbols.value_to_pred.items()]
+        premises_fol: list[str] = []
+        premises_nl: list[str] = []
+
+        def add_premise(formula: str, nl: str) -> None:
+            line_no = len(premises_fol) + 1
+            premises_fol.append(f"{line_no}. {formula}")
+            premises_nl.append(f"{line_no}. {nl}")
+
+        first_const = constants[0]
+        add_premise(atom(branch_states[0][0], first_const), f"{first_const} is {branch_states[0][0]}.")
+        add_premise(atom(branch_markers[0][0], first_const), f"{first_const} is {branch_markers[0][0]}.")
+
+        branch_orders: list[list[str]] = []
+        for step in range(depth):
+            src_const = constants[step % len(constants)]
+            dst_const = constants[(step + 1) % len(constants)]
+            branches: list[tuple[int, str, str, str, str]] = []
+            for branch_idx in range(branch_factor):
+                branches.append((
+                    branch_idx,
+                    branch_markers[branch_idx][step],
+                    branch_states[branch_idx][step],
+                    branch_states[branch_idx][step + 1],
+                    branch_markers[branch_idx][step + 1],
+                ))
+            rng.shuffle(branches)
+            branch_orders.append([f"branch{b[0]}:{b[1]}" for b in branches])
+
+            for _, marker, branch_src_state, out_state, out_marker in branches:
+                add_premise(
+                    f"{atom(marker, src_const)} & {atom(branch_src_state, src_const)} -> {atom(out_state, dst_const)}",
+                    f"If {src_const} is {marker} and {src_const} is {branch_src_state}, then {dst_const} is {out_state}.",
+                )
+                add_premise(
+                    f"{atom(out_state, dst_const)} -> {atom(out_marker, dst_const)}",
+                    f"If {dst_const} is {out_state}, then {dst_const} is {out_marker}.",
+                )
+
+        total_premises = len(premises_fol)
+        proof_entries: list[tuple[str, str]] = [(atom(branch_states[0][0], first_const), "R"), (atom(branch_markers[0][0], first_const), "R")]
+        proof_nl_entries: list[str] = [f"{first_const} is {branch_states[0][0]}.", f"{first_const} is {branch_markers[0][0]}."]
+        for step in range(depth):
+            dst_const = constants[(step + 1) % len(constants)]
+            proof_entries.append((atom(branch_states[0][step + 1], dst_const), "->E"))
+            proof_nl_entries.append(f"{dst_const} is {branch_states[0][step + 1]}.")
+            if step < depth - 1:
+                proof_entries.append((atom(branch_markers[0][step + 1], dst_const), "->E"))
+                proof_nl_entries.append(f"{dst_const} is {branch_markers[0][step + 1]}.")
+
+        proof_fol = [ProofLine(total_premises + idx, formula, just).render() for idx, (formula, just) in enumerate(proof_entries, start=1)]
+        proof_nl = [f"{total_premises + idx}. {text}" for idx, text in enumerate(proof_nl_entries, start=1)]
+        final_const = constants[depth % len(constants)]
+        answer = branch_states[0][-1]
+        shortcut_answer = branch_states[1][-1]
+
+        return LogicExample(
+            constants=constants_lines,
+            predicates=predicates_lines,
+            premises_fol=premises_fol,
+            premises_nl=premises_nl,
+            proof_fol=proof_fol,
+            proof_nl=proof_nl,
+            question_fol=f"Which state applies to {final_const}?",
+            question_nl=f"Which state applies to {final_const}?",
+            answer=answer,
+            metadata={
+                "depth": depth,
+                "distractor_ratio": self.config.distractor_ratio,
+                "num_distractors": branch_factor * depth,
+                "difficulty": self.config.difficulty,
+                "branching_factor": branch_factor,
+                "gold_answer": answer,
+                "shortcut_branch_answer": shortcut_answer,
+                "path_states": branch_states[0],
+                "path_markers": branch_markers[0],
+                "branch_states": branch_states,
+                "branch_markers": branch_markers,
+                "path_constants": [constants[i % len(constants)] for i in range(depth + 1)],
+                "branch_orders": branch_orders,
+                "citation_free_gold": True,
+                "final_conclusion_kind": "state",
+                "expected_proof_lines": 2 * depth + 1,
+                "query_constant": final_const,
+                "query_entity": final_const,
+                "queried_family": "state",
+            },
+        )
+
+    def _generate_hard_fsa_schema(self, index: int) -> LogicExample:
+        """FSA task with train-only shortcut schema and neutral eval mode.
+
+        `shortcut_rate > 0` enables a shared family-level transition schema for
+        the gold branch and marker redundancy. With `shortcut_rate == 0`, the
+        generator falls back to strict exchangeable random FSA behavior.
+        """
+        rng = self._rng(index)
+        depth = int(self.config.depth)
+        branch_factor = int(self.config.branching_factor or 4)
+        if not 2 <= branch_factor <= len(HARD_FSA_SCHEMA_FAMILIES):
+            raise ValueError(
+                "hard_fsa_schema requires branching_factor between "
+                f"2 and {len(HARD_FSA_SCHEMA_FAMILIES)}"
+            )
+
+        shortcut_enabled = rng.random() < float(self.config.shortcut_rate)
+        if not shortcut_enabled:
+            ex = self._generate_hard_fsa(index)
+            meta = dict(ex.metadata)
+            candidate_answers = [path[-1] for path in meta["branch_states"]]
+            wrong_candidates = [cand for cand in candidate_answers if cand != ex.answer]
+            rng.shuffle(wrong_candidates)
+            gold_pos = index % branch_factor
+            candidate_answers = wrong_candidates[:]
+            candidate_answers.insert(gold_pos, ex.answer)
+            meta.update({
+                "difficulty": self.config.difficulty,
+                "shortcut_enabled": False,
+                "shortcut_types": [],
+                "split_intervention": "eval_neutral",
+                "candidate_answers": candidate_answers,
+                "gold_candidate_position": gold_pos,
+                "schema_predicted_answer": None,
+                "schema_prediction_correct": False,
+                "marker_redundancy_correct": False,
+            })
+            return LogicExample(
+                constants=ex.constants,
+                predicates=ex.predicates,
+                premises_fol=ex.premises_fol,
+                premises_nl=ex.premises_nl,
+                proof_fol=ex.proof_fol,
+                proof_nl=ex.proof_nl,
+                question_fol=ex.question_fol,
+                question_nl=ex.question_nl,
+                answer=ex.answer,
+                metadata=meta,
+            )
+
+        marker_names = list(HARD_FSA_SCHEMA_MARKERS[:branch_factor])
+        schema_families = HARD_FSA_SCHEMA_FAMILIES[:branch_factor]
+        family_names = [name for name, _ in schema_families]
+        family_words = {name: list(words) for name, words in schema_families}
+        fol_constants = SymbolPool.CONSTS[:18]
+        constants = fol_constants[: min(depth + 1, len(fol_constants))]
+        family_to_marker = dict(zip(family_names, marker_names, strict=True))
+        marker_to_perm = {
+            marker: tuple((family_idx + marker_idx + 1) % branch_factor for family_idx in range(branch_factor))
+            for marker_idx, marker in enumerate(marker_names)
+        }
+        initial_markers = marker_names.copy()
+        rng.shuffle(initial_markers)
+
+        initial_family_idx = rng.randrange(branch_factor)
+        gold_family_indices = [initial_family_idx]
+        gold_marker_names = [family_to_marker[family_names[initial_family_idx]]]
+        initial_markers[0] = gold_marker_names[0]
+        if len(set(initial_markers)) < branch_factor:
+            remaining = [marker for marker in marker_names if marker != gold_marker_names[0]]
+            initial_markers = [gold_marker_names[0]] + remaining
+        for step in range(depth):
+            marker = gold_marker_names[-1]
+            next_family_idx = marker_to_perm[marker][gold_family_indices[-1]]
+            gold_family_indices.append(next_family_idx)
+            gold_marker_names.append(family_to_marker[family_names[next_family_idx]])
+
+        branch_family_indices: list[list[int]] = [gold_family_indices]
+        branch_markers: list[list[str]] = [gold_marker_names]
+        used_pair_keys = {(0, fam_idx, marker) for fam_idx, marker in zip(gold_family_indices, gold_marker_names, strict=True)}
+        for branch_idx in range(1, branch_factor):
+            families = [initial_family_idx]
+            markers = [initial_markers[branch_idx]]
+            for step in range(depth):
+                # Wrong branches are coherent but deliberately not governed by
+                # the train shortcut schema, and they remain distinct at the
+                # automaton-pair level.
+                for _attempt in range(100):
+                    fam_idx = rng.randrange(branch_factor)
+                    marker = rng.choice(marker_names)
+                    key = (step + 1, fam_idx, marker)
+                    if key not in used_pair_keys:
+                        break
+                else:
+                    raise RuntimeError("failed to sample hard_fsa_schema branch pair")
+                families.append(fam_idx)
+                markers.append(marker)
+                used_pair_keys.add(key)
+            branch_family_indices.append(families)
+            branch_markers.append(markers)
+
+        # Assign natural words. Reuse is avoided within a family until exhausted;
+        # with depth 20 there are only 24 state words total, so repeated lexical
+        # states are allowed only with distinct constants/markers.
+        family_word_positions = {name: rng.sample(words, len(words)) for name, words in family_words.items()}
+        family_word_counts = {name: 0 for name in family_names}
+
+        def next_word(fam_idx: int) -> str:
+            fam_name = family_names[fam_idx]
+            words = family_word_positions[fam_name]
+            idx = family_word_counts[fam_name] % len(words)
+            family_word_counts[fam_name] += 1
+            return words[idx]
+
+        branch_states: list[list[str]] = [[next_word(initial_family_idx)] for _ in range(branch_factor)]
+        # Same visible initial state, different marker facts/branches.
+        initial_state = branch_states[0][0]
+        for branch_idx in range(1, branch_factor):
+            branch_states[branch_idx][0] = initial_state
+        used_output_atoms: set[tuple[str, str]] = set()
+        used_source_keys = {
+            (branch_states[branch_idx][0], branch_markers[branch_idx][0], constants[0])
+            for branch_idx in range(branch_factor)
+        }
+        for step in range(depth):
+            dst_const = constants[(step + 1) % len(constants)]
+            layer_words: set[str] = set()
+            for branch_idx in range(branch_factor):
+                fam_idx = branch_family_indices[branch_idx][step + 1]
+                next_source_key = None
+                if step + 1 < depth:
+                    next_source_key = (
+                        branch_markers[branch_idx][step + 1],
+                        constants[(step + 1) % len(constants)],
+                    )
+                for _attempt in range(30):
+                    word = next_word(fam_idx)
+                    source_ok = next_source_key is None or (word, next_source_key[0], next_source_key[1]) not in used_source_keys
+                    if word not in layer_words and (word, dst_const) not in used_output_atoms and source_ok:
+                        break
+                else:
+                    candidates = [
+                        w for w in family_words[family_names[fam_idx]]
+                        if (w, dst_const) not in used_output_atoms
+                        and (next_source_key is None or (w, next_source_key[0], next_source_key[1]) not in used_source_keys)
+                    ]
+                    if not candidates:
+                        raise RuntimeError("failed to sample schema state word")
+                    word = rng.choice(candidates)
+                layer_words.add(word)
+                used_output_atoms.add((word, dst_const))
+                if next_source_key is not None:
+                    used_source_keys.add((word, next_source_key[0], next_source_key[1]))
+                branch_states[branch_idx].append(word)
+
+        states = sorted({state for path in branch_states for state in path})
+        symbols = SymbolPool()
+        symbols.constant_to_name = {c: c for c in constants}
+        symbols.assign_predicates(states + marker_names)
+        atom = lambda state, const: self._hard_v5_atom(symbols.value_to_pred, state, const)
+
+        constants_lines = [f"{c} = {c}" for c in constants]
+        predicates_lines = [f"{p}x: x is {v}" for v, p in symbols.value_to_pred.items()]
+        premises_fol: list[str] = []
+        premises_nl: list[str] = []
+
+        def add_premise(formula: str, nl: str) -> None:
+            line_no = len(premises_fol) + 1
+            premises_fol.append(f"{line_no}. {formula}")
+            premises_nl.append(f"{line_no}. {nl}")
+
+        first_const = constants[0]
+        add_premise(atom(branch_states[0][0], first_const), f"{first_const} is {branch_states[0][0]}.")
+        add_premise(atom(branch_markers[0][0], first_const), f"{first_const} is {branch_markers[0][0]}.")
+
+        branch_orders: list[list[str]] = []
+        seen_antecedents: set[str] = set()
+        for step in range(depth):
+            src_const = constants[step % len(constants)]
+            dst_const = constants[(step + 1) % len(constants)]
+            branches: list[tuple[int, str, str, str, str]] = []
+            for branch_idx in range(branch_factor):
+                branches.append((
+                    branch_idx,
+                    branch_markers[branch_idx][step],
+                    branch_states[branch_idx][step],
+                    branch_states[branch_idx][step + 1],
+                    branch_markers[branch_idx][step + 1],
+                ))
+            rng.shuffle(branches)
+            branch_orders.append([f"branch{b[0]}:{b[1]}" for b in branches])
+            for _, marker, branch_src_state, out_state, out_marker in branches:
+                antecedent = f"{atom(marker, src_const)} & {atom(branch_src_state, src_const)}"
+                if antecedent in seen_antecedents:
+                    raise RuntimeError("duplicate hard_fsa_schema antecedent")
+                seen_antecedents.add(antecedent)
+                add_premise(
+                    f"{antecedent} -> {atom(out_state, dst_const)}",
+                    f"If {src_const} is {marker} and {src_const} is {branch_src_state}, then {dst_const} is {out_state}.",
+                )
+                add_premise(
+                    f"{atom(out_state, dst_const)} -> {atom(out_marker, dst_const)}",
+                    f"If {dst_const} is {out_state}, then {dst_const} is {out_marker}.",
+                )
+
+        total_premises = len(premises_fol)
+        proof_entries: list[tuple[str, str]] = [(atom(branch_states[0][0], first_const), "R"), (atom(branch_markers[0][0], first_const), "R")]
+        proof_nl_entries: list[str] = [f"{first_const} is {branch_states[0][0]}.", f"{first_const} is {branch_markers[0][0]}."]
+        for step in range(depth):
+            dst_const = constants[(step + 1) % len(constants)]
+            proof_entries.append((atom(branch_states[0][step + 1], dst_const), "->E"))
+            proof_nl_entries.append(f"{dst_const} is {branch_states[0][step + 1]}.")
+            if step < depth - 1:
+                proof_entries.append((atom(branch_markers[0][step + 1], dst_const), "->E"))
+                proof_nl_entries.append(f"{dst_const} is {branch_markers[0][step + 1]}.")
+
+        proof_fol = [ProofLine(total_premises + idx, formula, just).render() for idx, (formula, just) in enumerate(proof_entries, start=1)]
+        proof_nl = [f"{total_premises + idx}. {text}" for idx, text in enumerate(proof_nl_entries, start=1)]
+        final_const = constants[depth % len(constants)]
+        answer = branch_states[0][-1]
+        candidate_answers = [path[-1] for path in branch_states]
+        wrong_candidates = [cand for cand in candidate_answers if cand != answer]
+        rng.shuffle(wrong_candidates)
+        gold_pos = index % branch_factor
+        candidate_answers = wrong_candidates[:]
+        candidate_answers.insert(gold_pos, answer)
+
+        return LogicExample(
+            constants=constants_lines,
+            predicates=predicates_lines,
+            premises_fol=premises_fol,
+            premises_nl=premises_nl,
+            proof_fol=proof_fol,
+            proof_nl=proof_nl,
+            question_fol=f"Which state applies to {final_const}?",
+            question_nl=f"Which state applies to {final_const}?",
+            answer=answer,
+            metadata={
+                "depth": depth,
+                "distractor_ratio": self.config.distractor_ratio,
+                "num_distractors": branch_factor * depth,
+                "difficulty": self.config.difficulty,
+                "branching_factor": branch_factor,
+                "shortcut_rate": self.config.shortcut_rate,
+                "shortcut_enabled": True,
+                "shortcut_types": ["marker_redundancy", "shared_transition_schema"],
+                "split_intervention": "train_shortcut",
+                "gold_answer": answer,
+                "shortcut_branch_answer": branch_states[1][-1],
+                "candidate_answers": candidate_answers,
+                "gold_candidate_position": gold_pos,
+                "path_states": branch_states[0],
+                "path_markers": branch_markers[0],
+                "path_families": [family_names[i] for i in branch_family_indices[0]],
+                "branch_states": branch_states,
+                "branch_markers": branch_markers,
+                "branch_families": [[family_names[i] for i in fams] for fams in branch_family_indices],
+                "path_constants": [constants[i % len(constants)] for i in range(depth + 1)],
+                "branch_orders": branch_orders,
+                "schema_predicted_family": family_names[gold_family_indices[-1]],
+                "schema_predicted_answer": answer,
+                "schema_prediction_correct": True,
+                "marker_redundancy_correct": True,
+                "citation_free_gold": True,
+                "final_conclusion_kind": "state",
+                "expected_proof_lines": 2 * depth + 1,
+                "query_constant": final_const,
+                "query_entity": final_const,
+                "queried_family": "state",
+            },
+        )
+
     def generate(self, index: int) -> LogicExample:
+        if self.config.is_hard_fsa_schema:
+            return self._generate_hard_fsa_schema(index)
+        if self.config.is_hard_fsa:
+            return self._generate_hard_fsa(index)
+        if self.config.is_hard_v5:
+            return self._generate_hard_v5(index)
         rng = self._rng(index)
         families = self._select_families(rng)
         world, query_const = self._build_world(rng, families)
@@ -1184,16 +1834,22 @@ def build_hf_validation_dataset(config: DatasetConfig, n: int):
 
 @dataclass(frozen=True)
 class MaterializedSyntheticDataset:
+    train_up_to_3_subset: str = "train_up_to_3_1k"
     train_up_to_5_subset: str = "train_up_to_5_1m"
     train_up_to_10_subset: str = "train_up_to_10_1m"
+    train_up_to_15_subset: str = "train_up_to_15_120k"
 
     def val_subset_name(self, step: int) -> str:
         return f"val_step_{step:02d}_1k"
 
     def train_subset_for_max_step(self, max_step: int) -> str:
+        if max_step <= 3:
+            return self.train_up_to_3_subset
         if max_step <= 5:
             return self.train_up_to_5_subset
-        return self.train_up_to_10_subset
+        if max_step <= 10:
+            return self.train_up_to_10_subset
+        return self.train_up_to_15_subset
 
     def materialized_parquet_path(self, local_root: str | Path, subset: str) -> Path:
         return Path(local_root).expanduser().resolve() / subset / "train.parquet"
@@ -1237,6 +1893,7 @@ class MaterializedDatasetSpec:
     max_depth: int
     rows: int
     seed: int
+    shortcut_rate: float = 0.0
 
 
 class MaterializedDatasetBuilder:
@@ -1246,17 +1903,29 @@ class MaterializedDatasetBuilder:
     def train_specs(
         self,
         *,
+        train_up_to_3_rows: int,
         train_up_to_5_rows: int,
         train_up_to_10_rows: int,
+        train_up_to_15_rows: int,
         seed: int,
+        train_shortcut_rate: float = 0.0,
     ) -> list[MaterializedDatasetSpec]:
-        return [
+        specs = [
+            MaterializedDatasetSpec(
+                subset=self.dataset.train_up_to_3_subset,
+                min_depth=1,
+                max_depth=3,
+                rows=int(train_up_to_3_rows),
+                seed=int(seed) - 100_000,
+                shortcut_rate=float(train_shortcut_rate),
+            ),
             MaterializedDatasetSpec(
                 subset=self.dataset.train_up_to_5_subset,
                 min_depth=1,
                 max_depth=5,
                 rows=int(train_up_to_5_rows),
                 seed=int(seed),
+                shortcut_rate=float(train_shortcut_rate),
             ),
             MaterializedDatasetSpec(
                 subset=self.dataset.train_up_to_10_subset,
@@ -1264,12 +1933,29 @@ class MaterializedDatasetBuilder:
                 max_depth=10,
                 rows=int(train_up_to_10_rows),
                 seed=int(seed) + 100_000,
+                shortcut_rate=float(train_shortcut_rate),
+            ),
+            MaterializedDatasetSpec(
+                subset=self.dataset.train_up_to_15_subset,
+                min_depth=1,
+                max_depth=15,
+                rows=int(train_up_to_15_rows),
+                seed=int(seed) + 200_000,
+                shortcut_rate=float(train_shortcut_rate),
             ),
         ]
+        return [spec for spec in specs if spec.rows > 0]
 
-    def val_specs(self, *, val_rows_per_step: int, seed: int) -> list[MaterializedDatasetSpec]:
+    def val_specs(
+        self,
+        *,
+        val_rows_per_step: int,
+        seed: int,
+        val_shortcut_rate: float = 0.0,
+        val_max_step: int = 20,
+    ) -> list[MaterializedDatasetSpec]:
         specs: list[MaterializedDatasetSpec] = []
-        for step in range(1, 21):
+        for step in range(1, int(val_max_step) + 1):
             specs.append(
                 MaterializedDatasetSpec(
                     subset=self.dataset.val_subset_name(step),
@@ -1277,20 +1963,26 @@ class MaterializedDatasetBuilder:
                     max_depth=step,
                     rows=int(val_rows_per_step),
                     seed=int(seed) + 1_000_000 + step * 10_000,
+                    shortcut_rate=float(val_shortcut_rate),
                 )
             )
-        return specs
+        return [spec for spec in specs if spec.rows > 0]
 
     def build(
         self,
         *,
         output_root: str | Path,
+        train_up_to_3_rows: int = 0,
         train_up_to_5_rows: int = 1_000_000,
         train_up_to_10_rows: int = 1_000_000,
+        train_up_to_15_rows: int = 0,
         val_rows_per_step: int = 1_000,
         seed: int = 3407,
         distractor_ratio: float = 0.5,
         difficulty: str = "standard",
+        train_shortcut_rate: float = 0.0,
+        val_shortcut_rate: float = 0.0,
+        val_max_step: int = 20,
         branching_factor: int | None = None,
         decoy_chains: int | None = None,
         near_miss_ratio: float | None = None,
@@ -1306,10 +1998,18 @@ class MaterializedDatasetBuilder:
         out_root.mkdir(parents=True, exist_ok=True)
 
         specs = self.train_specs(
+            train_up_to_3_rows=int(train_up_to_3_rows),
             train_up_to_5_rows=int(train_up_to_5_rows),
             train_up_to_10_rows=int(train_up_to_10_rows),
+            train_up_to_15_rows=int(train_up_to_15_rows),
             seed=int(seed),
-        ) + self.val_specs(val_rows_per_step=int(val_rows_per_step), seed=int(seed))
+            train_shortcut_rate=float(train_shortcut_rate),
+        ) + self.val_specs(
+            val_rows_per_step=int(val_rows_per_step),
+            seed=int(seed),
+            val_shortcut_rate=float(val_shortcut_rate),
+            val_max_step=int(val_max_step),
+        )
 
         for spec in specs:
             out_file = self.dataset.materialized_parquet_path(out_root, spec.subset)
@@ -1326,6 +2026,7 @@ class MaterializedDatasetBuilder:
                 side_chain_depth=side_chain_depth,
                 entity_decoy_ratio=entity_decoy_ratio,
                 answer_decoy_ratio=answer_decoy_ratio,
+                shortcut_rate=float(spec.shortcut_rate),
             ):
                 chunk.append(row)
                 if len(chunk) >= int(chunk_size):
@@ -1343,10 +2044,12 @@ class MaterializedDatasetBuilder:
                 writer.close()
 
         manifest = {
-            "train_subsets": [self.dataset.train_up_to_5_subset, self.dataset.train_up_to_10_subset],
-            "val_subsets": [self.dataset.val_subset_name(i) for i in range(1, 21)],
+            "train_subsets": [spec.subset for spec in specs if spec.subset.startswith("train_")],
+            "val_subsets": [self.dataset.val_subset_name(i) for i in range(1, int(val_max_step) + 1)],
             "difficulty": difficulty,
             "distractor_ratio": distractor_ratio,
+            "train_shortcut_rate": train_shortcut_rate,
+            "val_shortcut_rate": val_shortcut_rate,
             "branching_factor": branching_factor,
             "decoy_chains": decoy_chains,
             "near_miss_ratio": near_miss_ratio,
@@ -1363,19 +2066,44 @@ class MaterializedDatasetBuilder:
         repo_id: str,
         private: bool = False,
     ) -> None:
+        import time
+
         try:
             from datasets import Dataset
         except ImportError as e:
             raise ImportError("Install `datasets` to push materialized data to Hub.") from e
 
         root = Path(output_root).expanduser().resolve()
-        subsets = [self.dataset.train_up_to_5_subset, self.dataset.train_up_to_10_subset] + [
+        configured_subsets = [
+            self.dataset.train_up_to_3_subset,
+            self.dataset.train_up_to_5_subset,
+            self.dataset.train_up_to_10_subset,
+            self.dataset.train_up_to_15_subset,
+        ] + [
             self.dataset.val_subset_name(i) for i in range(1, 21)
         ]
+        available_subsets = sorted(p.parent.name for p in root.glob("*/train.parquet"))
+        subsets = list(dict.fromkeys(configured_subsets + available_subsets))
         for subset in subsets:
             parquet_file = self.dataset.materialized_parquet_path(root, subset)
+            if not parquet_file.exists():
+                continue
             ds = Dataset.from_parquet(str(parquet_file))
-            ds.push_to_hub(repo_id=repo_id, config_name=subset, split="train", private=bool(private))
+            last_error: Exception | None = None
+            for attempt in range(1, 6):
+                try:
+                    ds.push_to_hub(repo_id=repo_id, config_name=subset, split="train", private=bool(private))
+                    last_error = None
+                    break
+                except Exception as exc:  # HF occasionally returns transient 5xx on repo_info/upload.
+                    last_error = exc
+                    if attempt == 5:
+                        break
+                    sleep_s = min(300, 20 * attempt)
+                    print(f"[push_to_hub] subset={subset} attempt={attempt} failed: {exc}; retrying in {sleep_s}s", flush=True)
+                    time.sleep(sleep_s)
+            if last_error is not None:
+                raise last_error
 
     @staticmethod
     def _core_record(gen: LogicDatasetGenerator, index: int) -> dict[str, Any]:
@@ -1397,6 +2125,7 @@ class MaterializedDatasetBuilder:
         side_chain_depth: int | None = None,
         entity_decoy_ratio: float | None = None,
         answer_decoy_ratio: float | None = None,
+        shortcut_rate: float = 0.0,
     ) -> Iterator[dict[str, Any]]:
         depths = list(range(spec.min_depth, spec.max_depth + 1))
         gens = {
@@ -1411,6 +2140,7 @@ class MaterializedDatasetBuilder:
                     side_chain_depth=side_chain_depth,
                     entity_decoy_ratio=entity_decoy_ratio,
                     answer_decoy_ratio=answer_decoy_ratio,
+                    shortcut_rate=float(shortcut_rate),
                     seed=spec.seed + depth,
                 )
             )

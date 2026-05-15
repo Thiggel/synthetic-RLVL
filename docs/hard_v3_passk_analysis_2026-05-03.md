@@ -118,3 +118,40 @@ For scientific reporting, emphasize:
 - `joint_pass@k` and `valid_given_correct@k`, not only `correct_pass@k`.
 - low-k metrics, especially pass@1/pass@8, because pass@64 can hide reward-shaping differences.
 - step-wise curves, especially step 15 and step 20, because band averages obscure the sharp validity collapse.
+
+## Step-20 Failure Probe (2026-05-03)
+
+Targeted post-hoc evals were run on the interactive A100 for seed `3407`, step `20`, `80` prompts, greedy/pass@1:
+
+- Baseline checkpoint: `/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_actor_rl_hard_v3_correct_plus_0p1_format_seed3407_mrg_final`
+- Validity-reward checkpoint: `/home/atuin/c107fa/c107fa12/synthetic-RLVL/tmp/merged_actor_rl_hard_v3_correct_plus_valid_plus_0p1_format_seed3407_mrg_final`
+- Outputs:
+  - `tmp/hard_v3_failure_dumps/baseline_seed3407_step20_metrics.json`
+  - `tmp/hard_v3_failure_dumps/baseline_seed3407_step20_samples.jsonl`
+  - `tmp/hard_v3_failure_dumps/valid_reward_seed3407_step20_metrics.json`
+  - `tmp/hard_v3_failure_dumps/valid_reward_seed3407_step20_samples.jsonl`
+
+Results:
+
+| run | correct | syntactic | valid | joint | valid_given_correct | invalid_but_correct |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| baseline | 0.725 | 0.988 sampled / 1.000 greedy | 0.075 sampled / 0.100 greedy | 0.0625 | 0.086 | 0.6625 |
+| validity reward | 0.775 | 0.988 sampled / 1.000 greedy | 0.075 sampled / 0.100 greedy | 0.0750 | 0.097 | 0.7000 |
+
+Failure categories from saved greedy samples:
+
+- Baseline invalid samples:
+  - `60` first failures were future citations.
+  - `12` first failures were rule/inference mismatches.
+- Validity-reward invalid samples:
+  - `56` first failures were future citations.
+  - `14` first failures were rule/inference mismatches.
+  - `2` first failures were unjustified derived implication lines.
+
+The most common concrete failure is a shifted/future citation pattern such as:
+
+```text
+Bd ; ->E,2,74
+```
+
+where line `74` has not been introduced yet. The generated proof is syntactically parseable and semantically close to the gold chain, but the citation bookkeeping is wrong. This supports the interpretation that long-chain failures are mostly formal bookkeeping/citation failures plus some inference mismatches, not XML/FOL syntax failures.

@@ -1,0 +1,241 @@
+=== eval-neutral/no-shortcut ===
+answer=hazel conclusion=Ee query_constant=e proof_lines=9 expected=9 citation_free_ok=True
+metadata final_conclusion_kind=state candidate_answers=['hazel', 'ivory', 'willow', 'violet']
+--- FULL SFT SEQUENCE ---
+<question>
+1. a is teal.
+2. a is north.
+3. If a is east and a is teal, then b is violet.
+4. If b is violet, then b is north.
+5. If a is west and a is teal, then b is ivory.
+6. If b is ivory, then b is north.
+7. If a is north and a is teal, then b is willow.
+8. If b is willow, then b is north.
+9. If a is south and a is teal, then b is hazel.
+10. If b is hazel, then b is north.
+11. If b is north and b is willow, then c is ivory.
+12. If c is ivory, then c is south.
+13. If b is north and b is violet, then c is violet.
+14. If c is violet, then c is south.
+15. If b is north and b is hazel, then c is hazel.
+16. If c is hazel, then c is south.
+17. If b is north and b is ivory, then c is willow.
+18. If c is willow, then c is south.
+19. If c is south and c is violet, then d is willow.
+20. If d is willow, then d is east.
+21. If c is south and c is hazel, then d is violet.
+22. If d is violet, then d is east.
+23. If c is south and c is ivory, then d is hazel.
+24. If d is hazel, then d is east.
+25. If c is south and c is willow, then d is ivory.
+26. If d is ivory, then d is east.
+27. If d is east and d is violet, then e is violet.
+28. If e is violet, then e is west.
+29. If d is east and d is ivory, then e is willow.
+30. If e is willow, then e is west.
+31. If d is east and d is willow, then e is ivory.
+32. If e is ivory, then e is west.
+33. If d is east and d is hazel, then e is hazel.
+34. If e is hazel, then e is west.
+Which state applies to e?
+</question>
+
+<formal>
+<constants>
+a = a
+b = b
+c = c
+d = d
+e = e
+</constants>
+<predicates>
+Ax: x is willow
+Bx: x is ivory
+Cx: x is teal
+Dx: x is violet
+Ex: x is hazel
+Fx: x is north
+Gx: x is south
+Hx: x is east
+Ix: x is west
+</predicates>
+<premises>
+Ca
+Fa
+Ha & Ca -> Db
+Db -> Fb
+Ia & Ca -> Bb
+Bb -> Fb
+Fa & Ca -> Ab
+Ab -> Fb
+Ga & Ca -> Eb
+Eb -> Fb
+Fb & Ab -> Bc
+Bc -> Gc
+Fb & Db -> Dc
+Dc -> Gc
+Fb & Eb -> Ec
+Ec -> Gc
+Fb & Bb -> Ac
+Ac -> Gc
+Gc & Dc -> Ad
+Ad -> Hd
+Gc & Ec -> Dd
+Dd -> Hd
+Gc & Bc -> Ed
+Ed -> Hd
+Gc & Ac -> Bd
+Bd -> Hd
+Hd & Dd -> De
+De -> Ie
+Hd & Bd -> Ae
+Ae -> Ie
+Hd & Ad -> Be
+Be -> Ie
+Hd & Ed -> Ee
+Ee -> Ie
+</premises>
+<proof>
+Ca ; R
+Fa ; R
+Ab ; ->E
+Fb ; ->E
+Bc ; ->E
+Gc ; ->E
+Ed ; ->E
+Hd ; ->E
+Ee ; ->E
+</proof>
+<conclusion>
+Ee
+</conclusion>
+</formal>
+<answer>
+hazel
+</answer>
+
+=== shortcut-enabled train ===
+answer=lime conclusion=He query_constant=e proof_lines=9 expected=9 citation_free_ok=True
+metadata final_conclusion_kind=state candidate_answers=['lime', 'teal', 'willow', 'olive']
+--- FULL SFT SEQUENCE ---
+<question>
+1. a is maple.
+2. a is east.
+3. If a is south and a is maple, then b is cobalt.
+4. If b is cobalt, then b is west.
+5. If a is east and a is maple, then b is slate.
+6. If b is slate, then b is south.
+7. If a is north and a is maple, then b is orchid.
+8. If b is orchid, then b is north.
+9. If a is west and a is maple, then b is willow.
+10. If b is willow, then b is west.
+11. If b is west and b is cobalt, then c is harbor.
+12. If c is harbor, then c is east.
+13. If b is south and b is slate, then c is elm.
+14. If c is elm, then c is west.
+15. If b is north and b is orchid, then c is birch.
+16. If c is birch, then c is east.
+17. If b is west and b is willow, then c is ivory.
+18. If c is ivory, then c is south.
+19. If c is west and c is elm, then d is laurel.
+20. If d is laurel, then d is west.
+21. If c is east and c is harbor, then d is pearl.
+22. If d is pearl, then d is south.
+23. If c is south and c is ivory, then d is granite.
+24. If d is granite, then d is east.
+25. If c is east and c is birch, then d is maple.
+26. If d is maple, then d is north.
+27. If d is north and d is maple, then e is willow.
+28. If e is willow, then e is west.
+29. If d is east and d is granite, then e is teal.
+30. If e is teal, then e is south.
+31. If d is west and d is laurel, then e is lime.
+32. If e is lime, then e is west.
+33. If d is south and d is pearl, then e is olive.
+34. If e is olive, then e is south.
+Which state applies to e?
+</question>
+
+<formal>
+<constants>
+a = a
+b = b
+c = c
+d = d
+e = e
+</constants>
+<predicates>
+Ax: x is birch
+Bx: x is cobalt
+Cx: x is elm
+Dx: x is granite
+Ex: x is harbor
+Fx: x is ivory
+Gx: x is laurel
+Hx: x is lime
+Ix: x is maple
+Jx: x is olive
+Kx: x is orchid
+Lx: x is pearl
+Mx: x is slate
+Nx: x is teal
+Ox: x is willow
+Px: x is north
+Qx: x is south
+Rx: x is east
+Sx: x is west
+</predicates>
+<premises>
+Ia
+Ra
+Qa & Ia -> Bb
+Bb -> Sb
+Ra & Ia -> Mb
+Mb -> Qb
+Pa & Ia -> Kb
+Kb -> Pb
+Sa & Ia -> Ob
+Ob -> Sb
+Sb & Bb -> Ec
+Ec -> Rc
+Qb & Mb -> Cc
+Cc -> Sc
+Pb & Kb -> Ac
+Ac -> Rc
+Sb & Ob -> Fc
+Fc -> Qc
+Sc & Cc -> Gd
+Gd -> Sd
+Rc & Ec -> Ld
+Ld -> Qd
+Qc & Fc -> Dd
+Dd -> Rd
+Rc & Ac -> Id
+Id -> Pd
+Pd & Id -> Oe
+Oe -> Se
+Rd & Dd -> Ne
+Ne -> Qe
+Sd & Gd -> He
+He -> Se
+Qd & Ld -> Je
+Je -> Qe
+</premises>
+<proof>
+Ia ; R
+Ra ; R
+Mb ; ->E
+Qb ; ->E
+Cc ; ->E
+Sc ; ->E
+Gd ; ->E
+Sd ; ->E
+He ; ->E
+</proof>
+<conclusion>
+He
+</conclusion>
+</formal>
+<answer>
+lime
+</answer>

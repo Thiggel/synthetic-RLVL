@@ -1,0 +1,44 @@
+{
+  "chance": 0.5,
+  "train_shortcut_rate": 0.5,
+  "eval_shortcut_rate": 0.0,
+  "train": {
+    "num_rows": 100,
+    "num_failures": 0,
+    "failure_examples": [],
+    "shortcut_enabled_rate": 0.6,
+    "schema_predictor_accuracy": 0.6,
+    "first_candidate_accuracy": 0.5,
+    "last_candidate_accuracy": 0.5,
+    "alphabetic_first_accuracy": 0.52,
+    "alphabetic_last_accuracy": 0.48,
+    "gold_candidate_position_counts": {
+      "0": 50,
+      "1": 50
+    },
+    "gold_candidate_position_rates": {
+      "0": 0.5,
+      "1": 0.5
+    }
+  },
+  "eval": {
+    "num_rows": 400,
+    "num_failures": 0,
+    "failure_examples": [],
+    "shortcut_enabled_rate": 0.0,
+    "schema_predictor_accuracy": 0.0,
+    "first_candidate_accuracy": 0.5,
+    "last_candidate_accuracy": 0.5,
+    "alphabetic_first_accuracy": 0.5,
+    "alphabetic_last_accuracy": 0.5,
+    "gold_candidate_position_counts": {
+      "0": 200,
+      "1": 200
+    },
+    "gold_candidate_position_rates": {
+      "0": 0.5,
+      "1": 0.5
+    }
+  },
+  "accepted": true
+}

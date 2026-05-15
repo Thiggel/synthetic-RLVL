@@ -17,7 +17,7 @@ from .config import EvalLoopConfig
 from .evaluation.pass_at_k import score_pass_at_k
 from .external_eval import evaluate_external_benchmarks_with_generate_fn
 from .generation import ConstrainedProofGenerationConfig, ConstrainedProofGenerator
-from .metrics import OutputEvaluator
+from .metrics import OutputEvaluator, extract_tag, _is_answer_match
 from .task import TaskBuilder
 from .types import StepRange, TaskConfig, TemplateName
 
@@ -29,9 +29,12 @@ class _EvalPromptRecord:
     gold_answer: str
     template: TemplateName
     prefill: object
+    gold_logic_constants: str
+    gold_logic_predicates: str
     gold_logic_premises: str
     gold_logic_conclusion: str
     gold_first_modality_lines: list[str]
+    metadata: dict
 
 
 class _HFTextGenerator:
@@ -277,9 +280,12 @@ class UnifiedEvaluator:
                     gold_answer=s.answer,
                     template=step_cfg.template,
                     prefill=step_cfg.prefill,
+                    gold_logic_constants=s.logic_constants,
+                    gold_logic_predicates=s.logic_predicates,
                     gold_logic_premises=s.logic_premises,
                     gold_logic_conclusion=s.logic_conclusion,
                     gold_first_modality_lines=s.gold_first_modality_lines,
+                    metadata=dict(s.metadata),
                 )
                 for s in rows
             ]
@@ -298,7 +304,21 @@ class UnifiedEvaluator:
 
         metrics: Dict[str, float] = {}
         sample_candidates_by_step: dict[int, list[dict]] = defaultdict(list)
-        vals_by_step: dict[int, dict[str, list[float]]] = defaultdict(lambda: {"syntactic": [], "format": [], "correct": [], "valid": []})
+        vals_by_step: dict[int, dict[str, list[float]]] = defaultdict(
+            lambda: {
+                "syntactic": [],
+                "format": [],
+                "correct": [],
+                "valid": [],
+                "citation_free_valid": [],
+                "nl_logic_parse": [],
+                "nl_logic_citation_free_valid": [],
+                "nl_logic_joint": [],
+                "nl_logic_line_valid_fraction": [],
+                "nl_logic_valid_prefix_fraction": [],
+                "shortcut_answer": [],
+            }
+        )
         for rec, gen in zip(records, generations, strict=True):
             score = self.output_eval.evaluate(
                 gen,
@@ -306,6 +326,8 @@ class UnifiedEvaluator:
                 gold_answer=rec.gold_answer,
                 gold_logic_premises=rec.gold_logic_premises,
                 gold_logic_conclusion=rec.gold_logic_conclusion,
+                gold_logic_constants=rec.gold_logic_constants,
+                gold_logic_predicates=rec.gold_logic_predicates,
                 prefill=rec.prefill,
                 gold_first_modality_lines=rec.gold_first_modality_lines,
             )
@@ -313,24 +335,117 @@ class UnifiedEvaluator:
             vals_by_step[rec.step]["format"].append(score.format_ok)
             vals_by_step[rec.step]["correct"].append(score.correct)
             vals_by_step[rec.step]["valid"].append(score.valid)
+            vals_by_step[rec.step]["citation_free_valid"].append(score.citation_free_valid)
+            if rec.template in (
+                TemplateName.NATURAL,
+                TemplateName.NATURAL_LOGIC,
+                TemplateName.LOGIC_NATURAL,
+                TemplateName.NL_EXACT,
+                TemplateName.FORMAL_THINK,
+                TemplateName.THINK_FORMAL,
+            ):
+                vals_by_step[rec.step]["nl_logic_parse"].append(score.nl_logic_parse)
+                vals_by_step[rec.step]["nl_logic_citation_free_valid"].append(score.nl_logic_citation_free_valid)
+                vals_by_step[rec.step]["nl_logic_joint"].append(float(score.correct > 0 and score.nl_logic_citation_free_valid > 0))
+                vals_by_step[rec.step]["nl_logic_line_valid_fraction"].append(score.nl_logic_line_valid_fraction)
+                vals_by_step[rec.step]["nl_logic_valid_prefix_fraction"].append(score.nl_logic_valid_prefix_fraction)
+            shortcut_answer = rec.metadata.get("shortcut_branch_answer")
+            predicted_answer = extract_tag(gen, "answer")
+            if shortcut_answer:
+                vals_by_step[rec.step]["shortcut_answer"].append(float(_is_answer_match(predicted_answer, str(shortcut_answer))))
             if collect_samples > 0:
-                sample_candidates_by_step[rec.step].append(
-                    {
-                        "source": "synthetic",
-                        "step": rec.step,
-                        "prompt": rec.prompt,
-                        "generation": gen,
-                        "gold_answer": rec.gold_answer,
-                        "syntactic": score.syntactic,
-                        "format_ok": score.format_ok,
-                        "correct": score.correct,
-                        "valid": score.valid,
-                    }
-                )
+                sample = {
+                    "source": "synthetic",
+                    "step": rec.step,
+                    "prompt": rec.prompt,
+                    "generation": gen,
+                    "gold_answer": rec.gold_answer,
+                    "shortcut_answer": rec.metadata.get("shortcut_branch_answer"),
+                    "active_branch_first": rec.metadata.get("active_branch_first"),
+                    "syntactic": score.syntactic,
+                    "format_ok": score.format_ok,
+                    "correct": score.correct,
+                    "valid": score.valid,
+                    "citation_free_valid": score.citation_free_valid,
+                    "nl_logic_parse": score.nl_logic_parse,
+                    "nl_logic_citation_free_valid": score.nl_logic_citation_free_valid,
+                    "nl_logic_line_valid_fraction": score.nl_logic_line_valid_fraction,
+                    "nl_logic_valid_prefix_fraction": score.nl_logic_valid_prefix_fraction,
+                }
+                premises, proof, conclusion = self.output_eval._extract_logic_components(gen, self.output_eval._logic_block_tag(rec.template))
+                if premises and proof and conclusion:
+                    report = self.output_eval.engine.analyze_proof(premises=premises, conclusion=conclusion, proof=proof)
+                    citation_free_report = self.output_eval.engine.analyze_proof_citation_free(
+                        premises=premises, conclusion=conclusion, proof=proof
+                    )
+                    total_lines = len(report.lines)
+                    valid_lines = sum(1 for line in report.lines if line.valid)
+                    citation_free_total_lines = len(citation_free_report.lines)
+                    citation_free_valid_lines = sum(1 for line in citation_free_report.lines if line.valid)
+                    sample["validity_error"] = report.error
+                    sample["line_valid_fraction"] = float(valid_lines / total_lines) if total_lines else 0.0
+                    sample["citation_free_validity_error"] = citation_free_report.error
+                    sample["citation_free_line_valid_fraction"] = (
+                        float(citation_free_valid_lines / citation_free_total_lines)
+                        if citation_free_total_lines
+                        else 0.0
+                    )
+                    sample["invalid_line_errors"] = [
+                        {
+                            "line_number": line.line_number,
+                            "text": line.text,
+                            "syntax_valid": line.syntax_valid,
+                            "error": line.error or line.syntax_error,
+                        }
+                        for line in report.lines
+                        if not line.valid
+                    ][:5]
+                    sample["citation_free_invalid_line_errors"] = [
+                        {
+                            "line_number": line.line_number,
+                            "text": line.text,
+                            "syntax_valid": line.syntax_valid,
+                            "error": line.error or line.syntax_error,
+                        }
+                        for line in citation_free_report.lines
+                        if not line.valid
+                    ][:5]
+                sample_candidates_by_step[rec.step].append(sample)
 
         for step in range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1):
-            vals = vals_by_step.get(step, {"syntactic": [], "format": [], "correct": [], "valid": []})
-            for key in ("syntactic", "format", "correct", "valid"):
+            vals = vals_by_step.get(
+                step,
+                {
+                    "syntactic": [],
+                    "format": [],
+                    "correct": [],
+                    "valid": [],
+                    "citation_free_valid": [],
+                    "nl_logic_parse": [],
+                    "nl_logic_citation_free_valid": [],
+                    "nl_logic_joint": [],
+                    "nl_logic_line_valid_fraction": [],
+                    "nl_logic_valid_prefix_fraction": [],
+                    "shortcut_answer": [],
+                },
+            )
+            for key in (
+                "syntactic",
+                "format",
+                "correct",
+                "valid",
+                "citation_free_valid",
+                "nl_logic_parse",
+                "nl_logic_citation_free_valid",
+                "nl_logic_joint",
+                "nl_logic_line_valid_fraction",
+                "nl_logic_valid_prefix_fraction",
+                "shortcut_answer",
+            ):
+                if key == "shortcut_answer" and not vals[key]:
+                    continue
+                if key.startswith("nl_logic") and not vals[key]:
+                    continue
                 metrics[f"synthetic/step_{step}/{key}"] = sum(vals[key]) / max(1, len(vals[key]))
 
         samples: List[dict] = []
@@ -475,6 +590,8 @@ class UnifiedEvaluator:
                         gold_answer=rec.gold_answer,
                         gold_logic_premises=rec.gold_logic_premises,
                         gold_logic_conclusion=rec.gold_logic_conclusion,
+                        gold_logic_constants=rec.gold_logic_constants,
+                        gold_logic_predicates=rec.gold_logic_predicates,
                         prefill=rec.prefill,
                         gold_first_modality_lines=rec.gold_first_modality_lines,
                     )
@@ -490,6 +607,7 @@ class UnifiedEvaluator:
                             "format_ok": score.format_ok,
                             "correct": score.correct,
                             "valid": score.valid,
+                            "citation_free_valid": score.citation_free_valid,
                             "constrained_trace": None
                             if trace is None
                             else {

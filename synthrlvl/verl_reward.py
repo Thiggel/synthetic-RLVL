@@ -73,12 +73,15 @@ def compute_score(
             gold_first_modality_lines=gold_first_modality_lines,
         )
         line_valid = _REWARD._line_valid_fraction(solution_str, template=template)
+        citation_free_line_valid = _REWARD._line_valid_fraction(solution_str, template=template, citation_free=True)
         return {
             "score": float(score),
             "reward/format": float(comp.format_ok),
             "reward/correct": float(comp.correct),
             "reward/valid": float(comp.valid),
+            "reward/citation_free_valid": float(comp.citation_free_valid),
             "reward/line_valid": float(line_valid),
+            "reward/citation_free_line_valid": float(citation_free_line_valid),
             "reward/line_match": float(comp.line_match),
         }
     except Exception:
@@ -87,5 +90,8 @@ def compute_score(
             "reward/format": 0.0,
             "reward/correct": 0.0,
             "reward/valid": 0.0,
+            "reward/citation_free_valid": 0.0,
+            "reward/line_valid": 0.0,
+            "reward/citation_free_line_valid": 0.0,
             "reward/line_match": 0.0,
         }

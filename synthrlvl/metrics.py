@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 from logic_engine import LogicEngine
 
+from .natural_logic import translate_natural_proof_to_fol
 from .types import PrefillMode, RewardSchema, TemplateName
 
 
@@ -65,6 +66,11 @@ class EvalResult:
     format_ok: float
     correct: float
     valid: float
+    citation_free_valid: float
+    nl_logic_parse: float
+    nl_logic_citation_free_valid: float
+    nl_logic_line_valid_fraction: float
+    nl_logic_valid_prefix_fraction: float
     line_match: float
 
 
@@ -140,8 +146,10 @@ class OutputEvaluator:
         gold_answer: str,
         gold_logic_premises: str,
         gold_logic_conclusion: str,
-        prefill: PrefillMode,
-        gold_first_modality_lines: list[str],
+        gold_logic_constants: str = "",
+        gold_logic_predicates: str = "",
+        prefill: PrefillMode = PrefillMode.NONE,
+        gold_first_modality_lines: list[str] | None = None,
     ) -> EvalResult:
         answer = extract_tag(output_text, "answer")
         correct = float(_is_answer_match(answer, gold_answer))
@@ -178,16 +186,54 @@ class OutputEvaluator:
 
         syntactic = 0.0
         valid = 0.0
+        citation_free_valid = 0.0
         if wants_logic:
             premises, proof, conclusion = self._extract_logic_components(output_text, logic_tag)
             if premises and proof and conclusion:
                 report = self.engine.analyze_proof(premises=premises, conclusion=conclusion, proof=proof)
+                citation_free_report = self.engine.analyze_proof_citation_free(
+                    premises=premises, conclusion=conclusion, proof=proof
+                )
                 syntactic = float(
                     bool(report.lines)
                     and all(p.syntax_valid for p in report.premises)
                     and all(line.syntax_valid for line in report.lines)
                 )
                 valid = float(report.ok)
+                citation_free_valid = float(citation_free_report.ok)
+
+        nl_logic_parse = 0.0
+        nl_logic_citation_free_valid = 0.0
+        nl_logic_line_valid_fraction = 0.0
+        nl_logic_valid_prefix_fraction = 0.0
+        if wants_natural and gold_logic_premises and gold_logic_conclusion and gold_logic_constants and gold_logic_predicates:
+            natural = extract_tag(output_text, natural_tag)
+            source = natural if natural else (output_text or "")
+            natural_proof = extract_tag(source, "proof")
+            if natural_proof:
+                premise_count = len(split_lines(gold_logic_premises))
+                translated = translate_natural_proof_to_fol(
+                    natural_proof,
+                    constants=gold_logic_constants,
+                    predicates=gold_logic_predicates,
+                    premise_count=premise_count,
+                )
+                nl_logic_parse = translated.parse_fraction
+                if translated.total_lines:
+                    report = self.engine.analyze_proof_citation_free(
+                        premises=gold_logic_premises,
+                        conclusion=gold_logic_conclusion,
+                        proof=translated.proof,
+                    )
+                    valid_lines = sum(1 for line in report.lines if line.valid)
+                    prefix_valid = 0
+                    for line in report.lines:
+                        if not line.valid:
+                            break
+                        prefix_valid += 1
+                    nl_logic_citation_free_valid = float(translated.fully_parsed and report.ok)
+                    nl_logic_line_valid_fraction = float(valid_lines / len(report.lines)) if report.lines else 0.0
+                    nl_logic_valid_prefix_fraction = float(prefix_valid / len(report.lines)) if report.lines else 0.0
 
         line_match = 0.0
         if prefill == PrefillMode.LINE_REWARD and gold_first_modality_lines:
@@ -202,14 +248,25 @@ class OutputEvaluator:
                     hits += 1
             line_match = hits / max(1, len(wanted))
 
-        return EvalResult(syntactic=syntactic, format_ok=format_ok, correct=correct, valid=valid, line_match=line_match)
+        return EvalResult(
+            syntactic=syntactic,
+            format_ok=format_ok,
+            correct=correct,
+            valid=valid,
+            citation_free_valid=citation_free_valid,
+            nl_logic_parse=nl_logic_parse,
+            nl_logic_citation_free_valid=nl_logic_citation_free_valid,
+            nl_logic_line_valid_fraction=nl_logic_line_valid_fraction,
+            nl_logic_valid_prefix_fraction=nl_logic_valid_prefix_fraction,
+            line_match=line_match,
+        )
 
 
 class RewardComputer:
     def __init__(self, evaluator: OutputEvaluator):
         self.evaluator = evaluator
 
-    def _line_valid_fraction(self, output_text: str, *, template: TemplateName) -> float:
+    def _line_valid_fraction(self, output_text: str, *, template: TemplateName, citation_free: bool = False) -> float:
         wants_logic = template in (
             TemplateName.LOGIC,
             TemplateName.LOGIC_NATURAL,
@@ -224,7 +281,12 @@ class RewardComputer:
         if not premises or not proof or not conclusion:
             return 0.0
         try:
-            report = self.evaluator.engine.analyze_proof(premises=premises, conclusion=conclusion, proof=proof)
+            if citation_free:
+                report = self.evaluator.engine.analyze_proof_citation_free(
+                    premises=premises, conclusion=conclusion, proof=proof
+                )
+            else:
+                report = self.evaluator.engine.analyze_proof(premises=premises, conclusion=conclusion, proof=proof)
             total = len(report.lines)
             if total == 0:
                 return 0.0
@@ -261,6 +323,13 @@ class RewardComputer:
             RewardSchema.CORRECT_TIMES_LINE_VALID_PLUS_0P1_FORMAT,
         }:
             line_valid = self._line_valid_fraction(output_text, template=template)
+        citation_free_line_valid = None
+        if schema in {
+            RewardSchema.CORRECT_PLUS_CITATION_FREE_LINE_VALID_PLUS_0P1_FORMAT,
+            RewardSchema.CORRECT_TIMES_CITATION_FREE_LINE_VALID_PLUS_0P1_FORMAT,
+            RewardSchema.CITATION_FREE_LINE_VALID_PLUS_CORRECT_IF_FULL_VALID_PLUS_0P1_FORMAT,
+        }:
+            citation_free_line_valid = self._line_valid_fraction(output_text, template=template, citation_free=True)
 
         if schema == RewardSchema.CORRECT_PLUS_0P1_FORMAT:
             value = m.correct + 0.1 * m.format_ok
@@ -274,6 +343,22 @@ class RewardComputer:
             value = (m.correct * m.valid) + 0.1 * m.format_ok
         elif schema == RewardSchema.CORRECT_TIMES_LINE_VALID_PLUS_0P1_FORMAT:
             value = (m.correct * float(line_valid or 0.0)) + 0.1 * m.format_ok
+        elif schema == RewardSchema.CORRECT_PLUS_CITATION_FREE_VALID_PLUS_0P1_FORMAT:
+            value = m.correct + m.citation_free_valid + 0.1 * m.format_ok
+        elif schema == RewardSchema.CORRECT_PLUS_CITATION_FREE_LINE_VALID_PLUS_0P1_FORMAT:
+            value = m.correct + float(citation_free_line_valid or 0.0) + 0.1 * m.format_ok
+        elif schema == RewardSchema.CORRECT_TIMES_CITATION_FREE_VALID_PLUS_0P1_FORMAT:
+            value = (m.correct * m.citation_free_valid) + 0.1 * m.format_ok
+        elif schema == RewardSchema.CORRECT_TIMES_CITATION_FREE_LINE_VALID_PLUS_0P1_FORMAT:
+            value = (m.correct * float(citation_free_line_valid or 0.0)) + 0.1 * m.format_ok
+        elif schema == RewardSchema.CITATION_FREE_LINE_VALID_PLUS_CORRECT_IF_FULL_VALID_PLUS_0P1_FORMAT:
+            value = (
+                float(citation_free_line_valid or 0.0)
+                + (m.correct if m.citation_free_valid > 0 else 0.0)
+                + 0.1 * m.format_ok
+            )
+        elif schema == RewardSchema.INDICATOR_CORRECT_AND_CITATION_FREE_VALID_PLUS_0P1_FORMAT:
+            value = float(m.correct > 0 and m.citation_free_valid > 0) + 0.1 * m.format_ok
         elif schema == RewardSchema.CORRECT_PLUS_0P75_VALID_PLUS_0P1_FORMAT:
             value = m.correct + 0.75 * m.valid + 0.1 * m.format_ok
         elif schema == RewardSchema.CORRECT_PLUS_0P5_VALID_PLUS_0P1_FORMAT:

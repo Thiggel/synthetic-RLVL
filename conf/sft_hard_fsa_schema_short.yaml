@@ -1,0 +1,101 @@
+seed: 3407
+run_name: sft_hard_fsa_schema_short_base
+output_dir: ${oc.env:WORK,${oc.env:HOME}}/synthetic-RLVL/runs/${run_name}
+
+model:
+  name: allenai/Olmo-3-1025-7B
+  bf16: true
+  lora:
+    enabled: true
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj, o_proj, up_proj, down_proj, gate_proj]
+
+task:
+  template: logic
+  prefill: none
+  distractor_ratio: 0.5
+  difficulty: hard_fsa_schema
+  branching_factor: 4
+  decoy_chains: null
+  near_miss_ratio: null
+  side_chain_depth: null
+  entity_decoy_ratio: null
+  answer_decoy_ratio: null
+  shortcut_rate: 0.8
+  require_unique_solution: true
+  train_min_step: 1
+  train_max_step: 3
+  val_min_step: 1
+  val_max_step: 20
+
+data:
+  source: materialized
+  train_samples: 10000
+  eval_samples: 256
+  max_length: 8192
+  materialized:
+    dataset_id: flaitenberger/LogicalReasoning-hard-fsa-schema
+    local_root: null
+    train_subset: train_schema_0p8_up_to_3_10k
+    eval_subset: auto
+
+train:
+  per_device_batch_size: 1
+  per_device_eval_batch_size: 1
+  grad_accum: 1
+  num_epochs: 1
+  lr: 1e-4
+  max_steps: 1000
+  warmup_steps: 25
+  logging_steps: 10
+  eval_steps: 250
+  save_steps: 250
+  save_total_limit: 2
+
+validation:
+  eval_steps: 250
+  step_min: 1
+  step_max: 20
+  samples_per_step: 10
+  max_new_tokens: 1024
+  generation_backend: hf
+  generation_batch_size: 16
+  vllm_gpu_memory_utilization: 0.85
+  sampled_enabled: false
+  sampled_num_generations: 64
+  sampled_k_values: [1, 2, 4, 8, 16, 32, 64]
+  sampled_temperature: 1.0
+
+external_eval:
+  enabled: false
+  benchmarks: [proofwriter, folio, prontoqa, proverqa, logiqa2, bbh, mmlu_philosophy, mmlu_formal_logic, strategyqa]
+  limit_per_benchmark: 20
+  max_new_tokens: 256
+
+constrained_eval:
+  enabled: false
+  samples_per_step: 4
+  num_generations: 8
+  candidates_per_line: 8
+  k_values: [1, 2, 4, 8]
+  max_lines: 32
+  max_line_tokens: 48
+  suffix_max_tokens: 256
+  temperature: 1.0
+
+log_generations:
+  num_samples: 8
+  max_chars: 2000
+
+logging:
+  report_to: [wandb]
+
+hub:
+  push_final: false
+  repo_id: null
+  private: true
+  token_env: HF_TOKEN
+  path_in_repo: ""
+  cleanup_local_output: false

@@ -302,6 +302,142 @@ class ProofAnalyzer:
             graph=graph,
         )
 
+    def analyze_citation_free(self, premises: str, conclusion: str | None, proof_text: str) -> ProofReport:
+        """Analyze proof formulas while recovering dependencies instead of trusting citations.
+
+        This is intentionally separate from ``analyze``. Strict proof checking keeps
+        requiring exact citations; citation-free checking answers whether the proof
+        content can be justified in-order from premises plus previous accepted proof
+        lines using the fragment used by the synthetic tasks.
+        """
+        premise_lines = self._split_premise_lines(premises)
+        parsed_premises: list[Any] = []
+        analyzed_premises: list[PremiseReport] = []
+        source_formulas: dict[int, Any] = {}
+        first_error: str | None = None
+
+        for premise in premise_lines:
+            try:
+                parsed = self._parse_fol_sentence(premise.text)
+                if isinstance(parsed, Falsum):
+                    raise ParsingError('premise "#" is not allowed')
+                parsed_premises.append(parsed)
+                source_formulas[premise.line_number] = parsed
+                analyzed_premises.append(
+                    replace(premise, syntax_valid=True, fact_key=self._fact_key(parsed))
+                )
+            except Exception as exc:
+                if first_error is None:
+                    first_error = f"premise parse failed: {exc}"
+                analyzed_premises.append(replace(premise, syntax_valid=False, error=str(exc)))
+
+        conclusion_text = (conclusion or self._infer_conclusion(proof_text) or "").strip()
+        proof_lines = self._split_proof_lines(proof_text, premise_count=len(analyzed_premises))
+        annotated: list[LineReport] = []
+        for line in proof_lines:
+            syntax_error = self._line_syntax_error(line.text)
+            if syntax_error is None:
+                annotated.append(replace(line, syntax_valid=True))
+            else:
+                annotated.append(replace(line, syntax_valid=False, syntax_error=syntax_error))
+
+        if not conclusion_text:
+            return self._empty_report(analyzed_premises, annotated, first_error or "No conclusion found.")
+
+        try:
+            parsed_conclusion = self._parse_fol_sentence(conclusion_text)
+        except Exception as exc:
+            return self._empty_report(analyzed_premises, annotated, first_error or f"conclusion parse failed: {exc}")
+
+        valid_lines: list[LineReport] = []
+        deps_by_source: dict[int, tuple[int, ...]] = {}
+        conclusion_candidates: list[int] = []
+
+        for line in annotated:
+            if not line.syntax_valid:
+                if first_error is None:
+                    first_error = line.syntax_error
+                valid_lines.append(replace(line, valid=False, error=line.syntax_error))
+                continue
+            try:
+                formula, _justification = parse_line(line.text)
+                deps = self._recover_dependencies(formula, source_formulas)
+                if deps is None:
+                    raise ParsingError(f"Line {line.line_number}: formula is not derivable without citations: {formula}")
+                source_formulas[line.line_number] = formula
+                deps_by_source[line.line_number] = deps
+                if FormulaEquivalence.equivalent(formula, parsed_conclusion):
+                    conclusion_candidates.append(line.line_number)
+                fact_key = None if isinstance(formula, Falsum) else self._fact_key(formula)
+                valid_lines.append(
+                    replace(line, valid=True, fact_key=fact_key, dependencies=deps)
+                )
+            except Exception as exc:
+                if first_error is None:
+                    first_error = str(exc)
+                valid_lines.append(replace(line, valid=False, error=str(exc)))
+
+        relevant_premise_indexes, relevant_line_indexes = self._trace_relevance_by_source(
+            premise_count=len(analyzed_premises),
+            deps_by_source=deps_by_source,
+            conclusion_candidates=conclusion_candidates,
+            analyzed_lines=valid_lines,
+        )
+
+        analyzed_premises = [
+            replace(p, relevant=(p.index in relevant_premise_indexes)) if p.syntax_valid else p
+            for p in analyzed_premises
+        ]
+        valid_lines = [
+            replace(l, relevant=(l.index in relevant_line_indexes)) if l.valid else l
+            for l in valid_lines
+        ]
+
+        seen_keys: set[str] = set()
+        analyzed_premises = [
+            replace(
+                premise,
+                novel=(premise.fact_key is not None and premise.fact_key not in seen_keys and not seen_keys.add(premise.fact_key)),
+            )
+            if premise.syntax_valid
+            else premise
+            for premise in analyzed_premises
+        ]
+        for idx, premise in enumerate(analyzed_premises):
+            if premise.syntax_valid:
+                analyzed_premises[idx] = replace(
+                    premise, relevant_and_novel=premise.relevant and premise.novel
+                )
+
+        for idx, line in enumerate(valid_lines):
+            if line.valid and line.fact_key is not None:
+                is_novel = line.fact_key not in seen_keys
+                if is_novel:
+                    seen_keys.add(line.fact_key)
+                valid_lines[idx] = replace(
+                    line,
+                    novel=is_novel,
+                    relevant_and_novel=line.relevant and is_novel,
+                )
+
+        edges = tuple(
+            (dep, line.line_number)
+            for line in valid_lines
+            for dep in line.dependencies
+        )
+        nodes = tuple(sorted({p.line_number for p in analyzed_premises} | {l.line_number for l in valid_lines}))
+        invalid_count = sum(1 for line in valid_lines if not line.valid)
+        conclusion_supported = bool(conclusion_candidates)
+        return ProofReport(
+            ok=(invalid_count == 0 and conclusion_supported),
+            rendered="",
+            error=first_error,
+            conclusion_supported=conclusion_supported,
+            premises=tuple(analyzed_premises),
+            lines=tuple(valid_lines),
+            graph=ProofGraph(nodes=nodes, edges=edges),
+        )
+
     def _empty_report(self, premises: list[PremiseReport], lines: list[LineReport], error: str) -> ProofReport:
         nodes = tuple(sorted({p.line_number for p in premises} | {l.line_number for l in lines}))
         return ProofReport(
@@ -442,6 +578,49 @@ class ProofAnalyzer:
         proof.add_line(formula, Justification(justification.rule, remapped))
         return formula, self._flatten_citations(remapped)
 
+    @staticmethod
+    def _same_formula(left: Any, right: Any) -> bool:
+        return FormulaEquivalence.equivalent(left, right)
+
+    def _recover_dependencies(self, formula: Any, source_formulas: dict[int, Any]) -> tuple[int, ...] | None:
+        # Reiteration from any available source line.
+        for line_number, known in source_formulas.items():
+            if self._same_formula(formula, known):
+                return (line_number,)
+
+        # Conjunction introduction: A, B |- A & B.
+        if isinstance(formula, And):
+            left_dep = self._find_formula_source(formula.left, source_formulas)
+            right_dep = self._find_formula_source(formula.right, source_formulas)
+            if left_dep is not None and right_dep is not None:
+                return (left_dep, right_dep)
+
+        # Conjunction elimination: A & B |- A and A & B |- B.
+        for line_number, known in source_formulas.items():
+            if isinstance(known, And) and (self._same_formula(formula, known.left) or self._same_formula(formula, known.right)):
+                return (line_number,)
+
+        # Implication elimination: A -> B, A |- B.
+        for imp_line, known in source_formulas.items():
+            if not isinstance(known, Imp) or not self._same_formula(formula, known.right):
+                continue
+            antecedent_line = self._find_formula_source(known.left, source_formulas)
+            if antecedent_line is not None:
+                return (imp_line, antecedent_line)
+            if isinstance(known.left, And):
+                left_dep = self._find_formula_source(known.left.left, source_formulas)
+                right_dep = self._find_formula_source(known.left.right, source_formulas)
+                if left_dep is not None and right_dep is not None:
+                    return (imp_line, left_dep, right_dep)
+
+        return None
+
+    def _find_formula_source(self, formula: Any, source_formulas: dict[int, Any]) -> int | None:
+        for line_number, known in source_formulas.items():
+            if self._same_formula(formula, known):
+                return line_number
+        return None
+
     def _trace_relevance(
         self,
         *,
@@ -475,6 +654,34 @@ class ProofAnalyzer:
             line = line_by_source.get(source_line)
             if line is not None:
                 relevant_lines.add(line.index)
+        return premise_indexes, relevant_lines
+
+    def _trace_relevance_by_source(
+        self,
+        *,
+        premise_count: int,
+        deps_by_source: dict[int, tuple[int, ...]],
+        conclusion_candidates: list[int],
+        analyzed_lines: list[LineReport],
+    ) -> tuple[set[int], set[int]]:
+        if not conclusion_candidates:
+            return set(), set()
+
+        relevant_sources: set[int] = set()
+        stack = [conclusion_candidates[-1]]
+        while stack:
+            source = stack.pop()
+            if source in relevant_sources:
+                continue
+            relevant_sources.add(source)
+            stack.extend(deps_by_source.get(source, ()))
+
+        premise_indexes = {source - 1 for source in relevant_sources if 1 <= source <= premise_count}
+        relevant_lines = {
+            line.index
+            for line in analyzed_lines
+            if line.line_number in relevant_sources
+        }
         return premise_indexes, relevant_lines
 
     def _fact_key(self, formula: Any) -> str:

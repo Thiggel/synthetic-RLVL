@@ -118,9 +118,12 @@ def main() -> None:
     parser.add_argument("--wandb-entity", default=None)
     parser.add_argument("--wandb-group", default=None)
     parser.add_argument("--wandb-run-name", default=None)
+    parser.add_argument("overrides", nargs="*", help="Optional OmegaConf dotlist overrides, e.g. task.template=nl_exact.")
     args = parser.parse_args()
 
     cfg = OmegaConf.load(args.config)
+    if args.overrides:
+        cfg = OmegaConf.merge(cfg, OmegaConf.from_dotlist(args.overrides))
     profile = _detect_profile(cfg) if args.profile == "auto" else args.profile
     _apply_eval_overrides(cfg, profile, args)
 

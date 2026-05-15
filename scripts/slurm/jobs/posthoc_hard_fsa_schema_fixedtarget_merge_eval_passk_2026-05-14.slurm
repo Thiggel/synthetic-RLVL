@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+#SBATCH --job-name=hfsa_fix_passk
+#SBATCH --partition=a100
+#SBATCH --constraint=a100_80
+#SBATCH --gres=gpu:a100:1
+#SBATCH --cpus-per-task=12
+#SBATCH --time=24:00:00
+#SBATCH --array=0-3%4
+#SBATCH --output=logs/%x_%A_%a.out
+#SBATCH --error=logs/%x_%A_%a.err
+
+set -euo pipefail
+cd "${SLURM_SUBMIT_DIR:-$PWD}"
+mkdir -p logs passk_eval/hard_fsa_schema_fixedtarget tmp
+source ./scripts/env.sh
+VENV_PATH="${VENV_PATH:-${HPCVAULT:-}/.venv_rlvl_posttrain}"
+if [[ -z "${HPCVAULT:-}" || ! -x "${VENV_PATH}/bin/python" ]]; then VENV_PATH="${WORK}/.venv"; fi
+export VIRTUAL_ENV="${VENV_PATH}"
+export PATH="${VENV_PATH}/bin:${PATH}"
+hash -r 2>/dev/null || true
+
+SEED="${SEED:-3407}"
+REGIME_TAGS=(sft1to3_rl1to10 sft1to5_rl1to15)
+SCHEMAS=(
+  correct_plus_0p1_format
+  correct_plus_citation_free_valid_plus_0p1_format
+)
+IDX=${SLURM_ARRAY_TASK_ID}
+SCHEMA_IDX=$((IDX % ${#SCHEMAS[@]}))
+REGIME_IDX=$((IDX / ${#SCHEMAS[@]}))
+SCHEMA=${SCHEMAS[$SCHEMA_IDX]}
+REGIME_TAG=${REGIME_TAGS[$REGIME_IDX]}
+RUN_NAME="rl_hfsa_fixedtarget_${REGIME_TAG}_${SCHEMA}_seed${SEED}_mrg"
+GROUP="posttrain_hard_fsa_schema_fixedtarget/${REGIME_TAG}/${SCHEMA}"
+
+sleep $((SLURM_ARRAY_TASK_ID * ${PASSK_STAGGER_SECONDS:-120} + RANDOM % ${PASSK_JITTER_SECONDS:-30}))
+
+RUN_ROOT="${WORK}/synthetic-RLVL/runs/${RUN_NAME}"
+ACTOR=""
+FINAL_STEP=""
+for STEP in 501 500 401 400 301 300 201 200 101 100; do
+  CANDIDATE="${RUN_ROOT}/global_step_${STEP}/actor"
+  if [[ -f "${CANDIDATE}/lora_adapter/adapter_config.json" || -f "${CANDIDATE}/adapter_config.json" ]]; then
+    ACTOR="${CANDIDATE}"
+    FINAL_STEP="${STEP}"
+    break
+  fi
+done
+
+if [[ -z "${ACTOR}" ]]; then
+  echo "missing final actor for ${RUN_NAME}; skipping"
+  exit 0
+fi
+
+MERGED="${WORK}/synthetic-RLVL/tmp/merged_actor_${RUN_NAME}_final"
+OUT="${WORK}/synthetic-RLVL/passk_eval/hard_fsa_schema_fixedtarget/${RUN_NAME}_passk.json"
+SAMPLES_OUT="${WORK}/synthetic-RLVL/passk_eval/hard_fsa_schema_fixedtarget/${RUN_NAME}_samples.jsonl"
+
+if [[ ! -f "${MERGED}/config.json" || "${FORCE_PASSK_MERGE:-0}" == "1" ]]; then
+  rm -rf "${MERGED}.tmp"
+  python scripts/merge_lora_checkpoint.py --checkpoint "${ACTOR}" --output "${MERGED}.tmp" --dtype bf16 --overwrite
+  rm -rf "${MERGED}"
+  mv "${MERGED}.tmp" "${MERGED}"
+fi
+
+if [[ -s "${OUT}" && "${FORCE_PASSK_EVAL:-0}" != "1" ]]; then
+  echo "output already exists: ${OUT}; skipping eval"
+  exit 0
+fi
+
+export WANDB_PROJECT="${WANDB_PROJECT:-synthetic-rlvl}"
+export WANDB_GROUP="${GROUP}"
+export WANDB_RUN_GROUP="${GROUP}"
+
+python scripts/evaluate_checkpoint_passk.py \
+  --checkpoint "${MERGED}" \
+  --config conf/posttrain_grpo_hard_fsa_schema_fixedtarget_500.yaml \
+  --profile grpo \
+  --backend vllm \
+  --step-min 1 \
+  --step-max 25 \
+  --samples-per-step "${PASSK_SAMPLES_PER_STEP:-20}" \
+  --num-generations "${PASSK_NUM_GENERATIONS:-64}" \
+  --k-values 1,2,4,8,16,32,64 \
+  --temperature 1.0 \
+  --max-new-tokens "${PASSK_MAX_NEW_TOKENS:-2048}" \
+  --batch-size "${PASSK_BATCH_SIZE:-512}" \
+  --gpu-memory-utilization 0.80 \
+  --disable-external \
+  --collect-samples 20 \
+  --output "${OUT}" \
+  --samples-output "${SAMPLES_OUT}" \
+  --wandb-project "${WANDB_PROJECT}" \
+  --wandb-group "${GROUP}" \
+  --wandb-run-name "hfsa_fixedtarget_${REGIME_TAG}_${SCHEMA}_seed${SEED}_passk_step${FINAL_STEP}"

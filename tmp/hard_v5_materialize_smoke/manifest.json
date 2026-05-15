@@ -1,0 +1,38 @@
+{
+  "train_subsets": [
+    "train_up_to_3_1k",
+    "train_up_to_15_120k"
+  ],
+  "val_subsets": [
+    "val_step_01_1k",
+    "val_step_02_1k",
+    "val_step_03_1k",
+    "val_step_04_1k",
+    "val_step_05_1k",
+    "val_step_06_1k",
+    "val_step_07_1k",
+    "val_step_08_1k",
+    "val_step_09_1k",
+    "val_step_10_1k",
+    "val_step_11_1k",
+    "val_step_12_1k",
+    "val_step_13_1k",
+    "val_step_14_1k",
+    "val_step_15_1k",
+    "val_step_16_1k",
+    "val_step_17_1k",
+    "val_step_18_1k",
+    "val_step_19_1k",
+    "val_step_20_1k"
+  ],
+  "difficulty": "hard_v5",
+  "distractor_ratio": 0.5,
+  "train_shortcut_rate": 0.8,
+  "val_shortcut_rate": 0.0,
+  "branching_factor": null,
+  "decoy_chains": null,
+  "near_miss_ratio": null,
+  "side_chain_depth": null,
+  "entity_decoy_ratio": null,
+  "answer_decoy_ratio": null
+}

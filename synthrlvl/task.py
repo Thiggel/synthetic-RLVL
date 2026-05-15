@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import random
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from synthrlvl.datasets import DatasetConfig, LogicDatasetGenerator, LogicExample
 
@@ -16,9 +16,12 @@ class TaskSample:
     target: str
     depth: int
     answer: str
+    logic_constants: str
+    logic_predicates: str
     logic_premises: str
     logic_conclusion: str
     gold_first_modality_lines: List[str]
+    metadata: Dict[str, Any]
 
 
 def _seeded_rng(seed: int, index: int) -> random.Random:
@@ -52,10 +55,15 @@ def _extract_facts_rules(premises_nl: List[str]) -> tuple[List[str], List[str]]:
 class TaskBuilder:
     def __init__(self, cfg: TaskConfig):
         self.cfg = cfg
-        self._gens: Dict[int, LogicDatasetGenerator] = {}
+        self._gens: Dict[tuple[int, bool, float], LogicDatasetGenerator] = {}
 
-    def _generator(self, depth: int) -> LogicDatasetGenerator:
-        if depth not in self._gens:
+    def _generator(self, depth: int, *, train: bool) -> LogicDatasetGenerator:
+        shortcut_rate = self.cfg.shortcut_rate
+        if self.cfg.difficulty == "hard_fsa_schema" and not train:
+            # Eval is intentionally shortcut-neutral; train may be shortcut-rich.
+            shortcut_rate = 0.0
+        key = (depth, train, shortcut_rate)
+        if key not in self._gens:
             ds_cfg = DatasetConfig(
                 depth=depth,
                 distractor_ratio=self.cfg.distractor_ratio,
@@ -66,11 +74,12 @@ class TaskBuilder:
                 side_chain_depth=self.cfg.side_chain_depth,
                 entity_decoy_ratio=self.cfg.entity_decoy_ratio,
                 answer_decoy_ratio=self.cfg.answer_decoy_ratio,
+                shortcut_rate=shortcut_rate,
                 require_unique_solution=self.cfg.require_unique_solution,
                 seed=self.cfg.seed,
             )
-            self._gens[depth] = LogicDatasetGenerator(ds_cfg)
-        return self._gens[depth]
+            self._gens[key] = LogicDatasetGenerator(ds_cfg)
+        return self._gens[key]
 
     def _choose_depth(self, index: int, *, train: bool) -> int:
         step_range = self.cfg.train_steps if train else self.cfg.val_steps
@@ -79,7 +88,7 @@ class TaskBuilder:
 
     def sample(self, index: int, *, train: bool) -> TaskSample:
         depth = self._choose_depth(index, train=train)
-        ex = self._generator(depth).generate(index)
+        ex = self._generator(depth, train=train).generate(index)
         return task_sample_from_logic_example(ex, cfg=self.cfg, depth=depth)
 
     def build_samples(self, n: int, *, train: bool, start_index: int = 0) -> List[TaskSample]:
@@ -226,9 +235,12 @@ def task_sample_from_logic_example(ex: LogicExample, *, cfg: TaskConfig, depth: 
         target=target,
         depth=depth,
         answer=ex.answer,
+        logic_constants=logic_constants,
+        logic_predicates=logic_predicates,
         logic_premises=logic_premises,
         logic_conclusion=logic_conclusion,
         gold_first_modality_lines=first_lines,
+        metadata=dict(ex.metadata),
     )
 
 

@@ -1,0 +1,52 @@
+{
+  "chance": 0.25,
+  "train_shortcut_rate": 0.8,
+  "eval_shortcut_rate": 0.0,
+  "train": {
+    "num_rows": 1500,
+    "num_failures": 0,
+    "failure_examples": [],
+    "shortcut_enabled_rate": 0.83,
+    "schema_predictor_accuracy": 0.83,
+    "first_candidate_accuracy": 0.25,
+    "last_candidate_accuracy": 0.25,
+    "alphabetic_first_accuracy": 0.206,
+    "alphabetic_last_accuracy": 0.26666666666666666,
+    "gold_candidate_position_counts": {
+      "0": 375,
+      "1": 375,
+      "2": 375,
+      "3": 375
+    },
+    "gold_candidate_position_rates": {
+      "0": 0.25,
+      "1": 0.25,
+      "2": 0.25,
+      "3": 0.25
+    }
+  },
+  "eval": {
+    "num_rows": 2000,
+    "num_failures": 0,
+    "failure_examples": [],
+    "shortcut_enabled_rate": 0.0,
+    "schema_predictor_accuracy": 0.0,
+    "first_candidate_accuracy": 0.25,
+    "last_candidate_accuracy": 0.25,
+    "alphabetic_first_accuracy": 0.256,
+    "alphabetic_last_accuracy": 0.2445,
+    "gold_candidate_position_counts": {
+      "0": 500,
+      "1": 500,
+      "2": 500,
+      "3": 500
+    },
+    "gold_candidate_position_rates": {
+      "0": 0.25,
+      "1": 0.25,
+      "2": 0.25,
+      "3": 0.25
+    }
+  },
+  "accepted": true
+}

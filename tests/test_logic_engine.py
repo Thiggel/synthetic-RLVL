@@ -85,3 +85,35 @@ def test_incremental_validator_ranks_candidate_lines():
     assert valid.valid is True
     assert valid.novel is True
     assert valid.score == 3
+
+
+def test_citation_free_validation_recovers_shifted_future_citations():
+    engine = LogicEngine()
+    premises = "S0(a), S0(a)->S1(a), S1(a)->S2(a)"
+    proof = """
+S0(a) ; R,1
+S1(a) ; ->E,2,999
+S2(a) ; ->E,3,998
+"""
+
+    strict = engine.analyze_proof(premises=premises, conclusion="S2(a)", proof=proof)
+    citation_free = engine.analyze_proof_citation_free(premises=premises, conclusion="S2(a)", proof=proof)
+
+    assert strict.ok is False
+    assert citation_free.ok is True
+    assert [line.dependencies for line in citation_free.lines] == [(1,), (2, 1), (3, 5)]
+
+
+def test_citation_free_validation_rejects_undeducible_formula():
+    engine = LogicEngine()
+    report = engine.analyze_proof_citation_free(
+        premises="S0(a), S0(a)->S1(a)",
+        conclusion="S2(a)",
+        proof="""
+S0(a) ; R,1
+S2(a) ; ->E,2,4
+""",
+    )
+
+    assert report.ok is False
+    assert report.lines[-1].valid is False
