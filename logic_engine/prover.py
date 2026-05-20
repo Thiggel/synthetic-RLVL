@@ -605,6 +605,53 @@ class FOL(TFL):
 
         raise JustificationError('Invalid application of "ARITH".')
 
+    @Rules.add('MOD23', strict=True)
+    def MOD23(premises, conclusion, **kwargs):
+        from .mathkernels import MathKernels
+        if not isinstance(conclusion, Eq):
+            raise JustificationError('Invalid application of "MOD23".')
+
+        def eval_mod23(term):
+            try:
+                value = MathKernels.eval_rational(term).value
+            except ValueError:
+                raise JustificationError('Invalid application of "MOD23".')
+            if value.denominator != 1:
+                raise JustificationError('Invalid application of "MOD23".')
+            return Numeral(Fraction(value.numerator % 23, 1))
+
+        if len(premises) == 0:
+            try:
+                if eval_mod23(conclusion.left) == eval_mod23(conclusion.right):
+                    return [conclusion]
+            except JustificationError:
+                pass
+            raise JustificationError('Invalid application of "MOD23".')
+
+        if len(premises) != 1:
+            raise JustificationError('Invalid number of citations provided.')
+
+        premise = premises[0]
+        if not premise.is_line() or not isinstance(premise.formula, Eq):
+            raise JustificationError('Invalid application of "MOD23".')
+
+        cited = premise.formula
+        for arithmetic_side, other_side in ((cited.left, cited.right), (cited.right, cited.left)):
+            try:
+                value = eval_mod23(arithmetic_side)
+            except JustificationError:
+                continue
+
+            if (MathKernels.polynomial_equal(conclusion.left, other_side)
+                    and MathKernels.polynomial_equal(conclusion.right, value)):
+                return [conclusion]
+
+            if (MathKernels.polynomial_equal(conclusion.right, other_side)
+                    and MathKernels.polynomial_equal(conclusion.left, value)):
+                return [conclusion]
+
+        raise JustificationError('Invalid application of "MOD23".')
+
     @Rules.add('FACT', strict=True)
     def FACT(premises, conclusion, **kwargs):
         from .mathkernels import MathKernels

@@ -315,6 +315,7 @@ RULE_ALIASES = {
     'NE': '¬E',
     'ALG': 'ALG',
     'ARITH': 'ARITH',
+    'MOD23': 'MOD23',
     'CANCEL': 'CANCEL',
     'FACT': 'FACT',
 }

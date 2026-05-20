@@ -59,6 +59,7 @@ def test_score_pass_at_k_joint_and_valid_given_correct():
 
     assert metrics["synthetic_sampled/step_3/correct_pass@4"] == 1.0
     assert metrics["synthetic_sampled/step_3/joint_pass@4"] == 1.0
+    assert metrics["synthetic_sampled/step_3/grounded_joint_pass@4"] == 1.0
     assert metrics["synthetic_sampled/step_3/valid_given_correct@1"] == pytest.approx(0.5)
+    assert metrics["synthetic_sampled/step_3/grounded_valid_given_correct@1"] == pytest.approx(0.5)
     assert metrics["synthetic_sampled/band_ood/correct_pass@4"] == 1.0
-

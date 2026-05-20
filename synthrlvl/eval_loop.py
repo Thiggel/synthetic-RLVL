@@ -311,6 +311,8 @@ class UnifiedEvaluator:
                 "correct": [],
                 "valid": [],
                 "citation_free_valid": [],
+                "grounded_valid": [],
+                "citation_free_grounded_valid": [],
                 "nl_logic_parse": [],
                 "nl_logic_citation_free_valid": [],
                 "nl_logic_joint": [],
@@ -336,6 +338,8 @@ class UnifiedEvaluator:
             vals_by_step[rec.step]["correct"].append(score.correct)
             vals_by_step[rec.step]["valid"].append(score.valid)
             vals_by_step[rec.step]["citation_free_valid"].append(score.citation_free_valid)
+            vals_by_step[rec.step]["grounded_valid"].append(score.grounded_valid)
+            vals_by_step[rec.step]["citation_free_grounded_valid"].append(score.citation_free_grounded_valid)
             if rec.template in (
                 TemplateName.NATURAL,
                 TemplateName.NATURAL_LOGIC,
@@ -367,6 +371,8 @@ class UnifiedEvaluator:
                     "correct": score.correct,
                     "valid": score.valid,
                     "citation_free_valid": score.citation_free_valid,
+                    "grounded_valid": score.grounded_valid,
+                    "citation_free_grounded_valid": score.citation_free_grounded_valid,
                     "nl_logic_parse": score.nl_logic_parse,
                     "nl_logic_citation_free_valid": score.nl_logic_citation_free_valid,
                     "nl_logic_line_valid_fraction": score.nl_logic_line_valid_fraction,
@@ -421,6 +427,8 @@ class UnifiedEvaluator:
                     "correct": [],
                     "valid": [],
                     "citation_free_valid": [],
+                    "grounded_valid": [],
+                    "citation_free_grounded_valid": [],
                     "nl_logic_parse": [],
                     "nl_logic_citation_free_valid": [],
                     "nl_logic_joint": [],
@@ -435,6 +443,8 @@ class UnifiedEvaluator:
                 "correct",
                 "valid",
                 "citation_free_valid",
+                "grounded_valid",
+                "citation_free_grounded_valid",
                 "nl_logic_parse",
                 "nl_logic_citation_free_valid",
                 "nl_logic_joint",
@@ -608,6 +618,8 @@ class UnifiedEvaluator:
                             "correct": score.correct,
                             "valid": score.valid,
                             "citation_free_valid": score.citation_free_valid,
+                            "grounded_valid": score.grounded_valid,
+                            "citation_free_grounded_valid": score.citation_free_grounded_valid,
                             "constrained_trace": None
                             if trace is None
                             else {

@@ -15,10 +15,14 @@ class ScoredSample:
     correct: float
     valid: float
     citation_free_valid: float
+    grounded_valid: float
+    citation_free_grounded_valid: float
     nl_logic_parse: float
     nl_logic_citation_free_valid: float
     joint: float
     citation_free_joint: float
+    grounded_joint: float
+    citation_free_grounded_joint: float
     nl_logic_joint: float
 
     @classmethod
@@ -28,6 +32,8 @@ class ScoredSample:
         correct = float(result.correct > 0)
         valid = float(result.valid > 0)
         citation_free_valid = float(result.citation_free_valid > 0)
+        grounded_valid = float(result.grounded_valid > 0)
+        citation_free_grounded_valid = float(result.citation_free_grounded_valid > 0)
         nl_logic_parse = float(result.nl_logic_parse >= 1.0)
         nl_logic_citation_free_valid = float(result.nl_logic_citation_free_valid > 0)
         return cls(
@@ -36,10 +42,14 @@ class ScoredSample:
             correct=correct,
             valid=valid,
             citation_free_valid=citation_free_valid,
+            grounded_valid=grounded_valid,
+            citation_free_grounded_valid=citation_free_grounded_valid,
             nl_logic_parse=nl_logic_parse,
             nl_logic_citation_free_valid=nl_logic_citation_free_valid,
             joint=float(format_ok > 0 and correct > 0 and valid > 0),
             citation_free_joint=float(format_ok > 0 and correct > 0 and citation_free_valid > 0),
+            grounded_joint=float(format_ok > 0 and correct > 0 and grounded_valid > 0),
+            citation_free_grounded_joint=float(format_ok > 0 and correct > 0 and citation_free_grounded_valid > 0),
             nl_logic_joint=float(format_ok > 0 and correct > 0 and nl_logic_citation_free_valid > 0),
         )
 
@@ -103,10 +113,14 @@ def _metric_counts(samples: Sequence[ScoredSample]) -> dict[str, int]:
         "correct": sum(1 for s in samples if s.correct > 0),
         "valid": sum(1 for s in samples if s.valid > 0),
         "citation_free_valid": sum(1 for s in samples if s.citation_free_valid > 0),
+        "grounded_valid": sum(1 for s in samples if s.grounded_valid > 0),
+        "citation_free_grounded_valid": sum(1 for s in samples if s.citation_free_grounded_valid > 0),
         "nl_logic_parse": sum(1 for s in samples if s.nl_logic_parse > 0),
         "nl_logic_citation_free_valid": sum(1 for s in samples if s.nl_logic_citation_free_valid > 0),
         "joint": sum(1 for s in samples if s.joint > 0),
         "citation_free_joint": sum(1 for s in samples if s.citation_free_joint > 0),
+        "grounded_joint": sum(1 for s in samples if s.grounded_joint > 0),
+        "citation_free_grounded_joint": sum(1 for s in samples if s.citation_free_grounded_joint > 0),
         "nl_logic_joint": sum(1 for s in samples if s.nl_logic_joint > 0),
     }
 
@@ -125,10 +139,14 @@ def _add_passk_metrics_for_group(
             "correct": [],
             "valid": [],
             "citation_free_valid": [],
+            "grounded_valid": [],
+            "citation_free_grounded_valid": [],
             "nl_logic_parse": [],
             "nl_logic_citation_free_valid": [],
             "joint": [],
             "citation_free_joint": [],
+            "grounded_joint": [],
+            "citation_free_grounded_joint": [],
             "nl_logic_joint": [],
         }
         for k in k_values
@@ -149,9 +167,13 @@ def _add_passk_metrics_for_group(
         correct = _mean(by_k[kk]["correct"])
         joint = _mean(by_k[kk]["joint"])
         citation_free_joint = _mean(by_k[kk]["citation_free_joint"])
+        grounded_joint = _mean(by_k[kk]["grounded_joint"])
+        citation_free_grounded_joint = _mean(by_k[kk]["citation_free_grounded_joint"])
         nl_logic_joint = _mean(by_k[kk]["nl_logic_joint"])
         valid = _mean(by_k[kk]["valid"])
         citation_free_valid = _mean(by_k[kk]["citation_free_valid"])
+        grounded_valid = _mean(by_k[kk]["grounded_valid"])
+        citation_free_grounded_valid = _mean(by_k[kk]["citation_free_grounded_valid"])
         nl_logic_parse = _mean(by_k[kk]["nl_logic_parse"])
         nl_logic_citation_free_valid = _mean(by_k[kk]["nl_logic_citation_free_valid"])
         fmt = _mean(by_k[kk]["format"])
@@ -161,10 +183,14 @@ def _add_passk_metrics_for_group(
         metrics[f"{prefix}/correct_pass@{kk}"] = correct
         metrics[f"{prefix}/valid_pass@{kk}"] = valid
         metrics[f"{prefix}/citation_free_valid_pass@{kk}"] = citation_free_valid
+        metrics[f"{prefix}/grounded_valid_pass@{kk}"] = grounded_valid
+        metrics[f"{prefix}/citation_free_grounded_valid_pass@{kk}"] = citation_free_grounded_valid
         metrics[f"{prefix}/nl_logic_parse_pass@{kk}"] = nl_logic_parse
         metrics[f"{prefix}/nl_logic_citation_free_valid_pass@{kk}"] = nl_logic_citation_free_valid
         metrics[f"{prefix}/joint_pass@{kk}"] = joint
         metrics[f"{prefix}/citation_free_joint_pass@{kk}"] = citation_free_joint
+        metrics[f"{prefix}/grounded_joint_pass@{kk}"] = grounded_joint
+        metrics[f"{prefix}/citation_free_grounded_joint_pass@{kk}"] = citation_free_grounded_joint
         metrics[f"{prefix}/nl_logic_joint_pass@{kk}"] = nl_logic_joint
         metrics[f"{prefix}/valid_given_correct@{kk}"] = joint / correct if correct > 0 else 0.0
         metrics[f"{prefix}/correct_given_valid@{kk}"] = joint / valid if valid > 0 else 0.0
@@ -173,17 +199,33 @@ def _add_passk_metrics_for_group(
         metrics[f"{prefix}/citation_free_valid_given_correct@{kk}"] = (
             citation_free_joint / correct if correct > 0 else 0.0
         )
+        metrics[f"{prefix}/grounded_valid_given_correct@{kk}"] = (
+            grounded_joint / correct if correct > 0 else 0.0
+        )
+        metrics[f"{prefix}/citation_free_grounded_valid_given_correct@{kk}"] = (
+            citation_free_grounded_joint / correct if correct > 0 else 0.0
+        )
         metrics[f"{prefix}/nl_logic_valid_given_correct@{kk}"] = (
             nl_logic_joint / correct if correct > 0 else 0.0
         )
         metrics[f"{prefix}/correct_given_citation_free_valid@{kk}"] = (
             citation_free_joint / citation_free_valid if citation_free_valid > 0 else 0.0
         )
+        metrics[f"{prefix}/correct_given_grounded_valid@{kk}"] = (
+            grounded_joint / grounded_valid if grounded_valid > 0 else 0.0
+        )
+        metrics[f"{prefix}/correct_given_citation_free_grounded_valid@{kk}"] = (
+            citation_free_grounded_joint / citation_free_grounded_valid if citation_free_grounded_valid > 0 else 0.0
+        )
         metrics[f"{prefix}/correct_given_nl_logic_valid@{kk}"] = (
             nl_logic_joint / nl_logic_citation_free_valid if nl_logic_citation_free_valid > 0 else 0.0
         )
         metrics[f"{prefix}/citation_free_invalid_but_correct@{kk}"] = max(0.0, correct - citation_free_joint)
         metrics[f"{prefix}/citation_free_valid_but_wrong@{kk}"] = max(0.0, citation_free_valid - citation_free_joint)
+        metrics[f"{prefix}/grounded_invalid_but_correct@{kk}"] = max(0.0, correct - grounded_joint)
+        metrics[f"{prefix}/citation_free_grounded_invalid_but_correct@{kk}"] = max(
+            0.0, correct - citation_free_grounded_joint
+        )
 
 
 def score_pass_at_k(

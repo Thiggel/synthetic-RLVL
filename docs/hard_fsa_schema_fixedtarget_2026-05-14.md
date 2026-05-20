@@ -145,3 +145,46 @@ Primary questions:
 - Does training on `1..10` or `1..15` improve OOD depths up to `25`?
 - Does validity reward improve `valid_given_correct`, not merely raw correctness?
 - Does correctness-only learn invalid answer shortcuts even without an explicit shortcut channel?
+
+## Status Update - 2026-05-16 10:26 CEST
+
+Original GRPO array `3606770` timed out after about 24h, which was expected for these rows.
+
+Continuation status:
+
+- Active continuation wave: `3608684`.
+- Queued continuation waves: `3608685 -> 3608686`, both `afterany` with `RESUME_MODE=auto`.
+- Queued merge/pass@k eval: `3608687`, dependency-held after `3608686`.
+
+Current row state:
+
+| row | regime | reward | latest observed progress | status |
+| --- | --- | --- | ---: | --- |
+| `0` | `sft1to3_rl1to10` | `correct_plus_0p1_format` | `454/500` | running |
+| `1` | `sft1to3_rl1to10` | `correct_plus_citation_free_valid_plus_0p1_format` | `300/500` checkpoint | failed in continuation; covered by queued resume wave |
+| `2` | `sft1to5_rl1to15` | `correct_plus_0p1_format` | `195/500` | running |
+| `3` | `sft1to5_rl1to15` | `correct_plus_citation_free_valid_plus_0p1_format` | `193/500` | running |
+
+Failure note:
+
+- Row `1` failed after initial validation with a Ray worker death: `Worker unexpectedly exits with a connection error code 2`.
+- The job reached and loaded `global_step_300`; no evidence of a dataset or reward-code error appeared in the visible log.
+- Because the continuation chain is `afterany` and exported `RESUME_MODE=auto`, this row should resume automatically in the next wave.
+
+Interpretation:
+
+- No pass@k result exists yet for the fixed-target RL experiment.
+- Do not use the pre-fix easy-curriculum validity-reward result as final evidence for or against validity reward; it is useful diagnostically but was affected by the target mismatch.
+- The fixed-target pass@k output is the next clean RL readout.
+
+## Depth-50 Scaling Extension - 2026-05-19
+
+The fixed-target dataset is being extended to support the next pure-SFT scaling experiment:
+
+- new HF dataset target: `flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget-depth50`;
+- new train subsets: `train_fixedtarget_up_to_20_50k` and `train_fixedtarget_up_to_25_50k`;
+- validation/evaluation subsets now extend to `val_step_50_1k`;
+- the generator remains shortcut-neutral with `shortcut_rate=0.0`;
+- the proof target remains the final state atom, not the final marker.
+
+Primary plan: `docs/hfsa_depth_scaling_plan_2026-05-19.md`.

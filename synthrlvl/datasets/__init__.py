@@ -6,6 +6,14 @@ from synthetic_dataset import (
     MaterializedDatasetSpec,
     MaterializedSyntheticDataset,
 )
+from .paired_synthetic import (
+    PAIRED_DATASET_KINDS,
+    PairedGeneratorConfig,
+    PairedSyntheticGenerator,
+    ValidationResult,
+    finite_paired_examples,
+    validate_logic_example,
+)
 
 __all__ = [
     "DatasetConfig",
@@ -14,4 +22,10 @@ __all__ = [
     "MaterializedDatasetBuilder",
     "MaterializedDatasetSpec",
     "MaterializedSyntheticDataset",
+    "PAIRED_DATASET_KINDS",
+    "PairedGeneratorConfig",
+    "PairedSyntheticGenerator",
+    "ValidationResult",
+    "finite_paired_examples",
+    "validate_logic_example",
 ]

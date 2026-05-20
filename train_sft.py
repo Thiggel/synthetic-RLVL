@@ -87,6 +87,20 @@ def make_sft_data_collator(tokenizer):
     return collate
 
 
+def resolve_gradient_checkpointing(cfg: DictConfig) -> bool:
+    raw = cfg.train.get("gradient_checkpointing", "auto")
+    if isinstance(raw, str):
+        value = raw.strip().lower()
+        if value == "auto":
+            return str(cfg.task.template) == "nl_exact" and int(cfg.task.train_max_step) >= 25
+        if value in {"1", "true", "yes", "on"}:
+            return True
+        if value in {"0", "false", "no", "off"}:
+            return False
+        raise ValueError(f"Unsupported train.gradient_checkpointing value: {raw!r}")
+    return bool(raw)
+
+
 @hydra.main(config_path="conf", config_name="sft", version_base=None)
 def main(cfg: DictConfig):
     set_seed(int(cfg.seed))
@@ -104,6 +118,12 @@ def main(cfg: DictConfig):
         torch_dtype=torch.bfloat16 if cfg.model.bf16 else torch.float16,
         device_map="auto",
     )
+    gradient_checkpointing = resolve_gradient_checkpointing(cfg)
+    if gradient_checkpointing:
+        if hasattr(model.config, "use_cache"):
+            model.config.use_cache = False
+        if hasattr(model, "enable_input_require_grads"):
+            model.enable_input_require_grads()
 
     if bool(cfg.model.lora.enabled):
         lora_cfg = LoraConfig(
@@ -196,6 +216,10 @@ def main(cfg: DictConfig):
         arg_kwargs["evaluation_strategy"] = "steps"
     else:
         arg_kwargs["eval_strategy"] = "steps"
+    if "gradient_checkpointing" in params:
+        arg_kwargs["gradient_checkpointing"] = gradient_checkpointing
+    if gradient_checkpointing and "gradient_checkpointing_kwargs" in params:
+        arg_kwargs["gradient_checkpointing_kwargs"] = {"use_reentrant": False}
     args = TrainingArguments(**arg_kwargs)
 
     trainer = SFTTrainerWithGeneration(

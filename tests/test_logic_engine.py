@@ -35,6 +35,19 @@ def test_arithmetic_extension_with_arith_rule():
     assert report.lines[0].valid is True
 
 
+def test_mod23_arithmetic_extension():
+    engine = LogicEngine()
+    report = engine.analyze_proof(
+        premises="NA",
+        conclusion="12 + 14 = 3",
+        proof="""
+12 + 14 = 3 ; MOD23
+""",
+    )
+    assert report.ok is True
+    assert [line.valid for line in report.lines] == [True]
+
+
 def test_formula_equivalence_implication_vs_disjunction():
     engine = LogicEngine()
     assert engine.are_equivalent("P(a) -> Q(a)", "not P(a) or Q(a)") is True

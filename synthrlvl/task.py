@@ -5,7 +5,14 @@ import random
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
-from synthrlvl.datasets import DatasetConfig, LogicDatasetGenerator, LogicExample
+from synthrlvl.datasets import (
+    PAIRED_DATASET_KINDS,
+    DatasetConfig,
+    LogicDatasetGenerator,
+    LogicExample,
+    PairedGeneratorConfig,
+    PairedSyntheticGenerator,
+)
 
 from .types import PrefillMode, TaskConfig, TemplateName
 
@@ -45,7 +52,7 @@ def _extract_facts_rules(premises_nl: List[str]) -> tuple[List[str], List[str]]:
     rules: List[str] = []
     for raw in premises_nl:
         text = raw.split(". ", 1)[1].strip() if ". " in raw else raw.strip()
-        if text.startswith("All things") or text.startswith("For "):
+        if text.startswith(("All things", "For ", "If ")):
             rules.append(text)
         else:
             facts.append(text)
@@ -55,30 +62,41 @@ def _extract_facts_rules(premises_nl: List[str]) -> tuple[List[str], List[str]]:
 class TaskBuilder:
     def __init__(self, cfg: TaskConfig):
         self.cfg = cfg
-        self._gens: Dict[tuple[int, bool, float], LogicDatasetGenerator] = {}
+        self._gens: Dict[tuple[str, int, bool, float], LogicDatasetGenerator | PairedSyntheticGenerator] = {}
 
-    def _generator(self, depth: int, *, train: bool) -> LogicDatasetGenerator:
+    def _generator(self, depth: int, *, train: bool) -> LogicDatasetGenerator | PairedSyntheticGenerator:
         shortcut_rate = self.cfg.shortcut_rate
         if self.cfg.difficulty == "hard_fsa_schema" and not train:
             # Eval is intentionally shortcut-neutral; train may be shortcut-rich.
             shortcut_rate = 0.0
-        key = (depth, train, shortcut_rate)
+        key = (self.cfg.difficulty, depth, train, shortcut_rate)
         if key not in self._gens:
-            ds_cfg = DatasetConfig(
-                depth=depth,
-                distractor_ratio=self.cfg.distractor_ratio,
-                difficulty=self.cfg.difficulty,
-                branching_factor=self.cfg.branching_factor,
-                decoy_chains=self.cfg.decoy_chains,
-                near_miss_ratio=self.cfg.near_miss_ratio,
-                side_chain_depth=self.cfg.side_chain_depth,
-                entity_decoy_ratio=self.cfg.entity_decoy_ratio,
-                answer_decoy_ratio=self.cfg.answer_decoy_ratio,
-                shortcut_rate=shortcut_rate,
-                require_unique_solution=self.cfg.require_unique_solution,
-                seed=self.cfg.seed,
-            )
-            self._gens[key] = LogicDatasetGenerator(ds_cfg)
+            if self.cfg.difficulty in PAIRED_DATASET_KINDS:
+                self._gens[key] = PairedSyntheticGenerator(
+                    PairedGeneratorConfig(
+                        kind=self.cfg.difficulty,  # type: ignore[arg-type]
+                        depth=depth,
+                        seed=self.cfg.seed,
+                        branching_factor=int(self.cfg.branching_factor or 4),
+                        distractor_ratio=float(self.cfg.distractor_ratio),
+                    )
+                )
+            else:
+                ds_cfg = DatasetConfig(
+                    depth=depth,
+                    distractor_ratio=self.cfg.distractor_ratio,
+                    difficulty=self.cfg.difficulty,
+                    branching_factor=self.cfg.branching_factor,
+                    decoy_chains=self.cfg.decoy_chains,
+                    near_miss_ratio=self.cfg.near_miss_ratio,
+                    side_chain_depth=self.cfg.side_chain_depth,
+                    entity_decoy_ratio=self.cfg.entity_decoy_ratio,
+                    answer_decoy_ratio=self.cfg.answer_decoy_ratio,
+                    shortcut_rate=shortcut_rate,
+                    require_unique_solution=self.cfg.require_unique_solution,
+                    seed=self.cfg.seed,
+                )
+                self._gens[key] = LogicDatasetGenerator(ds_cfg)
         return self._gens[key]
 
     def _choose_depth(self, index: int, *, train: bool) -> int:

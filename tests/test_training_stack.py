@@ -45,6 +45,51 @@ def test_output_evaluator_positive_path_logic():
     assert result.format_ok == 1.0
     assert result.correct == 1.0
     assert result.valid == 1.0
+    assert result.grounded_valid == 1.0
+    assert result.citation_free_grounded_valid == 1.0
+
+
+def test_output_evaluator_distinguishes_internal_from_grounded_validity():
+    output = """
+<formal>
+<constants>
+a = entity a
+</constants>
+<predicates>
+P(x): x is P
+Q(x): x is Q
+R(x): x is R
+</predicates>
+<premises>
+P(a)
+P(a) -> Q(a)
+</premises>
+<proof>
+P(a) ; R,1
+Q(a) ; ->E,2,3
+</proof>
+<conclusion>
+Q(a)
+</conclusion>
+</formal>
+<answer>
+target
+</answer>
+"""
+    result = OutputEvaluator().evaluate(
+        output,
+        template=TemplateName.LOGIC,
+        gold_answer="target",
+        gold_logic_premises="P(a)\nP(a) -> R(a)",
+        gold_logic_conclusion="R(a)",
+        prefill=PrefillMode.NONE,
+        gold_first_modality_lines=[],
+    )
+
+    assert result.valid == 1.0
+    assert result.citation_free_valid == 1.0
+    assert result.grounded_valid == 0.0
+    assert result.citation_free_grounded_valid == 0.0
 
 
 def test_reward_schema_indicator_all():

@@ -203,3 +203,101 @@ Build script:
 ```bash
 sbatch scripts/slurm/jobs/build_materialized_hard_fsa_schema_fixedtarget_2026-05-14.slurm
 ```
+
+## Hard-FSA-Schema Fixed-Target Depth-50 Dataset (2026-05-19)
+
+HF dataset: `flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget-depth50`
+
+Purpose: extend the pure-SFT logic-vs-natural-language CoT scaling experiment to 3 seeds, train ranges through depth 25, and post-hoc pass@k evaluation through depth 50.
+
+Subsets:
+
+- `train_fixedtarget_up_to_5_50k`: K=4, no shortcut, train depths `1..5`.
+- `train_fixedtarget_up_to_10_50k`: K=4, no shortcut, train depths `1..10`.
+- `train_fixedtarget_up_to_15_50k`: K=4, no shortcut, train depths `1..15`.
+- `train_fixedtarget_up_to_20_50k`: K=4, no shortcut, train depths `1..20`.
+- `train_fixedtarget_up_to_25_50k`: K=4, no shortcut, train depths `1..25`.
+- `val_step_01_1k` ... `val_step_50_1k`: K=4, no shortcut, fixed-depth validation/evaluation.
+
+Build script:
+
+```bash
+sbatch scripts/slurm/jobs/build_materialized_hfsa_fixedtarget_depth50_2026-05-19.slurm
+```
+
+Experiment plan:
+
+- `docs/hfsa_depth_scaling_plan_2026-05-19.md`
+
+## Paired Synthetic Dataset Families (2026-05-20)
+
+Initial paired natural-language / formal-logic dataset families are implemented for follow-up experiments:
+
+- `official_igsm`: exact official `facebookresearch/iGSM` sampling with a validated 1:1 logic trace over the official modulo-23 arithmetic solution.
+- `maze_navigation`: keyed/constrained graph traversal with room reachability, held-key state, blocked decoy doors, and unreachable treasure decoys.
+- `attribute_constraints`: multi-input slot-value constraint propagation; no candidate-assignment objects and no precomputed Mastermind feedback are provided.
+- Backward-compatible aliases: `igsm_arithmetic`, `graph_traversal`, `mastermind_constraints`, `constraint_satisfaction`, `constraint_propagation`.
+
+The generator code lives in:
+
+```bash
+synthrlvl/datasets/paired_synthetic.py
+```
+
+Detailed construction rationale and exact generated example sequences:
+
+```bash
+docs/paired_synthetic_benchmarks_2026-05-20.md
+```
+
+The materializer writes the same `LogicExample`-compatible parquet schema as the existing synthetic datasets:
+
+```bash
+source ./scripts/env.sh
+python scripts/data/build_paired_synthetic_dataset.py \
+  --kind maze_navigation \
+  --output-root "$WORK/synthetic-RLVL/datasets/materialized_maze_navigation" \
+  --train-rows 50000 \
+  --train-max-depth 10 \
+  --val-rows-per-depth 128 \
+  --val-max-depth 50
+```
+
+Each generated example is optionally validated with `LogicEngine` during materialization. Use:
+
+```bash
+--validate-examples -1
+```
+
+to validate every row, or:
+
+```bash
+--validate-examples 0
+```
+
+to disable validation for large production builds after a smoke test.
+
+These paired families are implemented for later substrate-transfer experiments, not part of the active HFSA depth-scaling wave yet:
+
+- `official_igsm`: samples from the local official `facebookresearch/iGSM` generator and converts the official arithmetic solution into a validated logic trace. Arithmetic is modulo 23, matching iGSM, via the `MOD23` proof rule.
+- `igsm_arithmetic`: compact backward-compatible register arithmetic used for smoke tests and older scripts.
+- `maze_navigation`: a world-grounded keyed graph traversal task where the model proves which treasure room is reachable after exactly `N` moves while holding the required key for each traversed door.
+- `graph_traversal`: backward-compatible alias for `maze_navigation`.
+- `attribute_constraints`: a finite-domain constraint-propagation task where the model proves the value of each slot from two initial slot values and multi-input joint constraints over previous slots.
+- `mastermind_constraints` / `constraint_satisfaction` / `constraint_propagation`: backward-compatible aliases for `attribute_constraints`.
+- Logic evaluation reports both internal validity and grounded validity. Grounded validity validates generated proof lines against the gold canonical premises/conclusion instead of trusting generated premises.
+
+For on-the-fly evaluation through `TaskBuilder` / `scripts/evaluate_checkpoint_passk.py`, the paired families can be selected with:
+
+```bash
+task.difficulty=official_igsm
+task.difficulty=igsm_arithmetic
+task.difficulty=maze_navigation
+task.difficulty=graph_traversal
+task.difficulty=attribute_constraints
+task.difficulty=mastermind_constraints
+task.difficulty=constraint_satisfaction
+task.difficulty=constraint_propagation
+```
+
+For SFT from materialized parquet, set `data.materialized.local_root` and the explicit `data.materialized.train_subset` produced by the materializer.

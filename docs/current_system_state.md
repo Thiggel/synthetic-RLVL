@@ -1,4 +1,96 @@
-# Synthetic-RLVL: Current System State (2026-04-22)
+# Synthetic-RLVL: Current System State (2026-05-20)
+
+## Current Snapshot (2026-05-20 09:25 CEST)
+
+- Main HFSA depth-scaling SFT array `3634790_[0-29%6]` is active.
+  - `3634790_0` / child `3642860` is running on `a0934`.
+  - Run: `sft_hfsa_depth_scaling_logic_train1to5_10k_seed3407`.
+  - Last checked log reached the `3000/10000` online eval point and continued training; no fatal traceback/OOM was found.
+  - `3634790_[1-29%6]` remains pending by priority/resources.
+- Dependent evals are correctly held:
+  - final merge/pass@k eval `3634791_[0-29%6]`: dependency-held on main SFT.
+  - intermediate checkpoint eval `3634792_[0-29%2]`: dependency-held on main SFT.
+- 1k sanity SFT:
+  - `3634793` completed 9/10 rows.
+  - Failed row: `nl_exact_train1to25_1k_seed3407`, CUDA OOM at step 20 with `data.max_length=8192`.
+  - Mitigation applied: `train.gradient_checkpointing` support in `train_sft.py`, default `auto` in `conf/sft_hard_fsa_schema_fixedtarget.yaml` (enables checkpointing for long `nl_exact` depth-25 rows), and `PYTORCH_ALLOC_CONF=expandable_segments:True` in `scripts/env.sh`.
+  - The failed partial output directory was removed and only row 9 was resubmitted as `3643001_[9]`.
+  - The broken old eval task `3634794_9` was cancelled; replacement eval row is `3643002_[9]`, dependent on `3643001`.
+  - Existing 1k eval rows `3634794_0` through `3634794_8` remain pending by priority and should evaluate already completed 1k checkpoints.
+- Current expected risk:
+  - The pending long `nl_exact_train1to25` 10k SFT rows may have had the same memory risk; the gradient-checkpointing default should apply when they start because jobs read the current config/code at runtime.
+
+## Current Snapshot (2026-05-19)
+
+- New primary experiment wave: 3-seed pure-SFT HFSA depth scaling.
+  - Plan: `docs/hfsa_depth_scaling_plan_2026-05-19.md`.
+  - Dataset target: `flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget-depth50`.
+  - Train ranges: `1..5`, `1..10`, `1..15`, `1..20`, `1..25`.
+  - Templates: `logic` and `nl_exact`.
+  - Seeds: `3407`, `3408`, `3409`.
+  - Total SFT rows: `30`.
+  - Post-hoc eval: depths `1..50`, 128 prompts per depth, 16 samples per prompt, pass@k `1,2,4,8,16`.
+- Code update:
+  - `MaterializedSyntheticDataset` and `synthrlvl.datasets.materialize` now support explicit `train_up_to_20` and `train_up_to_25` subsets.
+  - The patched SFT Slurm script for HFSA depth scaling now keeps up to 12 LoRA checkpoints on resubmission, enough for selected 1000-step convergence eval.
+  - The final and intermediate eval scripts merge LoRA checkpoints temporarily and remove merged models after pass@k to control disk use.
+  - `scripts/evaluate_lm_eval.py` adds a thin `lm-evaluation-harness` wrapper for real-benchmark evaluation.
+  - `scripts/data/export_midtraining_mixture.py` adds token-budgeted JSONL mixture export for future Nanotron/midtraining work.
+  - `synthrlvl/datasets/paired_synthetic.py` and `scripts/data/build_paired_synthetic_dataset.py` add paired official-iGSM, maze-navigation, and attribute-constraint dataset families with validated logic traces.
+  - Paired benchmark construction and exact generated examples are documented in `docs/paired_synthetic_benchmarks_2026-05-20.md`.
+  - Logic evaluation now reports prompt-grounded validity metrics by validating generated proofs against gold canonical premises/conclusions in addition to internal generated-premise validity.
+  - `TaskBuilder` can route `task.difficulty=official_igsm|igsm_arithmetic|maze_navigation|graph_traversal|attribute_constraints|mastermind_constraints|constraint_satisfaction|constraint_propagation` for on-the-fly eval prompts. `mastermind_constraints` is retained only as a compatibility alias for `attribute_constraints`.
+- Scripts:
+  - Dataset build: `scripts/slurm/jobs/build_materialized_hfsa_fixedtarget_depth50_2026-05-19.slurm`.
+  - SFT sweep: `scripts/slurm/sweeps/sft/hfsa_depth_scaling_logic_vs_nl_2026-05-19.slurm`.
+  - Merge/eval: `scripts/slurm/jobs/posthoc_hfsa_depth_scaling_merge_eval_2026-05-19.slurm`.
+  - Intermediate checkpoint eval: `scripts/slurm/jobs/posthoc_hfsa_depth_scaling_intermediate_eval_2026-05-19.slurm`.
+  - lm-eval benchmark hook: `scripts/slurm/jobs/lm_eval_hfsa_depth_scaling_2026-05-19.slurm`.
+- Submitted jobs:
+  - `3623863`: build/push depth-50 dataset.
+  - Cancelled old pending arrays `3623864`, `3623865`, `3624535`, and `3624536` after patching checkpoint retention / eval cleanup.
+  - `3634790_[0-29%6]`: patched 30-row SFT array, `save_total_limit=12`.
+  - `3634791_[0-29%6]`: patched final merge/pass@k eval array, dependency `aftercorr:3634790`.
+  - `3634792_[0-29%2]`: intermediate checkpoint pass@k eval array, dependency `aftercorr:3634790`.
+  - `3634793_[0-9%5]`: patched one-seed 1k-sample sanity SFT array.
+  - `3634794_[0-9%5]`: patched 1k-sample merge/pass@k eval array, dependency `aftercorr:3634793`.
+  - `3643001_[9]`: retry for failed 1k `nl_exact_train1to25_seed3407` SFT row with gradient checkpointing enabled.
+  - `3643002_[9]`: dependent retry eval for the same 1k row.
+- Runtime expectation:
+  - Prior OLMo-7B LoRA 10k SFT runs took about 13-15h on one A100-80GB.
+  - Depth `1..20`/`1..25` SFT should likely fit 24h, but depth-50 pass@k eval is the higher-risk runtime component.
+- Follow-up, not yet launched:
+  - batch-size ablations,
+  - shortcut-rich SFT ablations,
+  - non-LoRA/full-parameter or smaller-model pretraining runs,
+  - later iGSM, graph traversal, and constraint-satisfaction datasets.
+- Resubmission note:
+  - The affected jobs have been resubmitted from patched scripts as of 2026-05-19 20:20 CEST.
+  - Eval arrays are dependency-held behind their corresponding SFT arrays.
+
+## Current Snapshot (2026-05-16 10:26 CEST)
+
+- Current detailed status report: `docs/experiment_status_2026-05-16.md`.
+- Completed result to trust most right now: `hard_fsa_schema_easy500`.
+  - Train depths saturate.
+  - OOD long-chain joint correct+valid quality collapses.
+  - Validity reward gives only small depth-10 gains and no meaningful depth-15/20 improvement.
+- Fixed-target dataset repair is active and important.
+  - It fixes the earlier issue where the formal proof concluded a final marker while the answer asked for a final state.
+  - Dataset: `flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget`.
+- Fixed-target GRPO:
+  - Original array `3606770` timed out after about 24h.
+  - Continuation wave `3608684` is running.
+  - Rows `0`, `2`, and `3` are progressing.
+  - Row `1` failed from a Ray worker death after resuming at `global_step_300`; queued waves `3608685 -> 3608686` use `afterany` and `RESUME_MODE=auto`, so it is covered.
+  - Merge/pass@k eval `3608687` is dependency-held after the continuation waves.
+- Pure SFT logic-vs-natural-language experiment:
+  - SFT array `3612413_[0-3%4]` completed all four rows.
+  - Merge + pass@k eval array `3612414_[0-3%4]` is running.
+  - Logic eval rows are printing sampled chunks; NL rows initialized vLLM but had not printed sampled chunks yet at the snapshot time.
+  - Preliminary online SFT eval suggests `nl_exact` traces are easier for OLMo-7B to imitate than formal logic traces, but both degrade hard beyond training depth.
+
+## Historical Summary (2026-04-22 Baseline)
 
 ## Summary
 
@@ -1154,3 +1246,112 @@ Fixed-target GRPO `3606770_[0-3]` is still running:
 - row 3 `sft1to5_rl1to15 / correct_plus_citation_free_valid_plus_0p1_format`: about `170/500`.
 
 Continuation waves `3608684 -> 3608685 -> 3608686` and replacement pass@k `3608687` remain queued. These rows are alive, but `rl1to15` is much slower and will need the continuation chain.
+
+## Active Formal-Logic CoT SFT Direction (2026-05-19 20:20 CEST)
+
+The active research direction is now supervised/midtraining comparison of reasoning substrates rather than GRPO validity-reward training.
+
+Active plan:
+
+- `docs/formal_logic_cot_research_plan_2026-05-19.md`
+
+Archived old state:
+
+- `docs/old_rl_validity_reward_direction_2026-05-19.md`
+
+Core question:
+
+- Does formal-logic CoT improve length extrapolation and downstream reasoning transfer compared with semantically matched natural-language CoT?
+
+Current strongest signal from the first pure-SFT HFSA wave:
+
+| train depths | trace | correct@1 on 16..25 | correct@16 on 16..25 |
+| --- | --- | ---: | ---: |
+| 1..10 | logic CoT | 0.287 | 0.842 |
+| 1..10 | natural-language CoT | 0.336 | 0.385 |
+| 1..15 | logic CoT | 0.511 | 0.959 |
+| 1..15 | natural-language CoT | 0.363 | 0.428 |
+
+Interpretation: logic CoT appears to extrapolate much better under sampling. Natural-language CoT is controlled and deterministic (`nl_exact`), so the comparison is not against free-form noisy NL.
+
+Live job status:
+
+| job | status | note |
+| --- | --- | --- |
+| `3623863` | completed | built/pushed `flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget-depth50` |
+| `3623864`, `3623865`, `3624535`, `3624536` | cancelled/replaced | old pending arrays used pre-patch Slurm snapshots |
+| `3634790_[0-29%6]` | pending | patched main 3-seed LoRA SFT depth-scaling array |
+| `3634791_[0-29%6]` | dependency-pending | final merge/pass@k eval after each SFT row |
+| `3634792_[0-29%2]` | dependency-pending | intermediate checkpoint eval after each SFT row |
+| `3634793_[0-9%5]` | pending | patched 1k-sample sanity SFT array; completed rows should skip if final exists |
+| `3634794_[0-9%5]` | dependency-pending | patched 1k-sample pass@k eval |
+
+Alignment with new plan:
+
+- The main 30-row depth-scaling sweep is aligned with the core synthetic experiment: `logic` vs `nl_exact`, train depths `1..5/10/15/20/25`, 3 seeds, eval to depth 50.
+- The 1k sanity sweep is useful for sample-size sensitivity but is one seed only.
+- The current jobs do not include real-benchmark eval, proof-only controls, terse-NL/pseudocode controls, matched-token-budget training, or non-LoRA controls.
+
+Checkpoint caveat:
+
+- The originally submitted main SFT script likely saved every `1000` steps but retained only `train.save_total_limit=2`.
+- The patched resubmission script now sets `train.save_total_limit=12`, enough to retain selected 1000-step LoRA checkpoints for convergence pass@k.
+- Online validation runs every `1000` steps with `validation.samples_per_step=4` and sampled pass@k disabled, so it is a health check rather than the paper-quality convergence signal.
+- For convergence curves, resubmit from the patched script and run posthoc pass@k over selected intermediate checkpoints.
+
+Implementation gaps for the new plan:
+
+- Intermediate-checkpoint merge/eval scripts for SFT `checkpoint-*` LoRA dirs are implemented.
+- Add plotting/aggregation for pass@k over seed, depth, trace type, and checkpoint step.
+- Add proof-only, terse-NL, pseudocode, and invalid-logic control templates.
+- Real benchmark evaluation now has a first `lm-evaluation-harness` wrapper; still need task-specific prompt modes and full benchmark suite coverage beyond the current small greedy external-eval set.
+- Add pass@k/self-consistency and answer-normalization for real benchmarks.
+- Token-budgeted midtraining mixture export is implemented; still need actual Nanotron configs and token-budgeted experiment manifests.
+- Add non-LoRA/full-finetune support if we want 7B full-parameter controls; current training is LoRA-first.
+
+## Storage/Tooling Plan Update (2026-05-19)
+
+Storage audit:
+
+| artifact/directory | approximate size |
+| --- | ---: |
+| repo checkout | 2.6 GB |
+| `${WORK}/synthetic-RLVL` total | 5.9 TB |
+| `${WORK}/synthetic-RLVL/runs` | 4.0 TB |
+| `${WORK}/synthetic-RLVL/tmp` | 2.0 TB |
+| `${WORK}/synthetic-RLVL/datasets` | 3.5 GB |
+| `${WORK}/synthetic-RLVL/passk_eval` | 20 MB |
+| LoRA SFT final adapter | 162 MB |
+| LoRA SFT trainer checkpoint | 468 MB |
+| merged OLMo-7B checkpoint | 14 GB |
+
+Conclusion:
+
+- The dangerous artifacts are merged full-model checkpoints and old VERL/actor run directories, not materialized datasets or LoRA adapters.
+- Do not retain many merged checkpoints locally.
+- Main depth-scaling should remain final-focused unless we explicitly resubmit a small convergence subset.
+- Eval scripts should merge LoRA -> evaluate -> delete merged model.
+- If we need many intermediate checkpoints, prefer pushing small LoRA adapters to HF or evaluating selected checkpoints and cleaning local dirs.
+
+Real benchmark eval tooling:
+
+- Prefer `lm-evaluation-harness` for standard benchmark loading/metrics instead of expanding bespoke loaders in `synthrlvl/external_eval.py`.
+- Keep local glue for prompt modes, pass@k/self-consistency, W&B grouping, and missing tasks.
+
+Midtraining tooling:
+
+- Use Nanotron or a dedicated external training repo for serious pre/midtraining.
+- Keep this repo focused on dataset generation, trace conversion, validation, manifests, and evaluation.
+- Nanotron configs can live in a separate folder/repo and consume HF datasets produced here.
+
+Additional synthetic families:
+
+- Native paired-trace generators are implemented in `synthrlvl/datasets/paired_synthetic.py`.
+- Materializer: `scripts/data/build_paired_synthetic_dataset.py`.
+- Supported canonical families:
+  - `official_igsm`: local official `facebookresearch/iGSM` generator plus validated modulo-23 logic traces.
+  - `maze_navigation`: keyed/constrained graph traversal; the model tracks both room reachability and held keys, while decoy doors are blocked because their required keys are not held.
+  - `attribute_constraints`: multi-input slot-value constraint propagation; the model derives `Value(slot_i,color)` from pairs of prior slot values plus a matching joint constraint, with no candidate-assignment objects and no Mastermind-style feedback facts.
+- Backward-compatible aliases remain available: `igsm_arithmetic`, `graph_traversal`, `mastermind_constraints`, `constraint_satisfaction`, `constraint_propagation`.
+- Logic traces validate under the logic engine; official iGSM uses the added `MOD23` proof rule.
+- Evaluation metrics now distinguish `valid` / `citation_free_valid` from `grounded_valid` / `citation_free_grounded_valid`. Grounded validity ignores generated premises and validates the generated proof against gold canonical premises.

@@ -67,6 +67,8 @@ class EvalResult:
     correct: float
     valid: float
     citation_free_valid: float
+    grounded_valid: float
+    citation_free_grounded_valid: float
     nl_logic_parse: float
     nl_logic_citation_free_valid: float
     nl_logic_line_valid_fraction: float
@@ -98,7 +100,12 @@ class OutputEvaluator:
         logic = extract_tag(text, block_tag)
         if not logic:
             return False
-        return all(extract_tag(logic, tag) for tag in ["constants", "predicates", "premises", "proof", "conclusion"])
+        has_header_tags = all(
+            re.search(rf"<{tag}>\s*.*?\s*</{tag}>", logic, flags=re.DOTALL | re.IGNORECASE)
+            for tag in ["constants", "predicates"]
+        )
+        has_reasoning_tags = all(extract_tag(logic, tag) for tag in ["premises", "proof", "conclusion"])
+        return has_header_tags and has_reasoning_tags
 
     @staticmethod
     def _has_natural_structure(text: str, block_tag: str, uses_premises_rules: bool) -> bool:
@@ -187,6 +194,8 @@ class OutputEvaluator:
         syntactic = 0.0
         valid = 0.0
         citation_free_valid = 0.0
+        grounded_valid = 0.0
+        citation_free_grounded_valid = 0.0
         if wants_logic:
             premises, proof, conclusion = self._extract_logic_components(output_text, logic_tag)
             if premises and proof and conclusion:
@@ -200,7 +209,20 @@ class OutputEvaluator:
                     and all(line.syntax_valid for line in report.lines)
                 )
                 valid = float(report.ok)
-                citation_free_valid = float(citation_free_report.ok)
+                citation_free_valid = float(citation_free_report.ok or report.ok)
+                if gold_logic_premises and gold_logic_conclusion:
+                    grounded_report = self.engine.analyze_proof(
+                        premises=gold_logic_premises,
+                        conclusion=gold_logic_conclusion,
+                        proof=proof,
+                    )
+                    citation_free_grounded_report = self.engine.analyze_proof_citation_free(
+                        premises=gold_logic_premises,
+                        conclusion=gold_logic_conclusion,
+                        proof=proof,
+                    )
+                    grounded_valid = float(grounded_report.ok)
+                    citation_free_grounded_valid = float(citation_free_grounded_report.ok or grounded_report.ok)
 
         nl_logic_parse = 0.0
         nl_logic_citation_free_valid = 0.0
@@ -254,6 +276,8 @@ class OutputEvaluator:
             correct=correct,
             valid=valid,
             citation_free_valid=citation_free_valid,
+            grounded_valid=grounded_valid,
+            citation_free_grounded_valid=citation_free_grounded_valid,
             nl_logic_parse=nl_logic_parse,
             nl_logic_citation_free_valid=nl_logic_citation_free_valid,
             nl_logic_line_valid_fraction=nl_logic_line_valid_fraction,

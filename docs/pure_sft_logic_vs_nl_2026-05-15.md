@@ -9,6 +9,14 @@ The recent GRPO runs are hard to interpret because reward variance is sparse/noi
 
 The core question is whether longer pure SFT/midtraining on proof traces produces better depth extrapolation, and whether formal logic traces are more robust than natural-language traces when evaluated on longer chains.
 
+As of 2026-05-19, this is the active research direction. The broader plan is in:
+
+- `docs/formal_logic_cot_research_plan_2026-05-19.md`
+
+The previous GRPO validity-reward direction is archived in:
+
+- `docs/old_rl_validity_reward_direction_2026-05-19.md`
+
 ## Implementation Added
 
 - Added deterministic NL-proof-to-FOL scoring in `synthrlvl/natural_logic.py`.
@@ -146,3 +154,66 @@ Continuation chain remains queued:
 - replacement pass@k eval: `3608687`
 
 The fixed-target rows are alive but too slow to finish in the first 24h allocation, especially `rl1to15`.
+
+## Status Update - 2026-05-16 10:26 CEST
+
+SFT array `3612413_[0-3%4]` completed all four first-wave jobs:
+
+| row | template | train depths | status | train loss | eval loss |
+| --- | --- | ---: | --- | ---: | ---: |
+| `0` | `logic` | `1..10` | completed | `0.0228` | `0.0737` |
+| `1` | `nl_exact` | `1..10` | completed | `0.0004` | `0.0085` |
+| `2` | `logic` | `1..15` | completed | `0.0251` | `0.0500` |
+| `3` | `nl_exact` | `1..15` | completed | `0.0003` | `0.0176` |
+
+The dependent pass@k eval array `3612414_[0-3%4]` is running:
+
+| row | template | train depths | eval state |
+| --- | --- | ---: | --- |
+| `0` | `logic` | `1..10` | running; sampled chunks progressing |
+| `1` | `nl_exact` | `1..10` | running; vLLM initialized but no sampled chunk printed yet |
+| `2` | `logic` | `1..15` | running; sampled chunks progressing |
+| `3` | `nl_exact` | `1..15` | running; vLLM initialized but no sampled chunk printed yet |
+
+Preliminary online SFT eval, averaged over depth bands:
+
+| row | template | correct `1..10` | correct `11..15` | correct `16..25` | translated/formal joint `1..10` | translated/formal joint `11..15` | translated/formal joint `16..25` |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `0` | `logic` | `0.319` | `0.338` | `0.138` | `0.119` | `0.075` | `0.038` |
+| `1` | `nl_exact` | `0.481` | `0.563` | `0.144` | `0.350` | `0.475` | `0.131` |
+| `2` | `logic` | `0.175` | `0.113` | `0.081` | `0.113` | `0.075` | `0.038` |
+| `3` | `nl_exact` | `0.769` | `0.300` | `0.056` | `0.763` | `0.300` | `0.056` |
+
+Interpretation:
+
+- This online eval is small and should not be treated as the final result.
+- The large pass@k eval is the primary readout because it uses 128 prompts per proof length and 16 generations per prompt.
+- Even as a sanity check, the current signal says controlled NL traces are easier for OLMo-7B to fit than formal logic traces under this LoRA SFT setup.
+- Both trace styles still show strong long-depth degradation, so the key question is whether pass@k reveals latent correct samples that greedy validation misses.
+
+## Depth-Scaling Extension - 2026-05-19
+
+The one-seed pure-SFT result is now being extended into a 3-seed depth-scaling sweep.
+
+Plan doc: `docs/hfsa_depth_scaling_plan_2026-05-19.md`.
+
+New dataset target:
+
+```bash
+flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget-depth50
+```
+
+New grid:
+
+| template | train depths | seeds | SFT steps | eval depths |
+| --- | --- | --- | ---: | --- |
+| `logic` | `1..5`, `1..10`, `1..15`, `1..20`, `1..25` | `3407`, `3408`, `3409` | 10,000 | `1..50` |
+| `nl_exact` | `1..5`, `1..10`, `1..15`, `1..20`, `1..25` | `3407`, `3408`, `3409` | 10,000 | `1..50` |
+
+Scripts:
+
+- `scripts/slurm/jobs/build_materialized_hfsa_fixedtarget_depth50_2026-05-19.slurm`
+- `scripts/slurm/sweeps/sft/hfsa_depth_scaling_logic_vs_nl_2026-05-19.slurm`
+- `scripts/slurm/jobs/posthoc_hfsa_depth_scaling_merge_eval_2026-05-19.slurm`
+
+This remains a LoRA SFT experiment on OLMo-3-1025-7B. If the depth extrapolation trend holds across seeds, the next stronger test is a non-LoRA/full-parameter or smaller-model pretraining setup to rule out adapter-specific effects.

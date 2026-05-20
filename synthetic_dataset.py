@@ -1838,6 +1838,8 @@ class MaterializedSyntheticDataset:
     train_up_to_5_subset: str = "train_up_to_5_1m"
     train_up_to_10_subset: str = "train_up_to_10_1m"
     train_up_to_15_subset: str = "train_up_to_15_120k"
+    train_up_to_20_subset: str = "train_up_to_20_0"
+    train_up_to_25_subset: str = "train_up_to_25_0"
 
     def val_subset_name(self, step: int) -> str:
         return f"val_step_{step:02d}_1k"
@@ -1849,7 +1851,11 @@ class MaterializedSyntheticDataset:
             return self.train_up_to_5_subset
         if max_step <= 10:
             return self.train_up_to_10_subset
-        return self.train_up_to_15_subset
+        if max_step <= 15:
+            return self.train_up_to_15_subset
+        if max_step <= 20:
+            return self.train_up_to_20_subset
+        return self.train_up_to_25_subset
 
     def materialized_parquet_path(self, local_root: str | Path, subset: str) -> Path:
         return Path(local_root).expanduser().resolve() / subset / "train.parquet"
@@ -1907,6 +1913,8 @@ class MaterializedDatasetBuilder:
         train_up_to_5_rows: int,
         train_up_to_10_rows: int,
         train_up_to_15_rows: int,
+        train_up_to_20_rows: int = 0,
+        train_up_to_25_rows: int = 0,
         seed: int,
         train_shortcut_rate: float = 0.0,
     ) -> list[MaterializedDatasetSpec]:
@@ -1943,6 +1951,22 @@ class MaterializedDatasetBuilder:
                 seed=int(seed) + 200_000,
                 shortcut_rate=float(train_shortcut_rate),
             ),
+            MaterializedDatasetSpec(
+                subset=self.dataset.train_up_to_20_subset,
+                min_depth=1,
+                max_depth=20,
+                rows=int(train_up_to_20_rows),
+                seed=int(seed) + 300_000,
+                shortcut_rate=float(train_shortcut_rate),
+            ),
+            MaterializedDatasetSpec(
+                subset=self.dataset.train_up_to_25_subset,
+                min_depth=1,
+                max_depth=25,
+                rows=int(train_up_to_25_rows),
+                seed=int(seed) + 400_000,
+                shortcut_rate=float(train_shortcut_rate),
+            ),
         ]
         return [spec for spec in specs if spec.rows > 0]
 
@@ -1976,6 +2000,8 @@ class MaterializedDatasetBuilder:
         train_up_to_5_rows: int = 1_000_000,
         train_up_to_10_rows: int = 1_000_000,
         train_up_to_15_rows: int = 0,
+        train_up_to_20_rows: int = 0,
+        train_up_to_25_rows: int = 0,
         val_rows_per_step: int = 1_000,
         seed: int = 3407,
         distractor_ratio: float = 0.5,
@@ -2002,6 +2028,8 @@ class MaterializedDatasetBuilder:
             train_up_to_5_rows=int(train_up_to_5_rows),
             train_up_to_10_rows=int(train_up_to_10_rows),
             train_up_to_15_rows=int(train_up_to_15_rows),
+            train_up_to_20_rows=int(train_up_to_20_rows),
+            train_up_to_25_rows=int(train_up_to_25_rows),
             seed=int(seed),
             train_shortcut_rate=float(train_shortcut_rate),
         ) + self.val_specs(
@@ -2079,8 +2107,10 @@ class MaterializedDatasetBuilder:
             self.dataset.train_up_to_5_subset,
             self.dataset.train_up_to_10_subset,
             self.dataset.train_up_to_15_subset,
+            self.dataset.train_up_to_20_subset,
+            self.dataset.train_up_to_25_subset,
         ] + [
-            self.dataset.val_subset_name(i) for i in range(1, 21)
+            self.dataset.val_subset_name(i) for i in range(1, 101)
         ]
         available_subsets = sorted(p.parent.name for p in root.glob("*/train.parquet"))
         subsets = list(dict.fromkeys(configured_subsets + available_subsets))

@@ -12,10 +12,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--train-up-to-5-subset", default="train_up_to_5_1m")
     parser.add_argument("--train-up-to-10-subset", default="train_up_to_10_1m")
     parser.add_argument("--train-up-to-15-subset", default="train_up_to_15_120k")
+    parser.add_argument("--train-up-to-20-subset", default="train_up_to_20_0")
+    parser.add_argument("--train-up-to-25-subset", default="train_up_to_25_0")
     parser.add_argument("--train-up-to-3-rows", type=int, default=0)
     parser.add_argument("--train-up-to-5-rows", type=int, default=1_000_000)
     parser.add_argument("--train-up-to-10-rows", type=int, default=1_000_000)
     parser.add_argument("--train-up-to-15-rows", type=int, default=0)
+    parser.add_argument("--train-up-to-20-rows", type=int, default=0)
+    parser.add_argument("--train-up-to-25-rows", type=int, default=0)
     parser.add_argument("--val-rows-per-step", type=int, default=1_000)
     parser.add_argument("--val-max-step", type=int, default=20)
     parser.add_argument("--seed", type=int, default=3407)
@@ -44,6 +48,8 @@ def main() -> None:
             train_up_to_5_subset=args.train_up_to_5_subset,
             train_up_to_10_subset=args.train_up_to_10_subset,
             train_up_to_15_subset=args.train_up_to_15_subset,
+            train_up_to_20_subset=args.train_up_to_20_subset,
+            train_up_to_25_subset=args.train_up_to_25_subset,
         )
     )
     builder.build(
@@ -52,6 +58,8 @@ def main() -> None:
         train_up_to_5_rows=args.train_up_to_5_rows,
         train_up_to_10_rows=args.train_up_to_10_rows,
         train_up_to_15_rows=args.train_up_to_15_rows,
+        train_up_to_20_rows=args.train_up_to_20_rows,
+        train_up_to_25_rows=args.train_up_to_25_rows,
         val_rows_per_step=args.val_rows_per_step,
         val_max_step=args.val_max_step,
         seed=args.seed,
