@@ -1,0 +1,150 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\title{Formal Logic CoT Synthetic Results Update}
+\date{2026-05-25}
+\begin{document}
+\maketitle
+
+\section{Metric note for OOD benchmarks}
+GSM8K is measured as numeric exact-match accuracy after extracting the learned \texttt{<answer>...</answer>} field. HotpotQA, 2WikiMultiHopQA, and MuSiQue are context-provided QA evaluations; the primary reported quantity is answer F1 after strict answer extraction, with exact-match/tag diagnostics available separately. I therefore call GSM8K an accuracy metric, but call the multi-hop QA readout F1/EM rather than plain accuracy.
+
+\section{Main OLMo-7B HFSA result}
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lllllllll}
+\toprule
+template & train max & n & OOD c@16 & OOD joint@16 & hard c@16 & hard joint@16 & d50 c@16 & d50 joint@16 \\
+\midrule
+logic & 5 & 3 & 0.293 & 0.052 & 0.207 & 0.013 & 0.135 & 0.010 \\
+logic & 10 & 3 & 0.727 & 0.362 & 0.697 & 0.292 & 0.479 & 0.010 \\
+logic & 15 & 3 & 0.634 & 0.293 & 0.675 & 0.372 & 0.354 & 0.042 \\
+logic & 20 & 3 & 0.830 & 0.441 & 0.887 & 0.627 & 0.854 & 0.198 \\
+logic & 25 & 3 & 0.921 & 0.710 & 0.956 & 0.839 & 0.833 & 0.417 \\
+nl\_exact & 5 & 3 & 0.502 & 0.318 & 0.391 & 0.167 & 0.292 & 0.000 \\
+nl\_exact & 10 & 3 & 0.482 & 0.299 & 0.425 & 0.221 & 0.417 & 0.000 \\
+nl\_exact & 15 & 3 & 0.322 & 0.137 & 0.397 & 0.233 & 0.260 & 0.000 \\
+nl\_exact & 20 & 3 & 0.474 & 0.219 & 0.649 & 0.479 & 0.406 & 0.115 \\
+nl\_exact & 25 & 3 & 0.794 & 0.748 & 0.885 & 0.860 & 0.510 & 0.427 \\
+\bottomrule
+\end{tabular}
+\caption{Final sparse-protocol means over seeds. Logic joint uses citation-free formal validity; NL joint uses translated NL-to-FOL validity.}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_final_by_train_depth.pdf}
+\caption{Final OOD and hard-tail correct/joint performance as train depth increases.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_depth_correct16.pdf}
+\caption{Depth curves for final correct@16, averaged over seeds. Vertical dotted line marks the max train depth.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_depth_joint16.pdf}
+\caption{Depth curves for final joint correct+valid@16, averaged over seeds.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_correct_k8_k16.pdf}
+\caption{Seed-3407 checkpoint curves for correct@8 and correct@16.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_joint_k8_k16.pdf}
+\caption{Seed-3407 checkpoint curves for joint correct+valid@8 and @16.}
+\end{figure}
+
+\section{Tiny Llama scratch-pretraining result}
+These small random-init models were not expected to solve depth-50 extrapolation. The useful signal is that logic is consistently stronger than matched NL on answer-only OOD pass@8, especially at 200M, while strict joint validity remains zero.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lllllll}
+\toprule
+size & template & train c@8 & OOD c@8 & hard c@8 & d50 c@8 & OOD joint@8 \\
+\midrule
+50m & logic & 0.797 & 0.219 & 0.179 & 0.000 & 0.000 \\
+50m & nl\_exact & 0.656 & 0.086 & 0.027 & 0.000 & 0.000 \\
+100m & logic & 0.734 & 0.148 & 0.062 & 0.000 & 0.000 \\
+100m & nl\_exact & 0.734 & 0.016 & 0.000 & 0.000 & 0.000 \\
+200m & logic & 0.859 & 0.273 & 0.179 & 0.000 & 0.000 \\
+200m & nl\_exact & 0.719 & 0.055 & 0.000 & 0.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Tiny Llama final sparse pass@8 metrics.}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/tiny_llama_final_bands_correct_joint.pdf}
+\caption{Tiny Llama final train/OOD/hard-tail correct@8 and joint@8 by model size. Solid lines are correct; dashed lines are joint.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/tiny_llama_50m_depth_correct_joint.pdf}
+\includegraphics[width=\linewidth]{figures/tiny_llama_100m_depth_correct_joint.pdf}
+\includegraphics[width=\linewidth]{figures/tiny_llama_200m_depth_correct_joint.pdf}
+\caption{Tiny Llama final depth curves. The dotted line marks train max depth 10.}
+\end{figure}
+
+Tiny checkpoint pass@k rows available at report generation time: 12. The curves below include all available intermediate checkpoint rows plus the final 20k checkpoint.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/tiny_llama_checkpoint_correct_k8.pdf}
+\caption{Tiny Llama checkpoint curves for correct@8.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/tiny_llama_checkpoint_joint_k8.pdf}
+\caption{Tiny Llama checkpoint curves for joint@8.}
+\end{figure}
+
+\subsection{Tiny Llama downstream OOD eval}
+The tiny downstream OOD evals completed with the 8192-context fallback. LongBench contexts are truncated for these tiny models, so this table is a smoke/result-sanity readout rather than a fair long-context QA claim.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lllllll}
+\toprule
+size & template & GSM8K EM & GSM8K tag & Hotpot F1 & 2Wiki F1 & MuSiQue F1 \\
+\midrule
+50m & logic & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+50m & nl\_exact & 0.000 & 0.013 & 0.000 & 0.000 & 0.000 \\
+100m & logic & 0.000 & 0.004 & 0.000 & 0.000 & 0.000 \\
+100m & nl\_exact & 0.000 & 0.070 & 0.000 & 0.000 & 0.000 \\
+200m & logic & 0.007 & 0.313 & 0.000 & 0.000 & 0.000 \\
+200m & nl\_exact & 0.005 & 0.080 & 0.000 & 0.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Tiny Llama OOD lm-eval metrics after strict answer extraction.}
+\end{table}
+
+\section{Qwen-2.5-7B partial architecture ablation}
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lllllll}
+\toprule
+template & train max & n & OOD c@16 & OOD joint@16 & d50 c@16 & d50 joint@16 \\
+\midrule
+logic & 10 & 3 & 0.618 & 0.320 & 0.292 & 0.031 \\
+logic & 20 & 3 & 0.753 & 0.165 & 0.656 & 0.021 \\
+logic & 25 & 3 & 0.906 & 0.431 & 0.854 & 0.156 \\
+nl\_exact & 10 & 3 & 0.461 & 0.279 & 0.427 & 0.000 \\
+nl\_exact & 20 & 2 & 0.576 & 0.503 & 0.406 & 0.203 \\
+\bottomrule
+\end{tabular}
+\caption{Qwen-2.5-7B sparse eval rows available at report time. Matched NL train-1-to-20/25 rows are still incomplete, so this is not yet a full architecture-ablation conclusion.}
+\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=0.86\linewidth]{figures/qwen7b_partial_ood_correct_joint.pdf}
+\caption{Partial Qwen-2.5-7B OOD correct/joint@16.}
+\end{figure}
+
+\section{Qualitative samples}
+The companion PDF \texttt{figures/sample\_generation\_panels.pdf} contains generated examples with extracted answer, gold answer, correctness, and validity metadata. This is kept as a PDF figure rather than long verbatim text in the main report.
+
+\section{Artifacts}
+CSV tables live under \texttt{tables/} and all plots are emitted as both PDF and PNG under \texttt{figures/}. This machine currently lacks \texttt{pdflatex}/\texttt{latexmk}, so the LaTeX source is generated but not compiled here.
+\end{document}

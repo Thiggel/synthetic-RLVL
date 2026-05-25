@@ -14,6 +14,12 @@ TASK_SUITES = {
     "reasoning_core": ["gsm8k", "folio", "logiqa"],
     "logic_core": ["folio", "logiqa"],
     "math_core": ["gsm8k"],
+    "synthrlvl_ood": [
+        "synthrlvl_gsm8k_tagged",
+        "synthrlvl_longbench_hotpotqa_tagged",
+        "synthrlvl_longbench_2wikimqa_tagged",
+        "synthrlvl_longbench_musique_tagged",
+    ],
 }
 
 
@@ -71,6 +77,8 @@ def main() -> None:
     parser.add_argument("--wandb-project", default=None)
     parser.add_argument("--wandb-run-name", default=None)
     parser.add_argument("--wandb-group", default=None)
+    parser.add_argument("--trust-remote-code", action="store_true")
+    parser.add_argument("--confirm-run-unsafe-code", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -121,6 +129,10 @@ def main() -> None:
         cmd.append("--log_samples")
     if args.use_cache:
         cmd += ["--use_cache", args.use_cache]
+    if args.trust_remote_code:
+        cmd.append("--trust_remote_code")
+    if args.confirm_run_unsafe_code:
+        cmd.append("--confirm_run_unsafe_code")
     wandb_args: list[str] = []
     if args.wandb_project:
         wandb_args.append(f"project={args.wandb_project}")

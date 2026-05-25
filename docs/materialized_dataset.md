@@ -233,10 +233,27 @@ Experiment plan:
 
 Initial paired natural-language / formal-logic dataset families are implemented for follow-up experiments:
 
-- `official_igsm`: exact official `facebookresearch/iGSM` sampling with a validated 1:1 logic trace over the official modulo-23 arithmetic solution.
+- `official_igsm`: exact official `facebookresearch/iGSM` sampling with an intended 1:1 logic trace over the official modulo-23 arithmetic solution; currently blocked by broader validation failures on subtraction-substitution proof lines.
 - `maze_navigation`: keyed/constrained graph traversal with room reachability, held-key state, blocked decoy doors, and unreachable treasure decoys.
 - `attribute_constraints`: multi-input slot-value constraint propagation; no candidate-assignment objects and no precomputed Mastermind feedback are provided.
 - Backward-compatible aliases: `igsm_arithmetic`, `graph_traversal`, `mastermind_constraints`, `constraint_satisfaction`, `constraint_propagation`.
+
+### Train-10 Follow-Up Materializations
+
+Submitted 2026-05-24:
+
+| family | job | status | local root |
+| --- | ---: | --- | --- |
+| `attribute_constraints` original | `3656210_1` | completed but saturated in seed-3407 eval | `${WORK}/synthetic-RLVL/datasets/materialized_paired_attribute_constraints_train10_20260524` |
+| `maze_navigation` | `3656308_0` | completed after depth-15 room-vocabulary fix | `${WORK}/synthetic-RLVL/datasets/materialized_paired_maze_navigation_train10_20260524` |
+
+Submitted 2026-05-25 after saturation:
+
+| family | job | status | local root |
+| --- | ---: | --- | --- |
+| `attribute_constraints` hard | `3659338` | completed at 09:33 CEST; downstream SFT/eval jobs are `3659339`/`3659340` | `${WORK}/synthetic-RLVL/datasets/materialized_paired_attribute_constraints_hard_train10_20260525` |
+
+The hard attribute generator maps requested depth to `floor(depth/2)+2` compact slots, uses compact `sN`/`vN` symbols, recent-window dependency DAGs, and adversarial decoys. Local smoke materialization with full validation through depth 50 passed before the Slurm build was submitted.
 
 The generator code lives in:
 
@@ -279,7 +296,7 @@ to disable validation for large production builds after a smoke test.
 
 These paired families are implemented for later substrate-transfer experiments, not part of the active HFSA depth-scaling wave yet:
 
-- `official_igsm`: samples from the local official `facebookresearch/iGSM` generator and converts the official arithmetic solution into a validated logic trace. Arithmetic is modulo 23, matching iGSM, via the `MOD23` proof rule.
+- `official_igsm`: samples from the local official `facebookresearch/iGSM` generator and converts the official arithmetic solution into a logic trace. Arithmetic is modulo 23, matching iGSM, via the `MOD23` proof rule. Do not use for training yet; the 2026-05-23 broader audit found invalid subtraction-substitution proof lines.
 - `igsm_arithmetic`: compact backward-compatible register arithmetic used for smoke tests and older scripts.
 - `maze_navigation`: a world-grounded keyed graph traversal task where the model proves which treasure room is reachable after exactly `N` moves while holding the required key for each traversed door.
 - `graph_traversal`: backward-compatible alias for `maze_navigation`.
@@ -301,3 +318,37 @@ task.difficulty=constraint_propagation
 ```
 
 For SFT from materialized parquet, set `data.materialized.local_root` and the explicit `data.materialized.train_subset` produced by the materializer.
+
+### Paired Dataset Audit - 2026-05-23
+
+The broader local materialization audit used `--validate-examples -1` on small depth-12 builds:
+
+| family | status | artifact |
+| --- | --- | --- |
+| `maze_navigation` | fixed and passed; key vocabulary now extends with deterministic `key_XX` names when depth exceeds the color list | `analysis/paired_dataset_audit_2026-05-23/maze_navigation/` |
+| `attribute_constraints` | passed | `analysis/paired_dataset_audit_2026-05-23/attribute_constraints/` |
+| `official_igsm` | blocked; subtraction substitution can produce invalid proof lines | `analysis/paired_dataset_audit_2026-05-23/logs/official_igsm.log` |
+
+### Paired Train-10 Pilot Materialization - 2026-05-24
+
+Submitted Slurm job `3656210_[0-1%2]` to materialize the two audited paired families for the first transfer pilot. Row `1` (`attribute_constraints`) completed. Row `0` (`maze_navigation`) failed at depth 15 because the room-name word bank was finite; the generator was patched to extend room names deterministically and row `0` was resubmitted as `3656308_0`, which completed with every generated row validated.
+
+| row | family | output root | train subset |
+| ---: | --- | --- | --- |
+| `0` | `maze_navigation` | `${WORK}/synthetic-RLVL/datasets/materialized_paired_maze_navigation_train10_20260524` | `train_maze_navigation_up_to_10_50k` |
+| `1` | `attribute_constraints` | `${WORK}/synthetic-RLVL/datasets/materialized_paired_attribute_constraints_train10_20260524` | `train_attribute_constraints_up_to_10_50k` |
+
+The materialization jobs write `val_step_01_1k` through `val_step_50_1k` and validate every generated row by default. The original dependent SFT/eval jobs were `3656211` and `3656213`.
+
+After the maze failure, the original dependent jobs `3656211` and `3656213` were canceled. Replacement jobs are:
+
+| stage | job | dependency |
+| --- | ---: | --- |
+| paired train-10 SFT pilot | `3656309_[0-3%2]` | `afterok:3656308` |
+| paired train-10 sparse eval | `3656310_[0-3%2]` | `aftercorr:3656309` |
+
+Oversight update 2026-05-24 15:06 CEST: paired maze SFT rows `3656309_0,1` failed with CUDA OOM at `data.max_length=8192` while gradient checkpointing was off. The dead eval rows `3656310_0,1` were canceled. Replacement maze SFT rows `3657088_0,1` are running with `GRADIENT_CHECKPOINTING=true` and had cleared the original OOM window by 15:05 CEST; replacement eval rows `3657089_0,1` depend on `aftercorr:3657088`. Attribute rows remain on the original `3656309`/`3656310` chain.
+
+Oversight update 2026-05-25 02:44 CEST: attribute rows completed SFT and sparse eval on the original replacement chain. Maze rows completed SFT on retry `3657738_0,1` after disabling default online generation eval; sparse eval rows `3657739_0,1` are running.
+
+Oversight update 2026-05-25 10:48 CEST: maze sparse eval row `3657739_0` failed because a depth-45 prompt had `16400` tokens under the old `vllm_max_model_len=16384`; row `3657739_1` was canceled before the same expected failure. The paired eval wrapper now uses a 32k vLLM context and batch `64` for `maze_navigation`; replacement `3659556_[0-1%2]` is pending.

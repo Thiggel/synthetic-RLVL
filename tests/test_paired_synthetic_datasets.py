@@ -82,6 +82,17 @@ def test_attribute_constraints_solve_slots_directly_without_feedback_or_assignme
     assert all(f"Value({slot['slot']},{slot['value']})" in ex.proof_fol[-1] for slot in slots)
 
 
+def test_attribute_constraints_depth_is_not_capped_at_six():
+    ex = PairedSyntheticGenerator(PairedGeneratorConfig(kind="attribute_constraints", depth=12, seed=3407)).generate(0)
+    validation = validate_logic_example(ex)
+    metadata = ex.metadata
+
+    assert validation.ok, (validation.error, validation.line_errors)
+    assert metadata["slot_count"] == 8
+    assert len(metadata["slots"]) == 8
+    assert len(str(ex.answer).split("-")) == 8
+
+
 def test_constraint_aliases_use_attribute_constraint_generator():
     for kind in ("mastermind_constraints", "constraint_satisfaction", "constraint_propagation"):
         ex = PairedSyntheticGenerator(PairedGeneratorConfig(kind=kind, depth=3, seed=3407)).generate(0)

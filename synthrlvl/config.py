@@ -11,11 +11,16 @@ from .types import PrefillMode, StepRange, TaskConfig, TemplateName
 class EvalLoopConfig:
     synthetic_step_min: int
     synthetic_step_max: int
+    synthetic_steps: list[int] | None
     synthetic_samples_per_step: int
     max_new_tokens: int
     generation_backend: str
     generation_batch_size: int
     vllm_gpu_memory_utilization: float
+    vllm_max_model_len: int | None
+    greedy_enabled: bool
+    stop_strings: list[str]
+    scoring_log_interval: int
     sampled_enabled: bool
     sampled_num_generations: int
     sampled_k_values: list[int]
@@ -32,6 +37,28 @@ class EvalLoopConfig:
     constrained_suffix_max_tokens: int
     constrained_temperature: float
     constrained_k_values: list[int]
+
+    def step_values(self) -> list[int]:
+        if self.synthetic_steps is not None:
+            return list(self.synthetic_steps)
+        return list(range(int(self.synthetic_step_min), int(self.synthetic_step_max) + 1))
+
+
+def _parse_optional_int_list(value: object) -> list[int] | None:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        parts = [part.strip() for part in value.split(",") if part.strip()]
+        return [int(part) for part in parts] or None
+    return [int(item) for item in list(value)] or None
+
+
+def _parse_str_list(value: object) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [part.strip() for part in value.split(",") if part.strip()]
+    return [str(item) for item in list(value) if str(item)]
 
 
 def task_config_from_cfg(cfg: DictConfig) -> TaskConfig:
@@ -58,11 +85,16 @@ def eval_loop_config_from_sft(cfg: DictConfig) -> EvalLoopConfig:
     return EvalLoopConfig(
         synthetic_step_min=int(cfg.validation.step_min),
         synthetic_step_max=int(cfg.validation.step_max),
+        synthetic_steps=_parse_optional_int_list(cfg.validation.get("steps")),
         synthetic_samples_per_step=int(cfg.validation.samples_per_step),
         max_new_tokens=int(cfg.validation.max_new_tokens),
         generation_backend=str(cfg.validation.get("generation_backend", "hf")),
         generation_batch_size=int(cfg.validation.get("generation_batch_size", 16)),
         vllm_gpu_memory_utilization=float(cfg.validation.get("vllm_gpu_memory_utilization", 0.85)),
+        vllm_max_model_len=int(cfg.validation.get("vllm_max_model_len", 0)) or None,
+        greedy_enabled=bool(cfg.validation.get("greedy_enabled", True)),
+        stop_strings=_parse_str_list(cfg.validation.get("stop_strings")),
+        scoring_log_interval=int(cfg.validation.get("scoring_log_interval", 0)),
         sampled_enabled=bool(cfg.validation.get("sampled_enabled", True)),
         sampled_num_generations=int(cfg.validation.get("sampled_num_generations", 64)),
         sampled_k_values=[int(k) for k in list(cfg.validation.get("sampled_k_values", [1, 2, 4, 8, 16, 32, 64]))],
@@ -86,11 +118,16 @@ def eval_loop_config_from_grpo(cfg: DictConfig) -> EvalLoopConfig:
     return EvalLoopConfig(
         synthetic_step_min=int(cfg.eval.synthetic_step_min),
         synthetic_step_max=int(cfg.eval.synthetic_step_max),
+        synthetic_steps=_parse_optional_int_list(cfg.eval.get("synthetic_steps")),
         synthetic_samples_per_step=int(cfg.eval.synthetic_samples_per_step),
         max_new_tokens=int(cfg.eval.max_new_tokens),
         generation_backend=str(cfg.eval.get("generation_backend", "vllm")),
         generation_batch_size=int(cfg.eval.get("generation_batch_size", 1024)),
         vllm_gpu_memory_utilization=float(cfg.eval.get("vllm_gpu_memory_utilization", 0.85)),
+        vllm_max_model_len=int(cfg.eval.get("vllm_max_model_len", 0)) or None,
+        greedy_enabled=bool(cfg.eval.get("greedy_enabled", True)),
+        stop_strings=_parse_str_list(cfg.eval.get("stop_strings")),
+        scoring_log_interval=int(cfg.eval.get("scoring_log_interval", 0)),
         sampled_enabled=bool(cfg.eval.get("sampled_enabled", True)),
         sampled_num_generations=int(cfg.eval.get("sampled_num_generations", 64)),
         sampled_k_values=[int(k) for k in list(cfg.eval.get("sampled_k_values", [1, 2, 4, 8, 16, 32, 64]))],

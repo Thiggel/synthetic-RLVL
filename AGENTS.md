@@ -93,44 +93,44 @@ Supported `reward.schema` values:
 - Project default:
   - `synthetic-rlvl`
 
-## Current Live Runs (as of 2026-05-20 09:25 CEST)
+## Handoff Discipline
 
-- HFSA depth-scaling dataset build: `3623863`
-  - builds/pushes `flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget-depth50`.
-  - completed.
-- Cancelled/replaced old pending arrays:
-  - `3623864`, `3623865`, `3624535`, `3624536`.
-- HFSA depth-scaling SFT array: `3634790_[0-29%6]`
-  - grid: templates `logic,nl_exact`; train depths `1..5,1..10,1..15,1..20,1..25`; seeds `3407,3408,3409`.
-  - patched to retain up to 12 LoRA checkpoints.
-  - current: `3634790_0` is running (`logic_train1to5_10k_seed3407`); remaining rows are pending by priority/resources.
-- HFSA depth-scaling final merge/pass@k eval array: `3634791_[0-29%6]`
-  - dependency: `aftercorr:3634790`.
-  - eval depths `1..50`, 128 prompts/depth, 16 generations/prompt.
-- HFSA depth-scaling intermediate checkpoint eval array: `3634792_[0-29%2]`
-  - dependency: `aftercorr:3634790`.
-  - default checkpoint steps: `1000,3000,10000`.
-- 1k-sample sanity SFT array: `3634793_[0-9%5]`
-  - seed `3407`; templates `logic,nl_exact`; train depths `1..5,1..10,1..15,1..20,1..25`.
-  - status: 9/10 rows completed; `nl_exact_train1to25_1k_seed3407` failed with CUDA OOM.
-  - retry: `3643001_[9]`, with gradient checkpointing enabled.
-- 1k-sample sanity eval array: `3634794_[0-9%5]`
-  - dependency: `aftercorr:3634793`.
-  - status: rows `0..8` pending by priority; broken row `9` was cancelled.
-  - retry eval: `3643002_[9]`, dependency `afterok:3643001`.
+Update the handoff docs whenever operational or scientific state changes.
 
-Checkpoint note:
-- Jobs submitted before the 2026-05-19 script patch likely saved every 1000 steps but retained only `train.save_total_limit=2`.
-- The patched HFSA depth-scaling SFT script now uses `train.save_total_limit=12` by default for resubmission.
-- SFT now supports `train.gradient_checkpointing`; the fixed-target config defaults to `auto`, enabling checkpointing for long `nl_exact` depth-25 rows after the 1k OOM. `scripts/env.sh` also sets `PYTORCH_ALLOC_CONF=expandable_segments:True`.
-- The affected arrays have been cancelled/resubmitted from patched scripts.
-- Merge/eval scripts delete merged full-model checkpoints by default; do not accumulate merged OLMo-7B dirs in `${WORK}/synthetic-RLVL/tmp`.
+- If a new Slurm job is submitted, canceled, resubmitted, or dependency-edited, update `docs/current_system_state.md` and the relevant experiment doc.
+- If implementation is changed or extended, update the relevant docs with what changed, why, and any verification run.
+- If new analysis, results, failure modes, or research insights are found, record the concise takeaway and affected artifacts in the handoff docs.
+- Keep `docs/current_system_state.md` as the shortest current operational truth; move historical detail to experiment-specific or archived docs instead of appending long stale snapshots.
+
+## Current Live Runs
+
+Current operational truth lives in `docs/current_system_state.md`; update it whenever jobs, code, or analysis state changes.
+
+Snapshot as of 2026-05-25 10:39 CEST:
+
+| Stage | Jobs | State | Note |
+| --- | --- | --- | --- |
+| HFSA 10k SFT | `3646736_[0-6]`, `3647379_[7-29%12]` | completed | all 30 main rows covered; row 0 skipped due existing final checkpoint; executed rows exit `0:0` |
+| Old full-grid eval arrays | `3647708`, `3648279`, `3648280`, `3647711`, `3647712` | canceled | canceled 2026-05-22 10:47 CEST after sparse runtime patch |
+| Sparse final eval | `3650951_[0-29%10]` | completed | 30/30 JSON files, all tasks exit `0:0` |
+| Sparse intermediate eval | `3650952_[0,3,6,9,12,15,18,21,24,27%4]` | completed | seed-3407 checkpoint curves; 30/30 JSON files, all tasks exit `0:0` |
+| Paired train-10 materialization | `3656210_1`, `3656308_0` | completed | `attribute_constraints` completed; `maze_navigation` completed after fixing depth-15 room vocabulary |
+| Paired train-10 SFT/eval pilot | SFT `3656309`, retries `3657088`/`3657738`; eval `3656310`, `3657739` | attribute complete, maze eval running | maze SFT recovered; maze eval rows `3657739_0,1` are long-running and hitting generation caps |
+| Hard attribute replacement | build `3659338`, SFT `3659339_[0-1%2]`, eval `3659340_[0-1%2]` | build completed, SFT running, eval dependency-pending | saturated `attribute_constraints` was hardened and resubmitted after local validation through depth 50 |
+| Qwen HFSA model ablation | `3656217_[0-17%3]`, `3656218_[0-17%3]` | SFT rows 0-14 complete, 15-17 running; eval rows 0-12 complete, 13-14 running | `Qwen/Qwen2.5-7B`; train depths `1..10`, `1..20`, `1..25`; both templates; three seeds |
+| Small-extra HFSA model ablation | `3656323_[0-35%4]`, retries `3656359_2` and `3656387_3`, eval `3656389_[0-35%4]` | rows 0,1,4-25 complete or recovered; 26-29 running; 30-35 pending | `Qwen/Qwen2.5-1.5B` and `google/gemma-3-4b-pt`; failed rows 2/3 recovered by retries |
+| OLMo-32B pilot | `3656335_[0-1%1]`, replacement eval `3658461_[0-1%1]` | row 0 complete, row 1 running, eval pending | `allenai/OLMo-2-0325-32B`, train depth `1..20`, seed 3407, logic vs NL |
+| Tiny Llama scratch pretraining | `3656338`, retries `3656360_1`/`3656388_0`, eval `3656390_[0-5%3]` | completed | random-init Llama3-tokenizer configs at `50M/100M/200M`; eval completed but joint/depth-50 metrics are zero |
+| Tiny Llama checkpoint eval | original `3659405`, replacement `3659415_[0-11%3]` | completed | checkpoint-10000/15000 pass@k for tiny training curves; original failed due missing tokenizer files in Trainer checkpoints and script now stages tokenizer metadata from `final/` |
+| OOD lm-eval | pilots `3659344`/`3659348`, broad `3659356_[0-89%4]`, OLMo32 `3659357_[0-1%1]`, tiny replacement `3659488_[0-5%3]` | pilots and tiny replacement completed; larger arrays dependency-pending | tag-aware GSM8K/HotpotQA/2Wiki/MuSiQue suite implemented; tiny replacement uses 8192 context after vLLM long-context assert |
+| Codex HFSA follow-up oversight | through `3658813`, next `3659047` | completed / begin-time pending | `scripts/slurm/codex/hfsa_followup_oversight_2026-05-24.slurm`; self-schedules 4h follow-up passes up to `OVERSIGHT_MAX_HOPS=18` |
+| Paired dataset audit | local materialization audits | mixed | `maze_navigation` and `attribute_constraints` pass; `official_igsm` blocked by subtraction proof validation |
 
 Check live status:
 
 ```bash
-squeue -u c107fa12 -o '%.18i %.9P %.32j %.2t %.10M %.6D %R'
-sacct -j <jobid> --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
+squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %R'
+sacct -j 3650951,3650952,3656210,3656308,3656309,3656310,3657088,3657738,3657739,3656217,3656218,3656323,3656359,3656387,3656389,3656335,3656336,3658461,3656338,3656360,3656388,3656390,3656509,3656510,3657079,3657734,3658457,3658813,3659047,3659338,3659339,3659340,3659344,3659348,3659356,3659357,3659392,3659405,3659415,3659488 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
 ```
 
 ## Primary Docs

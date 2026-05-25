@@ -1,0 +1,38 @@
+{
+  "final_dir": "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hfsa_depth_scaling_sparse",
+  "intermediate_dir": "/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hfsa_depth_scaling_intermediate_sparse",
+  "final_json_count": 30,
+  "intermediate_json_count": 30,
+  "depths": [
+    1,
+    2,
+    5,
+    10,
+    12,
+    15,
+    18,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50
+  ],
+  "intermediate_depths": [
+    1,
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    40,
+    50
+  ],
+  "metric_policy": {
+    "logic_joint": "citation_free_joint_pass",
+    "nl_exact_joint": "nl_logic_joint_pass"
+  },
+  "problems": []
+}

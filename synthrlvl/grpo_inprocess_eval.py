@@ -41,7 +41,7 @@ def install_grpo_eval_patch(
         synthetic_records_by_step = evaluator._build_synthetic_records(task_cfg=task_cfg, eval_cfg=eval_cfg)
         synthetic_records = [
             r
-            for s in range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1)
+            for s in eval_cfg.step_values()
             for r in synthetic_records_by_step[s]
         ]
         first_record_by_prompt: dict[str, object] = {}
@@ -158,7 +158,12 @@ def install_grpo_eval_patch(
                     generated_padded = self.async_rollout_manager.generate_sequences(padded)
                     generated = unpad_dataproto(generated_padded, pad_size=pad_size)
                     response_ids = generated.batch["responses"]
-                    generations.extend([self.tokenizer.decode(ids, skip_special_tokens=True) for ids in response_ids])
+                    for ids in response_ids:
+                        text = self.tokenizer.decode(ids, skip_special_tokens=True)
+                        cut_points = [text.find(stop) + len(stop) for stop in eval_cfg.stop_strings if stop in text]
+                        if cut_points:
+                            text = text[: min(cut_points)]
+                        generations.append(text)
             finally:
                 val_sampling.temperature = orig_temperature
                 val_sampling.top_p = orig_top_p

@@ -4,7 +4,9 @@ from collections import defaultdict
 from dataclasses import dataclass, replace
 import gc
 import json
+import os
 from pathlib import Path
+import time
 from typing import Callable, Dict, List, Sequence
 
 import torch
@@ -45,12 +47,20 @@ class _HFTextGenerator:
         tokenizer: PreTrainedTokenizerBase,
         device: torch.device,
         batch_size: int,
+        stop_strings: Sequence[str] | None = None,
     ):
         self._model = model
         self._tokenizer = tokenizer
         self._device = device
         self._batch_size = max(1, int(batch_size))
         self._pad_token_id = tokenizer.eos_token_id if tokenizer.eos_token_id is not None else tokenizer.pad_token_id
+        self._stop_strings = tuple(str(item) for item in (stop_strings or []) if str(item))
+
+    def _trim_at_stop(self, text: str) -> str:
+        cut_points = [text.find(stop) + len(stop) for stop in self._stop_strings if stop in text]
+        if not cut_points:
+            return text
+        return text[: min(cut_points)]
 
     @torch.no_grad()
     def generate(
@@ -78,7 +88,7 @@ class _HFTextGenerator:
             for row_idx in range(len(chunk)):
                 prompt_len = int(prompt_lens[row_idx])
                 text = self._tokenizer.decode(out_ids[row_idx][prompt_len:], skip_special_tokens=True)
-                outputs.append(text)
+                outputs.append(self._trim_at_stop(text))
         return outputs
 
     @torch.no_grad()
@@ -115,7 +125,7 @@ class _HFTextGenerator:
                 for sample_idx in range(n):
                     out_idx = row_idx * n + sample_idx
                     text = self._tokenizer.decode(out_ids[out_idx][prompt_len:], skip_special_tokens=True)
-                    samples.append(text)
+                    samples.append(self._trim_at_stop(text))
                 grouped.append(samples)
         return grouped
 
@@ -128,24 +138,31 @@ class _VLLMTextGenerator:
         tokenizer_path: str,
         batch_size: int,
         gpu_memory_utilization: float,
+        vllm_max_model_len: int | None,
         lora_adapter_path: str | None,
         lora_base_model_name: str | None,
+        stop_strings: Sequence[str] | None = None,
     ):
         from vllm import LLM
         from vllm.lora.request import LoRARequest
 
         self._batch_size = max(1, int(batch_size))
-        self._llm = LLM(
-            model=model_path,
-            tokenizer=tokenizer_path,
-            trust_remote_code=False,
-            dtype="bfloat16",
-            tensor_parallel_size=1,
-            gpu_memory_utilization=float(gpu_memory_utilization),
-            max_num_seqs=max(1, int(batch_size)),
-            enable_lora=bool(lora_adapter_path),
-            disable_log_stats=True,
-        )
+        self._stop_strings = tuple(str(item) for item in (stop_strings or []) if str(item))
+        tensor_parallel_size = max(1, int(os.environ.get("VLLM_TENSOR_PARALLEL_SIZE", "1")))
+        llm_kwargs = {
+            "model": model_path,
+            "tokenizer": tokenizer_path,
+            "trust_remote_code": False,
+            "dtype": "bfloat16",
+            "tensor_parallel_size": tensor_parallel_size,
+            "gpu_memory_utilization": float(gpu_memory_utilization),
+            "max_num_seqs": max(1, int(batch_size)),
+            "enable_lora": bool(lora_adapter_path),
+            "disable_log_stats": True,
+        }
+        if vllm_max_model_len is not None:
+            llm_kwargs["max_model_len"] = max(1, int(vllm_max_model_len))
+        self._llm = LLM(**llm_kwargs)
         self._lora_request = (
             LoRARequest(
                 lora_name="syntheval",
@@ -167,20 +184,45 @@ class _VLLMTextGenerator:
     ) -> list[str]:
         from vllm import SamplingParams
 
-        sampling = SamplingParams(
-            n=1,
-            max_tokens=int(max_new_tokens),
-            temperature=float(temperature) if do_sample else 0.0,
-            top_p=0.95 if do_sample else 1.0,
-        )
+        sampling_kwargs = {
+            "n": 1,
+            "max_tokens": int(max_new_tokens),
+            "temperature": float(temperature) if do_sample else 0.0,
+            "top_p": 0.95 if do_sample else 1.0,
+        }
+        if self._stop_strings:
+            sampling_kwargs["stop"] = list(self._stop_strings)
+            sampling_kwargs["include_stop_str_in_output"] = True
+        sampling = SamplingParams(**sampling_kwargs)
         outputs: list[str] = []
+        total_chunks = (len(prompts) + self._batch_size - 1) // self._batch_size
         for i in range(0, len(prompts), self._batch_size):
             chunk = list(prompts[i : i + self._batch_size])
+            chunk_idx = i // self._batch_size + 1
+            print(
+                f"[syntheval] greedy vLLM chunk {chunk_idx}/{total_chunks} "
+                f"({len(chunk)} prompts, max_new_tokens={int(max_new_tokens)}, stop={list(self._stop_strings)})",
+                flush=True,
+            )
+            start = time.perf_counter()
             req_outputs = self._llm.generate(
                 chunk,
                 sampling_params=sampling,
                 use_tqdm=False,
                 lora_request=self._lora_request,
+            )
+            elapsed = time.perf_counter() - start
+            token_counts = [
+                len(req.outputs[0].token_ids)
+                for req in req_outputs
+                if req.outputs and getattr(req.outputs[0], "token_ids", None) is not None
+            ]
+            total_tokens = sum(token_counts)
+            max_tokens = max(token_counts) if token_counts else 0
+            print(
+                f"[syntheval] greedy vLLM chunk {chunk_idx}/{total_chunks} done "
+                f"in {elapsed:.1f}s ({total_tokens} output tokens, max={max_tokens})",
+                flush=True,
             )
             for req in req_outputs:
                 text = req.outputs[0].text if req.outputs else ""
@@ -199,12 +241,16 @@ class _VLLMTextGenerator:
 
         n = max(1, int(num_samples))
         if self._lora_request is None:
-            sampling = SamplingParams(
-                n=n,
-                max_tokens=int(max_new_tokens),
-                temperature=float(temperature),
-                top_p=0.95,
-            )
+            sampling_kwargs = {
+                "n": n,
+                "max_tokens": int(max_new_tokens),
+                "temperature": float(temperature),
+                "top_p": 0.95,
+            }
+            if self._stop_strings:
+                sampling_kwargs["stop"] = list(self._stop_strings)
+                sampling_kwargs["include_stop_str_in_output"] = True
+            sampling = SamplingParams(**sampling_kwargs)
             grouped: list[list[str]] = []
             prompt_batch_size = max(1, self._batch_size // n)
             for i in range(0, len(prompts), prompt_batch_size):
@@ -215,22 +261,40 @@ class _VLLMTextGenerator:
                     f"({len(chunk)} prompts x n={n})",
                     flush=True,
                 )
+                start = time.perf_counter()
                 req_outputs = self._llm.generate(
                     chunk,
                     sampling_params=sampling,
                     use_tqdm=False,
                     lora_request=None,
                 )
+                elapsed = time.perf_counter() - start
+                token_counts = [
+                    len(out.token_ids)
+                    for req in req_outputs
+                    for out in req.outputs
+                    if getattr(out, "token_ids", None) is not None
+                ]
+                print(
+                    f"[syntheval] sampled vLLM chunk {i // prompt_batch_size + 1}/"
+                    f"{(len(prompts) + prompt_batch_size - 1) // prompt_batch_size} done "
+                    f"in {elapsed:.1f}s ({sum(token_counts)} output tokens, max={max(token_counts) if token_counts else 0})",
+                    flush=True,
+                )
                 for req in req_outputs:
                     grouped.append([out.text for out in req.outputs])
             return grouped
 
-        sampling = SamplingParams(
-            n=1,
-            max_tokens=int(max_new_tokens),
-            temperature=float(temperature),
-            top_p=0.95,
-        )
+        sampling_kwargs = {
+            "n": 1,
+            "max_tokens": int(max_new_tokens),
+            "temperature": float(temperature),
+            "top_p": 0.95,
+        }
+        if self._stop_strings:
+            sampling_kwargs["stop"] = list(self._stop_strings)
+            sampling_kwargs["include_stop_str_in_output"] = True
+        sampling = SamplingParams(**sampling_kwargs)
         grouped: list[list[str]] = [[] for _ in prompts]
         expanded: list[tuple[int, str]] = [
             (prompt_idx, prompt)
@@ -246,11 +310,24 @@ class _VLLMTextGenerator:
                 f"({len(chunk)} sequences, n={n})",
                 flush=True,
             )
+            start = time.perf_counter()
             req_outputs = self._llm.generate(
                 chunk,
                 sampling_params=sampling,
                 use_tqdm=False,
                 lora_request=self._lora_request,
+            )
+            elapsed = time.perf_counter() - start
+            token_counts = [
+                len(req.outputs[0].token_ids)
+                for req in req_outputs
+                if req.outputs and getattr(req.outputs[0], "token_ids", None) is not None
+            ]
+            print(
+                f"[syntheval] sampled vLLM chunk {i // self._batch_size + 1}/"
+                f"{(len(expanded) + self._batch_size - 1) // self._batch_size} done "
+                f"in {elapsed:.1f}s ({sum(token_counts)} output tokens, max={max(token_counts) if token_counts else 0})",
+                flush=True,
             )
             for (prompt_idx, _), req in zip(chunk_pairs, req_outputs, strict=True):
                 text = req.outputs[0].text if req.outputs else ""
@@ -270,7 +347,7 @@ class UnifiedEvaluator:
         eval_cfg: EvalLoopConfig,
     ) -> dict[int, list[_EvalPromptRecord]]:
         by_step: dict[int, list[_EvalPromptRecord]] = {}
-        for step in range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1):
+        for step in eval_cfg.step_values():
             step_cfg = replace(task_cfg, val_steps=StepRange(step, step))
             rows = TaskBuilder(step_cfg).build_samples(eval_cfg.synthetic_samples_per_step, train=False)
             by_step[step] = [
@@ -321,7 +398,10 @@ class UnifiedEvaluator:
                 "shortcut_answer": [],
             }
         )
-        for rec, gen in zip(records, generations, strict=True):
+        total_records = len(records)
+        progress_interval = max(0, int(eval_cfg.scoring_log_interval))
+        scoring_started = time.perf_counter()
+        for idx, (rec, gen) in enumerate(zip(records, generations, strict=True), start=1):
             score = self.output_eval.evaluate(
                 gen,
                 template=rec.template,
@@ -358,67 +438,17 @@ class UnifiedEvaluator:
             if shortcut_answer:
                 vals_by_step[rec.step]["shortcut_answer"].append(float(_is_answer_match(predicted_answer, str(shortcut_answer))))
             if collect_samples > 0:
-                sample = {
-                    "source": "synthetic",
-                    "step": rec.step,
-                    "prompt": rec.prompt,
-                    "generation": gen,
-                    "gold_answer": rec.gold_answer,
-                    "shortcut_answer": rec.metadata.get("shortcut_branch_answer"),
-                    "active_branch_first": rec.metadata.get("active_branch_first"),
-                    "syntactic": score.syntactic,
-                    "format_ok": score.format_ok,
-                    "correct": score.correct,
-                    "valid": score.valid,
-                    "citation_free_valid": score.citation_free_valid,
-                    "grounded_valid": score.grounded_valid,
-                    "citation_free_grounded_valid": score.citation_free_grounded_valid,
-                    "nl_logic_parse": score.nl_logic_parse,
-                    "nl_logic_citation_free_valid": score.nl_logic_citation_free_valid,
-                    "nl_logic_line_valid_fraction": score.nl_logic_line_valid_fraction,
-                    "nl_logic_valid_prefix_fraction": score.nl_logic_valid_prefix_fraction,
-                }
-                premises, proof, conclusion = self.output_eval._extract_logic_components(gen, self.output_eval._logic_block_tag(rec.template))
-                if premises and proof and conclusion:
-                    report = self.output_eval.engine.analyze_proof(premises=premises, conclusion=conclusion, proof=proof)
-                    citation_free_report = self.output_eval.engine.analyze_proof_citation_free(
-                        premises=premises, conclusion=conclusion, proof=proof
-                    )
-                    total_lines = len(report.lines)
-                    valid_lines = sum(1 for line in report.lines if line.valid)
-                    citation_free_total_lines = len(citation_free_report.lines)
-                    citation_free_valid_lines = sum(1 for line in citation_free_report.lines if line.valid)
-                    sample["validity_error"] = report.error
-                    sample["line_valid_fraction"] = float(valid_lines / total_lines) if total_lines else 0.0
-                    sample["citation_free_validity_error"] = citation_free_report.error
-                    sample["citation_free_line_valid_fraction"] = (
-                        float(citation_free_valid_lines / citation_free_total_lines)
-                        if citation_free_total_lines
-                        else 0.0
-                    )
-                    sample["invalid_line_errors"] = [
-                        {
-                            "line_number": line.line_number,
-                            "text": line.text,
-                            "syntax_valid": line.syntax_valid,
-                            "error": line.error or line.syntax_error,
-                        }
-                        for line in report.lines
-                        if not line.valid
-                    ][:5]
-                    sample["citation_free_invalid_line_errors"] = [
-                        {
-                            "line_number": line.line_number,
-                            "text": line.text,
-                            "syntax_valid": line.syntax_valid,
-                            "error": line.error or line.syntax_error,
-                        }
-                        for line in citation_free_report.lines
-                        if not line.valid
-                    ][:5]
+                sample = self._build_synthetic_sample(rec=rec, gen=gen, score=score, source="synthetic")
                 sample_candidates_by_step[rec.step].append(sample)
+            if progress_interval and (idx == 1 or idx % progress_interval == 0 or idx == total_records):
+                elapsed = time.perf_counter() - scoring_started
+                print(
+                    f"[syntheval] greedy scoring {idx}/{total_records} records "
+                    f"({elapsed:.1f}s elapsed)",
+                    flush=True,
+                )
 
-        for step in range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1):
+        for step in eval_cfg.step_values():
             vals = vals_by_step.get(
                 step,
                 {
@@ -460,7 +490,7 @@ class UnifiedEvaluator:
 
         samples: List[dict] = []
         if collect_samples > 0:
-            steps = list(range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1))
+            steps = eval_cfg.step_values()
             offsets = {step: 0 for step in steps}
             while len(samples) < collect_samples:
                 added = False
@@ -478,6 +508,120 @@ class UnifiedEvaluator:
                     break
         return metrics, samples
 
+    def _build_synthetic_sample(
+        self,
+        *,
+        rec: _EvalPromptRecord,
+        gen: str,
+        score,
+        source: str,
+    ) -> dict:
+        sample = {
+            "source": source,
+            "step": rec.step,
+            "prompt": rec.prompt,
+            "generation": gen,
+            "gold_answer": rec.gold_answer,
+            "shortcut_answer": rec.metadata.get("shortcut_branch_answer"),
+            "active_branch_first": rec.metadata.get("active_branch_first"),
+            "syntactic": score.syntactic,
+            "format_ok": score.format_ok,
+            "correct": score.correct,
+            "valid": score.valid,
+            "citation_free_valid": score.citation_free_valid,
+            "grounded_valid": score.grounded_valid,
+            "citation_free_grounded_valid": score.citation_free_grounded_valid,
+            "nl_logic_parse": score.nl_logic_parse,
+            "nl_logic_citation_free_valid": score.nl_logic_citation_free_valid,
+            "nl_logic_line_valid_fraction": score.nl_logic_line_valid_fraction,
+            "nl_logic_valid_prefix_fraction": score.nl_logic_valid_prefix_fraction,
+        }
+        premises, proof, conclusion = self.output_eval._extract_logic_components(gen, self.output_eval._logic_block_tag(rec.template))
+        if premises and proof and conclusion:
+            report = self.output_eval.engine.analyze_proof(premises=premises, conclusion=conclusion, proof=proof)
+            citation_free_report = self.output_eval.engine.analyze_proof_citation_free(
+                premises=premises, conclusion=conclusion, proof=proof
+            )
+            total_lines = len(report.lines)
+            valid_lines = sum(1 for line in report.lines if line.valid)
+            citation_free_total_lines = len(citation_free_report.lines)
+            citation_free_valid_lines = sum(1 for line in citation_free_report.lines if line.valid)
+            sample["validity_error"] = report.error
+            sample["line_valid_fraction"] = float(valid_lines / total_lines) if total_lines else 0.0
+            sample["citation_free_validity_error"] = citation_free_report.error
+            sample["citation_free_line_valid_fraction"] = (
+                float(citation_free_valid_lines / citation_free_total_lines)
+                if citation_free_total_lines
+                else 0.0
+            )
+            sample["invalid_line_errors"] = [
+                {
+                    "line_number": line.line_number,
+                    "text": line.text,
+                    "syntax_valid": line.syntax_valid,
+                    "error": line.error or line.syntax_error,
+                }
+                for line in report.lines
+                if not line.valid
+            ][:5]
+            sample["citation_free_invalid_line_errors"] = [
+                {
+                    "line_number": line.line_number,
+                    "text": line.text,
+                    "syntax_valid": line.syntax_valid,
+                    "error": line.error or line.syntax_error,
+                }
+                for line in citation_free_report.lines
+                if not line.valid
+            ][:5]
+        return sample
+
+    def _collect_sampled_generation_examples(
+        self,
+        *,
+        records: Sequence[_EvalPromptRecord],
+        generations_by_record: Sequence[Sequence[str]],
+        eval_cfg: EvalLoopConfig,
+        collect_samples: int,
+    ) -> list[dict]:
+        if collect_samples <= 0:
+            return []
+        candidates_by_step: dict[int, list[tuple[_EvalPromptRecord, str]]] = defaultdict(list)
+        for rec, generations in zip(records, generations_by_record, strict=True):
+            if generations:
+                candidates_by_step[rec.step].append((rec, generations[0]))
+
+        samples: list[dict] = []
+        steps = eval_cfg.step_values()
+        offsets = {step: 0 for step in steps}
+        while len(samples) < collect_samples:
+            added = False
+            for step in steps:
+                candidates = candidates_by_step.get(step, [])
+                offset = offsets[step]
+                if offset >= len(candidates):
+                    continue
+                rec, gen = candidates[offset]
+                score = self.output_eval.evaluate(
+                    gen,
+                    template=rec.template,
+                    gold_answer=rec.gold_answer,
+                    gold_logic_premises=rec.gold_logic_premises,
+                    gold_logic_conclusion=rec.gold_logic_conclusion,
+                    gold_logic_constants=rec.gold_logic_constants,
+                    gold_logic_predicates=rec.gold_logic_predicates,
+                    prefill=rec.prefill,
+                    gold_first_modality_lines=rec.gold_first_modality_lines,
+                )
+                samples.append(self._build_synthetic_sample(rec=rec, gen=gen, score=score, source="synthetic_sampled"))
+                offsets[step] = offset + 1
+                added = True
+                if len(samples) >= collect_samples:
+                    break
+            if not added:
+                break
+        return samples
+
     def _evaluate_with_generator(
         self,
         *,
@@ -488,14 +632,20 @@ class UnifiedEvaluator:
         generate_samples: Callable[[Sequence[str], int, int, float], list[list[str]]] | None = None,
     ) -> tuple[Dict[str, float], List[dict]]:
         records_by_step = self._build_synthetic_records(task_cfg=task_cfg, eval_cfg=eval_cfg)
-        records = [r for step in range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1) for r in records_by_step[step]]
-        generations = generate_texts([r.prompt for r in records], eval_cfg.max_new_tokens, False, 0.0)
-        metrics, samples = self._score_synthetic_outputs(
-            records=records,
-            generations=generations,
-            eval_cfg=eval_cfg,
-            collect_samples=collect_samples,
-        )
+        steps = eval_cfg.step_values()
+        records = [r for step in steps for r in records_by_step[step]]
+        metrics: Dict[str, float] = {}
+        samples: List[dict] = []
+        if eval_cfg.greedy_enabled:
+            generations = generate_texts([r.prompt for r in records], eval_cfg.max_new_tokens, False, 0.0)
+            metrics, samples = self._score_synthetic_outputs(
+                records=records,
+                generations=generations,
+                eval_cfg=eval_cfg,
+                collect_samples=collect_samples,
+            )
+        else:
+            print("[syntheval] skipping separate greedy eval; use sampled pass@1 for @1 curves", flush=True)
 
         if eval_cfg.sampled_enabled:
             sample_n = max(1, int(eval_cfg.sampled_num_generations))
@@ -530,13 +680,23 @@ class UnifiedEvaluator:
                         output_eval=self.output_eval,
                         k_values=k_values,
                         band_predicates=band_predicates,
+                        log_interval=eval_cfg.scoring_log_interval,
                     )
                 )
+                if len(samples) < collect_samples:
+                    samples.extend(
+                        self._collect_sampled_generation_examples(
+                            records=records,
+                            generations_by_record=sampled_generations,
+                            eval_cfg=eval_cfg,
+                            collect_samples=max(0, collect_samples - len(samples)),
+                        )
+                    )
 
         if eval_cfg.constrained_enabled and task_cfg.template == TemplateName.LOGIC:
             constrained_records = [
                 rec
-                for step in range(eval_cfg.synthetic_step_min, eval_cfg.synthetic_step_max + 1)
+                for step in steps
                 for rec in records_by_step[step][: max(1, int(eval_cfg.constrained_samples_per_step))]
             ]
             if constrained_records:
@@ -582,6 +742,7 @@ class UnifiedEvaluator:
                                 "ood": lambda step, train_max=train_max: step > train_max,
                                 "hard_tail": lambda step: step >= 15,
                             },
+                            log_interval=eval_cfg.scoring_log_interval,
                         )
                     )
                 for rec, generations_for_rec, traces_for_rec in zip(
@@ -681,6 +842,7 @@ class UnifiedEvaluator:
                 tokenizer=tokenizer,
                 device=device,
                 batch_size=eval_cfg.generation_batch_size,
+                stop_strings=eval_cfg.stop_strings,
             )
             return self._evaluate_with_generator(
                 task_cfg=task_cfg,
@@ -790,8 +952,10 @@ class UnifiedEvaluator:
             tokenizer_path=tokenizer_path,
             batch_size=eval_cfg.generation_batch_size,
             gpu_memory_utilization=eval_cfg.vllm_gpu_memory_utilization,
+            vllm_max_model_len=eval_cfg.vllm_max_model_len,
             lora_adapter_path=lora_adapter_path,
             lora_base_model_name=lora_base_model_name,
+            stop_strings=eval_cfg.stop_strings,
         )
         try:
             return self._evaluate_with_generator(

@@ -117,10 +117,11 @@ Eval protocol:
 | setting | value |
 | --- | ---: |
 | eval depths | `1..50` |
-| prompts per depth | 128 |
+| prompts per depth | 32 |
 | sampled generations per prompt | 16 |
 | pass@k | `1,2,4,8,16` |
-| max new tokens | 6144 |
+| max new tokens | `4096` for `logic`, `6144` for `nl_exact` |
+| vLLM max model length | 16384 |
 | constrained line-level eval | disabled by default |
 
 The eval job merges each LoRA checkpoint into a temporary standalone HF model, runs pass@k, writes JSON/JSONL outputs, logs to W&B, and deletes the merged model by default to avoid accumulating hundreds of GB in `tmp/`.
@@ -143,6 +144,17 @@ Default checkpoint steps:
 CHECKPOINT_STEPS=1000,3000,10000
 ```
 
+Intermediate checkpoint eval is intentionally lighter than final eval:
+
+| setting | value |
+| --- | ---: |
+| eval depths | `1..50` |
+| prompts per depth | 16 |
+| sampled generations per prompt | 8 |
+| pass@k | `1,2,4,8` |
+| max new tokens | `4096` for `logic`, `6144` for `nl_exact` |
+| vLLM max model length | 16384 |
+
 The intermediate eval job merges one LoRA checkpoint at a time into a job-local tmp directory, evaluates it, writes JSON/JSONL outputs under:
 
 ```bash
@@ -161,11 +173,47 @@ Primary metrics:
 - depth threshold curves: largest depth with metric above 80%, 50%, and 25%
 - area under the depth curve over `1..50`
 
+Metric caveat found on 2026-05-22: current HFSA `grounded_valid` / `citation_free_grounded_valid` numbers are not interpretable for logic traces because the prompt does not expose canonical predicate letters. Generated formal traces can copy the natural facts with a different but semantically equivalent predicate mapping, so exact-symbol grounded validity is near zero even when internal citation-free proof validity and the final answer are correct. Until semantic/canonicalized grounding is implemented, use internal citation-free validity for logic traces and `nl_logic_*` translated validity for NL traces.
+
+## OOD lm-eval Add-On
+
+Implementation added 2026-05-25:
+
+```bash
+${HPCVAULT}/.venv_rlvl_posttrain/bin/python scripts/evaluate_lm_eval.py \
+  --checkpoint <model_or_path> \
+  --suite synthrlvl_ood \
+  --output-path <out> \
+  --include-task-path lm_eval_tasks/synthrlvl_ood \
+  --confirm-run-unsafe-code
+```
+
+The suite contains GSM8K plus context-provided LongBench variants of HotpotQA, 2WikiMultiHopQA, and MuSiQue. Scoring is format-aware: GSM8K extracts from `<answer>...</answer>` before numeric normalization, while the multi-hop QA tasks use strict answer extraction before F1 so context-copy text does not receive accidental credit.
+
+Pilot wiring jobs `3659344` and strict rerun `3659348` completed. The broad submitted evals are:
+
+| job | scope | note |
+| --- | --- | --- |
+| `3659356_[0-89%4]` | main OLMo-7B, paired pilots, hard attribute, Qwen-7B, Qwen-1.5B, Gemma-4B | one-GPU LoRA merge/eval; missing checkpoints skip cleanly |
+| `3659357_[0-1%1]` | OLMo-32B pilot | four-GPU tensor-parallel vLLM eval |
+| `3659392_[0-5%3]` | six tiny Llama scratch-pretraining checkpoints | direct checkpoint eval; separate from the larger-model automatic hook |
+
+The larger-model lm-eval Slurm hook `scripts/slurm/jobs/lm_eval_hfsa_depth_scaling_2026-05-19.slurm` now defaults to this OOD suite so future larger training runs can attach the same downstream eval after training. Tiny scratch-pretraining runs are excluded from the automatic downstream hook.
+
 ## Runtime Expectation
 
 Prior 10k OLMo-7B LoRA SFT jobs on the fixed-target dataset took roughly 13-15 hours on one A100-80GB for train depths `1..10` and `1..15`. Depth `1..20` and `1..25` should still usually fit the 24h allocation because the max training sequence length remains below 8192 tokens, but they are expected to be slower.
 
-Depth-50 pass@k eval is the higher-risk runtime component because it evaluates `50 x 128 x 16 = 102,400` generations per checkpoint with longer outputs. Eval jobs are therefore separate dependent jobs, and the scripts are idempotent: they skip existing JSON outputs unless `FORCE_PASSK_EVAL=1` is set.
+Depth-50 pass@k eval is the higher-risk runtime component. The original `50 x 128 x 16 = 102,400` generations/checkpoint setting was too slow for the 24h window. A first runtime fix reduced final eval to `50 x 32 x 16 = 25,600` sampled generations/checkpoint, plus a greedy pass, and intermediate eval to `50 x 16 x 8 = 6,400` sampled generations/checkpoint.
+
+Second runtime patch applied on 2026-05-22 10:30 CEST for future/resubmitted jobs:
+
+- Final sparse protocol: depths `{1,2,5,10,12,15,18,20,25,30,35,40,45,50}`, `32` prompts/depth, `16` samples/prompt, no separate greedy pass, vLLM stop string `</answer>`, output subdir `passk_eval/hfsa_depth_scaling_sparse/`.
+- Intermediate sparse protocol: depths `{1,5,10,15,20,25,30,40,50}`, `16` prompts/depth, `16` samples/prompt, no separate greedy pass, vLLM stop string `</answer>`, output subdir `passk_eval/hfsa_depth_scaling_intermediate_sparse/`.
+- The final sparse protocol is `14*32*16 = 7,168` sampled generations/checkpoint versus `25,600` sampled generations/checkpoint in the old current protocol, and skips `1,600` greedy generations. This is about `3.6x` fewer sampled generations and `3.8x` fewer total generations before accounting for stop-string token savings.
+- The intermediate sparse protocol is `9*16*16 = 2,304` sampled generations/checkpoint, gives correct@16 over time, and skips `800` greedy generations. This is about `3.1x` fewer total generations than the previous `6,400 sampled + 800 greedy` intermediate protocol, before stop-string token savings.
+
+Eval jobs are separate dependent jobs, and the scripts are idempotent: they skip existing JSON outputs unless `FORCE_PASSK_EVAL=1` is set. Already-running Slurm jobs still use the script snapshot from their submission time; the sparse protocol affects new/resubmitted jobs only.
 
 ## Follow-Up Plan
 
@@ -191,150 +239,144 @@ Recommended first non-LoRA wave:
 
 The smaller-model setting should use the same depth curriculum and eval protocol, but with many more tokens and explicit train/eval loss curves because full pretraining is a different regime from 10k-step adapter SFT.
 
-## Submitted Jobs
+The first implementation is now a single-node pilot, not a production pretraining stack:
 
-Originally submitted on 2026-05-19, then cancelled after the checkpoint-retention patch:
+```bash
+scripts/train_tiny_llama_pretrain.py
+scripts/slurm/sweeps/pretrain/hfsa_tiny_llama_scratch_2026-05-24.slurm
+scripts/slurm/jobs/posthoc_hfsa_tiny_llama_pretrain_eval_2026-05-24.slurm
+```
+
+It uses random-init Llama configs with a Llama3 tokenizer at `50M`, `100M`, and `200M` parameter scale on HFSA train depths `1..10`. The user-requested "50B/100M/200M" wave was interpreted as the earlier planned `50M-200M` scale; a true 50B from-scratch run needs a separate distributed pretraining stack.
+
+Tiny result update 2026-05-25: all six tiny eval rows completed. The trainer learned some train-band answer/format behavior but not valid extrapolating reasoning. Train correct@8 ranges from `0.656` to `0.859`; OOD correct@8 ranges from `0.016` to `0.273`; depth-50 correct@8 is `0.000` for every row; OOD joint@8 and depth-50 joint@8 are also `0.000` for every row. The best answer-only row is 200M logic (`0.859` train correct@8, `0.273` OOD correct@8), but this remains a smoke/mechanism signal rather than a solved small-model result.
+
+Report/plot update 2026-05-25: `scripts/analysis/build_logic_cot_report.py` now builds a LaTeX report plus CSV tables and PDF/PNG plots under `analysis/logic_cot_report_2026-05-25/`. It covers main OLMo-7B final and checkpoint curves, tiny Llama final depth/band plots, partial tiny checkpoint curves, partial Qwen-7B architecture-ablation plots, and qualitative sample-generation panels. Because `pdflatex`/`latexmk` are not installed on the current node, the `.tex` report is generated but not compiled here.
+
+Tiny checkpoint eval update 2026-05-25: the first tiny intermediate eval array `3659405` exposed that HF Trainer checkpoint dirs do not contain tokenizer files. The script now stages each checkpoint with tokenizer metadata copied from the corresponding `final/` directory. Replacement `3659415_[0-11%3]` completed cleanly and produced all 12 checkpoint JSONs for 10k and 15k; the report builder was rerun and now includes tiny curves with 10k, 15k, and final/20k points.
+
+Tiny OOD lm-eval update 2026-05-25: original tiny OOD array `3659392` failed with a vLLM CUDA device-side assert under `max_model_len=32768`. The tiny eval script now defaults to `max_model_len=8192`, `max_num_seqs=8`, and smaller GPU memory utilization. Replacement `3659488_[0-5%3]` completed cleanly and the report now includes `tables/tiny_llama_ood_lmeval_summary.csv`. GSM8K EM is near zero (`0.0068` for 200M logic, `0.0045` for 200M NL, zero for the smaller rows), and strict LongBench QA F1 is zero for all tiny rows. Because contexts are truncated to 8192 for these tiny configs, use this as a downstream smoke readout, not a long-context QA claim.
+
+## Follow-Up Oversight Notes - 2026-05-24
+
+Qwen 7B logic sparse eval now covers all three seeds for train range `1..20`: mean OOD correct@16/joint@16 is `0.753/0.165`, and mean depth-50 correct@16/joint@16 is `0.656/0.021`. The completed Qwen `logic_train1to10` mean remains `0.618/0.320` OOD correct@16/joint@16, so the current partial Qwen curve is not a monotonic joint-validity replication of the OLMo-7B main result. Wait for `logic_train1to25` and matched `nl_exact` rows before drawing model-family conclusions.
+
+OLMo-32B pilot recovery: `3656335_0` completed, but original eval row `3656336_0` failed before generation because vLLM rejected `max_model_len=16384` while `allenai/OLMo-2-0325-32B` advertises `max_position_embeddings=4096`. `scripts/slurm/jobs/posthoc_hfsa_model_ablation_olmo32_eval_2026-05-24.slurm` now exports `VLLM_ALLOW_LONG_MAX_MODEL_LEN=1`; `bash -n` passed, stale pending row `3656336_1` was canceled, and replacement eval array `3658461_[0-1%1]` was submitted with `aftercorr:3656335`.
+
+Follow-up oversight 2026-05-25 02:44 CEST: Qwen 7B logic sparse eval has all nine expected JSON outputs. Three-seed means for train ranges `1..10`, `1..20`, and `1..25` are OOD correct@16/joint@16 `0.618/0.320`, `0.753/0.165`, and `0.906/0.431`; depth-50 correct@16/joint@16 `0.292/0.031`, `0.656/0.021`, and `0.854/0.156`. This makes Qwen logic correctness improve with train depth, but joint validity is still weaker than the main OLMo-7B `logic_train1to25` result and matched Qwen `nl_exact` rows are not finished.
+
+Follow-up oversight 2026-05-25 06:45 CEST: Qwen 7B `nl_exact_train1to10` sparse eval now has all three seeds. Three-seed means are OOD correct@1/correct@16/joint@16 `0.317/0.461/0.279`, depth-50 correct@16/joint@16 `0.427/0.000`, and OOD joint AUC `0.172`. The matched Qwen `logic_train1to10` means remain OOD correct@1/correct@16/joint@16 `0.249/0.618/0.320`, depth-50 correct@16/joint@16 `0.292/0.031`, and OOD joint AUC `0.215`. Treat this as a partial Qwen architecture signal only; `nl_exact_train1to20/25` eval rows are still running or dependency-pending.
+
+Follow-up oversight 2026-05-25 10:48 CEST: Qwen 7B `nl_exact_train1to20` sparse eval now has seeds `3407` and `3408`. The partial two-seed mean is OOD correct@1/correct@16/joint@16 `0.361/0.576/0.503` and depth-50 correct@16/joint@16 `0.406/0.203`. This is a strong partial NL result relative to Qwen `logic_train1to20` joint validity, but seed `3409` and all `nl_exact_train1to25` rows are still incomplete. Paired maze eval row `3657739_0` failed at chunk `51/56` because a depth-45 prompt had `16400` tokens under `vllm_max_model_len=16384`; row `3657739_1` was canceled before the same expected failure. The paired eval wrapper now defaults `maze_navigation` to `PASSK_VLLM_MAX_MODEL_LEN=32768` and batch `64`; replacement eval `3659556_[0-1%2]` is pending.
+
+## Submitted / Replacement Jobs
+
+Final replacement job set as of 2026-05-23 21:15 CEST:
 
 | stage | Slurm job | dependency | notes |
 | --- | ---: | --- | --- |
-| build + push depth-50 dataset | `3623863` | none | builds local parquet and pushes to HF |
-| 30-row SFT array | `3623864_[0-29%6]` | `afterok:3623863` | cancelled before start; old Slurm snapshot likely retained only 2 checkpoints |
-| 30-row merge/pass@k eval array | `3623865_[0-29%6]` | `aftercorr:3623864` | cancelled and replaced |
+| 10k SFT rows `0..6` | `3646736_[0-6]` | none | row 0 skipped due existing final checkpoint; rows 1-6 completed cleanly |
+| 10k SFT rows `7..29` | `3647379_[7-29%12]` | none | all later rows completed cleanly; no SFT failures found |
+| Old full-grid eval arrays | `3647708`, `3648279`, `3648280`, `3647711`, `3647712` | none | canceled at 2026-05-22 10:47 CEST; partial old outputs retained, but no 10k final JSON completed |
+| Sparse final eval, all 30 main 10k rows | `3650951_[0-29%10]` | none | completed; 30/30 JSON files, all tasks exit `0:0` |
+| Sparse intermediate eval, seed `3407` subset | `3650952_[0,3,6,9,12,15,18,21,24,27%4]` | none | completed; 30/30 checkpoint JSON files, all tasks exit `0:0` |
 
-Resubmitted from patched scripts on 2026-05-19 20:20 CEST:
+## Current Status - 2026-05-23 21:15 CEST
 
-| stage | Slurm job | dependency | notes |
-| --- | ---: | --- | --- |
-| 30-row SFT array | `3634790_[0-29%6]` | none; dataset already built | LoRA SFT, 10k steps, batch 1, `save_total_limit=12` |
-| 30-row final merge/pass@k eval | `3634791_[0-29%6]` | `aftercorr:3634790` | per-row final eval; transient merged checkpoints |
-| 30-row intermediate checkpoint eval | `3634792_[0-29%2]` | `aftercorr:3634790` | selected checkpoint pass@k, default `1000,3000,10000` |
+| stage | status | note |
+| --- | --- | --- |
+| SFT `3646736_0..6`, `3647379_7..29` | completed | all 30 main SFT rows are covered; row 0 skipped due existing checkpoint; all executed rows exit `0:0` |
+| Old eval arrays `3647708`, `3648279`, `3648280`, `3647711`, `3647712` | canceled | canceled because they used old full-grid protocol and were still cap-hitting; partial old outputs are not the comparable final result |
+| Sparse final eval `3650951` | completed | all 30 main rows finished under the comparable sparse protocol |
+| Sparse intermediate eval `3650952` | completed | seed-3407 rows for all train-depth/template groups finished at checkpoints `1000`, `3000`, and `10000` |
+
+Operational notes:
+
+- Old greedy eval was a major runtime risk because many completions ran to `max_new_tokens` (`4096` for logic, `6144` for `nl_exact`). A token-length audit indicates these cap hits are degenerate/non-terminating outputs rather than legitimate need for longer answers: logic gold targets are far below `4096` even at depth 50, and logic eval started hitting `4096` already in depth chunk `5..8`; `nl_exact` started hitting `6144` around depths `17..20`, where gold targets are only about `2.2k` tokens.
+- Runtime estimate from old logs: old final pass@k rows were trending over the 24h window for several rows. The new sparse protocol completed final rows in roughly `3.3h..8.0h`; the shallow logic rows were the slowest completed rows, while most later logic/NL rows finished in `3.3h..6.3h`.
+- Sparse final rows show train-band correct@16 and joint@16 are saturated at `1.000` for every group. The main result is depth-dependent: `nl_exact_train1to5` beats `logic_train1to5` OOD, logic is stronger at train ranges `1..10`, `1..15`, and `1..20`, and `nl_exact_train1to25` catches up/slightly exceeds logic at the deepest train range.
+- Sparse seed-3407 intermediate rows now cover all train-depth/template groups. `logic_train1to25_seed3407` improves in OOD joint@16 from `0.500` at checkpoint 1000 to `0.604` at checkpoint 3000 and `0.667` at checkpoint 10000, while OOD correct@16 stays high (`0.938`, `0.979`, `0.917`).
+- The sparse eval patch is active: vLLM stop string `</answer>` is used with the stop tag retained in output, separate greedy eval is skipped by default, sampled pass@1 provides the @1 curve, and sampled-generation examples are written to JSONL when greedy is skipped.
+- Eval stderr repeatedly shows tokenizer/rope warnings (`fix_mistral_regex`, integer rope-scaling fields), but completed rows exit `0:0`; the active merged tokenizer reports `GPT2Tokenizer`. Treat this as nonblocking for the current sparse readout and verify tokenizer round-trip before publication-quality reruns.
+
+Completed sparse-protocol group means:
+
+| template | train depths | OOD correct@1 | OOD correct@16 | OOD joint@16 | OOD joint AUC | depth-50 joint@16 | max depth joint >= 0.5 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `logic` | `1..5` | `0.031` | `0.293` | `0.052` | `0.027` | `0.010` | `5` |
+| `logic` | `1..10` | `0.248` | `0.727` | `0.362` | `0.265` | `0.010` | `18` |
+| `logic` | `1..15` | `0.166` | `0.634` | `0.293` | `0.197` | `0.042` | `20` |
+| `logic` | `1..20` | `0.284` | `0.830` | `0.441` | `0.418` | `0.198` | `30` |
+| `logic` | `1..25` | `0.513` | `0.921` | `0.710` | `0.711` | `0.417` | `45` |
+| `nl_exact` | `1..5` | `0.353` | `0.502` | `0.318` | `0.191` | `0.000` | `18` |
+| `nl_exact` | `1..10` | `0.354` | `0.482` | `0.299` | `0.184` | `0.000` | `18` |
+| `nl_exact` | `1..15` | `0.191` | `0.322` | `0.137` | `0.044` | `0.000` | `18` |
+| `nl_exact` | `1..20` | `0.220` | `0.474` | `0.219` | `0.180` | `0.115` | `25` |
+| `nl_exact` | `1..25` | `0.574` | `0.794` | `0.748` | `0.757` | `0.427` | `45` |
+
+Analysis artifacts:
+
+```bash
+scripts/analysis/aggregate_hfsa_depth_scaling.py
+analysis/hfsa_depth_scaling_2026-05-23/tables/final_group_summary.csv
+analysis/hfsa_depth_scaling_2026-05-23/tables/final_group_summary_compact.md
+analysis/hfsa_depth_scaling_2026-05-23/figures/final_depth_correct16.png
+analysis/hfsa_depth_scaling_2026-05-23/figures/final_depth_joint16.png
+analysis/hfsa_depth_scaling_2026-05-23/figures/final_ood_metrics_by_train.png
+analysis/hfsa_depth_scaling_2026-05-23/figures/intermediate_seed3407_curves.png
+```
 
 Check status:
 
 ```bash
-squeue -j 3634790,3634791,3634792,3634793,3634794,3643001,3643002 -o '%.18i %.9P %.32j %.8T %.10M %.6D %R'
-sacct -j 3634790,3634791,3634792,3634793,3634794,3643001,3643002 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
+squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %R'
+sacct -j 3650951,3650952 --format=JobID%30,JobIDRaw,JobName%34,State,Elapsed,ExitCode,Start,End -n -P
+for f in logs/hfsa_dscale_eval_3650951_*.out logs/hfsa_dscale_ckpt_eval_3650952_*.out; do [ -f "$f" ] && echo "### $f" && tail -n 20 "$f"; done
 ```
 
-## Current Status - 2026-05-20 09:25 CEST
+## Model-Ablation And Pretraining Follow-Up - 2026-05-24
 
-| stage | status | note |
-| --- | --- | --- |
-| main SFT `3634790_0` | running | `logic_train1to5_10k_seed3407`; reached the `3000/10000` online eval point in logs and continued |
-| main SFT `3634790_[1-29%6]` | pending | pending by priority/resources |
-| final eval `3634791_[0-29%6]` | dependency-pending | waits on corresponding main SFT rows |
-| intermediate eval `3634792_[0-29%2]` | dependency-pending | waits on corresponding main SFT rows |
-| 1k sanity SFT `3634793` | 9/10 completed, 1 failed | `nl_exact_train1to25_1k_seed3407` failed with CUDA OOM at step 20 |
-| 1k sanity SFT retry `3643001_[9]` | pending | retries only the failed row with gradient checkpointing enabled |
-| 1k sanity eval `3634794_0..8` | pending | existing eval rows for completed 1k SFT checkpoints |
-| 1k sanity eval retry `3643002_[9]` | dependency-pending | waits on `3643001` |
+Submitted representative architecture/pretraining follow-ups rather than repeating the full 30-row OLMo grid on every model.
 
-OOM mitigation added after the 1k `nl_exact_train1to25` failure:
+| stage | Slurm job | dependency | notes |
+| --- | ---: | --- | --- |
+| Qwen SFT | `3656217_[0-17%3]` | none | `Qwen/Qwen2.5-7B`, templates `logic,nl_exact`, train depths `1..10`, `1..20`, `1..25`, seeds `3407..3409` |
+| Qwen sparse eval | `3656218_[0-17%3]` | `aftercorr:3656217` | same sparse final protocol as the OLMo readout, output under `passk_eval/hfsa_model_ablation_qwen2p5_7b_sparse/` |
+| Qwen-1.5B/Gemma SFT | `3656323_[0-35%4]`, retries `3656359_2` and `3656387_3` | none | `Qwen/Qwen2.5-1.5B` and `google/gemma-3-4b-pt`, same representative train-depth/template/seed grid; exact `Qwen/Qwen2.5-1B` was not available |
+| Qwen-1.5B/Gemma sparse eval | `3656389_[0-35%4]` | `afterany:3656323,afterany:3656359,afterok:3656387` | replacement for canceled `3656324` and `3656361`; repeated immediate node failure occurred on `a0934`, so the second retry excludes it |
+| OLMo-32B SFT pilot | `3656335_[0-1%1]` | none | `allenai/OLMo-2-0325-32B`, train depth `1..20`, seed `3407`, `logic` and `nl_exact`, 4 GPUs |
+| OLMo-32B sparse eval | `3656336_[0-1%1]` | `aftercorr:3656335` | uses `VLLM_TENSOR_PARALLEL_SIZE=4`; exact OLMo-3 base 32B was not available under the checked IDs |
+| tiny Llama scratch pretraining | `3656338_[0-5%3]`, retries `3656360_1` and `3656388_0` | none | `50M/100M/200M` random-init Llama configs, HFSA `logic` vs `nl_exact`; original rows `0,1` hit cluster `NODE_FAIL` |
+| tiny Llama sparse eval | `3656390_[0-5%3]` | `afterany:3656338,afterany:3656360,afterok:3656388` | lightweight pass@k eval for the scratch-pretrained checkpoints |
+| Codex oversight | `3656509`, next pass `3656510` | none | autonomous `cs exec` oversight for the follow-up wave; script self-schedules a bounded follow-up pass every 4h |
 
-- `train_sft.py` supports `train.gradient_checkpointing`.
-- `conf/sft_hard_fsa_schema_fixedtarget.yaml` defaults `train.gradient_checkpointing=auto`, which enables checkpointing for long `nl_exact` depth-25 rows.
-- HFSA depth-scaling SFT Slurm scripts pass `train.gradient_checkpointing="${GRADIENT_CHECKPOINTING:-auto}"` for future submissions.
-- `scripts/env.sh` sets `PYTORCH_ALLOC_CONF=expandable_segments:True`.
+Oversight update 2026-05-24 15:06 CEST:
 
-This should also protect pending long `nl_exact_train1to25` 10k SFT rows when they start, because they load the current config/code at runtime.
+- Qwen 7B SFT rows `3656217_0,1,2` completed and rows `3,4,5` are running. Qwen eval rows `3656218_0,1,2` completed; later eval rows remain dependency-pending.
+- Qwen 7B `logic_train1to10` sparse eval outputs are complete for seeds `3407..3409` under `${WORK}/synthetic-RLVL/passk_eval/hfsa_model_ablation_qwen2p5_7b_sparse/`. Seed OOD correct@16/joint@16 is `0.591/0.309`, `0.781/0.400`, and `0.481/0.250`; the three-seed mean is `0.618/0.320`. Depth-50 joint@16 is `0.000`, `0.094`, and `0.000`. Do not draw model-family conclusions until the matched `nl_exact` rows complete.
+- Qwen-1.5B/Gemma replacement rows `3656359_2` and `3656387_3` completed after the earlier node failures. Original small-extra rows `0,1,4,5,6,7,8` completed; rows `9,10,11,12` are running; remaining rows are pending.
+- Tiny Llama node-failed rows are recovered and the dependent eval `3656390_[0-5%3]` completed all six rows. Preliminary OOD correct@8 is `0.219/0.148/0.273` for `50M/100M/200M` logic and `0.086/0.016/0.055` for `50M/100M/200M` `nl_exact`; all six rows have OOD joint@8 and depth-50 correct/joint at `0.0`.
+- Paired maze SFT rows `3656309_0,1` failed with CUDA OOM because gradient checkpointing was off. They were resubmitted as `3657088_0,1` with `GRADIENT_CHECKPOINTING=true`; by 15:05 CEST both replacement rows had run past the original OOM window, and replacement eval rows `3657089_0,1` remain dependency-pending.
 
-## Current Status - 2026-05-19 20:20 CEST
+Oversight update 2026-05-24 18:45 CEST:
 
-| stage | status | note |
-| --- | --- | --- |
-| build `3623863` | completed | dataset was built/pushed successfully |
-| old main SFT/eval `3623864`, `3623865` | cancelled | replaced so patched checkpoint retention is used |
-| main SFT `3634790_[0-29%6]` | pending | pending by priority/resources |
-| final eval `3634791_[0-29%6]` | dependency-pending | waits on corresponding SFT rows |
-| intermediate eval `3634792_[0-29%2]` | dependency-pending | waits on corresponding SFT rows |
-| old 1k sanity SFT/eval `3624535`, `3624536` | cancelled | replaced so pending tasks/evals use patched scripts |
-| 1k sanity SFT `3634793_[0-9%5]` | pending | idempotent; completed rows should skip if finals exist |
-| 1k sanity eval `3634794_[0-9%5]` | dependency-pending | waits on corresponding 1k SFT rows |
+- Qwen 7B SFT rows `3656217_0..5` completed; rows `6..8` are running; rows `9..17` remain pending by array limit. Eval rows `3656218_0..3` completed; rows `4,5` are running; later rows remain dependency-pending.
+- Qwen 7B `logic_train1to20_seed3407` sparse eval produced OOD correct@16/joint@16 `0.703/0.182` and depth-50 correct@16/joint@16 `0.500/0.000`. Together with the completed `logic_train1to10` rows, Qwen has logic-only signal but no matched `nl_exact` comparison yet.
+- Qwen-1.5B/Gemma rows `0,1,4..13` have completed, rows `14..17` are running, and recovered rows `2,3` are complete; eval `3656389` remains dependency-pending.
+- OLMo-32B row `3656335_0` is still training at about 8.7h elapsed and has passed multiple online eval windows; row `1` and eval `3656336` remain pending.
+- Paired maze retry `3657088_0,1` failed at step 2000 during online generation eval, not during training. The paired SFT script now defaults online eval past `max_steps`; dead eval `3657089` was canceled, and replacements `3657738_[0-1]` plus dependent eval `3657739_[0-1]` were submitted.
 
-No failure requiring resubmission was observed in these jobs. The bottleneck is cluster/node availability.
-
-## Checkpoint And Convergence-Curve Caveat
-
-The originally submitted main SFT array is aligned with the final depth-scaling comparison, but may not be fully aligned with the new convergence-curve requirement because Slurm snapshots job scripts at submission time.
-
-Original submitted behavior:
-
-- SFT runs save every `1000` steps through `train.save_steps=1000`.
-- The submitted script likely used `train.save_total_limit=2`.
-- Therefore a 10k run will likely retain only the last two checkpoints plus `final`.
-- Online validation runs every `1000` steps, but only with `validation.samples_per_step=4` and sampled pass@k disabled.
-
-Implication:
-
-- Current jobs are enough for final correct@1/correct@16 depth-scaling curves.
-- Original submitted jobs are not enough for robust correct@1/correct@16 over training progress.
-
-Patched resubmission behavior:
+Scripts:
 
 ```bash
-train.save_steps=1000
-train.save_total_limit=12
+scripts/slurm/sweeps/sft/hfsa_model_ablation_qwen7b_2026-05-24.slurm
+scripts/slurm/jobs/posthoc_hfsa_model_ablation_qwen7b_eval_2026-05-24.slurm
+scripts/slurm/sweeps/sft/hfsa_model_ablation_small_extra_2026-05-24.slurm
+scripts/slurm/jobs/posthoc_hfsa_model_ablation_small_extra_eval_2026-05-24.slurm
+scripts/slurm/sweeps/sft/hfsa_model_ablation_olmo32_pilot_2026-05-24.slurm
+scripts/slurm/jobs/posthoc_hfsa_model_ablation_olmo32_eval_2026-05-24.slurm
+scripts/train_tiny_llama_pretrain.py
+scripts/slurm/sweeps/pretrain/hfsa_tiny_llama_scratch_2026-05-24.slurm
+scripts/slurm/jobs/posthoc_hfsa_tiny_llama_pretrain_eval_2026-05-24.slurm
+scripts/slurm/codex/hfsa_followup_oversight_2026-05-24.slurm
 ```
-
-This keeps all ten 1000-step LoRA trainer checkpoints plus margin. Based on the observed LoRA checkpoint size of about 468 MB, retaining all 10 checkpoints for all 30 rows costs roughly 140 GB for checkpoint dirs. That is acceptable only because merged full checkpoints remain transient and are deleted after eval.
-
-Post-hoc pass@k should still evaluate only selected checkpoints first, e.g. `checkpoint-1000`, `checkpoint-3000`, and `checkpoint-10000`, not every checkpoint for every row.
-
-Observed artifact sizes:
-
-| artifact/directory | approximate size |
-| --- | ---: |
-| LoRA SFT final adapter | 162 MB |
-| LoRA SFT trainer checkpoint | 468 MB |
-| merged OLMo-7B checkpoint | 14 GB |
-| `${WORK}/synthetic-RLVL/tmp` | 2.0 TB |
-| `${WORK}/synthetic-RLVL/runs` | 4.0 TB |
-
-Eval jobs should keep merged checkpoints transient: merge, evaluate, log metrics, delete merged model.
-
-Important operational note:
-
-- Pending/running jobs submitted before this patch will not automatically use `save_total_limit=12`.
-- To get convergence checkpoints, cancel/resubmit the SFT array and submit dependent final/intermediate eval arrays from the patched scripts.
-
-## 1k-Sample Sanity Sweep
-
-Motivation: Harada et al. (2025) report that 1k-sample SFT can be competitive with larger SFT sets in their controlled 7B-scale study, and that 20k samples had no consistent accuracy advantage over 1k in their sample-size comparison. Since our current SFT setup has effective batch size 1, a `1k samples` sanity check maps cleanly to `data.train_samples=1000` and `train.max_steps=1000`.
-
-Reference: `https://arxiv.org/abs/2506.14681v2`.
-
-Script:
-
-```bash
-scripts/slurm/sweeps/sft/hfsa_depth_scaling_1k_sanity_2026-05-19.slurm
-```
-
-Grid:
-
-| axis | values |
-| --- | --- |
-| trace template | `logic`, `nl_exact` |
-| train depth range | `1..5`, `1..10`, `1..15`, `1..20`, `1..25` |
-| seed | `3407` only |
-| SFT steps | 1,000 |
-| train samples loaded | 1,000 |
-| effective batch | 1 sequence/update |
-
-Total: `2 x 5 x 1 = 10` SFT runs.
-
-Post-hoc eval script:
-
-```bash
-scripts/slurm/jobs/posthoc_hfsa_depth_scaling_1k_merge_eval_2026-05-19.slurm
-```
-
-Eval is the same depth-50 pass@k protocol except `PASSK_SAMPLES_PER_STEP=64` by default for faster turnaround. This is intended as an early sanity readout, not the final 3-seed result.
-
-Originally submitted 1k sanity jobs on 2026-05-19, then cancelled/replaced:
-
-| stage | Slurm job | dependency |
-| --- | ---: | --- |
-| old 1k-sample SFT sanity array | `3624535_[0-9%5]` | cancelled |
-| old 1k-sample merge/pass@k eval | `3624536_[0-9%5]` | cancelled |
-| patched 1k-sample SFT sanity array | `3634793_[0-9%5]` | none |
-| patched 1k-sample merge/pass@k eval | `3634794_[0-9%5]` | `aftercorr:3634793` |

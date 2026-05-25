@@ -1,0 +1,34 @@
+tag:
+  - synthrlvl_ood
+task: synthrlvl_longbench_musique_tagged
+dataset_path: Xnhyacinth/LongBench
+dataset_name: musique
+test_split: test
+output_type: generate_until
+doc_to_text: "<question>\nAnswer the question using the given passages. Put only the final answer in <answer>...</answer>.\n\nPassages:\n{{context}}\n\nQuestion: {{question}}\n</question>\n"
+doc_to_target: "{{answers}}"
+process_results: !function utils.process_longbench_qa_tagged
+generation_kwargs:
+  max_gen_toks: 512
+  until:
+    - "</answer>"
+    - "<|im_end|>"
+    - "</s>"
+  do_sample: false
+  temperature: 0.0
+repeats: 1
+metric_list:
+  - metric: score
+    aggregation: mean
+    higher_is_better: true
+  - metric: qa_f1_score
+    aggregation: mean
+    higher_is_better: true
+  - metric: tag_found
+    aggregation: mean
+    higher_is_better: true
+  - metric: extracted_nonempty
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0

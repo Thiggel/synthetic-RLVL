@@ -11,7 +11,7 @@
 
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-$PWD}"
-mkdir -p logs passk_eval/hfsa_depth_scaling_intermediate tmp
+mkdir -p logs tmp
 source ./scripts/env.sh
 VENV_PATH="${VENV_PATH:-${HPCVAULT:-}/.venv_rlvl_posttrain}"
 if [[ -z "${HPCVAULT:-}" || ! -x "${VENV_PATH}/bin/python" ]]; then VENV_PATH="${WORK}/.venv"; fi
@@ -43,7 +43,16 @@ GROUP="sft_hfsa_depth_scaling_intermediate/${TAG}"
 DATASET_ID="${DATASET_ID:-flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget-depth50}"
 RUN_DIR="${WORK}/synthetic-RLVL/runs/${RUN_NAME}"
 MERGED_ROOT="${WORK}/synthetic-RLVL/tmp/intermediate_eval_${SLURM_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
-OUT_DIR="${WORK}/synthetic-RLVL/passk_eval/hfsa_depth_scaling_intermediate"
+OUT_DIR="${WORK}/synthetic-RLVL/passk_eval/${PASSK_OUTPUT_SUBDIR:-hfsa_depth_scaling_intermediate_sparse}"
+DEFAULT_PASSK_MAX_NEW_TOKENS=4096
+if [[ "${TEMPLATE}" == "nl_exact" ]]; then
+  DEFAULT_PASSK_MAX_NEW_TOKENS=6144
+fi
+PASSK_MAX_NEW_TOKENS_VALUE="${PASSK_MAX_NEW_TOKENS:-${DEFAULT_PASSK_MAX_NEW_TOKENS}}"
+PASSK_VLLM_MAX_MODEL_LEN_VALUE="${PASSK_VLLM_MAX_MODEL_LEN:-16384}"
+PASSK_STEPS_VALUE="${PASSK_STEPS:-1,5,10,15,20,25,30,40,50}"
+DEFAULT_PASSK_STOP_STRINGS='</answer>'
+PASSK_STOP_STRINGS_VALUE="${PASSK_STOP_STRINGS:-${DEFAULT_PASSK_STOP_STRINGS}}"
 
 cleanup_merged() {
   rm -rf "${MERGED_ROOT}"
@@ -56,6 +65,16 @@ mkdir -p "${MERGED_ROOT}" "${OUT_DIR}"
 export WANDB_PROJECT="${WANDB_PROJECT:-synthetic-rlvl}"
 export WANDB_GROUP="${GROUP}"
 export WANDB_RUN_GROUP="${GROUP}"
+
+SKIP_GREEDY_ARGS=()
+case "${PASSK_SKIP_GREEDY:-1}" in
+  1|true|TRUE|yes|YES) SKIP_GREEDY_ARGS=(--skip-greedy) ;;
+esac
+
+STOP_STRING_ARGS=()
+if [[ -n "${PASSK_STOP_STRINGS_VALUE}" ]]; then
+  STOP_STRING_ARGS=(--stop-strings "${PASSK_STOP_STRINGS_VALUE}")
+fi
 
 IFS=',' read -r -a CKPT_STEPS <<< "${CHECKPOINT_STEPS:-1000,3000,10000}"
 for RAW_STEP in "${CKPT_STEPS[@]}"; do
@@ -96,25 +115,31 @@ for RAW_STEP in "${CKPT_STEPS[@]}"; do
     --backend vllm \
     --step-min 1 \
     --step-max "${PASSK_STEP_MAX:-50}" \
-    --samples-per-step "${PASSK_SAMPLES_PER_STEP:-64}" \
+    --steps "${PASSK_STEPS_VALUE}" \
+    --samples-per-step "${PASSK_SAMPLES_PER_STEP:-16}" \
     --num-generations "${PASSK_NUM_GENERATIONS:-16}" \
     --k-values "${PASSK_K_VALUES:-1,2,4,8,16}" \
     --temperature "${PASSK_TEMPERATURE:-1.0}" \
-    --max-new-tokens "${PASSK_MAX_NEW_TOKENS:-6144}" \
-    --batch-size "${PASSK_BATCH_SIZE:-256}" \
+    --max-new-tokens "${PASSK_MAX_NEW_TOKENS_VALUE}" \
+    --batch-size "${PASSK_BATCH_SIZE:-128}" \
     --gpu-memory-utilization "${PASSK_GPU_MEMORY_UTILIZATION:-0.80}" \
+    --vllm-max-model-len "${PASSK_VLLM_MAX_MODEL_LEN_VALUE}" \
+    --scoring-log-interval "${PASSK_SCORING_LOG_INTERVAL:-100}" \
     --collect-samples "${PASSK_COLLECT_SAMPLES:-40}" \
     --output "${OUT}" \
     --samples-output "${SAMPLES_OUT}" \
     --wandb-project "${WANDB_PROJECT}" \
     --wandb-group "${GROUP}" \
     --wandb-run-name "${RUN_NAME}_${CKPT_TAG}_passk" \
+    "${SKIP_GREEDY_ARGS[@]}" \
+    "${STOP_STRING_ARGS[@]}" \
     task.template="${TEMPLATE}" \
     task.train_max_step="${TRAIN_MAX}" \
     task.val_max_step="${PASSK_STEP_MAX:-50}" \
     data.materialized.dataset_id="${DATASET_ID}" \
     data.materialized.train_subset="${TRAIN_SUBSET}" \
-    validation.max_new_tokens="${PASSK_MAX_NEW_TOKENS:-6144}"
+    validation.max_new_tokens="${PASSK_MAX_NEW_TOKENS_VALUE}" \
+    validation.vllm_max_model_len="${PASSK_VLLM_MAX_MODEL_LEN_VALUE}"
 
   rm -rf "${MERGED}"
 done

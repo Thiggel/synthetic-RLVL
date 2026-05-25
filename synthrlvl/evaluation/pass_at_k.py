@@ -4,6 +4,7 @@ from collections import defaultdict
 from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 from math import comb
+import time
 
 from synthrlvl.metrics import EvalResult, OutputEvaluator
 
@@ -85,9 +86,13 @@ def _score_prompt_samples(
     records: Sequence[object],
     generations_by_record: Sequence[Sequence[str]],
     output_eval: OutputEvaluator,
+    log_interval: int = 0,
 ) -> list[PromptSampleScores]:
     scores: list[PromptSampleScores] = []
-    for rec, generations in zip(records, generations_by_record, strict=True):
+    total_records = len(records)
+    interval = max(0, int(log_interval))
+    started = time.perf_counter()
+    for idx, (rec, generations) in enumerate(zip(records, generations_by_record, strict=True), start=1):
         sample_scores: list[ScoredSample] = []
         for gen in generations:
             result = output_eval.evaluate(
@@ -103,6 +108,13 @@ def _score_prompt_samples(
             )
             sample_scores.append(ScoredSample.from_eval_result(result))
         scores.append(PromptSampleScores(step=int(rec.step), samples=tuple(sample_scores)))
+        if interval and (idx == 1 or idx % interval == 0 or idx == total_records):
+            elapsed = time.perf_counter() - started
+            print(
+                f"[syntheval] pass@k scoring {idx}/{total_records} prompts "
+                f"({elapsed:.1f}s elapsed)",
+                flush=True,
+            )
     return scores
 
 
@@ -236,6 +248,7 @@ def score_pass_at_k(
     k_values: Sequence[int],
     metric_prefix: str = "synthetic_sampled",
     band_predicates: dict[str, Callable[[int], bool]] | None = None,
+    log_interval: int = 0,
 ) -> dict[str, float]:
     """Score sampled generations by depth and optional OOD bands."""
     if len(records) != len(generations_by_record):
@@ -251,6 +264,7 @@ def score_pass_at_k(
         records=records,
         generations_by_record=generations_by_record,
         output_eval=output_eval,
+        log_interval=log_interval,
     )
 
     metrics: dict[str, float] = {}

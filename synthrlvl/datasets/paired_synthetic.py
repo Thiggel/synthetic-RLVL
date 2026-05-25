@@ -511,15 +511,13 @@ class PairedSyntheticGenerator:
         depth = int(self.config.depth)
         width = max(2, min(int(self.config.branching_factor), 4))
         needed = depth + 1 + depth * width + width + 8
-        if needed > len(STATE_WORDS):
-            raise ValueError(f"maze_navigation depth={depth}, width={width} exceeds room word bank")
-        names = rng.sample(list(STATE_WORDS), needed)
+        names = rng.sample(_maze_room_bank(needed), needed)
         room_path = names[: depth + 1]
         decoy_rooms = names[depth + 1 : depth + 1 + depth * width]
         treasure_decoys = names[depth + 1 + depth * width : depth + 1 + depth * width + width]
         start = room_path[0]
         target = room_path[-1]
-        key_bank = list(COLOR_WORDS[: max(depth + width + 2, 6)])
+        key_bank = _maze_key_bank(max(depth + width + 2, 6))
         key_path = rng.sample(key_bank, depth + 1)
 
         treasure_rooms = [target, *treasure_decoys]
@@ -720,10 +718,10 @@ class PairedSyntheticGenerator:
 
     def _generate_attribute_constraints(self, index: int) -> LogicExample:
         rng = self._rng(index)
-        length = max(2, min(int(self.config.depth), 6))
-        palette = list(COLOR_WORDS[: max(length + 1, min(8, int(self.config.branching_factor) + 3))])
+        length = max(2, int(self.config.depth) // 2 + 2)
+        palette = _attribute_value_bank(max(length + 6, int(self.config.branching_factor) * 4 + 8))
         values = tuple(rng.sample(palette, length))
-        slot_ids = [f"slot_{idx}" for idx in range(length)]
+        slot_ids = [f"s{idx}" for idx in range(length)]
 
         premises_fol: list[str] = []
         premises_nl: list[str] = []
@@ -738,11 +736,12 @@ class PairedSyntheticGenerator:
             premises_nl.append(f"{line}. {slot_ids[pos]} has value {values[pos]}.")
             value_lines[pos] = line
 
-        decoy_count = max(1, min(int(self.config.branching_factor), 4))
+        decoy_count = max(1, min(int(self.config.branching_factor), 2))
         derivation_rules: list[dict[str, str | int]] = []
         decoy_rules: list[dict[str, str | int]] = []
         for pos in range(base_count, length):
-            dep_a = max(0, pos - 2)
+            dep_window_start = max(0, pos - max(3, int(self.config.branching_factor)))
+            dep_a = rng.randrange(dep_window_start, pos - 1)
             dep_b = pos - 1
             slot_a = slot_ids[dep_a]
             slot_b = slot_ids[dep_b]
@@ -787,10 +786,14 @@ class PairedSyntheticGenerator:
             )
 
             wrong_pairs: list[tuple[str, str]] = []
-            for wrong_a in palette:
-                for wrong_b in palette:
-                    if wrong_a == color_a and wrong_b == color_b:
-                        continue
+            wrong_a_values = [candidate for candidate in palette if candidate != color_a]
+            wrong_b_values = [candidate for candidate in palette if candidate != color_b]
+            for wrong_b in wrong_b_values:
+                wrong_pairs.append((color_a, wrong_b))
+            for wrong_a in wrong_a_values:
+                wrong_pairs.append((wrong_a, color_b))
+            for wrong_a in wrong_a_values:
+                for wrong_b in wrong_b_values:
                     wrong_pairs.append((wrong_a, wrong_b))
             rng.shuffle(wrong_pairs)
             for wrong_a, wrong_b in wrong_pairs[:decoy_count]:
@@ -841,7 +844,8 @@ class PairedSyntheticGenerator:
             next_line += 1
 
         for pos in range(base_count, length):
-            dep_a = max(0, pos - 2)
+            rule = derivation_rules[pos - base_count]
+            dep_a = int(rule["dep_a"])
             dep_b = pos - 1
             slot_a = slot_ids[dep_a]
             slot_b = slot_ids[dep_b]
@@ -929,6 +933,27 @@ def _looks_like_igsm_var(text: str) -> bool:
 def _official_var_name(var: str) -> str:
     cleaned = re.sub(r"[^A-Za-z0-9_]", "_", var.strip())
     return f"v_{cleaned}"
+
+
+def _maze_key_bank(size: int) -> list[str]:
+    keys = list(COLOR_WORDS)
+    while len(keys) < int(size):
+        keys.append(f"key_{len(keys):02d}")
+    return keys[: int(size)]
+
+
+def _maze_room_bank(size: int) -> list[str]:
+    rooms = list(STATE_WORDS)
+    while len(rooms) < int(size):
+        rooms.append(f"room_{len(rooms):03d}")
+    return rooms[: int(size)]
+
+
+def _attribute_value_bank(size: int) -> list[str]:
+    values = list(COLOR_WORDS)
+    while len(values) < int(size):
+        values.append(f"v{len(values)}")
+    return values[: int(size)]
 
 
 def _normalize_igsm_expr(expr: str) -> str:

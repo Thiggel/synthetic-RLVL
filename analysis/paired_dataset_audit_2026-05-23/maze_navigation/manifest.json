@@ -1,0 +1,97 @@
+{
+  "kind": "maze_navigation",
+  "train_subset": "train_maze_navigation_up_to_10_120",
+  "train_rows": 120,
+  "train_max_depth": 10,
+  "val_rows_per_depth": 4,
+  "val_max_depth": 12,
+  "seed": 3407,
+  "branching_factor": 4,
+  "distractor_ratio": 0.25,
+  "official_igsm_repo_path": null,
+  "official_igsm_max_edge": null,
+  "official_igsm_perm_level": 5,
+  "official_igsm_detail_level": 0,
+  "official_igsm_p_format": "pq",
+  "candidate_count": 6,
+  "subsets": [
+    {
+      "subset": "train_maze_navigation_up_to_10_120",
+      "rows": 120,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/train_maze_navigation_up_to_10_120/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_01_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_01_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_02_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_02_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_03_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_03_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_04_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_04_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_05_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_05_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_06_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_06_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_07_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_07_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_08_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_08_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_09_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_09_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_10_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_10_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_11_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_11_1k/train.parquet",
+      "validation_failures": []
+    },
+    {
+      "subset": "val_step_12_1k",
+      "rows": 4,
+      "path": "/home/hpc/c107fa/c107fa12/synthetic-RLVL/analysis/paired_dataset_audit_2026-05-23/maze_navigation/val_step_12_1k/train.parquet",
+      "validation_failures": []
+    }
+  ]
+}

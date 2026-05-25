@@ -62,12 +62,16 @@ fi
 python scripts/evaluate_lm_eval.py \
   --checkpoint "${MERGED}" \
   --model "${LM_EVAL_MODEL:-vllm}" \
-  --tasks ${LM_EVAL_TASKS:-gsm8k} \
+  --suite "${LM_EVAL_SUITE:-synthrlvl_ood}" \
+  --tasks ${LM_EVAL_TASKS:-} \
+  --include-path "${LM_EVAL_INCLUDE_PATH:-lm_eval_tasks/synthrlvl_ood}" \
   --output-path "${OUT_DIR}" \
   --batch-size "${LM_EVAL_BATCH_SIZE:-auto}" \
   "${LIMIT_ARGS[@]}" \
   --dtype "${LM_EVAL_DTYPE:-bfloat16}" \
   --gpu-memory-utilization "${LM_EVAL_GPU_MEMORY_UTILIZATION:-0.80}" \
+  --model-arg "max_model_len=${LM_EVAL_MAX_MODEL_LEN:-32768}" \
+  --confirm-run-unsafe-code \
   --log-samples \
   --wandb-project "${WANDB_PROJECT:-synthetic-rlvl}" \
   --wandb-group "${GROUP}" \

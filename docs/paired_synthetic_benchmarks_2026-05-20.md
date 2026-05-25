@@ -18,6 +18,64 @@ The common output format is:
 
 Every benchmark below is designed to be evaluated with grounded validity: generated proof lines are checked against the gold canonical premises and gold conclusion rather than against premises hallucinated by the model. This matters because a model can otherwise create an internally valid but task-irrelevant proof.
 
+## Audit Status - 2026-05-23
+
+A broader local materialization/validation audit was run with every generated example validated by `LogicEngine`:
+
+```bash
+python -m pytest -q tests/test_paired_synthetic_datasets.py
+python scripts/data/build_paired_synthetic_dataset.py --kind <kind> --train-rows 120 --train-max-depth 10 --val-rows-per-depth 4 --val-max-depth 12 --validate-examples -1 ...
+```
+
+| family | status | implication |
+| --- | --- | --- |
+| `maze_navigation` | passed after a key-vocabulary fix | safe first candidate for follow-up substrate-transfer runs after full-size materialization |
+| `attribute_constraints` | passed | safe first candidate for follow-up substrate-transfer runs after full-size materialization |
+| `official_igsm` | blocked | do not train on it yet; subtraction-substitution proof lines can fail validation |
+
+Audit artifacts live under:
+
+```bash
+analysis/paired_dataset_audit_2026-05-23/
+```
+
+Follow-up submission on 2026-05-24:
+
+| stage | job | note |
+| --- | ---: | --- |
+| train-10 materialization | `3656210_1` completed, `3656210_0` failed, replacement `3656308_0` completed | `attribute_constraints` completed; `maze_navigation` exposed a fixed room-word-bank limit at depth 15, was fixed, resubmitted, and completed with every row validated |
+| seed-3407 SFT pilot | original `3656211` canceled; `3656309_[2-3]` completed; maze retries `3657088_[0-1]` failed and `3657738_[0-1]` completed | original maze rows `3656309_0,1` failed CUDA OOM at 8192 tokens with gradient checkpointing off; first retry used `GRADIENT_CHECKPOINTING=true` and reached step 2000, then OOMed during online generation eval; after disabling default online eval, `3657738_0,1` completed exit `0:0` |
+| sparse eval | original `3656213` canceled; `3656310_[2-3]` completed; `3657089_[0-1]` canceled; `3657739_0` failed, `3657739_1` canceled, replacement `3659556_[0-1]` pending | attribute eval complete; dead maze eval `3657089` was canceled after `3657088` failed; first maze eval replacement exposed a 16k vLLM context cap at depth 45; second replacement uses 32k context and smaller batch |
+
+Implementation update: `maze_navigation` now extends both key names and room names deterministically when requested depth exceeds the fixed word banks. A local smoke materialization with validation through depth 50 passed before resubmitting `3656308_0`.
+
+Oversight update 2026-05-24 15:06 CEST: the paired maze materialization completed cleanly as `3656308_0`. The first paired maze SFT attempts then failed during the first training steps with CUDA OOM, not a data-validation error. A token audit over 200 examples per train depth found depth-10 full SFT lengths below 8192 tokens for both `logic` and `nl_exact`, so the recovery kept `data.max_length=8192` and enabled gradient checkpointing instead of truncating. Replacement SFT rows `3657088_0,1` were still running and had cleared the original OOM window by 15:05 CEST; replacement eval rows are `3657089_0,1`.
+
+Oversight update 2026-05-24 18:45 CEST: `attribute_constraints` SFT/eval completed for both templates. Both `logic` and `nl_exact` reach OOD and depth-50 correct@16 `1.000`; `logic` grounded joint@16 is also `1.000`. The `nl_exact` NL-to-FOL validity readout is `0.000`, likely because the translator does not yet support this paired family, so do not use NL validity as a scientific conclusion here. Maze retry `3657088_0,1` failed at step 2000 during online generation eval with CUDA OOM after training had progressed; `3657089` was canceled, `scripts/slurm/sweeps/sft/paired_followup_train10_seed3407_2026-05-24.slurm` was patched to default online eval past `max_steps`, and replacements `3657738_[0-1]` plus dependent eval `3657739_[0-1]` were submitted.
+
+Oversight update 2026-05-25 02:44 CEST: maze retry `3657738_0,1` completed cleanly after default online generation eval was disabled. Dependent sparse eval rows `3657739_0,1` are running; logs show vLLM generation progress and only the already-known tokenizer/rope warnings so far.
+
+Oversight update 2026-05-25 06:45 CEST: maze sparse eval `3657739_0,1` is still running. Log tails show row `0` around sampled chunk `34/56` and row `1` around chunk `32/56`; higher-depth chunks are repeatedly hitting generation caps (`4096` for logic, `6144` for `nl_exact`). No Traceback, CUDA OOM, quota/no-space, or dependency failure was found in the live maze eval logs. If either row fails, inspect for timeout or generation-length pathology before resubmitting.
+
+Oversight update 2026-05-25 10:48 CEST: maze sparse eval row `3657739_0` failed at sampled chunk `51/56` with `ValueError: The decoder prompt (length 16400) is longer than the maximum model length of 16384`. Row `3657739_1` was canceled before reaching the same likely depth-45 prompt cap. `scripts/slurm/jobs/posthoc_paired_followup_train10_eval_2026-05-24.slurm` now defaults `maze_navigation` eval to `PASSK_VLLM_MAX_MODEL_LEN=32768` and batch `64`; `bash -n` passed and replacement eval array `3659556_[0-1%2]` was submitted.
+
+Saturation update 2026-05-25 08:44 CEST: `attribute_constraints` is saturated in the current train-10 seed-3407 pilot. Both `logic` and `nl_exact` reach train/OOD/hard-tail correct@1 and correct@16 `1.000`, and the logic run also reaches grounded joint@16 `1.000`. Treat this as evidence that this generator version is too easy for a broad follow-up sweep. Good hardening directions are higher-arity constraints, larger value domains, more confusable prerequisite pairs, multiple queried terminal slots, deeper branching dependency DAGs instead of a mostly chain-like recurrence, and stronger distractor rules that share one correct prerequisite but fail only on the other prerequisite or output.
+
+Hardening update 2026-05-25 09:25 CEST: `attribute_constraints` was hardened and resubmitted instead of spending more compute on the saturated version. The generator no longer caps the slot count at six; it maps requested depth to `floor(depth/2)+2` compact slots, uses compact `s0`/`v10` symbols, samples a recent-window dependency DAG instead of a fixed two-previous-slot chain, and adds adversarial decoys that often share one correct prerequisite while failing on the other prerequisite or output. Local checks before submission:
+
+```bash
+python -m pytest -q tests/test_paired_synthetic_datasets.py
+python scripts/data/build_paired_synthetic_dataset.py --kind attribute_constraints --output-root /tmp/attr_hard_smoke --train-rows 30 --train-max-depth 10 --val-rows-per-depth 2 --val-max-depth 50 --validate-examples -1 --chunk-size 20 --seed 3407
+```
+
+The test run passed (`9 passed`), and the smoke materialization validated through depth 50. OLMo-tokenizer audit after hardening: logic depth 10/50 total SFT tokens about `2.6k/13.4k`, NL depth 10/50 about `1.8k/8.8k`. Submitted replacement chain, updated at 09:34 CEST:
+
+| stage | job | note |
+| --- | ---: | --- |
+| hard train-10 materialization | `3659338` | completed exit `0:0` after 31m53s |
+| hard seed-3407 SFT | `3659339_[0-1%2]` | row `1` (`nl_exact`) completed; row `0` (`logic`) running |
+| hard sparse eval | `3659340_[0-1%2]` | depends on `3659339`; output under `passk_eval/paired_attribute_constraints_hard_sparse/` |
+
 ## Shared Design Principles
 
 1. Paired trace semantics.
@@ -36,6 +94,8 @@ Every benchmark below is designed to be evaluated with grounded validity: genera
    Decoy facts and decoy rules are included so that solving requires selecting the applicable rule, not simply copying the first visible relation.
 
 ## Benchmark 1: `official_igsm`
+
+Current status: blocked for training as of the 2026-05-23 broader audit. Addition chains validate in smoke examples, but subtraction-substitution proof lines can fail validation. Fix arithmetic proof generation or verifier support before using this family in SFT/eval sweeps.
 
 ### What It Tests
 
@@ -169,52 +229,52 @@ This is different from the earlier candidate-selection version. There are no `as
 
 ### Construction
 
-For depth `D`, the generator samples slots:
+For requested depth `D`, the hardened generator samples a compact slot count:
 
 ```text
-slot_0, ..., slot_{D-1}
+s0, ..., s_{floor(D/2)+1}
 ```
 
-and hidden values:
+and hidden values from a larger compact value bank:
 
 ```text
-v_0, ..., v_{D-1}
+v0, ..., vN
 ```
 
 The first two slot values are given:
 
 ```text
-Value(slot_0,v_0)
-Value(slot_1,v_1)
+Value(s0,v0)
+Value(s1,v1)
 ```
 
-For each later slot `i >= 2`, the generator adds one gold joint constraint:
+For each later slot `i >= 2`, the generator samples two prerequisites from already solved slots. One prerequisite is usually the immediately previous slot and the other comes from a recent solved window, which creates a shallow dependency DAG rather than a single fixed recurrence. The generator adds one gold joint constraint:
 
 ```text
-Constraint(slot_{i-2},v_{i-2},slot_{i-1},v_{i-1},slot_i,v_i)
+Constraint(s_a,v_a,s_b,v_b,s_i,v_i)
 ```
 
 and one implication rule:
 
 ```text
-Value(slot_{i-2},v_{i-2})
-& Value(slot_{i-1},v_{i-1})
-& Constraint(slot_{i-2},v_{i-2},slot_{i-1},v_{i-1},slot_i,v_i)
--> Value(slot_i,v_i)
+Value(s_a,v_a)
+& Value(s_b,v_b)
+& Constraint(s_a,v_a,s_b,v_b,s_i,v_i)
+-> Value(s_i,v_i)
 ```
 
-The generator also adds decoy constraints with wrong prerequisite pairs or wrong outputs. These decoys are not applicable because at least one prerequisite value is not known.
+The generator also adds decoy constraints with wrong prerequisite values or wrong outputs. Many decoys share one correct prerequisite with the gold rule, so simple lexical matching is not enough, but every decoy remains logically inapplicable because at least one prerequisite value is not known.
 
 The conclusion is a conjunction of all solved slot values:
 
 ```text
-Value(slot_0,v_0) & ... & Value(slot_{D-1},v_{D-1})
+Value(s0,v0) & ... & Value(sN,vN)
 ```
 
 and the answer string is the ordered value tuple:
 
 ```text
-v_0-v_1-...-v_{D-1}
+v0-v1-...-vN
 ```
 
 ### Why This Is A Constraint-Propagation Task
@@ -597,4 +657,3 @@ Value(slot_0,orange) & Value(slot_1,black) & Value(slot_2,blue) & Value(slot_3,g
 orange-black-blue-green
 </answer>
 ```
-

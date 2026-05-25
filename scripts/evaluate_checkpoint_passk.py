@@ -26,6 +26,24 @@ def _parse_k_values(raw: str | None) -> list[int] | None:
     return values
 
 
+def _parse_steps(raw: str | None) -> list[int] | None:
+    if raw is None:
+        return None
+    values = [int(part.strip()) for part in raw.split(",") if part.strip()]
+    if not values:
+        raise ValueError("--steps must contain at least one integer")
+    return values
+
+
+def _parse_stop_strings(raw: str | None) -> list[str] | None:
+    if raw is None:
+        return None
+    values = [part.strip() for part in raw.split(",") if part.strip()]
+    if not values:
+        raise ValueError("--stop-strings must contain at least one non-empty string")
+    return values
+
+
 def _detect_profile(cfg) -> str:
     if "eval" in cfg and "synthetic_step_min" in cfg.eval:
         return "grpo"
@@ -44,6 +62,9 @@ def _apply_eval_overrides(cfg, profile: str, args: argparse.Namespace) -> None:
     if args.step_max is not None:
         key = "synthetic_step_max" if profile == "grpo" else "step_max"
         section[key] = int(args.step_max)
+    if args.steps is not None:
+        key = "synthetic_steps" if profile == "grpo" else "steps"
+        section[key] = args.steps
     if args.samples_per_step is not None:
         key = "synthetic_samples_per_step" if profile == "grpo" else "samples_per_step"
         section[key] = int(args.samples_per_step)
@@ -53,12 +74,20 @@ def _apply_eval_overrides(cfg, profile: str, args: argparse.Namespace) -> None:
         section.generation_batch_size = int(args.batch_size)
     if args.gpu_memory_utilization is not None:
         section.vllm_gpu_memory_utilization = float(args.gpu_memory_utilization)
+    if args.vllm_max_model_len is not None:
+        section.vllm_max_model_len = int(args.vllm_max_model_len)
     if args.num_generations is not None:
         section.sampled_num_generations = int(args.num_generations)
     if args.k_values is not None:
         section.sampled_k_values = args.k_values
     if args.temperature is not None:
         section.sampled_temperature = float(args.temperature)
+    if args.skip_greedy:
+        section.greedy_enabled = False
+    if args.stop_strings is not None:
+        section.stop_strings = args.stop_strings
+    if args.scoring_log_interval is not None:
+        section.scoring_log_interval = int(args.scoring_log_interval)
     section.sampled_enabled = True
     if args.constrained_enabled:
         if profile == "grpo":
@@ -97,6 +126,7 @@ def main() -> None:
     parser.add_argument("--backend", choices=["auto", "hf", "vllm"], default=None)
     parser.add_argument("--step-min", type=int, default=None)
     parser.add_argument("--step-max", type=int, default=None)
+    parser.add_argument("--steps", type=_parse_steps, default=None, help="Comma-separated explicit depths; overrides step range.")
     parser.add_argument("--samples-per-step", type=int, default=None)
     parser.add_argument("--num-generations", type=int, default=None)
     parser.add_argument("--k-values", type=_parse_k_values, default=None, help="Comma-separated pass@k values.")
@@ -104,6 +134,10 @@ def main() -> None:
     parser.add_argument("--max-new-tokens", type=int, default=None)
     parser.add_argument("--batch-size", type=int, default=None)
     parser.add_argument("--gpu-memory-utilization", type=float, default=None)
+    parser.add_argument("--vllm-max-model-len", type=int, default=None)
+    parser.add_argument("--skip-greedy", action="store_true", help="Skip the separate deterministic greedy pass.")
+    parser.add_argument("--stop-strings", type=_parse_stop_strings, default=None, help="Comma-separated generation stop strings.")
+    parser.add_argument("--scoring-log-interval", type=int, default=None, help="Print scoring progress every N prompts.")
     parser.add_argument("--disable-external", action="store_true", help="Skip external benchmarks for GRPO configs.")
     parser.add_argument("--constrained-enabled", action="store_true", help="Also run line-level constrained proof pass@k.")
     parser.add_argument("--constrained-samples-per-step", type=int, default=4)
@@ -139,9 +173,7 @@ def main() -> None:
     )
     elapsed = time.perf_counter() - start
     metrics["posthoc/elapsed_seconds"] = float(elapsed)
-    metrics["posthoc/prompts"] = float(
-        (int(eval_cfg.synthetic_step_max) - int(eval_cfg.synthetic_step_min) + 1) * int(eval_cfg.synthetic_samples_per_step)
-    )
+    metrics["posthoc/prompts"] = float(len(eval_cfg.step_values()) * int(eval_cfg.synthetic_samples_per_step))
     metrics["posthoc/sampled_generations_per_prompt"] = float(eval_cfg.sampled_num_generations)
 
     payload = {"checkpoint": args.checkpoint, "profile": profile, "elapsed_seconds": elapsed, "metrics": metrics}
@@ -173,11 +205,16 @@ def main() -> None:
                 "config_path": args.config,
                 "step_min": eval_cfg.synthetic_step_min,
                 "step_max": eval_cfg.synthetic_step_max,
+                "steps": eval_cfg.synthetic_steps,
                 "samples_per_step": eval_cfg.synthetic_samples_per_step,
+                "greedy_enabled": eval_cfg.greedy_enabled,
+                "stop_strings": eval_cfg.stop_strings,
+                "scoring_log_interval": eval_cfg.scoring_log_interval,
                 "sampled_num_generations": eval_cfg.sampled_num_generations,
                 "sampled_k_values": eval_cfg.sampled_k_values,
                 "sampled_temperature": eval_cfg.sampled_temperature,
                 "max_new_tokens": eval_cfg.max_new_tokens,
+                "vllm_max_model_len": eval_cfg.vllm_max_model_len,
                 "constrained_enabled": eval_cfg.constrained_enabled,
                 "constrained_num_generations": eval_cfg.constrained_num_generations,
                 "constrained_candidates_per_line": eval_cfg.constrained_candidates_per_line,
