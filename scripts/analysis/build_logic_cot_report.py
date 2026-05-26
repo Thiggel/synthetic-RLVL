@@ -7,6 +7,7 @@ import re
 import textwrap
 from collections import defaultdict
 from dataclasses import dataclass
+from numbers import Number
 from pathlib import Path
 from statistics import mean, pstdev
 
@@ -370,8 +371,9 @@ def plot_tiny_final(tiny: list[Record]) -> None:
             save(fig, f"tiny_llama_{size}_bands_{metric_name}_k8")
 
     depth_df = depth_dataframe(tiny, DEPTHS_TINY, 8)
+    depth_plot_df = depth_df.groupby(["size", "template", "depth"], as_index=False)[["correct", "joint"]].mean()
     for size in ["50m", "100m", "200m"]:
-        sub = depth_df[depth_df["size"] == size]
+        sub = depth_plot_df[depth_plot_df["size"] == size]
         if sub.empty:
             continue
         for metric_name in ["correct", "joint"]:
@@ -404,8 +406,9 @@ def plot_tiny_checkpoint_curves(tiny_final: list[Record], tiny_ckpt: list[Record
                 }
             )
     df = pd.DataFrame(rows)
+    plot_df = df.groupby(["size", "template", "checkpoint", "band"], as_index=False)[["correct", "joint"]].mean()
     for size in ["50m", "100m", "200m"]:
-        sub_size = df[df["size"] == size]
+        sub_size = plot_df[plot_df["size"] == size]
         if sub_size.empty:
             continue
         for metric_name in ["correct", "joint"]:
@@ -536,21 +539,43 @@ def plot_sample_panels(samples: list[dict[str, object]]) -> None:
             plt.close(fig)
 
 
-def latex_table(df: pd.DataFrame, columns: list[tuple[str, str]], max_rows: int | None = None) -> str:
+def latex_table(
+    df: pd.DataFrame,
+    columns: list[tuple[str, str]],
+    max_rows: int | None = None,
+    bold_columns: set[str] | None = None,
+) -> str:
     if df.empty:
         return "No rows available."
     data = df.copy()
     if max_rows is not None:
         data = data.head(max_rows)
+    bold_columns = bold_columns or set()
+    best_values: dict[str, float] = {}
+    for col in bold_columns:
+        values = [
+            float(value)
+            for value in data[col].tolist()
+            if isinstance(value, Number) and not isinstance(value, bool) and not pd.isna(value)
+        ]
+        if values and len(set(values)) > 1:
+            best_values[col] = max(values)
     lines = ["\\begin{tabular}{" + "l" * len(columns) + "}", "\\toprule"]
     lines.append(" & ".join(label for _, label in columns) + " \\\\")
     lines.append("\\midrule")
+    integer_columns = {"n", "seed", "train_max", "checkpoint", "depth"}
     for _, row in data.iterrows():
         vals = []
         for col, _ in columns:
             value = row.get(col, "")
-            if isinstance(value, float):
-                vals.append(f3(value))
+            if isinstance(value, Number) and not isinstance(value, bool):
+                if col in integer_columns and float(value).is_integer():
+                    cell = str(int(value))
+                else:
+                    cell = f3(value)
+                if col in best_values and abs(float(value) - best_values[col]) < 1e-12:
+                    cell = f"\\textbf{{{cell}}}"
+                vals.append(cell)
             else:
                 vals.append(str(value).replace("_", "\\_"))
         lines.append(" & ".join(vals) + " \\\\")
@@ -769,22 +794,22 @@ def write_report(
     tiny_depth_figures = "\n".join(
         f"""\\begin{{figure}}[H]\\centering
 \\includegraphics[width=0.72\\linewidth]{{figures/tiny_llama_{size}_depth_correct_k8.pdf}}
-\\caption{{Tiny Llama {size} depth curve for correct@8. The dotted line marks train max depth 10.}}
+\\caption{{Tiny Llama {size} seed-mean depth curve for correct@8. The dotted line marks train max depth 10.}}
 \\end{{figure}}
 \\begin{{figure}}[H]\\centering
 \\includegraphics[width=0.72\\linewidth]{{figures/tiny_llama_{size}_depth_joint_k8.pdf}}
-\\caption{{Tiny Llama {size} depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}}
+\\caption{{Tiny Llama {size} seed-mean depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}}
 \\end{{figure}}"""
         for size in tiny_sizes
     )
     tiny_ckpt_figures = "\n".join(
         f"""\\begin{{figure}}[H]\\centering
 \\includegraphics[width=\\linewidth]{{figures/tiny_llama_{size}_checkpoint_correct_k8.pdf}}
-\\caption{{Tiny Llama {size} checkpoint curves for correct@8.}}
+\\caption{{Tiny Llama {size} seed-mean checkpoint curves for correct@8.}}
 \\end{{figure}}
 \\begin{{figure}}[H]\\centering
 \\includegraphics[width=\\linewidth]{{figures/tiny_llama_{size}_checkpoint_joint_k8.pdf}}
-\\caption{{Tiny Llama {size} checkpoint curves for joint correct+valid@8.}}
+\\caption{{Tiny Llama {size} seed-mean checkpoint curves for joint correct+valid@8.}}
 \\end{{figure}}"""
         for size in tiny_sizes
     )
@@ -801,10 +826,10 @@ def write_report(
 \maketitle
 
 \section{{Metric note for OOD benchmarks}}
-GSM8K is measured as numeric exact-match accuracy after extracting the learned \texttt{{<answer>...</answer>}} field. HotpotQA, 2WikiMultiHopQA, and MuSiQue are context-provided QA evaluations; the report logs answer F1 and exact match after strict answer extraction, plus tag diagnostics. I therefore call GSM8K an accuracy metric, but call the multi-hop QA readout F1/EM rather than plain accuracy.
+EM means exact match: after extracting the model's answer, the evaluator normalizes the prediction and gold answer and assigns 1 only when they exactly match, then averages over examples. For GSM8K this is numeric exact match and is effectively an accuracy over single numeric answers. For HotpotQA, 2WikiMultiHopQA, and MuSiQue the answers are free-form strings with aliases and partial-overlap possibilities, so the standard report is EM plus token-level F1 rather than calling the result plain accuracy. F1 gives partial credit for overlapping answer tokens; EM is the stricter all-or-nothing string match.
 
 \section{{Main OLMo-7B downstream OOD}}
-The broad OOD run has completed the 30-row main OLMo grid. This is downstream transfer under the strict answer extractor, not a synthetic validity score. The headline pattern is split: NL is much better on GSM8K numeric EM, while logic is much better on the context-provided multi-hop QA F1/EM tasks.
+The broad OOD run has completed the 30-row main OLMo grid. This is downstream transfer under the strict answer extractor, not a synthetic validity score. The headline pattern is split: NL is much better on GSM8K numeric EM, while logic is much better on the context-provided multi-hop QA F1/EM tasks. Bold values mark the best value in each metric column.
 
 \begin{{table}}[H]
 \centering
@@ -814,14 +839,25 @@ The broad OOD run has completed the 30-row main OLMo grid. This is downstream tr
     ("train_max", "train max"),
     ("n", "n"),
     ("gsm8k_em", "GSM8K EM"),
-    ("hotpot_f1", "Hotpot F1"),
     ("hotpot_em", "Hotpot EM"),
-    ("twowiki_f1", "2Wiki F1"),
     ("twowiki_em", "2Wiki EM"),
-    ("musique_f1", "MuSiQue F1"),
     ("musique_em", "MuSiQue EM"),
-])}
-\caption{{OOD lm-eval means over seeds for the main OLMo-7B checkpoints.}}
+], bold_columns={"gsm8k_em", "hotpot_em", "twowiki_em", "musique_em"})}
+\caption{{OOD exact-match means over seeds for the main OLMo-7B checkpoints.}}
+\end{{table}}
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(main_ood_rows, [
+    ("template", "template"),
+    ("train_max", "train max"),
+    ("n", "n"),
+    ("hotpot_f1", "Hotpot F1"),
+    ("twowiki_f1", "2Wiki F1"),
+    ("musique_f1", "MuSiQue F1"),
+], bold_columns={"hotpot_f1", "twowiki_f1", "musique_f1"})}
+\caption{{OOD F1 means over seeds for the main OLMo-7B checkpoints. GSM8K is omitted because the task is scored by numeric exact match rather than answer-token F1.}}
 \end{{table}}
 
 \section{{Main OLMo-7B HFSA result}}
@@ -894,7 +930,7 @@ The tiny plots separate model sizes and separate answer correctness from joint c
 
     tex += rf"""
 \subsection{{Tiny Llama downstream OOD eval}}
-The tiny downstream OOD evals completed with the 8192-context fallback. LongBench contexts are truncated for these tiny models, so this table is a smoke/result-sanity readout rather than a fair long-context QA claim.
+The tiny downstream OOD evals completed with the 8192-context fallback. LongBench contexts are truncated for these tiny models, so these tables are smoke/result-sanity readouts rather than fair long-context QA claims.
 
 \begin{{table}}[H]
 \centering
@@ -905,14 +941,25 @@ The tiny downstream OOD evals completed with the 8192-context fallback. LongBenc
     ("n", "n"),
     ("gsm8k_em", "GSM8K EM"),
     ("gsm8k_tag", "GSM8K tag"),
-    ("hotpot_f1", "Hotpot F1"),
     ("hotpot_em", "Hotpot EM"),
-    ("twowiki_f1", "2Wiki F1"),
     ("twowiki_em", "2Wiki EM"),
-    ("musique_f1", "MuSiQue F1"),
     ("musique_em", "MuSiQue EM"),
-])}
-\caption{{Tiny Llama OOD lm-eval metrics after strict answer extraction.}}
+], bold_columns={"gsm8k_em", "gsm8k_tag", "hotpot_em", "twowiki_em", "musique_em"})}
+\caption{{Tiny Llama OOD exact-match metrics after strict answer extraction.}}
+\end{{table}}
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(tiny_ood_summary, [
+    ("size", "size"),
+    ("template", "template"),
+    ("n", "n"),
+    ("hotpot_f1", "Hotpot F1"),
+    ("twowiki_f1", "2Wiki F1"),
+    ("musique_f1", "MuSiQue F1"),
+], bold_columns={"hotpot_f1", "twowiki_f1", "musique_f1"})}
+\caption{{Tiny Llama OOD F1 metrics after strict answer extraction. GSM8K is omitted because it is scored by numeric exact match.}}
 \end{{table}}
 
 \section{{Qwen-2.5-7B partial architecture ablation}}

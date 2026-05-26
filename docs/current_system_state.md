@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-05-26 15:03 CEST.
+Last updated: 2026-05-26 15:44 CEST.
 
 This file is the current operational handoff for the active `synthetic-RLVL` work. Older RL-validity and earlier HFSA snapshots are intentionally not duplicated here; use the archived docs listed near the end if historical detail is needed.
 
@@ -34,7 +34,8 @@ The active direction is the formal-logic CoT depth-scaling SFT study:
 | `3647708`, `3648279`, `3648280`, `3647711`, `3647712` | old eval arrays | canceled | old full-grid/old-protocol evals | canceled at 2026-05-22 10:47 CEST to avoid spending more GPU on incomparable slow eval |
 | `3650951_[0-29%10]` | 0-29 | completed | sparse final eval for all 30 main 10k rows | 30/30 JSON complete; all tasks exit `0:0` |
 | `3650952_[0,3,6,9,12,15,18,21,24,27%4]` | seed `3407` rows across all train depths/templates | completed | sparse intermediate eval for correct@1/correct@16 over time | 30/30 checkpoint JSON complete; all tasks exit `0:0` |
-| bad `3660813_[0,3,6,9,12,15,18,21,24,27%2]`, replacement `3661090_[0,3,6,9,12,15,18,21,24,27%2]` | seed `3407` rows across all train depths/templates | bad array canceled; replacement running/pending | denser sparse intermediate eval for the saved 1k-step checkpoint grid | rows `0` and `3` completed, giving full 1k-grid curves for `logic_train1to5_seed3407` and `logic_train1to10_seed3407`; rows `6` and `9` are running; remaining rows `12,15,18,21,24,27` are pending by throttle |
+| bad `3660813_[0,3,6,9,12,15,18,21,24,27%2]`, replacement `3661090_[0,3,6,9,12,15,18,21,24,27%2]` | seed `3407` rows across all train depths/templates | bad array canceled; replacement running/pending | denser sparse intermediate eval for the saved 1k-step checkpoint grid | rows `0` and `3` completed, giving full 1k-grid curves for `logic_train1to5_seed3407` and `logic_train1to10_seed3407`; rows `6` and `9` are running; pending duplicate train-1-to-25 rows `12` and `27` were canceled after targeted job `3664473` started; remaining rows `15,18,21,24` are pending by throttle |
+| `3664473_[0-1%2]` | seed-3407 `logic_train1to25` and `nl_exact_train1to25` | running | targeted dense checkpoint eval for the matched train-1-to-25 pair | submitted 2026-05-26 15:31 CEST via `posthoc_hfsa_depth_scaling_train25_dense_eval_2026-05-26.slurm`; writes to the normal `hfsa_depth_scaling_intermediate_sparse` output dir, skips existing `1000/3000/10000` JSONs, and fills `2000/4000/5000/6000/7000/8000/9000` for both logic and NL |
 
 ### New Follow-Up Jobs Submitted 2026-05-24
 
@@ -127,6 +128,7 @@ scripts/slurm/jobs/ood_lm_eval_pilot_2026-05-25.slurm
 scripts/slurm/jobs/ood_lm_eval_large_1gpu_2026-05-25.slurm
 scripts/slurm/jobs/ood_lm_eval_large_olmo32_2026-05-25.slurm
 scripts/slurm/jobs/ood_lm_eval_tiny_llama_2026-05-25.slurm
+scripts/slurm/jobs/posthoc_hfsa_depth_scaling_train25_dense_eval_2026-05-26.slurm
 scripts/analysis/build_logic_cot_report.py
 ```
 
@@ -211,13 +213,13 @@ Generated artifacts include:
 - Main OLMo OOD lm-eval tables: `tables/main_olmo7b_ood_lmeval_summary.csv` and by-seed `tables/main_olmo7b_ood_lmeval_by_seed.csv`
 - Main OLMo final plots: `figures/olmo7b_final_by_train_depth.pdf`, `figures/olmo7b_depth_correct16.pdf`, `figures/olmo7b_depth_joint16.pdf`
 - Main OLMo checkpoint plots are now split by matched train-depth pair and metric: `figures/olmo7b_checkpoint_train1to{5,10,15,20,25}_{correct16,joint16}.pdf`. These are @16-only; old combined `k8_k16` checkpoint PDFs are no longer referenced by the report.
-- Tiny plots are now split by model size and by metric: `figures/tiny_llama_{50m,100m,200m}_bands_{correct,joint}_k8.pdf`, `figures/tiny_llama_{50m,100m,200m}_depth_{correct,joint}_k8.pdf`, and checkpoint plots `figures/tiny_llama_{50m,100m,200m}_checkpoint_{correct,joint}_k8.pdf`.
+- Tiny plots are now split by model size and by metric: `figures/tiny_llama_{50m,100m,200m}_bands_{correct,joint}_k8.pdf`, `figures/tiny_llama_{50m,100m,200m}_depth_{correct,joint}_k8.pdf`, and checkpoint plots `figures/tiny_llama_{50m,100m,200m}_checkpoint_{correct,joint}_k8.pdf`. The depth and checkpoint plots were regenerated on 2026-05-26 to plot seed means instead of stacked per-seed points at the same x-value; the CSVs still retain per-seed rows.
 - Partial Qwen plot: `figures/qwen7b_partial_ood_correct_joint.pdf`
 - Sample generation panel PDF: `figures/sample_generation_panels.pdf`
 - CSV tables under `tables/`
 - Tiny OOD lm-eval tables: `tables/tiny_llama_ood_lmeval_summary.csv` and by-seed `tables/tiny_llama_ood_lmeval_by_seed.csv`
 
-The report notes that GSM8K is numeric exact-match accuracy after `<answer>` extraction, while HotpotQA/2Wiki/MuSiQue should be reported as strict-extraction QA F1/EM rather than plain accuracy. The report builder now aggregates main OLMo OOD and tiny OOD by seed and includes LongBench EM columns. `pdflatex`/`latexmk` are not installed on this node, so the LaTeX source was generated but not compiled here. All plot PDFs were generated successfully.
+The report defines EM as exact match after answer extraction/normalization. GSM8K numeric EM is effectively accuracy over single numeric answers, while HotpotQA/2Wiki/MuSiQue are reported as free-form QA EM and token F1 rather than plain accuracy. The report builder now aggregates main OLMo OOD and tiny OOD by seed, splits OOD tables into separate EM and F1 tables, and bolds the best value in each metric column. `pdflatex`/`latexmk` are not installed on this node, so the LaTeX source was generated but not compiled here. All plot PDFs were generated successfully.
 
 Checkpoint-curve note: the completed main OLMo SFT runs saved checkpoints every `1000` optimizer steps, not every `500`, and the first sparse intermediate eval only evaluated `1000,3000,10000`. As of the 2026-05-26 report rebuild there are 46 main checkpoint JSONs: full 1k-grid rows for `logic_train1to5_seed3407` and `logic_train1to10_seed3407`, partial dense additions for `logic_train1to15_seed3407` and `logic_train1to20_seed3407`, and the original 1k/3k/10k grid for the remaining six seed-3407 rows. Future reruns need `train.save_steps=500` and enough `save_total_limit` if we want true 500-step curves.
 
@@ -274,7 +276,7 @@ Readout:
 - Logic wins the paired OOD joint@16 comparison at train depths `1..10`, `1..15`, and `1..20`; mean logic-minus-NL OOD joint@16 deltas are `+0.064`, `+0.156`, and `+0.222`.
 - `nl_exact_train1to25` catches up and slightly exceeds `logic_train1to25` on OOD joint@16 (`0.748` vs `0.710`) and OOD joint AUC (`0.757` vs `0.711`). At the deepest train range, the claim is no longer "logic strictly dominates"; the cleaner claim is that logic is more sample/depth efficient at intermediate train depths, while matched NL can catch up with enough train-depth coverage.
 - Depth-50 joint@16 is similar at train depth `1..25`: `logic=0.417`, `nl_exact=0.427`.
-- Sparse seed-3407 intermediate eval still has the 30 checkpoint JSON files from the first pass (`1000,3000,10000`). Bad dense backfill job `3660813` produced no new dense JSONs because Slurm parsed the comma-list export as `CHECKPOINT_STEPS=1000`; replacement `3661090` is filling the saved `1000,2000,...,10000` grid. Completed dense rows: `logic_train1to5_seed3407` has OOD correct@16 range `0.161..0.554`, OOD joint@16 range `0.045..0.098`, and depth-50 joint@16 is nonzero only at checkpoints 7000 and 9000 (`0.062`); `logic_train1to10_seed3407` has OOD correct@16 range `0.396..0.688`, OOD joint@16 range `0.083..0.344`, and depth-50 joint@16 is nonzero only at checkpoint 9000 (`0.062`). Rows `6` and `9` are now running the `logic_train1to15/20_seed3407` dense grids.
+- Sparse seed-3407 intermediate eval still has the 30 checkpoint JSON files from the first pass (`1000,3000,10000`). Bad dense backfill job `3660813` produced no new dense JSONs because Slurm parsed the comma-list export as `CHECKPOINT_STEPS=1000`; replacement `3661090` is filling the saved `1000,2000,...,10000` grid. Completed dense rows: `logic_train1to5_seed3407` has OOD correct@16 range `0.161..0.554`, OOD joint@16 range `0.045..0.098`, and depth-50 joint@16 is nonzero only at checkpoints 7000 and 9000 (`0.062`); `logic_train1to10_seed3407` has OOD correct@16 range `0.396..0.688`, OOD joint@16 range `0.083..0.344`, and depth-50 joint@16 is nonzero only at checkpoint 9000 (`0.062`). Rows `6` and `9` are now running the `logic_train1to15/20_seed3407` dense grids. Targeted job `3664473_[0-1]` is separately filling the matched `logic`/`nl_exact_train1to25_seed3407` dense curves so the report can show both modalities for the deepest train range without waiting for the whole broad backfill.
 
 Analysis artifacts:
 
@@ -388,7 +390,7 @@ Latest OLMo wrapper checks: `bash -n scripts/slurm/jobs/posthoc_hfsa_model_ablat
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3650951,3650952,3660813,3661090 --format=JobID%30,JobIDRaw,JobName%34,State,Elapsed,ExitCode,Start,End -n -P
+sacct -j 3650951,3650952,3660813,3661090,3664473 --format=JobID%30,JobIDRaw,JobName%34,State,Elapsed,ExitCode,Start,End -n -P
 sacct -j 3656210,3656308,3656309,3656310,3657088,3657089,3657738,3657739,3659556,3656217,3656218,3656323,3656359,3656387,3656389,3656335,3656336,3658461,3660238,3656338,3656360,3656388,3656390,3656509,3656510,3657079,3657734,3658457,3658813,3659047,3659552,3660235,3661005,3662229,3662735,3663541,3664182,3659338,3659339,3659340,3659344,3659348,3659356,3659357,3660240,3659392,3659405,3659415,3659488,3659626,3659627,3659628,3659629,3659630,3659631,3659632,3659633,3659634,3660813,3661090,3660986,3660987,3660988,3660989,3660990,3660991,3660992,3660993,3660994,3660995,3660996,3660997,3661118,3661119,3661120,3661121,3661122,3661123,3661124,3661135,3661136,3661137,3662743,3662744,3661162,3661164,3661165,3661166 --format=JobID%30,JobIDRaw,JobName%34,State,Elapsed,ExitCode,Start,End -n -P
 for f in logs/hfsa_dscale_eval_3650951_*.out logs/hfsa_dscale_ckpt_eval_3650952_*.out; do [ -f "$f" ] && echo "### $f" && tail -n 20 "$f"; done
 for f in logs/build_paired_t10_3656210_*.out logs/build_paired_t10_3656308_*.out logs/sft_pair_t10_3656309_*.out logs/sft_pair_t10_3657088_*.out logs/sft_pair_t10_3657738_*.out logs/pair_t10_eval_3656310_*.out logs/pair_t10_eval_3657089_*.out logs/pair_t10_eval_3657739_*.out logs/pair_t10_eval_3659556_*.out logs/sft_hfsa_qwen7b_3656217_*.out logs/eval_hfsa_qwen7b_3656218_*.out logs/sft_hfsa_extra_3656323_*.out logs/sft_hfsa_extra_3656359_*.out logs/sft_hfsa_extra_3656387_*.out logs/sft_hfsa_olmo32_3656335_*.out logs/eval_hfsa_olmo32_3656336_*.out logs/eval_hfsa_olmo32_3658461_*.out logs/eval_hfsa_olmo32_3660238_*.out logs/ood_lmeval_o32_3659357_*.out logs/ood_lmeval_o32_3660240_*.out logs/pt_hfsa_llama_3656338_*.out logs/pt_hfsa_llama_3656360_*.out logs/pt_hfsa_llama_3656388_*.out logs/eval_pt_llama_3656390_*.out logs/hfsa_followup_oversight_3656509.* logs/hfsa_followup_oversight_3656510.* logs/hfsa_followup_oversight_3657079.* logs/hfsa_followup_oversight_3657734.* logs/hfsa_followup_oversight_3658457.* logs/hfsa_followup_oversight_3658813.* logs/hfsa_followup_oversight_3659047.* logs/hfsa_followup_oversight_3659552.* logs/hfsa_followup_oversight_3660235.* logs/hfsa_followup_oversight_3661005.*; do [ -f "$f" ] && echo "### $f" && tail -n 20 "$f"; done

@@ -10,31 +10,53 @@
 \maketitle
 
 \section{Metric note for OOD benchmarks}
-GSM8K is measured as numeric exact-match accuracy after extracting the learned \texttt{<answer>...</answer>} field. HotpotQA, 2WikiMultiHopQA, and MuSiQue are context-provided QA evaluations; the report logs answer F1 and exact match after strict answer extraction, plus tag diagnostics. I therefore call GSM8K an accuracy metric, but call the multi-hop QA readout F1/EM rather than plain accuracy.
+EM means exact match: after extracting the model's answer, the evaluator normalizes the prediction and gold answer and assigns 1 only when they exactly match, then averages over examples. For GSM8K this is numeric exact match and is effectively an accuracy over single numeric answers. For HotpotQA, 2WikiMultiHopQA, and MuSiQue the answers are free-form strings with aliases and partial-overlap possibilities, so the standard report is EM plus token-level F1 rather than calling the result plain accuracy. F1 gives partial credit for overlapping answer tokens; EM is the stricter all-or-nothing string match.
 
 \section{Main OLMo-7B downstream OOD}
-The broad OOD run has completed the 30-row main OLMo grid. This is downstream transfer under the strict answer extractor, not a synthetic validity score. The headline pattern is split: NL is much better on GSM8K numeric EM, while logic is much better on the context-provided multi-hop QA F1/EM tasks.
+The broad OOD run has completed the 30-row main OLMo grid. This is downstream transfer under the strict answer extractor, not a synthetic validity score. The headline pattern is split: NL is much better on GSM8K numeric EM, while logic is much better on the context-provided multi-hop QA F1/EM tasks. Bold values mark the best value in each metric column.
 
 \begin{table}[H]
 \centering
 \scriptsize
-\begin{tabular}{llllllllll}
+\begin{tabular}{lllllll}
 \toprule
-template & train max & n & GSM8K EM & Hotpot F1 & Hotpot EM & 2Wiki F1 & 2Wiki EM & MuSiQue F1 & MuSiQue EM \\
+template & train max & n & GSM8K EM & Hotpot EM & 2Wiki EM & MuSiQue EM \\
 \midrule
-logic & 5 & 3 & 0.056 & 0.469 & 0.348 & 0.418 & 0.360 & 0.296 & 0.232 \\
-logic & 10 & 3 & 0.079 & 0.478 & 0.360 & 0.401 & 0.338 & 0.295 & 0.228 \\
-logic & 15 & 3 & 0.074 & 0.459 & 0.343 & 0.407 & 0.343 & 0.282 & 0.223 \\
-logic & 20 & 3 & 0.086 & 0.504 & 0.383 & 0.409 & 0.348 & 0.312 & 0.247 \\
-logic & 25 & 3 & 0.056 & 0.489 & 0.372 & 0.422 & 0.362 & 0.301 & 0.232 \\
-nl\_exact & 5 & 3 & 0.493 & 0.198 & 0.147 & 0.202 & 0.172 & 0.113 & 0.083 \\
-nl\_exact & 10 & 3 & 0.479 & 0.216 & 0.160 & 0.193 & 0.157 & 0.127 & 0.087 \\
-nl\_exact & 15 & 3 & 0.326 & 0.251 & 0.193 & 0.229 & 0.183 & 0.161 & 0.115 \\
-nl\_exact & 20 & 3 & 0.411 & 0.233 & 0.175 & 0.189 & 0.165 & 0.133 & 0.098 \\
-nl\_exact & 25 & 3 & 0.257 & 0.175 & 0.127 & 0.163 & 0.132 & 0.099 & 0.078 \\
+logic & 5 & 3 & 0.056 & 0.348 & 0.360 & 0.232 \\
+logic & 10 & 3 & 0.079 & 0.360 & 0.338 & 0.228 \\
+logic & 15 & 3 & 0.074 & 0.343 & 0.343 & 0.223 \\
+logic & 20 & 3 & 0.086 & \textbf{0.383} & 0.348 & \textbf{0.247} \\
+logic & 25 & 3 & 0.056 & 0.372 & \textbf{0.362} & 0.232 \\
+nl\_exact & 5 & 3 & \textbf{0.493} & 0.147 & 0.172 & 0.083 \\
+nl\_exact & 10 & 3 & 0.479 & 0.160 & 0.157 & 0.087 \\
+nl\_exact & 15 & 3 & 0.326 & 0.193 & 0.183 & 0.115 \\
+nl\_exact & 20 & 3 & 0.411 & 0.175 & 0.165 & 0.098 \\
+nl\_exact & 25 & 3 & 0.257 & 0.127 & 0.132 & 0.078 \\
 \bottomrule
 \end{tabular}
-\caption{OOD lm-eval means over seeds for the main OLMo-7B checkpoints.}
+\caption{OOD exact-match means over seeds for the main OLMo-7B checkpoints.}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\begin{tabular}{llllll}
+\toprule
+template & train max & n & Hotpot F1 & 2Wiki F1 & MuSiQue F1 \\
+\midrule
+logic & 5 & 3 & 0.469 & 0.418 & 0.296 \\
+logic & 10 & 3 & 0.478 & 0.401 & 0.295 \\
+logic & 15 & 3 & 0.459 & 0.407 & 0.282 \\
+logic & 20 & 3 & \textbf{0.504} & 0.409 & \textbf{0.312} \\
+logic & 25 & 3 & 0.489 & \textbf{0.422} & 0.301 \\
+nl\_exact & 5 & 3 & 0.198 & 0.202 & 0.113 \\
+nl\_exact & 10 & 3 & 0.216 & 0.193 & 0.127 \\
+nl\_exact & 15 & 3 & 0.251 & 0.229 & 0.161 \\
+nl\_exact & 20 & 3 & 0.233 & 0.189 & 0.133 \\
+nl\_exact & 25 & 3 & 0.175 & 0.163 & 0.099 \\
+\bottomrule
+\end{tabular}
+\caption{OOD F1 means over seeds for the main OLMo-7B checkpoints. GSM8K is omitted because the task is scored by numeric exact match rather than answer-token F1.}
 \end{table}
 
 \section{Main OLMo-7B HFSA result}
@@ -73,7 +95,7 @@ nl\_exact & 25 & 3 & 0.794 & 0.748 & 0.885 & 0.860 & 0.510 & 0.427 \\
 \caption{Depth curves for final joint correct+valid@16, averaged over seeds.}
 \end{figure}
 The checkpoint figures below compare each matched logic/NL train-depth pair separately and report only @16.
-Main OLMo checkpoint pass@k files available: 46. Full 1k-grid rows now available: logic train1to10 seed3407, logic train1to5 seed3407. Rows with partial dense additions beyond 1k/3k/10k: logic train1to15 seed3407, logic train1to20 seed3407. Rows still at the original 1k/3k/10k grid: 6.
+Main OLMo checkpoint pass@k files available: 47. Full 1k-grid rows now available: logic train1to10 seed3407, logic train1to5 seed3407. Rows with partial dense additions beyond 1k/3k/10k: logic train1to15 seed3407, logic train1to20 seed3407. Rows still at the original 1k/3k/10k grid: 6.
 \begin{figure}[H]\centering
 \includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to5_correct16.pdf}
 \caption{Seed-3407 train-1-to-5 checkpoint curves for correct@16.}
@@ -163,75 +185,93 @@ The tiny plots separate model sizes and separate answer correctness from joint c
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=0.72\linewidth]{figures/tiny_llama_50m_depth_correct_k8.pdf}
-\caption{Tiny Llama 50m depth curve for correct@8. The dotted line marks train max depth 10.}
+\caption{Tiny Llama 50m seed-mean depth curve for correct@8. The dotted line marks train max depth 10.}
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=0.72\linewidth]{figures/tiny_llama_50m_depth_joint_k8.pdf}
-\caption{Tiny Llama 50m depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}
+\caption{Tiny Llama 50m seed-mean depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=0.72\linewidth]{figures/tiny_llama_100m_depth_correct_k8.pdf}
-\caption{Tiny Llama 100m depth curve for correct@8. The dotted line marks train max depth 10.}
+\caption{Tiny Llama 100m seed-mean depth curve for correct@8. The dotted line marks train max depth 10.}
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=0.72\linewidth]{figures/tiny_llama_100m_depth_joint_k8.pdf}
-\caption{Tiny Llama 100m depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}
+\caption{Tiny Llama 100m seed-mean depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=0.72\linewidth]{figures/tiny_llama_200m_depth_correct_k8.pdf}
-\caption{Tiny Llama 200m depth curve for correct@8. The dotted line marks train max depth 10.}
+\caption{Tiny Llama 200m seed-mean depth curve for correct@8. The dotted line marks train max depth 10.}
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=0.72\linewidth]{figures/tiny_llama_200m_depth_joint_k8.pdf}
-\caption{Tiny Llama 200m depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}
+\caption{Tiny Llama 200m seed-mean depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}
 \end{figure}
 
 Tiny checkpoint pass@k rows available at report generation time: 36. The curves below include all available intermediate checkpoint rows plus the final 20k checkpoint.
 
 \begin{figure}[H]\centering
 \includegraphics[width=\linewidth]{figures/tiny_llama_50m_checkpoint_correct_k8.pdf}
-\caption{Tiny Llama 50m checkpoint curves for correct@8.}
+\caption{Tiny Llama 50m seed-mean checkpoint curves for correct@8.}
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=\linewidth]{figures/tiny_llama_50m_checkpoint_joint_k8.pdf}
-\caption{Tiny Llama 50m checkpoint curves for joint correct+valid@8.}
+\caption{Tiny Llama 50m seed-mean checkpoint curves for joint correct+valid@8.}
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=\linewidth]{figures/tiny_llama_100m_checkpoint_correct_k8.pdf}
-\caption{Tiny Llama 100m checkpoint curves for correct@8.}
+\caption{Tiny Llama 100m seed-mean checkpoint curves for correct@8.}
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=\linewidth]{figures/tiny_llama_100m_checkpoint_joint_k8.pdf}
-\caption{Tiny Llama 100m checkpoint curves for joint correct+valid@8.}
+\caption{Tiny Llama 100m seed-mean checkpoint curves for joint correct+valid@8.}
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=\linewidth]{figures/tiny_llama_200m_checkpoint_correct_k8.pdf}
-\caption{Tiny Llama 200m checkpoint curves for correct@8.}
+\caption{Tiny Llama 200m seed-mean checkpoint curves for correct@8.}
 \end{figure}
 \begin{figure}[H]\centering
 \includegraphics[width=\linewidth]{figures/tiny_llama_200m_checkpoint_joint_k8.pdf}
-\caption{Tiny Llama 200m checkpoint curves for joint correct+valid@8.}
+\caption{Tiny Llama 200m seed-mean checkpoint curves for joint correct+valid@8.}
 \end{figure}
 
 \subsection{Tiny Llama downstream OOD eval}
-The tiny downstream OOD evals completed with the 8192-context fallback. LongBench contexts are truncated for these tiny models, so this table is a smoke/result-sanity readout rather than a fair long-context QA claim.
+The tiny downstream OOD evals completed with the 8192-context fallback. LongBench contexts are truncated for these tiny models, so these tables are smoke/result-sanity readouts rather than fair long-context QA claims.
 
 \begin{table}[H]
 \centering
 \small
-\begin{tabular}{lllllllllll}
+\begin{tabular}{llllllll}
 \toprule
-size & template & n & GSM8K EM & GSM8K tag & Hotpot F1 & Hotpot EM & 2Wiki F1 & 2Wiki EM & MuSiQue F1 & MuSiQue EM \\
+size & template & n & GSM8K EM & GSM8K tag & Hotpot EM & 2Wiki EM & MuSiQue EM \\
 \midrule
-50m & logic & 3 & 0.003 & 0.004 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-50m & nl\_exact & 3 & 0.000 & 0.029 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-100m & logic & 3 & 0.001 & 0.010 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-100m & nl\_exact & 3 & 0.000 & 0.055 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-200m & logic & 3 & 0.006 & 0.215 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-200m & nl\_exact & 3 & 0.002 & 0.403 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+50m & logic & 3 & 0.003 & 0.004 & 0.000 & 0.000 & 0.000 \\
+50m & nl\_exact & 3 & 0.000 & 0.029 & 0.000 & 0.000 & 0.000 \\
+100m & logic & 3 & 0.001 & 0.010 & 0.000 & 0.000 & 0.000 \\
+100m & nl\_exact & 3 & 0.000 & 0.055 & 0.000 & 0.000 & 0.000 \\
+200m & logic & 3 & \textbf{0.006} & 0.215 & 0.000 & 0.000 & 0.000 \\
+200m & nl\_exact & 3 & 0.002 & \textbf{0.403} & 0.000 & 0.000 & 0.000 \\
 \bottomrule
 \end{tabular}
-\caption{Tiny Llama OOD lm-eval metrics after strict answer extraction.}
+\caption{Tiny Llama OOD exact-match metrics after strict answer extraction.}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{llllll}
+\toprule
+size & template & n & Hotpot F1 & 2Wiki F1 & MuSiQue F1 \\
+\midrule
+50m & logic & 3 & 0.000 & 0.000 & 0.000 \\
+50m & nl\_exact & 3 & 0.000 & 0.000 & 0.000 \\
+100m & logic & 3 & 0.000 & 0.000 & 0.000 \\
+100m & nl\_exact & 3 & 0.000 & 0.000 & 0.000 \\
+200m & logic & 3 & 0.000 & 0.000 & 0.000 \\
+200m & nl\_exact & 3 & 0.000 & 0.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Tiny Llama OOD F1 metrics after strict answer extraction. GSM8K is omitted because it is scored by numeric exact match.}
 \end{table}
 
 \section{Qwen-2.5-7B partial architecture ablation}
