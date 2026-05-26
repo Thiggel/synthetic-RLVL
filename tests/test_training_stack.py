@@ -4,6 +4,7 @@ import pytest
 
 from synthetic_dataset import DatasetConfig, LogicDatasetGenerator
 from synthrlvl.metrics import OutputEvaluator, RewardComputer
+from synthrlvl.sft_data import build_sft_dataset_from_materialized_rows
 from synthrlvl.task import TaskBuilder, task_sample_from_logic_example
 from synthrlvl.types import PrefillMode, RewardSchema, StepRange, TaskConfig, TemplateName
 
@@ -25,6 +26,135 @@ def test_task_builder_emits_tagged_targets():
     assert sample.prompt
     assert "<formal>" in sample.target
     assert "<answer>" in sample.target
+
+
+@pytest.mark.parametrize(
+    ("template", "block_tag", "marker"),
+    [
+        (TemplateName.TERSE_NL, "think", None),
+        (TemplateName.RULE_ANNOTATED_NL, "think", "[rule:"),
+        (TemplateName.PSEUDOCODE, "think", "step_1: derive"),
+        (TemplateName.SHUFFLED_NL, "think", None),
+        (TemplateName.SHUFFLED_LOGIC, "formal", None),
+        (TemplateName.INVALID_LOGIC, "formal", " ; R"),
+    ],
+)
+def test_ablation_templates_emit_scorable_targets(template: TemplateName, block_tag: str, marker: str | None):
+    gen = LogicDatasetGenerator(DatasetConfig(depth=3, distractor_ratio=0.5, seed=123))
+    ex = gen.generate(0)
+    cfg = make_task(template=template)
+    sample = task_sample_from_logic_example(ex, cfg=cfg, depth=3)
+
+    assert f"<{block_tag}>" in sample.target
+    assert "<answer>" in sample.target
+    if marker is not None:
+        assert marker in sample.target
+
+    result = OutputEvaluator().evaluate(
+        sample.target,
+        template=template,
+        gold_answer=sample.answer,
+        gold_logic_premises=sample.logic_premises,
+        gold_logic_conclusion=sample.logic_conclusion,
+        gold_logic_constants=sample.logic_constants,
+        gold_logic_predicates=sample.logic_predicates,
+        prefill=cfg.prefill,
+        gold_first_modality_lines=sample.gold_first_modality_lines,
+    )
+    assert result.format_ok == 1.0
+    assert result.correct == 1.0
+
+
+def test_invalid_logic_template_breaks_proof_validity():
+    gen = LogicDatasetGenerator(DatasetConfig(depth=3, distractor_ratio=0.5, seed=123))
+    ex = gen.generate(0)
+    cfg = make_task(template=TemplateName.INVALID_LOGIC)
+    sample = task_sample_from_logic_example(ex, cfg=cfg, depth=3)
+
+    result = OutputEvaluator().evaluate(
+        sample.target,
+        template=cfg.template,
+        gold_answer=sample.answer,
+        gold_logic_premises=sample.logic_premises,
+        gold_logic_conclusion=sample.logic_conclusion,
+        prefill=cfg.prefill,
+        gold_first_modality_lines=sample.gold_first_modality_lines,
+    )
+    assert result.valid == 0.0
+
+
+def test_high_depth_shortcut_schema_extended_predicates_are_scorable():
+    gen = LogicDatasetGenerator(
+        DatasetConfig(
+            depth=25,
+            difficulty="hard_fsa_schema",
+            branching_factor=4,
+            shortcut_rate=1.0,
+            seed=3407,
+        )
+    )
+    ex = gen.generate(0)
+    assert any("(x):" in line for line in ex.predicates)
+
+    cfg = make_task(template=TemplateName.NL_EXACT)
+    sample = task_sample_from_logic_example(ex, cfg=cfg, depth=25)
+    result = OutputEvaluator().evaluate(
+        sample.target,
+        template=cfg.template,
+        gold_answer=sample.answer,
+        gold_logic_premises=sample.logic_premises,
+        gold_logic_conclusion=sample.logic_conclusion,
+        gold_logic_constants=sample.logic_constants,
+        gold_logic_predicates=sample.logic_predicates,
+        prefill=cfg.prefill,
+        gold_first_modality_lines=sample.gold_first_modality_lines,
+    )
+    assert result.format_ok == 1.0
+    assert result.correct == 1.0
+    assert result.nl_logic_parse == 1.0
+    assert result.nl_logic_citation_free_valid == 1.0
+
+
+@pytest.mark.parametrize(
+    ("template", "mode", "block_tag"),
+    [
+        (TemplateName.CONDITIONED_LOGIC, "formal_logic", "formal"),
+        (TemplateName.CONDITIONED_NL, "natural_language", "think"),
+    ],
+)
+def test_conditioned_templates_add_mode_prompt(template: TemplateName, mode: str, block_tag: str):
+    gen = LogicDatasetGenerator(DatasetConfig(depth=3, distractor_ratio=0.5, seed=123))
+    ex = gen.generate(0)
+    cfg = make_task(template=template)
+    sample = task_sample_from_logic_example(ex, cfg=cfg, depth=3)
+
+    assert sample.prompt.startswith(f"<reasoning_mode>\n{mode}\n</reasoning_mode>\n")
+    assert f"<{block_tag}>" in sample.target
+    assert "<answer>" in sample.target
+
+
+def test_conditioned_dual_materialized_training_duplicates_modalities():
+    class TinyTokenizer:
+        eos_token_id = 0
+
+        def __call__(self, text: str, add_special_tokens: bool = False) -> dict:
+            return {"input_ids": [ord(ch) % 251 + 1 for ch in text]}
+
+    gen = LogicDatasetGenerator(DatasetConfig(depth=2, distractor_ratio=0.5, seed=123))
+    row = gen.generate(0).to_dict()
+    row["depth"] = 2
+    row["record_index"] = 0
+    cfg = make_task(template=TemplateName.CONDITIONED_DUAL)
+    bundle = build_sft_dataset_from_materialized_rows(
+        train_rows=[row],
+        eval_rows=[row],
+        task_cfg=cfg,
+        tokenizer=TinyTokenizer(),
+        max_length=8192,
+    )
+
+    assert len(bundle.train) == 2
+    assert len(bundle.eval) == 2
 
 
 def test_output_evaluator_positive_path_logic():

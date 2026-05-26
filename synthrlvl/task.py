@@ -47,6 +47,82 @@ def _join_unnumbered(lines: List[str]) -> str:
     return "\n".join(out)
 
 
+def _line_body(line: str) -> str:
+    stripped = line.strip()
+    if ". " in stripped:
+        return stripped.split(". ", 1)[1].strip()
+    return stripped
+
+
+def _logic_formula(line: str) -> str:
+    return _line_body(line).split(" ; ", 1)[0].strip()
+
+
+def _logic_rule_label(line: str) -> str:
+    body = _line_body(line)
+    if " ; " not in body:
+        return "unknown"
+    justification = body.split(" ; ", 1)[1].strip()
+    return justification.split(",", 1)[0].strip() or "unknown"
+
+
+def _stable_int(parts: list[str]) -> int:
+    h = hashlib.sha256("|".join(parts).encode()).hexdigest()
+    return int(h[:16], 16)
+
+
+def _shuffle_example_lines(lines: List[str], *, ex: LogicExample, cfg: TaskConfig, depth: int, salt: str) -> List[str]:
+    out = list(lines)
+    if len(out) < 2:
+        return out
+    meta = ex.metadata or {}
+    index = str(meta.get("record_index", meta.get("index", "")))
+    seed_value = _stable_int([str(cfg.seed), salt, str(depth), ex.answer, index, "\n".join(lines)])
+    rng = random.Random(seed_value)
+    rng.shuffle(out)
+    return out
+
+
+def _terse_natural_proof(lines: List[str]) -> str:
+    out: List[str] = []
+    for line in lines:
+        text = _line_body(line)
+        text = text.removeprefix("Therefore ").strip()
+        text = text.replace("Combining ", "Using ")
+        if text and not text.endswith("."):
+            text += "."
+        out.append(text)
+    return "\n".join(out)
+
+
+def _rule_annotated_natural_proof(proof_nl: List[str], proof_fol: List[str]) -> str:
+    out: List[str] = []
+    for nl_line, fol_line in zip(proof_nl, proof_fol, strict=False):
+        text = _line_body(nl_line).rstrip(".")
+        out.append(f"{text}. [rule: {_logic_rule_label(fol_line)}]")
+    return "\n".join(out)
+
+
+def _pseudocode_proof(proof_nl: List[str], proof_fol: List[str]) -> str:
+    out: List[str] = []
+    for i, (nl_line, fol_line) in enumerate(zip(proof_nl, proof_fol, strict=False), start=1):
+        statement = _line_body(nl_line).rstrip(".")
+        out.append(f'step_{i}: derive "{statement}" using {_logic_rule_label(fol_line)}.')
+    return "\n".join(out)
+
+
+def _invalid_logic_proof(proof_fol: List[str]) -> str:
+    return "\n".join(f"{_logic_formula(line)} ; R" for line in proof_fol)
+
+
+def _conditioned_prompt_prefix(template: TemplateName) -> str:
+    if template == TemplateName.CONDITIONED_LOGIC:
+        return "<reasoning_mode>\nformal_logic\n</reasoning_mode>\n"
+    if template == TemplateName.CONDITIONED_NL:
+        return "<reasoning_mode>\nnatural_language\n</reasoning_mode>\n"
+    return ""
+
+
 def _extract_facts_rules(premises_nl: List[str]) -> tuple[List[str], List[str]]:
     facts: List[str] = []
     rules: List[str] = []
@@ -124,6 +200,16 @@ def task_sample_from_logic_example(ex: LogicExample, *, cfg: TaskConfig, depth: 
     natural_facts = "\n".join(facts)
     natural_rules = "\n".join(rules)
     natural_proof = _join_unnumbered(ex.proof_nl)
+    terse_natural_proof = _terse_natural_proof(ex.proof_nl)
+    rule_annotated_natural_proof = _rule_annotated_natural_proof(ex.proof_nl, ex.proof_fol)
+    pseudocode_proof = _pseudocode_proof(ex.proof_nl, ex.proof_fol)
+    shuffled_logic_proof = _join_unnumbered(
+        _shuffle_example_lines(ex.proof_fol, ex=ex, cfg=cfg, depth=depth, salt="shuffled_logic")
+    )
+    shuffled_natural_proof = _join_unnumbered(
+        _shuffle_example_lines(ex.proof_nl, ex=ex, cfg=cfg, depth=depth, salt="shuffled_nl")
+    )
+    invalid_logic_proof = _invalid_logic_proof(ex.proof_fol)
     natural_conclusion = ex.proof_nl[-1].split(". ", 1)[1].strip()
     natural_premises = _join_unnumbered(ex.premises_nl)
     natural_theory_numbered = "\n".join(ex.premises_nl)
@@ -152,6 +238,34 @@ def task_sample_from_logic_example(ex: LogicExample, *, cfg: TaskConfig, depth: 
         "<conclusion>\n" + natural_conclusion + "\n</conclusion>\n"
         "</think>"
     )
+    terse_think_block = (
+        "<think>\n"
+        "<premises>\n" + natural_premises + "\n</premises>\n"
+        "<proof>\n" + terse_natural_proof + "\n</proof>\n"
+        "<conclusion>\n" + natural_conclusion + "\n</conclusion>\n"
+        "</think>"
+    )
+    rule_annotated_think_block = (
+        "<think>\n"
+        "<premises>\n" + natural_premises + "\n</premises>\n"
+        "<proof>\n" + rule_annotated_natural_proof + "\n</proof>\n"
+        "<conclusion>\n" + natural_conclusion + "\n</conclusion>\n"
+        "</think>"
+    )
+    pseudocode_think_block = (
+        "<think>\n"
+        "<premises>\n" + natural_premises + "\n</premises>\n"
+        "<proof>\n" + pseudocode_proof + "\n</proof>\n"
+        "<conclusion>\n" + natural_conclusion + "\n</conclusion>\n"
+        "</think>"
+    )
+    shuffled_think_block = (
+        "<think>\n"
+        "<premises>\n" + natural_premises + "\n</premises>\n"
+        "<proof>\n" + shuffled_natural_proof + "\n</proof>\n"
+        "<conclusion>\n" + natural_conclusion + "\n</conclusion>\n"
+        "</think>"
+    )
     formal_block = (
         "<formal>\n"
         "<constants>\n" + logic_constants + "\n</constants>\n"
@@ -161,8 +275,37 @@ def task_sample_from_logic_example(ex: LogicExample, *, cfg: TaskConfig, depth: 
         "<conclusion>\n" + logic_conclusion + "\n</conclusion>\n"
         "</formal>"
     )
+    shuffled_logic_block = (
+        "<formal>\n"
+        "<constants>\n" + logic_constants + "\n</constants>\n"
+        "<predicates>\n" + logic_predicates + "\n</predicates>\n"
+        "<premises>\n" + logic_premises + "\n</premises>\n"
+        "<proof>\n" + shuffled_logic_proof + "\n</proof>\n"
+        "<conclusion>\n" + logic_conclusion + "\n</conclusion>\n"
+        "</formal>"
+    )
+    invalid_logic_block = (
+        "<formal>\n"
+        "<constants>\n" + logic_constants + "\n</constants>\n"
+        "<predicates>\n" + logic_predicates + "\n</predicates>\n"
+        "<premises>\n" + logic_premises + "\n</premises>\n"
+        "<proof>\n" + invalid_logic_proof + "\n</proof>\n"
+        "<conclusion>\n" + logic_conclusion + "\n</conclusion>\n"
+        "</formal>"
+    )
 
     if cfg.template == TemplateName.LOGIC:
+        target_body = logic_block
+        question = ex.question_fol
+        first_modality = "logic"
+        first_lines = ex.constants + ex.predicates + ex.premises_fol
+        first_prefix_text = (
+            "<formal>\n"
+            "<constants>\n" + logic_constants + "\n</constants>\n"
+            "<predicates>\n" + logic_predicates + "\n</predicates>\n"
+            "<premises>\n" + logic_premises + "\n</premises>\n"
+        )
+    elif cfg.template == TemplateName.CONDITIONED_LOGIC:
         target_body = logic_block
         question = ex.question_fol
         first_modality = "logic"
@@ -203,6 +346,47 @@ def task_sample_from_logic_example(ex: LogicExample, *, cfg: TaskConfig, depth: 
             "<think>\n"
             "<premises>\n" + natural_premises + "\n</premises>\n"
         )
+    elif cfg.template == TemplateName.CONDITIONED_NL:
+        target_body = think_block
+        question = ex.question_nl
+        first_modality = "natural"
+        first_lines = ex.premises_nl
+        first_prefix_text = (
+            "<think>\n"
+            "<premises>\n" + natural_premises + "\n</premises>\n"
+        )
+    elif cfg.template in (
+        TemplateName.TERSE_NL,
+        TemplateName.RULE_ANNOTATED_NL,
+        TemplateName.PSEUDOCODE,
+        TemplateName.SHUFFLED_NL,
+    ):
+        if cfg.template == TemplateName.TERSE_NL:
+            target_body = terse_think_block
+        elif cfg.template == TemplateName.RULE_ANNOTATED_NL:
+            target_body = rule_annotated_think_block
+        elif cfg.template == TemplateName.PSEUDOCODE:
+            target_body = pseudocode_think_block
+        else:
+            target_body = shuffled_think_block
+        question = ex.question_nl
+        first_modality = "natural"
+        first_lines = ex.premises_nl
+        first_prefix_text = (
+            "<think>\n"
+            "<premises>\n" + natural_premises + "\n</premises>\n"
+        )
+    elif cfg.template in (TemplateName.SHUFFLED_LOGIC, TemplateName.INVALID_LOGIC):
+        target_body = shuffled_logic_block if cfg.template == TemplateName.SHUFFLED_LOGIC else invalid_logic_block
+        question = ex.question_fol
+        first_modality = "logic"
+        first_lines = ex.constants + ex.predicates + ex.premises_fol
+        first_prefix_text = (
+            "<formal>\n"
+            "<constants>\n" + logic_constants + "\n</constants>\n"
+            "<predicates>\n" + logic_predicates + "\n</predicates>\n"
+            "<premises>\n" + logic_premises + "\n</premises>\n"
+        )
     elif cfg.template == TemplateName.FORMAL_THINK:
         target_body = formal_block + "\n\n" + think_block
         question = ex.question_fol + "\n" + ex.question_nl
@@ -239,6 +423,8 @@ def task_sample_from_logic_example(ex: LogicExample, *, cfg: TaskConfig, depth: 
         prefill_text = "\nGold prefix (copy exactly, then continue):\n" + first_prefix_text
 
     prompt = (
+        _conditioned_prompt_prefix(cfg.template)
+        +
         "<question>\n"
         f"{natural_theory_numbered}\n"
         f"{ex.question_nl}\n"
@@ -263,6 +449,9 @@ def task_sample_from_logic_example(ex: LogicExample, *, cfg: TaskConfig, depth: 
 
 
 def task_sample_from_materialized_row(row: dict, *, cfg: TaskConfig) -> TaskSample:
+    metadata = dict(row.get("metadata", {}))
+    if "record_index" in row:
+        metadata["record_index"] = int(row["record_index"])
     ex = LogicExample(
         constants=list(row["constants"]),
         predicates=list(row["predicates"]),
@@ -273,6 +462,6 @@ def task_sample_from_materialized_row(row: dict, *, cfg: TaskConfig) -> TaskSamp
         question_fol=str(row["question_fol"]),
         question_nl=str(row["question_nl"]),
         answer=str(row["answer"]),
-        metadata=dict(row.get("metadata", {})),
+        metadata=metadata,
     )
     return task_sample_from_logic_example(ex, cfg=cfg, depth=int(row["depth"]))

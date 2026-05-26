@@ -297,7 +297,7 @@ def build_family_bank(num_values: int) -> List[AttributeFamily]:
 
 class SymbolPool:
     CONSTS = list("abcdefghijklmnopqrstuvwxyz")
-    PREDS = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    PREDS = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ") + [f"P{i}" for i in range(100)]
 
     def __init__(self):
         self.constant_to_name: Dict[str, str] = {}
@@ -316,7 +316,7 @@ class SymbolPool:
                 unique_values.append(v)
                 seen.add(v)
         if len(unique_values) > len(self.PREDS):
-            raise ValueError("too many active predicates for A-Z")
+            raise ValueError("too many active predicates")
         self.value_to_pred = {v: self.PREDS[i] for i, v in enumerate(unique_values)}
         self.pred_to_value = {v: k for k, v in self.value_to_pred.items()}
         return self.value_to_pred
@@ -332,7 +332,19 @@ class Atom:
     constant: str
 
     def render(self) -> str:
-        return f"{self.predicate}{self.constant}"
+        return render_predicate_atom(self.predicate, self.constant)
+
+
+def render_predicate_atom(predicate: str, term: str) -> str:
+    if len(predicate) == 1 and predicate.isalpha():
+        return f"{predicate}{term}"
+    return f"{predicate}({term})"
+
+
+def render_predicate_declaration(predicate: str) -> str:
+    if len(predicate) == 1 and predicate.isalpha():
+        return f"{predicate}x"
+    return f"{predicate}(x)"
 
 @dataclass(frozen=True)
 class RuleTemplate:
@@ -356,8 +368,11 @@ class RuleInstance:
 
     def fol(self) -> str:
         if len(self.source_preds) == 1:
-            return self.template.render_fol(P=self.source_preds[0], Q=self.target_pred)
-        return self.template.render_fol(P=self.source_preds[0], Q=self.source_preds[1], R=self.target_pred)
+            return f"{render_predicate_atom(self.source_preds[0], 'x')} -> {render_predicate_atom(self.target_pred, 'x')}"
+        left = render_predicate_atom(self.source_preds[0], "x")
+        right = render_predicate_atom(self.source_preds[1], "x")
+        target = render_predicate_atom(self.target_pred, "x")
+        return f"{left} & {right} -> {target}"
 
     def nl(self) -> str:
         if len(self.source_texts) == 1:
@@ -404,10 +419,90 @@ HARD_V5_STATE_WORDS = [
 ]
 
 HARD_FSA_SCHEMA_FAMILIES = [
-    ("warm", ("amber", "coral", "ruby", "poppy", "orchid", "violet")),
-    ("cool", ("cobalt", "teal", "slate", "harbor", "pearl", "ivory")),
-    ("plant", ("olive", "maple", "cedar", "hazel", "birch")),
-    ("earth", ("lime", "willow", "laurel", "elm", "granite")),
+    (
+        "warm",
+        (
+            "amber",
+            "coral",
+            "ruby",
+            "poppy",
+            "orchid",
+            "violet",
+            "crimson",
+            "scarlet",
+            "copper",
+            "rose",
+            "magenta",
+            "saffron",
+            "maroon",
+            "apricot",
+            "salmon",
+            "blush",
+        ),
+    ),
+    (
+        "cool",
+        (
+            "cobalt",
+            "teal",
+            "slate",
+            "harbor",
+            "pearl",
+            "ivory",
+            "azure",
+            "navy",
+            "cyan",
+            "indigo",
+            "glacier",
+            "arctic",
+            "denim",
+            "cerulean",
+            "silver",
+            "mist",
+        ),
+    ),
+    (
+        "plant",
+        (
+            "olive",
+            "maple",
+            "cedar",
+            "hazel",
+            "birch",
+            "moss",
+            "fern",
+            "clover",
+            "basil",
+            "pine",
+            "spruce",
+            "laurel",
+            "ivy",
+            "mint",
+            "willow",
+            "juniper",
+        ),
+    ),
+    (
+        "earth",
+        (
+            "granite",
+            "umber",
+            "sienna",
+            "ochre",
+            "basalt",
+            "quartz",
+            "flint",
+            "shale",
+            "clay",
+            "pebble",
+            "onyx",
+            "sand",
+            "stone",
+            "dune",
+            "loam",
+            "ridge",
+        ),
+    ),
 ]
 
 HARD_FSA_SCHEMA_MARKERS = ("north", "south", "east", "west")
@@ -913,7 +1008,7 @@ class LogicDatasetGenerator:
 
         active_branch_first = rng.random() < self.config.shortcut_rate
         constants_lines = [f"{c} = {c}" for c in constants]
-        predicates_lines = [f"{p}x: x is {v}" for v, p in symbols.value_to_pred.items()]
+        predicates_lines = [f"{render_predicate_declaration(p)}: x is {v}" for v, p in symbols.value_to_pred.items()]
 
         premises_fol: list[str] = []
         premises_nl: list[str] = []
@@ -1110,7 +1205,7 @@ class LogicDatasetGenerator:
         atom = lambda state, const: self._hard_v5_atom(symbols.value_to_pred, state, const)
 
         constants_lines = [f"{c} = {c}" for c in constants]
-        predicates_lines = [f"{p}x: x is {v}" for v, p in symbols.value_to_pred.items()]
+        predicates_lines = [f"{render_predicate_declaration(p)}: x is {v}" for v, p in symbols.value_to_pred.items()]
         premises_fol: list[str] = []
         premises_nl: list[str] = []
 
@@ -1301,8 +1396,7 @@ class LogicDatasetGenerator:
             branch_markers.append(markers)
 
         # Assign natural words. Reuse is avoided within a family until exhausted;
-        # with depth 20 there are only 24 state words total, so repeated lexical
-        # states are allowed only with distinct constants/markers.
+        # repeated lexical states are allowed only with distinct constants/markers.
         family_word_positions = {name: rng.sample(words, len(words)) for name, words in family_words.items()}
         family_word_counts = {name: 0 for name in family_names}
 
@@ -1361,7 +1455,7 @@ class LogicDatasetGenerator:
         atom = lambda state, const: self._hard_v5_atom(symbols.value_to_pred, state, const)
 
         constants_lines = [f"{c} = {c}" for c in constants]
-        predicates_lines = [f"{p}x: x is {v}" for v, p in symbols.value_to_pred.items()]
+        predicates_lines = [f"{render_predicate_declaration(p)}: x is {v}" for v, p in symbols.value_to_pred.items()]
         premises_fol: list[str] = []
         premises_nl: list[str] = []
 
@@ -1495,7 +1589,7 @@ class LogicDatasetGenerator:
         symbols.assign_predicates(active_values)
 
         constants_lines = [f"{c} = {name}" for c, name in world.constants.items()]
-        predicates_lines = [f"{p}x: x is {v}" for v, p in symbols.value_to_pred.items()]
+        predicates_lines = [f"{render_predicate_declaration(p)}: x is {v}" for v, p in symbols.value_to_pred.items()]
 
         premises_fol: List[str] = []
         premises_nl: List[str] = []

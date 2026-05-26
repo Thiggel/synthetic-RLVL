@@ -52,11 +52,20 @@ def _predicate_map(predicates: str) -> dict[str, str]:
     mapping: dict[str, str] = {}
     for raw in (predicates or "").splitlines():
         text = _strip_number(raw)
-        # Current synthetic predicates are rendered as "Ax: x is blue".
-        m = re.match(r"^\s*([A-Z])\w*\s*:\s*x\s+is\s+(.+?)\s*$", text)
+        # Synthetic predicates are rendered as "Ax: x is blue" for legacy
+        # single-letter names and "P0(x): x is blue" for extended names.
+        m = re.match(r"^\s*([A-Z][A-Za-z0-9_]*)\(\s*x\s*\)\s*:\s*x\s+is\s+(.+?)\s*$", text)
+        if not m:
+            m = re.match(r"^\s*([A-Z])x\s*:\s*x\s+is\s+(.+?)\s*$", text)
         if m:
             mapping[_norm(m.group(2))] = m.group(1)
     return mapping
+
+
+def _predicate_atom(predicate: str, constant: str) -> str:
+    if len(predicate) == 1 and predicate.isalpha():
+        return f"{predicate}{constant}"
+    return f"{predicate}({constant})"
 
 
 def _assertion_clause(line: str) -> str:
@@ -105,7 +114,7 @@ def translate_natural_sentence_to_formula(
         pred = pred_by_attr.get(_norm(attr))
         if not pred:
             return None
-        formulas.append(f"{pred}{entity}")
+        formulas.append(_predicate_atom(pred, entity))
     if not formulas:
         return None
     return " & ".join(formulas)

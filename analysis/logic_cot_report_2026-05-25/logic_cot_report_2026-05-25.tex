@@ -10,7 +10,7 @@
 \maketitle
 
 \section{Metric note for OOD benchmarks}
-GSM8K is measured as numeric exact-match accuracy after extracting the learned \texttt{<answer>...</answer>} field. HotpotQA, 2WikiMultiHopQA, and MuSiQue are context-provided QA evaluations; the primary reported quantity is answer F1 after strict answer extraction, with exact-match/tag diagnostics available separately. I therefore call GSM8K an accuracy metric, but call the multi-hop QA readout F1/EM rather than plain accuracy.
+GSM8K is measured as numeric exact-match accuracy after extracting the learned \texttt{<answer>...</answer>} field. HotpotQA, 2WikiMultiHopQA, and MuSiQue are context-provided QA evaluations; the report logs answer F1 and exact match after strict answer extraction, plus tag diagnostics. I therefore call GSM8K an accuracy metric, but call the multi-hop QA readout F1/EM rather than plain accuracy.
 
 \section{Main OLMo-7B HFSA result}
 \begin{table}[H]
@@ -47,13 +47,46 @@ nl\_exact & 25 & 3 & 0.794 & 0.748 & 0.885 & 0.860 & 0.510 & 0.427 \\
 \includegraphics[width=\linewidth]{figures/olmo7b_depth_joint16.pdf}
 \caption{Depth curves for final joint correct+valid@16, averaged over seeds.}
 \end{figure}
+The checkpoint figures below compare each matched logic/NL train-depth pair separately and report only @16.
 \begin{figure}[H]\centering
-\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_correct_k8_k16.pdf}
-\caption{Seed-3407 checkpoint curves for correct@8 and correct@16.}
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to5_correct16.pdf}
+\caption{Seed-3407 train-1-to-5 checkpoint curves for correct@16.}
 \end{figure}
 \begin{figure}[H]\centering
-\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_joint_k8_k16.pdf}
-\caption{Seed-3407 checkpoint curves for joint correct+valid@8 and @16.}
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to5_joint16.pdf}
+\caption{Seed-3407 train-1-to-5 checkpoint curves for joint correct+valid@16.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to10_correct16.pdf}
+\caption{Seed-3407 train-1-to-10 checkpoint curves for correct@16.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to10_joint16.pdf}
+\caption{Seed-3407 train-1-to-10 checkpoint curves for joint correct+valid@16.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to15_correct16.pdf}
+\caption{Seed-3407 train-1-to-15 checkpoint curves for correct@16.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to15_joint16.pdf}
+\caption{Seed-3407 train-1-to-15 checkpoint curves for joint correct+valid@16.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to20_correct16.pdf}
+\caption{Seed-3407 train-1-to-20 checkpoint curves for correct@16.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to20_joint16.pdf}
+\caption{Seed-3407 train-1-to-20 checkpoint curves for joint correct+valid@16.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to25_correct16.pdf}
+\caption{Seed-3407 train-1-to-25 checkpoint curves for correct@16.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/olmo7b_checkpoint_train1to25_joint16.pdf}
+\caption{Seed-3407 train-1-to-25 checkpoint curves for joint correct+valid@16.}
 \end{figure}
 
 \section{Tiny Llama scratch-pretraining result}
@@ -66,37 +99,92 @@ These small random-init models were not expected to solve depth-50 extrapolation
 \toprule
 size & template & train c@8 & OOD c@8 & hard c@8 & d50 c@8 & OOD joint@8 \\
 \midrule
-50m & logic & 0.797 & 0.219 & 0.179 & 0.000 & 0.000 \\
-50m & nl\_exact & 0.656 & 0.086 & 0.027 & 0.000 & 0.000 \\
-100m & logic & 0.734 & 0.148 & 0.062 & 0.000 & 0.000 \\
-100m & nl\_exact & 0.734 & 0.016 & 0.000 & 0.000 & 0.000 \\
-200m & logic & 0.859 & 0.273 & 0.179 & 0.000 & 0.000 \\
-200m & nl\_exact & 0.719 & 0.055 & 0.000 & 0.000 & 0.000 \\
+50m & logic & 0.766 & 0.141 & 0.110 & 0.000 & 0.000 \\
+50m & nl\_exact & 0.672 & 0.036 & 0.009 & 0.000 & 0.000 \\
+100m & logic & 0.807 & 0.201 & 0.134 & 0.000 & 0.000 \\
+100m & nl\_exact & 0.729 & 0.034 & 0.000 & 0.000 & 0.000 \\
+200m & logic & 0.854 & 0.240 & 0.146 & 0.000 & 0.000 \\
+200m & nl\_exact & 0.719 & 0.047 & 0.018 & 0.000 & 0.000 \\
 \bottomrule
 \end{tabular}
 \caption{Tiny Llama final sparse pass@8 metrics.}
 \end{table}
 
+The tiny plots separate model sizes and separate answer correctness from joint correct+valid.
 \begin{figure}[H]\centering
-\includegraphics[width=\linewidth]{figures/tiny_llama_final_bands_correct_joint.pdf}
-\caption{Tiny Llama final train/OOD/hard-tail correct@8 and joint@8 by model size. Solid lines are correct; dashed lines are joint.}
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_50m_bands_correct_k8.pdf}
+\caption{Tiny Llama 50m train/OOD/hard-tail/depth-50 correct@8 by template.}
 \end{figure}
 \begin{figure}[H]\centering
-\includegraphics[width=\linewidth]{figures/tiny_llama_50m_depth_correct_joint.pdf}
-\includegraphics[width=\linewidth]{figures/tiny_llama_100m_depth_correct_joint.pdf}
-\includegraphics[width=\linewidth]{figures/tiny_llama_200m_depth_correct_joint.pdf}
-\caption{Tiny Llama final depth curves. The dotted line marks train max depth 10.}
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_50m_bands_joint_k8.pdf}
+\caption{Tiny Llama 50m train/OOD/hard-tail/depth-50 joint correct+valid@8 by template.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_100m_bands_correct_k8.pdf}
+\caption{Tiny Llama 100m train/OOD/hard-tail/depth-50 correct@8 by template.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_100m_bands_joint_k8.pdf}
+\caption{Tiny Llama 100m train/OOD/hard-tail/depth-50 joint correct+valid@8 by template.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_200m_bands_correct_k8.pdf}
+\caption{Tiny Llama 200m train/OOD/hard-tail/depth-50 correct@8 by template.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_200m_bands_joint_k8.pdf}
+\caption{Tiny Llama 200m train/OOD/hard-tail/depth-50 joint correct+valid@8 by template.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_50m_depth_correct_k8.pdf}
+\caption{Tiny Llama 50m depth curve for correct@8. The dotted line marks train max depth 10.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_50m_depth_joint_k8.pdf}
+\caption{Tiny Llama 50m depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_100m_depth_correct_k8.pdf}
+\caption{Tiny Llama 100m depth curve for correct@8. The dotted line marks train max depth 10.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_100m_depth_joint_k8.pdf}
+\caption{Tiny Llama 100m depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_200m_depth_correct_k8.pdf}
+\caption{Tiny Llama 200m depth curve for correct@8. The dotted line marks train max depth 10.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.72\linewidth]{figures/tiny_llama_200m_depth_joint_k8.pdf}
+\caption{Tiny Llama 200m depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}
 \end{figure}
 
-Tiny checkpoint pass@k rows available at report generation time: 12. The curves below include all available intermediate checkpoint rows plus the final 20k checkpoint.
+Tiny checkpoint pass@k rows available at report generation time: 36. The curves below include all available intermediate checkpoint rows plus the final 20k checkpoint.
 
 \begin{figure}[H]\centering
-\includegraphics[width=\linewidth]{figures/tiny_llama_checkpoint_correct_k8.pdf}
-\caption{Tiny Llama checkpoint curves for correct@8.}
+\includegraphics[width=\linewidth]{figures/tiny_llama_50m_checkpoint_correct_k8.pdf}
+\caption{Tiny Llama 50m checkpoint curves for correct@8.}
 \end{figure}
 \begin{figure}[H]\centering
-\includegraphics[width=\linewidth]{figures/tiny_llama_checkpoint_joint_k8.pdf}
-\caption{Tiny Llama checkpoint curves for joint@8.}
+\includegraphics[width=\linewidth]{figures/tiny_llama_50m_checkpoint_joint_k8.pdf}
+\caption{Tiny Llama 50m checkpoint curves for joint correct+valid@8.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/tiny_llama_100m_checkpoint_correct_k8.pdf}
+\caption{Tiny Llama 100m checkpoint curves for correct@8.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/tiny_llama_100m_checkpoint_joint_k8.pdf}
+\caption{Tiny Llama 100m checkpoint curves for joint correct+valid@8.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/tiny_llama_200m_checkpoint_correct_k8.pdf}
+\caption{Tiny Llama 200m checkpoint curves for correct@8.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{figures/tiny_llama_200m_checkpoint_joint_k8.pdf}
+\caption{Tiny Llama 200m checkpoint curves for joint correct+valid@8.}
 \end{figure}
 
 \subsection{Tiny Llama downstream OOD eval}
@@ -105,16 +193,16 @@ The tiny downstream OOD evals completed with the 8192-context fallback. LongBenc
 \begin{table}[H]
 \centering
 \small
-\begin{tabular}{lllllll}
+\begin{tabular}{lllllllllll}
 \toprule
-size & template & GSM8K EM & GSM8K tag & Hotpot F1 & 2Wiki F1 & MuSiQue F1 \\
+size & template & n & GSM8K EM & GSM8K tag & Hotpot F1 & Hotpot EM & 2Wiki F1 & 2Wiki EM & MuSiQue F1 & MuSiQue EM \\
 \midrule
-50m & logic & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
-50m & nl\_exact & 0.000 & 0.013 & 0.000 & 0.000 & 0.000 \\
-100m & logic & 0.000 & 0.004 & 0.000 & 0.000 & 0.000 \\
-100m & nl\_exact & 0.000 & 0.070 & 0.000 & 0.000 & 0.000 \\
-200m & logic & 0.007 & 0.313 & 0.000 & 0.000 & 0.000 \\
-200m & nl\_exact & 0.005 & 0.080 & 0.000 & 0.000 & 0.000 \\
+50m & logic & 3 & 0.003 & 0.004 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+50m & nl\_exact & 3 & 0.000 & 0.029 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+100m & logic & 3 & 0.001 & 0.010 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+100m & nl\_exact & 3 & 0.000 & 0.055 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+200m & logic & 3 & 0.006 & 0.215 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+200m & nl\_exact & 3 & 0.002 & 0.403 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
 \bottomrule
 \end{tabular}
 \caption{Tiny Llama OOD lm-eval metrics after strict answer extraction.}
@@ -132,7 +220,8 @@ logic & 10 & 3 & 0.618 & 0.320 & 0.292 & 0.031 \\
 logic & 20 & 3 & 0.753 & 0.165 & 0.656 & 0.021 \\
 logic & 25 & 3 & 0.906 & 0.431 & 0.854 & 0.156 \\
 nl\_exact & 10 & 3 & 0.461 & 0.279 & 0.427 & 0.000 \\
-nl\_exact & 20 & 2 & 0.576 & 0.503 & 0.406 & 0.203 \\
+nl\_exact & 20 & 3 & 0.438 & 0.339 & 0.333 & 0.135 \\
+nl\_exact & 25 & 3 & 0.569 & 0.565 & 0.250 & 0.229 \\
 \bottomrule
 \end{tabular}
 \caption{Qwen-2.5-7B sparse eval rows available at report time. Matched NL train-1-to-20/25 rows are still incomplete, so this is not yet a full architecture-ablation conclusion.}

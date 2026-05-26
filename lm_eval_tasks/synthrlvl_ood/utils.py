@@ -87,15 +87,23 @@ def qa_f1_score(prediction: str, ground_truth: str) -> float:
     return (2 * precision * recall) / (precision + recall)
 
 
+def qa_exact_match(prediction: str, ground_truth: str) -> float:
+    return float(normalize_answer(prediction) == normalize_answer(ground_truth))
+
+
 def process_longbench_qa_tagged(doc: dict, results: list[str]) -> dict[str, float]:
     raw = results[0] if results else ""
     extracted = extract_answer(raw, allow_raw_fallback=False)
-    score = 0.0
+    best_f1 = 0.0
+    best_em = 0.0
     for answer in doc["answers"]:
-        score = max(score, qa_f1_score(extracted, str(answer)))
+        best_f1 = max(best_f1, qa_f1_score(extracted, str(answer)))
+        best_em = max(best_em, qa_exact_match(extracted, str(answer)))
     return {
-        "score": float(score),
-        "qa_f1_score": float(score),
+        "score": float(best_f1),
+        "qa_f1_score": float(best_f1),
+        "exact_match": float(best_em),
+        "qa_exact_match": float(best_em),
         "tag_found": float(bool(_ANSWER_RE.search(str(raw)))),
         "extracted_nonempty": float(bool(extracted.strip())),
     }

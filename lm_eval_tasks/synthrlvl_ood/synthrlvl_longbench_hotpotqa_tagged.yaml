@@ -24,6 +24,12 @@ metric_list:
   - metric: qa_f1_score
     aggregation: mean
     higher_is_better: true
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+  - metric: qa_exact_match
+    aggregation: mean
+    higher_is_better: true
   - metric: tag_found
     aggregation: mean
     higher_is_better: true

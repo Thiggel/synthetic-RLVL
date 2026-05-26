@@ -26,8 +26,10 @@ RUN_NAME="sft_hfsa_modelablate_olmo2_32b_${TEMPLATE}_train1to20_10k_seed3407"
 SFT_FINAL="${WORK}/synthetic-RLVL/runs/${RUN_NAME}/final"
 MERGED_ROOT="${WORK}/synthetic-RLVL/tmp/ood_lmeval_o32_${SLURM_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
 MERGED="${MERGED_ROOT}/merged_${RUN_NAME}"
-OUT_DIR="${WORK}/synthetic-RLVL/lm_eval_results/ood_large_2026-05-25/${RUN_NAME}"
-GROUP="ood_lmeval_large_olmo32"
+OUT_DIR="${WORK}/synthetic-RLVL/lm_eval_results/ood_large_olmo32_gsm8k_shortctx_2026-05-25/${RUN_NAME}"
+GROUP="ood_lmeval_large_olmo32_gsm8k_shortctx"
+LM_EVAL_TASKS_VALUE="${LM_EVAL_TASKS:-synthrlvl_gsm8k_tagged}"
+read -r -a TASK_ARGS <<< "${LM_EVAL_TASKS_VALUE//,/ }"
 
 cleanup_merged() { rm -rf "${MERGED_ROOT}"; }
 trap cleanup_merged EXIT
@@ -52,12 +54,14 @@ if [[ -n "${LM_EVAL_LIMIT:-}" ]]; then
   LIMIT_ARGS=(--limit "${LM_EVAL_LIMIT}")
 fi
 
-export VLLM_ALLOW_LONG_MAX_MODEL_LEN="${VLLM_ALLOW_LONG_MAX_MODEL_LEN:-1}"
+if [[ "${ALLOW_OLMO32_LONG_CONTEXT:-0}" != "1" ]]; then
+  unset VLLM_ALLOW_LONG_MAX_MODEL_LEN
+fi
 
 python scripts/evaluate_lm_eval.py \
   --checkpoint "${MERGED}" \
   --model vllm \
-  --suite synthrlvl_ood \
+  --tasks "${TASK_ARGS[@]}" \
   --include-path lm_eval_tasks/synthrlvl_ood \
   --output-path "${OUT_DIR}" \
   --batch-size "${LM_EVAL_BATCH_SIZE:-auto}" \
@@ -65,7 +69,7 @@ python scripts/evaluate_lm_eval.py \
   --dtype "${LM_EVAL_DTYPE:-bfloat16}" \
   --gpu-memory-utilization "${LM_EVAL_GPU_MEMORY_UTILIZATION:-0.80}" \
   --model-arg tensor_parallel_size=4 \
-  --model-arg "max_model_len=${LM_EVAL_MAX_MODEL_LEN:-32768}" \
+  --model-arg "max_model_len=${LM_EVAL_MAX_MODEL_LEN:-4096}" \
   --confirm-run-unsafe-code \
   --log-samples \
   --wandb-project "${WANDB_PROJECT:-synthetic-rlvl}" \

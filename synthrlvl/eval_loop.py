@@ -427,6 +427,11 @@ class UnifiedEvaluator:
                 TemplateName.NL_EXACT,
                 TemplateName.FORMAL_THINK,
                 TemplateName.THINK_FORMAL,
+                TemplateName.TERSE_NL,
+                TemplateName.RULE_ANNOTATED_NL,
+                TemplateName.PSEUDOCODE,
+                TemplateName.SHUFFLED_NL,
+                TemplateName.CONDITIONED_NL,
             ):
                 vals_by_step[rec.step]["nl_logic_parse"].append(score.nl_logic_parse)
                 vals_by_step[rec.step]["nl_logic_citation_free_valid"].append(score.nl_logic_citation_free_valid)

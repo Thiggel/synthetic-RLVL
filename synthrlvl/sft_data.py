@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from dataclasses import replace
 
 from datasets import Dataset
 from transformers import PreTrainedTokenizerBase
 
 from .task import TaskBuilder, task_sample_from_materialized_row
-from .types import TaskConfig
+from .types import TaskConfig, TemplateName
 
 
 @dataclass(frozen=True)
@@ -36,8 +37,22 @@ def build_sft_dataset_from_materialized_rows(
     tokenizer: PreTrainedTokenizerBase,
     max_length: int,
 ) -> SFTDatasetBundle:
-    train_task_rows = [task_sample_from_materialized_row(r, cfg=task_cfg).__dict__ for r in train_rows]
-    eval_task_rows = [task_sample_from_materialized_row(r, cfg=task_cfg).__dict__ for r in eval_rows]
+    if task_cfg.template == TemplateName.CONDITIONED_DUAL:
+        logic_cfg = replace(task_cfg, template=TemplateName.CONDITIONED_LOGIC)
+        nl_cfg = replace(task_cfg, template=TemplateName.CONDITIONED_NL)
+        train_task_rows = [
+            task_sample_from_materialized_row(r, cfg=cfg).__dict__
+            for r in train_rows
+            for cfg in (logic_cfg, nl_cfg)
+        ]
+        eval_task_rows = [
+            task_sample_from_materialized_row(r, cfg=cfg).__dict__
+            for r in eval_rows
+            for cfg in (logic_cfg, nl_cfg)
+        ]
+    else:
+        train_task_rows = [task_sample_from_materialized_row(r, cfg=task_cfg).__dict__ for r in train_rows]
+        eval_task_rows = [task_sample_from_materialized_row(r, cfg=task_cfg).__dict__ for r in eval_rows]
     return _tokenize_sft_rows(train_task_rows, eval_task_rows, tokenizer=tokenizer, max_length=max_length)
 
 

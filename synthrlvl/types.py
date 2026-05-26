@@ -12,6 +12,15 @@ class TemplateName(str, Enum):
     NL_EXACT = "nl_exact"
     FORMAL_THINK = "formal_think"
     THINK_FORMAL = "think_formal"
+    TERSE_NL = "terse_nl"
+    RULE_ANNOTATED_NL = "rule_annotated_nl"
+    PSEUDOCODE = "pseudocode"
+    SHUFFLED_LOGIC = "shuffled_logic"
+    INVALID_LOGIC = "invalid_logic"
+    SHUFFLED_NL = "shuffled_nl"
+    CONDITIONED_DUAL = "conditioned_dual"
+    CONDITIONED_LOGIC = "conditioned_logic"
+    CONDITIONED_NL = "conditioned_nl"
 
 
 class PrefillMode(str, Enum):

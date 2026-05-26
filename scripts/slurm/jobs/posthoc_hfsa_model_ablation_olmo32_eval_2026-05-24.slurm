@@ -32,19 +32,19 @@ RUN_NAME="sft_hfsa_modelablate_${MODEL_TAG}_${TAG}_10k_seed${SEED}"
 GROUP="sft_hfsa_model_ablation_eval/${MODEL_TAG}/${TAG}"
 SFT_FINAL="${WORK}/synthetic-RLVL/runs/${RUN_NAME}/final"
 MERGED="${WORK}/synthetic-RLVL/tmp/merged_${RUN_NAME}"
-OUT_DIR="${WORK}/synthetic-RLVL/passk_eval/hfsa_model_ablation_${MODEL_TAG}_sparse"
+OUT_DIR="${WORK}/synthetic-RLVL/passk_eval/hfsa_model_ablation_${MODEL_TAG}_shortctx_sparse"
 OUT="${OUT_DIR}/${RUN_NAME}_passk.json"
 SAMPLES_OUT="${OUT_DIR}/${RUN_NAME}_samples.jsonl"
 
-DEFAULT_PASSK_MAX_NEW_TOKENS=4096
-if [[ "${TEMPLATE}" == "nl_exact" ]]; then
-  DEFAULT_PASSK_MAX_NEW_TOKENS=6144
-fi
+DEFAULT_PASSK_MAX_NEW_TOKENS=2048
 PASSK_MAX_NEW_TOKENS_VALUE="${PASSK_MAX_NEW_TOKENS:-${DEFAULT_PASSK_MAX_NEW_TOKENS}}"
-PASSK_VLLM_MAX_MODEL_LEN_VALUE="${PASSK_VLLM_MAX_MODEL_LEN:-16384}"
-PASSK_STEPS_VALUE="${PASSK_STEPS:-1,2,5,10,12,15,18,20,25,30,35,40,45,50}"
+PASSK_VLLM_MAX_MODEL_LEN_VALUE="${PASSK_VLLM_MAX_MODEL_LEN:-4096}"
+PASSK_STEP_MAX_VALUE="${PASSK_STEP_MAX:-15}"
+PASSK_STEPS_VALUE="${PASSK_STEPS:-1,2,5,10,12,15}"
 export VLLM_TENSOR_PARALLEL_SIZE="${VLLM_TENSOR_PARALLEL_SIZE:-4}"
-export VLLM_ALLOW_LONG_MAX_MODEL_LEN="${VLLM_ALLOW_LONG_MAX_MODEL_LEN:-1}"
+if [[ "${ALLOW_OLMO32_LONG_CONTEXT:-0}" != "1" ]]; then
+  unset VLLM_ALLOW_LONG_MAX_MODEL_LEN
+fi
 
 cleanup_merged() {
   rm -rf "${MERGED}.tmp"
@@ -89,7 +89,7 @@ python scripts/evaluate_checkpoint_passk.py \
   --profile sft \
   --backend vllm \
   --step-min 1 \
-  --step-max "${PASSK_STEP_MAX:-50}" \
+  --step-max "${PASSK_STEP_MAX_VALUE}" \
   --steps "${PASSK_STEPS_VALUE}" \
   --samples-per-step "${PASSK_SAMPLES_PER_STEP:-16}" \
   --num-generations "${PASSK_NUM_GENERATIONS:-16}" \
@@ -110,7 +110,7 @@ python scripts/evaluate_checkpoint_passk.py \
   "${SKIP_GREEDY_ARGS[@]}" \
   task.template="${TEMPLATE}" \
   task.train_max_step="${TRAIN_MAX}" \
-  task.val_max_step="${PASSK_STEP_MAX:-50}" \
+  task.val_max_step="${PASSK_STEP_MAX_VALUE}" \
   data.materialized.dataset_id="${DATASET_ID}" \
   data.materialized.train_subset="${TRAIN_SUBSET}" \
   validation.max_new_tokens="${PASSK_MAX_NEW_TOKENS_VALUE}" \

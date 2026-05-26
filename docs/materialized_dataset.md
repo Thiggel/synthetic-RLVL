@@ -351,4 +351,4 @@ Oversight update 2026-05-24 15:06 CEST: paired maze SFT rows `3656309_0,1` faile
 
 Oversight update 2026-05-25 02:44 CEST: attribute rows completed SFT and sparse eval on the original replacement chain. Maze rows completed SFT on retry `3657738_0,1` after disabling default online generation eval; sparse eval rows `3657739_0,1` are running.
 
-Oversight update 2026-05-25 10:48 CEST: maze sparse eval row `3657739_0` failed because a depth-45 prompt had `16400` tokens under the old `vllm_max_model_len=16384`; row `3657739_1` was canceled before the same expected failure. The paired eval wrapper now uses a 32k vLLM context and batch `64` for `maze_navigation`; replacement `3659556_[0-1%2]` is pending.
+Oversight update 2026-05-25 10:48 CEST: maze sparse eval row `3657739_0` failed because a depth-45 prompt had `16400` tokens under the old `vllm_max_model_len=16384`; row `3657739_1` was canceled before the same expected failure. The paired eval wrapper now uses a 32k vLLM context and batch `64` for `maze_navigation`; replacement `3659556_[0-1%2]` is running.

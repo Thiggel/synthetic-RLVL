@@ -165,7 +165,7 @@ def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
         return
     keys = list(rows[0].keys())
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=keys)
+        writer = csv.DictWriter(handle, fieldnames=keys, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -203,7 +203,7 @@ def summarize_group(records: list[Record], ks: tuple[int, ...]) -> pd.DataFrame:
         rows.append(row)
     df = pd.DataFrame(rows)
     if not df.empty:
-        df.to_csv(TABLE_DIR / "group_summary_all.csv", index=False)
+        df.to_csv(TABLE_DIR / "group_summary_all.csv", index=False, lineterminator="\n")
     return df
 
 
@@ -303,46 +303,40 @@ def plot_main_checkpoint_curves(records: list[Record]) -> None:
         return
     rows = []
     for record in records:
-        for k in [8, 16]:
-            for band in ["train", "ood", "hard_tail"]:
-                rows.append(
-                    {
-                        "template": record.template,
-                        "train_max": record.train_max,
-                        "checkpoint": record.checkpoint,
-                        "k": k,
-                        "band": band,
-                        "correct": band_metric(record, band, "correct_pass", k),
-                        "joint": band_metric(record, band, joint_metric(record.template), k),
-                    }
-                )
+        for band in ["train", "ood", "hard_tail"]:
+            rows.append(
+                {
+                    "template": record.template,
+                    "train_max": record.train_max,
+                    "checkpoint": record.checkpoint,
+                    "band": band,
+                    "correct": band_metric(record, band, "correct_pass", 16),
+                    "joint": band_metric(record, band, joint_metric(record.template), 16),
+                }
+            )
     df = pd.DataFrame(rows)
-    for metric_name in ["correct", "joint"]:
-        fig, axes = plt.subplots(2, 3, figsize=(12, 6.5), sharex=True, sharey=True)
-        for row_idx, k in enumerate([8, 16]):
-            for col_idx, band in enumerate(["train", "ood", "hard_tail"]):
-                ax = axes[row_idx, col_idx]
-                sub0 = df[(df["k"] == k) & (df["band"] == band)]
-                for train_max in sorted(sub0["train_max"].unique()):
-                    for template in ["logic", "nl_exact"]:
-                        sub = sub0[(sub0["train_max"] == train_max) & (sub0["template"] == template)].sort_values("checkpoint")
-                        if sub.empty:
-                            continue
-                        linestyle = "-" if template == "logic" else "--"
-                        ax.plot(
-                            sub["checkpoint"],
-                            sub[metric_name],
-                            color=COLORS[template],
-                            linestyle=linestyle,
-                            marker="o",
-                            markersize=3,
-                            alpha=0.55 + 0.018 * train_max,
-                            label=f"{TEMPLATE_LABEL[template]} 1..{train_max}" if row_idx == 0 and col_idx == 0 else None,
-                        )
-                style_axes(ax, f"{metric_name}@{k}", f"{band}, k={k}")
+    for train_max in sorted(df["train_max"].unique()):
+        sub_train = df[df["train_max"] == train_max]
+        for metric_name in ["correct", "joint"]:
+            fig, axes = plt.subplots(1, 3, figsize=(11.5, 3.4), sharex=True, sharey=True)
+            for ax, band in zip(axes, ["train", "ood", "hard_tail"], strict=True):
+                sub0 = sub_train[sub_train["band"] == band]
+                for template in ["logic", "nl_exact"]:
+                    sub = sub0[sub0["template"] == template].sort_values("checkpoint")
+                    if sub.empty:
+                        continue
+                    ax.plot(
+                        sub["checkpoint"],
+                        sub[metric_name],
+                        color=COLORS[template],
+                        marker="o",
+                        markersize=3,
+                        label=TEMPLATE_LABEL[template],
+                    )
+                style_axes(ax, f"{metric_name}@16", band)
                 ax.set_xlabel("optimizer step")
-        axes[0, 0].legend(fontsize=6, frameon=False, ncol=2)
-        save(fig, f"olmo7b_checkpoint_{metric_name}_k8_k16")
+            axes[0].legend(fontsize=8, frameon=False)
+            save(fig, f"olmo7b_checkpoint_train1to{train_max}_{metric_name}16")
 
 
 def plot_tiny_final(tiny: list[Record]) -> None:
@@ -350,34 +344,45 @@ def plot_tiny_final(tiny: list[Record]) -> None:
         return
     df = summarize_group(tiny, (8,))
     df = df[df["size"] != ""].copy()
-    df["size_num"] = df["size"].map(SIZE_ORDER)
-    fig, axes = plt.subplots(1, 3, figsize=(11.5, 3.4), sharey=True)
-    for ax, band in zip(axes, ["train", "ood", "hard_tail"], strict=True):
-        for template in ["logic", "nl_exact"]:
-            sub = df[df["template"] == template].sort_values("size_num")
-            ax.plot(sub["size_num"], sub[f"{band}_correct@8"], marker="o", color=COLORS[template], label=TEMPLATE_LABEL[template])
-            ax.plot(sub["size_num"], sub[f"{band}_joint@8"], marker="s", color=COLORS[template], linestyle="--", alpha=0.75)
-        style_axes(ax, "@8", band)
-        ax.set_xlabel("model size (M params target)")
-        ax.set_xticks([50, 100, 200])
-    axes[0].legend(frameon=False, fontsize=8)
-    save(fig, "tiny_llama_final_bands_correct_joint")
+    band_labels = ["train", "OOD", "hard", "d50"]
+    for size in ["50m", "100m", "200m"]:
+        sub_size = df[df["size"] == size]
+        if sub_size.empty:
+            continue
+        for metric_name, label in [("correct", "correct@8"), ("joint", "joint@8")]:
+            fig, ax = plt.subplots(figsize=(5.2, 3.4))
+            for template in ["logic", "nl_exact"]:
+                row = sub_size[sub_size["template"] == template]
+                if row.empty:
+                    continue
+                row0 = row.iloc[0]
+                values = [
+                    row0.get(f"train_{metric_name}@8"),
+                    row0.get(f"ood_{metric_name}@8"),
+                    row0.get(f"hard_tail_{metric_name}@8"),
+                    row0.get(f"depth50_{metric_name}@8"),
+                ]
+                ax.plot(band_labels, values, marker="o", color=COLORS[template], label=TEMPLATE_LABEL[template])
+            style_axes(ax, label, size)
+            ax.set_xlabel("eval band")
+            ax.legend(frameon=False)
+            save(fig, f"tiny_llama_{size}_bands_{metric_name}_k8")
 
     depth_df = depth_dataframe(tiny, DEPTHS_TINY, 8)
     for size in ["50m", "100m", "200m"]:
         sub = depth_df[depth_df["size"] == size]
         if sub.empty:
             continue
-        fig, axes = plt.subplots(1, 2, figsize=(9.2, 3.4), sharey=True)
-        for ax, metric_name in zip(axes, ["correct", "joint"], strict=True):
+        for metric_name in ["correct", "joint"]:
+            fig, ax = plt.subplots(figsize=(5.2, 3.4))
             for template in ["logic", "nl_exact"]:
                 s = sub[sub["template"] == template].sort_values("depth")
                 ax.plot(s["depth"], s[metric_name], marker="o", color=COLORS[template], label=TEMPLATE_LABEL[template])
             ax.axvline(10, color="black", linestyle=":", linewidth=1)
             style_axes(ax, f"{metric_name}@8", f"{size}")
             ax.set_xlabel("eval depth")
-        axes[0].legend(frameon=False)
-        save(fig, f"tiny_llama_{size}_depth_correct_joint")
+            ax.legend(frameon=False)
+            save(fig, f"tiny_llama_{size}_depth_{metric_name}_k8")
 
 
 def plot_tiny_checkpoint_curves(tiny_final: list[Record], tiny_ckpt: list[Record]) -> None:
@@ -398,27 +403,29 @@ def plot_tiny_checkpoint_curves(tiny_final: list[Record], tiny_ckpt: list[Record
                 }
             )
     df = pd.DataFrame(rows)
-    for metric_name in ["correct", "joint"]:
-        fig, axes = plt.subplots(1, 3, figsize=(11.5, 3.4), sharey=True)
-        for ax, band in zip(axes, ["train", "ood", "hard_tail"], strict=True):
-            sub0 = df[df["band"] == band]
-            for size in ["50m", "100m", "200m"]:
+    for size in ["50m", "100m", "200m"]:
+        sub_size = df[df["size"] == size]
+        if sub_size.empty:
+            continue
+        for metric_name in ["correct", "joint"]:
+            fig, axes = plt.subplots(1, 3, figsize=(11.5, 3.4), sharey=True)
+            for ax, band in zip(axes, ["train", "ood", "hard_tail"], strict=True):
+                sub0 = sub_size[sub_size["band"] == band]
                 for template in ["logic", "nl_exact"]:
-                    sub = sub0[(sub0["size"] == size) & (sub0["template"] == template)].sort_values("checkpoint")
+                    sub = sub0[sub0["template"] == template].sort_values("checkpoint")
                     if sub.empty:
                         continue
-                    linestyle = "-" if template == "logic" else "--"
                     ax.plot(
                         sub["checkpoint"],
                         sub[metric_name],
                         marker="o",
-                        linestyle=linestyle,
-                        label=f"{size} {TEMPLATE_LABEL[template]}" if band == "train" else None,
+                        color=COLORS[template],
+                        label=TEMPLATE_LABEL[template] if band == "train" else None,
                     )
-            style_axes(ax, f"{metric_name}@8", band)
-            ax.set_xlabel("pretraining step")
-        axes[0].legend(fontsize=6, frameon=False, ncol=2)
-        save(fig, f"tiny_llama_checkpoint_{metric_name}_k8")
+                style_axes(ax, f"{metric_name}@8", band)
+                ax.set_xlabel("pretraining step")
+            axes[0].legend(fontsize=8, frameon=False)
+            save(fig, f"tiny_llama_{size}_checkpoint_{metric_name}_k8")
 
 
 def plot_qwen_partial(qwen: list[Record]) -> None:
@@ -575,15 +582,34 @@ def load_tiny_ood_summary() -> pd.DataFrame:
             {
                 "size": match.group(1),
                 "template": match.group(2),
+                "seed": int(match.group(3)),
                 "gsm8k_em": get("synthrlvl_gsm8k_tagged", "exact_match,none"),
                 "gsm8k_tag": get("synthrlvl_gsm8k_tagged", "tag_found,none"),
                 "hotpot_f1": get("synthrlvl_longbench_hotpotqa_tagged", "qa_f1_score,none"),
+                "hotpot_em": get("synthrlvl_longbench_hotpotqa_tagged", "exact_match,none"),
                 "twowiki_f1": get("synthrlvl_longbench_2wikimqa_tagged", "qa_f1_score,none"),
+                "twowiki_em": get("synthrlvl_longbench_2wikimqa_tagged", "exact_match,none"),
                 "musique_f1": get("synthrlvl_longbench_musique_tagged", "qa_f1_score,none"),
+                "musique_em": get("synthrlvl_longbench_musique_tagged", "exact_match,none"),
             }
         )
     df = pd.DataFrame(rows)
     if not df.empty:
+        metric_cols = [
+            "gsm8k_em",
+            "gsm8k_tag",
+            "hotpot_f1",
+            "hotpot_em",
+            "twowiki_f1",
+            "twowiki_em",
+            "musique_f1",
+            "musique_em",
+        ]
+        df.to_csv(TABLE_DIR / "tiny_llama_ood_lmeval_by_seed.csv", index=False, lineterminator="\n")
+        df = df.groupby(["size", "template"], as_index=False).agg(
+            n=("seed", "nunique"),
+            **{col: (col, "mean") for col in metric_cols},
+        )
         df["size_order"] = df["size"].map(SIZE_ORDER)
         df = df.sort_values(["size_order", "template"]).drop(columns=["size_order"])
     return df
@@ -603,6 +629,52 @@ def write_report(
         tiny_rows["size_order"] = tiny_rows["size"].map(SIZE_ORDER)
         tiny_rows = tiny_rows.sort_values(["size_order", "template"])
     qwen_rows = qwen_summary.sort_values(["template", "train_max"]) if not qwen_summary.empty else pd.DataFrame()
+    train_maxes = [5, 10, 15, 20, 25]
+    tiny_sizes = ["50m", "100m", "200m"]
+    olmo_ckpt_figures = "\n".join(
+        f"""\\begin{{figure}}[H]\\centering
+\\includegraphics[width=\\linewidth]{{figures/olmo7b_checkpoint_train1to{train_max}_correct16.pdf}}
+\\caption{{Seed-3407 train-1-to-{train_max} checkpoint curves for correct@16.}}
+\\end{{figure}}
+\\begin{{figure}}[H]\\centering
+\\includegraphics[width=\\linewidth]{{figures/olmo7b_checkpoint_train1to{train_max}_joint16.pdf}}
+\\caption{{Seed-3407 train-1-to-{train_max} checkpoint curves for joint correct+valid@16.}}
+\\end{{figure}}"""
+        for train_max in train_maxes
+    )
+    tiny_band_figures = "\n".join(
+        f"""\\begin{{figure}}[H]\\centering
+\\includegraphics[width=0.72\\linewidth]{{figures/tiny_llama_{size}_bands_correct_k8.pdf}}
+\\caption{{Tiny Llama {size} train/OOD/hard-tail/depth-50 correct@8 by template.}}
+\\end{{figure}}
+\\begin{{figure}}[H]\\centering
+\\includegraphics[width=0.72\\linewidth]{{figures/tiny_llama_{size}_bands_joint_k8.pdf}}
+\\caption{{Tiny Llama {size} train/OOD/hard-tail/depth-50 joint correct+valid@8 by template.}}
+\\end{{figure}}"""
+        for size in tiny_sizes
+    )
+    tiny_depth_figures = "\n".join(
+        f"""\\begin{{figure}}[H]\\centering
+\\includegraphics[width=0.72\\linewidth]{{figures/tiny_llama_{size}_depth_correct_k8.pdf}}
+\\caption{{Tiny Llama {size} depth curve for correct@8. The dotted line marks train max depth 10.}}
+\\end{{figure}}
+\\begin{{figure}}[H]\\centering
+\\includegraphics[width=0.72\\linewidth]{{figures/tiny_llama_{size}_depth_joint_k8.pdf}}
+\\caption{{Tiny Llama {size} depth curve for joint correct+valid@8. The dotted line marks train max depth 10.}}
+\\end{{figure}}"""
+        for size in tiny_sizes
+    )
+    tiny_ckpt_figures = "\n".join(
+        f"""\\begin{{figure}}[H]\\centering
+\\includegraphics[width=\\linewidth]{{figures/tiny_llama_{size}_checkpoint_correct_k8.pdf}}
+\\caption{{Tiny Llama {size} checkpoint curves for correct@8.}}
+\\end{{figure}}
+\\begin{{figure}}[H]\\centering
+\\includegraphics[width=\\linewidth]{{figures/tiny_llama_{size}_checkpoint_joint_k8.pdf}}
+\\caption{{Tiny Llama {size} checkpoint curves for joint correct+valid@8.}}
+\\end{{figure}}"""
+        for size in tiny_sizes
+    )
 
     tex = rf"""\documentclass[10pt]{{article}}
 \usepackage[margin=0.7in]{{geometry}}
@@ -616,7 +688,7 @@ def write_report(
 \maketitle
 
 \section{{Metric note for OOD benchmarks}}
-GSM8K is measured as numeric exact-match accuracy after extracting the learned \texttt{{<answer>...</answer>}} field. HotpotQA, 2WikiMultiHopQA, and MuSiQue are context-provided QA evaluations; the primary reported quantity is answer F1 after strict answer extraction, with exact-match/tag diagnostics available separately. I therefore call GSM8K an accuracy metric, but call the multi-hop QA readout F1/EM rather than plain accuracy.
+GSM8K is measured as numeric exact-match accuracy after extracting the learned \texttt{{<answer>...</answer>}} field. HotpotQA, 2WikiMultiHopQA, and MuSiQue are context-provided QA evaluations; the report logs answer F1 and exact match after strict answer extraction, plus tag diagnostics. I therefore call GSM8K an accuracy metric, but call the multi-hop QA readout F1/EM rather than plain accuracy.
 
 \section{{Main OLMo-7B HFSA result}}
 \begin{{table}}[H]
@@ -648,14 +720,8 @@ GSM8K is measured as numeric exact-match accuracy after extracting the learned \
 \includegraphics[width=\linewidth]{{figures/olmo7b_depth_joint16.pdf}}
 \caption{{Depth curves for final joint correct+valid@16, averaged over seeds.}}
 \end{{figure}}
-\begin{{figure}}[H]\centering
-\includegraphics[width=\linewidth]{{figures/olmo7b_checkpoint_correct_k8_k16.pdf}}
-\caption{{Seed-3407 checkpoint curves for correct@8 and correct@16.}}
-\end{{figure}}
-\begin{{figure}}[H]\centering
-\includegraphics[width=\linewidth]{{figures/olmo7b_checkpoint_joint_k8_k16.pdf}}
-\caption{{Seed-3407 checkpoint curves for joint correct+valid@8 and @16.}}
-\end{{figure}}
+The checkpoint figures below compare each matched logic/NL train-depth pair separately and report only @16.
+{olmo_ckpt_figures}
 
 \section{{Tiny Llama scratch-pretraining result}}
 These small random-init models were not expected to solve depth-50 extrapolation. The useful signal is that logic is consistently stronger than matched NL on answer-only OOD pass@8, especially at 200M, while strict joint validity remains zero.
@@ -675,32 +741,16 @@ These small random-init models were not expected to solve depth-50 extrapolation
 \caption{{Tiny Llama final sparse pass@8 metrics.}}
 \end{{table}}
 
-\begin{{figure}}[H]\centering
-\includegraphics[width=\linewidth]{{figures/tiny_llama_final_bands_correct_joint.pdf}}
-\caption{{Tiny Llama final train/OOD/hard-tail correct@8 and joint@8 by model size. Solid lines are correct; dashed lines are joint.}}
-\end{{figure}}
-\begin{{figure}}[H]\centering
-\includegraphics[width=\linewidth]{{figures/tiny_llama_50m_depth_correct_joint.pdf}}
-\includegraphics[width=\linewidth]{{figures/tiny_llama_100m_depth_correct_joint.pdf}}
-\includegraphics[width=\linewidth]{{figures/tiny_llama_200m_depth_correct_joint.pdf}}
-\caption{{Tiny Llama final depth curves. The dotted line marks train max depth 10.}}
-\end{{figure}}
+The tiny plots separate model sizes and separate answer correctness from joint correct+valid.
+{tiny_band_figures}
+{tiny_depth_figures}
 """
     if tiny_ckpt_count:
         tex += (
             f"\nTiny checkpoint pass@k rows available at report generation time: {tiny_ckpt_count}. "
             "The curves below include all available intermediate checkpoint rows plus the final 20k checkpoint.\n"
         )
-        tex += r"""
-\begin{figure}[H]\centering
-\includegraphics[width=\linewidth]{figures/tiny_llama_checkpoint_correct_k8.pdf}
-\caption{Tiny Llama checkpoint curves for correct@8.}
-\end{figure}
-\begin{figure}[H]\centering
-\includegraphics[width=\linewidth]{figures/tiny_llama_checkpoint_joint_k8.pdf}
-\caption{Tiny Llama checkpoint curves for joint@8.}
-\end{figure}
-"""
+        tex += "\n" + tiny_ckpt_figures + "\n"
     else:
         tex += (
             "\nCheckpoint pass@k files for tiny Llama were not present when this report was generated; "
@@ -717,11 +767,15 @@ The tiny downstream OOD evals completed with the 8192-context fallback. LongBenc
 {latex_table(tiny_ood_summary, [
     ("size", "size"),
     ("template", "template"),
+    ("n", "n"),
     ("gsm8k_em", "GSM8K EM"),
     ("gsm8k_tag", "GSM8K tag"),
     ("hotpot_f1", "Hotpot F1"),
+    ("hotpot_em", "Hotpot EM"),
     ("twowiki_f1", "2Wiki F1"),
+    ("twowiki_em", "2Wiki EM"),
     ("musique_f1", "MuSiQue F1"),
+    ("musique_em", "MuSiQue EM"),
 ])}
 \caption{{Tiny Llama OOD lm-eval metrics after strict answer extraction.}}
 \end{{table}}
@@ -777,8 +831,8 @@ def main() -> None:
 
     main_depth = depth_dataframe(main_records, DEPTHS_FINAL, 16)
     tiny_depth = depth_dataframe(tiny_records, DEPTHS_TINY, 8)
-    main_depth.to_csv(TABLE_DIR / "main_olmo7b_depth_curves_k16.csv", index=False)
-    tiny_depth.to_csv(TABLE_DIR / "tiny_llama_depth_curves_k8.csv", index=False)
+    main_depth.to_csv(TABLE_DIR / "main_olmo7b_depth_curves_k16.csv", index=False, lineterminator="\n")
+    tiny_depth.to_csv(TABLE_DIR / "tiny_llama_depth_curves_k8.csv", index=False, lineterminator="\n")
 
     plot_main_trainmax(main_summary)
     plot_depth_grid(main_depth, "olmo7b_depth_correct16", "correct", 16)

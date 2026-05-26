@@ -92,7 +92,18 @@ def resolve_gradient_checkpointing(cfg: DictConfig) -> bool:
     if isinstance(raw, str):
         value = raw.strip().lower()
         if value == "auto":
-            return str(cfg.task.template) == "nl_exact" and int(cfg.task.train_max_step) >= 25
+            memory_heavy_templates = {
+                "nl_exact",
+                "terse_nl",
+                "rule_annotated_nl",
+                "pseudocode",
+                "shuffled_nl",
+                "formal_think",
+                "think_formal",
+                "conditioned_dual",
+                "conditioned_nl",
+            }
+            return str(cfg.task.template) in memory_heavy_templates and int(cfg.task.train_max_step) >= 25
         if value in {"1", "true", "yes", "on"}:
             return True
         if value in {"0", "false", "no", "off"}:

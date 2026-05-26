@@ -91,7 +91,16 @@ class OutputEvaluator:
 
     @staticmethod
     def _natural_block_tag(template: TemplateName) -> str:
-        if template in (TemplateName.NL_EXACT, TemplateName.FORMAL_THINK, TemplateName.THINK_FORMAL):
+        if template in (
+            TemplateName.NL_EXACT,
+            TemplateName.FORMAL_THINK,
+            TemplateName.THINK_FORMAL,
+            TemplateName.TERSE_NL,
+            TemplateName.RULE_ANNOTATED_NL,
+            TemplateName.PSEUDOCODE,
+            TemplateName.SHUFFLED_NL,
+            TemplateName.CONDITIONED_NL,
+        ):
             return "think"
         return "natural"
 
@@ -167,6 +176,9 @@ class OutputEvaluator:
             TemplateName.NATURAL_LOGIC,
             TemplateName.FORMAL_THINK,
             TemplateName.THINK_FORMAL,
+            TemplateName.SHUFFLED_LOGIC,
+            TemplateName.INVALID_LOGIC,
+            TemplateName.CONDITIONED_LOGIC,
         )
         wants_natural = template in (
             TemplateName.NATURAL,
@@ -175,10 +187,24 @@ class OutputEvaluator:
             TemplateName.NL_EXACT,
             TemplateName.FORMAL_THINK,
             TemplateName.THINK_FORMAL,
+            TemplateName.TERSE_NL,
+            TemplateName.RULE_ANNOTATED_NL,
+            TemplateName.PSEUDOCODE,
+            TemplateName.SHUFFLED_NL,
+            TemplateName.CONDITIONED_NL,
         )
         logic_tag = self._logic_block_tag(template)
         natural_tag = self._natural_block_tag(template)
-        natural_uses_premises_rules = template in (TemplateName.NL_EXACT, TemplateName.FORMAL_THINK, TemplateName.THINK_FORMAL)
+        natural_uses_premises_rules = template in (
+            TemplateName.NL_EXACT,
+            TemplateName.FORMAL_THINK,
+            TemplateName.THINK_FORMAL,
+            TemplateName.TERSE_NL,
+            TemplateName.RULE_ANNOTATED_NL,
+            TemplateName.PSEUDOCODE,
+            TemplateName.SHUFFLED_NL,
+            TemplateName.CONDITIONED_NL,
+        )
 
         format_ok = 1.0
         # For pure logic format reward, require canonical tag order with no extra content outside tags.
@@ -259,7 +285,17 @@ class OutputEvaluator:
 
         line_match = 0.0
         if prefill == PrefillMode.LINE_REWARD and gold_first_modality_lines:
-            natural_first_templates = (TemplateName.NATURAL, TemplateName.NATURAL_LOGIC, TemplateName.NL_EXACT, TemplateName.THINK_FORMAL)
+            natural_first_templates = (
+                TemplateName.NATURAL,
+                TemplateName.NATURAL_LOGIC,
+                TemplateName.NL_EXACT,
+                TemplateName.THINK_FORMAL,
+                TemplateName.TERSE_NL,
+                TemplateName.RULE_ANNOTATED_NL,
+                TemplateName.PSEUDOCODE,
+                TemplateName.SHUFFLED_NL,
+                TemplateName.CONDITIONED_NL,
+            )
             block = extract_tag(output_text, natural_tag) if template in natural_first_templates else extract_tag(output_text, logic_tag)
             pred_lines = split_lines(block)
             wanted = [ln.strip() for ln in gold_first_modality_lines if ln.strip()]
@@ -297,6 +333,9 @@ class RewardComputer:
             TemplateName.NATURAL_LOGIC,
             TemplateName.FORMAL_THINK,
             TemplateName.THINK_FORMAL,
+            TemplateName.SHUFFLED_LOGIC,
+            TemplateName.INVALID_LOGIC,
+            TemplateName.CONDITIONED_LOGIC,
         )
         if not wants_logic:
             return 0.0
