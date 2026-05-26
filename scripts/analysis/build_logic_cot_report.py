@@ -34,6 +34,7 @@ TINY_CKPT_RE = re.compile(
 QWEN_RE = re.compile(
     r"sft_hfsa_modelablate_qwen2p5_7b_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
 )
+MAIN_OOD_RE = re.compile(r"sft_hfsa_depth_scaling_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)$")
 
 DEPTHS_FINAL = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 35, 40, 45, 50]
 DEPTHS_TINY = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 40, 50]
@@ -557,6 +558,74 @@ def latex_table(df: pd.DataFrame, columns: list[tuple[str, str]], max_rows: int 
     return "\n".join(lines)
 
 
+def get_lm_eval_metric(results: dict, task: str, key: str) -> float | None:
+    value = results.get(task, {}).get(key)
+    return float(value) if isinstance(value, (int, float)) else None
+
+
+def load_main_ood_summary() -> pd.DataFrame:
+    root = LM_EVAL_ROOT / "ood_large_2026-05-25"
+    rows: list[dict[str, object]] = []
+    if not root.exists():
+        return pd.DataFrame()
+    for run_dir in sorted(root.iterdir()):
+        if not run_dir.is_dir():
+            continue
+        match = MAIN_OOD_RE.match(run_dir.name)
+        if not match:
+            continue
+        result_files = sorted(run_dir.glob("**/results_*.json"))
+        if not result_files:
+            continue
+        payload = json.loads(result_files[-1].read_text(encoding="utf-8"))
+        results = payload.get("results", {})
+        rows.append(
+            {
+                "template": match.group(1),
+                "train_max": int(match.group(2)),
+                "seed": int(match.group(3)),
+                "gsm8k_em": get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "exact_match,none"),
+                "gsm8k_tag": get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "tag_found,none"),
+                "hotpot_f1": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_hotpotqa_tagged", "qa_f1_score,none"
+                ),
+                "hotpot_em": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_hotpotqa_tagged", "qa_exact_match,none"
+                ),
+                "twowiki_f1": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_2wikimqa_tagged", "qa_f1_score,none"
+                ),
+                "twowiki_em": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_2wikimqa_tagged", "qa_exact_match,none"
+                ),
+                "musique_f1": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_musique_tagged", "qa_f1_score,none"
+                ),
+                "musique_em": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_musique_tagged", "qa_exact_match,none"
+                ),
+            }
+        )
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df
+    metric_cols = [
+        "gsm8k_em",
+        "gsm8k_tag",
+        "hotpot_f1",
+        "hotpot_em",
+        "twowiki_f1",
+        "twowiki_em",
+        "musique_f1",
+        "musique_em",
+    ]
+    df.to_csv(TABLE_DIR / "main_olmo7b_ood_lmeval_by_seed.csv", index=False, lineterminator="\n")
+    return df.groupby(["template", "train_max"], as_index=False).agg(
+        n=("seed", "nunique"),
+        **{col: (col, "mean") for col in metric_cols},
+    ).sort_values(["template", "train_max"])
+
+
 def load_tiny_ood_summary() -> pd.DataFrame:
     root = LM_EVAL_ROOT / "ood_tiny_llama_2026-05-25"
     rows: list[dict[str, object]] = []
@@ -574,23 +643,31 @@ def load_tiny_ood_summary() -> pd.DataFrame:
         payload = json.loads(result_files[-1].read_text(encoding="utf-8"))
         results = payload.get("results", {})
 
-        def get(task: str, key: str) -> float | None:
-            value = results.get(task, {}).get(key)
-            return float(value) if isinstance(value, (int, float)) else None
-
         rows.append(
             {
                 "size": match.group(1),
                 "template": match.group(2),
                 "seed": int(match.group(3)),
-                "gsm8k_em": get("synthrlvl_gsm8k_tagged", "exact_match,none"),
-                "gsm8k_tag": get("synthrlvl_gsm8k_tagged", "tag_found,none"),
-                "hotpot_f1": get("synthrlvl_longbench_hotpotqa_tagged", "qa_f1_score,none"),
-                "hotpot_em": get("synthrlvl_longbench_hotpotqa_tagged", "exact_match,none"),
-                "twowiki_f1": get("synthrlvl_longbench_2wikimqa_tagged", "qa_f1_score,none"),
-                "twowiki_em": get("synthrlvl_longbench_2wikimqa_tagged", "exact_match,none"),
-                "musique_f1": get("synthrlvl_longbench_musique_tagged", "qa_f1_score,none"),
-                "musique_em": get("synthrlvl_longbench_musique_tagged", "exact_match,none"),
+                "gsm8k_em": get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "exact_match,none"),
+                "gsm8k_tag": get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "tag_found,none"),
+                "hotpot_f1": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_hotpotqa_tagged", "qa_f1_score,none"
+                ),
+                "hotpot_em": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_hotpotqa_tagged", "exact_match,none"
+                ),
+                "twowiki_f1": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_2wikimqa_tagged", "qa_f1_score,none"
+                ),
+                "twowiki_em": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_2wikimqa_tagged", "exact_match,none"
+                ),
+                "musique_f1": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_musique_tagged", "qa_f1_score,none"
+                ),
+                "musique_em": get_lm_eval_metric(
+                    results, "synthrlvl_longbench_musique_tagged", "exact_match,none"
+                ),
             }
         )
     df = pd.DataFrame(rows)
@@ -615,15 +692,51 @@ def load_tiny_ood_summary() -> pd.DataFrame:
     return df
 
 
+def main_checkpoint_note(records: list[Record]) -> str:
+    if not records:
+        return "No main OLMo checkpoint pass@k files were present at report generation time."
+    grouped: dict[tuple[str, int, int], list[int]] = defaultdict(list)
+    for record in records:
+        if record.checkpoint is not None:
+            grouped[(record.template, record.train_max, record.seed)].append(record.checkpoint)
+
+    expected_dense = list(range(1000, 10001, 1000))
+    original_sparse = [1000, 3000, 10000]
+
+    def label(item: tuple[tuple[str, int, int], list[int]]) -> str:
+        (template, train_max, seed), _ = item
+        template_label = "NL exact" if template == "nl_exact" else "logic"
+        return f"{template_label} train1to{train_max} seed{seed}"
+
+    full = [label(item) for item in grouped.items() if sorted(set(item[1])) == expected_dense]
+    partial = [
+        label(item)
+        for item in grouped.items()
+        if sorted(set(item[1])) != expected_dense and sorted(set(item[1])) != original_sparse
+    ]
+    sparse_count = sum(1 for steps in grouped.values() if sorted(set(steps)) == original_sparse)
+    parts = [f"Main OLMo checkpoint pass@k files available: {len(records)}."]
+    if full:
+        parts.append("Full 1k-grid rows now available: " + ", ".join(full) + ".")
+    if partial:
+        parts.append("Rows with partial dense additions beyond 1k/3k/10k: " + ", ".join(partial) + ".")
+    if sparse_count:
+        parts.append(f"Rows still at the original 1k/3k/10k grid: {sparse_count}.")
+    return " ".join(parts)
+
+
 def write_report(
     main_summary: pd.DataFrame,
     tiny_summary: pd.DataFrame,
     qwen_summary: pd.DataFrame,
+    main_ood_summary: pd.DataFrame,
     tiny_ood_summary: pd.DataFrame,
+    main_ckpt_note: str,
     tiny_ckpt_count: int,
 ) -> None:
     main_rows = main_summary[(main_summary["size"] == "") & (main_summary["n"] >= 1)].copy()
     main_rows = main_rows.sort_values(["template", "train_max"])
+    main_ood_rows = main_ood_summary.sort_values(["template", "train_max"]) if not main_ood_summary.empty else pd.DataFrame()
     tiny_rows = tiny_summary[tiny_summary["size"] != ""].copy() if not tiny_summary.empty else pd.DataFrame()
     if not tiny_rows.empty:
         tiny_rows["size_order"] = tiny_rows["size"].map(SIZE_ORDER)
@@ -683,12 +796,33 @@ def write_report(
 \usepackage{{float}}
 \usepackage{{hyperref}}
 \title{{Formal Logic CoT Synthetic Results Update}}
-\date{{2026-05-25}}
+\date{{2026-05-26}}
 \begin{{document}}
 \maketitle
 
 \section{{Metric note for OOD benchmarks}}
 GSM8K is measured as numeric exact-match accuracy after extracting the learned \texttt{{<answer>...</answer>}} field. HotpotQA, 2WikiMultiHopQA, and MuSiQue are context-provided QA evaluations; the report logs answer F1 and exact match after strict answer extraction, plus tag diagnostics. I therefore call GSM8K an accuracy metric, but call the multi-hop QA readout F1/EM rather than plain accuracy.
+
+\section{{Main OLMo-7B downstream OOD}}
+The broad OOD run has completed the 30-row main OLMo grid. This is downstream transfer under the strict answer extractor, not a synthetic validity score. The headline pattern is split: NL is much better on GSM8K numeric EM, while logic is much better on the context-provided multi-hop QA F1/EM tasks.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(main_ood_rows, [
+    ("template", "template"),
+    ("train_max", "train max"),
+    ("n", "n"),
+    ("gsm8k_em", "GSM8K EM"),
+    ("hotpot_f1", "Hotpot F1"),
+    ("hotpot_em", "Hotpot EM"),
+    ("twowiki_f1", "2Wiki F1"),
+    ("twowiki_em", "2Wiki EM"),
+    ("musique_f1", "MuSiQue F1"),
+    ("musique_em", "MuSiQue EM"),
+])}
+\caption{{OOD lm-eval means over seeds for the main OLMo-7B checkpoints.}}
+\end{{table}}
 
 \section{{Main OLMo-7B HFSA result}}
 \begin{{table}}[H]
@@ -721,6 +855,7 @@ GSM8K is measured as numeric exact-match accuracy after extracting the learned \
 \caption{{Depth curves for final joint correct+valid@16, averaged over seeds.}}
 \end{{figure}}
 The checkpoint figures below compare each matched logic/NL train-depth pair separately and report only @16.
+{main_ckpt_note}
 {olmo_ckpt_figures}
 
 \section{{Tiny Llama scratch-pretraining result}}
@@ -821,12 +956,14 @@ def main() -> None:
     main_summary = summarize_group(main_records, (8, 16))
     tiny_summary = summarize_group(tiny_records, (8,))
     qwen_summary = summarize_group(qwen_records, (16,))
+    main_ood_summary = load_main_ood_summary()
     tiny_ood_summary = load_tiny_ood_summary()
 
     write_csv(TABLE_DIR / "main_olmo7b_summary.csv", main_summary.to_dict("records"))
     write_csv(TABLE_DIR / "tiny_llama_final_summary.csv", tiny_summary.to_dict("records"))
     write_csv(TABLE_DIR / "qwen7b_partial_summary.csv", qwen_summary.to_dict("records"))
     write_csv(TABLE_DIR / "all_group_summary.csv", all_summary.to_dict("records"))
+    write_csv(TABLE_DIR / "main_olmo7b_ood_lmeval_summary.csv", main_ood_summary.to_dict("records"))
     write_csv(TABLE_DIR / "tiny_llama_ood_lmeval_summary.csv", tiny_ood_summary.to_dict("records"))
 
     main_depth = depth_dataframe(main_records, DEPTHS_FINAL, 16)
@@ -844,10 +981,19 @@ def main() -> None:
 
     samples = build_sample_panels()
     plot_sample_panels(samples)
-    write_report(main_summary, tiny_summary, qwen_summary, tiny_ood_summary, len(tiny_ckpt))
+    write_report(
+        main_summary,
+        tiny_summary,
+        qwen_summary,
+        main_ood_summary,
+        tiny_ood_summary,
+        main_checkpoint_note(main_ckpt),
+        len(tiny_ckpt),
+    )
 
     print(f"wrote report artifacts to {OUT_ROOT}")
     print(f"main records: {len(main_records)}, main checkpoints: {len(main_ckpt)}")
+    print(f"main OOD rows: {int(main_ood_summary['n'].sum()) if not main_ood_summary.empty else 0}")
     print(f"tiny final: {len(tiny_records)}, tiny checkpoints: {len(tiny_ckpt)}, qwen: {len(qwen_records)}")
 
 
