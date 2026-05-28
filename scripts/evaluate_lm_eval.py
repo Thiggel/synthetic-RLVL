@@ -20,6 +20,18 @@ TASK_SUITES = {
         "synthrlvl_longbench_2wikimqa_tagged",
         "synthrlvl_longbench_musique_tagged",
     ],
+    "synthrlvl_ood_cot_bare": [
+        "synthrlvl_gsm8k_cot_bare",
+        "synthrlvl_longbench_hotpotqa_cot_bare",
+        "synthrlvl_longbench_2wikimqa_cot_bare",
+        "synthrlvl_longbench_musique_cot_bare",
+    ],
+    "synthrlvl_ood_cot_prompted": [
+        "synthrlvl_gsm8k_cot_prompted",
+        "synthrlvl_longbench_hotpotqa_cot_prompted",
+        "synthrlvl_longbench_2wikimqa_cot_prompted",
+        "synthrlvl_longbench_musique_cot_prompted",
+    ],
 }
 
 

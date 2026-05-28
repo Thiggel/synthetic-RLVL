@@ -1,0 +1,40 @@
+tag:
+  - synthrlvl_ood_cot_prompted
+task: synthrlvl_longbench_musique_cot_prompted
+dataset_path: Xnhyacinth/LongBench
+dataset_name: musique
+test_split: test
+output_type: generate_until
+doc_to_text: !function utils.doc_to_text_longbench_cot_prompted
+doc_to_target: "{{answers}}"
+process_results: !function utils.process_longbench_qa_tagged
+generation_kwargs:
+  max_gen_toks: 4096
+  until:
+    - "</answer>"
+    - "<|im_end|>"
+    - "</s>"
+  do_sample: false
+  temperature: 0.0
+repeats: 1
+metric_list:
+  - metric: score
+    aggregation: mean
+    higher_is_better: true
+  - metric: qa_f1_score
+    aggregation: mean
+    higher_is_better: true
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+  - metric: qa_exact_match
+    aggregation: mean
+    higher_is_better: true
+  - metric: tag_found
+    aggregation: mean
+    higher_is_better: true
+  - metric: extracted_nonempty
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0

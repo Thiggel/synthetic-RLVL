@@ -9,7 +9,7 @@ import sys
 
 import torch
 from peft import PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoProcessor, AutoTokenizer
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
@@ -31,6 +31,22 @@ def _resolve_tokenizer_dir(checkpoint: Path, adapter_dir: Path, base_model: str)
     if checkpoint != adapter_dir and checkpoint.is_dir():
         return str(checkpoint)
     return base_model
+
+
+def _save_processor_if_available(output: Path, *sources: str) -> None:
+    seen: set[str] = set()
+    for source in sources:
+        if not source or source in seen:
+            continue
+        seen.add(source)
+        try:
+            processor = AutoProcessor.from_pretrained(source)
+        except Exception as exc:  # noqa: BLE001 - optional metadata is absent for most text-only models.
+            print(f"[merge] no processor metadata from {source}: {exc}", file=sys.stderr, flush=True)
+            continue
+        processor.save_pretrained(str(output))
+        print(f"[merge] saved processor metadata from {source}", flush=True)
+        return
 
 
 def main() -> None:
@@ -74,9 +90,9 @@ def main() -> None:
     tokenizer_dir = _resolve_tokenizer_dir(checkpoint, adapter_dir, base_model)
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_dir)
     tokenizer.save_pretrained(str(output))
+    _save_processor_if_available(output, tokenizer_dir, base_model)
     print(f"[merge] wrote {output}", flush=True)
 
 
 if __name__ == "__main__":
     main()
-

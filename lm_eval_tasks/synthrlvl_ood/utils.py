@@ -8,6 +8,12 @@ from typing import Any
 
 _ANSWER_RE = re.compile(r"<answer>\s*(.*?)(?:\s*</answer>|$)", re.IGNORECASE | re.DOTALL)
 _NUMBER_RE = re.compile(r"-?\$?[0-9][0-9,]*(?:\.[0-9]+)?")
+_LONGBENCH_PREFIX_RE = re.compile(
+    r"^\s*Answer the question based on the given passages\.\s*"
+    r"Only give me the answer and do not output any other words\.\s*"
+    r"The following are given passages\.\s*",
+    re.IGNORECASE,
+)
 
 
 def extract_answer(response: Any, *, allow_raw_fallback: bool = True) -> str:
@@ -26,6 +32,38 @@ def extract_answer(response: Any, *, allow_raw_fallback: bool = True) -> str:
 def _clean_extracted(text: str) -> str:
     text = re.sub(r"</?(?:think|formal|natural|proof|conclusion|answer)[^>]*>", " ", str(text), flags=re.IGNORECASE)
     return " ".join(text.strip().split())
+
+
+def _question_block(body: str) -> str:
+    return f"<question>\n{str(body).strip()}\n</question>\n"
+
+
+def _clean_longbench_context(context: Any) -> str:
+    text = "" if context is None else str(context)
+    return _LONGBENCH_PREFIX_RE.sub("", text).strip()
+
+
+def doc_to_text_gsm8k_cot_bare(doc: dict) -> str:
+    return _question_block(f"Question: {doc['question']}")
+
+
+def doc_to_text_gsm8k_cot_prompted(doc: dict) -> str:
+    return _question_block(
+        f"Question: {doc['question']}\n"
+        "Reason through the problem in your learned format, then put the final answer in <answer>...</answer>."
+    )
+
+
+def doc_to_text_longbench_cot_bare(doc: dict) -> str:
+    return _question_block(f"Passages:\n{_clean_longbench_context(doc.get('context', ''))}\n\nQuestion: {doc['question']}")
+
+
+def doc_to_text_longbench_cot_prompted(doc: dict) -> str:
+    return _question_block(
+        f"Passages:\n{_clean_longbench_context(doc.get('context', ''))}\n\n"
+        f"Question: {doc['question']}\n"
+        "Reason through the problem in your learned format, then put the final answer in <answer>...</answer>."
+    )
 
 
 def _gold_gsm8k_answer(doc: dict) -> str:
@@ -51,12 +89,16 @@ def _canonical_number(text: str) -> str:
 
 def process_gsm8k_tagged(doc: dict, results: list[str]) -> dict[str, float]:
     raw = results[0] if results else ""
-    extracted = extract_answer(raw)
-    pred = _last_number(extracted) or _last_number(raw) or extracted.strip()
+    extracted = extract_answer(raw, allow_raw_fallback=False)
+    tag_found = bool(_ANSWER_RE.search(str(raw)))
+    # Score only explicit answer content. Falling back to arbitrary raw numbers
+    # in a formal trace can mark <answer>z</answer> correct when the gold number
+    # appeared in premises.
+    pred = _last_number(extracted) or extracted.strip()
     gold = _canonical_number(_gold_gsm8k_answer(doc))
     return {
         "exact_match": float(pred == gold),
-        "tag_found": float(bool(_ANSWER_RE.search(str(raw)))),
+        "tag_found": float(tag_found),
         "extracted_nonempty": float(bool(extracted.strip())),
     }
 

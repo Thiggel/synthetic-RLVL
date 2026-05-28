@@ -112,6 +112,32 @@ def resolve_gradient_checkpointing(cfg: DictConfig) -> bool:
     return bool(raw)
 
 
+def resolve_resume_from_checkpoint(cfg: DictConfig) -> str | None:
+    raw = cfg.train.get("resume_from_checkpoint", None)
+    if raw is None:
+        return None
+    value = str(raw).strip()
+    if value.lower() in {"", "none", "null", "false", "0"}:
+        return None
+    if value.lower() != "auto":
+        return value
+
+    output_dir = Path(str(cfg.output_dir))
+    checkpoints: list[tuple[int, Path]] = []
+    for path in output_dir.glob("checkpoint-*"):
+        if not path.is_dir():
+            continue
+        try:
+            step = int(path.name.rsplit("-", 1)[1])
+        except (IndexError, ValueError):
+            continue
+        if (path / "trainer_state.json").is_file():
+            checkpoints.append((step, path))
+    if not checkpoints:
+        return None
+    return str(max(checkpoints, key=lambda item: item[0])[1])
+
+
 @hydra.main(config_path="conf", config_name="sft", version_base=None)
 def main(cfg: DictConfig):
     set_seed(int(cfg.seed))
@@ -245,7 +271,12 @@ def main(cfg: DictConfig):
         data_collator=make_sft_data_collator(tokenizer),
     )
 
-    trainer.train()
+    resume_from_checkpoint = resolve_resume_from_checkpoint(cfg)
+    if resume_from_checkpoint:
+        print(f"[sft] Resuming from checkpoint: {resume_from_checkpoint}")
+        trainer.train(resume_from_checkpoint=resume_from_checkpoint)
+    else:
+        trainer.train()
     final_dir = Path(cfg.output_dir) / "final"
     trainer.save_model(str(final_dir))
     tokenizer.save_pretrained(str(final_dir))

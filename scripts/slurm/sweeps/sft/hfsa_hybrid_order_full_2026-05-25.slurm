@@ -41,6 +41,14 @@ TAG="${TEMPLATE}_train1to${TRAIN_MAX}"
 RUN_NAME="sft_hfsa_hybrid_order_${TAG}_10k_seed${SEED}"
 GROUP="sft_hfsa_hybrid_order/${TAG}"
 DATASET_ID="${DATASET_ID:-flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget-depth50}"
+MAX_STEPS_VALUE="${MAX_STEPS:-10000}"
+EVAL_STEPS_VALUE="${EVAL_STEPS:-$((MAX_STEPS_VALUE + 1))}"
+SAVE_STEPS_VALUE="${SAVE_STEPS:-1000}"
+SAVE_TOTAL_LIMIT_VALUE="${SAVE_TOTAL_LIMIT:-12}"
+RESUME_FROM_CHECKPOINT_VALUE="${RESUME_FROM_CHECKPOINT:-null}"
+GRADIENT_CHECKPOINTING_VALUE="${GRADIENT_CHECKPOINTING:-true}"
+
+export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
 
 export WANDB_PROJECT="${WANDB_PROJECT:-synthetic-rlvl}"
 export WANDB_GROUP="${GROUP}"
@@ -68,11 +76,12 @@ python train_sft.py \
   train.per_device_batch_size="${PER_DEVICE_BATCH_SIZE:-1}" \
   train.grad_accum="${GRAD_ACCUM:-1}" \
   train.lr="${LR:-1e-4}" \
-  train.max_steps="${MAX_STEPS:-10000}" \
-  train.eval_steps="${EVAL_STEPS:-1000}" \
-  train.save_steps="${SAVE_STEPS:-1000}" \
-  train.save_total_limit="${SAVE_TOTAL_LIMIT:-12}" \
-  train.gradient_checkpointing="${GRADIENT_CHECKPOINTING:-auto}" \
+  train.max_steps="${MAX_STEPS_VALUE}" \
+  train.eval_steps="${EVAL_STEPS_VALUE}" \
+  train.save_steps="${SAVE_STEPS_VALUE}" \
+  train.save_total_limit="${SAVE_TOTAL_LIMIT_VALUE}" \
+  train.gradient_checkpointing="${GRADIENT_CHECKPOINTING_VALUE}" \
+  train.resume_from_checkpoint="${RESUME_FROM_CHECKPOINT_VALUE}" \
   validation.step_max="${ONLINE_VAL_MAX:-25}" \
   validation.samples_per_step="${ONLINE_SAMPLES_PER_STEP:-4}" \
   validation.max_new_tokens="${ONLINE_MAX_NEW_TOKENS:-8192}"

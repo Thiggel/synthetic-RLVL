@@ -88,6 +88,8 @@ Oversight update 2026-05-25 14:50 CEST: hard `attribute_constraints` sparse eval
 
 Oversight update 2026-05-25 18:56 CEST: hard `attribute_constraints` sparse eval completed both rows. The hardened family is no longer saturated: logic OOD correct/joint@8 is `0.488/0.356` and hard-tail correct/joint@8 is `0.431/0.285`; `nl_exact` OOD correct@8 is `0.806` and hard-tail correct@8 is `0.785`, but NL-to-FOL parse/joint remains `0.000`. Use correctness as a partial paired-family readout until translator coverage is improved.
 
+OOD lm-eval update 2026-05-27 11:30 CEST: broad OOD array `3659356` completed all six paired-family rows, and GSM8K was recomputed from sample JSONL after removing raw-trace number fallback. The downstream transfer readout is mixed and task-dependent: maze `logic/nl_exact` gets strict GSM8K EM `0.107/0.586`, but mean strict LongBench F1 `0.403/0.179`; saturated attribute `logic/nl_exact` gets strict GSM8K EM `0.160/0.233`, but LongBench F1 `0.400/0.025`; hard attribute `logic/nl_exact` gets strict GSM8K EM `0.136/0.196`, but LongBench F1 `0.273/0.044`. This mirrors the main HFSA downstream pattern: NL-style traces are stronger on GSM8K arithmetic, while logic-style traces are stronger on strict context-QA under the current prompts/extractor.
+
 ## Shared Design Principles
 
 1. Paired trace semantics.

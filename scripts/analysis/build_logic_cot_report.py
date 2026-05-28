@@ -32,13 +32,40 @@ TINY_RE = re.compile(r"pretrain_hfsa_llama3_(50m|100m|200m)_(logic|nl_exact)_tra
 TINY_CKPT_RE = re.compile(
     r"pretrain_hfsa_llama3_(50m|100m|200m)_(logic|nl_exact)_train1to10_seed(\d+)_checkpoint-(\d+)_passk\.json$"
 )
+TINY_100K_RE = re.compile(
+    r"pretrain_hfsa_llama3_(50m|100m|200m)_(logic|nl_exact)_train1to10_100k_seed(\d+)_passk\.json$"
+)
+TINY_100K_CKPT_RE = re.compile(
+    r"pretrain_hfsa_llama3_(50m|100m|200m)_(logic|nl_exact)_train1to10_100k_seed(\d+)_checkpoint-(\d+)_passk\.json$"
+)
 QWEN_RE = re.compile(
     r"sft_hfsa_modelablate_qwen2p5_7b_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
 )
 MAIN_OOD_RE = re.compile(r"sft_hfsa_depth_scaling_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)$")
+TINY_OOD_RE = re.compile(r"pretrain_hfsa_llama3_(50m|100m|200m)_(logic|nl_exact)_train1to10_seed(\d+)$")
+TINY_100K_OOD_RE = re.compile(
+    r"pretrain_hfsa_llama3_(50m|100m|200m)_(logic|nl_exact)_train1to10_100k_seed(\d+)$"
+)
+OLMO32_BARE_RE = re.compile(r"sft_hfsa_modelablate_olmo2_32b_(logic|nl_exact)_train1to20_10k_seed(\d+)$")
+TOKBUDGET_RE = re.compile(
+    r"sft_hfsa_same_target_tokens_(logic|nl_exact)_train1to25_(\d+)steps_seed(\d+)_passk\.json$"
+)
+SHORTCUT_RE = re.compile(
+    r"sft_hfsa_shortcut_rate_(logic|nl_exact)_shortcut(0p5|0p8)_train1to25_10k_seed(\d+)_passk\.json$"
+)
+CONDITIONED_RE = re.compile(
+    r"sft_hfsa_conditioned_dual_train1to(\d+)_10k_seed(\d+)_(conditioned_logic|conditioned_nl)_passk\.json$"
+)
 
 DEPTHS_FINAL = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 35, 40, 45, 50]
 DEPTHS_TINY = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 40, 50]
+OLMO_CKPT_DEPTH_BANDS = [("1-25", [1, 5, 10, 15, 20, 25]), ("30", [30]), ("40", [40]), ("50", [50])]
+TINY_CKPT_DEPTH_BANDS = [
+    ("1-10", [1, 2, 5, 10]),
+    ("12-20", [12, 15, 18, 20]),
+    ("25-30", [25, 30]),
+    ("40-50", [40, 50]),
+]
 TEMPLATE_LABEL = {"logic": "Logic", "nl_exact": "NL exact"}
 COLORS = {"logic": "#1f77b4", "nl_exact": "#d62728"}
 SIZE_ORDER = {"50m": 50, "100m": 100, "200m": 200}
@@ -81,6 +108,19 @@ def step_metric(record: Record, depth: int, name: str, k: int) -> float | None:
     return metric(record, f"step_{depth}/{name}@{k}")
 
 
+def depth_band_value(record: Record, depths: list[int], metric_name: str, k: int) -> float | None:
+    if metric_name == "correct":
+        values = [step_metric(record, depth, "correct_pass", k) for depth in depths]
+    elif metric_name == "joint":
+        values = [step_metric(record, depth, joint_metric(record.template), k) for depth in depths]
+    else:
+        raise ValueError(f"Unsupported depth-band metric: {metric_name}")
+    clean = [float(value) for value in values if value is not None and not pd.isna(value)]
+    if not clean:
+        return None
+    return mean(clean)
+
+
 def f3(value: float | None) -> str:
     if value is None or pd.isna(value):
         return "--"
@@ -94,11 +134,21 @@ def avg_std(values: list[float | None]) -> tuple[float | None, float | None, int
     return mean(clean), pstdev(clean) if len(clean) > 1 else 0.0, len(clean)
 
 
-def load_records() -> tuple[list[Record], list[Record], list[Record], list[Record], list[Record]]:
+def load_records() -> tuple[
+    list[Record],
+    list[Record],
+    list[Record],
+    list[Record],
+    list[Record],
+    list[Record],
+    list[Record],
+]:
     main: list[Record] = []
     main_ckpt: list[Record] = []
     tiny: list[Record] = []
     tiny_ckpt: list[Record] = []
+    tiny_100k: list[Record] = []
+    tiny_100k_ckpt: list[Record] = []
     qwen: list[Record] = []
 
     for path in sorted((PASSK_ROOT / "hfsa_depth_scaling_sparse").glob("*_passk.json")):
@@ -151,13 +201,43 @@ def load_records() -> tuple[list[Record], list[Record], list[Record], list[Recor
                     checkpoint=int(match.group(4)),
                 )
             )
+    for path in sorted((PASSK_ROOT / "hfsa_tiny_llama_pretrain_100k_sparse").glob("*_passk.json")):
+        if match := TINY_100K_RE.match(path.name):
+            payload = read_payload(path)
+            tiny_100k.append(
+                Record(
+                    "tiny_llama_100k",
+                    path,
+                    match.group(2),
+                    10,
+                    int(match.group(3)),
+                    payload["metrics"],
+                    size=match.group(1),
+                    checkpoint=100000,
+                )
+            )
+    for path in sorted((PASSK_ROOT / "hfsa_tiny_llama_pretrain_100k_intermediate_sparse").glob("*_passk.json")):
+        if match := TINY_100K_CKPT_RE.match(path.name):
+            payload = read_payload(path)
+            tiny_100k_ckpt.append(
+                Record(
+                    "tiny_llama_100k_ckpt",
+                    path,
+                    match.group(2),
+                    10,
+                    int(match.group(3)),
+                    payload["metrics"],
+                    size=match.group(1),
+                    checkpoint=int(match.group(4)),
+                )
+            )
     for path in sorted((PASSK_ROOT / "hfsa_model_ablation_qwen2p5_7b_sparse").glob("*_passk.json")):
         if match := QWEN_RE.match(path.name):
             payload = read_payload(path)
             qwen.append(
                 Record("qwen7b", path, match.group(1), int(match.group(2)), int(match.group(3)), payload["metrics"])
             )
-    return main, main_ckpt, tiny, tiny_ckpt, qwen
+    return main, main_ckpt, tiny, tiny_ckpt, tiny_100k, tiny_100k_ckpt, qwen
 
 
 def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
@@ -341,6 +421,42 @@ def plot_main_checkpoint_curves(records: list[Record]) -> None:
             save(fig, f"olmo7b_checkpoint_train1to{train_max}_{metric_name}16")
 
 
+def plot_main_checkpoint_depth_bands(records: list[Record]) -> None:
+    sub_records = [record for record in records if record.train_max == 25 and record.seed == 3407]
+    if not sub_records:
+        return
+    for metric_name in ["correct", "joint"]:
+        fig, axes = plt.subplots(1, len(OLMO_CKPT_DEPTH_BANDS), figsize=(12.8, 3.4), sharex=True, sharey=True)
+        for ax, (label, depths) in zip(axes, OLMO_CKPT_DEPTH_BANDS, strict=True):
+            for template in ["logic", "nl_exact"]:
+                rows = []
+                for record in sub_records:
+                    if record.template != template or record.checkpoint is None:
+                        continue
+                    rows.append(
+                        {
+                            "checkpoint": record.checkpoint,
+                            "value": depth_band_value(record, depths, metric_name, 16),
+                        }
+                    )
+                df = pd.DataFrame(rows).dropna()
+                if df.empty:
+                    continue
+                df = df.sort_values("checkpoint")
+                ax.plot(
+                    df["checkpoint"],
+                    df["value"],
+                    marker="o",
+                    markersize=3,
+                    color=COLORS[template],
+                    label=TEMPLATE_LABEL[template],
+                )
+            style_axes(ax, f"{metric_name}@16", f"eval depth {label}")
+            ax.set_xlabel("optimizer step")
+        axes[0].legend(fontsize=8, frameon=False)
+        save(fig, f"olmo7b_checkpoint_train1to25_depthbands_{metric_name}16")
+
+
 def plot_tiny_final(tiny: list[Record]) -> None:
     if not tiny:
         return
@@ -432,6 +548,51 @@ def plot_tiny_checkpoint_curves(tiny_final: list[Record], tiny_ckpt: list[Record
             save(fig, f"tiny_llama_{size}_checkpoint_{metric_name}_k8")
 
 
+def plot_tiny_checkpoint_depth_bands(
+    tiny_final: list[Record],
+    tiny_ckpt: list[Record],
+    *,
+    prefix: str,
+) -> None:
+    records = tiny_ckpt + tiny_final
+    if not tiny_ckpt:
+        return
+    for size in ["50m", "100m", "200m"]:
+        sub_records = [record for record in records if record.size == size]
+        if not sub_records:
+            continue
+        for metric_name in ["correct", "joint"]:
+            fig, axes = plt.subplots(1, len(TINY_CKPT_DEPTH_BANDS), figsize=(12.8, 3.4), sharex=True, sharey=True)
+            for ax, (label, depths) in zip(axes, TINY_CKPT_DEPTH_BANDS, strict=True):
+                for template in ["logic", "nl_exact"]:
+                    rows = []
+                    for record in sub_records:
+                        if record.template != template or record.checkpoint is None:
+                            continue
+                        rows.append(
+                            {
+                                "checkpoint": record.checkpoint,
+                                "value": depth_band_value(record, depths, metric_name, 8),
+                            }
+                        )
+                    df = pd.DataFrame(rows).dropna()
+                    if df.empty:
+                        continue
+                    df = df.groupby("checkpoint", as_index=False)["value"].mean().sort_values("checkpoint")
+                    ax.plot(
+                        df["checkpoint"],
+                        df["value"],
+                        marker="o",
+                        markersize=3,
+                        color=COLORS[template],
+                        label=TEMPLATE_LABEL[template],
+                    )
+                style_axes(ax, f"{metric_name}@8", f"eval depth {label}")
+                ax.set_xlabel("pretraining step")
+            axes[0].legend(fontsize=8, frameon=False)
+            save(fig, f"{prefix}_{size}_checkpoint_depthbands_{metric_name}_k8")
+
+
 def plot_qwen_partial(qwen: list[Record]) -> None:
     if not qwen:
         return
@@ -447,6 +608,105 @@ def plot_qwen_partial(qwen: list[Record]) -> None:
         ax.set_xlabel("max train depth")
     axes[0].legend(frameon=False)
     save(fig, "qwen7b_partial_ood_correct_joint")
+
+
+def plot_token_budget_comparison(main_summary: pd.DataFrame, token_budget_summary: pd.DataFrame) -> None:
+    if main_summary.empty or token_budget_summary.empty:
+        return
+    rows: list[dict[str, object]] = []
+    baseline = main_summary[(main_summary["size"] == "") & (main_summary["train_max"] == 25)]
+    for _, row in baseline.iterrows():
+        rows.append(
+            {
+                "condition": f"main {row['template']} 10k",
+                "ood_correct@16": row.get("ood_correct@16"),
+                "ood_joint@16": row.get("ood_joint@16"),
+                "depth50_correct@16": row.get("depth50_correct@16"),
+                "depth50_joint@16": row.get("depth50_joint@16"),
+            }
+        )
+    for _, row in token_budget_summary.iterrows():
+        rows.append(
+            {
+                "condition": f"tok {row['template']} {int(row['steps'])} steps",
+                "ood_correct@16": row.get("ood_correct@16"),
+                "ood_joint@16": row.get("ood_joint@16"),
+                "depth50_correct@16": row.get("depth50_correct@16"),
+                "depth50_joint@16": row.get("depth50_joint@16"),
+            }
+        )
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_joint@16", "OOD joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+        ("depth50_joint@16", "depth-50 joint@16"),
+    ]
+    fig, axes = plt.subplots(2, 2, figsize=(10.5, 6.4), sharey=True)
+    for ax, (col, label) in zip(axes.ravel(), metrics, strict=True):
+        ax.barh(df["condition"], df[col], color=["#1f77b4", "#d62728", "#4c78a8", "#e45756"])
+        style_axes(ax, label)
+        ax.set_xlabel(label)
+    save(fig, "ablation_same_target_token_budget_vs_main")
+
+
+def plot_shortcut_comparison(main_summary: pd.DataFrame, shortcut_summary: pd.DataFrame) -> None:
+    if main_summary.empty:
+        return
+    rows: list[dict[str, object]] = []
+    baseline = main_summary[(main_summary["size"] == "") & (main_summary["train_max"] == 25)]
+    for _, row in baseline.iterrows():
+        rows.append(
+            {
+                "shortcut_rate": 0.0,
+                "template": row["template"],
+                "ood_correct@16": row.get("ood_correct@16"),
+                "ood_joint@16": row.get("ood_joint@16"),
+                "depth50_correct@16": row.get("depth50_correct@16"),
+                "depth50_joint@16": row.get("depth50_joint@16"),
+            }
+        )
+    if not shortcut_summary.empty:
+        for _, row in shortcut_summary.iterrows():
+            rate = str(row["shortcut_rate"]).replace("0p", "0.")
+            rows.append(
+                {
+                    "shortcut_rate": float(rate),
+                    "template": row["template"],
+                    "ood_correct@16": row.get("ood_correct@16"),
+                    "ood_joint@16": row.get("ood_joint@16"),
+                    "depth50_correct@16": row.get("depth50_correct@16"),
+                    "depth50_joint@16": row.get("depth50_joint@16"),
+                }
+            )
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_joint@16", "OOD joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+        ("depth50_joint@16", "depth-50 joint@16"),
+    ]
+    fig, axes = plt.subplots(2, 2, figsize=(9.5, 6.4), sharex=True, sharey=True)
+    for ax, (col, label) in zip(axes.ravel(), metrics, strict=True):
+        for template in ["logic", "nl_exact"]:
+            sub = df[df["template"] == template].sort_values("shortcut_rate")
+            if sub.empty:
+                continue
+            ax.plot(
+                sub["shortcut_rate"],
+                sub[col],
+                marker="o",
+                color=COLORS[template],
+                label=TEMPLATE_LABEL[template],
+            )
+        style_axes(ax, label)
+        ax.set_xlabel("train shortcut rate")
+    axes[0, 0].legend(frameon=False)
+    save(fig, "ablation_shortcut_rate_vs_main")
 
 
 def clean_text(text: str, limit: int = 850) -> str:
@@ -563,7 +823,18 @@ def latex_table(
     lines = ["\\begin{tabular}{" + "l" * len(columns) + "}", "\\toprule"]
     lines.append(" & ".join(label for _, label in columns) + " \\\\")
     lines.append("\\midrule")
-    integer_columns = {"n", "seed", "train_max", "checkpoint", "depth"}
+    integer_columns = {
+        "n",
+        "seed",
+        "train_max",
+        "checkpoint",
+        "depth",
+        "logic_target",
+        "nl_target",
+        "logic_total",
+        "nl_total",
+        "steps",
+    }
     for _, row in data.iterrows():
         vals = []
         for col, _ in columns:
@@ -588,6 +859,90 @@ def get_lm_eval_metric(results: dict, task: str, key: str) -> float | None:
     return float(value) if isinstance(value, (int, float)) else None
 
 
+def get_lm_eval_metric_any(results: dict, task: str, keys: tuple[str, ...]) -> float | None:
+    for key in keys:
+        value = get_lm_eval_metric(results, task, key)
+        if value is not None:
+            return value
+    return None
+
+
+_ANSWER_RE = re.compile(r"<answer>\s*(.*?)(?:\s*</answer>|$)", re.IGNORECASE | re.DOTALL)
+_NUMBER_RE = re.compile(r"-?\$?[0-9][0-9,]*(?:\.[0-9]+)?")
+
+
+def _clean_extracted_answer(text: str) -> str:
+    text = re.sub(r"</?(?:think|formal|natural|proof|conclusion|answer)[^>]*>", " ", str(text), flags=re.IGNORECASE)
+    return " ".join(text.strip().split())
+
+
+def _extract_explicit_answer(text: str) -> str:
+    matches = _ANSWER_RE.findall(str(text))
+    if matches:
+        return _clean_extracted_answer(matches[-1])
+    for marker in ("Final answer:", "final answer:", "Answer:", "answer:"):
+        if marker in str(text):
+            return _clean_extracted_answer(str(text).rsplit(marker, 1)[-1])
+    return ""
+
+
+def _canonical_number(text: str) -> str:
+    value = str(text).strip().replace("$", "").replace(",", "")
+    if re.fullmatch(r"-?[0-9]+\.0+", value):
+        value = value.split(".", 1)[0]
+    return value
+
+
+def _last_number(text: str) -> str:
+    matches = _NUMBER_RE.findall(str(text))
+    if not matches:
+        return ""
+    return _canonical_number(matches[-1])
+
+
+def _gold_gsm8k_answer(doc: dict) -> str:
+    answer = str(doc.get("answer", ""))
+    if "####" in answer:
+        return answer.rsplit("####", 1)[-1].strip()
+    return answer.strip()
+
+
+def _raw_sample_response(row: dict) -> str:
+    resps = row.get("resps") or []
+    if resps and isinstance(resps[0], list) and resps[0]:
+        return str(resps[0][0])
+    if resps:
+        return str(resps[0])
+    return ""
+
+
+def recompute_gsm8k_from_samples(run_dir: Path) -> dict[str, float] | None:
+    sample_files = sorted(run_dir.glob("**/samples_synthrlvl_gsm8k_tagged_*.jsonl"))
+    if not sample_files:
+        return None
+    n = correct = tag_found = nonempty = 0
+    with sample_files[-1].open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            raw = _raw_sample_response(row)
+            extracted = _extract_explicit_answer(raw)
+            pred = _last_number(extracted) or extracted.strip()
+            gold = _canonical_number(_gold_gsm8k_answer(row.get("doc", {})))
+            correct += int(pred == gold)
+            tag_found += int(bool(_ANSWER_RE.search(raw)))
+            nonempty += int(bool(extracted.strip()))
+            n += 1
+    if n == 0:
+        return None
+    return {
+        "gsm8k_em": correct / n,
+        "gsm8k_tag": tag_found / n,
+        "gsm8k_explicit_nonempty": nonempty / n,
+    }
+
+
 def load_main_ood_summary() -> pd.DataFrame:
     root = LM_EVAL_ROOT / "ood_large_2026-05-25"
     rows: list[dict[str, object]] = []
@@ -604,13 +959,19 @@ def load_main_ood_summary() -> pd.DataFrame:
             continue
         payload = json.loads(result_files[-1].read_text(encoding="utf-8"))
         results = payload.get("results", {})
+        gsm8k = recompute_gsm8k_from_samples(run_dir) or {}
         rows.append(
             {
                 "template": match.group(1),
                 "train_max": int(match.group(2)),
                 "seed": int(match.group(3)),
-                "gsm8k_em": get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "exact_match,none"),
-                "gsm8k_tag": get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "tag_found,none"),
+                "gsm8k_em": gsm8k.get("gsm8k_em")
+                if gsm8k
+                else get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "exact_match,none"),
+                "gsm8k_tag": gsm8k.get("gsm8k_tag")
+                if gsm8k
+                else get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "tag_found,none"),
+                "gsm8k_explicit_nonempty": gsm8k.get("gsm8k_explicit_nonempty"),
                 "hotpot_f1": get_lm_eval_metric(
                     results, "synthrlvl_longbench_hotpotqa_tagged", "qa_f1_score,none"
                 ),
@@ -637,6 +998,7 @@ def load_main_ood_summary() -> pd.DataFrame:
     metric_cols = [
         "gsm8k_em",
         "gsm8k_tag",
+        "gsm8k_explicit_nonempty",
         "hotpot_f1",
         "hotpot_em",
         "twowiki_f1",
@@ -667,14 +1029,20 @@ def load_tiny_ood_summary() -> pd.DataFrame:
             continue
         payload = json.loads(result_files[-1].read_text(encoding="utf-8"))
         results = payload.get("results", {})
+        gsm8k = recompute_gsm8k_from_samples(run_dir) or {}
 
         rows.append(
             {
                 "size": match.group(1),
                 "template": match.group(2),
                 "seed": int(match.group(3)),
-                "gsm8k_em": get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "exact_match,none"),
-                "gsm8k_tag": get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "tag_found,none"),
+                "gsm8k_em": gsm8k.get("gsm8k_em")
+                if gsm8k
+                else get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "exact_match,none"),
+                "gsm8k_tag": gsm8k.get("gsm8k_tag")
+                if gsm8k
+                else get_lm_eval_metric(results, "synthrlvl_gsm8k_tagged", "tag_found,none"),
+                "gsm8k_explicit_nonempty": gsm8k.get("gsm8k_explicit_nonempty"),
                 "hotpot_f1": get_lm_eval_metric(
                     results, "synthrlvl_longbench_hotpotqa_tagged", "qa_f1_score,none"
                 ),
@@ -700,6 +1068,7 @@ def load_tiny_ood_summary() -> pd.DataFrame:
         metric_cols = [
             "gsm8k_em",
             "gsm8k_tag",
+            "gsm8k_explicit_nonempty",
             "hotpot_f1",
             "hotpot_em",
             "twowiki_f1",
@@ -715,6 +1084,382 @@ def load_tiny_ood_summary() -> pd.DataFrame:
         df["size_order"] = df["size"].map(SIZE_ORDER)
         df = df.sort_values(["size_order", "template"]).drop(columns=["size_order"])
     return df
+
+
+def _latest_result_file(run_dir: Path) -> Path | None:
+    files = sorted(run_dir.glob("**/results_*.json"))
+    return files[-1] if files else None
+
+
+def _cot_bare_metrics(results: dict) -> dict[str, float | None]:
+    return {
+        "gsm8k_em": get_lm_eval_metric(results, "synthrlvl_gsm8k_cot_bare", "exact_match,none"),
+        "gsm8k_tag": get_lm_eval_metric(results, "synthrlvl_gsm8k_cot_bare", "tag_found,none"),
+        "hotpot_em": get_lm_eval_metric_any(
+            results, "synthrlvl_longbench_hotpotqa_cot_bare", ("qa_exact_match,none", "exact_match,none")
+        ),
+        "hotpot_f1": get_lm_eval_metric(
+            results, "synthrlvl_longbench_hotpotqa_cot_bare", "qa_f1_score,none"
+        ),
+        "twowiki_em": get_lm_eval_metric_any(
+            results, "synthrlvl_longbench_2wikimqa_cot_bare", ("qa_exact_match,none", "exact_match,none")
+        ),
+        "twowiki_f1": get_lm_eval_metric(
+            results, "synthrlvl_longbench_2wikimqa_cot_bare", "qa_f1_score,none"
+        ),
+        "musique_em": get_lm_eval_metric_any(
+            results, "synthrlvl_longbench_musique_cot_bare", ("qa_exact_match,none", "exact_match,none")
+        ),
+        "musique_f1": get_lm_eval_metric(
+            results, "synthrlvl_longbench_musique_cot_bare", "qa_f1_score,none"
+        ),
+    }
+
+
+def _summarize_lm_eval_rows(rows: list[dict[str, object]], keys: list[str]) -> pd.DataFrame:
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df
+    metric_cols = [
+        "gsm8k_em",
+        "gsm8k_tag",
+        "hotpot_em",
+        "hotpot_f1",
+        "twowiki_em",
+        "twowiki_f1",
+        "musique_em",
+        "musique_f1",
+    ]
+    return df.groupby(keys, as_index=False).agg(
+        n=("seed", "nunique"),
+        **{col: (col, "mean") for col in metric_cols},
+    ).sort_values(keys)
+
+
+def load_main_cot_bare_ood_summary() -> pd.DataFrame:
+    root = LM_EVAL_ROOT / "ood_large_cot_bare_2026-05-27"
+    rows: list[dict[str, object]] = []
+    if not root.exists():
+        return pd.DataFrame()
+    for run_dir in sorted(root.iterdir()):
+        if not run_dir.is_dir():
+            continue
+        match = MAIN_OOD_RE.match(run_dir.name)
+        if not match:
+            continue
+        result_file = _latest_result_file(run_dir)
+        if result_file is None:
+            continue
+        results = json.loads(result_file.read_text(encoding="utf-8")).get("results", {})
+        rows.append(
+            {
+                "template": match.group(1),
+                "train_max": int(match.group(2)),
+                "seed": int(match.group(3)),
+                **_cot_bare_metrics(results),
+            }
+        )
+    if rows:
+        write_csv(TABLE_DIR / "main_olmo7b_cot_bare_ood_by_seed.csv", rows)
+    summary = _summarize_lm_eval_rows(rows, ["template", "train_max"])
+    if not summary.empty:
+        write_csv(TABLE_DIR / "main_olmo7b_cot_bare_ood_summary.csv", summary.to_dict("records"))
+    return summary
+
+
+def load_tiny_cot_bare_ood_summary(root_name: str, regex: re.Pattern[str], table_prefix: str) -> pd.DataFrame:
+    root = LM_EVAL_ROOT / root_name
+    rows: list[dict[str, object]] = []
+    if not root.exists():
+        return pd.DataFrame()
+    for run_dir in sorted(root.iterdir()):
+        if not run_dir.is_dir():
+            continue
+        match = regex.match(run_dir.name)
+        if not match:
+            continue
+        result_file = _latest_result_file(run_dir)
+        if result_file is None:
+            continue
+        results = json.loads(result_file.read_text(encoding="utf-8")).get("results", {})
+        rows.append(
+            {
+                "size": match.group(1),
+                "template": match.group(2),
+                "seed": int(match.group(3)),
+                **_cot_bare_metrics(results),
+            }
+        )
+    if rows:
+        write_csv(TABLE_DIR / f"{table_prefix}_by_seed.csv", rows)
+    summary = _summarize_lm_eval_rows(rows, ["size", "template"])
+    if not summary.empty:
+        summary["size_order"] = summary["size"].map(SIZE_ORDER)
+        summary = summary.sort_values(["size_order", "template"]).drop(columns=["size_order"])
+        write_csv(TABLE_DIR / f"{table_prefix}_summary.csv", summary.to_dict("records"))
+    return summary
+
+
+def load_olmo32_cot_bare_gsm8k() -> pd.DataFrame:
+    root = LM_EVAL_ROOT / "ood_large_olmo32_gsm8k_cot_bare_2026-05-27"
+    rows: list[dict[str, object]] = []
+    if not root.exists():
+        return pd.DataFrame()
+    for run_dir in sorted(root.iterdir()):
+        if not run_dir.is_dir():
+            continue
+        match = OLMO32_BARE_RE.match(run_dir.name)
+        if not match:
+            continue
+        result_file = _latest_result_file(run_dir)
+        if result_file is None:
+            continue
+        results = json.loads(result_file.read_text(encoding="utf-8")).get("results", {})
+        rows.append(
+            {
+                "template": match.group(1),
+                "train_max": 20,
+                "seed": int(match.group(2)),
+                "gsm8k_em": get_lm_eval_metric(results, "synthrlvl_gsm8k_cot_bare", "exact_match,none"),
+                "gsm8k_tag": get_lm_eval_metric(results, "synthrlvl_gsm8k_cot_bare", "tag_found,none"),
+            }
+        )
+    df = pd.DataFrame(rows).sort_values(["template", "seed"]) if rows else pd.DataFrame()
+    if not df.empty:
+        write_csv(TABLE_DIR / "olmo32_cot_bare_gsm8k.csv", df.to_dict("records"))
+    return df
+
+
+def _joint_key(label: str) -> str:
+    return "citation_free_joint_pass" if label in {"logic", "conditioned_logic"} else "nl_logic_joint_pass"
+
+
+def _summarize_passk_ablation(
+    root: Path,
+    regex: re.Pattern[str],
+    field_names: list[str],
+    summary_keys: list[str],
+    table_prefix: str,
+) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    if not root.exists():
+        return pd.DataFrame()
+    for path in sorted(root.glob("*_passk.json")):
+        match = regex.match(path.name)
+        if not match:
+            continue
+        groups = list(match.groups())
+        payload = read_payload(path)
+        group_map = dict(zip(field_names, groups, strict=True))
+        template_label = group_map.get("template") or group_map.get("eval_template") or "logic"
+        joint = _joint_key(str(template_label))
+        rows.append(
+            {
+                **group_map,
+                "ood_correct@16": payload["metrics"].get("synthetic_sampled/band_ood/correct_pass@16"),
+                "ood_joint@16": payload["metrics"].get(f"synthetic_sampled/band_ood/{joint}@16"),
+                "depth50_correct@16": payload["metrics"].get("synthetic_sampled/step_50/correct_pass@16"),
+                "depth50_joint@16": payload["metrics"].get(f"synthetic_sampled/step_50/{joint}@16"),
+            }
+        )
+    if rows:
+        write_csv(TABLE_DIR / f"{table_prefix}_by_seed.csv", rows)
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df
+    metric_cols = ["ood_correct@16", "ood_joint@16", "depth50_correct@16", "depth50_joint@16"]
+    summary = df.groupby(summary_keys, as_index=False).agg(
+        n=("seed", "nunique"),
+        **{col: (col, "mean") for col in metric_cols},
+    ).sort_values(summary_keys)
+    write_csv(TABLE_DIR / f"{table_prefix}_summary.csv", summary.to_dict("records"))
+    return summary
+
+
+def load_ablation_summaries() -> dict[str, pd.DataFrame]:
+    return {
+        "token_budget": _summarize_passk_ablation(
+            PASSK_ROOT / "hfsa_same_target_token_budget_20260525",
+            TOKBUDGET_RE,
+            ["template", "steps", "seed"],
+            ["template", "steps"],
+            "same_target_token_budget",
+        ),
+        "shortcut": _summarize_passk_ablation(
+            PASSK_ROOT / "hfsa_shortcut_rate_ablation_20260525",
+            SHORTCUT_RE,
+            ["template", "shortcut_rate", "seed"],
+            ["template", "shortcut_rate"],
+            "shortcut_rate_ablation",
+        ),
+        "conditioned": _summarize_passk_ablation(
+            PASSK_ROOT / "hfsa_conditioned_dual_full_20260525",
+            CONDITIONED_RE,
+            ["train_max", "seed", "eval_template"],
+            ["train_max", "eval_template"],
+            "conditioned_dual_partial",
+        ),
+    }
+
+
+COT_BARE_SAMPLE_PATTERNS = {
+    "gsm8k": "samples_synthrlvl_gsm8k_cot_bare_*.jsonl",
+    "hotpotqa": "samples_synthrlvl_longbench_hotpotqa_cot_bare_*.jsonl",
+    "2wikimqa": "samples_synthrlvl_longbench_2wikimqa_cot_bare_*.jsonl",
+    "musique": "samples_synthrlvl_longbench_musique_cot_bare_*.jsonl",
+}
+
+
+def _load_sample_file(run_dir: Path, pattern: str) -> dict[int, dict[str, object]]:
+    files = sorted(run_dir.glob(f"**/{pattern}"))
+    if not files:
+        return {}
+    rows: dict[int, dict[str, object]] = {}
+    with files[-1].open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if line.strip():
+                row = json.loads(line)
+                rows[int(row["doc_id"])] = row
+    return rows
+
+
+def _sample_question(row: dict[str, object]) -> str:
+    doc = row.get("doc") or {}
+    if isinstance(doc, dict):
+        return " ".join(str(doc.get("question", "")).split())
+    return ""
+
+
+def _sample_gold(row: dict[str, object]) -> str:
+    doc = row.get("doc") or {}
+    if not isinstance(doc, dict):
+        return ""
+    if "answers" in doc:
+        return ", ".join(str(item) for item in doc.get("answers", []))
+    answer = str(doc.get("answer", row.get("target", "")))
+    if "####" in answer:
+        answer = answer.rsplit("####", 1)[-1]
+    return " ".join(answer.split())
+
+
+def _sample_metric(row: dict[str, object], task: str) -> float:
+    if task == "gsm8k":
+        return float(row.get("exact_match", 0.0) or 0.0)
+    return float(row.get("qa_f1_score", row.get("score", 0.0)) or 0.0)
+
+
+def _clip_for_report(text: str, limit: int = 900) -> str:
+    text = str(text).strip()
+    if len(text) <= limit:
+        return text
+    head = text[: limit // 2].rstrip()
+    tail = text[-limit // 2 :].lstrip()
+    return f"{head}\n...[truncated]...\n{tail}"
+
+
+def build_cot_bare_generation_examples() -> list[dict[str, object]]:
+    logic_root = (
+        LM_EVAL_ROOT
+        / "ood_large_cot_bare_2026-05-27"
+        / "sft_hfsa_depth_scaling_logic_train1to25_10k_seed3407"
+    )
+    nl_root = (
+        LM_EVAL_ROOT
+        / "ood_large_cot_bare_2026-05-27"
+        / "sft_hfsa_depth_scaling_nl_exact_train1to25_10k_seed3407"
+    )
+    rows: list[dict[str, object]] = []
+    if not logic_root.exists() or not nl_root.exists():
+        return rows
+    for task, pattern in COT_BARE_SAMPLE_PATTERNS.items():
+        logic_rows = _load_sample_file(logic_root, pattern)
+        nl_rows = _load_sample_file(nl_root, pattern)
+        common = sorted(set(logic_rows) & set(nl_rows))
+        if not common:
+            continue
+        selected = common[0]
+        for doc_id in common:
+            logic_score = _sample_metric(logic_rows[doc_id], task)
+            nl_score = _sample_metric(nl_rows[doc_id], task)
+            if logic_score > 0.0 or nl_score > 0.0:
+                selected = doc_id
+                break
+        logic = logic_rows[selected]
+        nl = nl_rows[selected]
+        logic_raw = _raw_sample_response(logic)
+        nl_raw = _raw_sample_response(nl)
+        rows.append(
+            {
+                "task": task,
+                "doc_id": selected,
+                "question": _clip_for_report(_sample_question(logic), 800),
+                "gold": _sample_gold(logic),
+                "logic_metric": _sample_metric(logic, task),
+                "logic_extracted": _extract_explicit_answer(logic_raw),
+                "logic_generation": _clip_for_report(logic_raw),
+                "nl_metric": _sample_metric(nl, task),
+                "nl_extracted": _extract_explicit_answer(nl_raw),
+                "nl_generation": _clip_for_report(nl_raw),
+            }
+        )
+    if rows:
+        write_csv(TABLE_DIR / "cot_bare_ood_generation_examples.csv", rows)
+        lines = ["# Bare-Format OOD Generation Examples", ""]
+        for row in rows:
+            lines.extend(
+                [
+                    f"## {row['task']} doc_id {row['doc_id']}",
+                    "",
+                    f"Question: {row['question']}",
+                    "",
+                    f"Gold: {row['gold']}",
+                    "",
+                    f"Logic extracted: `{row['logic_extracted']}`; metric={float(row['logic_metric']):.3f}",
+                    "",
+                    "```text",
+                    str(row["logic_generation"]),
+                    "```",
+                    "",
+                    f"NL extracted: `{row['nl_extracted']}`; metric={float(row['nl_metric']):.3f}",
+                    "",
+                    "```text",
+                    str(row["nl_generation"]),
+                    "```",
+                    "",
+                ]
+            )
+        (OUT_ROOT / "ood_cot_bare_generation_examples_olmo7b_train1to25_seed3407.md").write_text(
+            "\n".join(lines).rstrip() + "\n", encoding="utf-8"
+        )
+    return rows
+
+
+def latex_ood_examples(rows: list[dict[str, object]]) -> str:
+    if not rows:
+        return "No bare-format OOD sample rows were available at report generation time."
+
+    def esc(text: object) -> str:
+        return str(text).replace("_", r"\_")
+
+    parts: list[str] = []
+    for row in rows:
+        metric_label = "EM" if row["task"] == "gsm8k" else "F1"
+        parts.append(
+            rf"""\subsection*{{{row['task']} doc {row['doc_id']}}}
+\textbf{{Question.}} {esc(row['question'])}
+
+\textbf{{Gold.}} {esc(row['gold'])}
+
+\textbf{{Logic extracted:}} {esc(row['logic_extracted'])} ({metric_label}={float(row['logic_metric']):.3f})
+\begin{{verbatim}}
+{row['logic_generation']}
+\end{{verbatim}}
+\textbf{{NL extracted:}} {esc(row['nl_extracted'])} ({metric_label}={float(row['nl_metric']):.3f})
+\begin{{verbatim}}
+{row['nl_generation']}
+\end{{verbatim}}"""
+        )
+    return "\n\n".join(parts)
 
 
 def main_checkpoint_note(records: list[Record]) -> str:
@@ -753,20 +1498,51 @@ def main_checkpoint_note(records: list[Record]) -> str:
 def write_report(
     main_summary: pd.DataFrame,
     tiny_summary: pd.DataFrame,
+    tiny_100k_summary: pd.DataFrame,
     qwen_summary: pd.DataFrame,
     main_ood_summary: pd.DataFrame,
     tiny_ood_summary: pd.DataFrame,
+    main_cot_bare_ood_summary: pd.DataFrame,
+    tiny_cot_bare_ood_summary: pd.DataFrame,
+    tiny_100k_cot_bare_ood_summary: pd.DataFrame,
+    olmo32_cot_bare_gsm8k: pd.DataFrame,
+    ablation_summaries: dict[str, pd.DataFrame],
+    cot_bare_examples: list[dict[str, object]],
     main_ckpt_note: str,
     tiny_ckpt_count: int,
+    tiny_100k_ckpt_count: int,
 ) -> None:
     main_rows = main_summary[(main_summary["size"] == "") & (main_summary["n"] >= 1)].copy()
     main_rows = main_rows.sort_values(["template", "train_max"])
     main_ood_rows = main_ood_summary.sort_values(["template", "train_max"]) if not main_ood_summary.empty else pd.DataFrame()
+    main_cot_bare_rows = (
+        main_cot_bare_ood_summary.sort_values(["template", "train_max"])
+        if not main_cot_bare_ood_summary.empty
+        else pd.DataFrame()
+    )
     tiny_rows = tiny_summary[tiny_summary["size"] != ""].copy() if not tiny_summary.empty else pd.DataFrame()
     if not tiny_rows.empty:
         tiny_rows["size_order"] = tiny_rows["size"].map(SIZE_ORDER)
         tiny_rows = tiny_rows.sort_values(["size_order", "template"])
+    tiny_100k_rows = (
+        tiny_100k_summary[tiny_100k_summary["size"] != ""].copy() if not tiny_100k_summary.empty else pd.DataFrame()
+    )
+    if not tiny_100k_rows.empty:
+        tiny_100k_rows["size_order"] = tiny_100k_rows["size"].map(SIZE_ORDER)
+        tiny_100k_rows = tiny_100k_rows.sort_values(["size_order", "template"])
     qwen_rows = qwen_summary.sort_values(["template", "train_max"]) if not qwen_summary.empty else pd.DataFrame()
+    token_length_rows = pd.DataFrame(
+        [
+            {"train_range": "1..5", "logic_target": 322, "nl_target": 382, "logic_total": 697, "nl_total": 757},
+            {"train_range": "1..10", "logic_target": 500, "nl_target": 653, "logic_total": 1166, "nl_total": 1319},
+            {"train_range": "1..15", "logic_target": 681, "nl_target": 925, "logic_total": 1637, "nl_total": 1881},
+            {"train_range": "1..20", "logic_target": 863, "nl_target": 1196, "logic_total": 2109, "nl_total": 2442},
+            {"train_range": "1..25", "logic_target": 1049, "nl_target": 1469, "logic_total": 2587, "nl_total": 3008},
+        ]
+    )
+    token_budget_rows = ablation_summaries.get("token_budget", pd.DataFrame())
+    shortcut_rows = ablation_summaries.get("shortcut", pd.DataFrame())
+    conditioned_rows = ablation_summaries.get("conditioned", pd.DataFrame())
     train_maxes = [5, 10, 15, 20, 25]
     tiny_sizes = ["50m", "100m", "200m"]
     olmo_ckpt_figures = "\n".join(
@@ -813,6 +1589,28 @@ def write_report(
 \\end{{figure}}"""
         for size in tiny_sizes
     )
+    tiny_ckpt_depthband_figures = "\n".join(
+        f"""\\begin{{figure}}[H]\\centering
+\\includegraphics[width=\\linewidth]{{figures/tiny_llama_{size}_checkpoint_depthbands_correct_k8.pdf}}
+\\caption{{Tiny Llama {size} optimizer-step curves for correct@8 over eval-depth bands.}}
+\\end{{figure}}
+\\begin{{figure}}[H]\\centering
+\\includegraphics[width=\\linewidth]{{figures/tiny_llama_{size}_checkpoint_depthbands_joint_k8.pdf}}
+\\caption{{Tiny Llama {size} optimizer-step curves for joint correct+valid@8 over eval-depth bands.}}
+\\end{{figure}}"""
+        for size in tiny_sizes
+    )
+    tiny_100k_ckpt_depthband_figures = "\n".join(
+        f"""\\begin{{figure}}[H]\\centering
+\\includegraphics[width=\\linewidth]{{figures/tiny_llama_100k_{size}_checkpoint_depthbands_correct_k8.pdf}}
+\\caption{{Tiny Llama 100k {size} optimizer-step curves for correct@8 over eval-depth bands.}}
+\\end{{figure}}
+\\begin{{figure}}[H]\\centering
+\\includegraphics[width=\\linewidth]{{figures/tiny_llama_100k_{size}_checkpoint_depthbands_joint_k8.pdf}}
+\\caption{{Tiny Llama 100k {size} optimizer-step curves for joint correct+valid@8 over eval-depth bands.}}
+\\end{{figure}}"""
+        for size in tiny_sizes
+    )
 
     tex = rf"""\documentclass[10pt]{{article}}
 \usepackage[margin=0.7in]{{geometry}}
@@ -821,12 +1619,28 @@ def write_report(
 \usepackage{{float}}
 \usepackage{{hyperref}}
 \title{{Formal Logic CoT Synthetic Results Update}}
-\date{{2026-05-26}}
+\date{{2026-05-28}}
 \begin{{document}}
 \maketitle
 
 \section{{Metric note for OOD benchmarks}}
-EM means exact match: after extracting the model's answer, the evaluator normalizes the prediction and gold answer and assigns 1 only when they exactly match, then averages over examples. For GSM8K this is numeric exact match and is effectively an accuracy over single numeric answers. For HotpotQA, 2WikiMultiHopQA, and MuSiQue the answers are free-form strings with aliases and partial-overlap possibilities, so the standard report is EM plus token-level F1 rather than calling the result plain accuracy. F1 gives partial credit for overlapping answer tokens; EM is the stricter all-or-nothing string match.
+EM means exact match: after extracting explicit answer content from an \texttt{{<answer>}} tag or answer marker, the evaluator normalizes the prediction and gold answer and assigns 1 only when they exactly match, then averages over examples. GSM8K is numeric EM and is effectively an accuracy over single numeric answers, but the report does not fall back to arbitrary numbers elsewhere in a generated trace. For HotpotQA, 2WikiMultiHopQA, and MuSiQue the answers are free-form strings with aliases and partial-overlap possibilities, so the standard report is EM plus token-level F1 rather than calling the result plain accuracy. F1 gives partial credit for overlapping answer tokens; EM is the stricter all-or-nothing string match.
+
+\section{{Training sequence token lengths}}
+This audit uses the OLMo tokenizer over the actual SFT training mixtures. NL targets are longer than logic targets at every train range; total sequence lengths include the prompt plus target.
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(token_length_rows, [
+    ("train_range", "train range"),
+    ("logic_target", "logic target"),
+    ("nl_target", "NL target"),
+    ("logic_total", "logic total"),
+    ("nl_total", "NL total"),
+])}
+\caption{{Mean token lengths for main OLMo-7B SFT sequences by train-depth range.}}
+\end{{table}}
 
 \section{{Main OLMo-7B downstream OOD}}
 The broad OOD run has completed the 30-row main OLMo grid. This is downstream transfer under the strict answer extractor, not a synthetic validity score. The headline pattern is split: NL is much better on GSM8K numeric EM, while logic is much better on the context-provided multi-hop QA F1/EM tasks. Bold values mark the best value in each metric column.
@@ -858,6 +1672,51 @@ The broad OOD run has completed the 30-row main OLMo grid. This is downstream tr
     ("musique_f1", "MuSiQue F1"),
 ], bold_columns={"hotpot_f1", "twowiki_f1", "musique_f1"})}
 \caption{{OOD F1 means over seeds for the main OLMo-7B checkpoints. GSM8K is omitted because the task is scored by numeric exact match rather than answer-token F1.}}
+\end{{table}}
+
+\subsection{{Bare-format OOD rerun}}
+The format-matched bare rerun wraps the task content in \texttt{{<question>...</question>}} and lets the checkpoint emit its learned answer format. The 30-row main OLMo-7B slice is complete. Compared with the answer-only OOD run, NL remains much stronger on GSM8K, while logic remains stronger on context-provided QA.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(main_cot_bare_rows, [
+    ("template", "template"),
+    ("train_max", "train max"),
+    ("n", "n"),
+    ("gsm8k_em", "GSM8K EM"),
+    ("hotpot_em", "Hotpot EM"),
+    ("twowiki_em", "2Wiki EM"),
+    ("musique_em", "MuSiQue EM"),
+], bold_columns={"gsm8k_em", "hotpot_em", "twowiki_em", "musique_em"})}
+\caption{{Bare-format OOD exact-match means for the completed main OLMo-7B slice.}}
+\end{{table}}
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(main_cot_bare_rows, [
+    ("template", "template"),
+    ("train_max", "train max"),
+    ("n", "n"),
+    ("hotpot_f1", "Hotpot F1"),
+    ("twowiki_f1", "2Wiki F1"),
+    ("musique_f1", "MuSiQue F1"),
+], bold_columns={"hotpot_f1", "twowiki_f1", "musique_f1"})}
+\caption{{Bare-format OOD F1 means for the completed main OLMo-7B slice.}}
+\end{{table}}
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(olmo32_cot_bare_gsm8k, [
+    ("template", "template"),
+    ("train_max", "train max"),
+    ("seed", "seed"),
+    ("gsm8k_em", "GSM8K EM"),
+    ("gsm8k_tag", "GSM8K tag"),
+], bold_columns={"gsm8k_em", "gsm8k_tag"})}
+\caption{{OLMo-2-32B bare-format GSM8K rerun. Full LongBench is intentionally skipped for this model because its configured context limit is 4096.}}
 \end{{table}}
 
 \section{{Main OLMo-7B HFSA result}}
@@ -893,6 +1752,15 @@ The broad OOD run has completed the 30-row main OLMo grid. This is downstream tr
 The checkpoint figures below compare each matched logic/NL train-depth pair separately and report only @16.
 {main_ckpt_note}
 {olmo_ckpt_figures}
+The next two figures slice the train-1-to-25 checkpoint curve by eval-depth bands. The intermediate protocol contains depths 30, 40, and 50, but not depths 35 or 45, so exact 30--35 or 36--40 curves would require an additional focused checkpoint eval.
+\begin{{figure}}[H]\centering
+\includegraphics[width=\linewidth]{{figures/olmo7b_checkpoint_train1to25_depthbands_correct16.pdf}}
+\caption{{Seed-3407 train-1-to-25 optimizer-step curves for correct@16 over available eval-depth bands.}}
+\end{{figure}}
+\begin{{figure}}[H]\centering
+\includegraphics[width=\linewidth]{{figures/olmo7b_checkpoint_train1to25_depthbands_joint16.pdf}}
+\caption{{Seed-3407 train-1-to-25 optimizer-step curves for joint correct+valid@16 over available eval-depth bands.}}
+\end{{figure}}
 
 \section{{Tiny Llama scratch-pretraining result}}
 These small random-init models were not expected to solve depth-50 extrapolation. The useful signal is that logic is consistently stronger than matched NL on answer-only OOD pass@8, especially at 200M, while strict joint validity remains zero.
@@ -912,6 +1780,28 @@ These small random-init models were not expected to solve depth-50 extrapolation
 \caption{{Tiny Llama final sparse pass@8 metrics.}}
 \end{{table}}
 
+\subsection{{Tiny Llama 100k-step rerun}}
+The 100k-step rerun is complete for all three seeds, sizes, and templates. It does not solve strict depth-50 extrapolation; the notable change is that the 100M NL model improves answer-only OOD correct@8 relative to its 20k run, while joint validity remains zero.
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(tiny_100k_rows, [
+    ("size", "size"),
+    ("template", "template"),
+    ("train_correct@8", "train c@8"),
+    ("ood_correct@8", "OOD c@8"),
+    ("hard_tail_correct@8", "hard c@8"),
+    ("depth50_correct@8", "d50 c@8"),
+    ("ood_joint@8", "OOD joint@8"),
+    ("depth50_joint@8", "d50 joint@8"),
+])}
+\caption{{Tiny Llama 100k-step final sparse pass@8 metrics.}}
+\end{{table}}
+
+Tiny 100k checkpoint pass@k rows available at report generation time: {tiny_100k_ckpt_count}; the completed grid contains checkpoints 20k, 40k, 60k, 80k, and 100k for every size/template/seed.
+{tiny_100k_ckpt_depthband_figures}
+
 The tiny plots separate model sizes and separate answer correctness from joint correct+valid.
 {tiny_band_figures}
 {tiny_depth_figures}
@@ -922,6 +1812,7 @@ The tiny plots separate model sizes and separate answer correctness from joint c
             "The curves below include all available intermediate checkpoint rows plus the final 20k checkpoint.\n"
         )
         tex += "\n" + tiny_ckpt_figures + "\n"
+        tex += "\n" + tiny_ckpt_depthband_figures + "\n"
     else:
         tex += (
             "\nCheckpoint pass@k files for tiny Llama were not present when this report was generated; "
@@ -962,7 +1853,42 @@ The tiny downstream OOD evals completed with the 8192-context fallback. LongBenc
 \caption{{Tiny Llama OOD F1 metrics after strict answer extraction. GSM8K is omitted because it is scored by numeric exact match.}}
 \end{{table}}
 
-\section{{Qwen-2.5-7B partial architecture ablation}}
+\subsection{{Tiny Llama bare-format OOD reruns}}
+Both the 20k and 100k tiny bare-format OOD arrays completed. All strict EM/F1 values remain zero on GSM8K and LongBench; the only movement is answer-tag adherence, mostly in the 200M checkpoints.
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(tiny_cot_bare_ood_summary, [
+    ("size", "size"),
+    ("template", "template"),
+    ("n", "n"),
+    ("gsm8k_em", "GSM8K EM"),
+    ("gsm8k_tag", "GSM8K tag"),
+    ("hotpot_em", "Hotpot EM"),
+    ("twowiki_em", "2Wiki EM"),
+    ("musique_em", "MuSiQue EM"),
+], bold_columns={"gsm8k_em", "gsm8k_tag", "hotpot_em", "twowiki_em", "musique_em"})}
+\caption{{Tiny Llama 20k bare-format OOD exact-match metrics.}}
+\end{{table}}
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(tiny_100k_cot_bare_ood_summary, [
+    ("size", "size"),
+    ("template", "template"),
+    ("n", "n"),
+    ("gsm8k_em", "GSM8K EM"),
+    ("gsm8k_tag", "GSM8K tag"),
+    ("hotpot_em", "Hotpot EM"),
+    ("twowiki_em", "2Wiki EM"),
+    ("musique_em", "MuSiQue EM"),
+], bold_columns={"gsm8k_em", "gsm8k_tag", "hotpot_em", "twowiki_em", "musique_em"})}
+\caption{{Tiny Llama 100k bare-format OOD exact-match metrics.}}
+\end{{table}}
+
+\section{{Qwen-2.5-7B architecture ablation}}
 \begin{{table}}[H]
 \centering
 \small
@@ -975,15 +1901,73 @@ The tiny downstream OOD evals completed with the 8192-context fallback. LongBenc
     ("depth50_correct@16", "d50 c@16"),
     ("depth50_joint@16", "d50 joint@16"),
 ])}
-\caption{{Qwen-2.5-7B sparse eval rows available at report time. Matched NL train-1-to-20/25 rows are still incomplete, so this is not yet a full architecture-ablation conclusion.}}
+\caption{{Qwen-2.5-7B representative sparse eval. This 18-row architecture slice is complete.}}
 \end{{table}}
 \begin{{figure}}[H]\centering
 \includegraphics[width=0.86\linewidth]{{figures/qwen7b_partial_ood_correct_joint.pdf}}
 \caption{{Partial Qwen-2.5-7B OOD correct/joint@16.}}
 \end{{figure}}
 
+\section{{Targeted ablations}}
+Completed ablation results are shown here; active arrays are tracked in the handoff documents. The same-token-budget control keeps the logic-vs-NL comparison favorable to logic on answer correctness but not on joint validity. The shortcut-rate table currently covers shortcut rate 0.5; shortcut rate 0.8 eval rows are still running. Conditioned dual-modality eval is partial and should not be interpreted until all 30 eval rows complete.
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(token_budget_rows, [
+    ("template", "template"),
+    ("steps", "steps"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_joint@16", "OOD joint@16"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_joint@16", "d50 joint@16"),
+])}
+\caption{{Same target-token budget control, train-1-to-25, three seeds.}}
+\end{{table}}
+\begin{{figure}}[H]\centering
+\includegraphics[width=\linewidth]{{figures/ablation_same_target_token_budget_vs_main.pdf}}
+\caption{{Same target-token budget control compared against the main train-1-to-25 logic/NL baselines.}}
+\end{{figure}}
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(shortcut_rows, [
+    ("template", "template"),
+    ("shortcut_rate", "shortcut rate"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_joint@16", "OOD joint@16"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_joint@16", "d50 joint@16"),
+])}
+\caption{{Shortcut-rate ablation results available so far. Eval remains shortcut-neutral.}}
+\end{{table}}
+\begin{{figure}}[H]\centering
+\includegraphics[width=0.9\linewidth]{{figures/ablation_shortcut_rate_vs_main.pdf}}
+\caption{{Shortcut-rate ablation compared with shortcut-neutral main train-1-to-25 baselines.}}
+\end{{figure}}
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(conditioned_rows, [
+    ("train_max", "train max"),
+    ("eval_template", "eval mode"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_joint@16", "OOD joint@16"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_joint@16", "d50 joint@16"),
+], max_rows=20)}
+\caption{{Conditioned dual-modality ablation rows available at report generation time.}}
+\end{{table}}
+
 \section{{Qualitative samples}}
-The companion PDF \texttt{{figures/sample\_generation\_panels.pdf}} contains generated examples with extracted answer, gold answer, correctness, and validity metadata. This is kept as a PDF figure rather than long verbatim text in the main report.
+The companion PDF \texttt{{figures/sample\_generation\_panels.pdf}} contains synthetic generated examples with extracted answer, gold answer, correctness, and validity metadata. The following samples are from the completed bare-format OOD rerun for OLMo-7B train-1-to-25 seed 3407.
+
+{latex_ood_examples(cot_bare_examples)}
 
 \section{{Artifacts}}
 CSV tables live under \texttt{{tables/}} and all plots are emitted as both PDF and PNG under \texttt{{figures/}}. This machine currently lacks \texttt{{pdflatex}}/\texttt{{latexmk}}, so the LaTeX source is generated but not compiled here.
@@ -998,16 +1982,31 @@ def main() -> None:
     TABLE_DIR.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False})
 
-    main_records, main_ckpt, tiny_records, tiny_ckpt, qwen_records = load_records()
-    all_summary = summarize_group(main_records + tiny_records + qwen_records, (8, 16))
+    main_records, main_ckpt, tiny_records, tiny_ckpt, tiny_100k_records, tiny_100k_ckpt, qwen_records = load_records()
+    all_summary = summarize_group(main_records + tiny_records + tiny_100k_records + qwen_records, (8, 16))
     main_summary = summarize_group(main_records, (8, 16))
     tiny_summary = summarize_group(tiny_records, (8,))
+    tiny_100k_summary = summarize_group(tiny_100k_records, (8,))
     qwen_summary = summarize_group(qwen_records, (16,))
     main_ood_summary = load_main_ood_summary()
     tiny_ood_summary = load_tiny_ood_summary()
+    main_cot_bare_ood_summary = load_main_cot_bare_ood_summary()
+    tiny_cot_bare_ood_summary = load_tiny_cot_bare_ood_summary(
+        "ood_tiny_llama_cot_bare_2026-05-27",
+        TINY_OOD_RE,
+        "tiny_llama_cot_bare_ood",
+    )
+    tiny_100k_cot_bare_ood_summary = load_tiny_cot_bare_ood_summary(
+        "ood_tiny_llama_100k_cot_bare_2026-05-27",
+        TINY_100K_OOD_RE,
+        "tiny_llama_100k_cot_bare_ood",
+    )
+    olmo32_cot_bare_gsm8k = load_olmo32_cot_bare_gsm8k()
+    ablation_summaries = load_ablation_summaries()
 
     write_csv(TABLE_DIR / "main_olmo7b_summary.csv", main_summary.to_dict("records"))
     write_csv(TABLE_DIR / "tiny_llama_final_summary.csv", tiny_summary.to_dict("records"))
+    write_csv(TABLE_DIR / "tiny_llama_100k_final_summary.csv", tiny_100k_summary.to_dict("records"))
     write_csv(TABLE_DIR / "qwen7b_partial_summary.csv", qwen_summary.to_dict("records"))
     write_csv(TABLE_DIR / "all_group_summary.csv", all_summary.to_dict("records"))
     write_csv(TABLE_DIR / "main_olmo7b_ood_lmeval_summary.csv", main_ood_summary.to_dict("records"))
@@ -1022,26 +2021,45 @@ def main() -> None:
     plot_depth_grid(main_depth, "olmo7b_depth_correct16", "correct", 16)
     plot_depth_grid(main_depth, "olmo7b_depth_joint16", "joint", 16)
     plot_main_checkpoint_curves(main_ckpt)
+    plot_main_checkpoint_depth_bands(main_ckpt)
     plot_tiny_final(tiny_records)
     plot_tiny_checkpoint_curves(tiny_records, tiny_ckpt)
+    plot_tiny_checkpoint_depth_bands(tiny_records, tiny_ckpt, prefix="tiny_llama")
+    plot_tiny_checkpoint_depth_bands(tiny_100k_records, tiny_100k_ckpt, prefix="tiny_llama_100k")
     plot_qwen_partial(qwen_records)
+    plot_token_budget_comparison(main_summary, ablation_summaries.get("token_budget", pd.DataFrame()))
+    plot_shortcut_comparison(main_summary, ablation_summaries.get("shortcut", pd.DataFrame()))
 
     samples = build_sample_panels()
     plot_sample_panels(samples)
+    cot_bare_examples = build_cot_bare_generation_examples()
     write_report(
         main_summary,
         tiny_summary,
+        tiny_100k_summary,
         qwen_summary,
         main_ood_summary,
         tiny_ood_summary,
+        main_cot_bare_ood_summary,
+        tiny_cot_bare_ood_summary,
+        tiny_100k_cot_bare_ood_summary,
+        olmo32_cot_bare_gsm8k,
+        ablation_summaries,
+        cot_bare_examples,
         main_checkpoint_note(main_ckpt),
         len(tiny_ckpt),
+        len(tiny_100k_ckpt),
     )
 
     print(f"wrote report artifacts to {OUT_ROOT}")
     print(f"main records: {len(main_records)}, main checkpoints: {len(main_ckpt)}")
     print(f"main OOD rows: {int(main_ood_summary['n'].sum()) if not main_ood_summary.empty else 0}")
-    print(f"tiny final: {len(tiny_records)}, tiny checkpoints: {len(tiny_ckpt)}, qwen: {len(qwen_records)}")
+    print(f"main bare OOD rows: {int(main_cot_bare_ood_summary['n'].sum()) if not main_cot_bare_ood_summary.empty else 0}")
+    print(
+        f"tiny final: {len(tiny_records)}, tiny checkpoints: {len(tiny_ckpt)}, "
+        f"tiny 100k final: {len(tiny_100k_records)}, tiny 100k checkpoints: {len(tiny_100k_ckpt)}, "
+        f"qwen: {len(qwen_records)}"
+    )
 
 
 if __name__ == "__main__":
