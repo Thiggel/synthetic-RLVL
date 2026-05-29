@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=12
 #SBATCH --time=24:00:00
-#SBATCH --array=0-3%2
+#SBATCH --array=0-5%2
 #SBATCH --output=logs/%x_%A_%a.out
 #SBATCH --error=logs/%x_%A_%a.err
 
@@ -20,7 +20,7 @@ export VIRTUAL_ENV="${VENV_PATH}"
 export PATH="${VENV_PATH}/bin:${PATH}"
 hash -r 2>/dev/null || true
 
-KINDS=(maze_navigation attribute_constraints)
+KINDS=(maze_navigation attribute_constraints official_igsm)
 TEMPLATES=(logic nl_exact)
 IDX="${SLURM_ARRAY_TASK_ID}"
 KIND="${KINDS[$((IDX / 2))]}"
@@ -47,6 +47,11 @@ DEFAULT_PASSK_VLLM_MAX_MODEL_LEN=16384
 if [[ "${KIND}" == "maze_navigation" ]]; then
   DEFAULT_PASSK_BATCH_SIZE=64
   DEFAULT_PASSK_VLLM_MAX_MODEL_LEN=32768
+fi
+if [[ "${KIND}" == "official_igsm" ]]; then
+  DEFAULT_PASSK_BATCH_SIZE=64
+  DEFAULT_PASSK_VLLM_MAX_MODEL_LEN=32768
+  DEFAULT_PASSK_MAX_NEW_TOKENS=8192
 fi
 PASSK_MAX_NEW_TOKENS_VALUE="${PASSK_MAX_NEW_TOKENS:-${DEFAULT_PASSK_MAX_NEW_TOKENS}}"
 PASSK_BATCH_SIZE_VALUE="${PASSK_BATCH_SIZE:-${DEFAULT_PASSK_BATCH_SIZE}}"

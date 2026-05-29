@@ -27,6 +27,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--difficulty", choices=["standard", "hard_v1", "hard_v2", "hard_v3", "hard_v5", "hard_fsa", "hard_fsa_schema"], default="standard")
     parser.add_argument("--train-shortcut-rate", type=float, default=0.0)
     parser.add_argument("--val-shortcut-rate", type=float, default=0.0)
+    parser.add_argument("--shortcut-kind", choices=["schema", "position", "initial_marker"], default="schema")
     parser.add_argument("--branching-factor", type=int, default=None)
     parser.add_argument("--decoy-chains", type=int, default=None)
     parser.add_argument("--near-miss-ratio", type=float, default=None)
@@ -67,6 +68,7 @@ def main() -> None:
         difficulty=args.difficulty,
         train_shortcut_rate=args.train_shortcut_rate,
         val_shortcut_rate=args.val_shortcut_rate,
+        shortcut_kind=args.shortcut_kind,
         branching_factor=args.branching_factor,
         decoy_chains=args.decoy_chains,
         near_miss_ratio=args.near_miss_ratio,

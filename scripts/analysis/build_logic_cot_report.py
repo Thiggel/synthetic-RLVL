@@ -41,6 +41,15 @@ TINY_100K_CKPT_RE = re.compile(
 QWEN_RE = re.compile(
     r"sft_hfsa_modelablate_qwen2p5_7b_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
 )
+QWEN15_RE = re.compile(
+    r"sft_hfsa_modelablate_qwen2p5_1p5b_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
+)
+GEMMA_RE = re.compile(
+    r"sft_hfsa_modelablate_gemma3_4b_pt_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
+)
+OLMO32_PASSK_RE = re.compile(
+    r"sft_hfsa_modelablate_olmo2_32b_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
+)
 MAIN_OOD_RE = re.compile(r"sft_hfsa_depth_scaling_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)$")
 TINY_OOD_RE = re.compile(r"pretrain_hfsa_llama3_(50m|100m|200m)_(logic|nl_exact)_train1to10_seed(\d+)$")
 TINY_100K_OOD_RE = re.compile(
@@ -51,10 +60,25 @@ TOKBUDGET_RE = re.compile(
     r"sft_hfsa_same_target_tokens_(logic|nl_exact)_train1to25_(\d+)steps_seed(\d+)_passk\.json$"
 )
 SHORTCUT_RE = re.compile(
-    r"sft_hfsa_shortcut_rate_(logic|nl_exact)_shortcut(0p5|0p8)_train1to25_10k_seed(\d+)_passk\.json$"
+    r"sft_hfsa_shortcut_rate_(logic|nl_exact)_shortcut(0p3|0p5|0p8)_train1to25_10k_seed(\d+)_passk\.json$"
+)
+SHORTCUT_KIND_RE = re.compile(
+    r"sft_hfsa_shortcut_(position|initial_marker)_(logic|nl_exact)_shortcut(0p5|0p8)_train1to25_10k_seed(\d+)_passk\.json$"
 )
 CONDITIONED_RE = re.compile(
     r"sft_hfsa_conditioned_dual_train1to(\d+)_10k_seed(\d+)_(conditioned_logic|conditioned_nl)_passk\.json$"
+)
+CONDITIONED_50K_RE = re.compile(
+    r"sft_hfsa_conditioned_dual_train1to(\d+)_50k_seed(\d+)_(conditioned_logic|conditioned_nl)_passk\.json$"
+)
+CONDITIONED_50K_CKPT_RE = re.compile(
+    r"sft_hfsa_conditioned_dual_train1to25_50k_seed(\d+)_(conditioned_logic|conditioned_nl)_checkpoint-(\d+)_passk\.json$"
+)
+SYMBOL_PADDED_RE = re.compile(
+    r"sft_hfsa_symbol_padded_(logic_symbol_padded)_train1to25_10k_seed(\d+)_passk\.json$"
+)
+WORDIFIED_RE = re.compile(
+    r"sft_hfsa_wordified_(logic_wordified)_train1to25_10k_seed(\d+)_passk\.json$"
 )
 
 DEPTHS_FINAL = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 35, 40, 45, 50]
@@ -69,6 +93,27 @@ TINY_CKPT_DEPTH_BANDS = [
 TEMPLATE_LABEL = {"logic": "Logic", "nl_exact": "NL exact"}
 COLORS = {"logic": "#1f77b4", "nl_exact": "#d62728"}
 SIZE_ORDER = {"50m": 50, "100m": 100, "200m": 200}
+MODEL_LABELS = {
+    "olmo7b": "OLMo-7B",
+    "qwen7b": "Qwen-2.5-7B",
+    "qwen1p5b": "Qwen-2.5-1.5B",
+    "gemma4b": "Gemma-3-4B",
+    "olmo32b_shortctx": "OLMo-2-32B shortctx",
+}
+MODEL_ORDER = {
+    "OLMo-7B": 0,
+    "Qwen-2.5-1.5B": 1,
+    "Qwen-2.5-7B": 2,
+    "Gemma-3-4B": 3,
+    "OLMo-2-32B shortctx": 4,
+}
+MODEL_COLORS = {
+    "OLMo-7B": "#1f77b4",
+    "Qwen-2.5-1.5B": "#54a24b",
+    "Qwen-2.5-7B": "#f58518",
+    "Gemma-3-4B": "#b279a2",
+    "OLMo-2-32B shortctx": "#4c78a8",
+}
 
 
 @dataclass(frozen=True)
@@ -84,11 +129,19 @@ class Record:
 
 
 def joint_metric(template: str) -> str:
-    return "citation_free_joint_pass" if template == "logic" else "nl_logic_joint_pass"
+    return (
+        "citation_free_joint_pass"
+        if template in {"logic", "conditioned_logic", "logic_symbol_padded", "logic_wordified"}
+        else "nl_logic_joint_pass"
+    )
 
 
 def valid_metric(template: str) -> str:
-    return "citation_free_valid_pass" if template == "logic" else "nl_logic_citation_free_valid_pass"
+    return (
+        "citation_free_valid_pass"
+        if template in {"logic", "conditioned_logic", "logic_symbol_padded", "logic_wordified"}
+        else "nl_logic_citation_free_valid_pass"
+    )
 
 
 def read_payload(path: Path) -> dict:
@@ -240,6 +293,23 @@ def load_records() -> tuple[
     return main, main_ckpt, tiny, tiny_ckpt, tiny_100k, tiny_100k_ckpt, qwen
 
 
+def load_extra_architecture_records() -> list[Record]:
+    records: list[Record] = []
+    specs = [
+        (PASSK_ROOT / "hfsa_model_ablation_qwen2p5_1p5b_sparse", QWEN15_RE, "qwen1p5b"),
+        (PASSK_ROOT / "hfsa_model_ablation_gemma3_4b_pt_sparse", GEMMA_RE, "gemma4b"),
+        (PASSK_ROOT / "hfsa_model_ablation_olmo2_32b_shortctx_sparse", OLMO32_PASSK_RE, "olmo32b_shortctx"),
+    ]
+    for root, regex, source in specs:
+        for path in sorted(root.glob("*_passk.json")):
+            if match := regex.match(path.name):
+                payload = read_payload(path)
+                records.append(
+                    Record(source, path, match.group(1), int(match.group(2)), int(match.group(3)), payload["metrics"])
+                )
+    return records
+
+
 def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if not rows:
@@ -286,6 +356,48 @@ def summarize_group(records: list[Record], ks: tuple[int, ...]) -> pd.DataFrame:
     df = pd.DataFrame(rows)
     if not df.empty:
         df.to_csv(TABLE_DIR / "group_summary_all.csv", index=False, lineterminator="\n")
+    return df
+
+
+def summarize_architecture(records: list[Record]) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    groups: dict[tuple[str, str, int], list[Record]] = defaultdict(list)
+    for record in records:
+        groups[(record.source, record.template, record.train_max)].append(record)
+    for (source, template, train_max), items in sorted(
+        groups.items(), key=lambda x: (MODEL_ORDER.get(MODEL_LABELS.get(x[0][0], x[0][0]), 99), x[0][1], x[0][2])
+    ):
+        row: dict[str, object] = {
+            "model": MODEL_LABELS.get(source, source),
+            "template": template,
+            "train_max": train_max,
+            "n": len({item.seed for item in items}),
+        }
+        for col, values in {
+            "ood_correct@16": [band_metric(item, "ood", "correct_pass", 16) for item in items],
+            "ood_joint@16": [band_metric(item, "ood", joint_metric(template), 16) for item in items],
+            "depth30_50_correct@16": [
+                depth_band_value(item, [30, 35, 40, 45, 50], "correct", 16) for item in items
+            ],
+            "depth30_50_joint@16": [
+                depth_band_value(item, [30, 35, 40, 45, 50], "joint", 16) for item in items
+            ],
+            "depth50_correct@16": [step_metric(item, 50, "correct_pass", 16) for item in items],
+            "depth50_joint@16": [step_metric(item, 50, joint_metric(template), 16) for item in items],
+            "shortctx_correct@16": [
+                depth_band_value(item, [1, 2, 5, 10, 12, 15], "correct", 16) for item in items
+            ],
+            "shortctx_joint@16": [
+                depth_band_value(item, [1, 2, 5, 10, 12, 15], "joint", 16) for item in items
+            ],
+        }.items():
+            avg, std, _ = avg_std(values)
+            row[col] = avg
+            row[f"{col}_std"] = std
+        rows.append(row)
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        write_csv(TABLE_DIR / "architecture_ablation_summary.csv", df.to_dict("records"))
     return df
 
 
@@ -378,6 +490,133 @@ def plot_depth_grid(depth_df: pd.DataFrame, name: str, metric_name: str, k: int)
         ax.set_xlabel("eval depth")
     axes[0].legend(frameon=False, loc="lower left")
     save(fig, name)
+
+
+def load_symbol_padded_records() -> list[Record]:
+    records: list[Record] = []
+    root = PASSK_ROOT / "hfsa_logic_symbol_padded_20260528"
+    if not root.exists():
+        return records
+    for path in sorted(root.glob("*_passk.json")):
+        match = SYMBOL_PADDED_RE.match(path.name)
+        if not match:
+            continue
+        payload = read_payload(path)
+        records.append(
+            Record(
+                "logic_symbol_padded",
+                path,
+                match.group(1),
+                25,
+                int(match.group(2)),
+                payload["metrics"],
+            )
+        )
+    return records
+
+
+def load_wordified_records() -> list[Record]:
+    records: list[Record] = []
+    root = PASSK_ROOT / "hfsa_logic_wordified_20260529"
+    if not root.exists():
+        return records
+    for path in sorted(root.glob("*_passk.json")):
+        match = WORDIFIED_RE.match(path.name)
+        if not match:
+            continue
+        payload = read_payload(path)
+        records.append(
+            Record(
+                "logic_wordified",
+                path,
+                match.group(1),
+                25,
+                int(match.group(2)),
+                payload["metrics"],
+            )
+        )
+    return records
+
+
+def symbol_padded_depth_dataframe(
+    main_records: list[Record],
+    symbol_records: list[Record],
+    wordified_records: list[Record] | None = None,
+) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    conditions: list[tuple[str, Record]] = []
+    for record in main_records:
+        if record.train_max == 25 and record.template in {"logic", "nl_exact"}:
+            label = "compact logic" if record.template == "logic" else "NL exact"
+            conditions.append((label, record))
+    for record in symbol_records:
+        conditions.append(("symbol-padded logic", record))
+    for record in wordified_records or []:
+        conditions.append(("wordified logic", record))
+
+    for condition, record in conditions:
+        for depth in DEPTHS_FINAL:
+            rows.append(
+                {
+                    "condition": condition,
+                    "template": record.template,
+                    "seed": record.seed,
+                    "train_max": record.train_max,
+                    "depth": depth,
+                    "correct@16": step_metric(record, depth, "correct_pass", 16),
+                    "joint@16": step_metric(record, depth, joint_metric(record.template), 16),
+                }
+            )
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        write_csv(TABLE_DIR / "logic_symbol_padded_depth_curve_vs_main_train25.csv", df.to_dict("records"))
+        write_csv(TABLE_DIR / "logic_length_control_depth_curve_vs_main_train25.csv", df.to_dict("records"))
+    return df
+
+
+def plot_symbol_padded_depth_comparison(
+    main_records: list[Record],
+    symbol_records: list[Record],
+    wordified_records: list[Record] | None = None,
+) -> None:
+    df = symbol_padded_depth_dataframe(main_records, symbol_records, wordified_records)
+    if df.empty:
+        return
+    grouped = df.groupby(["condition", "depth"], as_index=False)[["correct@16", "joint@16"]].mean()
+    styles = {
+        "compact logic": ("#1f77b4", "-"),
+        "symbol-padded logic": ("#54a24b", "--"),
+        "wordified logic": ("#9467bd", "-."),
+        "NL exact": ("#d62728", "-"),
+    }
+    fig, axes = plt.subplots(1, 2, figsize=(10.5, 3.7), sharey=True)
+    for ax, (metric_name, ylabel) in zip(
+        axes,
+        [("correct@16", "correct@16"), ("joint@16", "joint correct+valid@16")],
+        strict=True,
+    ):
+        for condition, (color, linestyle) in styles.items():
+            sub = grouped[grouped["condition"] == condition].sort_values("depth")
+            if sub.empty:
+                continue
+            ax.plot(
+                sub["depth"],
+                sub[metric_name],
+                marker="o",
+                markersize=3,
+                linewidth=1.6,
+                color=color,
+                linestyle=linestyle,
+                label=condition,
+            )
+        ax.axvline(25, color="black", linestyle=":", linewidth=1)
+        style_axes(ax, ylabel)
+        ax.set_xlabel("eval depth")
+    axes[0].legend(frameon=False, loc="lower left")
+    fig.tight_layout()
+    fig.savefig(FIG_DIR / "ablation_symbol_padded_depth_curve_train1to25.pdf")
+    fig.savefig(FIG_DIR / "ablation_symbol_padded_depth_curve_train1to25.png", dpi=180)
+    save(fig, "ablation_logic_length_control_depth_curve_train1to25")
 
 
 def plot_main_checkpoint_curves(records: list[Record]) -> None:
@@ -610,6 +849,36 @@ def plot_qwen_partial(qwen: list[Record]) -> None:
     save(fig, "qwen7b_partial_ood_correct_joint")
 
 
+def plot_architecture_comparison(architecture_summary: pd.DataFrame) -> None:
+    if architecture_summary.empty:
+        return
+    plot_specs = [
+        ("ood_correct@16", "OOD correct@16", "architecture_ood_correct16_by_train_depth"),
+        ("depth30_50_correct@16", "eval-depth 30-50 correct@16", "architecture_depth30_50_correct16_by_train_depth"),
+    ]
+    for col, ylabel, name in plot_specs:
+        if col not in architecture_summary:
+            continue
+        fig, axes = plt.subplots(1, 2, figsize=(10.5, 3.8), sharey=True)
+        for ax, template in zip(axes, ["logic", "nl_exact"], strict=True):
+            sub_template = architecture_summary[architecture_summary["template"] == template]
+            for model in sorted(sub_template["model"].unique(), key=lambda m: MODEL_ORDER.get(m, 99)):
+                sub = sub_template[sub_template["model"] == model].dropna(subset=[col]).sort_values("train_max")
+                if sub.empty:
+                    continue
+                ax.plot(
+                    sub["train_max"],
+                    sub[col],
+                    marker="o",
+                    color=MODEL_COLORS.get(model, "#666666"),
+                    label=model,
+                )
+            style_axes(ax, ylabel, TEMPLATE_LABEL.get(template, template))
+            ax.set_xlabel("max train depth")
+        axes[0].legend(frameon=False, fontsize=8)
+        save(fig, name)
+
+
 def plot_token_budget_comparison(main_summary: pd.DataFrame, token_budget_summary: pd.DataFrame) -> None:
     if main_summary.empty or token_budget_summary.empty:
         return
@@ -707,6 +976,354 @@ def plot_shortcut_comparison(main_summary: pd.DataFrame, shortcut_summary: pd.Da
         ax.set_xlabel("train shortcut rate")
     axes[0, 0].legend(frameon=False)
     save(fig, "ablation_shortcut_rate_vs_main")
+
+
+def build_shortcut_comparison_table(main_summary: pd.DataFrame, shortcut_summary: pd.DataFrame) -> pd.DataFrame:
+    if main_summary.empty:
+        return pd.DataFrame()
+    rows: list[dict[str, object]] = []
+    metric_cols = ["ood_correct@16", "ood_joint@16", "depth50_correct@16", "depth50_joint@16"]
+    baseline = main_summary[(main_summary["size"] == "") & (main_summary["train_max"] == 25)]
+    for _, row in baseline.sort_values("template").iterrows():
+        item: dict[str, object] = {"template": row["template"], "shortcut_rate": 0.0, "n": row.get("n")}
+        for col in metric_cols:
+            item[col] = row.get(col)
+        rows.append(item)
+    if not shortcut_summary.empty:
+        for _, row in shortcut_summary.sort_values(["template", "shortcut_rate"]).iterrows():
+            item = {
+                "template": row["template"],
+                "shortcut_rate": float(str(row["shortcut_rate"]).replace("0p", "0.")),
+                "n": row.get("n"),
+            }
+            for col in metric_cols:
+                item[col] = row.get(col)
+            rows.append(item)
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        df = df.sort_values(["template", "shortcut_rate"])
+        write_csv(TABLE_DIR / "shortcut_rate_ablation_vs_main.csv", df.to_dict("records"))
+    return df
+
+
+def build_conditioned_comparison_table(main_summary: pd.DataFrame, conditioned_summary: pd.DataFrame) -> pd.DataFrame:
+    if main_summary.empty and conditioned_summary.empty:
+        return pd.DataFrame()
+    metric_cols = ["ood_correct@16", "ood_joint@16", "depth50_correct@16", "depth50_joint@16"]
+    rows: list[dict[str, object]] = []
+    main_rows = main_summary[
+        (main_summary.get("size", "") == "")
+        & (main_summary.get("template").isin(["logic", "nl_exact"]))
+        & (main_summary.get("train_max").isin([5, 10, 15, 20, 25]))
+    ]
+    for _, row in main_rows.iterrows():
+        template = str(row["template"])
+        item: dict[str, object] = {
+            "train_max": int(row["train_max"]),
+            "condition": "main logic" if template == "logic" else "main NL exact",
+            "modality": "logic" if template == "logic" else "nl",
+            "n": row.get("n"),
+        }
+        for col in metric_cols:
+            item[col] = row.get(col)
+        rows.append(item)
+    if not conditioned_summary.empty:
+        for _, row in conditioned_summary.iterrows():
+            eval_template = str(row["eval_template"])
+            item = {
+                "train_max": int(row["train_max"]),
+                "condition": "conditioned logic" if eval_template == "conditioned_logic" else "conditioned NL",
+                "modality": "logic" if eval_template == "conditioned_logic" else "nl",
+                "n": row.get("n"),
+            }
+            for col in metric_cols:
+                item[col] = row.get(col)
+            rows.append(item)
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        order = {"main logic": 0, "conditioned logic": 1, "main NL exact": 2, "conditioned NL": 3}
+        df["condition_order"] = df["condition"].map(order)
+        df = df.sort_values(["train_max", "condition_order"]).drop(columns=["condition_order"])
+        write_csv(TABLE_DIR / "conditioned_dual_vs_main_by_train_depth.csv", df.to_dict("records"))
+    return df
+
+
+def plot_conditioned_comparison(conditioned_comparison: pd.DataFrame) -> None:
+    if conditioned_comparison.empty:
+        return
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_joint@16", "OOD joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+        ("depth50_joint@16", "depth-50 joint@16"),
+    ]
+    styles = {
+        "main logic": ("#1f77b4", "-"),
+        "conditioned logic": ("#1f77b4", "--"),
+        "main NL exact": ("#d62728", "-"),
+        "conditioned NL": ("#d62728", "--"),
+    }
+    fig, axes = plt.subplots(2, 2, figsize=(10.2, 6.5), sharex=True, sharey=True)
+    for ax, (col, label) in zip(axes.ravel(), metrics, strict=True):
+        for condition, (color, linestyle) in styles.items():
+            sub = conditioned_comparison[conditioned_comparison["condition"] == condition].sort_values("train_max")
+            if sub.empty:
+                continue
+            ax.plot(
+                sub["train_max"],
+                sub[col],
+                marker="o",
+                color=color,
+                linestyle=linestyle,
+                label=condition,
+            )
+        style_axes(ax, label)
+        ax.set_xlabel("max train depth")
+    axes[0, 0].legend(frameon=False, fontsize=8)
+    save(fig, "ablation_conditioned_dual_vs_main_by_train_depth")
+
+
+def load_conditioned_50k_checkpoint_summary() -> pd.DataFrame:
+    root = PASSK_ROOT / "hfsa_conditioned_dual_50k_intermediate_20260529"
+    rows: list[dict[str, object]] = []
+    if not root.exists():
+        return pd.DataFrame()
+    for path in sorted(root.glob("*_passk.json")):
+        match = CONDITIONED_50K_CKPT_RE.match(path.name)
+        if not match:
+            continue
+        seed = int(match.group(1))
+        eval_template = match.group(2)
+        checkpoint = int(match.group(3))
+        payload = read_payload(path)
+        joint = _joint_key(eval_template)
+        rows.append(
+            {
+                "seed": seed,
+                "eval_template": eval_template,
+                "checkpoint": checkpoint,
+                "ood_correct@16": payload["metrics"].get("synthetic_sampled/band_ood/correct_pass@16"),
+                "ood_joint@16": payload["metrics"].get(f"synthetic_sampled/band_ood/{joint}@16"),
+                "depth50_correct@16": payload["metrics"].get("synthetic_sampled/step_50/correct_pass@16"),
+                "depth50_joint@16": payload["metrics"].get(f"synthetic_sampled/step_50/{joint}@16"),
+            }
+        )
+    if rows:
+        write_csv(TABLE_DIR / "conditioned_dual_50k_checkpoint_by_seed.csv", rows)
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df
+    metric_cols = ["ood_correct@16", "ood_joint@16", "depth50_correct@16", "depth50_joint@16"]
+    summary = df.groupby(["eval_template", "checkpoint"], as_index=False).agg(
+        n=("seed", "nunique"),
+        **{col: (col, "mean") for col in metric_cols},
+    ).sort_values(["eval_template", "checkpoint"])
+    write_csv(TABLE_DIR / "conditioned_dual_50k_checkpoint_summary.csv", summary.to_dict("records"))
+    return summary
+
+
+def plot_conditioned_50k_convergence(summary: pd.DataFrame) -> None:
+    if summary.empty:
+        return
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_joint@16", "OOD joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+        ("depth50_joint@16", "depth-50 joint@16"),
+    ]
+    styles = {
+        "conditioned_logic": ("#1f77b4", "conditioned logic"),
+        "conditioned_nl": ("#d62728", "conditioned NL"),
+    }
+    fig, axes = plt.subplots(2, 2, figsize=(10.2, 6.4), sharex=True, sharey=True)
+    for ax, (col, label) in zip(axes.ravel(), metrics, strict=True):
+        for eval_template, (color, display) in styles.items():
+            sub = summary[summary["eval_template"] == eval_template].dropna(subset=[col]).sort_values("checkpoint")
+            if sub.empty:
+                continue
+            ax.plot(sub["checkpoint"], sub[col], marker="o", color=color, label=display)
+        style_axes(ax, label)
+        ax.set_xlabel("optimizer step")
+    axes[0, 0].legend(frameon=False, fontsize=8)
+    save(fig, "ablation_conditioned_dual_50k_convergence_train1to25")
+
+
+def build_token_budget_comparison_table(main_summary: pd.DataFrame, token_budget_summary: pd.DataFrame) -> pd.DataFrame:
+    if main_summary.empty and token_budget_summary.empty:
+        return pd.DataFrame()
+    metrics = ["ood_correct@16", "ood_joint@16", "depth50_correct@16", "depth50_joint@16"]
+    baseline = main_summary[
+        (main_summary.get("size", "") == "")
+        & (main_summary.get("template") == "logic")
+        & (main_summary.get("train_max") == 25)
+    ]
+    baseline_values = baseline.iloc[0].to_dict() if not baseline.empty else {}
+    rows: list[dict[str, object]] = []
+
+    main_pair = main_summary[(main_summary.get("size", "") == "") & (main_summary.get("train_max") == 25)]
+    for _, row in main_pair.sort_values("template").iterrows():
+        item: dict[str, object] = {
+            "condition": f"main {row['template']}",
+            "steps": 10000,
+            "n": row.get("n"),
+        }
+        for col in metrics:
+            value = row.get(col)
+            item[col] = value
+            base = baseline_values.get(col)
+            item[f"delta_{col}"] = value - base if isinstance(value, Number) and isinstance(base, Number) else None
+        rows.append(item)
+
+    for _, row in token_budget_summary.sort_values(["template", "steps"]).iterrows():
+        item = {
+            "condition": f"same-token {row['template']}",
+            "steps": row.get("steps"),
+            "n": row.get("n"),
+        }
+        for col in metrics:
+            value = row.get(col)
+            item[col] = value
+            base = baseline_values.get(col)
+            item[f"delta_{col}"] = value - base if isinstance(value, Number) and isinstance(base, Number) else None
+        rows.append(item)
+
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        write_csv(TABLE_DIR / "same_target_token_budget_vs_main_logic.csv", df.to_dict("records"))
+    return df
+
+
+def build_token_budget_exposure_table() -> pd.DataFrame:
+    logic_target_ratio_audit = 1038
+    nl_target_ratio_audit = 1454
+    logic_total_report_audit = 2587
+    nl_total_report_audit = 3008
+    nl_target_matched_steps = 7140
+    nl_total_matched_steps = round(10000 * logic_total_report_audit / nl_total_report_audit)
+    rows = [
+        {
+            "condition": "main logic baseline",
+            "status": "result exists",
+            "steps": 10000,
+            "target_tok_per_ex": logic_target_ratio_audit,
+            "total_tok_per_ex": logic_total_report_audit,
+        },
+        {
+            "condition": "main NL baseline",
+            "status": "result exists",
+            "steps": 10000,
+            "target_tok_per_ex": nl_target_ratio_audit,
+            "total_tok_per_ex": nl_total_report_audit,
+        },
+        {
+            "condition": "same-target logic control",
+            "status": "result exists",
+            "steps": 10000,
+            "target_tok_per_ex": logic_target_ratio_audit,
+            "total_tok_per_ex": logic_total_report_audit,
+        },
+        {
+            "condition": "same-target NL",
+            "status": "result exists",
+            "steps": nl_target_matched_steps,
+            "target_tok_per_ex": nl_target_ratio_audit,
+            "total_tok_per_ex": nl_total_report_audit,
+        },
+        {
+            "condition": "total-token NL match",
+            "status": "not run",
+            "steps": nl_total_matched_steps,
+            "target_tok_per_ex": nl_target_ratio_audit,
+            "total_tok_per_ex": nl_total_report_audit,
+        },
+    ]
+    for row in rows:
+        row["target_exposure_vs_logic"] = row["steps"] * row["target_tok_per_ex"] / (10000 * logic_target_ratio_audit)
+        row["total_exposure_vs_logic"] = row["steps"] * row["total_tok_per_ex"] / (10000 * logic_total_report_audit)
+    df = pd.DataFrame(rows)
+    write_csv(TABLE_DIR / "same_token_budget_exposure_accounting.csv", df.to_dict("records"))
+    return df
+
+
+def build_symbol_padded_token_match_table() -> pd.DataFrame:
+    raw_parts = []
+    for path in [
+        TABLE_DIR / "logic_symbol_padded_length_audit_512.csv",
+        TABLE_DIR / "logic_wordified_length_audit_512.csv",
+    ]:
+        if path.exists():
+            raw_parts.append(pd.read_csv(path))
+    if not raw_parts:
+        return pd.DataFrame()
+    raw = pd.concat(raw_parts, ignore_index=True)
+    labels = {
+        "logic": "main logic",
+        "logic_symbol_padded": "symbol-padded logic",
+        "logic_wordified": "wordified logic",
+        "nl_exact": "main NL exact",
+    }
+    order = {"logic": 0, "logic_symbol_padded": 1, "logic_wordified": 2, "nl_exact": 3}
+    rows: list[dict[str, object]] = []
+    baseline = raw[raw["template"] == "nl_exact"]
+    nl_target = float(baseline.iloc[0]["target_mean"]) if not baseline.empty else None
+    nl_total = float(baseline.iloc[0]["total_mean"]) if not baseline.empty else None
+    for _, row in raw.sort_values("template", key=lambda s: s.map(order)).iterrows():
+        target = float(row["target_mean"])
+        total = float(row["total_mean"])
+        rows.append(
+            {
+                "condition": labels.get(str(row["template"]), str(row["template"])),
+                "n": int(row["n"]),
+                "target_mean": target,
+                "target_p95": float(row["target_p95"]),
+                "total_mean": total,
+                "total_p95": float(row["total_p95"]),
+                "target_vs_nl": (target / nl_target) if nl_target else None,
+                "total_vs_nl": (total / nl_total) if nl_total else None,
+                "truncation_rate": float(row["truncation_rate_at_max_length"]),
+            }
+        )
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        write_csv(TABLE_DIR / "logic_symbol_padded_token_match.csv", df.to_dict("records"))
+        write_csv(TABLE_DIR / "logic_length_control_token_match.csv", df.to_dict("records"))
+    return df
+
+
+def build_symbol_padded_eval_comparison_table(
+    main_summary: pd.DataFrame,
+    symbol_padded_summary: pd.DataFrame,
+    wordified_summary: pd.DataFrame | None = None,
+) -> pd.DataFrame:
+    if main_summary.empty and symbol_padded_summary.empty and (wordified_summary is None or wordified_summary.empty):
+        return pd.DataFrame()
+    metrics = ["ood_correct@16", "ood_joint@16", "depth50_correct@16", "depth50_joint@16"]
+    rows: list[dict[str, object]] = []
+    main_pair = main_summary[(main_summary.get("size", "") == "") & (main_summary.get("train_max") == 25)]
+    labels = {
+        "logic": "main compact logic",
+        "nl_exact": "main NL exact",
+        "logic_symbol_padded": "symbol-padded logic",
+        "logic_wordified": "wordified logic",
+    }
+    for _, row in main_pair.sort_values("template").iterrows():
+        item: dict[str, object] = {"condition": labels.get(str(row["template"]), str(row["template"])), "n": row.get("n")}
+        for col in metrics:
+            item[col] = row.get(col)
+        rows.append(item)
+    for summary in [symbol_padded_summary, wordified_summary if wordified_summary is not None else pd.DataFrame()]:
+        if summary.empty:
+            continue
+        for _, row in summary.sort_values("template").iterrows():
+            item = {"condition": labels.get(str(row["template"]), str(row["template"])), "n": row.get("n")}
+            for col in metrics:
+                item[col] = row.get(col)
+            rows.append(item)
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        write_csv(TABLE_DIR / "logic_symbol_padded_eval_vs_main.csv", df.to_dict("records"))
+        write_csv(TABLE_DIR / "logic_length_control_eval_vs_main.csv", df.to_dict("records"))
+    return df
 
 
 def clean_text(text: str, limit: int = 850) -> str:
@@ -834,6 +1451,12 @@ def latex_table(
         "logic_total",
         "nl_total",
         "steps",
+        "target_tok_per_ex",
+        "total_tok_per_ex",
+        "target_mean",
+        "target_p95",
+        "total_mean",
+        "total_p95",
     }
     for _, row in data.iterrows():
         vals = []
@@ -1192,6 +1815,8 @@ def load_tiny_cot_bare_ood_summary(root_name: str, regex: re.Pattern[str], table
         )
     if rows:
         write_csv(TABLE_DIR / f"{table_prefix}_by_seed.csv", rows)
+        if table_prefix == "conditioned_dual":
+            write_csv(TABLE_DIR / "conditioned_dual_partial_by_seed.csv", rows)
     summary = _summarize_lm_eval_rows(rows, ["size", "template"])
     if not summary.empty:
         summary["size_order"] = summary["size"].map(SIZE_ORDER)
@@ -1231,7 +1856,11 @@ def load_olmo32_cot_bare_gsm8k() -> pd.DataFrame:
 
 
 def _joint_key(label: str) -> str:
-    return "citation_free_joint_pass" if label in {"logic", "conditioned_logic"} else "nl_logic_joint_pass"
+    return (
+        "citation_free_joint_pass"
+        if label in {"logic", "conditioned_logic", "logic_symbol_padded", "logic_wordified"}
+        else "nl_logic_joint_pass"
+    )
 
 
 def _summarize_passk_ablation(
@@ -1251,6 +1880,9 @@ def _summarize_passk_ablation(
         groups = list(match.groups())
         payload = read_payload(path)
         group_map = dict(zip(field_names, groups, strict=True))
+        for numeric_field in ("train_max", "seed", "steps"):
+            if numeric_field in group_map:
+                group_map[numeric_field] = int(group_map[numeric_field])
         template_label = group_map.get("template") or group_map.get("eval_template") or "logic"
         joint = _joint_key(str(template_label))
         rows.append(
@@ -1273,6 +1905,8 @@ def _summarize_passk_ablation(
         **{col: (col, "mean") for col in metric_cols},
     ).sort_values(summary_keys)
     write_csv(TABLE_DIR / f"{table_prefix}_summary.csv", summary.to_dict("records"))
+    if table_prefix == "conditioned_dual":
+        write_csv(TABLE_DIR / "conditioned_dual_partial_summary.csv", summary.to_dict("records"))
     return summary
 
 
@@ -1292,12 +1926,40 @@ def load_ablation_summaries() -> dict[str, pd.DataFrame]:
             ["template", "shortcut_rate"],
             "shortcut_rate_ablation",
         ),
+        "shortcut_kind": _summarize_passk_ablation(
+            PASSK_ROOT / "hfsa_shortcut_kind_ablation_20260529",
+            SHORTCUT_KIND_RE,
+            ["shortcut_kind", "template", "shortcut_rate", "seed"],
+            ["shortcut_kind", "template", "shortcut_rate"],
+            "shortcut_kind_ablation",
+        ),
         "conditioned": _summarize_passk_ablation(
             PASSK_ROOT / "hfsa_conditioned_dual_full_20260525",
             CONDITIONED_RE,
             ["train_max", "seed", "eval_template"],
             ["train_max", "eval_template"],
-            "conditioned_dual_partial",
+            "conditioned_dual",
+        ),
+        "conditioned_50k": _summarize_passk_ablation(
+            PASSK_ROOT / "hfsa_conditioned_dual_50k_20260529",
+            CONDITIONED_50K_RE,
+            ["train_max", "seed", "eval_template"],
+            ["train_max", "eval_template"],
+            "conditioned_dual_50k",
+        ),
+        "symbol_padded": _summarize_passk_ablation(
+            PASSK_ROOT / "hfsa_logic_symbol_padded_20260528",
+            SYMBOL_PADDED_RE,
+            ["template", "seed"],
+            ["template"],
+            "logic_symbol_padded_eval",
+        ),
+        "wordified": _summarize_passk_ablation(
+            PASSK_ROOT / "hfsa_logic_wordified_20260529",
+            WORDIFIED_RE,
+            ["template", "seed"],
+            ["template"],
+            "logic_wordified_eval",
         ),
     }
 
@@ -1500,6 +2162,7 @@ def write_report(
     tiny_summary: pd.DataFrame,
     tiny_100k_summary: pd.DataFrame,
     qwen_summary: pd.DataFrame,
+    architecture_summary: pd.DataFrame,
     main_ood_summary: pd.DataFrame,
     tiny_ood_summary: pd.DataFrame,
     main_cot_bare_ood_summary: pd.DataFrame,
@@ -1531,6 +2194,10 @@ def write_report(
         tiny_100k_rows["size_order"] = tiny_100k_rows["size"].map(SIZE_ORDER)
         tiny_100k_rows = tiny_100k_rows.sort_values(["size_order", "template"])
     qwen_rows = qwen_summary.sort_values(["template", "train_max"]) if not qwen_summary.empty else pd.DataFrame()
+    architecture_rows = architecture_summary.copy() if not architecture_summary.empty else pd.DataFrame()
+    if not architecture_rows.empty:
+        architecture_rows["model_order"] = architecture_rows["model"].map(MODEL_ORDER).fillna(99)
+        architecture_rows = architecture_rows.sort_values(["model_order", "template", "train_max"]).drop(columns=["model_order"])
     token_length_rows = pd.DataFrame(
         [
             {"train_range": "1..5", "logic_target": 322, "nl_target": 382, "logic_total": 697, "nl_total": 757},
@@ -1541,10 +2208,28 @@ def write_report(
         ]
     )
     token_budget_rows = ablation_summaries.get("token_budget", pd.DataFrame())
+    token_budget_comparison_rows = build_token_budget_comparison_table(main_summary, token_budget_rows)
+    token_budget_exposure_rows = build_token_budget_exposure_table()
+    symbol_padded_token_rows = build_symbol_padded_token_match_table()
+    symbol_padded_eval_rows = build_symbol_padded_eval_comparison_table(
+        main_summary,
+        ablation_summaries.get("symbol_padded", pd.DataFrame()),
+        ablation_summaries.get("wordified", pd.DataFrame()),
+    )
     shortcut_rows = ablation_summaries.get("shortcut", pd.DataFrame())
     conditioned_rows = ablation_summaries.get("conditioned", pd.DataFrame())
+    shortcut_comparison_rows = build_shortcut_comparison_table(main_summary, shortcut_rows)
+    conditioned_comparison_rows = build_conditioned_comparison_table(main_summary, conditioned_rows)
     train_maxes = [5, 10, 15, 20, 25]
     tiny_sizes = ["50m", "100m", "200m"]
+    conditioned_50k_curve_block = ""
+    if (FIG_DIR / "ablation_conditioned_dual_50k_convergence_train1to25.pdf").exists():
+        conditioned_50k_curve_block = r"""
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\linewidth]{figures/ablation_conditioned_dual_50k_convergence_train1to25.pdf}
+\caption{Conditioned dual-modality 50k convergence curves for train-1-to-25. Points are three-seed means over checkpoint evals at 10k, 20k, 30k, 40k, and 50k optimizer steps.}
+\end{figure}
+"""
     olmo_ckpt_figures = "\n".join(
         f"""\\begin{{figure}}[H]\\centering
 \\includegraphics[width=\\linewidth]{{figures/olmo7b_checkpoint_train1to{train_max}_correct16.pdf}}
@@ -1612,6 +2297,7 @@ def write_report(
         for size in tiny_sizes
     )
 
+    delta_label = "$\\Delta$ vs logic"
     tex = rf"""\documentclass[10pt]{{article}}
 \usepackage[margin=0.7in]{{geometry}}
 \usepackage{{booktabs}}
@@ -1619,7 +2305,7 @@ def write_report(
 \usepackage{{float}}
 \usepackage{{hyperref}}
 \title{{Formal Logic CoT Synthetic Results Update}}
-\date{{2026-05-28}}
+\date{{2026-05-29}}
 \begin{{document}}
 \maketitle
 
@@ -1640,6 +2326,23 @@ This audit uses the OLMo tokenizer over the actual SFT training mixtures. NL tar
     ("nl_total", "NL total"),
 ])}
 \caption{{Mean token lengths for main OLMo-7B SFT sequences by train-depth range.}}
+\end{{table}}
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(symbol_padded_token_rows, [
+    ("condition", "condition"),
+    ("n", "n"),
+    ("target_mean", "target mean"),
+    ("target_p95", "target p95"),
+    ("total_mean", "total mean"),
+    ("total_p95", "total p95"),
+    ("target_vs_nl", "target/NL"),
+    ("total_vs_nl", "total/NL"),
+    ("truncation_rate", "trunc."),
+])}
+\caption{{Token-length match for logic length-control ablations on the same 512 train-1-to-25 examples. Symbol-padded lengthens formal atoms mechanically; wordified logic uses natural attribute predicate names while preserving formal proof rules.}}
 \end{{table}}
 
 \section{{Main OLMo-7B downstream OOD}}
@@ -1888,52 +2591,100 @@ Both the 20k and 100k tiny bare-format OOD arrays completed. All strict EM/F1 va
 \caption{{Tiny Llama 100k bare-format OOD exact-match metrics.}}
 \end{{table}}
 
-\section{{Qwen-2.5-7B architecture ablation}}
+\section{{Architecture ablations}}
+The architecture comparison now includes completed Qwen-2.5-1.5B, Qwen-2.5-7B, and Gemma-3-4B sparse evals, plus the main OLMo-7B baseline for the overlapping train ranges. OLMo-2-32B is shown only as a short-context slice because its real context limit prevents the depth-50 protocol.
+
 \begin{{table}}[H]
 \centering
-\small
-{latex_table(qwen_rows, [
+\scriptsize
+{latex_table(architecture_rows, [
+    ("model", "model"),
     ("template", "template"),
     ("train_max", "train max"),
     ("n", "n"),
     ("ood_correct@16", "OOD c@16"),
     ("ood_joint@16", "OOD joint@16"),
+    ("depth30_50_correct@16", "d30--50 c@16"),
+    ("depth30_50_joint@16", "d30--50 joint@16"),
     ("depth50_correct@16", "d50 c@16"),
     ("depth50_joint@16", "d50 joint@16"),
+    ("shortctx_correct@16", "short c@16"),
+    ("shortctx_joint@16", "short joint@16"),
 ])}
-\caption{{Qwen-2.5-7B representative sparse eval. This 18-row architecture slice is complete.}}
+\caption{{Architecture sparse eval comparison. Depth 30--50 averages depths 30, 35, 40, 45, and 50 when available; short-context averages depths 1, 2, 5, 10, 12, and 15 and is the only valid OLMo-2-32B synthetic slice.}}
 \end{{table}}
 \begin{{figure}}[H]\centering
-\includegraphics[width=0.86\linewidth]{{figures/qwen7b_partial_ood_correct_joint.pdf}}
-\caption{{Partial Qwen-2.5-7B OOD correct/joint@16.}}
+\includegraphics[width=0.95\linewidth]{{figures/architecture_ood_correct16_by_train_depth.pdf}}
+\caption{{Architecture comparison for OOD correct@16.}}
+\end{{figure}}
+\begin{{figure}}[H]\centering
+\includegraphics[width=0.95\linewidth]{{figures/architecture_depth30_50_correct16_by_train_depth.pdf}}
+\caption{{Architecture comparison for eval-depth 30--50 correct@16.}}
 \end{{figure}}
 
 \section{{Targeted ablations}}
-Completed ablation results are shown here; active arrays are tracked in the handoff documents. The same-token-budget control keeps the logic-vs-NL comparison favorable to logic on answer correctness but not on joint validity. The shortcut-rate table currently covers shortcut rate 0.5; shortcut rate 0.8 eval rows are still running. Conditioned dual-modality eval is partial and should not be interpreted until all 30 eval rows complete.
+Completed ablation results are shown here; active arrays are tracked in the handoff documents. The current same-token-budget experiment is more precisely a same target-token budget experiment. The logic row in that experiment is a control rerun at 10k steps; the NL row is shortened to 7140 steps so target-token exposure approximately matches 10k logic steps. It does not match total prompt-plus-target tokens; that would require roughly 8600 NL steps and has not been run yet. The symbol-padded logic control is the completed total-sequence-length match to NL at the same optimizer-step budget; the wordified logic length-control run is tracked as the cleaner follow-up once it completes. Shortcut rates 0.5 and 0.8 are complete; shortcut rate 0.3 is still training. Conditioned dual-modality eval is complete.
+
+The shortcut-rate ablation changes only the training distribution. With probability equal to the shortcut rate, a training example uses the \texttt{{hard\_fsa\_schema}} shortcut generator: the gold path obeys a shared marker-conditioned transition schema and carries redundant marker facts that make a family-level transition heuristic predictive. Non-gold branches remain coherent but do not follow that schema. Evaluation always resets \texttt{{shortcut\_rate=0.0}}, so these rows test whether training on shortcut-rich traces hurts or helps transfer back to shortcut-neutral depth extrapolation.
 
 \begin{{table}}[H]
 \centering
 \small
-{latex_table(token_budget_rows, [
-    ("template", "template"),
+{latex_table(token_budget_exposure_rows, [
+    ("condition", "condition"),
+    ("status", "status"),
     ("steps", "steps"),
+    ("target_tok_per_ex", "target tok/ex"),
+    ("target_exposure_vs_logic", "target exposure"),
+    ("total_tok_per_ex", "total tok/ex"),
+    ("total_exposure_vs_logic", "total exposure"),
+])}
+\caption{{Token-budget accounting for train-1-to-25. Target-token ratios use the 512-example audit that set the submitted step count; total-token ratios use the report token-length audit. Exposure columns are relative to 10k logic steps.}}
+\end{{table}}
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(symbol_padded_eval_rows, [
+    ("condition", "condition"),
     ("n", "n"),
     ("ood_correct@16", "OOD c@16"),
     ("ood_joint@16", "OOD joint@16"),
     ("depth50_correct@16", "d50 c@16"),
     ("depth50_joint@16", "d50 joint@16"),
 ])}
-\caption{{Same target-token budget control, train-1-to-25, three seeds.}}
+\caption{{Logic length-control ablations compared with the main train-1-to-25 runs.}}
 \end{{table}}
-\begin{{figure}}[H]\centering
-\includegraphics[width=\linewidth]{{figures/ablation_same_target_token_budget_vs_main.pdf}}
-\caption{{Same target-token budget control compared against the main train-1-to-25 logic/NL baselines.}}
+
+\begin{{figure}}[H]
+\centering
+\includegraphics[width=\linewidth]{{figures/ablation_logic_length_control_depth_curve_train1to25.pdf}}
+\caption{{Train-1-to-25 depth curve comparing compact logic, length-control logic variants, and main NL exact. Curves are seed means over the sparse final eval depths; the dotted line marks the maximum training depth.}}
 \end{{figure}}
 
 \begin{{table}}[H]
 \centering
 \small
-{latex_table(shortcut_rows, [
+{latex_table(token_budget_comparison_rows, [
+    ("condition", "condition"),
+    ("steps", "steps"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("delta_ood_correct@16", delta_label),
+    ("ood_joint@16", "OOD joint@16"),
+    ("delta_ood_joint@16", delta_label),
+    ("depth50_correct@16", "d50 c@16"),
+    ("delta_depth50_correct@16", delta_label),
+    ("depth50_joint@16", "d50 joint@16"),
+    ("delta_depth50_joint@16", delta_label),
+])}
+\caption{{Same target-token budget control compared directly to the main train-1-to-25 logic baseline. Delta columns subtract the main logic row.}}
+\end{{table}}
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(shortcut_comparison_rows, [
     ("template", "template"),
     ("shortcut_rate", "shortcut rate"),
     ("n", "n"),
@@ -1942,7 +2693,7 @@ Completed ablation results are shown here; active arrays are tracked in the hand
     ("depth50_correct@16", "d50 c@16"),
     ("depth50_joint@16", "d50 joint@16"),
 ])}
-\caption{{Shortcut-rate ablation results available so far. Eval remains shortcut-neutral.}}
+\caption{{Shortcut-rate ablation, including the shortcut-neutral main train-1-to-25 baseline as rate 0.0. Eval remains shortcut-neutral for all rows.}}
 \end{{table}}
 \begin{{figure}}[H]\centering
 \includegraphics[width=0.9\linewidth]{{figures/ablation_shortcut_rate_vs_main.pdf}}
@@ -1952,17 +2703,22 @@ Completed ablation results are shown here; active arrays are tracked in the hand
 \begin{{table}}[H]
 \centering
 \scriptsize
-{latex_table(conditioned_rows, [
+{latex_table(conditioned_comparison_rows, [
     ("train_max", "train max"),
-    ("eval_template", "eval mode"),
+    ("condition", "condition"),
     ("n", "n"),
     ("ood_correct@16", "OOD c@16"),
     ("ood_joint@16", "OOD joint@16"),
     ("depth50_correct@16", "d50 c@16"),
     ("depth50_joint@16", "d50 joint@16"),
 ], max_rows=20)}
-\caption{{Conditioned dual-modality ablation rows available at report generation time.}}
+\caption{{Conditioned dual-modality ablation compared with the main single-modality baselines at each train-depth range.}}
 \end{{table}}
+\begin{{figure}}[H]\centering
+\includegraphics[width=0.95\linewidth]{{figures/ablation_conditioned_dual_vs_main_by_train_depth.pdf}}
+\caption{{Conditioned dual-modality ablation compared with main logic and main NL across train-depth ranges. Dashed lines are conditioned runs; solid lines are single-modality baselines.}}
+\end{{figure}}
+{conditioned_50k_curve_block}
 
 \section{{Qualitative samples}}
 The companion PDF \texttt{{figures/sample\_generation\_panels.pdf}} contains synthetic generated examples with extracted answer, gold answer, correctness, and validity metadata. The following samples are from the completed bare-format OOD rerun for OLMo-7B train-1-to-25 seed 3407.
@@ -1983,11 +2739,16 @@ def main() -> None:
     plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False})
 
     main_records, main_ckpt, tiny_records, tiny_ckpt, tiny_100k_records, tiny_100k_ckpt, qwen_records = load_records()
+    symbol_padded_records = load_symbol_padded_records()
+    wordified_records = load_wordified_records()
+    extra_architecture_records = load_extra_architecture_records()
+    architecture_records = main_records + qwen_records + extra_architecture_records
     all_summary = summarize_group(main_records + tiny_records + tiny_100k_records + qwen_records, (8, 16))
     main_summary = summarize_group(main_records, (8, 16))
     tiny_summary = summarize_group(tiny_records, (8,))
     tiny_100k_summary = summarize_group(tiny_100k_records, (8,))
     qwen_summary = summarize_group(qwen_records, (16,))
+    architecture_summary = summarize_architecture(architecture_records)
     main_ood_summary = load_main_ood_summary()
     tiny_ood_summary = load_tiny_ood_summary()
     main_cot_bare_ood_summary = load_main_cot_bare_ood_summary()
@@ -2003,11 +2764,13 @@ def main() -> None:
     )
     olmo32_cot_bare_gsm8k = load_olmo32_cot_bare_gsm8k()
     ablation_summaries = load_ablation_summaries()
+    conditioned_50k_checkpoint_summary = load_conditioned_50k_checkpoint_summary()
 
     write_csv(TABLE_DIR / "main_olmo7b_summary.csv", main_summary.to_dict("records"))
     write_csv(TABLE_DIR / "tiny_llama_final_summary.csv", tiny_summary.to_dict("records"))
     write_csv(TABLE_DIR / "tiny_llama_100k_final_summary.csv", tiny_100k_summary.to_dict("records"))
     write_csv(TABLE_DIR / "qwen7b_partial_summary.csv", qwen_summary.to_dict("records"))
+    write_csv(TABLE_DIR / "architecture_ablation_summary.csv", architecture_summary.to_dict("records"))
     write_csv(TABLE_DIR / "all_group_summary.csv", all_summary.to_dict("records"))
     write_csv(TABLE_DIR / "main_olmo7b_ood_lmeval_summary.csv", main_ood_summary.to_dict("records"))
     write_csv(TABLE_DIR / "tiny_llama_ood_lmeval_summary.csv", tiny_ood_summary.to_dict("records"))
@@ -2020,6 +2783,7 @@ def main() -> None:
     plot_main_trainmax(main_summary)
     plot_depth_grid(main_depth, "olmo7b_depth_correct16", "correct", 16)
     plot_depth_grid(main_depth, "olmo7b_depth_joint16", "joint", 16)
+    plot_symbol_padded_depth_comparison(main_records, symbol_padded_records, wordified_records)
     plot_main_checkpoint_curves(main_ckpt)
     plot_main_checkpoint_depth_bands(main_ckpt)
     plot_tiny_final(tiny_records)
@@ -2027,8 +2791,14 @@ def main() -> None:
     plot_tiny_checkpoint_depth_bands(tiny_records, tiny_ckpt, prefix="tiny_llama")
     plot_tiny_checkpoint_depth_bands(tiny_100k_records, tiny_100k_ckpt, prefix="tiny_llama_100k")
     plot_qwen_partial(qwen_records)
+    plot_architecture_comparison(architecture_summary)
     plot_token_budget_comparison(main_summary, ablation_summaries.get("token_budget", pd.DataFrame()))
     plot_shortcut_comparison(main_summary, ablation_summaries.get("shortcut", pd.DataFrame()))
+    conditioned_comparison = build_conditioned_comparison_table(
+        main_summary, ablation_summaries.get("conditioned", pd.DataFrame())
+    )
+    plot_conditioned_comparison(conditioned_comparison)
+    plot_conditioned_50k_convergence(conditioned_50k_checkpoint_summary)
 
     samples = build_sample_panels()
     plot_sample_panels(samples)
@@ -2038,6 +2808,7 @@ def main() -> None:
         tiny_summary,
         tiny_100k_summary,
         qwen_summary,
+        architecture_summary,
         main_ood_summary,
         tiny_ood_summary,
         main_cot_bare_ood_summary,
@@ -2058,7 +2829,7 @@ def main() -> None:
     print(
         f"tiny final: {len(tiny_records)}, tiny checkpoints: {len(tiny_ckpt)}, "
         f"tiny 100k final: {len(tiny_100k_records)}, tiny 100k checkpoints: {len(tiny_100k_ckpt)}, "
-        f"qwen: {len(qwen_records)}"
+        f"qwen: {len(qwen_records)}, architecture extras: {len(extra_architecture_records)}"
     )
 
 

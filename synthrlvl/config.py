@@ -74,6 +74,7 @@ def task_config_from_cfg(cfg: DictConfig) -> TaskConfig:
         entity_decoy_ratio=cfg.task.get("entity_decoy_ratio"),
         answer_decoy_ratio=cfg.task.get("answer_decoy_ratio"),
         shortcut_rate=float(cfg.task.get("shortcut_rate", 0.0)),
+        shortcut_kind=str(cfg.task.get("shortcut_kind", "schema")),
         require_unique_solution=bool(cfg.task.get("require_unique_solution", True)),
         train_steps=StepRange(int(cfg.task.train_min_step), int(cfg.task.train_max_step)),
         val_steps=StepRange(int(cfg.task.val_min_step), int(cfg.task.val_max_step)),

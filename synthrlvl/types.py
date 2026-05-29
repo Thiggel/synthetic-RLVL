@@ -10,6 +10,8 @@ class TemplateName(str, Enum):
     LOGIC_NATURAL = "logic_natural"
     NATURAL_LOGIC = "natural_logic"
     NL_EXACT = "nl_exact"
+    LOGIC_SYMBOL_PADDED = "logic_symbol_padded"
+    LOGIC_WORDIFIED = "logic_wordified"
     FORMAL_THINK = "formal_think"
     THINK_FORMAL = "think_formal"
     TERSE_NL = "terse_nl"
@@ -72,4 +74,5 @@ class TaskConfig:
     entity_decoy_ratio: float | None = None
     answer_decoy_ratio: float | None = None
     shortcut_rate: float = 0.0
+    shortcut_kind: str = "schema"
     require_unique_solution: bool = True

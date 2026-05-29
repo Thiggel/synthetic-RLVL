@@ -229,11 +229,39 @@ Experiment plan:
 
 - `docs/hfsa_depth_scaling_plan_2026-05-19.md`
 
+## Hard-FSA-Schema Shortcut-Kind Depth-50 Datasets (2026-05-29)
+
+Local roots submitted for build:
+
+- `${WORK}/synthetic-RLVL/datasets/materialized_hfsa_fixedtarget_depth50_shortcut_position_0p5_20260529`
+- `${WORK}/synthetic-RLVL/datasets/materialized_hfsa_fixedtarget_depth50_shortcut_position_0p8_20260529`
+- `${WORK}/synthetic-RLVL/datasets/materialized_hfsa_fixedtarget_depth50_shortcut_initial_marker_0p5_20260529`
+- `${WORK}/synthetic-RLVL/datasets/materialized_hfsa_fixedtarget_depth50_shortcut_initial_marker_0p8_20260529`
+
+Submitted chain:
+
+- build `3674886_[0-3%2]`
+- SFT `3674887_[0-23%3]`
+- eval `3674888_[0-23%4]`
+
+Purpose: repeat the shortcut robustness ablation with two concrete shortcut mechanisms beyond the existing schema shortcut. `position` makes the gold branch first on shortcut-enabled training examples. `initial_marker` fixes the gold path's initial marker to `north` on shortcut-enabled training examples. Evaluation remains shortcut-neutral with `val_shortcut_rate=0.0` for every row.
+
+Generated subsets:
+
+- `train_fixedtarget_up_to_25_50k`: K=4, train depths `1..25`, shortcut rate `0.5` or `0.8`.
+- `val_step_01_1k` ... `val_step_50_1k`: K=4, shortcut-neutral fixed-depth validation/evaluation.
+
+Implementation details:
+
+- `synthrlvl.datasets.materialize` now accepts `--shortcut-kind {schema,position,initial_marker}`.
+- `DatasetConfig.shortcut_kind` and `TaskConfig.shortcut_kind` propagate the setting into both materialization and on-the-fly eval.
+- `scripts/analysis/probe_hard_fsa_schema.py` now probes the expected shortcut for each kind. Local probes and tiny materialization smokes passed for `position` and `initial_marker` before submission.
+
 ## Paired Synthetic Dataset Families (2026-05-20)
 
 Initial paired natural-language / formal-logic dataset families are implemented for follow-up experiments:
 
-- `official_igsm`: exact official `facebookresearch/iGSM` sampling with an intended 1:1 logic trace over the official modulo-23 arithmetic solution; currently blocked by broader validation failures on subtraction-substitution proof lines.
+- `official_igsm`: exact official `facebookresearch/iGSM` sampling with an intended 1:1 logic trace over the official modulo-23 arithmetic solution; subtraction-substitution validation was fixed locally on 2026-05-28, the seed-3407 train-10 materialization/SFT/eval chain completed, and the full paired suite is running.
 - `maze_navigation`: keyed/constrained graph traversal with room reachability, held-key state, blocked decoy doors, and unreachable treasure decoys.
 - `attribute_constraints`: multi-input slot-value constraint propagation; no candidate-assignment objects and no precomputed Mastermind feedback are provided.
 - Backward-compatible aliases: `igsm_arithmetic`, `graph_traversal`, `mastermind_constraints`, `constraint_satisfaction`, `constraint_propagation`.
@@ -254,6 +282,18 @@ Submitted 2026-05-25 after saturation:
 | `attribute_constraints` hard | `3659338` | completed at 09:33 CEST; downstream SFT/eval jobs are `3659339`/`3659340` | `${WORK}/synthetic-RLVL/datasets/materialized_paired_attribute_constraints_hard_train10_20260525` |
 
 The hard attribute generator maps requested depth to `floor(depth/2)+2` compact slots, uses compact `sN`/`vN` symbols, recent-window dependency DAGs, and adversarial decoys. Local smoke materialization with full validation through depth 50 passed before the Slurm build was submitted.
+
+### Full Paired Follow-Up Materializations
+
+Submitted 2026-05-28 as the broad repeat suite:
+
+| family | build job | local root | train subsets |
+| --- | ---: | --- | --- |
+| `official_igsm` | `3672195_0` | `${WORK}/synthetic-RLVL/datasets/materialized_paired_official_igsm_full_20260528` | `train_official_igsm_up_to_{5,10,15,20,25}_50k` |
+| `maze_navigation` | `3672195_1` | `${WORK}/synthetic-RLVL/datasets/materialized_paired_maze_navigation_full_20260528` | `train_maze_navigation_up_to_{5,10,15,20,25}_50k` |
+| hard `attribute_constraints` | `3672195_2` | `${WORK}/synthetic-RLVL/datasets/materialized_paired_attribute_constraints_hard_full_20260528` | `train_attribute_constraints_hard_up_to_{5,10,15,20,25}_50k` |
+
+Each build also writes `val_step_01_1k` through `val_step_50_1k` and validates every generated row with `--validate-examples -1`. Dependent SFT and sparse pass@k eval arrays are `3672212_[0-89%6]` and `3672213_[0-89%4]`, covering both `logic` and `nl_exact` with seeds `3407`, `3408`, and `3409`. Initial pending arrays `3672196`/`3672197` were canceled before start after fixing excessive startup staggering. As of 2026-05-29 11:42 CEST, all three build rows are complete, SFT rows `0..35` are complete, rows `36..41` are running, rows `42..89` are pending by throttle, and eval remains dependency-pending with no full-suite pass@k JSONs yet.
 
 The generator code lives in:
 
@@ -294,9 +334,9 @@ to validate every row, or:
 
 to disable validation for large production builds after a smoke test.
 
-These paired families are implemented for later substrate-transfer experiments, not part of the active HFSA depth-scaling wave yet:
+These paired families are implemented for substrate-transfer experiments alongside the active HFSA depth-scaling wave:
 
-- `official_igsm`: samples from the local official `facebookresearch/iGSM` generator and converts the official arithmetic solution into a logic trace. Arithmetic is modulo 23, matching iGSM, via the `MOD23` proof rule. Do not use for training yet; the 2026-05-23 broader audit found invalid subtraction-substitution proof lines.
+- `official_igsm`: samples from the local official `facebookresearch/iGSM` generator and converts the official arithmetic solution into a logic trace. Arithmetic is modulo 23, matching iGSM, via the `MOD23` proof rule. The 2026-05-23 subtraction-substitution blocker is fixed locally as of 2026-05-28; the seed-3407 train-10 chain `3671601`/`3671602`/`3671603` completed, and the full three-family suite is running under `3672212` with eval dependency `3672213`.
 - `igsm_arithmetic`: compact backward-compatible register arithmetic used for smoke tests and older scripts.
 - `maze_navigation`: a world-grounded keyed graph traversal task where the model proves which treasure room is reachable after exactly `N` moves while holding the required key for each traversed door.
 - `graph_traversal`: backward-compatible alias for `maze_navigation`.
@@ -327,7 +367,7 @@ The broader local materialization audit used `--validate-examples -1` on small d
 | --- | --- | --- |
 | `maze_navigation` | fixed and passed; key vocabulary now extends with deterministic `key_XX` names when depth exceeds the color list | `analysis/paired_dataset_audit_2026-05-23/maze_navigation/` |
 | `attribute_constraints` | passed | `analysis/paired_dataset_audit_2026-05-23/attribute_constraints/` |
-| `official_igsm` | blocked; subtraction substitution can produce invalid proof lines | `analysis/paired_dataset_audit_2026-05-23/logs/official_igsm.log` |
+| `official_igsm` | fixed locally 2026-05-28; depth-50 smoke validation passes after parser tokenization fix | old failing log: `analysis/paired_dataset_audit_2026-05-23/logs/official_igsm.log` |
 
 ### Paired Train-10 Pilot Materialization - 2026-05-24
 

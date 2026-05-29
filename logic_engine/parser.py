@@ -99,7 +99,7 @@ def find_main_connective(s, symbol):
     return -1
 
 
-TERM_TOKEN_RE = re.compile(r"\s*([A-Za-z_][A-Za-z_0-9-]*|\d+/\d+|\d+|[()+\-*/,])")
+TERM_TOKEN_RE = re.compile(r"\s*([A-Za-z_][A-Za-z_0-9]*|\d+/\d+|\d+|[()+\-*/,])")
 
 
 def tokenize_term(s):

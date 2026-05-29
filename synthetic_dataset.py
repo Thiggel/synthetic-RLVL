@@ -40,6 +40,7 @@ class DatasetConfig:
     entity_decoy_ratio: float | None = None
     answer_decoy_ratio: float | None = None
     shortcut_rate: float = 0.0
+    shortcut_kind: str = "schema"
     require_unique_solution: bool = True
     min_entities: int = 4
     max_entities: int = 8
@@ -61,6 +62,8 @@ class DatasetConfig:
             raise ValueError("num_attribute_values should be at least 4")
         if not (0.0 <= float(self.shortcut_rate) <= 1.0):
             raise ValueError("shortcut_rate must be between 0 and 1")
+        if self.shortcut_kind not in {"schema", "position", "initial_marker"}:
+            raise ValueError("shortcut_kind must be one of: schema, position, initial_marker")
         if self.effective_branching_factor < 1:
             raise ValueError("branching_factor must be >= 1")
         if self.effective_side_chain_depth < 0:
@@ -1124,7 +1127,14 @@ class LogicDatasetGenerator:
         )
 
 
-    def _generate_hard_fsa(self, index: int) -> LogicExample:
+    def _generate_hard_fsa_core(
+        self,
+        index: int,
+        *,
+        gold_branch_first: bool = False,
+        gold_initial_marker: str | None = None,
+        metadata_extra: dict[str, Any] | None = None,
+    ) -> LogicExample:
         """Finite-state automaton task with high-entropy branch ambiguity.
 
         Each example samples fresh state labels and a fresh transition table.
@@ -1163,6 +1173,12 @@ class LogicDatasetGenerator:
             raise ValueError("hard_fsa needs enough non-initial states for per-layer branch uniqueness")
         initial_markers = marker_names.copy()
         rng.shuffle(initial_markers)
+        if gold_initial_marker is not None:
+            if gold_initial_marker not in marker_names:
+                raise ValueError(f"gold_initial_marker must be one of {marker_names}, got {gold_initial_marker!r}")
+            remaining_markers = [marker for marker in initial_markers if marker != gold_initial_marker]
+            rng.shuffle(remaining_markers)
+            initial_markers = [gold_initial_marker] + remaining_markers[: branch_factor - 1]
         for _build_attempt in range(200):
             branch_states = [[initial_state] for _ in range(branch_factor)]
             branch_markers = [[initial_markers[branch_idx]] for branch_idx in range(branch_factor)]
@@ -1232,6 +1248,10 @@ class LogicDatasetGenerator:
                     branch_markers[branch_idx][step + 1],
                 ))
             rng.shuffle(branches)
+            if gold_branch_first:
+                branches = [branch for branch in branches if branch[0] == 0] + [
+                    branch for branch in branches if branch[0] != 0
+                ]
             branch_orders.append([f"branch{b[0]}:{b[1]}" for b in branches])
 
             for _, marker, branch_src_state, out_state, out_marker in branches:
@@ -1291,8 +1311,12 @@ class LogicDatasetGenerator:
                 "query_constant": final_const,
                 "query_entity": final_const,
                 "queried_family": "state",
+                **(metadata_extra or {}),
             },
         )
+
+    def _generate_hard_fsa(self, index: int) -> LogicExample:
+        return self._generate_hard_fsa_core(index)
 
     def _generate_hard_fsa_schema(self, index: int) -> LogicExample:
         """FSA task with train-only shortcut schema and neutral eval mode.
@@ -1323,6 +1347,7 @@ class LogicDatasetGenerator:
             meta.update({
                 "difficulty": self.config.difficulty,
                 "shortcut_enabled": False,
+                "shortcut_kind": self.config.shortcut_kind,
                 "shortcut_types": [],
                 "split_intervention": "eval_neutral",
                 "candidate_answers": candidate_answers,
@@ -1343,6 +1368,46 @@ class LogicDatasetGenerator:
                 answer=ex.answer,
                 metadata=meta,
             )
+
+        if self.config.shortcut_kind == "position":
+            ex = self._generate_hard_fsa_core(
+                index,
+                gold_branch_first=True,
+                metadata_extra={
+                    "difficulty": self.config.difficulty,
+                    "shortcut_rate": self.config.shortcut_rate,
+                    "shortcut_enabled": True,
+                    "shortcut_kind": "position",
+                    "shortcut_types": ["gold_branch_first"],
+                    "split_intervention": "train_shortcut",
+                    "position_shortcut_correct": True,
+                    "citation_free_gold": True,
+                },
+            )
+            return ex
+
+        if self.config.shortcut_kind == "initial_marker":
+            marker_names_for_core = ["north", "south", "east", "west", "open", "closed", "bright", "dim"][:branch_factor]
+            gold_marker = marker_names_for_core[0]
+            ex = self._generate_hard_fsa_core(
+                index,
+                gold_initial_marker=gold_marker,
+                metadata_extra={
+                    "difficulty": self.config.difficulty,
+                    "shortcut_rate": self.config.shortcut_rate,
+                    "shortcut_enabled": True,
+                    "shortcut_kind": "initial_marker",
+                    "shortcut_types": ["fixed_initial_marker"],
+                    "split_intervention": "train_shortcut",
+                    "shortcut_marker": gold_marker,
+                    "marker_identity_correct": True,
+                    "citation_free_gold": True,
+                },
+            )
+            return ex
+
+        if self.config.shortcut_kind != "schema":
+            raise ValueError(f"Unsupported hard_fsa_schema shortcut_kind: {self.config.shortcut_kind}")
 
         marker_names = list(HARD_FSA_SCHEMA_MARKERS[:branch_factor])
         schema_families = HARD_FSA_SCHEMA_FAMILIES[:branch_factor]
@@ -1538,6 +1603,7 @@ class LogicDatasetGenerator:
                 "branching_factor": branch_factor,
                 "shortcut_rate": self.config.shortcut_rate,
                 "shortcut_enabled": True,
+                "shortcut_kind": "schema",
                 "shortcut_types": ["marker_redundancy", "shared_transition_schema"],
                 "split_intervention": "train_shortcut",
                 "gold_answer": answer,
@@ -2011,6 +2077,7 @@ class MaterializedDatasetBuilder:
         train_up_to_25_rows: int = 0,
         seed: int,
         train_shortcut_rate: float = 0.0,
+        shortcut_kind: str = "schema",
     ) -> list[MaterializedDatasetSpec]:
         specs = [
             MaterializedDatasetSpec(
@@ -2102,6 +2169,7 @@ class MaterializedDatasetBuilder:
         difficulty: str = "standard",
         train_shortcut_rate: float = 0.0,
         val_shortcut_rate: float = 0.0,
+        shortcut_kind: str = "schema",
         val_max_step: int = 20,
         branching_factor: int | None = None,
         decoy_chains: int | None = None,
@@ -2126,6 +2194,7 @@ class MaterializedDatasetBuilder:
             train_up_to_25_rows=int(train_up_to_25_rows),
             seed=int(seed),
             train_shortcut_rate=float(train_shortcut_rate),
+            shortcut_kind=str(shortcut_kind),
         ) + self.val_specs(
             val_rows_per_step=int(val_rows_per_step),
             seed=int(seed),
@@ -2149,6 +2218,7 @@ class MaterializedDatasetBuilder:
                 entity_decoy_ratio=entity_decoy_ratio,
                 answer_decoy_ratio=answer_decoy_ratio,
                 shortcut_rate=float(spec.shortcut_rate),
+                shortcut_kind=str(shortcut_kind),
             ):
                 chunk.append(row)
                 if len(chunk) >= int(chunk_size):
@@ -2172,6 +2242,7 @@ class MaterializedDatasetBuilder:
             "distractor_ratio": distractor_ratio,
             "train_shortcut_rate": train_shortcut_rate,
             "val_shortcut_rate": val_shortcut_rate,
+            "shortcut_kind": shortcut_kind,
             "branching_factor": branching_factor,
             "decoy_chains": decoy_chains,
             "near_miss_ratio": near_miss_ratio,
@@ -2250,6 +2321,7 @@ class MaterializedDatasetBuilder:
         entity_decoy_ratio: float | None = None,
         answer_decoy_ratio: float | None = None,
         shortcut_rate: float = 0.0,
+        shortcut_kind: str = "schema",
     ) -> Iterator[dict[str, Any]]:
         depths = list(range(spec.min_depth, spec.max_depth + 1))
         gens = {
@@ -2265,6 +2337,7 @@ class MaterializedDatasetBuilder:
                     entity_decoy_ratio=entity_decoy_ratio,
                     answer_decoy_ratio=answer_decoy_ratio,
                     shortcut_rate=float(shortcut_rate),
+                    shortcut_kind=str(shortcut_kind),
                     seed=spec.seed + depth,
                 )
             )

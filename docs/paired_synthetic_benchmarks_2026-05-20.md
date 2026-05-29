@@ -31,13 +31,78 @@ python scripts/data/build_paired_synthetic_dataset.py --kind <kind> --train-rows
 | --- | --- | --- |
 | `maze_navigation` | passed after a key-vocabulary fix | safe first candidate for follow-up substrate-transfer runs after full-size materialization |
 | `attribute_constraints` | passed | safe first candidate for follow-up substrate-transfer runs after full-size materialization |
-| `official_igsm` | blocked | do not train on it yet; subtraction-substitution proof lines can fail validation |
+| `official_igsm` | fixed locally 2026-05-28 | subtraction-substitution proof lines now validate after parser tokenization fix; train-10 build/SFT/eval chain submitted |
 
 Audit artifacts live under:
 
 ```bash
 analysis/paired_dataset_audit_2026-05-23/
 ```
+
+Fix update 2026-05-28 12:51 CEST: the iGSM blocker was in the shared term tokenizer, not in the iGSM proof generator. `parse_formula()` strips whitespace before term tokenization, and the old term-token regex allowed `-` inside identifiers, so `v_b - v_d` became the single constant `v_b-v_d`. Equality substitution could not rewrite inside that term. `logic_engine/parser.py` now treats `-` as an arithmetic operator, `tests/test_logic_engine.py` has a regression test for `=E` inside subtraction, and the following checks passed:
+
+```bash
+python -m pytest -q tests/test_logic_engine.py tests/test_paired_synthetic_datasets.py
+python scripts/data/build_paired_synthetic_dataset.py --kind official_igsm --output-root /tmp/igsm_validation_smoke_20260528 --train-rows 60 --train-max-depth 10 --val-rows-per-depth 2 --val-max-depth 50 --validate-examples -1 --chunk-size 20 --seed 3407
+python scripts/data/build_paired_synthetic_dataset.py --kind maze_navigation --output-root /tmp/maze_validation_smoke_20260528 --train-rows 60 --train-max-depth 10 --val-rows-per-depth 2 --val-max-depth 50 --validate-examples -1 --chunk-size 20 --seed 3407
+python scripts/data/build_paired_synthetic_dataset.py --kind attribute_constraints --output-root /tmp/attr_validation_smoke_20260528 --train-rows 60 --train-max-depth 10 --val-rows-per-depth 2 --val-max-depth 50 --validate-examples -1 --chunk-size 20 --seed 3407
+```
+
+Submitted iGSM train-10 chain after the fix:
+
+| stage | job | note |
+| --- | ---: | --- |
+| iGSM train-10 materialization | `3671601_[2]` | completed exit `0:0`; wrote `${WORK}/synthetic-RLVL/datasets/materialized_paired_official_igsm_train10_20260528` with 50k train rows and depth-50 validation, no validation failures |
+| iGSM seed-3407 SFT | `3671602_[4-5%2]` | both rows completed exit `0:0`; train depth `1..10` |
+| iGSM sparse eval | `3671603_[4-5%2]` | both rows completed exit `0:0`; eval depths `1..50`, 32k vLLM context, output under `passk_eval/paired_followup_train10_sparse/` |
+
+Full-suite submission 2026-05-28 15:48 CEST:
+
+| stage | job | scope |
+| --- | ---: | --- |
+| paired full-suite materialization | `3672195_[0-2%3]` | `official_igsm`, `maze_navigation`, and hard `attribute_constraints`; train ranges `1..5/10/15/20/25`, 50k rows each; validation `val_step_01_1k` through `val_step_50_1k`; every generated row validated |
+| paired full-suite SFT | `3672212_[0-89%6]` | `3` families x `5` train ranges x `logic,nl_exact` x seeds `3407/3408/3409`; 10k OLMo-7B LoRA SFT steps; gradient checkpointing on by default |
+| paired full-suite sparse eval | `3672213_[0-89%4]` | dependent on SFT; sparse pass@k eval to depth 50, `32` prompts/depth, `16` generations/prompt, output under `passk_eval/paired_full_suite_sparse_20260528/` |
+| paired full-suite Codex oversight | `3672214`, `3672448`, `3673399`, `3673729`, `3674556`, next `3675380` | `3672214`, `3672448`, `3673399`, and `3673729` completed; `3674556` is running and `3675380` is scheduled for 2026-05-29 15:39 CEST as of 2026-05-29 11:42 CEST |
+
+The full-suite roots are:
+
+```bash
+${WORK}/synthetic-RLVL/datasets/materialized_paired_official_igsm_full_20260528
+${WORK}/synthetic-RLVL/datasets/materialized_paired_maze_navigation_full_20260528
+${WORK}/synthetic-RLVL/datasets/materialized_paired_attribute_constraints_hard_full_20260528
+```
+
+The submission scripts are:
+
+```bash
+scripts/slurm/jobs/build_paired_full_suite_2026-05-28.slurm
+scripts/slurm/sweeps/sft/paired_full_suite_2026-05-28.slurm
+scripts/slurm/jobs/posthoc_paired_full_suite_eval_2026-05-28.slurm
+scripts/slurm/codex/paired_full_suite_oversight_2026-05-28.slurm
+```
+
+The first pending SFT/eval/oversight submissions `3672196`/`3672197`/`3672208` were canceled before start after replacing array-id-based startup sleeps with throttle-slot-based sleeps. The active dependent jobs are `3672212`/`3672213`; oversight pass `3674556` is running and next oversight `3675380` is already scheduled.
+
+Status update 2026-05-29 07:41 CEST:
+
+- iGSM train-10 chain is complete. Logic gets OOD correct/joint@16 `0.488/0.406` and depth-50 `0.469/0.312`; `nl_exact` gets OOD correct@16 `0.544` and depth-50 correct@16 `0.438`, with NL-to-FOL joint `0.000`.
+- Full paired-suite SFT rows `0..31` completed exit `0:0`; rows `32..37` are running and `38..89` are pending by array throttle. Eval `3672213_[0-89%4]` remains dependency-pending on `3672212`, so no full-suite eval JSONs exist yet.
+- Paired full-suite oversight passes `3672214`, `3672448`, `3673399`, and `3673729` completed without finding unrecovered severe failures; next pass `3674556` is queued.
+
+Oversight update 2026-05-28 17:02 CEST: build rows `3672195_0`, `3672195_1`, and `3672195_2` were all still running after about 1h14m. SFT `3672212_[0-89%6]` was pending on `afterok:3672195_*`; eval `3672213_[0-89%4]` was pending on `afterok:3672212_*`. Build-log inspection found no Traceback, proof-validation failure, OOM/CUDA OOM, context-length failure, quota/no-space error, dependency failure, node failure, or timeout/cancelled task. The materialized roots were actively being populated; no full-suite manifests were present yet, so no downstream SFT/eval rows were released.
+
+Oversight update 2026-05-28 21:41 CEST: build rows `3672195_0`, `3672195_1`, and `3672195_2` completed exit `0:0`. The three full-suite roots now each have `full_suite_manifest.json` with 55 expected subsets and no missing parquet paths. SFT `3672212_0..5` released; row `0` (`official_igsm`, `logic`, train `1..5`, seed `3407`) reached `checkpoint-5000`, row `1` started optimizer steps, and rows `2..5` were still in normal startup/stagger windows. Eval `3672213_[0-89%4]` remains pending on `afterok:3672212_*`. Log scans found no Traceback, proof-validation failure, OOM/CUDA OOM, context-length failure, quota/no-space issue, dependency failure, node failure, timeout/cancelled task, tokenizer/model-load error, or vLLM failure. No eval JSONs are expected yet.
+
+Oversight update 2026-05-29 01:40 CEST: SFT rows `3672212_0..15` completed exit `0:0`, covering `official_igsm` through `nl_exact_train1to15_seed3407`. Rows `16..21` are running and rows `22..89` remain pending by `JobArrayTaskLimit`; row `16`, row `17`, and row `18` have reached `checkpoint-5000`, while rows `19..21` are in normal startup/early training. Eval `3672213_[0-89%4]` is still pending on `afterok:3672212_*`, and `passk_eval/paired_full_suite_sparse_20260528/` has no pass@k JSONs yet. Log scans found no fatal Traceback, proof-validation failure, OOM/CUDA OOM, context-length/context-cap failure, quota/no-space issue, dependency failure, node failure, timeout/cancelled task, tokenizer/model-load error, or vLLM failure; matches were limited to benign tokenizer warnings, quota-info headers, and standard accelerate OOM-avoidance wording. `3673399` is the running oversight pass and `3673729` is scheduled for 2026-05-29 05:37 CEST.
+
+Oversight update 2026-05-29 07:30 CEST: SFT rows `3672212_0..30` completed exit `0:0`, rows `31..35` are running, and rows `36..89` are pending by array throttle. Eval `3672213_[0-89%4]` remains dependency-pending and no full-suite eval JSONs exist yet. Oversight `3673399` completed exit `0:0`; next oversight `3673729` is queued.
+
+Oversight update 2026-05-29 07:41 CEST: SFT row `3672212_31` completed exit `0:0`, row `3672212_36` released, and current running rows are `32..36`; rows `37..89` remain pending by `JobArrayTaskLimit`. Eval `3672213_[0-89%4]` is still pending on `afterok:3672212_*(unfulfilled)` with zero JSON outputs under `passk_eval/paired_full_suite_sparse_20260528/`. Fatal-log scan found no Traceback, proof-validation failure, actual OOM/CUDA OOM, context-length failure, quota/no-space issue, dependency failure, node failure, timeout/cancelled task, tokenizer/model-load error, or vLLM failure. Full-suite manifests remain complete with 55 expected subsets and no missing parquet paths per family. Oversight `3673729` is running and next oversight `3674556` is pending BeginTime.
+
+Status update 2026-05-29 07:55 CEST: SFT row `3672212_37` released; rows `32..37` are running and rows `38..89` are pending by `JobArrayTaskLimit`. Eval remains dependency-pending with zero JSON outputs. Oversight `3673729` completed exit `0:0`; next oversight `3674556` is pending BeginTime.
+
+Oversight update 2026-05-29 11:42 CEST: build rows `3672195_0..2` remain completed exit `0:0`, and all three full-suite manifests still report 55 subsets with no missing parquet paths. SFT rows `3672212_0..35` completed exit `0:0`; rows `36..41` are running on `maze_navigation` train-1-to-10, with rows `36` and `37` already at `checkpoint-5000`; rows `42..89` are pending by `JobArrayTaskLimit`. Eval `3672213_[0-89%4]` remains dependency-pending on `afterok:3672212_*` and `passk_eval/paired_full_suite_sparse_20260528/` still has zero JSON outputs. Fatal-log scan found no Traceback, proof-validation failure, actual OOM/CUDA OOM, context-length failure, quota/no-space issue, dependency failure, node failure, timeout/cancelled task, tokenizer/model-load error, vLLM failure, idle-GPU symptom, or `DependencyNeverSatisfied`; matches were limited to benign tokenizer warnings, build token-length warnings, quota headers, and standard accelerate OOM-avoidance wording. Oversight `3674556` is running and next oversight `3675380` is scheduled for 2026-05-29 15:39 CEST.
 
 Follow-up submission on 2026-05-24:
 
@@ -109,7 +174,7 @@ OOD lm-eval update 2026-05-27 11:30 CEST: broad OOD array `3659356` completed al
 
 ## Benchmark 1: `official_igsm`
 
-Current status: blocked for training as of the 2026-05-23 broader audit. Addition chains validate in smoke examples, but subtraction-substitution proof lines can fail validation. Fix arithmetic proof generation or verifier support before using this family in SFT/eval sweeps.
+Current status: fixed locally and submitted for train-10 seed-3407 SFT/eval as of 2026-05-28. Addition and subtraction chains validate in the local depth-50 smoke after the tokenizer fix above. The full 50k train-10 chain `3671601 -> 3671602 -> 3671603` completed with no validation or runtime failures. A full 3-seed, 5-train-depth paired suite was submitted later the same day as `3672195 -> 3672212 -> 3672213` and is still in SFT.
 
 ### What It Tests
 

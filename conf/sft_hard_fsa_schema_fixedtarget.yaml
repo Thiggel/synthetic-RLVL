@@ -24,6 +24,7 @@ task:
   entity_decoy_ratio: null
   answer_decoy_ratio: null
   shortcut_rate: 0.0
+  shortcut_kind: schema
   require_unique_solution: true
   train_min_step: 1
   train_max_step: 3

@@ -94,6 +94,8 @@ def resolve_gradient_checkpointing(cfg: DictConfig) -> bool:
         if value == "auto":
             memory_heavy_templates = {
                 "nl_exact",
+                "logic_symbol_padded",
+                "logic_wordified",
                 "terse_nl",
                 "rule_annotated_nl",
                 "pseudocode",

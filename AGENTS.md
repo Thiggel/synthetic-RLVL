@@ -97,52 +97,66 @@ Supported `reward.schema` values:
 
 Update the handoff docs whenever operational or scientific state changes.
 
-- If a new Slurm job is submitted, canceled, resubmitted, or dependency-edited, update `docs/current_system_state.md` and the relevant experiment doc.
+- Keep `docs/current_system_state.md` as the shortest current operational truth.
+- Keep `docs/running_experiments.md` as the live Slurm dashboard.
+- Keep `docs/experiment_backlog.md` as the planned-experiment backlog. Add new experiment ideas from the conversation, remove or mark completed items, and record the trigger for when each item should run.
+- Keep `docs/project_log.md` as the short dated log for useful operational events, cleanup decisions, results updates, and handoff changes.
+- Move historical detail to experiment-specific docs or archive docs instead of appending long stale snapshots.
+- If a new Slurm job is submitted, canceled, resubmitted, dependency-edited, or partition-edited, update `docs/current_system_state.md`, `docs/running_experiments.md`, and the relevant experiment doc.
 - If implementation is changed or extended, update the relevant docs with what changed, why, and any verification run.
 - If new analysis, results, failure modes, or research insights are found, record the concise takeaway and affected artifacts in the handoff docs.
-- Keep `docs/current_system_state.md` as the shortest current operational truth; move historical detail to experiment-specific or archived docs instead of appending long stale snapshots.
+
+## Report Discipline
+
+- The ongoing LaTeX report lives outside this repo in `../synthetic-RLVL-report`.
+- Treat `../synthetic-RLVL-report` as the primary reader-facing report repo. Keep generated analysis in this repo as reproducible artifacts, but move polished narrative, selected tables, selected figures, current system state summaries, and short useful logs into the report repo.
+- Whenever new results, plots, tables, sample generations, or important insights are produced, update the LaTeX report and push the report repo to GitHub.
+- If local TeX tooling is unavailable, still update the `.tex` sources and note that compilation was not run.
+- Keep raw or bulky artifacts out of the report repo unless they are explicitly needed by the LaTeX source.
+
+## GitHub Push Discipline
+
+- After making code, Slurm, docs, or report changes, commit and push the affected repo to GitHub yourself when network/authentication permits.
+- For this repo, push changes to `git@github.com:Thiggel/synthetic-RLVL.git`.
+- For the report repo, push changes to `git@github.com:Thiggel/synthetic-RLVL-report.git`.
+- If direct push to the current branch is inappropriate, push a clearly named branch and record it in the final user update. If pushing fails because credentials, network, or tooling are unavailable, state the exact blocker.
+
+## Slurm Housekeeping
+
+- When checking pending jobs, inspect whether compatible partitions are free or likely to start sooner.
+- If a pending job can safely run on more partitions, use:
+  - `scontrol update JobId=<jobid> Partition=<partition1,partition2>`
+- Only widen to partitions compatible with the job's GPU, memory, walltime, account, and software constraints.
+- Record any partition edits in `docs/running_experiments.md` and `docs/current_system_state.md`.
 
 ## Current Live Runs
 
-Current operational truth lives in `docs/current_system_state.md`; update it whenever jobs, code, or analysis state changes.
+Do not embed long live-run snapshots in this file. Current operational truth lives in:
 
-Snapshot as of 2026-05-25 18:07 CEST:
+- `docs/current_system_state.md`
+- `docs/running_experiments.md`
+- `docs/experiment_backlog.md`
 
-| Stage | Jobs | State | Note |
-| --- | --- | --- | --- |
-| HFSA 10k SFT | `3646736_[0-6]`, `3647379_[7-29%12]` | completed | all 30 main rows covered; row 0 skipped due existing final checkpoint; executed rows exit `0:0` |
-| Old full-grid eval arrays | `3647708`, `3648279`, `3648280`, `3647711`, `3647712` | canceled | canceled 2026-05-22 10:47 CEST after sparse runtime patch |
-| Sparse final eval | `3650951_[0-29%10]` | completed | 30/30 JSON files, all tasks exit `0:0` |
-| Sparse intermediate eval | `3650952_[0,3,6,9,12,15,18,21,24,27%4]` | completed | seed-3407 checkpoint curves; 30/30 JSON files, all tasks exit `0:0` |
-| Dense intermediate eval backfill | `3660813_[0,3,6,9,12,15,18,21,24,27%2]` | running | seed-3407 1k-grid checkpoint backfill with `CHECKPOINT_STEPS=1000,2000,...,10000`; existing outputs skip |
-| Paired train-10 materialization | `3656210_1`, `3656308_0` | completed | `attribute_constraints` completed; `maze_navigation` completed after fixing depth-15 room vocabulary |
-| Paired train-10 SFT/eval pilot | SFT `3656309`, retries `3657088`/`3657738`; eval `3656310`, `3657739`, replacement `3659556_[0-1%2]` | attribute complete, maze eval replacement running | maze SFT recovered; first maze eval hit 16k context cap and replacement uses 32k context |
-| Hard attribute replacement | build `3659338`, SFT `3659339_[0-1%2]`, eval `3659340_[0-1%2]` | build/SFT completed, eval running | saturated `attribute_constraints` was hardened and resubmitted after local validation through depth 50 |
-| Qwen HFSA model ablation | `3656217_[0-17%3]`, `3656218_[0-17%3]` | SFT rows 0-14 complete, 15-17 running; eval rows 0-12 complete, 13-14 running | `Qwen/Qwen2.5-7B`; train depths `1..10`, `1..20`, `1..25`; both templates; three seeds |
-| Small-extra HFSA model ablation | `3656323_[0-35%4]`, retries `3656359_2` and `3656387_3`, eval `3656389_[0-35%4]` | rows 0,1,4-25 complete or recovered; 26-29 running; 30-35 pending | `Qwen/Qwen2.5-1.5B` and `google/gemma-3-4b-pt`; failed rows 2/3 recovered by retries |
-| OLMo-32B pilot | `3656335_[0-1%1]`, replacement eval `3658461_[0-1%1]` | row 0 complete, row 1 running, eval pending | `allenai/OLMo-2-0325-32B`, train depth `1..20`, seed 3407, logic vs NL |
-| Tiny Llama scratch pretraining | seed-3407 `3656338`, retries `3656360_1`/`3656388_0`; new seeds `3659626`, `3659630` | seed 3407 completed; seeds 3408/3409 running | random-init Llama3-tokenizer configs at `50M/100M/200M`; missing seeds were submitted 2026-05-25 with final/checkpoint/OOD eval dependencies |
-| Tiny Llama checkpoint/final eval | seed-3407 final `3656390` and checkpoint replacement `3659415`; seed deps `3659627`, `3659628`, `3659631`, `3659632` | seed 3407 completed; new seed evals dependency-pending | final sparse pass@k plus checkpoint-10000/15000 pass@k; checkpoint script stages tokenizer metadata from `final/` |
-| OOD lm-eval | pilots `3659344`/`3659348`, broad `3659356_[0-89%4]`, OLMo32 `3659357_[0-1%1]`, tiny `3659488`, EM rerun `3659634`, tiny seed deps `3659629`/`3659633` | pilots and tiny seed-3407 replacement/EM rerun completed; larger/new seed arrays pending | tag-aware GSM8K/HotpotQA/2Wiki/MuSiQue suite implemented; LongBench now reports F1 and exact match |
-| Codex HFSA follow-up oversight | through `3659047`, next `3659552` | running / begin-time pending | `scripts/slurm/codex/hfsa_followup_oversight_2026-05-24.slurm`; self-schedules 4h follow-up passes up to `OVERSIGHT_MAX_HOPS=18` |
-| Paired dataset audit | local materialization audits | mixed | `maze_navigation` and `attribute_constraints` pass; `official_igsm` blocked by subtraction proof validation |
-
-Check live status:
+Check live status with:
 
 ```bash
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %R'
-sacct -j 3650951,3650952,3660813,3656210,3656308,3656309,3656310,3657088,3657738,3657739,3659556,3656217,3656218,3656323,3656359,3656387,3656389,3656335,3656336,3658461,3656338,3656360,3656388,3656390,3656509,3656510,3657079,3657734,3658457,3658813,3659047,3659552,3659338,3659339,3659340,3659344,3659348,3659356,3659357,3659392,3659405,3659415,3659488,3659626,3659627,3659628,3659629,3659630,3659631,3659632,3659633,3659634 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j <jobids> --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
 ```
 
 ## Primary Docs
 
 - `README.md`
 - `docs/current_system_state.md`
+- `docs/running_experiments.md`
+- `docs/experiment_backlog.md`
+- `docs/project_log.md`
 - `docs/formal_logic_cot_research_plan_2026-05-19.md`
 - `docs/hfsa_depth_scaling_plan_2026-05-19.md`
 - `docs/old_rl_validity_reward_direction_2026-05-19.md`
 - `docs/posttrain_status_2026-04-18.md`
 - `docs/runtime_env.md`
+- `../synthetic-RLVL-report/main.tex`
 
 # Code Review
 

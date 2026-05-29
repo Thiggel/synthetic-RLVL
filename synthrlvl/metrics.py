@@ -172,6 +172,8 @@ class OutputEvaluator:
 
         wants_logic = template in (
             TemplateName.LOGIC,
+            TemplateName.LOGIC_SYMBOL_PADDED,
+            TemplateName.LOGIC_WORDIFIED,
             TemplateName.LOGIC_NATURAL,
             TemplateName.NATURAL_LOGIC,
             TemplateName.FORMAL_THINK,
@@ -208,7 +210,11 @@ class OutputEvaluator:
 
         format_ok = 1.0
         # For pure logic format reward, require canonical tag order with no extra content outside tags.
-        if template == TemplateName.LOGIC and not self._has_strict_logic_layout(output_text):
+        if template in (
+            TemplateName.LOGIC,
+            TemplateName.LOGIC_SYMBOL_PADDED,
+            TemplateName.LOGIC_WORDIFIED,
+        ) and not self._has_strict_logic_layout(output_text):
             format_ok = 0.0
         if wants_logic and not self._has_logic_structure(output_text, logic_tag):
             format_ok = 0.0
@@ -329,6 +335,8 @@ class RewardComputer:
     def _line_valid_fraction(self, output_text: str, *, template: TemplateName, citation_free: bool = False) -> float:
         wants_logic = template in (
             TemplateName.LOGIC,
+            TemplateName.LOGIC_SYMBOL_PADDED,
+            TemplateName.LOGIC_WORDIFIED,
             TemplateName.LOGIC_NATURAL,
             TemplateName.NATURAL_LOGIC,
             TemplateName.FORMAL_THINK,

@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=16
 #SBATCH --time=24:00:00
-#SBATCH --array=0-1%2
+#SBATCH --array=0-2%2
 #SBATCH --output=logs/%x_%A_%a.out
 #SBATCH --error=logs/%x_%A_%a.err
 
@@ -20,7 +20,7 @@ export VIRTUAL_ENV="${VENV_PATH}"
 export PATH="${VENV_PATH}/bin:${PATH}"
 hash -r 2>/dev/null || true
 
-KINDS=(maze_navigation attribute_constraints)
+KINDS=(maze_navigation attribute_constraints official_igsm)
 KIND="${KINDS[${SLURM_ARRAY_TASK_ID}]}"
 OUT_ROOT="${PAIRED_OUT_ROOT:-${WORK}/synthetic-RLVL/datasets/materialized_paired_${KIND}_train10_20260524}"
 TRAIN_ROWS="${TRAIN_ROWS:-50000}"

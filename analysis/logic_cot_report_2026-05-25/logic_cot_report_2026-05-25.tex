@@ -5,7 +5,7 @@
 \usepackage{float}
 \usepackage{hyperref}
 \title{Formal Logic CoT Synthetic Results Update}
-\date{2026-05-28}
+\date{2026-05-29}
 \begin{document}
 \maketitle
 
@@ -30,6 +30,24 @@ train range & logic target & NL target & logic total & NL total \\
 \bottomrule
 \end{tabular}
 \caption{Mean token lengths for main OLMo-7B SFT sequences by train-depth range.}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lllllllll}
+\toprule
+condition & n & target mean & target p95 & total mean & total p95 & target/NL & total/NL & trunc. \\
+\midrule
+main logic & 512 & 1038.031 & 1862 & 2560.252 & 4681 & 0.714 & 0.860 & 0.000 \\
+main logic & 512 & 1038 & 1862 & 2559.300 & 4680 & 0.714 & 0.860 & 0.000 \\
+symbol-padded logic & 512 & 1443.164 & 2603 & 2965.385 & 5424 & 0.993 & 0.996 & 0.000 \\
+wordified logic & 512 & 1469.700 & 2610 & 2990.900 & 5429 & 1.011 & 1.005 & 0.000 \\
+main NL exact & 512 & 1453.980 & 2668 & 2976.201 & 5491 & 1.000 & 1.000 & 0.000 \\
+main NL exact & 512 & 1454 & 2668 & 2975.200 & 5490 & 1.000 & 1.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Token-length match for logic length-control ablations on the same 512 train-1-to-25 examples. Symbol-padded lengthens formal atoms mechanically; wordified logic uses natural attribute predicate names while preserving formal proof rules.}
 \end{table}
 
 \section{Main OLMo-7B downstream OOD}
@@ -475,49 +493,117 @@ size & template & n & GSM8K EM & GSM8K tag & Hotpot EM & 2Wiki EM & MuSiQue EM \
 \caption{Tiny Llama 100k bare-format OOD exact-match metrics.}
 \end{table}
 
-\section{Qwen-2.5-7B architecture ablation}
+\section{Architecture ablations}
+The architecture comparison now includes completed Qwen-2.5-1.5B, Qwen-2.5-7B, and Gemma-3-4B sparse evals, plus the main OLMo-7B baseline for the overlapping train ranges. OLMo-2-32B is shown only as a short-context slice because its real context limit prevents the depth-50 protocol.
+
 \begin{table}[H]
 \centering
-\small
-\begin{tabular}{lllllll}
+\scriptsize
+\begin{tabular}{llllllllllll}
 \toprule
-template & train max & n & OOD c@16 & OOD joint@16 & d50 c@16 & d50 joint@16 \\
+model & template & train max & n & OOD c@16 & OOD joint@16 & d30--50 c@16 & d30--50 joint@16 & d50 c@16 & d50 joint@16 & short c@16 & short joint@16 \\
 \midrule
-logic & 10 & 3 & 0.618 & 0.320 & 0.292 & 0.031 \\
-logic & 20 & 3 & 0.753 & 0.165 & 0.656 & 0.021 \\
-logic & 25 & 3 & 0.906 & 0.431 & 0.854 & 0.156 \\
-nl\_exact & 10 & 3 & 0.461 & 0.279 & 0.427 & 0.000 \\
-nl\_exact & 20 & 3 & 0.438 & 0.339 & 0.333 & 0.135 \\
-nl\_exact & 25 & 3 & 0.569 & 0.565 & 0.250 & 0.229 \\
+OLMo-7B & logic & 5 & 3 & 0.293 & 0.052 & 0.160 & 0.004 & 0.135 & 0.010 & 0.795 & 0.583 \\
+OLMo-7B & logic & 10 & 3 & 0.727 & 0.362 & 0.537 & 0.062 & 0.479 & 0.010 & 1.000 & 0.967 \\
+OLMo-7B & logic & 15 & 3 & 0.634 & 0.293 & 0.477 & 0.042 & 0.354 & 0.042 & 1.000 & 1.000 \\
+OLMo-7B & logic & 20 & 3 & 0.830 & 0.441 & 0.810 & 0.346 & 0.854 & 0.198 & 1.000 & 1.000 \\
+OLMo-7B & logic & 25 & 3 & 0.921 & 0.710 & 0.921 & 0.710 & 0.833 & 0.417 & 1.000 & 1.000 \\
+OLMo-7B & nl\_exact & 5 & 3 & 0.502 & 0.318 & 0.304 & 0.000 & 0.292 & 0.000 & 0.967 & 0.965 \\
+OLMo-7B & nl\_exact & 10 & 3 & 0.482 & 0.299 & 0.329 & 0.000 & 0.417 & 0.000 & 1.000 & 1.000 \\
+OLMo-7B & nl\_exact & 15 & 3 & 0.322 & 0.137 & 0.271 & 0.002 & 0.260 & 0.000 & 1.000 & 1.000 \\
+OLMo-7B & nl\_exact & 20 & 3 & 0.474 & 0.219 & 0.423 & 0.121 & 0.406 & 0.115 & 1.000 & 1.000 \\
+OLMo-7B & nl\_exact & 25 & 3 & 0.794 & 0.748 & 0.794 & 0.748 & 0.510 & 0.427 & 1.000 & 1.000 \\
+Qwen-2.5-1.5B & logic & 10 & 3 & 0.691 & 0.231 & 0.650 & 0.062 & 0.552 & 0.010 & 0.988 & 0.953 \\
+Qwen-2.5-1.5B & logic & 20 & 3 & 0.694 & 0.208 & 0.669 & 0.154 & 0.698 & 0.042 & 1.000 & 1.000 \\
+Qwen-2.5-1.5B & logic & 25 & 3 & 0.771 & 0.425 & 0.771 & 0.425 & 0.708 & 0.260 & 1.000 & 1.000 \\
+Qwen-2.5-1.5B & nl\_exact & 10 & 3 & 0.561 & 0.278 & 0.435 & 0.000 & 0.521 & 0.000 & 1.000 & 1.000 \\
+Qwen-2.5-1.5B & nl\_exact & 20 & 3 & 0.354 & 0.075 & 0.331 & 0.000 & 0.406 & 0.000 & 1.000 & 1.000 \\
+Qwen-2.5-1.5B & nl\_exact & 25 & 3 & 0.542 & 0.292 & 0.542 & 0.292 & 0.438 & 0.010 & 1.000 & 1.000 \\
+Qwen-2.5-7B & logic & 10 & 3 & 0.618 & 0.320 & 0.415 & 0.044 & 0.292 & 0.031 & 1.000 & 0.981 \\
+Qwen-2.5-7B & logic & 20 & 3 & 0.753 & 0.165 & 0.733 & 0.069 & 0.656 & 0.021 & 1.000 & 1.000 \\
+Qwen-2.5-7B & logic & 25 & 3 & 0.906 & 0.431 & 0.906 & 0.431 & 0.854 & 0.156 & 1.000 & 1.000 \\
+Qwen-2.5-7B & nl\_exact & 10 & 3 & 0.461 & 0.279 & 0.275 & 0.000 & 0.427 & 0.000 & 1.000 & 1.000 \\
+Qwen-2.5-7B & nl\_exact & 20 & 3 & 0.438 & 0.339 & 0.427 & 0.315 & 0.333 & 0.135 & 1.000 & 1.000 \\
+Qwen-2.5-7B & nl\_exact & 25 & 3 & 0.569 & 0.565 & 0.569 & 0.565 & 0.250 & 0.229 & 1.000 & 1.000 \\
+Gemma-3-4B & logic & 10 & 3 & 0.691 & 0.522 & 0.517 & 0.265 & 0.417 & 0.135 & 1.000 & 1.000 \\
+Gemma-3-4B & logic & 20 & 3 & 0.769 & 0.288 & 0.746 & 0.244 & 0.677 & 0.146 & 1.000 & 1.000 \\
+Gemma-3-4B & logic & 25 & 3 & 0.696 & 0.254 & 0.696 & 0.254 & 0.562 & 0.177 & 1.000 & 1.000 \\
+Gemma-3-4B & nl\_exact & 10 & 3 & 0.458 & 0.261 & 0.279 & 0.000 & 0.167 & 0.000 & 0.964 & 0.941 \\
+Gemma-3-4B & nl\_exact & 20 & 3 & 0.215 & 0.188 & 0.115 & 0.081 & 0.104 & 0.052 & 1.000 & 1.000 \\
+Gemma-3-4B & nl\_exact & 25 & 3 & 0.394 & 0.394 & 0.394 & 0.394 & 0.302 & 0.302 & 1.000 & 1.000 \\
+OLMo-2-32B shortctx & logic & 20 & 1 & -- & -- & -- & -- & -- & -- & 1.000 & 1.000 \\
+OLMo-2-32B shortctx & nl\_exact & 20 & 1 & -- & -- & -- & -- & -- & -- & 1.000 & 1.000 \\
 \bottomrule
 \end{tabular}
-\caption{Qwen-2.5-7B representative sparse eval. This 18-row architecture slice is complete.}
+\caption{Architecture sparse eval comparison. Depth 30--50 averages depths 30, 35, 40, 45, and 50 when available; short-context averages depths 1, 2, 5, 10, 12, and 15 and is the only valid OLMo-2-32B synthetic slice.}
 \end{table}
 \begin{figure}[H]\centering
-\includegraphics[width=0.86\linewidth]{figures/qwen7b_partial_ood_correct_joint.pdf}
-\caption{Partial Qwen-2.5-7B OOD correct/joint@16.}
+\includegraphics[width=0.95\linewidth]{figures/architecture_ood_correct16_by_train_depth.pdf}
+\caption{Architecture comparison for OOD correct@16.}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\linewidth]{figures/architecture_depth30_50_correct16_by_train_depth.pdf}
+\caption{Architecture comparison for eval-depth 30--50 correct@16.}
 \end{figure}
 
 \section{Targeted ablations}
-Completed ablation results are shown here; active arrays are tracked in the handoff documents. The same-token-budget control keeps the logic-vs-NL comparison favorable to logic on answer correctness but not on joint validity. The shortcut-rate table currently covers shortcut rate 0.5; shortcut rate 0.8 eval rows are still running. Conditioned dual-modality eval is partial and should not be interpreted until all 30 eval rows complete.
+Completed ablation results are shown here; active arrays are tracked in the handoff documents. The current same-token-budget experiment is more precisely a same target-token budget experiment. The logic row in that experiment is a control rerun at 10k steps; the NL row is shortened to 7140 steps so target-token exposure approximately matches 10k logic steps. It does not match total prompt-plus-target tokens; that would require roughly 8600 NL steps and has not been run yet. The symbol-padded logic control is the completed total-sequence-length match to NL at the same optimizer-step budget; the wordified logic length-control run is tracked as the cleaner follow-up once it completes. Shortcut rates 0.5 and 0.8 are complete; shortcut rate 0.3 is still training. Conditioned dual-modality eval is complete.
+
+The shortcut-rate ablation changes only the training distribution. With probability equal to the shortcut rate, a training example uses the \texttt{hard\_fsa\_schema} shortcut generator: the gold path obeys a shared marker-conditioned transition schema and carries redundant marker facts that make a family-level transition heuristic predictive. Non-gold branches remain coherent but do not follow that schema. Evaluation always resets \texttt{shortcut\_rate=0.0}, so these rows test whether training on shortcut-rich traces hurts or helps transfer back to shortcut-neutral depth extrapolation.
 
 \begin{table}[H]
 \centering
 \small
 \begin{tabular}{lllllll}
 \toprule
-template & steps & n & OOD c@16 & OOD joint@16 & d50 c@16 & d50 joint@16 \\
+condition & status & steps & target tok/ex & target exposure & total tok/ex & total exposure \\
 \midrule
-logic & 10000 & 3 & 0.898 & 0.335 & 0.792 & 0.125 \\
-nl\_exact & 7140 & 3 & 0.554 & 0.473 & 0.344 & 0.219 \\
+main logic baseline & result exists & 10000 & 1038 & 1.000 & 2587 & 1.000 \\
+main NL baseline & result exists & 10000 & 1454 & 1.401 & 3008 & 1.163 \\
+same-target logic control & result exists & 10000 & 1038 & 1.000 & 2587 & 1.000 \\
+same-target NL & result exists & 7140 & 1454 & 1.000 & 3008 & 0.830 \\
+total-token NL match & not run & 8600 & 1454 & 1.205 & 3008 & 1.000 \\
 \bottomrule
 \end{tabular}
-\caption{Same target-token budget control, train-1-to-25, three seeds.}
+\caption{Token-budget accounting for train-1-to-25. Target-token ratios use the 512-example audit that set the submitted step count; total-token ratios use the report token-length audit. Exposure columns are relative to 10k logic steps.}
 \end{table}
-\begin{figure}[H]\centering
-\includegraphics[width=\linewidth]{figures/ablation_same_target_token_budget_vs_main.pdf}
-\caption{Same target-token budget control compared against the main train-1-to-25 logic/NL baselines.}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{llllll}
+\toprule
+condition & n & OOD c@16 & OOD joint@16 & d50 c@16 & d50 joint@16 \\
+\midrule
+main compact logic & 3 & 0.921 & 0.710 & 0.833 & 0.417 \\
+main NL exact & 3 & 0.794 & 0.748 & 0.510 & 0.427 \\
+symbol-padded logic & 3 & 0.675 & 0.206 & 0.562 & 0.094 \\
+\bottomrule
+\end{tabular}
+\caption{Logic length-control ablations compared with the main train-1-to-25 runs.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/ablation_logic_length_control_depth_curve_train1to25.pdf}
+\caption{Train-1-to-25 depth curve comparing compact logic, length-control logic variants, and main NL exact. Curves are seed means over the sparse final eval depths; the dotted line marks the maximum training depth.}
 \end{figure}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lllllllllll}
+\toprule
+condition & steps & n & OOD c@16 & $\Delta$ vs logic & OOD joint@16 & $\Delta$ vs logic & d50 c@16 & $\Delta$ vs logic & d50 joint@16 & $\Delta$ vs logic \\
+\midrule
+main logic & 10000 & 3 & 0.921 & 0.000 & 0.710 & 0.000 & 0.833 & 0.000 & 0.417 & 0.000 \\
+main nl\_exact & 10000 & 3 & 0.794 & -0.127 & 0.748 & 0.037 & 0.510 & -0.323 & 0.427 & 0.010 \\
+same-token logic & 10000 & 3 & 0.898 & -0.023 & 0.335 & -0.375 & 0.792 & -0.042 & 0.125 & -0.292 \\
+same-token nl\_exact & 7140 & 3 & 0.554 & -0.367 & 0.473 & -0.238 & 0.344 & -0.490 & 0.219 & -0.198 \\
+\bottomrule
+\end{tabular}
+\caption{Same target-token budget control compared directly to the main train-1-to-25 logic baseline. Delta columns subtract the main logic row.}
+\end{table}
 
 \begin{table}[H]
 \centering
@@ -526,11 +612,15 @@ nl\_exact & 7140 & 3 & 0.554 & 0.473 & 0.344 & 0.219 \\
 \toprule
 template & shortcut rate & n & OOD c@16 & OOD joint@16 & d50 c@16 & d50 joint@16 \\
 \midrule
-logic & 0p5 & 3 & 0.906 & 0.677 & 0.833 & 0.375 \\
-nl\_exact & 0p5 & 3 & 0.642 & 0.585 & 0.385 & 0.312 \\
+logic & 0.000 & 3 & 0.921 & 0.710 & 0.833 & 0.417 \\
+logic & 0.500 & 3 & 0.906 & 0.677 & 0.833 & 0.375 \\
+logic & 0.800 & 3 & 0.940 & 0.794 & 0.823 & 0.417 \\
+nl\_exact & 0.000 & 3 & 0.794 & 0.748 & 0.510 & 0.427 \\
+nl\_exact & 0.500 & 3 & 0.642 & 0.585 & 0.385 & 0.312 \\
+nl\_exact & 0.800 & 3 & 0.638 & 0.565 & 0.281 & 0.146 \\
 \bottomrule
 \end{tabular}
-\caption{Shortcut-rate ablation results available so far. Eval remains shortcut-neutral.}
+\caption{Shortcut-rate ablation, including the shortcut-neutral main train-1-to-25 baseline as rate 0.0. Eval remains shortcut-neutral for all rows.}
 \end{table}
 \begin{figure}[H]\centering
 \includegraphics[width=0.9\linewidth]{figures/ablation_shortcut_rate_vs_main.pdf}
@@ -542,20 +632,37 @@ nl\_exact & 0p5 & 3 & 0.642 & 0.585 & 0.385 & 0.312 \\
 \scriptsize
 \begin{tabular}{lllllll}
 \toprule
-train max & eval mode & n & OOD c@16 & OOD joint@16 & d50 c@16 & d50 joint@16 \\
+train max & condition & n & OOD c@16 & OOD joint@16 & d50 c@16 & d50 joint@16 \\
 \midrule
-10 & conditioned\_logic & 3 & 0.695 & 0.256 & 0.521 & 0.000 \\
-10 & conditioned\_nl & 3 & 0.638 & 0.339 & 0.604 & 0.000 \\
-15 & conditioned\_logic & 3 & 0.572 & 0.258 & 0.344 & 0.031 \\
-15 & conditioned\_nl & 1 & 0.469 & 0.191 & 0.500 & 0.000 \\
-20 & conditioned\_logic & 3 & 0.701 & 0.116 & 0.500 & 0.021 \\
-25 & conditioned\_logic & 3 & 0.677 & 0.202 & 0.521 & 0.031 \\
-5 & conditioned\_logic & 3 & 0.360 & 0.058 & 0.167 & 0.000 \\
-5 & conditioned\_nl & 3 & 0.697 & 0.332 & 0.646 & 0.000 \\
+5 & main logic & 3 & 0.293 & 0.052 & 0.135 & 0.010 \\
+5 & conditioned logic & 3 & 0.360 & 0.058 & 0.167 & 0.000 \\
+5 & main NL exact & 3 & 0.502 & 0.318 & 0.292 & 0.000 \\
+5 & conditioned NL & 3 & 0.697 & 0.332 & 0.646 & 0.000 \\
+10 & main logic & 3 & 0.727 & 0.362 & 0.479 & 0.010 \\
+10 & conditioned logic & 3 & 0.695 & 0.256 & 0.521 & 0.000 \\
+10 & main NL exact & 3 & 0.482 & 0.299 & 0.417 & 0.000 \\
+10 & conditioned NL & 3 & 0.638 & 0.339 & 0.604 & 0.000 \\
+15 & main logic & 3 & 0.634 & 0.293 & 0.354 & 0.042 \\
+15 & conditioned logic & 3 & 0.572 & 0.258 & 0.344 & 0.031 \\
+15 & main NL exact & 3 & 0.322 & 0.137 & 0.260 & 0.000 \\
+15 & conditioned NL & 3 & 0.363 & 0.155 & 0.281 & 0.000 \\
+20 & main logic & 3 & 0.830 & 0.441 & 0.854 & 0.198 \\
+20 & conditioned logic & 3 & 0.701 & 0.116 & 0.500 & 0.021 \\
+20 & main NL exact & 3 & 0.474 & 0.219 & 0.406 & 0.115 \\
+20 & conditioned NL & 3 & 0.630 & 0.290 & 0.510 & 0.042 \\
+25 & main logic & 3 & 0.921 & 0.710 & 0.833 & 0.417 \\
+25 & conditioned logic & 3 & 0.677 & 0.202 & 0.521 & 0.031 \\
+25 & main NL exact & 3 & 0.794 & 0.748 & 0.510 & 0.427 \\
+25 & conditioned NL & 3 & 0.581 & 0.490 & 0.510 & 0.333 \\
 \bottomrule
 \end{tabular}
-\caption{Conditioned dual-modality ablation rows available at report generation time.}
+\caption{Conditioned dual-modality ablation compared with the main single-modality baselines at each train-depth range.}
 \end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\linewidth]{figures/ablation_conditioned_dual_vs_main_by_train_depth.pdf}
+\caption{Conditioned dual-modality ablation compared with main logic and main NL across train-depth ranges. Dashed lines are conditioned runs; solid lines are single-modality baselines.}
+\end{figure}
+
 
 \section{Qualitative samples}
 The companion PDF \texttt{figures/sample\_generation\_panels.pdf} contains synthetic generated examples with extracted answer, gold answer, correctness, and validity metadata. The following samples are from the completed bare-format OOD rerun for OLMo-7B train-1-to-25 seed 3407.

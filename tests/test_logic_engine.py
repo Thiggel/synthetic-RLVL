@@ -48,6 +48,18 @@ def test_mod23_arithmetic_extension():
     assert [line.valid for line in report.lines] == [True]
 
 
+def test_equality_substitution_inside_subtraction_term():
+    engine = LogicEngine()
+    report = engine.analyze_proof(
+        premises="v_b = 19, v_o = v_b - v_d",
+        conclusion="v_o = 19 - v_d",
+        proof="v_o = 19 - v_d ; =E,1,2",
+    )
+
+    assert report.ok is True
+    assert report.lines[0].valid is True
+
+
 def test_formula_equivalence_implication_vs_disjunction():
     engine = LogicEngine()
     assert engine.are_equivalent("P(a) -> Q(a)", "not P(a) or Q(a)") is True

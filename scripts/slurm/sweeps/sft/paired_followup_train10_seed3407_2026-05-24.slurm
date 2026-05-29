@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=12
 #SBATCH --time=24:00:00
-#SBATCH --array=0-3%2
+#SBATCH --array=0-5%2
 #SBATCH --output=logs/%x_%A_%a.out
 #SBATCH --error=logs/%x_%A_%a.err
 
@@ -20,7 +20,7 @@ export VIRTUAL_ENV="${VENV_PATH}"
 export PATH="${VENV_PATH}/bin:${PATH}"
 hash -r 2>/dev/null || true
 
-KINDS=(maze_navigation attribute_constraints)
+KINDS=(maze_navigation attribute_constraints official_igsm)
 TEMPLATES=(logic nl_exact)
 IDX="${SLURM_ARRAY_TASK_ID}"
 KIND="${KINDS[$((IDX / 2))]}"

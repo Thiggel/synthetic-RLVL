@@ -20,8 +20,12 @@ export VIRTUAL_ENV="${VENV_PATH}"
 export PATH="${VENV_PATH}/bin:${PATH}"
 hash -r 2>/dev/null || true
 
-RATE_TAGS=(0p5 0p8)
-RATE_VALUES=(0.5 0.8)
+IFS=',' read -r -a RATE_TAGS <<< "${RATE_TAGS_CSV:-0p5,0p8}"
+IFS=',' read -r -a RATE_VALUES <<< "${RATE_VALUES_CSV:-0.5,0.8}"
+if [[ "${#RATE_TAGS[@]}" -ne "${#RATE_VALUES[@]}" ]]; then
+  echo "RATE_TAGS_CSV and RATE_VALUES_CSV must have the same length" >&2
+  exit 2
+fi
 IDX=${SLURM_ARRAY_TASK_ID}
 RATE_TAG=${RATE_TAGS[$IDX]}
 RATE_VALUE=${RATE_VALUES[$IDX]}
