@@ -108,11 +108,12 @@ Update the handoff docs whenever operational or scientific state changes.
 
 ## Report Discipline
 
-- The ongoing LaTeX report lives outside this repo in `../synthetic-RLVL-report`.
-- Treat `../synthetic-RLVL-report` as the primary reader-facing report repo. Keep generated analysis in this repo as reproducible artifacts, but move polished narrative, selected tables, selected figures, current system state summaries, and short useful logs into the report repo.
-- Whenever new results, plots, tables, sample generations, or important insights are produced, update the LaTeX report and push the report repo to GitHub.
+- The primary ongoing LaTeX report lives inside this repo at `analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex`.
+- Regenerate the report with `scripts/analysis/build_logic_cot_report.py` whenever new results, plots, tables, sample generations, or important insights are produced.
+- Keep `../synthetic-RLVL-report` as an optional external scaffold only if the user explicitly asks for it; do not treat it as the primary report target.
+- The in-repo report should include all current generated result tables, figures, qualitative samples, and concise scientific insights, plus an artifact index for generated CSV/PDF/Markdown supplements.
 - If local TeX tooling is unavailable, still update the `.tex` sources and note that compilation was not run.
-- Keep raw or bulky artifacts out of the report repo unless they are explicitly needed by the LaTeX source.
+- Keep raw or bulky artifacts out of Git unless they are explicitly needed by the LaTeX source or are already part of the generated report bundle.
 
 ## GitHub Push Discipline
 
@@ -156,7 +157,7 @@ sacct -j <jobids> --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
 - `docs/old_rl_validity_reward_direction_2026-05-19.md`
 - `docs/posttrain_status_2026-04-18.md`
 - `docs/runtime_env.md`
-- `../synthetic-RLVL-report/main.tex`
+- `analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex`
 
 # Code Review
 

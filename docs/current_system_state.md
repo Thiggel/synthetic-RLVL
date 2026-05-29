@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-05-29 12:34 CEST.
+Last updated: 2026-05-29 12:50 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -16,7 +16,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | HFSA implementation/eval plan | `docs/hfsa_depth_scaling_plan_2026-05-19.md` |
 | Dataset materialization details | `docs/materialized_dataset.md` |
 | Paired synthetic benchmark details | `docs/paired_synthetic_benchmarks_2026-05-20.md` |
-| Ongoing LaTeX report | `../synthetic-RLVL-report/main.tex` |
+| Ongoing LaTeX report | `analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex` |
 
 ## Current Scientific State
 
@@ -43,13 +43,7 @@ The active Slurm work is summarized in `docs/running_experiments.md`. Current hi
 
 ## Report Artifacts
 
-Primary reader-facing report repo:
-
-```bash
-../synthetic-RLVL-report/
-```
-
-Generated analysis artifact root in this repo:
+Primary reader-facing report root in this repo:
 
 ```bash
 analysis/logic_cot_report_2026-05-25/
@@ -68,6 +62,8 @@ The report builder is:
 source ./scripts/env.sh
 ${HPCVAULT}/.venv_rlvl_posttrain/bin/python scripts/analysis/build_logic_cot_report.py
 ```
+
+The 2026-05-29 report regeneration now includes an executive insight section, every generated PDF figure in the report bundle, OOD qualitative samples, and an index of generated CSV/PDF/Markdown artifacts.
 
 `pdflatex`/`latexmk` are not installed on the current node, so the `.tex` source is generated but not compiled here.
 

@@ -1256,6 +1256,14 @@ def build_symbol_padded_token_match_table() -> pd.DataFrame:
     if not raw_parts:
         return pd.DataFrame()
     raw = pd.concat(raw_parts, ignore_index=True)
+    raw = raw.groupby("template", as_index=False).agg(
+        n=("n", "max"),
+        target_mean=("target_mean", "mean"),
+        target_p95=("target_p95", "mean"),
+        total_mean=("total_mean", "mean"),
+        total_p95=("total_p95", "mean"),
+        truncation_rate_at_max_length=("truncation_rate_at_max_length", "mean"),
+    )
     labels = {
         "logic": "main logic",
         "logic_symbol_padded": "symbol-padded logic",
@@ -2124,6 +2132,112 @@ def latex_ood_examples(rows: list[dict[str, object]]) -> str:
     return "\n\n".join(parts)
 
 
+SUPPLEMENTAL_FIGURE_CAPTIONS = {
+    "ablation_same_target_token_budget_vs_main.pdf": (
+        "Same target-token budget ablation compared with the main train-1-to-25 logic and NL baselines."
+    ),
+    "ablation_symbol_padded_depth_curve_train1to25.pdf": (
+        "Symbol-padded equal-length logic depth curve for train-1-to-25. This older length-control view is kept "
+        "alongside the cleaner compact/wordified comparison."
+    ),
+    "olmo7b_checkpoint_correct_k8_k16.pdf": (
+        "Earlier combined OLMo-7B checkpoint curves for correct@8 and correct@16. The main text uses separated "
+        "logic/NL @16 panels, but this aggregate view is retained for completeness."
+    ),
+    "olmo7b_checkpoint_joint_k8_k16.pdf": (
+        "Earlier combined OLMo-7B checkpoint curves for joint correct+valid at @8 and @16. The main text uses "
+        "separated logic/NL @16 panels."
+    ),
+    "qwen7b_partial_ood_correct_joint.pdf": (
+        "Initial Qwen-2.5-7B partial architecture-ablation view. Superseded by the full architecture tables and "
+        "figures, but retained as a generated result artifact."
+    ),
+    "sample_generation_panels.pdf": (
+        "Synthetic sample-generation panels with extracted answers, gold answers, correctness, and validity metadata."
+    ),
+    "tiny_llama_100m_depth_correct_joint.pdf": (
+        "Earlier combined Tiny Llama 100M depth curve showing correct and joint metrics together."
+    ),
+    "tiny_llama_200m_depth_correct_joint.pdf": (
+        "Earlier combined Tiny Llama 200M depth curve showing correct and joint metrics together."
+    ),
+    "tiny_llama_50m_depth_correct_joint.pdf": (
+        "Earlier combined Tiny Llama 50M depth curve showing correct and joint metrics together."
+    ),
+    "tiny_llama_checkpoint_correct_k8.pdf": (
+        "Earlier all-size Tiny Llama checkpoint curve for correct@8. Size-separated checkpoint plots are in the main text."
+    ),
+    "tiny_llama_checkpoint_joint_k8.pdf": (
+        "Earlier all-size Tiny Llama checkpoint curve for joint correct+valid@8. Size-separated checkpoint plots are in the main text."
+    ),
+    "tiny_llama_final_bands_correct_joint.pdf": (
+        "Earlier aggregate Tiny Llama final-band view combining correct and joint metrics."
+    ),
+}
+
+
+def default_figure_caption(name: str) -> str:
+    stem = Path(name).stem.replace("_", " ")
+    return f"Generated supplemental figure: {stem}."
+
+
+def build_supplemental_figures_block(tex: str) -> str:
+    included = set(re.findall(r"\{figures/([^}]+\.pdf)\}", tex))
+    missing = [path.name for path in sorted(FIG_DIR.glob("*.pdf")) if path.name not in included]
+    if not missing:
+        return ""
+
+    parts = [
+        r"\clearpage",
+        r"\section{Supplemental generated figures}",
+        (
+            "This section embeds every remaining generated PDF figure that was not already placed in the main "
+            "narrative above. Some panels are older aggregate views now superseded by clearer separated plots; "
+            "they are retained here so the in-repo report contains the full current figure set."
+        ),
+    ]
+    for name in missing:
+        caption = SUPPLEMENTAL_FIGURE_CAPTIONS.get(name, default_figure_caption(name))
+        parts.append(
+            rf"""\begin{{figure}}[H]\centering
+\includegraphics[width=0.95\linewidth]{{figures/{name}}}
+\caption{{{caption}}}
+\end{{figure}}"""
+        )
+    return "\n\n".join(parts)
+
+
+def build_artifact_index_block() -> str:
+    csv_names = [path.name for path in sorted(TABLE_DIR.glob("*.csv"))]
+    sample_names = [
+        path.name
+        for path in sorted(OUT_ROOT.glob("*.md"))
+        if path.name.endswith(".md")
+    ]
+    pdf_names = [path.name for path in sorted(FIG_DIR.glob("*.pdf"))]
+
+    def verbatim_block(title: str, names: list[str]) -> str:
+        if not names:
+            return f"\\paragraph{{{title}.}} None generated."
+        return "\n".join(
+            [
+                rf"\paragraph{{{title}.}}",
+                r"\begin{verbatim}",
+                "\n".join(names),
+                r"\end{verbatim}",
+            ]
+        )
+
+    return "\n\n".join(
+        [
+            "The following generated artifacts are part of this report bundle.",
+            verbatim_block("CSV result tables", csv_names),
+            verbatim_block("PDF figures", pdf_names),
+            verbatim_block("Markdown sample supplements", sample_names),
+        ]
+    )
+
+
 def main_checkpoint_note(records: list[Record]) -> str:
     if not records:
         return "No main OLMo checkpoint pass@k files were present at report generation time."
@@ -2308,6 +2422,17 @@ def write_report(
 \date{{2026-05-29}}
 \begin{{document}}
 \maketitle
+
+\section{{Executive insights}}
+\begin{{itemize}}
+\item The main OLMo-7B HFSA grid is complete over three seeds. Logic is more sample- and depth-efficient at intermediate train ranges; NL exact catches up at train-1-to-25 on strict joint validity. At train-1-to-25, depth-50 joint@16 is logic 0.417 versus NL 0.427.
+\item The downstream OOD picture is split. NL transfers much better to GSM8K numeric EM, while logic transfers much better to context-provided HotpotQA, 2WikiMultiHopQA, and MuSiQue EM/F1. Treat the QA result as context-QA robustness, not proof-chain evidence.
+\item Token length is a real confound: NL targets are longer than logic targets at every train range. The symbol-padded equal-length logic control performs much worse than compact logic, so a naive token-length match is not enough; the wordified logic control is the cleaner next comparison once its eval finishes.
+\item Tiny random-init Llama pretraining is a mechanism smoke test. Logic is stronger than matched NL on answer-only synthetic OOD pass@8, but strict depth-50 joint validity is essentially absent.
+\item Architecture ablations show that the phenomenon is not OLMo-only: Qwen and Gemma runs also show strong formal-trace transfer, with model-specific variation in joint validity.
+\item Shortcut-rich training hurts NL more clearly than logic in the completed 0.5/0.8 shortcut-rate runs, supporting the hypothesis that NL relies more on brittle shortcut associations. The 0.3 shortcut-rate and shortcut-kind controls are still running.
+\item Conditioned dual-modality at 10k underperforms the best single-modality baselines, especially for conditioned logic at larger train ranges. The 50k continuation is running to test whether this is undertraining.
+\end{{itemize}}
 
 \section{{Metric note for OOD benchmarks}}
 EM means exact match: after extracting explicit answer content from an \texttt{{<answer>}} tag or answer marker, the evaluator normalizes the prediction and gold answer and assigns 1 only when they exactly match, then averages over examples. GSM8K is numeric EM and is effectively an accuracy over single numeric answers, but the report does not fall back to arbitrary numbers elsewhere in a generated trace. For HotpotQA, 2WikiMultiHopQA, and MuSiQue the answers are free-form strings with aliases and partial-overlap possibilities, so the standard report is EM plus token-level F1 rather than calling the result plain accuracy. F1 gives partial credit for overlapping answer tokens; EM is the stricter all-or-nothing string match.
@@ -2726,9 +2851,14 @@ The companion PDF \texttt{{figures/sample\_generation\_panels.pdf}} contains syn
 {latex_ood_examples(cot_bare_examples)}
 
 \section{{Artifacts}}
+{build_artifact_index_block()}
+
 CSV tables live under \texttt{{tables/}} and all plots are emitted as both PDF and PNG under \texttt{{figures/}}. This machine currently lacks \texttt{{pdflatex}}/\texttt{{latexmk}}, so the LaTeX source is generated but not compiled here.
 \end{{document}}
 """
+    supplemental_figures = build_supplemental_figures_block(tex)
+    if supplemental_figures:
+        tex = tex.replace("\n\\section{Artifacts}\n", f"\n{supplemental_figures}\n\n\\section{{Artifacts}}\n")
     (OUT_ROOT / "logic_cot_report_2026-05-25.tex").write_text(tex, encoding="utf-8")
 
 
