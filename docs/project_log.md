@@ -2,6 +2,10 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-05-30
+
+- 00:07 CEST paired full-suite oversight: build `3672195_0..2` remains complete with all three manifests at 55/55 paths; SFT rows `3672212_0..41` are complete with final adapters, rows `42..47` are running on `maze_navigation` train-1-to-15 with all six past `checkpoint-5000` and latest progress `9139/8790/8586/8744/8452/8489` of `10000`, and rows `48..89` are pending by array throttle. Eval `3672213` is still dependency-pending with zero JSON outputs and no output directory. Focused SFT fatal-log scan found no unrecovered Traceback/OOM/CUDA OOM/context/quota/dependency/tokenizer/model-load/vLLM/node-failure/timeout/idle-GPU issue, so no resubmission, cancellation, dependency edit, or partition edit was made. Oversight `3677238` is running and next pass `3677873` is begin-time pending.
+
 ## 2026-05-29
 
 - Split the live handoff into `docs/current_system_state.md`, `docs/running_experiments.md`, and `docs/experiment_backlog.md`; preserved the old long handoff in `docs/operational_history_2026-05-29.md`.

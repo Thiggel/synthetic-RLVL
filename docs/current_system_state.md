@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-05-29 21:50 CEST.
+Last updated: 2026-05-30 00:07 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -32,7 +32,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 The active Slurm work is summarized in `docs/running_experiments.md`. Current high-priority active chains are:
 
-- full paired-family suite: SFT `3672212` rows `0..41` complete, rows `42..47` running, rows `48..89` pending by throttle; eval `3672213` dependency-pending; oversight `3676517` completed, next `3677238` begin-time pending
+- full paired-family suite: SFT `3672212` rows `0..41` complete, rows `42..47` running, rows `48..89` pending by throttle; eval `3672213` dependency-pending; oversight `3677238` running, next `3677873` begin-time pending
 - trace-control ablations: SFT `3661118` rows `0..17` complete; eval `3661119` rows `0..2` running, rows `3..17` pending by throttle
 - shortcut-rate `0.3`: SFT `3671431` rows `0..5` complete; eval `3671432` rows `0..2` running, rows `3..5` pending by throttle
 - hybrid-order eval: `3670783` rows `0..5` complete, rows `6..9` running, rows `10..29` pending by throttle
@@ -41,7 +41,7 @@ The active Slurm work is summarized in `docs/running_experiments.md`. Current hi
 - shortcut-kind controls: build `3674886_[0-3]` complete and materialized roots exist, SFT `3674887_0..8` complete, `9..11` running, `12..23` pending by throttle, eval `3674888` dependency-pending
 - ablation oversight: `3675833` completed, `3676880` running, next pass `3677392` begin-time pending
 - hybrid-order partial readout: completed `think_formal` train-1-to-5 rows average OOD correct@16 `0.480`, formal citation-free joint@16 `0.022`, translated-NL joint@16 `0.297`, depth-50 correct@16 `0.219`, depth-50 joint@16 `0.000`. Completed `think_formal` train-1-to-10 rows average OOD correct@16 `0.490`, formal joint@16 `0.249`, translated-NL joint@16 `0.296`, depth-50 correct@16 `0.354`, and depth-50 joint@16 `0.000`. Treat as partial until the remaining hybrid rows finish.
-- paired full-suite audit at 20:05 CEST: build `3672195_0..2` remains complete with all three manifests present and 55/55 parquet paths per family; completed SFT rows `0..41` all have final adapter checkpoints; rows `42..47` are running on `maze_navigation` train-1-to-15 and showing optimizer progress, with row `42` past checkpoint-5000; rows `48..89` remain pending by array throttle. Eval `3672213` is still dependency-pending on `afterok:3672212_*`, and the eval output directory has not been created yet, so there are still `0` eval JSONs. Focused SFT log scan found no Traceback/proof-validation failure/OOM/CUDA OOM/context failure/quota/no-space/DependencyNeverSatisfied/tokenizer/model-load/vLLM/node-failure/idle-GPU failure; no resubmission or partition edit was made.
+- paired full-suite audit at 2026-05-30 00:07 CEST: build `3672195_0..2` remains complete with all three manifests present and 55/55 parquet paths per family; completed SFT rows `0..41` all have final adapter checkpoints; rows `42..47` are running on `maze_navigation` train-1-to-15, all have written `checkpoint-5000`, and the latest normalized progress was rows `42..47` at `9139/8790/8586/8744/8452/8489` of `10000` steps. Rows `48..89` remain pending by array throttle. Eval `3672213` is still dependency-pending on `afterok:3672212_*`, and the eval output directory has not been created yet, so there are still `0` eval JSONs. Focused SFT fatal-log scan found no Traceback/proof-validation failure/OOM/CUDA OOM/context failure/quota/no-space/DependencyNeverSatisfied/tokenizer/model-load/vLLM/node-failure/timeout/idle-GPU failure; no resubmission or partition edit was made.
 - ablation log audit at 21:50 CEST: focused `squeue`/`sacct`/log scan found no unrecovered Traceback, OOM/CUDA OOM, quota/no-space, `DependencyNeverSatisfied`, tokenizer/model-load, vLLM, node-failure, timeout, cancellation, or idle-GPU failure in the monitored HFSA ablation chains. Active eval rows are emitting vLLM chunks/scoring progress; pending monitored rows are blocked by array throttles or dependencies, so no partition edit or resubmission was made. Visible `puzzle_*` jobs are unrelated.
 
 ## Report Artifacts
@@ -77,5 +77,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3672212,3672213,3675380,3676517,3677238,3661118,3661119,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3675833,3676880,3677392 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3672212,3672213,3675380,3676517,3677238,3677873,3661118,3661119,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3675833,3676880,3677392 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
 ```
