@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-05-29 13:01 CEST.
+Last updated: 2026-05-29 16:05 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -8,7 +8,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 | Experiment | Jobs | State | Expected outputs | Notes |
 | --- | --- | --- | --- | --- |
-| Full paired-family suite | SFT `3672212_[0-89%6]`, eval `3672213_[0-89%4]`, oversight `3674556`, next `3675380` | SFT rows `0..35` complete, `36..41` running, `42..89` pending by throttle; eval dependency-pending; oversight `3674556` completed, next `3675380` begin-time pending | `$WORK/synthetic-RLVL/passk_eval/paired_full_suite_sparse_20260528/` | Covers `official_igsm`, `maze_navigation`, hardened `attribute_constraints`, templates `logic,nl_exact`, train ranges `1..5/10/15/20/25`, seeds `3407..3409`. Build is complete; full-suite eval has `0` JSON outputs so far. |
+| Full paired-family suite | SFT `3672212_[0-89%6]`, eval `3672213_[0-89%4]`, oversight `3675380`, next `3676517` | SFT rows `0..41` complete, `42..47` running, `48..89` pending by throttle; eval dependency-pending on `afterok:3672212_*`; oversight `3675380` running, next `3676517` begin-time pending | `$WORK/synthetic-RLVL/passk_eval/paired_full_suite_sparse_20260528/` | Covers `official_igsm`, `maze_navigation`, hardened `attribute_constraints`, templates `logic,nl_exact`, train ranges `1..5/10/15/20/25`, seeds `3407..3409`. Build is complete with 55/55 manifest paths present for all three families; completed SFT rows `0..41` have final adapters; full-suite eval still has `0` JSON outputs and no output directory yet. |
 | Trace-control ablations | SFT `3661118_[0-17%3]`, eval `3661119_[0-17%3]` | most SFT rows complete; rows `14`, `16`, `17` running; eval dependency-pending | `passk_eval/hfsa_ablation_trace_controls_20260525/` | Templates: `terse_nl`, `rule_annotated_nl`, `pseudocode`, `shuffled_logic`, `invalid_logic`, `shuffled_nl`. |
 | Shortcut-rate `0.3` | SFT `3671431_[0-5%3]`, eval `3671432_[0-5%3]` | SFT rows `3..5` running; eval dependency-pending | `$WORK/synthetic-RLVL/passk_eval/hfsa_shortcut_rate_ablation_20260525/` | Adds low/intermediate point to the existing `0.5/0.8` shortcut-rate curve. Existing `0.5/0.8` output count is `12`; no `0.3` eval outputs yet. |
 | Hybrid order | targeted SFT `3670782`, eval `3670783_[0-29%4]` | SFT complete; 4 eval JSONs written, rows `4..7` running, `8..29` pending by throttle | `$WORK/synthetic-RLVL/passk_eval/hfsa_hybrid_order_full_20260525/` | Full suite for logic-then-NL and NL-then-logic traces with one answer at the end. |
@@ -19,7 +19,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 ## Partition Audit
 
-Checked at 2026-05-29 13:01 CEST. `sinfo` showed idle compatible `a100` nodes, but the pending active jobs were blocked by array task limits, dependencies, or begin times, not by partition availability. No `scontrol update JobId=<jobid> Partition=<partition1,partition2>` edit was made.
+Checked at 2026-05-29 16:05 CEST. `sinfo` showed idle compatible `a100` nodes, but the paired full-suite pending rows were blocked by array task limits or dependencies, not by partition availability. No `scontrol update JobId=<jobid> Partition=<partition1,partition2>` edit was made.
 
 Unrelated visible `puzzle_*` jobs are not part of this handoff.
 
@@ -36,7 +36,7 @@ Unrelated visible `puzzle_*` jobs are not part of this handoff.
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3672212,3672213,3674556,3675380,3661118,3661119,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3674892 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3672212,3672213,3675380,3676517,3661118,3661119,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3674892 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
 ```
 
 Useful log tails:

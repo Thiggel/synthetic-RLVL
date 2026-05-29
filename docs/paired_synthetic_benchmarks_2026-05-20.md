@@ -63,7 +63,7 @@ Full-suite submission 2026-05-28 15:48 CEST:
 | paired full-suite materialization | `3672195_[0-2%3]` | `official_igsm`, `maze_navigation`, and hard `attribute_constraints`; train ranges `1..5/10/15/20/25`, 50k rows each; validation `val_step_01_1k` through `val_step_50_1k`; every generated row validated |
 | paired full-suite SFT | `3672212_[0-89%6]` | `3` families x `5` train ranges x `logic,nl_exact` x seeds `3407/3408/3409`; 10k OLMo-7B LoRA SFT steps; gradient checkpointing on by default |
 | paired full-suite sparse eval | `3672213_[0-89%4]` | dependent on SFT; sparse pass@k eval to depth 50, `32` prompts/depth, `16` generations/prompt, output under `passk_eval/paired_full_suite_sparse_20260528/` |
-| paired full-suite Codex oversight | `3672214`, `3672448`, `3673399`, `3673729`, `3674556`, next `3675380` | `3672214`, `3672448`, `3673399`, and `3673729` completed; `3674556` is running and `3675380` is scheduled for 2026-05-29 15:39 CEST as of 2026-05-29 11:42 CEST |
+| paired full-suite Codex oversight | `3672214`, `3672448`, `3673399`, `3673729`, `3674556`, `3675380`, next `3676517` | `3672214`, `3672448`, `3673399`, `3673729`, and `3674556` completed; `3675380` is running and `3676517` is begin-time pending as of 2026-05-29 16:05 CEST |
 
 The full-suite roots are:
 
@@ -82,7 +82,7 @@ scripts/slurm/jobs/posthoc_paired_full_suite_eval_2026-05-28.slurm
 scripts/slurm/codex/paired_full_suite_oversight_2026-05-28.slurm
 ```
 
-The first pending SFT/eval/oversight submissions `3672196`/`3672197`/`3672208` were canceled before start after replacing array-id-based startup sleeps with throttle-slot-based sleeps. The active dependent jobs are `3672212`/`3672213`; oversight pass `3674556` is running and next oversight `3675380` is already scheduled.
+The first pending SFT/eval/oversight submissions `3672196`/`3672197`/`3672208` were canceled before start after replacing array-id-based startup sleeps with throttle-slot-based sleeps. The active dependent jobs are `3672212`/`3672213`; oversight pass `3675380` is running and next oversight `3676517` is already scheduled.
 
 Status update 2026-05-29 07:41 CEST:
 
@@ -103,6 +103,8 @@ Oversight update 2026-05-29 07:41 CEST: SFT row `3672212_31` completed exit `0:0
 Status update 2026-05-29 07:55 CEST: SFT row `3672212_37` released; rows `32..37` are running and rows `38..89` are pending by `JobArrayTaskLimit`. Eval remains dependency-pending with zero JSON outputs. Oversight `3673729` completed exit `0:0`; next oversight `3674556` is pending BeginTime.
 
 Oversight update 2026-05-29 11:42 CEST: build rows `3672195_0..2` remain completed exit `0:0`, and all three full-suite manifests still report 55 subsets with no missing parquet paths. SFT rows `3672212_0..35` completed exit `0:0`; rows `36..41` are running on `maze_navigation` train-1-to-10, with rows `36` and `37` already at `checkpoint-5000`; rows `42..89` are pending by `JobArrayTaskLimit`. Eval `3672213_[0-89%4]` remains dependency-pending on `afterok:3672212_*` and `passk_eval/paired_full_suite_sparse_20260528/` still has zero JSON outputs. Fatal-log scan found no Traceback, proof-validation failure, actual OOM/CUDA OOM, context-length failure, quota/no-space issue, dependency failure, node failure, timeout/cancelled task, tokenizer/model-load error, vLLM failure, idle-GPU symptom, or `DependencyNeverSatisfied`; matches were limited to benign tokenizer warnings, build token-length warnings, quota headers, and standard accelerate OOM-avoidance wording. Oversight `3674556` is running and next oversight `3675380` is scheduled for 2026-05-29 15:39 CEST.
+
+Oversight update 2026-05-29 16:05 CEST: build rows `3672195_0..2` remain completed exit `0:0`; all three full-suite manifests still have 55 subsets and no missing parquet paths. SFT rows `3672212_0..41` completed exit `0:0` and all have final adapter checkpoints. Rows `42..47` are running on `maze_navigation` train-1-to-15 (`logic` and `nl_exact`, seeds `3407..3409`) and are making optimizer-step progress; rows `48..89` remain pending by `JobArrayTaskLimit`. Eval `3672213_[0-89%4]` remains dependency-pending on `afterok:3672212_*(unfulfilled)`, and the full-suite eval output directory has not been created yet, so there are still zero pass@k JSONs. Focused log scan found no Traceback, proof-validation failure, actual OOM/CUDA OOM, context-length failure, quota/no-space issue, dependency failure, node failure, timeout/cancelled task, tokenizer/model-load error, vLLM failure, idle-GPU symptom, or `DependencyNeverSatisfied`; observed matches were benign tokenizer warnings, quota headers, and standard accelerate OOM-avoidance wording. `a100` had idle compatible nodes, but pending paired rows were throttle/dependency-blocked, so no partition edit was made. Oversight `3675380` is running and next oversight `3676517` is begin-time pending.
 
 Follow-up submission on 2026-05-24:
 
