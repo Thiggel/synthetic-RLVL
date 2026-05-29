@@ -65,6 +65,8 @@ ${HPCVAULT}/.venv_rlvl_posttrain/bin/python scripts/analysis/build_logic_cot_rep
 
 The 2026-05-29 report regeneration now includes an executive insight section, every generated PDF figure in the report bundle, OOD qualitative samples, and an index of generated CSV/PDF/Markdown artifacts.
 
+The external report repo `../synthetic-RLVL-report` mirrors the generated bundle and should be pushed after every report update.
+
 `pdflatex`/`latexmk` are not installed on the current node, so the `.tex` source is generated but not compiled here.
 
 ## Quick Commands
