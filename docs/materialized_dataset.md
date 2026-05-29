@@ -238,11 +238,11 @@ Local roots submitted for build:
 - `${WORK}/synthetic-RLVL/datasets/materialized_hfsa_fixedtarget_depth50_shortcut_initial_marker_0p5_20260529`
 - `${WORK}/synthetic-RLVL/datasets/materialized_hfsa_fixedtarget_depth50_shortcut_initial_marker_0p8_20260529`
 
-Submitted chain:
+Submitted chain/status:
 
-- build `3674886_[0-3%2]`
-- SFT `3674887_[0-23%3]`
-- eval `3674888_[0-23%4]`
+- build `3674886_[0-3%2]`: completed exit `0:0` on 2026-05-29; all four local roots exist with the expected train plus depth-1..50 validation subsets.
+- SFT `3674887_[0-23%3]`: running/pending.
+- eval `3674888_[0-23%4]`: dependency-pending.
 
 Purpose: repeat the shortcut robustness ablation with two concrete shortcut mechanisms beyond the existing schema shortcut. `position` makes the gold branch first on shortcut-enabled training examples. `initial_marker` fixes the gold path's initial marker to `north` on shortcut-enabled training examples. Evaluation remains shortcut-neutral with `val_shortcut_rate=0.0` for every row.
 

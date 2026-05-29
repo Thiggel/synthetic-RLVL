@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-05-29 12:50 CEST.
+Last updated: 2026-05-29 13:01 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -35,11 +35,11 @@ The active Slurm work is summarized in `docs/running_experiments.md`. Current hi
 - trace-control ablations: `3661118 -> 3661119`
 - shortcut-rate `0.3`: `3671431 -> 3671432`
 - hybrid-order eval: `3670783`
-- wordified length-control: `3674875` running, eval `3674876` pending
-- conditioned-dual 50k extension: 10k chunk `3674879` running/pending; later chunks `3674880..3674883` and evals `3674884/3674885` pending
-- shortcut-kind controls: build `3674886` complete, SFT `3674887` running/pending, eval `3674888` pending
-- ablation oversight: `3674892`
-- partition audit at 12:34 CEST: `a100` had idle nodes, but pending active jobs were blocked by array task limits, dependencies, or begin times rather than partition availability, so no `scontrol update ... Partition=...` edit was made.
+- wordified length-control: SFT `3674875_[0-2]` running, eval `3674876` dependency-pending
+- conditioned-dual 50k extension: 10k chunk `3674879` has rows `0..5` complete, `6..9` running, `10..14` pending; later chunks `3674880..3674883` and evals `3674884/3674885` pending
+- shortcut-kind controls: build `3674886_[0-3]` complete and materialized roots exist, SFT `3674887_0..2` running, `3..23` pending, eval `3674888` dependency-pending
+- ablation oversight: `3674892` running; next pass `3675833` begin-time pending
+- partition/log audit at 13:01 CEST: `a100` had idle nodes, but pending active jobs were blocked by array task limits, dependencies, or begin times rather than partition availability. Log scan found no unrecovered Traceback/OOM/CUDA OOM/quota/no-space/DependencyNeverSatisfied/tokenizer/model-load/vLLM/node-failure issues. No `scontrol update ... Partition=...` edit was made.
 
 ## Report Artifacts
 
