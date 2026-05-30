@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-05-30 22:54 CEST.
+Last updated: 2026-05-30 22:58 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -29,7 +29,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 
 ## Report/Artifact Work
 
-- Plan-driven oversight is active through refreshed jobs: paired `3682410` is running with next pass `3683024` begin-time pending; ablation oversight continues separately. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
+- Plan-driven oversight is active through refreshed jobs: paired `3682410` completed cleanly with next pass `3683024` begin-time pending; ablation oversight `3682409` is running with next pass `3683023` begin-time pending. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
 - 2026-05-30 18:40-22:39 ablation oversight recovered interrupted rows by submitting `3682457_[3,6-14%4]` plus later `3682492_[5%1]` for conditioned-dual 30k, `3682458_[22%1]` for shortcut-kind SFT, `3682459_[12,14-17%3]` for original trace-control eval, `3682460_[5-8%3]` for fixed-translator trace repair, and `3682461_[13,15-29%4]` for hybrid-order eval. `3682492_5` completed cleanly, so `3674882` now waits only on `afterok:3682457`; `3674888` now waits only on replacement row `3682458`.
 - 2026-05-30 18:32 paired oversight recovered interrupted SFT rows by submitting targeted replacement `3682411_[55,57,59-89%6]`, canceling stale eval `3672213`, and submitting replacement eval `3682449_[0-89%4]`. No paired-family analysis trigger is satisfied yet because there are still zero paired full-suite eval JSONs.
 - 2026-05-30 22:31 paired oversight canceled stuck original row `3672212_56`, submitted targeted replacement `3683070_[56%1]` with `--exclude=a0831`, and rewired eval `3682449` to depend on `afterok:3681398:3683070:3681586:3682411`. No paired-family analysis trigger is satisfied yet because there are still zero paired full-suite eval JSONs.
