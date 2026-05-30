@@ -113,6 +113,17 @@ Update the handoff docs whenever operational or scientific state changes.
 - When a metric is surprising, question the evaluator before accepting the scientific interpretation. Check whether parser coverage, trace wrappers, prompt format, token limits, stale code, or report aggregation could explain the result.
 - Record analysis assumptions, discovered evaluator artifacts, sample-generation findings, and any re-eval requirements in the handoff docs and report before using the result as evidence.
 
+## Oversight Job Discipline
+
+- Scheduled Codex oversight jobs should run regularly while Slurm experiment waves are active, read the active plans/backlog, and decide each pass whether anything can be fixed, resubmitted, submitted, analyzed, plotted, or documented.
+- Each oversight pass must start from `AGENTS.md`, `docs/current_system_state.md`, `docs/running_experiments.md`, `docs/experiment_backlog.md`, `docs/project_log.md`, and the relevant experiment/research-plan docs. Update the backlog when a planned experiment is started, deferred, completed, or invalidated.
+- Oversight should inspect `squeue`, expanded `sacct` array-row states, logs, output roots, manifests, and partition availability. Apply safe partition widening with `scontrol update JobId=<jobid> Partition=<partition1,partition2>` when compatible and useful.
+- For every newly completed or suspicious job family, inspect representative sample generations before accepting metrics. Cover multiple seeds, train depths, eval depths, templates, and both success/failure cases when available.
+- Question all assumptions before writing scientific conclusions: verify prompt format, answer extraction, trace translation, validity checking, token limits, stale outputs, report aggregation, and whether the sample generations match the intended experiment.
+- If results are newly available, aggregate them, create the most informative tables/figures currently justified by the data, regenerate the LaTeX report, mirror it to `../synthetic-RLVL-report`, and record concise insights plus artifact paths in the docs.
+- If a planned experiment's trigger is satisfied, oversight may submit the smallest appropriate job set after verifying prerequisites. If a job fails, prefer the smallest fix/resubmission that recovers the affected rows.
+- After changing code, Slurm scripts, docs, or report artifacts, commit and push the affected repo when network/authentication permits.
+
 ## Report Discipline
 
 - The primary ongoing LaTeX report lives inside this repo at `analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex`.

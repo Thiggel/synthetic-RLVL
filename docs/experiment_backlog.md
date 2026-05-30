@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-05-30 09:50 CEST.
+Last updated: 2026-05-30 10:28 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -29,6 +29,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 
 ## Report/Artifact Work
 
+- Plan-driven oversight is now active through refreshed jobs `3680036` and `3680037`, with next passes `3680038` and `3680039` already scheduled. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
 - Regenerate `analysis/logic_cot_report_2026-05-25/` after every newly completed eval family.
 - Add convergence curves from `hfsa_conditioned_dual_50k_intermediate_20260529` once available.
 - Shortcut-rate `0.3/0.5/0.8` matched logic/NL rows are complete and included in the report; revisit only if adding new rates or mechanisms.

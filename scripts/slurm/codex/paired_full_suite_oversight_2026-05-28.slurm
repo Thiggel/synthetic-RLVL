@@ -62,10 +62,14 @@ This oversight job has already attempted to schedule the next oversight pass. Ke
 First read:
 - AGENTS.md
 - docs/current_system_state.md
+- docs/running_experiments.md
+- docs/experiment_backlog.md
+- docs/project_log.md
 - docs/paired_synthetic_benchmarks_2026-05-20.md
 - docs/materialized_dataset.md
 - docs/formal_logic_cot_research_plan_2026-05-19.md
 - docs/hfsa_depth_scaling_plan_2026-05-19.md
+- analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex
 
 Use source ./scripts/env.sh for shell commands. Do not touch unrelated tjepa_* or seqedit_* jobs except to label them unrelated if visible in squeue.
 
@@ -83,12 +87,18 @@ Scope:
 - eval outputs: \${WORK}/synthetic-RLVL/passk_eval/paired_full_suite_sparse_20260528/
 
 Tasks:
+- Treat this as a plan-driven oversight pass, not just a queue check. Compare live paired-family state against docs/experiment_backlog.md and the active plan docs, decide whether any planned trigger is satisfied, and update the backlog when work is started, deferred, completed, or invalidated.
 - Check squeue and sacct for the paired full-suite jobs, including array rows, states, elapsed time, exit codes, dependencies, and node failures.
+- Inspect pending rows for compatible freer partitions. If widening is safe and useful, run scontrol update JobId=<jobid> Partition=<partition1,partition2> and record the edit in the handoff docs.
 - Inspect relevant logs for Traceback, proof-validation failure, OOM, CUDA OOM, context-length failure, quota/no-space, DependencyNeverSatisfied, tokenizer/model-load errors, vLLM failures, idle GPU symptoms, and timeout/cancelled tasks.
+- Inspect materialized manifests, parquet paths, training outputs, eval JSONs, and sample-generation artifacts for every newly completed or suspicious family. Look across seeds, train depths, eval depths, templates, and success/failure cases when available.
+- Before accepting any paired-family metric, question the evaluator and experiment assumptions: verify 1:1 formal/NL mapping, proof validation, prompt format, answer extraction, trace translation, validity checks, token limits, stale outputs, report aggregation, and whether generations actually match the intended modality.
 - If a build row fails due to validation or generator logic, inspect the failing example, implement the smallest local fix, run focused tests/smokes, and resubmit only the affected family build plus dependent rows as needed.
 - If an SFT/eval row fails due to transient node failure and no equivalent live/pending retry exists, submit a replacement only for the missing row, excluding the implicated bad node if known, and recreate dependent eval rows if needed.
 - If an eval row fails due to context limits, resubmit only that row with larger vLLM context or smaller batch/max-new-token settings.
 - If jobs are healthy and progressing, leave them alone.
-- When eval rows finish, aggregate available JSON outputs, summarize substrate/dataset trends, and update docs/current_system_state.md plus docs/paired_synthetic_benchmarks_2026-05-20.md.
-- Do not launch broad new scientific experiments unless needed to recover this already submitted chain.
-- End with a concise status report containing job IDs, states, output artifacts, failures or fixes, and next safe action."
+- When eval rows finish, aggregate available JSON outputs, summarize substrate/dataset trends, create the most informative currently justified tables, figures, curves, and qualitative sample summaries, regenerate analysis/logic_cot_report_2026-05-25/, and mirror it to ../synthetic-RLVL-report.
+- If the backlog/plan clearly says a next paired-family experiment should start and prerequisites are satisfied, submit the smallest appropriate job set, document the job IDs, and keep the plan/backlog synchronized. Be conservative with broad expensive launches unless the trigger is explicit.
+- Update docs/current_system_state.md, docs/running_experiments.md, docs/experiment_backlog.md, docs/project_log.md, docs/paired_synthetic_benchmarks_2026-05-20.md, and any relevant experiment docs for state/result/insight changes.
+- Commit and push this repo and ../synthetic-RLVL-report when changes are made and network/authentication permit.
+- End with a concise status report containing job IDs, states, output artifacts, sample-generation findings, figures/tables created, failures or fixes, submissions, and next safe action."
