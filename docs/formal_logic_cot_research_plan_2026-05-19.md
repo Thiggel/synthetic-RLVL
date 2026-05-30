@@ -114,7 +114,7 @@ The reviewer-facing broad repeat on non-HFSA paired datasets is now submitted. A
 | `maze_navigation` | `3672195_1` | same full suite |
 | hard `attribute_constraints` | `3672195_2` | same full suite, using the hardened generator under `attribute_constraints_hard` materialized roots |
 
-Dependent arrays are SFT `3672212_[0-89%6]` and sparse pass@k eval `3672213_[0-89%4]`, with repeated paired-suite oversight passes. As of 2026-05-30 14:31 CEST, SFT rows `0..47` are complete, rows `48..53` are running on `maze_navigation` train-1-to-20, rows `54..89` are pending by throttle, and eval `3672213` has not released or written JSON outputs. The first pending SFT/eval/oversight submissions `3672196`/`3672197`/`3672208` were canceled before start after fixing excessive startup staggering. Detailed operational status is in `docs/current_system_state.md`, and construction details are in `docs/paired_synthetic_benchmarks_2026-05-20.md`.
+Dependent arrays started as SFT `3672212_[0-89%6]` and sparse pass@k eval `3672213_[0-89%4]`, with repeated paired-suite oversight passes. As of 2026-05-30 18:32 CEST, original SFT rows `0..53` are complete, rows `54/56/58` are running, interrupted rows `55/57/59-89` are covered by replacement SFT `3682411_[55,57,59-89%6]`, stale eval `3672213` has been canceled, and replacement eval `3682449_[0-89%4]` is dependency-pending. No full-suite eval JSONs have been written yet. The first pending SFT/eval/oversight submissions `3672196`/`3672197`/`3672208` were canceled before start after fixing excessive startup staggering. Detailed operational status is in `docs/current_system_state.md`, and construction details are in `docs/paired_synthetic_benchmarks_2026-05-20.md`.
 
 ## Required Controls
 

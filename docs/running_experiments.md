@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-05-30 14:36 CEST.
+Last updated: 2026-05-30 18:32 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -8,7 +8,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 | Experiment | Jobs | State | Expected outputs | Notes |
 | --- | --- | --- | --- | --- |
-| Full paired-family suite | SFT `3672212_[0-89%6]`, eval `3672213_[0-89%4]`, previous oversight `3680037`, current oversight `3680039`, next oversight `3680777` | SFT rows `0..47` complete, `48..53` running, `54..89` pending by throttle; eval dependency-pending on `afterok:3672212_*`; oversight `3680037` complete; current plan-driven oversight `3680039` running; next pass `3680777` begin-time pending | `$WORK/synthetic-RLVL/passk_eval/paired_full_suite_sparse_20260528/` | Covers `official_igsm`, `maze_navigation`, hardened `attribute_constraints`, templates `logic,nl_exact`, train ranges `1..5/10/15/20/25`, seeds `3407..3409`. Build is complete with 55/55 manifest paths present for all three families; completed SFT rows `0..47` have final adapters. Running rows `48..53` are `maze_navigation` train-1-to-20 (`logic` and `nl_exact`, seeds `3407..3409`) with latest parsed progress `8829/8511/8479/8728/8676/8556` of `10000`, and all six have `checkpoint-5000`. Full-suite eval still has `0` JSON outputs and no output directory yet. A 2026-05-30 14:31 sample materialized-row audit across train-1-to-20 and val-depth-50 for all three families found matching logic/NL prompts, correct target wrappers, strict proof validation passing, and the expected iGSM citation-free caveat for cited arithmetic substitutions. |
+| Full paired-family suite | original SFT `3672212_[0-89%6]`, replacement SFT `3682411_[55,57,59-89%6]`, replacement eval `3682449_[0-89%4]`, current oversight `3680777`, next oversight `3682410` | Original SFT rows `0..53` complete, `54/56/58` running, `55/57/59` failed with exit `1:0`, `60..89` canceled/failed with signal `53`; replacement rows `55/57/59/60/61/62` running and `63..89` pending by throttle; stale eval `3672213` canceled; replacement eval `3682449` dependency-pending on original running job IDs `3681398/3681503/3681586` plus replacement SFT `3682411`; current oversight `3680777` running and next pass `3682410` begin-time pending | `$WORK/synthetic-RLVL/passk_eval/paired_full_suite_sparse_20260528/` | Covers `official_igsm`, `maze_navigation`, hardened `attribute_constraints`, templates `logic,nl_exact`, train ranges `1..5/10/15/20/25`, seeds `3407..3409`. Build is complete with 55/55 manifest paths present for all three families; `54/90` SFT rows currently have final adapters. Original rows `54/56/58` are `maze_navigation` train-1-to-25 with latest parsed progress about `972/109/627` of `10000`. Focused scans of failed row logs found no Traceback, proof-validation failure, OOM/CUDA OOM, context error, quota/no-space, tokenizer/model-load, or vLLM signature; rows `60..89` have empty/near-empty logs and signal `53`, so recovery is a targeted rerun rather than a code/data fix. Full-suite eval still has `0` JSON outputs and no output directory. A 2026-05-30 18:32 materialized-row audit across train-depth-25 and val-depth-50 for all three families found matching logic/NL prompts, correct target wrappers, strict proof validation passing, and the expected iGSM citation-free caveat for cited arithmetic substitutions. |
 | Trace-control ablations | SFT `3661118_[0-17%3]`, original eval `3661119_[0-17%3]`, repair eval `3680004_[3-8%3]` | SFT rows `0..17` complete; original eval rows `0..5` and `9..11` complete, rows `6..8` intentionally canceled, rows `12..14` running, rows `15..17` pending by throttle; repair eval `3680004_3..5` running at chunks `50/50/49` of `56`, `3680004_6..8` pending by throttle | `passk_eval/hfsa_ablation_trace_controls_20260525/` | Templates: `terse_nl`, `rule_annotated_nl`, `pseudocode`, `shuffled_logic`, `invalid_logic`, `shuffled_nl`. Manual sample inspection found the `rule_annotated_nl` zero translated-joint result was an evaluator artifact; treat `3661119_3..5` as stale until `3680004_3..5` overwrite them. New `shuffled_logic` readout is report-ingested: OOD correct/formal-joint@16 `0.690/0.002`, depth-50 correct/formal-joint@16 `0.510/0.000`; samples show normal formal/answer formatting but invalid or unparsable higher-depth proof fragments, so this supports the negative-control interpretation. `3680004_6..8` reruns pseudocode with the fixed translator. |
 | Shortcut-rate `0.3` | SFT `3671431_[0-5%3]`, eval `3671432_[0-5%3]` | complete; all 18 shortcut-rate JSONs exist across `0.3/0.5/0.8` and `logic/nl_exact` | `$WORK/synthetic-RLVL/passk_eval/hfsa_shortcut_rate_ablation_20260525/` | The `0.3` row is now fully matched: logic OOD correct/joint@16 `0.892/0.598`, depth-50 correct/joint@16 `0.844/0.375`; NL OOD correct/translated-joint@16 `0.588/0.571`, depth-50 correct/translated-joint@16 `0.458/0.438`. Across rates `0.3/0.5/0.8`, NL depth-50 joint falls `0.438 -> 0.312 -> 0.146`, while logic depth-50 joint is `0.375 -> 0.375 -> 0.417`. |
 | Hybrid order | targeted SFT `3670782`, eval `3670783_[0-29%4]` | SFT complete; 11 eval JSONs written, rows `11..14` running, `15..29` pending by throttle | `$WORK/synthetic-RLVL/passk_eval/hfsa_hybrid_order_full_20260525/` | Completed `think_formal` train-1-to-5 rows average OOD correct@16 `0.480`, formal joint@16 `0.022`, translated-NL joint@16 `0.297`, depth-50 correct@16 `0.219`; train-1-to-10 rows average OOD correct@16 `0.490`, formal joint@16 `0.249`, translated-NL joint@16 `0.296`, depth-50 correct@16 `0.354`; train-1-to-15 is now three-seed complete with mean OOD correct/formal-joint/translated-joint@16 `0.353/0.111/0.111`, depth-50 correct/formal-joint@16 `0.312/0.000`; train-1-to-20 has seeds `3407/3408` complete with OOD correct/formal-joint/translated-joint@16 `0.419/0.016/0.078`, depth-50 correct/formal-joint@16 `0.594/0.000`. Running rows `11..14` are at sampling/scoring state `112/99/89/90` of `112`. `think_formal` is NL then formal; the report builder now labels it correctly and parses the pending `formal_think` rows. |
@@ -19,7 +19,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 ## Partition Audit
 
-Checked at 2026-05-30 14:36 CEST. Monitored pending rows were blocked by array task limits, eval/SFT dependencies, or begin time rather than a clear compatible freer partition; `a100` also had idle nodes. Oversight `3680038`/`3680039` are running on `a100`, with next passes `3680772`/`3680777` begin-time pending. No `scontrol update JobId=<jobid> Partition=<partition1,partition2>` edit was appropriate.
+Checked at 2026-05-30 18:32 CEST. Paired replacement rows launched on `a100`; remaining paired SFT rows are blocked by the replacement array throttle, and replacement eval `3682449` is blocked by SFT dependencies. `a100` had idle nodes, but there was no compatible freer partition issue to solve and no `scontrol update JobId=<jobid> Partition=<partition1,partition2>` edit was appropriate.
 
 Unrelated visible `puzzle_*` jobs are not part of this handoff. No visible `tjepa_*` or `seqedit_*` jobs were present in the queue check.
 
@@ -36,14 +36,14 @@ Unrelated visible `puzzle_*` jobs are not part of this handoff. No visible `tjep
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3672212,3672213,3678335,3680037,3680039,3680777,3661118,3661119,3680004,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3678051,3679095,3680036,3680038,3680772 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3672212,3682411,3682449,3680777,3682410,3661118,3661119,3680004,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3678051,3679095,3680036,3680038,3680772 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```
 
 Useful log tails:
 
 ```bash
 for f in \
-  logs/sft_pair_full_3672212_*.out logs/pair_full_eval_3672213_*.out \
+  logs/sft_pair_full_3672212_*.out logs/sft_pair_full_3682411_*.out logs/pair_full_eval_3682449_*.out \
   logs/sft_hfsa_trace_ctl_3661118_*.out logs/hfsa_trace_ctl_eval_3661119_*.out \
   logs/sft_hfsa_shortcut_3671431_*.out logs/hfsa_shortcut_eval_3671432_*.out \
   logs/hfsa_hybrid_eval_3670783_*.out \
