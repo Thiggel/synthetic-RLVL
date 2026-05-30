@@ -465,6 +465,8 @@ Submitted representative architecture/pretraining follow-ups rather than repeati
 | shortcut-kind controls | build `3674886_[0-3%2]`; SFT `3674887_[0-23%3]`; eval `3674888_[0-23%4]` | running/pending | build completed exit `0:0`; SFT rows `0..11` completed, rows `12..14` running, rows `15..23` pending by throttle; eval dependency-pending |
 | Codex oversight | current `3678051`, next `3679095` | running/pending | autonomous oversight for the 2026-05-29 ablation wave; log scan at 05:42 CEST found no unrecovered severe failures and made no scheduler edits |
 
+Update 2026-05-30 18:47 CEST: the 2026-05-29 ablation wave is under targeted recovery after several later rows failed or were killed without traceback/OOM/quota/model-load signatures. Replacement arrays are `3682457_[3,6-14%4]` plus `3682492_[5%1]` for conditioned-dual 30k, `3682458_[22%1]` for shortcut-kind SFT, `3682459_[12,14-17%3]` for trace-control eval, `3682460_[5-8%3]` for fixed-translator trace repair, and `3682461_[13,15-29%4]` for hybrid-order eval. Dependencies were rewired for `3674882` and `3674888` to wait on the replacement rows plus the still-running original rows. The report now includes three-seed `think_formal` train-1-to-20 and filters the stale pre-fix `rule_annotated_nl` seed-3409 artifact until the repair row overwrites it.
+
 Oversight update 2026-05-24 15:06 CEST:
 
 - Qwen 7B SFT rows `3656217_0,1,2` completed and rows `3,4,5` are running. Qwen eval rows `3656218_0,1,2` completed; later eval rows remain dependency-pending.

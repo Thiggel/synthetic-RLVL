@@ -1165,6 +1165,8 @@ def _summarize_dual_joint_passk(
     if not root.exists():
         return pd.DataFrame()
     for path in sorted(root.glob("*_passk.json")):
+        if table_prefix == "trace_control_ablation" and _is_stale_rule_annotated_trace_repair(path, root):
+            continue
         match = regex.match(path.name)
         if not match:
             continue
@@ -1203,6 +1205,14 @@ def _summarize_dual_joint_passk(
     ).sort_values(summary_keys)
     write_csv(TABLE_DIR / f"{table_prefix}_summary.csv", summary.to_dict("records"))
     return summary
+
+
+def _is_stale_rule_annotated_trace_repair(path: Path, root: Path) -> bool:
+    stale_name = "sft_hfsa_ablate_rule_annotated_nl_train1to25_10k_seed3409_passk.json"
+    if path.name != stale_name:
+        return False
+    repaired_seed = root / "sft_hfsa_ablate_rule_annotated_nl_train1to25_10k_seed3407_passk.json"
+    return repaired_seed.exists() and path.stat().st_mtime < repaired_seed.stat().st_mtime
 
 
 def plot_trace_control_summary(summary: pd.DataFrame) -> None:
@@ -2641,7 +2651,7 @@ def write_report(
 \item Architecture ablations show that the phenomenon is not OLMo-only: Qwen and Gemma runs also show strong formal-trace transfer, with model-specific variation in joint validity.
 \item Shortcut-rich training hurts NL more clearly than logic in the completed 0.3/0.5/0.8 shortcut-rate runs, supporting the hypothesis that NL relies more on brittle shortcut associations. The shortcut-kind controls for position and initial-marker shortcuts are still training.
 \item Conditioned dual-modality at 10k underperforms the best single-modality baselines, especially for conditioned logic at larger train ranges. The 50k continuation is running to test whether this is undertraining.
-\item Trace controls are only partially evaluated. The existing rule-annotated NL translated-validity numbers are stale because the older NL-to-FOL translator did not strip \texttt{{[rule: ...]}} suffixes; a repair eval is running after adding annotation/pseudocode unwrapping. Do not use the old zero translated-joint value as evidence.
+\item Trace controls are only partially evaluated. The older rule-annotated NL seed 3409 translated-validity artifact is stale because the prior NL-to-FOL translator did not strip \texttt{{[rule: ...]}} suffixes. The generated trace-control tables filter that stale seed until the repair eval overwrites it.
 \end{{itemize}}
 
 \section{{Metric note for OOD benchmarks}}
@@ -3073,8 +3083,7 @@ The shortcut-kind controls test two concrete shortcut mechanisms: a \texttt{{pos
 \end{{table}}
 
 \subsection{{Trace controls}}
-The trace-control ablation trains train-1-to-25 models with six altered trace styles, always over three seeds and evaluated on the same 1-to-50 sparse protocol. The six controls are: \texttt{{terse\_nl}} (shorter natural-language reasoning), \texttt{{rule\_annotated\_nl}} (NL with explicit rule names), \texttt{{pseudocode}} (algorithm-like trace), \texttt{{shuffled\_logic}} (formal lines shuffled as a negative control), \texttt{{invalid\_logic}} (formally invalid proof trace negative control), and \texttt{{shuffled\_nl}} (NL trace order shuffled). Manual inspection found that the completed \texttt{{rule\_annotated\_nl}} translated-validity metrics were an evaluator artifact: lines such as \texttt{{a is teal. [rule: R]}} were not stripped before controlled NL-to-FOL parsing. The translator now unwraps rule annotations and pseudocode \texttt{{derive "..."}}
-lines, and repair eval \texttt{{3680004\_[3-8]}} is running/queued to overwrite \texttt{{rule\_annotated\_nl}} and rerun \texttt{{pseudocode}}.
+The trace-control ablation trains train-1-to-25 models with six altered trace styles, always over three seeds and evaluated on the same 1-to-50 sparse protocol. The six controls are: \texttt{{terse\_nl}} (shorter natural-language reasoning), \texttt{{rule\_annotated\_nl}} (NL with explicit rule names), \texttt{{pseudocode}} (algorithm-like trace), \texttt{{shuffled\_logic}} (formal lines shuffled as a negative control), \texttt{{invalid\_logic}} (formally invalid proof trace negative control), and \texttt{{shuffled\_nl}} (NL trace order shuffled). Manual inspection found that the completed \texttt{{rule\_annotated\_nl}} translated-validity metrics were an evaluator artifact: lines such as \texttt{{a is teal. [rule: R]}} were not stripped before controlled NL-to-FOL parsing. The translator now unwraps rule annotations and pseudocode \texttt{{derive "..."}}, and the stale pre-fix seed 3409 rule-annotated artifact is filtered until its repair output is regenerated. Current replacement rows \texttt{{3682460\_[5-8]}} and \texttt{{3682459\_[12,14-17]}} are running/queued to overwrite the stale rule-annotated seed and finish the remaining trace-control eval rows.
 
 \begin{{table}}[H]
 \centering
@@ -3094,7 +3103,7 @@ lines, and repair eval \texttt{{3680004\_[3-8]}} is running/queued to overwrite 
 {trace_control_figure_block}
 
 \subsection{{Hybrid order}}
-The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means NL first, then formal logic; \texttt{{formal\_think}} means formal logic first, then NL. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. Current completed rows are all \texttt{{think\_formal}} for train-1-to-5/10/15 and two seeds for train-1-to-20; \texttt{{formal\_think}} is still pending.
+The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means NL first, then formal logic; \texttt{{formal\_think}} means formal logic first, then NL. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. Current completed rows cover all \texttt{{think\_formal}} seeds through train-1-to-20; train-1-to-25 and \texttt{{formal\_think}} are still incomplete.
 
 \begin{{table}}[H]
 \centering
