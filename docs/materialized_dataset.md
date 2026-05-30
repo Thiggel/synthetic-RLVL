@@ -241,8 +241,8 @@ Local roots submitted for build:
 Submitted chain/status:
 
 - build `3674886_[0-3%2]`: completed exit `0:0` on 2026-05-29; all four local roots exist with the expected train plus depth-1..50 validation subsets.
-- SFT `3674887_[0-23%3]`: rows `0..17` complete, rows `18..20` running with latest parsed progress `6798/6231/5167` of `10000`, rows `21..23` pending by throttle as of 2026-05-30 14:36 CEST.
-- eval `3674888_[0-23%4]`: dependency-pending.
+- SFT `3674887_[0-23%3]`: original rows `0..21` and `23` complete, row `22` failed; replacement SFT `3682458_22` is running as of 2026-05-30 22:39 CEST.
+- eval `3674888_[0-23%4]`: dependency-pending on `afterok:3682458`.
 
 Purpose: repeat the shortcut robustness ablation with two concrete shortcut mechanisms beyond the existing schema shortcut. `position` makes the gold branch first on shortcut-enabled training examples. `initial_marker` fixes the gold path's initial marker to `north` on shortcut-enabled training examples. Evaluation remains shortcut-neutral with `val_shortcut_rate=0.0` for every row.
 
@@ -293,7 +293,7 @@ Submitted 2026-05-28 as the broad repeat suite:
 | `maze_navigation` | `3672195_1` | `${WORK}/synthetic-RLVL/datasets/materialized_paired_maze_navigation_full_20260528` | `train_maze_navigation_up_to_{5,10,15,20,25}_50k` |
 | hard `attribute_constraints` | `3672195_2` | `${WORK}/synthetic-RLVL/datasets/materialized_paired_attribute_constraints_hard_full_20260528` | `train_attribute_constraints_hard_up_to_{5,10,15,20,25}_50k` |
 
-Each build also writes `val_step_01_1k` through `val_step_50_1k` and validates every generated row with `--validate-examples -1`. Dependent SFT and sparse pass@k eval arrays are `3672212_[0-89%6]` and `3672213_[0-89%4]`, covering both `logic` and `nl_exact` with seeds `3407`, `3408`, and `3409`. Initial pending arrays `3672196`/`3672197` were canceled before start after fixing excessive startup staggering. As of 2026-05-30 10:33 CEST, all three build rows are complete, SFT rows `0..47` are complete, rows `48..53` are running on `maze_navigation` train-1-to-20, rows `54..89` are pending by throttle, and eval remains dependency-pending with no full-suite pass@k JSONs yet.
+Each build also writes `val_step_01_1k` through `val_step_50_1k` and validates every generated row with `--validate-examples -1`. Dependent SFT and sparse pass@k eval arrays were initially `3672212_[0-89%6]` and `3672213_[0-89%4]`, covering both `logic` and `nl_exact` with seeds `3407`, `3408`, and `3409`. Initial pending arrays `3672196`/`3672197` were canceled before start after fixing excessive startup staggering. As of 2026-05-30 22:39 CEST, all three build rows are complete; original SFT rows `0..53` are complete, rows `54/58` are running, row `56` was canceled after idle-GPU diagnosis and replaced by `3683070_56`, and interrupted rows `55/57/59-89` are covered by replacement SFT `3682411_[55,57,59-89%6]`. Stale eval `3672213` was canceled and replacement eval `3682449_[0-89%4]` is dependency-pending on `afterok:3681398:3683070:3681586:3682411`, with no full-suite pass@k JSONs yet.
 
 The generator code lives in:
 

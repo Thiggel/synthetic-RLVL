@@ -2552,7 +2552,7 @@ def write_report(
         hybrid_order_figure_block = r"""
 \begin{figure}[H]\centering
 \includegraphics[width=0.95\linewidth]{figures/ablation_hybrid_order_partial.pdf}
-\caption{Hybrid order partial eval. The formal-then-NL direction has completed train-1-to-5/10/15 and partial train-1-to-20; NL-then-formal rows are still pending.}
+\caption{Hybrid order partial eval. \texttt{think\_formal} is NL then formal and is complete through train-1-to-20, with train-1-to-25 partial; \texttt{formal\_think} is still pending.}
 \end{figure}
 """
     conditioned_50k_curve_block = ""
@@ -3103,7 +3103,7 @@ The trace-control ablation trains train-1-to-25 models with six altered trace st
 {trace_control_figure_block}
 
 \subsection{{Hybrid order}}
-The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means NL first, then formal logic; \texttt{{formal\_think}} means formal logic first, then NL. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. Current completed rows cover all \texttt{{think\_formal}} seeds through train-1-to-20; train-1-to-25 and \texttt{{formal\_think}} are still incomplete.
+The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means NL first, then formal logic; \texttt{{formal\_think}} means formal logic first, then NL. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. Current completed rows cover all \texttt{{think\_formal}} seeds through train-1-to-20; train-1-to-25 is partial, and \texttt{{formal\_think}} is still incomplete.
 
 \begin{{table}}[H]
 \centering
@@ -3119,7 +3119,7 @@ The hybrid-order ablation trains a single prompt containing both trace substrate
     ("depth50_formal_joint@16", "d50 formal joint"),
     ("depth50_translated_joint@16", "d50 translated joint"),
 ])}
-\caption{{Hybrid-order partial summary. Treat train-1-to-20 as partial until the third seed finishes; train-1-to-25 and formal-then-NL are not yet evaluated.}}
+\caption{{Hybrid-order partial summary. \texttt{{think\_formal}} train-1-to-25 is still partial; \texttt{{formal\_think}} remains pending.}}
 \end{{table}}
 {hybrid_order_figure_block}
 
