@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-05-30 10:28 CEST.
+Last updated: 2026-05-30 10:30 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -8,7 +8,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 
 | Priority | Item | Why | Trigger |
 | --- | --- | --- | --- |
-| P0 | Analyze and report full paired-family suite | This is the real repeat of the HFSA logic-vs-NL comparison on `official_igsm`, `maze_navigation`, and hardened `attribute_constraints`. | `3672213` completes. |
+| P0 | Analyze and report full paired-family suite | This is the real repeat of the HFSA logic-vs-NL comparison on `official_igsm`, `maze_navigation`, and hardened `attribute_constraints`. Deferred at the 2026-05-30 10:30 oversight pass because `3672213` is still dependency-pending and there are zero eval JSONs. | `3672213` completes. |
 | P0 | Add completed trace-control, hybrid, shortcut-kind, and conditioned-50k results to the LaTeX report | These are reviewer-facing ablations. Shortcut-rate `0.3`, wordified length-control, partial trace-control, partial hybrid-order, and active-artifact status are now included in the 2026-05-30 09:46 report regeneration. | Corresponding eval JSONs appear. |
 | P0 | Inspect sample generations for each completed ablation | Tables alone are not enough to understand invalid/wrong failure modes. | After each eval family completes. |
 | P1 | Improve paired-family NL validity translation | Current paired pilots often have meaningful correctness but `nl_exact` joint validity is `0.000` because translator coverage is incomplete. | Before making NL-vs-logic validity claims on paired families. |
