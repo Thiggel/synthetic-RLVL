@@ -65,6 +65,30 @@ def test_ablation_templates_emit_scorable_targets(template: TemplateName, block_
     assert result.correct == 1.0
 
 
+@pytest.mark.parametrize("template", [TemplateName.RULE_ANNOTATED_NL, TemplateName.PSEUDOCODE])
+def test_controlled_nl_trace_wrappers_translate_to_valid_logic(template: TemplateName):
+    gen = LogicDatasetGenerator(DatasetConfig(depth=3, distractor_ratio=0.5, seed=123))
+    ex = gen.generate(0)
+    cfg = make_task(template=template)
+    sample = task_sample_from_logic_example(ex, cfg=cfg, depth=3)
+
+    result = OutputEvaluator().evaluate(
+        sample.target,
+        template=template,
+        gold_answer=sample.answer,
+        gold_logic_premises=sample.logic_premises,
+        gold_logic_conclusion=sample.logic_conclusion,
+        gold_logic_constants=sample.logic_constants,
+        gold_logic_predicates=sample.logic_predicates,
+        prefill=cfg.prefill,
+        gold_first_modality_lines=sample.gold_first_modality_lines,
+    )
+    assert result.format_ok == 1.0
+    assert result.correct == 1.0
+    assert result.nl_logic_parse == 1.0
+    assert result.nl_logic_citation_free_valid == 1.0
+
+
 def test_invalid_logic_template_breaks_proof_validity():
     gen = LogicDatasetGenerator(DatasetConfig(depth=3, distractor_ratio=0.5, seed=123))
     ex = gen.generate(0)

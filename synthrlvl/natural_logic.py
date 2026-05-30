@@ -69,12 +69,26 @@ def _predicate_atom(predicate: str, constant: str) -> str:
 
 
 def _assertion_clause(line: str) -> str:
+    line = _unwrap_controlled_trace_line(line)
     text = _norm(_strip_number(line))
     if text.startswith("since ") and "," in text:
         text = text.rsplit(",", 1)[1].strip()
     for prefix in ("therefore ", "thus ", "hence ", "so "):
         if text.startswith(prefix):
             text = text[len(prefix) :].strip()
+    return text
+
+
+def _unwrap_controlled_trace_line(line: str) -> str:
+    """Remove wrappers added by controlled trace ablations before NL parsing."""
+    text = _strip_number(line)
+    m = re.match(
+        r'(?is)^\s*step[_\s-]*\d+\s*:\s*derive\s+["“](?P<statement>.+?)["”]\s+using\s+.+?\s*$',
+        text,
+    )
+    if m:
+        return m.group("statement").strip()
+    text = re.sub(r"(?is)\s*\[\s*rule\s*:\s*[^\]]+\]\s*$", "", text).strip()
     return text
 
 

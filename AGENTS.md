@@ -106,6 +106,13 @@ Update the handoff docs whenever operational or scientific state changes.
 - If implementation is changed or extended, update the relevant docs with what changed, why, and any verification run.
 - If new analysis, results, failure modes, or research insights are found, record the concise takeaway and affected artifacts in the handoff docs.
 
+## Experiment Analysis Discipline
+
+- Treat every aggregate metric as provisional until representative raw generations, extracted answers, translated traces, and validity diagnostics have been inspected.
+- For every completed or newly suspicious job family, inspect sample generations across seeds, depths, templates, and success/failure cases; verify that prompts, formatting, answer extraction, trace translation, and validity checks match the intended experiment.
+- When a metric is surprising, question the evaluator before accepting the scientific interpretation. Check whether parser coverage, trace wrappers, prompt format, token limits, stale code, or report aggregation could explain the result.
+- Record analysis assumptions, discovered evaluator artifacts, sample-generation findings, and any re-eval requirements in the handoff docs and report before using the result as evidence.
+
 ## Report Discipline
 
 - The primary ongoing LaTeX report lives inside this repo at `analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex`.
