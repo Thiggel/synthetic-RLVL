@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-05-29 09:09 CEST.
+Last updated: 2026-05-30 09:29 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -9,7 +9,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 | Priority | Item | Why | Trigger |
 | --- | --- | --- | --- |
 | P0 | Analyze and report full paired-family suite | This is the real repeat of the HFSA logic-vs-NL comparison on `official_igsm`, `maze_navigation`, and hardened `attribute_constraints`. | `3672213` completes. |
-| P0 | Add completed trace-control, hybrid, shortcut-rate `0.3`, shortcut-kind, wordified, and conditioned-50k results to the LaTeX report | These are reviewer-facing ablations. | Corresponding eval JSONs appear. |
+| P0 | Add completed trace-control, hybrid, shortcut-kind, wordified, and conditioned-50k results to the LaTeX report | These are reviewer-facing ablations. Shortcut-rate `0.3` is now fully evaluated and the matched rows were included in the 2026-05-30 09:29 report regeneration. | Corresponding eval JSONs appear. |
 | P0 | Inspect sample generations for each completed ablation | Tables alone are not enough to understand invalid/wrong failure modes. | After each eval family completes. |
 | P1 | Improve paired-family NL validity translation | Current paired pilots often have meaningful correctness but `nl_exact` joint validity is `0.000` because translator coverage is incomplete. | Before making NL-vs-logic validity claims on paired families. |
 | P1 | Build support-facts/context-QA reasoning eval | Current HotpotQA/2Wiki/MuSiQue are context-provided answer-only probes; they do not force or verify explicit multi-hop reasoning traces. | After current OOD tables are stable. |
@@ -31,6 +31,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 
 - Regenerate `analysis/logic_cot_report_2026-05-25/` after every newly completed eval family.
 - Add convergence curves from `hfsa_conditioned_dual_50k_intermediate_20260529` once available.
+- Shortcut-rate `0.3` matched logic/NL rows are complete and included in the 2026-05-30 09:29 report regeneration; revisit only if adding new rates or mechanisms.
 - Add shortcut-kind comparison tables/plots once `hfsa_shortcut_kind_ablation_20260529` is complete.
 - Add wordified-vs-compact-vs-NL length-control plots once `hfsa_logic_wordified_20260529` is complete.
 - Keep full raw generation examples in a supplemental Markdown file; keep only selected examples in the main LaTeX report.
