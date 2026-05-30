@@ -69,7 +69,7 @@ TRACE_CONTROL_RE = re.compile(
     r"sft_hfsa_ablate_(terse_nl|rule_annotated_nl|pseudocode|shuffled_logic|invalid_logic|shuffled_nl)_train1to25_10k_seed(\d+)_passk\.json$"
 )
 HYBRID_ORDER_RE = re.compile(
-    r"sft_hfsa_hybrid_order_(think_formal|think_natural)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
+    r"sft_hfsa_hybrid_order_(think_formal|formal_think)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
 )
 CONDITIONED_RE = re.compile(
     r"sft_hfsa_conditioned_dual_train1to(\d+)_10k_seed(\d+)_(conditioned_logic|conditioned_nl)_passk\.json$"
@@ -1245,7 +1245,7 @@ def plot_hybrid_order_summary(summary: pd.DataFrame) -> None:
         ("ood_translated_joint@16", "OOD translated joint@16"),
         ("depth50_correct@16", "depth-50 correct@16"),
     ]
-    styles = {"think_formal": ("#1f77b4", "formal then NL"), "think_natural": ("#d62728", "NL then formal")}
+    styles = {"think_formal": ("#1f77b4", "NL then formal"), "formal_think": ("#d62728", "formal then NL")}
     fig, axes = plt.subplots(2, 2, figsize=(10.2, 6.5), sharex=True, sharey=True)
     for ax, (col, title) in zip(axes.ravel(), metrics, strict=True):
         for mode, (color, label) in styles.items():
@@ -3094,7 +3094,7 @@ lines, and repair eval \texttt{{3680004\_[3-8]}} is running/queued to overwrite 
 {trace_control_figure_block}
 
 \subsection{{Hybrid order}}
-The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means formal logic first, then NL; \texttt{{think\_natural}} means NL first, then formal logic. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. Current completed rows are all \texttt{{think\_formal}} for train-1-to-5/10/15 and two seeds for train-1-to-20; \texttt{{think\_natural}} is still pending.
+The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means NL first, then formal logic; \texttt{{formal\_think}} means formal logic first, then NL. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. Current completed rows are all \texttt{{think\_formal}} for train-1-to-5/10/15 and two seeds for train-1-to-20; \texttt{{formal\_think}} is still pending.
 
 \begin{{table}}[H]
 \centering
@@ -3110,7 +3110,7 @@ The hybrid-order ablation trains a single prompt containing both trace substrate
     ("depth50_formal_joint@16", "d50 formal joint"),
     ("depth50_translated_joint@16", "d50 translated joint"),
 ])}
-\caption{{Hybrid-order partial summary. Treat train-1-to-20 as partial until the third seed finishes; train-1-to-25 and NL-then-formal are not yet evaluated.}}
+\caption{{Hybrid-order partial summary. Treat train-1-to-20 as partial until the third seed finishes; train-1-to-25 and formal-then-NL are not yet evaluated.}}
 \end{{table}}
 {hybrid_order_figure_block}
 

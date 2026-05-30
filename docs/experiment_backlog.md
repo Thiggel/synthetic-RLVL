@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-05-30 10:30 CEST.
+Last updated: 2026-05-30 10:33 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -9,7 +9,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 | Priority | Item | Why | Trigger |
 | --- | --- | --- | --- |
 | P0 | Analyze and report full paired-family suite | This is the real repeat of the HFSA logic-vs-NL comparison on `official_igsm`, `maze_navigation`, and hardened `attribute_constraints`. Deferred at the 2026-05-30 10:30 oversight pass because `3672213` is still dependency-pending and there are zero eval JSONs. | `3672213` completes. |
-| P0 | Add completed trace-control, hybrid, shortcut-kind, and conditioned-50k results to the LaTeX report | These are reviewer-facing ablations. Shortcut-rate `0.3`, wordified length-control, partial trace-control, partial hybrid-order, and active-artifact status are now included in the 2026-05-30 09:46 report regeneration. | Corresponding eval JSONs appear. |
+| P0 | Add completed trace-control, hybrid, shortcut-kind, and conditioned-50k results to the LaTeX report | These are reviewer-facing ablations. Shortcut-rate `0.3`, wordified length-control, partial trace-control, partial hybrid-order, and active-artifact status are included. The 2026-05-30 10:33 regeneration also fixed hybrid-order labeling/parsing so pending `formal_think` rows will be included when JSONs appear. | Corresponding eval JSONs appear. |
 | P0 | Inspect sample generations for each completed ablation | Tables alone are not enough to understand invalid/wrong failure modes. | After each eval family completes. |
 | P1 | Improve paired-family NL validity translation | Current paired pilots often have meaningful correctness but `nl_exact` joint validity is `0.000` because translator coverage is incomplete. | Before making NL-vs-logic validity claims on paired families. |
 | P1 | Build support-facts/context-QA reasoning eval | Current HotpotQA/2Wiki/MuSiQue are context-provided answer-only probes; they do not force or verify explicit multi-hop reasoning traces. | After current OOD tables are stable. |
@@ -30,6 +30,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 ## Report/Artifact Work
 
 - Plan-driven oversight is now active through refreshed jobs `3680036` and `3680037`, with next passes `3680038` and `3680039` already scheduled. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
+- 2026-05-30 10:33 oversight found no newly satisfied broad-experiment trigger: paired eval `3672213`, trace repair `3680004`, hybrid eval `3670783`, shortcut-kind eval `3674888`, and conditioned-dual 50k evals `3674884/3674885` are still running or dependency-pending.
 - Regenerate `analysis/logic_cot_report_2026-05-25/` after every newly completed eval family.
 - Add convergence curves from `hfsa_conditioned_dual_50k_intermediate_20260529` once available.
 - Shortcut-rate `0.3/0.5/0.8` matched logic/NL rows are complete and included in the report; revisit only if adding new rates or mechanisms.
