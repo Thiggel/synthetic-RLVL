@@ -65,6 +65,12 @@ SHORTCUT_RE = re.compile(
 SHORTCUT_KIND_RE = re.compile(
     r"sft_hfsa_shortcut_(position|initial_marker)_(logic|nl_exact)_shortcut(0p5|0p8)_train1to25_10k_seed(\d+)_passk\.json$"
 )
+TRACE_CONTROL_RE = re.compile(
+    r"sft_hfsa_ablate_(terse_nl|rule_annotated_nl|pseudocode|shuffled_logic|invalid_logic|shuffled_nl)_train1to25_10k_seed(\d+)_passk\.json$"
+)
+HYBRID_ORDER_RE = re.compile(
+    r"sft_hfsa_hybrid_order_(think_formal|think_natural)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
+)
 CONDITIONED_RE = re.compile(
     r"sft_hfsa_conditioned_dual_train1to(\d+)_10k_seed(\d+)_(conditioned_logic|conditioned_nl)_passk\.json$"
 )
@@ -1148,6 +1154,170 @@ def plot_conditioned_50k_convergence(summary: pd.DataFrame) -> None:
     save(fig, "ablation_conditioned_dual_50k_convergence_train1to25")
 
 
+def _summarize_dual_joint_passk(
+    root: Path,
+    regex: re.Pattern[str],
+    field_names: list[str],
+    summary_keys: list[str],
+    table_prefix: str,
+) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    if not root.exists():
+        return pd.DataFrame()
+    for path in sorted(root.glob("*_passk.json")):
+        match = regex.match(path.name)
+        if not match:
+            continue
+        group_map: dict[str, object] = dict(zip(field_names, match.groups(), strict=True))
+        for numeric_field in ("train_max", "seed"):
+            if numeric_field in group_map:
+                group_map[numeric_field] = int(group_map[numeric_field])
+        metrics = read_payload(path)["metrics"]
+        rows.append(
+            {
+                **group_map,
+                "ood_correct@16": metrics.get("synthetic_sampled/band_ood/correct_pass@16"),
+                "ood_formal_joint@16": metrics.get("synthetic_sampled/band_ood/citation_free_joint_pass@16"),
+                "ood_translated_joint@16": metrics.get("synthetic_sampled/band_ood/nl_logic_joint_pass@16"),
+                "depth50_correct@16": metrics.get("synthetic_sampled/step_50/correct_pass@16"),
+                "depth50_formal_joint@16": metrics.get("synthetic_sampled/step_50/citation_free_joint_pass@16"),
+                "depth50_translated_joint@16": metrics.get("synthetic_sampled/step_50/nl_logic_joint_pass@16"),
+            }
+        )
+    if rows:
+        write_csv(TABLE_DIR / f"{table_prefix}_by_seed.csv", rows)
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df
+    metric_cols = [
+        "ood_correct@16",
+        "ood_formal_joint@16",
+        "ood_translated_joint@16",
+        "depth50_correct@16",
+        "depth50_formal_joint@16",
+        "depth50_translated_joint@16",
+    ]
+    summary = df.groupby(summary_keys, as_index=False).agg(
+        n=("seed", "nunique"),
+        **{col: (col, "mean") for col in metric_cols},
+    ).sort_values(summary_keys)
+    write_csv(TABLE_DIR / f"{table_prefix}_summary.csv", summary.to_dict("records"))
+    return summary
+
+
+def plot_trace_control_summary(summary: pd.DataFrame) -> None:
+    if summary.empty:
+        return
+    df = summary.copy()
+    template_order = {
+        "terse_nl": 0,
+        "rule_annotated_nl": 1,
+        "pseudocode": 2,
+        "shuffled_logic": 3,
+        "invalid_logic": 4,
+        "shuffled_nl": 5,
+    }
+    df["order"] = df["template"].map(template_order).fillna(99)
+    df = df.sort_values("order")
+    labels = [str(value).replace("_", "\n") for value in df["template"]]
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_formal_joint@16", "OOD formal joint@16"),
+        ("ood_translated_joint@16", "OOD translated joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+    ]
+    fig, axes = plt.subplots(2, 2, figsize=(10.5, 6.8), sharey=True)
+    for ax, (col, title) in zip(axes.ravel(), metrics, strict=True):
+        values = [float(value) if isinstance(value, Number) and not pd.isna(value) else 0.0 for value in df[col]]
+        ax.bar(range(len(df)), values, color="#4c78a8")
+        ax.set_xticks(range(len(df)))
+        ax.set_xticklabels(labels, rotation=0, fontsize=8)
+        style_axes(ax, title)
+    save(fig, "ablation_trace_controls_summary")
+
+
+def plot_hybrid_order_summary(summary: pd.DataFrame) -> None:
+    if summary.empty:
+        return
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_formal_joint@16", "OOD formal joint@16"),
+        ("ood_translated_joint@16", "OOD translated joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+    ]
+    styles = {"think_formal": ("#1f77b4", "formal then NL"), "think_natural": ("#d62728", "NL then formal")}
+    fig, axes = plt.subplots(2, 2, figsize=(10.2, 6.5), sharex=True, sharey=True)
+    for ax, (col, title) in zip(axes.ravel(), metrics, strict=True):
+        for mode, (color, label) in styles.items():
+            sub = summary[summary["mode"] == mode].dropna(subset=[col]).sort_values("train_max")
+            if sub.empty:
+                continue
+            ax.plot(sub["train_max"], sub[col], marker="o", color=color, label=label)
+        style_axes(ax, title)
+        ax.set_xlabel("max train depth")
+    axes[0, 0].legend(frameon=False, fontsize=8)
+    save(fig, "ablation_hybrid_order_partial")
+
+
+def build_experiment_artifact_status() -> pd.DataFrame:
+    runs_root = WORK_ROOT / "synthetic-RLVL" / "runs"
+
+    def has_final(run_name: str) -> bool:
+        return (runs_root / run_name / "final" / "adapter_config.json").exists()
+
+    rows: list[dict[str, object]] = []
+    paired_eval_root = PASSK_ROOT / "paired_full_suite_sparse_20260528"
+    for family, label in [
+        ("official_igsm", "iGSM"),
+        ("maze_navigation", "maze"),
+        ("attribute_constraints_hard", "attribute constraints"),
+    ]:
+        expected = 30
+        sft_done = 0
+        for train_max in [5, 10, 15, 20, 25]:
+            for template in ["logic", "nl_exact"]:
+                for seed in [3407, 3408, 3409]:
+                    run_name = f"sft_paired_full_{family}_{template}_train1to{train_max}_10k_seed{seed}"
+                    sft_done += int(has_final(run_name))
+        eval_done = len(list(paired_eval_root.glob(f"sft_paired_full_{family}_*_passk.json")))
+        rows.append(
+            {
+                "experiment": label,
+                "scope": "paired-family full suite",
+                "sft_done": sft_done,
+                "sft_expected": expected,
+                "eval_done": eval_done,
+                "eval_expected": expected,
+                "status": "eval pending" if eval_done == 0 else ("complete" if eval_done == expected else "partial eval"),
+            }
+        )
+
+    for name, scope, expected, root in [
+        ("trace controls", "six train-1-to-25 perturbations", 18, PASSK_ROOT / "hfsa_ablation_trace_controls_20260525"),
+        ("shortcut-rate", "rates 0.3/0.5/0.8, logic and NL", 18, PASSK_ROOT / "hfsa_shortcut_rate_ablation_20260525"),
+        ("hybrid order", "formal-then-NL and NL-then-formal full train-depth suite", 30, PASSK_ROOT / "hfsa_hybrid_order_full_20260525"),
+        ("shortcut-kind", "position and initial-marker shortcuts", 24, PASSK_ROOT / "hfsa_shortcut_kind_ablation_20260529"),
+        ("conditioned dual 10k", "conditioned formal/NL dual modality", 30, PASSK_ROOT / "hfsa_conditioned_dual_full_20260525"),
+        ("conditioned dual 50k", "longer conditioned formal/NL dual modality", 30, PASSK_ROOT / "hfsa_conditioned_dual_50k_20260529"),
+    ]:
+        eval_done = len(list(root.glob("*_passk.json"))) if root.exists() else 0
+        rows.append(
+            {
+                "experiment": name,
+                "scope": scope,
+                "sft_done": "",
+                "sft_expected": "",
+                "eval_done": eval_done,
+                "eval_expected": expected,
+                "status": "complete" if eval_done == expected else ("not started" if eval_done == 0 else "partial eval"),
+            }
+        )
+
+    df = pd.DataFrame(rows)
+    write_csv(TABLE_DIR / "active_experiment_artifact_status.csv", df.to_dict("records"))
+    return df
+
+
 def build_token_budget_comparison_table(main_summary: pd.DataFrame, token_budget_summary: pd.DataFrame) -> pd.DataFrame:
     if main_summary.empty and token_budget_summary.empty:
         return pd.DataFrame()
@@ -1465,6 +1635,10 @@ def latex_table(
         "target_p95",
         "total_mean",
         "total_p95",
+        "sft_done",
+        "sft_expected",
+        "eval_done",
+        "eval_expected",
     }
     for _, row in data.iterrows():
         vals = []
@@ -1941,6 +2115,20 @@ def load_ablation_summaries() -> dict[str, pd.DataFrame]:
             ["shortcut_kind", "template", "shortcut_rate"],
             "shortcut_kind_ablation",
         ),
+        "trace_control": _summarize_dual_joint_passk(
+            PASSK_ROOT / "hfsa_ablation_trace_controls_20260525",
+            TRACE_CONTROL_RE,
+            ["template", "seed"],
+            ["template"],
+            "trace_control_ablation",
+        ),
+        "hybrid_order": _summarize_dual_joint_passk(
+            PASSK_ROOT / "hfsa_hybrid_order_full_20260525",
+            HYBRID_ORDER_RE,
+            ["mode", "train_max", "seed"],
+            ["mode", "train_max"],
+            "hybrid_order_ablation",
+        ),
         "conditioned": _summarize_passk_ablation(
             PASSK_ROOT / "hfsa_conditioned_dual_full_20260525",
             CONDITIONED_RE,
@@ -2331,11 +2519,32 @@ def write_report(
         ablation_summaries.get("wordified", pd.DataFrame()),
     )
     shortcut_rows = ablation_summaries.get("shortcut", pd.DataFrame())
+    shortcut_kind_rows = ablation_summaries.get("shortcut_kind", pd.DataFrame())
+    trace_control_rows = ablation_summaries.get("trace_control", pd.DataFrame())
+    hybrid_order_rows = ablation_summaries.get("hybrid_order", pd.DataFrame())
     conditioned_rows = ablation_summaries.get("conditioned", pd.DataFrame())
+    conditioned_50k_rows = ablation_summaries.get("conditioned_50k", pd.DataFrame())
+    experiment_status_rows = build_experiment_artifact_status()
     shortcut_comparison_rows = build_shortcut_comparison_table(main_summary, shortcut_rows)
     conditioned_comparison_rows = build_conditioned_comparison_table(main_summary, conditioned_rows)
     train_maxes = [5, 10, 15, 20, 25]
     tiny_sizes = ["50m", "100m", "200m"]
+    trace_control_figure_block = ""
+    if not trace_control_rows.empty and (FIG_DIR / "ablation_trace_controls_summary.pdf").exists():
+        trace_control_figure_block = r"""
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\linewidth]{figures/ablation_trace_controls_summary.pdf}
+\caption{Trace-control ablation summary for completed rows. Formal joint is citation-free formal validity; translated joint is NL-to-FOL translated validity.}
+\end{figure}
+"""
+    hybrid_order_figure_block = ""
+    if not hybrid_order_rows.empty and (FIG_DIR / "ablation_hybrid_order_partial.pdf").exists():
+        hybrid_order_figure_block = r"""
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\linewidth]{figures/ablation_hybrid_order_partial.pdf}
+\caption{Hybrid order partial eval. The formal-then-NL direction has completed train-1-to-5/10/15 and partial train-1-to-20; NL-then-formal rows are still pending.}
+\end{figure}
+"""
     conditioned_50k_curve_block = ""
     if (FIG_DIR / "ablation_conditioned_dual_50k_convergence_train1to25.pdf").exists():
         conditioned_50k_curve_block = r"""
@@ -2419,7 +2628,7 @@ def write_report(
 \usepackage{{float}}
 \usepackage{{hyperref}}
 \title{{Formal Logic CoT Synthetic Results Update}}
-\date{{2026-05-29}}
+\date{{2026-05-30}}
 \begin{{document}}
 \maketitle
 
@@ -2430,8 +2639,9 @@ def write_report(
 \item Token length is a real confound: NL targets are longer than logic targets at every train range. Both equal-length logic controls underperform compact logic; symbol padding disrupts atom tokenization, and the cleaner wordified logic control is also weaker than compact logic and NL at train-1-to-25.
 \item Tiny random-init Llama pretraining is a mechanism smoke test. Logic is stronger than matched NL on answer-only synthetic OOD pass@8, but strict depth-50 joint validity is essentially absent.
 \item Architecture ablations show that the phenomenon is not OLMo-only: Qwen and Gemma runs also show strong formal-trace transfer, with model-specific variation in joint validity.
-\item Shortcut-rich training hurts NL more clearly than logic in the completed 0.5/0.8 shortcut-rate runs, supporting the hypothesis that NL relies more on brittle shortcut associations. The 0.3 shortcut-rate and shortcut-kind controls are still running.
+\item Shortcut-rich training hurts NL more clearly than logic in the completed 0.3/0.5/0.8 shortcut-rate runs, supporting the hypothesis that NL relies more on brittle shortcut associations. The shortcut-kind controls for position and initial-marker shortcuts are still training.
 \item Conditioned dual-modality at 10k underperforms the best single-modality baselines, especially for conditioned logic at larger train ranges. The 50k continuation is running to test whether this is undertraining.
+\item Trace controls are only partially evaluated: terse NL and rule-annotated NL are complete; pseudocode is evaluating; shuffled/invalid negative controls are still pending. Rule-annotated NL gets nontrivial answer correctness but zero translated joint validity, so it is not yet a clean improvement over exact NL.
 \end{{itemize}}
 
 \section{{Metric note for OOD benchmarks}}
@@ -2747,8 +2957,26 @@ The architecture comparison now includes completed Qwen-2.5-1.5B, Qwen-2.5-7B, a
 \caption{{Architecture comparison for eval-depth 30--50 correct@16.}}
 \end{{figure}}
 
+\section{{Active experiment status}}
+This table is artifact-based at report-generation time: it counts completed SFT final adapters where applicable and completed sparse pass@k JSONs. Live Slurm state is maintained in \texttt{{docs/running\_experiments.md}}.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(experiment_status_rows, [
+    ("experiment", "experiment"),
+    ("scope", "scope"),
+    ("sft_done", "SFT done"),
+    ("sft_expected", "SFT expected"),
+    ("eval_done", "eval done"),
+    ("eval_expected", "eval expected"),
+    ("status", "status"),
+])}
+\caption{{Artifact status for paired-family repeats and active ablation families.}}
+\end{{table}}
+
 \section{{Targeted ablations}}
-Completed ablation results are shown here; active arrays are tracked in the handoff documents. The current same-token-budget experiment is more precisely a same target-token budget experiment. The logic row in that experiment is a control rerun at 10k steps; the NL row is shortened to 7140 steps so target-token exposure approximately matches 10k logic steps. It does not match total prompt-plus-target tokens; that would require roughly 8600 NL steps and has not been run yet. The symbol-padded logic control is the completed total-sequence-length match to NL at the same optimizer-step budget; the wordified logic length-control is the cleaner equal-length formal follow-up and is now complete. Shortcut rates 0.5 and 0.8 are complete; shortcut rate 0.3 is evaluating. Conditioned dual-modality 10k eval is complete, and the 50k continuation is running.
+Completed ablation results are shown here; active arrays are tracked in the handoff documents. The current same-token-budget experiment is more precisely a same target-token budget experiment. The logic row in that experiment is a control rerun at 10k steps; the NL row is shortened to 7140 steps so target-token exposure approximately matches 10k logic steps. It does not match total prompt-plus-target tokens; that would require roughly 8600 NL steps and has not been run yet. The symbol-padded logic control is the completed total-sequence-length match to NL at the same optimizer-step budget; the wordified logic length-control is the cleaner equal-length formal follow-up and is now complete. Shortcut rates 0.3, 0.5, and 0.8 are complete. Conditioned dual-modality 10k eval is complete, and the 50k continuation is running.
 
 The shortcut-rate ablation changes only the training distribution. With probability equal to the shortcut rate, a training example uses the \texttt{{hard\_fsa\_schema}} shortcut generator: the gold path obeys a shared marker-conditioned transition schema and carries redundant marker facts that make a family-level transition heuristic predictive. Non-gold branches remain coherent but do not follow that schema. Evaluation always resets \texttt{{shortcut\_rate=0.0}}, so these rows test whether training on shortcut-rich traces hurts or helps transfer back to shortcut-neutral depth extrapolation.
 
@@ -2825,6 +3053,66 @@ The shortcut-rate ablation changes only the training distribution. With probabil
 \caption{{Shortcut-rate ablation compared with shortcut-neutral main train-1-to-25 baselines.}}
 \end{{figure}}
 
+\subsection{{Other shortcut types}}
+The shortcut-kind controls test two concrete shortcut mechanisms: a \texttt{{position}} shortcut, where the target path is statistically associated with position-like structure, and an \texttt{{initial\_marker}} shortcut, where an early marker fact is predictive of the target transition family. Both are trained at rates 0.5 and 0.8 for logic and NL over three seeds, with shortcut-neutral eval. At this report generation time, SFT is still running and no shortcut-kind eval JSON has been produced.
+
+\begin{{table}}[H]
+\centering
+\small
+{latex_table(shortcut_kind_rows, [
+    ("shortcut_kind", "shortcut kind"),
+    ("template", "template"),
+    ("shortcut_rate", "rate"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_joint@16", "OOD joint@16"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_joint@16", "d50 joint@16"),
+])}
+\caption{{Shortcut-kind eval summary. No rows means the eval dependency has not started or has not written JSON yet.}}
+\end{{table}}
+
+\subsection{{Trace controls}}
+The trace-control ablation trains train-1-to-25 models with six altered trace styles, always over three seeds and evaluated on the same 1-to-50 sparse protocol. The six controls are: \texttt{{terse\_nl}} (shorter natural-language reasoning), \texttt{{rule\_annotated\_nl}} (NL with explicit rule names), \texttt{{pseudocode}} (algorithm-like trace), \texttt{{shuffled\_logic}} (formal lines shuffled as a negative control), \texttt{{invalid\_logic}} (formally invalid proof trace negative control), and \texttt{{shuffled\_nl}} (NL trace order shuffled). Current completed rows are terse NL and rule-annotated NL; pseudocode is evaluating; the negative controls are pending.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(trace_control_rows, [
+    ("template", "trace control"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_formal_joint@16", "OOD formal joint"),
+    ("ood_translated_joint@16", "OOD translated joint"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_formal_joint@16", "d50 formal joint"),
+    ("depth50_translated_joint@16", "d50 translated joint"),
+])}
+\caption{{Trace-control partial summary. Both formal and translated joint are shown because the controls intentionally move between formal, NL, and hybrid-like trace surfaces.}}
+\end{{table}}
+{trace_control_figure_block}
+
+\subsection{{Hybrid order}}
+The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means formal logic first, then NL; \texttt{{think\_natural}} means NL first, then formal logic. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. Current completed rows are all \texttt{{think\_formal}} for train-1-to-5/10/15 and two seeds for train-1-to-20; \texttt{{think\_natural}} is still pending.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(hybrid_order_rows, [
+    ("mode", "mode"),
+    ("train_max", "train max"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_formal_joint@16", "OOD formal joint"),
+    ("ood_translated_joint@16", "OOD translated joint"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_formal_joint@16", "d50 formal joint"),
+    ("depth50_translated_joint@16", "d50 translated joint"),
+])}
+\caption{{Hybrid-order partial summary. Treat train-1-to-20 as partial until the third seed finishes; train-1-to-25 and NL-then-formal are not yet evaluated.}}
+\end{{table}}
+{hybrid_order_figure_block}
+
 \begin{{table}}[H]
 \centering
 \scriptsize
@@ -2843,6 +3131,20 @@ The shortcut-rate ablation changes only the training distribution. With probabil
 \includegraphics[width=0.95\linewidth]{{figures/ablation_conditioned_dual_vs_main_by_train_depth.pdf}}
 \caption{{Conditioned dual-modality ablation compared with main logic and main NL across train-depth ranges. Dashed lines are conditioned runs; solid lines are single-modality baselines.}}
 \end{{figure}}
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(conditioned_50k_rows, [
+    ("train_max", "train max"),
+    ("eval_template", "eval template"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_joint@16", "OOD joint@16"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_joint@16", "d50 joint@16"),
+])}
+\caption{{Conditioned dual-modality 50k final eval summary. No rows means the 50k continuation/eval chain has not reached final pass@k output yet.}}
+\end{{table}}
 {conditioned_50k_curve_block}
 
 \section{{Qualitative samples}}
@@ -2924,6 +3226,8 @@ def main() -> None:
     plot_architecture_comparison(architecture_summary)
     plot_token_budget_comparison(main_summary, ablation_summaries.get("token_budget", pd.DataFrame()))
     plot_shortcut_comparison(main_summary, ablation_summaries.get("shortcut", pd.DataFrame()))
+    plot_trace_control_summary(ablation_summaries.get("trace_control", pd.DataFrame()))
+    plot_hybrid_order_summary(ablation_summaries.get("hybrid_order", pd.DataFrame()))
     conditioned_comparison = build_conditioned_comparison_table(
         main_summary, ablation_summaries.get("conditioned", pd.DataFrame())
     )
