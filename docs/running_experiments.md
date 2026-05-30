@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-05-30 01:41 CEST.
+Last updated: 2026-05-30 04:05 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -8,7 +8,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 | Experiment | Jobs | State | Expected outputs | Notes |
 | --- | --- | --- | --- | --- |
-| Full paired-family suite | SFT `3672212_[0-89%6]`, eval `3672213_[0-89%4]`, latest oversight `3677238`, next oversight `3677873` | SFT rows `0..47` complete, `48..53` running, `54..89` pending by throttle; eval dependency-pending on `afterok:3672212_*`; oversight `3677238` complete, next `3677873` begin-time pending | `$WORK/synthetic-RLVL/passk_eval/paired_full_suite_sparse_20260528/` | Covers `official_igsm`, `maze_navigation`, hardened `attribute_constraints`, templates `logic,nl_exact`, train ranges `1..5/10/15/20/25`, seeds `3407..3409`. Build is complete with 55/55 manifest paths present for all three families; completed SFT rows `0..47` have final adapters. Running rows `48..53` started `maze_navigation` train-1-to-20; row `48` has entered training and rows `49..53` are in startup/data mapping. Full-suite eval still has `0` JSON outputs and no output directory yet. |
+| Full paired-family suite | SFT `3672212_[0-89%6]`, eval `3672213_[0-89%4]`, latest oversight `3677873`, next oversight `3678335` | SFT rows `0..47` complete, `48..53` running, `54..89` pending by throttle; eval dependency-pending on `afterok:3672212_*`; oversight `3677873` running, next `3678335` begin-time pending | `$WORK/synthetic-RLVL/passk_eval/paired_full_suite_sparse_20260528/` | Covers `official_igsm`, `maze_navigation`, hardened `attribute_constraints`, templates `logic,nl_exact`, train ranges `1..5/10/15/20/25`, seeds `3407..3409`. Build is complete with 55/55 manifest paths present for all three families; completed SFT rows `0..47` have final adapters. Running rows `48..53` are `maze_navigation` train-1-to-20 (`logic` and `nl_exact`, seeds `3407..3409`) with latest parsed progress `1873/1574/1536/1416/1380/1256` of `10000`. Full-suite eval still has `0` JSON outputs and no output directory yet. |
 | Trace-control ablations | SFT `3661118_[0-17%3]`, eval `3661119_[0-17%3]` | SFT rows `0..17` complete; eval row `1` complete, rows `0/2/3` running, `4..17` pending by throttle | `passk_eval/hfsa_ablation_trace_controls_20260525/` | Templates: `terse_nl`, `rule_annotated_nl`, `pseudocode`, `shuffled_logic`, `invalid_logic`, `shuffled_nl`. One JSON so far: `terse_nl` seed `3408` has OOD correct/translated-joint@16 `0.475/0.319`, depth-50 correct/joint@16 `0.156/0.000`; treat as partial. |
 | Shortcut-rate `0.3` | SFT `3671431_[0-5%3]`, eval `3671432_[0-5%3]` | SFT rows `0..5` complete; eval rows `0..2` complete, rows `3..5` running | `$WORK/synthetic-RLVL/passk_eval/hfsa_shortcut_rate_ablation_20260525/` | Adds low/intermediate point to the existing `0.5/0.8` shortcut-rate curve. Output count is now `15`: existing `0.5/0.8` plus three `0.3` logic JSONs. `0.3` logic mean OOD correct/joint@16 is `0.892/0.598`; depth-50 correct/joint@16 is `0.844/0.375`. Matched NL rows are still running. |
 | Hybrid order | targeted SFT `3670782`, eval `3670783_[0-29%4]` | SFT complete; 7 eval JSONs written, rows `7..10` running, `11..29` pending by throttle | `$WORK/synthetic-RLVL/passk_eval/hfsa_hybrid_order_full_20260525/` | Completed `think_formal` train-1-to-5 rows average OOD correct@16 `0.480`, formal joint@16 `0.022`, translated-NL joint@16 `0.297`, depth-50 correct@16 `0.219`; train-1-to-10 rows average OOD correct@16 `0.490`, formal joint@16 `0.249`, translated-NL joint@16 `0.296`, depth-50 correct@16 `0.354`; train-1-to-15 has only seed `3407` complete with OOD correct/formal-joint/translated-joint@16 `0.414/0.121/0.113`, depth-50 correct@16 `0.531`. |
@@ -19,7 +19,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 ## Partition Audit
 
-Checked at 2026-05-30 01:41 CEST. Monitored pending rows were blocked by array task limits, dependencies, or begin times, not partition availability. No `scontrol update JobId=<jobid> Partition=<partition1,partition2>` edit was appropriate.
+Checked at 2026-05-30 04:05 CEST. Monitored paired full-suite pending rows were blocked by array task limits, dependency, or begin time, not partition availability. No `scontrol update JobId=<jobid> Partition=<partition1,partition2>` edit was appropriate.
 
 Unrelated visible `puzzle_*` jobs are not part of this handoff. No visible `tjepa_*` or `seqedit_*` jobs were present in the queue check.
 
@@ -36,7 +36,7 @@ Unrelated visible `puzzle_*` jobs are not part of this handoff. No visible `tjep
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3672212,3672213,3677238,3677873,3661118,3661119,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3675833,3676880,3677392,3678051 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3672212,3672213,3677873,3678335,3661118,3661119,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3675833,3676880,3677392,3678051 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
 ```
 
 Useful log tails:
