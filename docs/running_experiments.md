@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-05-30 10:33 CEST.
+Last updated: 2026-05-30 14:31 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -8,7 +8,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 | Experiment | Jobs | State | Expected outputs | Notes |
 | --- | --- | --- | --- | --- |
-| Full paired-family suite | SFT `3672212_[0-89%6]`, eval `3672213_[0-89%4]`, previous oversight `3678335`, current oversight `3680037`, next oversight `3680039` | SFT rows `0..47` complete, `48..53` running, `54..89` pending by throttle; eval dependency-pending on `afterok:3672212_*`; oversight `3678335` complete; stale queued oversight `3679358` canceled after the prompt update; fresh plan-driven oversight `3680037` running; next pass `3680039` begin-time pending | `$WORK/synthetic-RLVL/passk_eval/paired_full_suite_sparse_20260528/` | Covers `official_igsm`, `maze_navigation`, hardened `attribute_constraints`, templates `logic,nl_exact`, train ranges `1..5/10/15/20/25`, seeds `3407..3409`. Build is complete with 55/55 manifest paths present for all three families; completed SFT rows `0..47` have final adapters. Running rows `48..53` are `maze_navigation` train-1-to-20 (`logic` and `nl_exact`, seeds `3407..3409`) with latest parsed progress `6185/5867/5836/5944/5900/5764` of `10000`, and all six have `checkpoint-5000`. Full-suite eval still has `0` JSON outputs and no output directory yet. A 2026-05-30 10:30 sample materialized-row audit across train-1-to-5 and val-depth-50 for all three families found matching logic/NL prompts, correct target wrappers, strict proof validation passing, and the expected iGSM citation-free caveat for cited arithmetic substitutions. |
+| Full paired-family suite | SFT `3672212_[0-89%6]`, eval `3672213_[0-89%4]`, previous oversight `3680037`, current oversight `3680039`, next oversight `3680777` | SFT rows `0..47` complete, `48..53` running, `54..89` pending by throttle; eval dependency-pending on `afterok:3672212_*`; oversight `3680037` complete; current plan-driven oversight `3680039` running; next pass `3680777` begin-time pending | `$WORK/synthetic-RLVL/passk_eval/paired_full_suite_sparse_20260528/` | Covers `official_igsm`, `maze_navigation`, hardened `attribute_constraints`, templates `logic,nl_exact`, train ranges `1..5/10/15/20/25`, seeds `3407..3409`. Build is complete with 55/55 manifest paths present for all three families; completed SFT rows `0..47` have final adapters. Running rows `48..53` are `maze_navigation` train-1-to-20 (`logic` and `nl_exact`, seeds `3407..3409`) with latest parsed progress `8829/8511/8479/8728/8676/8556` of `10000`, and all six have `checkpoint-5000`. Full-suite eval still has `0` JSON outputs and no output directory yet. A 2026-05-30 14:31 sample materialized-row audit across train-1-to-20 and val-depth-50 for all three families found matching logic/NL prompts, correct target wrappers, strict proof validation passing, and the expected iGSM citation-free caveat for cited arithmetic substitutions. |
 | Trace-control ablations | SFT `3661118_[0-17%3]`, original eval `3661119_[0-17%3]`, repair eval `3680004_[3-8%3]` | SFT rows `0..17` complete; original eval rows `0..5` complete, rows `6..8` intentionally canceled, rows `9..11` running, rows `12..17` pending by throttle; repair eval `3680004_3..5` running at chunk `18/56`, `3680004_6..8` pending by throttle | `passk_eval/hfsa_ablation_trace_controls_20260525/` | Templates: `terse_nl`, `rule_annotated_nl`, `pseudocode`, `shuffled_logic`, `invalid_logic`, `shuffled_nl`. Manual sample inspection found the `rule_annotated_nl` zero translated-joint result was an evaluator artifact: lines like `a is teal. [rule: R]` were parsed as attribute `teal. [rule: r]`. The translator now strips `[rule: ...]` and unwraps pseudocode `derive "..." using ...`; tests pass. Treat `rule_annotated_nl` translated-validity numbers from `3661119_3..5` as stale until `3680004_3..5` overwrite them. `3680004_6..8` reruns pseudocode with the fixed evaluator. Stale samples still demonstrate the old parser failure, so do not cite the zero translated-joint rows. |
 | Shortcut-rate `0.3` | SFT `3671431_[0-5%3]`, eval `3671432_[0-5%3]` | complete; all 18 shortcut-rate JSONs exist across `0.3/0.5/0.8` and `logic/nl_exact` | `$WORK/synthetic-RLVL/passk_eval/hfsa_shortcut_rate_ablation_20260525/` | The `0.3` row is now fully matched: logic OOD correct/joint@16 `0.892/0.598`, depth-50 correct/joint@16 `0.844/0.375`; NL OOD correct/translated-joint@16 `0.588/0.571`, depth-50 correct/translated-joint@16 `0.458/0.438`. Across rates `0.3/0.5/0.8`, NL depth-50 joint falls `0.438 -> 0.312 -> 0.146`, while logic depth-50 joint is `0.375 -> 0.375 -> 0.417`. |
 | Hybrid order | targeted SFT `3670782`, eval `3670783_[0-29%4]` | SFT complete; 11 eval JSONs written, rows `11..14` running, `15..29` pending by throttle | `$WORK/synthetic-RLVL/passk_eval/hfsa_hybrid_order_full_20260525/` | Completed `think_formal` train-1-to-5 rows average OOD correct@16 `0.480`, formal joint@16 `0.022`, translated-NL joint@16 `0.297`, depth-50 correct@16 `0.219`; train-1-to-10 rows average OOD correct@16 `0.490`, formal joint@16 `0.249`, translated-NL joint@16 `0.296`, depth-50 correct@16 `0.354`; train-1-to-15 is now three-seed complete with mean OOD correct/formal-joint/translated-joint@16 `0.353/0.111/0.111`, depth-50 correct/formal-joint@16 `0.312/0.000`; train-1-to-20 has seeds `3407/3408` complete with OOD correct/formal-joint/translated-joint@16 `0.419/0.016/0.078`, depth-50 correct/formal-joint@16 `0.594/0.000`. Running rows `11..14` are sampling chunks `96/112`, `76/112`, `66/112`, and `63/112`. `think_formal` is NL then formal; the report builder now labels it correctly and parses the pending `formal_think` rows. |
@@ -19,7 +19,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 ## Partition Audit
 
-Checked at 2026-05-30 10:33 CEST. Monitored pending rows were blocked by array task limits, dependencies, or begin time rather than a clear compatible freer partition. The refreshed oversight jobs `3680036` and `3680037` started on `a100` and scheduled next passes `3680038` and `3680039`; no `scontrol update JobId=<jobid> Partition=<partition1,partition2>` edit was appropriate.
+Checked at 2026-05-30 14:31 CEST. Paired pending rows were blocked by the `3672212` array task limit or the eval dependency, not by a scarce compatible partition; `a100` also had idle nodes. Oversight `3680039` is running on `a100` and next paired pass `3680777` is begin-time pending. No `scontrol update JobId=<jobid> Partition=<partition1,partition2>` edit was appropriate.
 
 Unrelated visible `puzzle_*` jobs are not part of this handoff. No visible `tjepa_*` or `seqedit_*` jobs were present in the queue check.
 
@@ -36,7 +36,7 @@ Unrelated visible `puzzle_*` jobs are not part of this handoff. No visible `tjep
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3672212,3672213,3678335,3680037,3680039,3661118,3661119,3680004,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3678051,3679095,3680036,3680038 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3672212,3672213,3678335,3680037,3680039,3680777,3661118,3661119,3680004,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3678051,3679095,3680036,3680038 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```
 
 Useful log tails:
@@ -51,7 +51,7 @@ for f in \
   logs/sft_hfsa_cond50k_3674879_*.out logs/sft_hfsa_cond50k_3674879_*.err logs/hfsa_cond50k_eval_3674884_*.out logs/hfsa_cond50k_ckpt_3674885_*.out \
   logs/build_hfsa_shkind_3674886_*.out logs/sft_hfsa_shortkind_3674887_*.out logs/sft_hfsa_shortkind_3674887_*.err logs/hfsa_shortkind_eval_3674888_*.out \
   logs/hfsa_ablate_oversight_3678051.* logs/hfsa_ablate_oversight_3679095.* logs/hfsa_ablate_oversight_3680036.* \
-  logs/paired_full_oversight_3680037.*; do
+  logs/paired_full_oversight_3680037.* logs/paired_full_oversight_3680039.*; do
   [ -f "$f" ] && echo "### $f" && tail -n 20 "$f"
 done
 ```
