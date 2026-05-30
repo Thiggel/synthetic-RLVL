@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-05-30 05:42 CEST.
+Last updated: 2026-05-30 08:06 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -32,7 +32,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 The active Slurm work is summarized in `docs/running_experiments.md`. Current high-priority active chains are:
 
-- full paired-family suite: SFT `3672212` rows `0..47` complete, rows `48..53` running, rows `54..89` pending by throttle; eval `3672213` dependency-pending; latest oversight `3677873` completed, next `3678335` begin-time pending
+- full paired-family suite: SFT `3672212` rows `0..47` complete, rows `48..53` running, rows `54..89` pending by throttle; eval `3672213` dependency-pending; current oversight `3678335` running, next `3679358` begin-time pending
 - trace-control ablations: SFT `3661118` rows `0..17` complete; eval `3661119` rows `0..2` complete, rows `3..5` running, rows `6..17` pending by throttle; `3` eval JSONs so far
 - shortcut-rate `0.3`: SFT `3671431` rows `0..5` complete; eval `3671432` rows `0..2` complete, rows `3..5` running; logic-side `0.3` has 3 JSONs so far
 - hybrid-order eval: `3670783` rows `0..7` complete, rows `8..11` running, rows `12..29` pending by throttle
@@ -42,7 +42,7 @@ The active Slurm work is summarized in `docs/running_experiments.md`. Current hi
 - ablation oversight: `3678051` running, next pass `3679095` begin-time pending
 - hybrid-order partial readout: completed `think_formal` train-1-to-5 rows average OOD correct@16 `0.480`, formal citation-free joint@16 `0.022`, translated-NL joint@16 `0.297`, depth-50 correct@16 `0.219`, depth-50 joint@16 `0.000`. Completed `think_formal` train-1-to-10 rows average OOD correct@16 `0.490`, formal joint@16 `0.249`, translated-NL joint@16 `0.296`, depth-50 correct@16 `0.354`, and depth-50 joint@16 `0.000`. Treat as partial until the remaining hybrid rows finish.
 - partial ablation readout at 2026-05-30 05:42 CEST: shortcut-rate `0.3` logic rows remain complete with mean OOD correct/joint@16 `0.892/0.598` and depth-50 correct/joint@16 `0.844/0.375`; matched NL rows `3671432_3..5` are still running. Trace-control `terse_nl` is now three-seed complete with mean OOD correct/translated-joint@16 `0.348/0.277` and depth-50 correct/translated-joint@16 `0.094/0.010`. Hybrid `think_formal` train-1-to-15 has two seeds complete with mean OOD correct/formal-joint/translated-joint@16 `0.332/0.117/0.111` and depth-50 correct/formal-joint@16 `0.328/0.000`. Treat all three as partial until the matched running rows finish.
-- paired full-suite audit at 2026-05-30 04:05 CEST: build `3672195_0..2` remains complete with all three manifests at 55 subsets and no missing parquet paths. SFT rows `0..47` are complete with final adapters; rows `48..53` are running on `maze_navigation` train-1-to-20 with latest parsed progress `1873/1574/1536/1416/1380/1256` of `10000`; rows `54..89` are pending by array throttle. Eval `3672213` is still dependency-pending on `afterok:3672212_*`, and the eval output directory has not been created yet, so there are still `0` eval JSONs. Focused fatal-log/progress scan found no Traceback/proof-validation failure/OOM/CUDA OOM/context failure/quota/no-space/DependencyNeverSatisfied/tokenizer/model-load/vLLM/node-failure/timeout/idle-GPU failure; no resubmission, dependency edit, or partition edit was made. Oversight `3677873` later completed exit `0:0`, and next pass `3678335` is begin-time pending.
+- paired full-suite audit at 2026-05-30 08:06 CEST: build `3672195_0..2` remains complete with all three manifests at 55 subsets and no missing parquet paths. SFT rows `0..47` are complete with final adapters; rows `48..53` are running on `maze_navigation` train-1-to-20 with latest parsed progress `4581/4246/4220/4236/4195/4072` of `10000`; rows `54..89` are pending by array throttle. Eval `3672213` is still dependency-pending on `afterok:3672212_*`, and the eval output directory has not been created yet, so there are still `0` eval JSONs. `sacct` shows no failed, node-failed, timed-out, canceled, or nonzero-exit paired rows. Focused SFT fatal-log/progress scan found no unrecovered Traceback/proof-validation failure/actual OOM/CUDA OOM/context failure/quota/no-space/DependencyNeverSatisfied/tokenizer/model-load/vLLM/node-failure/timeout/idle-GPU failure; OOM matches are limited to standard accelerate memory-reserve INFO lines. No resubmission, cancellation, dependency edit, or partition edit was made. Oversight `3678335` is running and next pass `3679358` is begin-time pending. Visible `puzzle_*` jobs are unrelated; no visible `tjepa_*` or `seqedit_*` jobs were present.
 - ablation log audit at 2026-05-30 05:42 CEST: focused `squeue`/`sacct`/log scan found no unrecovered Traceback, OOM/CUDA OOM, quota/no-space, `DependencyNeverSatisfied`, tokenizer/model-load, vLLM failure, node failure, timeout, cancellation, or idle-GPU failure in the monitored HFSA ablation chains. Active eval rows are emitting vLLM chunks/scoring progress, active SFT rows are progressing, and pending monitored rows are blocked by array throttles, dependencies, or begin time, so no partition edit, dependency edit, cancellation, or resubmission was made. Visible `puzzle_*` jobs are unrelated; no visible `tjepa_*` or `seqedit_*` jobs were present.
 
 ## Report Artifacts
@@ -78,5 +78,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3672212,3672213,3677873,3678335,3661118,3661119,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3678051,3679095 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3672212,3672213,3678335,3679358,3661118,3661119,3671431,3671432,3670783,3674875,3674876,3674879,3674880,3674881,3674882,3674883,3674884,3674885,3674886,3674887,3674888,3678051,3679095 --format=JobIDRaw,JobName%34,State,Elapsed,ExitCode -n -P
 ```
