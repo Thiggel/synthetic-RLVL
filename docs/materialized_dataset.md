@@ -241,7 +241,7 @@ Local roots submitted for build:
 Submitted chain/status:
 
 - build `3674886_[0-3%2]`: completed exit `0:0` on 2026-05-29; all four local roots exist with the expected train plus depth-1..50 validation subsets.
-- SFT `3674887_[0-23%3]`: rows `0..14` complete, rows `15..17` running with latest parsed progress `8424/7922/7107` of `10000`, rows `18..23` pending by throttle as of 2026-05-30 10:33 CEST.
+- SFT `3674887_[0-23%3]`: rows `0..17` complete, rows `18..20` running with latest parsed progress `6798/6231/5167` of `10000`, rows `21..23` pending by throttle as of 2026-05-30 14:36 CEST.
 - eval `3674888_[0-23%4]`: dependency-pending.
 
 Purpose: repeat the shortcut robustness ablation with two concrete shortcut mechanisms beyond the existing schema shortcut. `position` makes the gold branch first on shortcut-enabled training examples. `initial_marker` fixes the gold path's initial marker to `north` on shortcut-enabled training examples. Evaluation remains shortcut-neutral with `val_shortcut_rate=0.0` for every row.
