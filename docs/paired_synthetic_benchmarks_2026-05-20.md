@@ -61,9 +61,9 @@ Full-suite submission 2026-05-28 15:48 CEST:
 | stage | job | scope |
 | --- | ---: | --- |
 | paired full-suite materialization | `3672195_[0-2%3]` | `official_igsm`, `maze_navigation`, and hard `attribute_constraints`; train ranges `1..5/10/15/20/25`, 50k rows each; validation `val_step_01_1k` through `val_step_50_1k`; every generated row validated |
-| paired full-suite SFT | original `3672212_[0-89%6]`, replacement `3682411_[55,57,59-89%6]`, row-56 replacement `3683070_[56%1]` | `3` families x `5` train ranges x `logic,nl_exact` x seeds `3407/3408/3409`; 10k OLMo-7B LoRA SFT steps; gradient checkpointing on by default. As of 2026-05-31 18:35 CEST, `90/90` final adapters exist. |
-| paired full-suite sparse eval | stale `3672213_[0-89%4]` canceled, replacement `3682449_[0-89%4]` | sparse pass@k eval to depth 50, `32` prompts/depth, `16` generations/prompt, output under `passk_eval/paired_full_suite_sparse_20260528/`; rows `0..3` are running and rows `4..89` are pending by array throttle as of 2026-05-31 18:35 CEST; output directory exists but has zero eval JSONs/sample JSONLs so far |
-| paired full-suite Codex oversight | `3672214`, `3672448`, `3673399`, `3673729`, `3674556`, `3675380`, `3676517`, `3677238`, `3677873`, `3678335`, `3680037`, `3680039`, `3680777`, `3682410`, `3683024`, `3683562`, `3683967`, `3684369`, `3685027`, next `3685570` | `3672214`, `3672448`, `3673399`, `3673729`, `3674556`, `3675380`, `3676517`, `3677238`, `3677873`, `3678335`, `3680037`, `3680039`, `3680777`, `3682410`, `3683024`, `3683562`, `3683967`, `3684369`, and `3685027` completed; stale queued `3679358` was canceled after the oversight prompt update; `3685570` is begin-time pending as of 2026-05-31 18:43 CEST |
+| paired full-suite SFT | original `3672212_[0-89%6]`, replacement `3682411_[55,57,59-89%6]`, row-56 replacement `3683070_[56%1]` | `3` families x `5` train ranges x `logic,nl_exact` x seeds `3407/3408/3409`; 10k OLMo-7B LoRA SFT steps; gradient checkpointing on by default. As of 2026-05-31 22:40 CEST, `90/90` final adapters exist. |
+| paired full-suite sparse eval | stale `3672213_[0-89%4]` canceled, replacement `3682449_[0-89%4]` | sparse pass@k eval to depth 50, `32` prompts/depth, `16` generations/prompt, output under `passk_eval/paired_full_suite_sparse_20260528/`; rows `0..13` are complete, rows `14..17` are running, and rows `18..89` are pending by array throttle as of 2026-05-31 22:40 CEST; output directory has `14` `official_igsm` pass@k JSONs and sample JSONLs, while `maze_navigation` and hard `attribute_constraints` have none yet |
+| paired full-suite Codex oversight | `3672214`, `3672448`, `3673399`, `3673729`, `3674556`, `3675380`, `3676517`, `3677238`, `3677873`, `3678335`, `3680037`, `3680039`, `3680777`, `3682410`, `3683024`, `3683562`, `3683967`, `3684369`, `3685027`, current `3685570`, next `3686267` | `3672214`, `3672448`, `3673399`, `3673729`, `3674556`, `3675380`, `3676517`, `3677238`, `3677873`, `3678335`, `3680037`, `3680039`, `3680777`, `3682410`, `3683024`, `3683562`, `3683967`, `3684369`, and `3685027` completed; stale queued `3679358` was canceled after the oversight prompt update; `3685570` is running and `3686267` is begin-time pending as of 2026-05-31 22:40 CEST |
 
 The full-suite roots are:
 
@@ -89,6 +89,14 @@ Status update 2026-05-29 07:41 CEST:
 - iGSM train-10 chain is complete. Logic gets OOD correct/joint@16 `0.488/0.406` and depth-50 `0.469/0.312`; `nl_exact` gets OOD correct@16 `0.544` and depth-50 correct@16 `0.438`, with NL-to-FOL joint `0.000`.
 - Full paired-suite SFT rows `0..31` completed exit `0:0`; rows `32..37` are running and `38..89` are pending by array throttle. Eval `3672213_[0-89%4]` remains dependency-pending on `3672212`, so no full-suite eval JSONs exist yet.
 - Paired full-suite oversight passes `3672214`, `3672448`, `3673399`, and `3673729` completed without finding unrecovered severe failures; next pass `3674556` is queued.
+
+Status update 2026-05-31 22:40 CEST:
+
+- Full-suite materialization remains complete for all three families with 55 manifest subsets and no missing parquet paths. Full-suite SFT is complete at `90/90` final adapters after the targeted replacements documented below.
+- Replacement sparse eval `3682449_[0-89%4]` has rows `0..13` complete, rows `14..17` running, and rows `18..89` pending only by `JobArrayTaskLimit`. Active rows are sampling with high GPU utilization and no fatal log signatures; no partition widening was appropriate.
+- The first `14` eval JSONs and sample JSONLs are all `official_igsm`: logic train-1-to-5 and train-1-to-10 three-seed, logic train-1-to-15 seeds `3407/3408`, and matched `nl_exact` train-1-to-5 and train-1-to-10 three-seed. `maze_navigation` and hard `attribute_constraints` still have no eval JSONs, so the full paired-family trigger remains `3682449` completion.
+- Diagnostics-only partial means: logic train-1-to-5/train-1-to-10/train-1-to-15 OOD correct@16 `0.312/0.507/0.547` and internal-joint@16 `0.255/0.377/0.400` (`train1to15` two seeds); matched `nl_exact` train-1-to-5/train-1-to-10 OOD correct@16 `0.366/0.589`, with NL parse/translated validity still `0.000`. Shallow iGSM logic examples can be grounded-valid; deeper logic and NL samples show grounding, validity, or answer fragility, so this is not yet a scientific paired-family conclusion.
+- The report was regenerated and mirrored with a paired partial table, figure, and sample supplement. No scheduler edit, partition edit, cancellation, resubmission, broad launch, or generator/evaluator fix was made in this pass.
 
 Oversight update 2026-05-28 17:02 CEST: build rows `3672195_0`, `3672195_1`, and `3672195_2` were all still running after about 1h14m. SFT `3672212_[0-89%6]` was pending on `afterok:3672195_*`; eval `3672213_[0-89%4]` was pending on `afterok:3672212_*`. Build-log inspection found no Traceback, proof-validation failure, OOM/CUDA OOM, context-length failure, quota/no-space error, dependency failure, node failure, or timeout/cancelled task. The materialized roots were actively being populated; no full-suite manifests were present yet, so no downstream SFT/eval rows were released.
 
@@ -208,7 +216,7 @@ OOD lm-eval update 2026-05-27 11:30 CEST: broad OOD array `3659356` completed al
 
 ## Benchmark 1: `official_igsm`
 
-Current status: fixed locally and submitted for train-10 seed-3407 SFT/eval as of 2026-05-28. Addition and subtraction chains validate in the local depth-50 smoke after the tokenizer fix above. The full 50k train-10 chain `3671601 -> 3671602 -> 3671603` completed with no validation or runtime failures. A full 3-seed, 5-train-depth paired suite was submitted later the same day as `3672195 -> 3672212 -> 3672213` and is still in SFT.
+Current status: fixed locally and submitted for train-10 seed-3407 SFT/eval as of 2026-05-28. Addition and subtraction chains validate in the local depth-50 smoke after the tokenizer fix above. The full 50k train-10 chain `3671601 -> 3671602 -> 3671603` completed with no validation or runtime failures. A full 3-seed, 5-train-depth paired suite was submitted later the same day as `3672195 -> 3672212 -> 3672213`, repaired through replacement SFT/eval arrays, and now has `official_igsm` sparse eval partially complete under `3682449`.
 
 ### What It Tests
 

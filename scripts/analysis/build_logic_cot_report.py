@@ -86,6 +86,9 @@ SYMBOL_PADDED_RE = re.compile(
 WORDIFIED_RE = re.compile(
     r"sft_hfsa_wordified_(logic_wordified)_train1to25_10k_seed(\d+)_passk\.json$"
 )
+PAIRED_FULL_RE = re.compile(
+    r"sft_paired_full_(official_igsm|maze_navigation|attribute_constraints_hard)_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
+)
 
 DEPTHS_FINAL = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 35, 40, 45, 50]
 DEPTHS_TINY = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 40, 50]
@@ -1267,6 +1270,90 @@ def plot_hybrid_order_summary(summary: pd.DataFrame) -> None:
         ax.set_xlabel("max train depth")
     axes[0, 0].legend(frameon=False, fontsize=8)
     save(fig, "ablation_hybrid_order_partial")
+
+
+def summarize_paired_full_suite() -> pd.DataFrame:
+    root = PASSK_ROOT / "paired_full_suite_sparse_20260528"
+    rows: list[dict[str, object]] = []
+    if not root.exists():
+        return pd.DataFrame()
+    for path in sorted(root.glob("*_passk.json")):
+        match = PAIRED_FULL_RE.match(path.name)
+        if not match:
+            continue
+        family, template, train_max, seed = match.groups()
+        payload = read_payload(path)
+        metrics = payload["metrics"]
+        joint = "citation_free_joint_pass" if template == "logic" else "nl_logic_joint_pass"
+        rows.append(
+            {
+                "family": family,
+                "template": template,
+                "train_max": int(train_max),
+                "seed": int(seed),
+                "ood_correct@16": metrics.get("synthetic_sampled/band_ood/correct_pass@16"),
+                "ood_joint@16": metrics.get(f"synthetic_sampled/band_ood/{joint}@16"),
+                "ood_grounded_joint@16": metrics.get(
+                    "synthetic_sampled/band_ood/citation_free_grounded_joint_pass@16"
+                ),
+                "ood_nl_parse@16": metrics.get("synthetic_sampled/band_ood/nl_logic_parse_pass@16"),
+                "depth50_correct@16": metrics.get("synthetic_sampled/step_50/correct_pass@16"),
+                "depth50_joint@16": metrics.get(f"synthetic_sampled/step_50/{joint}@16"),
+                "depth50_grounded_joint@16": metrics.get(
+                    "synthetic_sampled/step_50/citation_free_grounded_joint_pass@16"
+                ),
+                "depth50_nl_parse@16": metrics.get("synthetic_sampled/step_50/nl_logic_parse_pass@16"),
+            }
+        )
+    if rows:
+        write_csv(TABLE_DIR / "paired_full_suite_partial_by_seed.csv", rows)
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df
+    metric_cols = [
+        "ood_correct@16",
+        "ood_joint@16",
+        "ood_grounded_joint@16",
+        "ood_nl_parse@16",
+        "depth50_correct@16",
+        "depth50_joint@16",
+        "depth50_grounded_joint@16",
+        "depth50_nl_parse@16",
+    ]
+    summary = df.groupby(["family", "template", "train_max"], as_index=False).agg(
+        n=("seed", "nunique"),
+        **{col: (col, "mean") for col in metric_cols},
+    )
+    summary = summary.sort_values(["family", "template", "train_max"])
+    write_csv(TABLE_DIR / "paired_full_suite_partial_summary.csv", summary.to_dict("records"))
+    return summary
+
+
+def plot_paired_full_suite_partial(summary: pd.DataFrame) -> None:
+    if summary.empty:
+        return
+    igsm = summary[summary["family"] == "official_igsm"].copy()
+    if igsm.empty:
+        return
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_joint@16", "OOD template-valid joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+    ]
+    fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.2), sharex=True)
+    for ax, (col, title) in zip(axes, metrics, strict=True):
+        for template, color in [("logic", COLORS["logic"]), ("nl_exact", COLORS["nl_exact"])]:
+            sub = igsm[igsm["template"] == template].sort_values("train_max")
+            if sub.empty:
+                continue
+            ax.plot(sub["train_max"], sub[col], marker="o", color=color, label=TEMPLATE_LABEL.get(template, template))
+            for _, row in sub.iterrows():
+                if int(row["n"]) < 3:
+                    ax.annotate(f"n={int(row['n'])}", (row["train_max"], row[col]), fontsize=7, xytext=(3, 3), textcoords="offset points")
+        style_axes(ax, title)
+        ax.set_xlabel("max train depth")
+    axes[0].legend(frameon=False, fontsize=8)
+    save(fig, "paired_full_suite_official_igsm_partial")
 
 
 def build_experiment_artifact_status() -> pd.DataFrame:
@@ -2482,6 +2569,7 @@ def write_report(
     tiny_100k_cot_bare_ood_summary: pd.DataFrame,
     olmo32_cot_bare_gsm8k: pd.DataFrame,
     ablation_summaries: dict[str, pd.DataFrame],
+    paired_full_summary: pd.DataFrame,
     cot_bare_examples: list[dict[str, object]],
     main_ckpt_note: str,
     tiny_ckpt_count: int,
@@ -2535,6 +2623,9 @@ def write_report(
     conditioned_rows = ablation_summaries.get("conditioned", pd.DataFrame())
     conditioned_50k_rows = ablation_summaries.get("conditioned_50k", pd.DataFrame())
     experiment_status_rows = build_experiment_artifact_status()
+    paired_full_rows = paired_full_summary.copy() if not paired_full_summary.empty else pd.DataFrame()
+    if not paired_full_rows.empty:
+        paired_full_rows = paired_full_rows.sort_values(["family", "template", "train_max"])
     shortcut_comparison_rows = build_shortcut_comparison_table(main_summary, shortcut_rows)
     conditioned_comparison_rows = build_conditioned_comparison_table(main_summary, conditioned_rows)
     train_maxes = [5, 10, 15, 20, 25]
@@ -2641,6 +2732,14 @@ def write_report(
 \begin{figure}[H]\centering
 \includegraphics[width=0.95\linewidth]{figures/ablation_conditioned_dual_50k_convergence_train1to25.pdf}
 \caption{Conditioned dual-modality 50k convergence curves for train-1-to-25. Points are three-seed means over checkpoint evals at 10k, 20k, 30k, 40k, and 50k optimizer steps.}
+\end{figure}
+"""
+    paired_full_figure_block = ""
+    if not paired_full_rows.empty and (FIG_DIR / "paired_full_suite_official_igsm_partial.pdf").exists():
+        paired_full_figure_block = r"""
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\linewidth]{figures/paired_full_suite_official_igsm_partial.pdf}
+\caption{Partial official-iGSM full-suite readout from currently completed paired eval rows. Train-1-to-15 logic is still two-seed partial in this snapshot.}
 \end{figure}
 """
     olmo_ckpt_figures = "\n".join(
@@ -3065,6 +3164,28 @@ This table is artifact-based at report-generation time: it counts completed SFT 
 \caption{{Artifact status for paired-family repeats and active ablation families.}}
 \end{{table}}
 
+\section{{Paired-family full-suite partial readout}}
+The replacement paired-family eval has started writing artifacts. The table below is intentionally partial: at this report generation time, only \texttt{{official\_igsm}} rows have completed. The \texttt{{joint}} column is template-specific: citation-free internal formal validity for logic and translated NL-to-FOL validity for \texttt{{nl\_exact}}. For iGSM, grounded joint validity is currently zero away from trivial retrieval cases because generated variable names and arithmetic-substitution citations do not reliably align with the canonical grounded checker. The \texttt{{nl\_exact}} rows also still have zero parser coverage, so use correctness as the main provisional paired-family signal until the translator/grounded-validity caveats are resolved.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(paired_full_rows, [
+    ("family", "family"),
+    ("template", "template"),
+    ("train_max", "train max"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_joint@16", "OOD joint@16"),
+    ("ood_grounded_joint@16", "OOD grounded joint"),
+    ("ood_nl_parse@16", "OOD NL parse"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_joint@16", "d50 joint@16"),
+])}
+\caption{{Partial paired full-suite summary for completed eval JSONs.}}
+\end{{table}}
+{paired_full_figure_block}
+
 \section{{Targeted ablations}}
 Completed ablation results are shown here; active arrays are tracked in the handoff documents. The current same-token-budget experiment is more precisely a same target-token budget experiment. The logic row in that experiment is a control rerun at 10k steps; the NL row is shortened to 7140 steps so target-token exposure approximately matches 10k logic steps. It does not match total prompt-plus-target tokens; that would require roughly 8600 NL steps and has not been run yet. The symbol-padded logic control is the completed total-sequence-length match to NL at the same optimizer-step budget; the wordified logic length-control is the cleaner equal-length formal follow-up and is now complete. Shortcut rates 0.3, 0.5, and 0.8 are complete. Conditioned dual-modality 10k eval is complete, and the 50k continuation is running.
 
@@ -3286,6 +3407,7 @@ def main() -> None:
     )
     olmo32_cot_bare_gsm8k = load_olmo32_cot_bare_gsm8k()
     ablation_summaries = load_ablation_summaries()
+    paired_full_summary = summarize_paired_full_suite()
     conditioned_50k_checkpoint_summary = load_conditioned_50k_checkpoint_summary()
 
     write_csv(TABLE_DIR / "main_olmo7b_summary.csv", main_summary.to_dict("records"))
@@ -3318,6 +3440,7 @@ def main() -> None:
     plot_shortcut_comparison(main_summary, ablation_summaries.get("shortcut", pd.DataFrame()))
     plot_trace_control_summary(ablation_summaries.get("trace_control", pd.DataFrame()))
     plot_hybrid_order_summary(ablation_summaries.get("hybrid_order", pd.DataFrame()))
+    plot_paired_full_suite_partial(paired_full_summary)
     conditioned_comparison = build_conditioned_comparison_table(
         main_summary, ablation_summaries.get("conditioned", pd.DataFrame())
     )
@@ -3340,6 +3463,7 @@ def main() -> None:
         tiny_100k_cot_bare_ood_summary,
         olmo32_cot_bare_gsm8k,
         ablation_summaries,
+        paired_full_summary,
         cot_bare_examples,
         main_checkpoint_note(main_ckpt),
         len(tiny_ckpt),
