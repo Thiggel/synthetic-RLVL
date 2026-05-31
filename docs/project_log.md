@@ -2,6 +2,10 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-05-31
+
+- 02:29 CEST paired full-suite progress check: replacement SFT rows `3682411_66..71` completed cleanly, increasing paired final adapters to `66/90` (`official_igsm` `30/30`, `maze_navigation` `24/30`, hard `attribute_constraints` `12/30`). Active paired SFT rows are original `3672212_54/58`, row-56 replacement `3683070_56`, and replacements `3682411_55/57/59/72/73/74`; rows `3682411_75..89` remain throttle-pending. Latest parsed progress is `3672212_54` `5063/10000`, `3672212_58` `4836/10000`, `3683070_56` `1758/10000`, `3682411_55` `3806/10000`, `3682411_57` `3877/10000`, `3682411_59` `3819/10000`, `3682411_72` `6279/10000`, `3682411_73` `5375/10000`, and `3682411_74` `4250/10000`. Focused active/recent paired SFT log scan found no unrecovered Traceback, proof-validation failure, OOM/CUDA OOM, context-length failure, quota/no-space, dependency, tokenizer/model-load, vLLM, node-failure, timeout, or idle-GPU signature. Full-suite manifests remain complete with 55 subsets and no missing parquet paths for all three families. Eval `3682449` remains dependency-pending and the paired eval output directory still does not exist, so no aggregation/report regeneration was run. Pending paired rows are throttle/dependency blocked despite idle compatible `a100` nodes, so no partition edit, cancellation, resubmission, or new science launch was made. Paired oversight `3683024` is running and has scheduled next pass `3683562`; visible `puzzle_*` jobs are unrelated and no visible `tjepa_*` or `seqedit_*` jobs were present.
+
 ## 2026-05-30
 
 - 22:58 CEST paired oversight completion: `3682410` completed cleanly (`0:0`) after the already-recorded row-56 recovery. Its log confirms no paired eval JSONs/sample outputs exist yet under `passk_eval/paired_full_suite_sparse_20260528/`, no additional scheduler/report changes were made, and next paired pass `3683024` remains begin-time pending.

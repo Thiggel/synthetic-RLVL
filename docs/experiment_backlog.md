@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-05-30 22:58 CEST.
+Last updated: 2026-05-31 02:29 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -8,7 +8,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 
 | Priority | Item | Why | Trigger |
 | --- | --- | --- | --- |
-| P0 | Analyze and report full paired-family suite | This is the real repeat of the HFSA logic-vs-NL comparison on `official_igsm`, `maze_navigation`, and hardened `attribute_constraints`. Deferred at the 2026-05-30 22:39 oversight pass because replacement SFT `3682411`, row-56 replacement `3683070`, and replacement eval `3682449` are still active/dependency-pending, and there are zero eval JSONs. | `3682449` completes. |
+| P0 | Analyze and report full paired-family suite | This is the real repeat of the HFSA logic-vs-NL comparison on `official_igsm`, `maze_navigation`, and hardened `attribute_constraints`. Deferred at the 2026-05-31 02:29 paired oversight pass because original SFT rows `54/58`, replacement SFT `3682411`, row-56 replacement `3683070`, and replacement eval `3682449` are still active/dependency-pending, and there are zero eval JSONs. | `3682449` completes. |
 | P0 | Add completed trace-control, hybrid, shortcut-kind, and conditioned-50k results to the LaTeX report | These are reviewer-facing ablations. Shortcut-rate `0.3`, wordified length-control, completed `shuffled_logic`, repaired `rule_annotated_nl` seeds `3407/3408`, two-seed trace-control `invalid_logic`, hybrid `think_formal` through train-1-to-20, two-seed hybrid `think_formal` train-1-to-25, and active-artifact status are included. The 2026-05-30 22:54 regeneration filters stale `rule_annotated_nl` seed `3409`; pending repair/pseudocode, remaining trace controls, hybrid train-1-to-25/formal-think, shortcut-kind, and conditioned-50k rows should be ingested when their JSONs appear. | Corresponding eval JSONs appear. |
 | P0 | Inspect sample generations for each completed ablation | Tables alone are not enough to understand invalid/wrong failure modes. | After each eval family completes. |
 | P1 | Improve paired-family NL validity translation | Current paired pilots often have meaningful correctness but `nl_exact` joint validity is `0.000` because translator coverage is incomplete. | Before making NL-vs-logic validity claims on paired families. |
@@ -29,10 +29,11 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 
 ## Report/Artifact Work
 
-- Plan-driven oversight is active through refreshed jobs: paired `3682410` completed cleanly with next pass `3683024` begin-time pending; ablation oversight `3682409` is running with next pass `3683023` begin-time pending. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
+- Plan-driven oversight is active through refreshed jobs: paired `3683024` is running and has scheduled next pass `3683562` begin-time pending; ablation oversight is handled by its separate active pass. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
 - 2026-05-30 18:40-22:39 ablation oversight recovered interrupted rows by submitting `3682457_[3,6-14%4]` plus later `3682492_[5%1]` for conditioned-dual 30k, `3682458_[22%1]` for shortcut-kind SFT, `3682459_[12,14-17%3]` for original trace-control eval, `3682460_[5-8%3]` for fixed-translator trace repair, and `3682461_[13,15-29%4]` for hybrid-order eval. `3682492_5` completed cleanly, so `3674882` now waits only on `afterok:3682457`; `3674888` now waits only on replacement row `3682458`.
 - 2026-05-30 18:32 paired oversight recovered interrupted SFT rows by submitting targeted replacement `3682411_[55,57,59-89%6]`, canceling stale eval `3672213`, and submitting replacement eval `3682449_[0-89%4]`. No paired-family analysis trigger is satisfied yet because there are still zero paired full-suite eval JSONs.
 - 2026-05-30 22:31 paired oversight canceled stuck original row `3672212_56`, submitted targeted replacement `3683070_[56%1]` with `--exclude=a0831`, and rewired eval `3682449` to depend on `afterok:3681398:3683070:3681586:3682411`. No paired-family analysis trigger is satisfied yet because there are still zero paired full-suite eval JSONs.
+- 2026-05-31 02:29 paired oversight found replacement SFT rows `3682411_66..71` completed cleanly and paired final adapters at `66/90`; active paired rows are `3672212_54/58`, `3683070_56`, and `3682411_55/57/59/72/73/74`, with `3682411_75..89` pending by throttle. No new failure, partition edit, resubmission, eval output, aggregation, or report trigger is satisfied yet.
 - 2026-05-30 22:54 report regeneration included trace-control `invalid_logic` seed `3409`, bringing trace-control eval artifacts to `11/18` and `invalid_logic` to two seeds; it mirrored `64` PDFs plus `53` CSVs to `../synthetic-RLVL-report`. Remaining broad triggers are still deferred because trace repair/replacement, original trace replacement, hybrid replacements, shortcut-kind eval `3674888`, and conditioned-dual 50k evals `3674884/3674885` are still running or dependency-pending.
 - Regenerate `analysis/logic_cot_report_2026-05-25/` after every newly completed eval family.
 - Add convergence curves from `hfsa_conditioned_dual_50k_intermediate_20260529` once available.
