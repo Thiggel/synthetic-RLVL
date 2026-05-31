@@ -2547,6 +2547,42 @@ def write_report(
 \caption{Trace-control ablation summary for completed rows. Formal joint is citation-free formal validity; translated joint is NL-to-FOL translated validity.}
 \end{figure}
 """
+    shortcut_kind_eval_count = int(shortcut_kind_rows["n"].sum()) if not shortcut_kind_rows.empty else 0
+    if shortcut_kind_eval_count:
+        shortcut_kind_status_sentence = (
+            "At this report generation time, SFT is complete and shortcut-kind eval is running; "
+            "the completed eval artifacts are summarized below."
+        )
+        shortcut_kind_exec_sentence = (
+            f"The shortcut-kind eval has started and has {shortcut_kind_eval_count}/24 JSONs so far."
+        )
+    else:
+        shortcut_kind_status_sentence = (
+            "At this report generation time, SFT is complete and the eval has started, "
+            "but no shortcut-kind eval JSON has been produced."
+        )
+        shortcut_kind_exec_sentence = "The shortcut-kind eval has started but has not written JSON yet."
+    trace_control_eval_count = int(trace_control_rows["n"].sum()) if not trace_control_rows.empty else 0
+    pseudocode_done = 0
+    shuffled_nl_done = 0
+    if not trace_control_rows.empty:
+        by_template = trace_control_rows.set_index("template")
+        if "pseudocode" in by_template.index:
+            pseudocode_done = int(by_template.loc["pseudocode", "n"])
+        if "shuffled_nl" in by_template.index:
+            shuffled_nl_done = int(by_template.loc["shuffled_nl", "n"])
+    if trace_control_eval_count >= 18:
+        trace_control_status_sentence = "All trace-control eval rows are now complete."
+    elif pseudocode_done < 3 and shuffled_nl_done >= 3:
+        trace_control_status_sentence = (
+            "The remaining trace-control row is \\texttt{pseudocode} seed 3409; "
+            "\\texttt{shuffled\\_nl} is now three-seed complete."
+        )
+    else:
+        trace_control_status_sentence = (
+            "Current replacement rows are still finishing \\texttt{pseudocode} seed 3409 "
+            "and \\texttt{shuffled\\_nl} seeds 3408/3409."
+        )
     hybrid_order_figure_block = ""
     if not hybrid_order_rows.empty and (FIG_DIR / "ablation_hybrid_order_partial.pdf").exists():
         hybrid_order_figure_block = r"""
@@ -2649,9 +2685,9 @@ def write_report(
 \item Token length is a real confound: NL targets are longer than logic targets at every train range. Both equal-length logic controls underperform compact logic; symbol padding disrupts atom tokenization, and the cleaner wordified logic control is also weaker than compact logic and NL at train-1-to-25.
 \item Tiny random-init Llama pretraining is a mechanism smoke test. Logic is stronger than matched NL on answer-only synthetic OOD pass@8, but strict depth-50 joint validity is essentially absent.
 \item Architecture ablations show that the phenomenon is not OLMo-only: Qwen and Gemma runs also show strong formal-trace transfer, with model-specific variation in joint validity.
-\item Shortcut-rich training hurts NL more clearly than logic in the completed 0.3/0.5/0.8 shortcut-rate runs, supporting the hypothesis that NL relies more on brittle shortcut associations. The shortcut-kind eval has started but has not written JSON yet.
+\item Shortcut-rich training hurts NL more clearly than logic in the completed 0.3/0.5/0.8 shortcut-rate runs, supporting the hypothesis that NL relies more on brittle shortcut associations. {shortcut_kind_exec_sentence}
 \item Conditioned dual-modality at 10k underperforms the best single-modality baselines, especially for conditioned logic at larger train ranges. The 50k continuation is running to test whether this is undertraining.
-\item Trace controls are partially evaluated at 15/18 rows. The repaired \texttt{{rule\_annotated\_nl}} rows now show nonzero translated validity, \texttt{{invalid\_logic}} keeps high answer accuracy but zero grounded validity, and shuffled NL parses while losing translated joint validity.
+\item Trace controls are partially evaluated at {trace_control_eval_count}/18 rows. The repaired \texttt{{rule\_annotated\_nl}} rows now show nonzero translated validity, \texttt{{invalid\_logic}} keeps high answer accuracy but zero grounded validity, and shuffled NL parses while losing translated joint validity.
 \end{{itemize}}
 
 \section{{Metric note for OOD benchmarks}}
@@ -3064,7 +3100,7 @@ The shortcut-rate ablation changes only the training distribution. With probabil
 \end{{figure}}
 
 \subsection{{Other shortcut types}}
-The shortcut-kind controls test two concrete shortcut mechanisms: a \texttt{{position}} shortcut, where the target path is statistically associated with position-like structure, and an \texttt{{initial\_marker}} shortcut, where an early marker fact is predictive of the target transition family. Both are trained at rates 0.5 and 0.8 for logic and NL over three seeds, with shortcut-neutral eval. At this report generation time, SFT is complete and the eval has started, but no shortcut-kind eval JSON has been produced.
+The shortcut-kind controls test two concrete shortcut mechanisms: a \texttt{{position}} shortcut, where the target path is statistically associated with position-like structure, and an \texttt{{initial\_marker}} shortcut, where an early marker fact is predictive of the target transition family. Both are trained at rates 0.5 and 0.8 for logic and NL over three seeds, with shortcut-neutral eval. {shortcut_kind_status_sentence}
 
 \begin{{table}}[H]
 \centering
@@ -3083,7 +3119,7 @@ The shortcut-kind controls test two concrete shortcut mechanisms: a \texttt{{pos
 \end{{table}}
 
 \subsection{{Trace controls}}
-The trace-control ablation trains train-1-to-25 models with six altered trace styles, always over three seeds and evaluated on the same 1-to-50 sparse protocol. The six controls are: \texttt{{terse\_nl}} (shorter natural-language reasoning), \texttt{{rule\_annotated\_nl}} (NL with explicit rule names), \texttt{{pseudocode}} (algorithm-like trace), \texttt{{shuffled\_logic}} (formal lines shuffled as a negative control), \texttt{{invalid\_logic}} (formally invalid proof trace negative control), and \texttt{{shuffled\_nl}} (NL trace order shuffled). Manual inspection found that the early \texttt{{rule\_annotated\_nl}} translated-validity metrics were an evaluator artifact: lines such as \texttt{{a is teal. [rule: R]}} were not stripped before controlled NL-to-FOL parsing. The translator now unwraps rule annotations and pseudocode \texttt{{derive "..."}}, and the completed repair rows are included in the table. Current replacement rows are still finishing \texttt{{pseudocode}} seed 3409 and \texttt{{shuffled\_nl}} seeds 3408/3409.
+The trace-control ablation trains train-1-to-25 models with six altered trace styles, always over three seeds and evaluated on the same 1-to-50 sparse protocol. The six controls are: \texttt{{terse\_nl}} (shorter natural-language reasoning), \texttt{{rule\_annotated\_nl}} (NL with explicit rule names), \texttt{{pseudocode}} (algorithm-like trace), \texttt{{shuffled\_logic}} (formal lines shuffled as a negative control), \texttt{{invalid\_logic}} (formally invalid proof trace negative control), and \texttt{{shuffled\_nl}} (NL trace order shuffled). Manual inspection found that the early \texttt{{rule\_annotated\_nl}} translated-validity metrics were an evaluator artifact: lines such as \texttt{{a is teal. [rule: R]}} were not stripped before controlled NL-to-FOL parsing. The translator now unwraps rule annotations and pseudocode \texttt{{derive "..."}}, and the completed repair rows are included in the table. {trace_control_status_sentence}
 
 \begin{{table}}[H]
 \centering
