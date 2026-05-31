@@ -2572,23 +2572,67 @@ def write_report(
         if "shuffled_nl" in by_template.index:
             shuffled_nl_done = int(by_template.loc["shuffled_nl", "n"])
     if trace_control_eval_count >= 18:
+        trace_control_exec_sentence = "Trace controls are complete at 18/18 rows."
         trace_control_status_sentence = "All trace-control eval rows are now complete."
     elif pseudocode_done < 3 and shuffled_nl_done >= 3:
+        trace_control_exec_sentence = (
+            f"Trace controls are partially evaluated at {trace_control_eval_count}/18 rows."
+        )
         trace_control_status_sentence = (
             "The remaining trace-control row is \\texttt{pseudocode} seed 3409; "
             "\\texttt{shuffled\\_nl} is now three-seed complete."
         )
     else:
+        trace_control_exec_sentence = (
+            f"Trace controls are partially evaluated at {trace_control_eval_count}/18 rows."
+        )
         trace_control_status_sentence = (
             "Current replacement rows are still finishing \\texttt{pseudocode} seed 3409 "
             "and \\texttt{shuffled\\_nl} seeds 3408/3409."
+        )
+    think_formal_train25_n = 0
+    if not hybrid_order_rows.empty:
+        match = hybrid_order_rows[
+            (hybrid_order_rows["mode"] == "think_formal")
+            & (hybrid_order_rows["train_max"] == 25)
+        ]
+        if not match.empty:
+            think_formal_train25_n = int(match.iloc[0]["n"])
+    if think_formal_train25_n >= 3:
+        hybrid_order_status_sentence = (
+            "Current completed rows cover all \\texttt{think\\_formal} seeds through "
+            "train-1-to-25; \\texttt{formal\\_think} is still incomplete."
+        )
+        hybrid_order_table_caption = (
+            "Hybrid-order partial summary. \\texttt{think\\_formal} train-1-to-25 "
+            "is now three-seed complete; \\texttt{formal\\_think} remains pending."
+        )
+        hybrid_order_figure_caption = (
+            "Hybrid order partial eval. \\texttt{think\\_formal} is NL then formal "
+            "and is complete through train-1-to-25; \\texttt{formal\\_think} is "
+            "still pending."
+        )
+    else:
+        hybrid_order_status_sentence = (
+            "Current completed rows cover all \\texttt{think\\_formal} seeds through "
+            "train-1-to-20; train-1-to-25 is partial, and \\texttt{formal\\_think} "
+            "is still incomplete."
+        )
+        hybrid_order_table_caption = (
+            "Hybrid-order partial summary. \\texttt{think\\_formal} train-1-to-25 "
+            "is still partial; \\texttt{formal\\_think} remains pending."
+        )
+        hybrid_order_figure_caption = (
+            "Hybrid order partial eval. \\texttt{think\\_formal} is NL then formal "
+            "and is complete through train-1-to-20, with train-1-to-25 partial; "
+            "\\texttt{formal\\_think} is still pending."
         )
     hybrid_order_figure_block = ""
     if not hybrid_order_rows.empty and (FIG_DIR / "ablation_hybrid_order_partial.pdf").exists():
         hybrid_order_figure_block = r"""
 \begin{figure}[H]\centering
 \includegraphics[width=0.95\linewidth]{figures/ablation_hybrid_order_partial.pdf}
-\caption{Hybrid order partial eval. \texttt{think\_formal} is NL then formal and is complete through train-1-to-20, with train-1-to-25 partial; \texttt{formal\_think} is still pending.}
+\caption{""" + hybrid_order_figure_caption + r"""}
 \end{figure}
 """
     conditioned_50k_curve_block = ""
@@ -2687,7 +2731,7 @@ def write_report(
 \item Architecture ablations show that the phenomenon is not OLMo-only: Qwen and Gemma runs also show strong formal-trace transfer, with model-specific variation in joint validity.
 \item Shortcut-rich training hurts NL more clearly than logic in the completed 0.3/0.5/0.8 shortcut-rate runs, supporting the hypothesis that NL relies more on brittle shortcut associations. {shortcut_kind_exec_sentence}
 \item Conditioned dual-modality at 10k underperforms the best single-modality baselines, especially for conditioned logic at larger train ranges. The 50k continuation is running to test whether this is undertraining.
-\item Trace controls are partially evaluated at {trace_control_eval_count}/18 rows. The repaired \texttt{{rule\_annotated\_nl}} rows now show nonzero translated validity, \texttt{{invalid\_logic}} keeps high answer accuracy but zero grounded validity, and shuffled NL parses while losing translated joint validity.
+\item {trace_control_exec_sentence} The repaired \texttt{{rule\_annotated\_nl}} rows now show nonzero translated validity, \texttt{{invalid\_logic}} keeps high answer accuracy but zero grounded validity, and shuffled NL parses while losing translated joint validity.
 \end{{itemize}}
 
 \section{{Metric note for OOD benchmarks}}
@@ -3134,12 +3178,12 @@ The trace-control ablation trains train-1-to-25 models with six altered trace st
     ("depth50_formal_joint@16", "d50 formal joint"),
     ("depth50_translated_joint@16", "d50 translated joint"),
 ])}
-\caption{{Trace-control partial summary. Both formal and translated joint are shown because the controls intentionally move between formal, NL, and hybrid-like trace surfaces.}}
+\caption{{Trace-control summary. Both formal and translated joint are shown because the controls intentionally move between formal, NL, and hybrid-like trace surfaces.}}
 \end{{table}}
 {trace_control_figure_block}
 
 \subsection{{Hybrid order}}
-The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means NL first, then formal logic; \texttt{{formal\_think}} means formal logic first, then NL. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. Current completed rows cover all \texttt{{think\_formal}} seeds through train-1-to-20; train-1-to-25 is partial, and \texttt{{formal\_think}} is still incomplete.
+The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means NL first, then formal logic; \texttt{{formal\_think}} means formal logic first, then NL. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. {hybrid_order_status_sentence}
 
 \begin{{table}}[H]
 \centering
@@ -3155,7 +3199,7 @@ The hybrid-order ablation trains a single prompt containing both trace substrate
     ("depth50_formal_joint@16", "d50 formal joint"),
     ("depth50_translated_joint@16", "d50 translated joint"),
 ])}
-\caption{{Hybrid-order partial summary. \texttt{{think\_formal}} train-1-to-25 is still partial; \texttt{{formal\_think}} remains pending.}}
+\caption{{{hybrid_order_table_caption}}}
 \end{{table}}
 {hybrid_order_figure_block}
 
