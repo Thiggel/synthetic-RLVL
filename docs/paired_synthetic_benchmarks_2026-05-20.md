@@ -67,6 +67,8 @@ Full-suite submission 2026-05-28 15:48 CEST:
 
 Focused iGSM eval audit 2026-06-01 15:16 CEST: the completed `official_igsm` full-suite eval rows (`30/30` JSONs, `30/90` total paired eval rows) show `nl_exact` answer correctness above logic on every train range, but `nl_exact` translated validity remains `0.000` because the current generic NL-to-FOL translator does not parse iGSM proof grammar. It fails on gold-style lines such as `From the official iGSM relation...`, `Substitute ... into the current expression.`, and `Evaluate the arithmetic modulo 23...`. Representative logic samples confirm the warning at the top of this doc: generated formal traces are often internally valid under hallucinated premises/variables but ungrounded relative to the prompt and gold conclusion. Treat iGSM NL validity as missing evaluator coverage and iGSM logic internal joint as optimistic until grounded/canonical checks are emphasized. Detailed examples are in `docs/paired_igsm_validity_audit_2026-06-01.md`.
 
+Fix update 2026-06-01 15:29 CEST: the iGSM NL translator/evaluator gap is patched for official-relation, substitution, and modulo-23 proof lines, with regression tests and gold materialized target checks passing. Minimal rerun `3689003_[3-5,9-11,15-17,21-23,27-29%4]` is recomputing only the completed official_iGSM `nl_exact` rows.
+
 The full-suite roots are:
 
 ```bash

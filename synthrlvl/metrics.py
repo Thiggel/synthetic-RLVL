@@ -260,7 +260,7 @@ class OutputEvaluator:
         nl_logic_citation_free_valid = 0.0
         nl_logic_line_valid_fraction = 0.0
         nl_logic_valid_prefix_fraction = 0.0
-        if wants_natural and gold_logic_premises and gold_logic_conclusion and gold_logic_constants and gold_logic_predicates:
+        if wants_natural and gold_logic_premises and gold_logic_conclusion and gold_logic_constants:
             natural = extract_tag(output_text, natural_tag)
             source = natural if natural else (output_text or "")
             natural_proof = extract_tag(source, "proof")
@@ -271,23 +271,33 @@ class OutputEvaluator:
                     constants=gold_logic_constants,
                     predicates=gold_logic_predicates,
                     premise_count=premise_count,
+                    premises=gold_logic_premises,
                 )
                 nl_logic_parse = translated.parse_fraction
                 if translated.total_lines:
+                    strict_report = self.engine.analyze_proof(
+                        premises=gold_logic_premises,
+                        conclusion=gold_logic_conclusion,
+                        proof=translated.proof,
+                    )
                     report = self.engine.analyze_proof_citation_free(
                         premises=gold_logic_premises,
                         conclusion=gold_logic_conclusion,
                         proof=translated.proof,
                     )
-                    valid_lines = sum(1 for line in report.lines if line.valid)
+                    line_report = strict_report if strict_report.ok else report
+                    valid_lines = max(
+                        sum(1 for line in strict_report.lines if line.valid),
+                        sum(1 for line in report.lines if line.valid),
+                    )
                     prefix_valid = 0
-                    for line in report.lines:
+                    for line in line_report.lines:
                         if not line.valid:
                             break
                         prefix_valid += 1
-                    nl_logic_citation_free_valid = float(translated.fully_parsed and report.ok)
-                    nl_logic_line_valid_fraction = float(valid_lines / len(report.lines)) if report.lines else 0.0
-                    nl_logic_valid_prefix_fraction = float(prefix_valid / len(report.lines)) if report.lines else 0.0
+                    nl_logic_citation_free_valid = float(translated.fully_parsed and (report.ok or strict_report.ok))
+                    nl_logic_line_valid_fraction = float(valid_lines / len(line_report.lines)) if line_report.lines else 0.0
+                    nl_logic_valid_prefix_fraction = float(prefix_valid / len(line_report.lines)) if line_report.lines else 0.0
 
         line_match = 0.0
         if prefill == PrefillMode.LINE_REWARD and gold_first_modality_lines:

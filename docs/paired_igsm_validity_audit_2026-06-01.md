@@ -62,3 +62,13 @@ NL is ahead on answer correctness for completed iGSM rows, but its validity metr
 3. Add regression tests using gold iGSM `proof_nl` lines so translated validity is nonzero for valid targets before rerunning or reaggregating paired NL validity.
 4. For logic, emphasize grounded/citation-free-grounded validity in the report; internal validity alone overstates iGSM proof quality.
 5. Recompute paired iGSM summaries after the parser fix, then analyze `maze_navigation` and hard `attribute_constraints` once their eval rows finish.
+
+## Fix Status - 2026-06-01 15:29 CEST
+
+Items 1 and 3 are implemented for iGSM:
+
+- `synthrlvl/natural_logic.py` now translates official-relation, substitution, and modulo-23 iGSM NL proof lines into formal equality/MOD23 proof lines with citations.
+- `synthrlvl/metrics.py` now lets translated NL validity use strict proof validation when citation-free recovery cannot justify equality substitution or MOD23.
+- Regression coverage was added in `tests/test_training_stack.py`; `tests/test_training_stack.py` passed (`28 passed`) and `tests/test_paired_synthetic_datasets.py` passed (`9 passed`).
+- Materialized gold official_iGSM `nl_exact` targets sampled at depths `1/10/25/50` now score format/correct/parse/valid as `1.0`.
+- Minimal recomputation job `3689003_[3-5,9-11,15-17,21-23,27-29%4]` was submitted with `FORCE_PASSK_EVAL=1` to rerun only the 15 completed official_iGSM `nl_exact` pass@k rows.

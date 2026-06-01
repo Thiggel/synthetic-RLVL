@@ -479,6 +479,73 @@ def test_nl_exact_trace_translates_to_valid_logic():
     assert result.nl_logic_citation_free_valid == 1.0
 
 
+def test_igsm_nl_exact_trace_translates_to_valid_logic():
+    output = """<think>
+<premises>
+The number of each Grizzly Bear's Pericardium equals 20.
+The number of each African Elephant's Pericardium equals 9 times as much as each Grizzly Bear's Pericardium.
+</premises>
+<proof>
+From the official iGSM relation, v_k equals 20.
+From the official iGSM relation, v_v equals 9 * v_k.
+Substitute k = 20 into the current expression.
+Evaluate the arithmetic modulo 23 to get v_v = 19.
+</proof>
+<conclusion>
+Evaluate the arithmetic modulo 23 to get v_v = 19.
+</conclusion>
+</think>
+<answer>
+19
+</answer>"""
+    result = OutputEvaluator().evaluate(
+        output,
+        template=TemplateName.NL_EXACT,
+        gold_answer="19",
+        gold_logic_premises="v_k = 20\nv_v = 9 * v_k",
+        gold_logic_conclusion="v_v = 19",
+        gold_logic_constants="v_k = official iGSM variable k\nv_v = official iGSM variable v",
+        gold_logic_predicates="",
+    )
+
+    assert result.format_ok == 1.0
+    assert result.correct == 1.0
+    assert result.nl_logic_parse == 1.0
+    assert result.nl_logic_citation_free_valid == 1.0
+
+
+def test_igsm_nl_exact_trace_must_match_gold_chain():
+    output = """<think>
+<premises>
+The number of each Grizzly Bear's Pericardium equals 20.
+</premises>
+<proof>
+From the official iGSM relation, v_m equals 20.
+Evaluate the arithmetic modulo 23 to get v_m = 20.
+</proof>
+<conclusion>
+Evaluate the arithmetic modulo 23 to get v_m = 20.
+</conclusion>
+</think>
+<answer>
+20
+</answer>"""
+    result = OutputEvaluator().evaluate(
+        output,
+        template=TemplateName.NL_EXACT,
+        gold_answer="20",
+        gold_logic_premises="v_k = 20",
+        gold_logic_conclusion="v_k = 20",
+        gold_logic_constants="v_k = official iGSM variable k\nv_m = official iGSM variable m",
+        gold_logic_predicates="",
+    )
+
+    assert result.format_ok == 1.0
+    assert result.correct == 1.0
+    assert result.nl_logic_parse == 1.0
+    assert result.nl_logic_citation_free_valid == 0.0
+
+
 def test_logic_format_rejects_unexpected_text_outside_tags():
     cfg = make_task(template=TemplateName.LOGIC)
     builder = TaskBuilder(cfg)
