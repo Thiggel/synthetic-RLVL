@@ -1398,6 +1398,12 @@ def build_experiment_artifact_status() -> pd.DataFrame:
         ("conditioned dual 50k", "longer conditioned formal/NL dual modality", 30, PASSK_ROOT / "hfsa_conditioned_dual_50k_20260529"),
     ]:
         eval_done = len(list(root.glob("*_passk.json"))) if root.exists() else 0
+        status = "complete" if eval_done == expected else ("not started" if eval_done == 0 else "partial eval")
+        if name == "conditioned dual 50k" and eval_done == 0:
+            ckpt_root = PASSK_ROOT / "hfsa_conditioned_dual_50k_intermediate_20260529"
+            ckpt_done = len(list(ckpt_root.glob("*_passk.json"))) if ckpt_root.exists() else 0
+            if ckpt_done:
+                status = f"checkpoint partial ({ckpt_done} JSONs)"
         rows.append(
             {
                 "experiment": name,
@@ -1406,7 +1412,7 @@ def build_experiment_artifact_status() -> pd.DataFrame:
                 "sft_expected": "",
                 "eval_done": eval_done,
                 "eval_expected": expected,
-                "status": "complete" if eval_done == expected else ("not started" if eval_done == 0 else "partial eval"),
+                "status": status,
             }
         )
 
@@ -2737,7 +2743,7 @@ def write_report(
         conditioned_50k_curve_block = r"""
 \begin{figure}[H]\centering
 \includegraphics[width=0.95\linewidth]{figures/ablation_conditioned_dual_50k_convergence_train1to25.pdf}
-\caption{Conditioned dual-modality 50k convergence curves for train-1-to-25. Points are three-seed means over checkpoint evals at 10k, 20k, 30k, 40k, and 50k optimizer steps.}
+\caption{Conditioned dual-modality 50k convergence curves for train-1-to-25. Points are three-seed means for checkpoint evals available at report generation time; pending 30k/40k/50k points will appear as the eval array writes JSONs.}
 \end{figure}
 """
     paired_full_figure_block = ""
@@ -3171,7 +3177,7 @@ This table is artifact-based at report-generation time: it counts completed SFT 
 \end{{table}}
 
 \section{{Paired-family full-suite partial readout}}
-The replacement paired-family eval has started writing artifacts. The table below is intentionally partial: at this report generation time, \texttt{{official\_igsm}} is complete and the first \texttt{{maze\_navigation}} row has completed, while remaining maze and hard attribute-constraint rows are still running or pending. The \texttt{{joint}} column is template-specific: citation-free internal formal validity for logic and translated NL-to-FOL validity for \texttt{{nl\_exact}}. For iGSM, grounded joint validity is currently zero away from trivial retrieval cases because generated variable names and arithmetic-substitution citations do not reliably align with the canonical grounded checker. The targeted iGSM NL rerun has improved parser coverage on completed rerun rows, but generated NL translated-validity is still zero so far; use correctness and parser coverage as provisional diagnostics until the rerun and non-iGSM rows complete.
+The replacement paired-family eval has started writing artifacts. The table below is intentionally partial: at this report generation time, \texttt{{official\_igsm}} is complete and the first \texttt{{maze\_navigation}} row has completed, while remaining maze and hard attribute-constraint rows are still running or pending. The \texttt{{joint}} column is template-specific: citation-free internal formal validity for logic and translated NL-to-FOL validity for \texttt{{nl\_exact}}. For iGSM, grounded joint validity is currently zero away from trivial retrieval cases because generated variable names and arithmetic-substitution citations do not reliably align with the canonical grounded checker. The targeted iGSM NL rerun has completed all 15 NL rows and recovers near-complete parser coverage, but generated NL translated-validity is still zero on OOD/depth-50 slices; use correctness and parser coverage as provisional diagnostics until non-iGSM rows complete and grounded/canonical checks are improved.
 
 \begin{{table}}[H]
 \centering

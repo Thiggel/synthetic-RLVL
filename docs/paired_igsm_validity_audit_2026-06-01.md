@@ -73,18 +73,18 @@ Items 1 and 3 are implemented for iGSM:
 - Materialized gold official_iGSM `nl_exact` targets sampled at depths `1/10/25/50` now score format/correct/parse/valid as `1.0`.
 - Minimal recomputation job `3689003_[3-5,9-11,15-17,21-23,27-29%4]` was submitted with `FORCE_PASSK_EVAL=1` to rerun only the 15 completed official_iGSM `nl_exact` pass@k rows.
 
-## Partial Rerun Readout - 2026-06-01 18:41 CEST
+## Completed Rerun Readout - 2026-06-01 22:37 CEST
 
-Targeted rerun `3689003` has completed `8/15` rows so far: train-1-to-5 seeds `3407/3408/3409`, train-1-to-10 seeds `3407/3408/3409`, and train-1-to-15 seeds `3407/3408`.
+Targeted rerun `3689003` completed all `15/15` official_iGSM `nl_exact` rows by 2026-06-01 21:51 CEST.
 
-Current rerun-visible `official_iGSM` `nl_exact` aggregate:
+Completed rerun `official_iGSM` `nl_exact` aggregate:
 
 | Train Max | Rows rerun | OOD correct@16 | OOD parse@16 | OOD translated joint@16 | Depth-50 correct@16 | Depth-50 parse@16 | Depth-50 translated joint@16 |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | 5 | `3407,3408,3409` | 0.359 | 1.000 | 0.000 | 0.260 | 1.000 | 0.000 |
 | 10 | `3407,3408,3409` | 0.569 | 1.000 | 0.000 | 0.385 | 1.000 | 0.000 |
-| 15 | `3407,3408` plus one stale row | 0.612 | 0.664 | 0.000 | 0.479 | 0.656 | 0.000 |
-| 20 | none yet | 0.576 | 0.000 | 0.000 | 0.573 | 0.000 | 0.000 |
-| 25 | none yet | 0.585 | 0.000 | 0.000 | 0.521 | 0.000 | 0.000 |
+| 15 | `3407,3408,3409` | 0.603 | 0.997 | 0.000 | 0.479 | 0.990 | 0.000 |
+| 20 | `3407,3408,3409` | 0.592 | 1.000 | 0.000 | 0.583 | 1.000 | 0.000 |
+| 25 | `3407,3408,3409` | 0.560 | 0.994 | 0.000 | 0.469 | 0.969 | 0.000 |
 
-The parser-coverage part of the iGSM fix is working on completed rerun rows, but generated translated validity remains zero. Representative rerun samples parse as iGSM NL proof lines, then fail strict translated validation because generated variable names and chains often do not match the gold formal premises. This is now a generated-trace grounding/canonicality issue rather than the original parser-coverage bug.
+The parser-coverage part of the iGSM fix is working on completed rerun rows, but generated translated validity remains zero on OOD and depth-50. Representative rerun samples parse as iGSM NL proof lines, then fail strict translated validation because generated variable names and chains often do not match the gold formal premises. This is now a generated-trace grounding/canonicality issue rather than the original parser-coverage bug.
