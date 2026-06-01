@@ -2739,7 +2739,7 @@ def write_report(
         paired_full_figure_block = r"""
 \begin{figure}[H]\centering
 \includegraphics[width=0.95\linewidth]{figures/paired_full_suite_official_igsm_partial.pdf}
-\caption{Partial official-iGSM full-suite readout from currently completed paired eval rows. Train-1-to-15 logic is still two-seed partial in this snapshot.}
+\caption{Partial official-iGSM full-suite readout from currently completed paired eval rows. Inline n annotations mark any train-depth slices that are not yet three-seed complete.}
 \end{figure}
 """
     olmo_ckpt_figures = "\n".join(
