@@ -242,7 +242,7 @@ Submitted chain/status:
 
 - build `3674886_[0-3%2]`: completed exit `0:0` on 2026-05-29; all four local roots exist with the expected train plus depth-1..50 validation subsets.
 - SFT `3674887_[0-23%3]`: original rows `0..21` and `23` complete, row `22` failed, and replacement SFT `3682458_22` completed.
-- eval `3674888_[0-23%4]`: running as of 2026-06-01 06:35 CEST; rows `0..20` are complete and wrote `21/24` pass@k JSONs plus sample JSONLs, and rows `21..23` are running.
+- eval `3674888_[0-23%4]`: running as of 2026-06-01 10:40 CEST; rows `0..22` are complete and wrote `23/24` pass@k JSONs plus sample JSONLs, and row `23` is running.
 
 Purpose: repeat the shortcut robustness ablation with two concrete shortcut mechanisms beyond the existing schema shortcut. `position` makes the gold branch first on shortcut-enabled training examples. `initial_marker` fixes the gold path's initial marker to `north` on shortcut-enabled training examples. Evaluation remains shortcut-neutral with `val_shortcut_rate=0.0` for every row.
 
