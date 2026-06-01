@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-06-01 14:57 CEST.
+Last updated: 2026-06-01 15:16 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -16,6 +16,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | HFSA implementation/eval plan | `docs/hfsa_depth_scaling_plan_2026-05-19.md` |
 | Dataset materialization details | `docs/materialized_dataset.md` |
 | Paired synthetic benchmark details | `docs/paired_synthetic_benchmarks_2026-05-20.md` |
+| Paired iGSM validity audit | `docs/paired_igsm_validity_audit_2026-06-01.md` |
 | Ongoing LaTeX report | `analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex` |
 
 ## Current Scientific State
@@ -29,6 +30,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - Trace-control repair outputs are complete and report-ingested for `18/18` rows. `invalid_logic` keeps high answer accuracy with zero grounded validity; repaired `rule_annotated_nl` and `pseudocode` have nonzero translated validity; shuffled NL parses but loses translated joint validity.
 - Shortcut-kind controls are complete at `24/24` eval JSONs. `position` rows are three-seed complete; `initial_marker` logic `0.5` and `0.8` are three-seed with OOD correct/joint@16 `0.883/0.625` and `0.885/0.610`, depth-50 `0.854/0.344` and `0.865/0.344`; `initial_marker` `nl_exact` `0.5` is three-seed with OOD correct/translated-joint@16 `0.469/0.421` and depth-50 `0.115/0.094`; `initial_marker` `nl_exact` `0.8` is now three-seed with OOD correct/translated-joint@16 `0.771/0.702` and depth-50 `0.667/0.500`.
 - Full paired-family SFT for `official_igsm`, `maze_navigation`, and hardened `attribute_constraints` is complete at `90/90` final adapters. Replacement eval `3682449` is running; `official_igsm` now has `30/30` JSONs and sample JSONLs, while `maze_navigation` and hard `attribute_constraints` still have `0/30`. The diagnostics-only report readout covers completed `official_igsm`: logic train-1-to-5/10/15/20/25 OOD correct/internal-joint@16 is `0.312/0.255`, `0.507/0.377`, `0.546/0.392`, `0.536/0.245`, and `0.488/0.106`; matched `nl_exact` train-1-to-5/10/15/20/25 OOD correct@16 is `0.366/0.589/0.618/0.576/0.585`, but paired NL translated validity remains `0.000`. Treat this as diagnostics-only until the full eval suite and translator checks finish.
+- Focused iGSM validity audit at 2026-06-01 15:16 CEST found the `nl_exact` translated-validity `0.000` is an evaluator coverage issue: the current NL-to-FOL translator handles controlled HFSA assertions but not iGSM lines such as official-relation, substitution, and modulo-23 arithmetic. Sampled iGSM logic outputs often form internally valid but ungrounded invented variable chains; sampled NL outputs often use the expected iGSM prose grammar but are not currently validatable. Details and examples are in `docs/paired_igsm_validity_audit_2026-06-01.md`.
 
 ## Active Work
 

@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-06-01 14:42 CEST.
+Last updated: 2026-06-01 15:16 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -11,7 +11,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 | P0 | Analyze and report full paired-family suite | This is the real repeat of the HFSA logic-vs-NL comparison on `official_igsm`, `maze_navigation`, and hardened `attribute_constraints`. SFT is now complete at `90/90` final adapters and eval `3682449` is running; a diagnostics-only table/figure/sample supplement now covers completed `official_igsm` (`30/30` rows), but full paired-family analysis remains deferred because `maze_navigation` and hard `attribute_constraints` have no completed eval JSONs yet. | `3682449` completes. |
 | P0 | Add completed trace-control, hybrid, shortcut-kind, and conditioned-50k results to the LaTeX report | These are reviewer-facing ablations. Shortcut-rate `0.3`, wordified length-control, trace controls `18/18`, shortcut-kind controls `24/24`, hybrid `think_formal` through train-1-to-25 plus `formal_think` train-1-to-5/10 and one train-1-to-15 seed, completed paired iGSM `30/30`, and active-artifact status are included. Remaining report triggers are remaining hybrid `formal_think` replacements, conditioned-50k final/checkpoint eval JSONs, and paired non-iGSM rows. | Corresponding eval JSONs appear. |
 | P0 | Inspect sample generations for each completed ablation | Tables alone are not enough to understand invalid/wrong failure modes. | After each eval family completes. |
-| P1 | Improve paired-family NL validity translation | Current paired pilots often have meaningful correctness but `nl_exact` joint validity is `0.000` because translator coverage is incomplete. A 2026-05-31 gold-target audit over sampled full-suite paired train/val rows also found paired NL targets answer and format correctly while `nl_logic_parse` and translated validity remain `0.0`. | Before making NL-vs-logic validity claims on paired families. |
+| P1 | Improve paired-family NL validity translation | Current paired pilots often have meaningful correctness but `nl_exact` joint validity is `0.000` because translator coverage is incomplete. The 2026-06-01 iGSM audit confirms the generic translator cannot parse iGSM official-relation, substitution, or modulo-23 proof lines, including gold-style `proof_nl`; generated NL traces often use the expected iGSM prose surface but remain unscored for validity. | Before making NL-vs-logic validity claims on paired families; add an iGSM-aware parser/validator and regression tests over gold iGSM `proof_nl`. |
 | P1 | Build support-facts/context-QA reasoning eval | Current HotpotQA/2Wiki/MuSiQue are context-provided answer-only probes; they do not force or verify explicit multi-hop reasoning traces. | After current OOD tables are stable. |
 | P1 | Decide whether conditioned dual is undertrained | Current 10k conditioned dual is weaker than single-modality logic. | After 50k checkpoint curves `3674885` complete. |
 
