@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-06-01 06:57 CEST.
+Last updated: 2026-06-01 07:00 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -29,7 +29,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 
 ## Report/Artifact Work
 
-- Plan-driven oversight is active through refreshed jobs: paired `3686895` and ablation `3686897` are running, and next passes `3687377` and `3687378` are begin-time pending. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
+- Plan-driven oversight is active through refreshed jobs: paired `3686895` completed cleanly, ablation `3686897` is running, and next passes `3687377` and `3687378` are begin-time pending. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
 - 2026-06-01 06:57 paired/report refresh regenerated and mirrored the report after `3682449_29` completed, bringing official_iGSM to `30/30` eval rows. The iGSM diagnostics-only means are now logic train-1-to-5/10/15/20/25 OOD correct/internal-joint@16 `0.312/0.255`, `0.507/0.377`, `0.546/0.392`, `0.536/0.245`, `0.488/0.106`; matched `nl_exact` OOD correct@16 `0.366/0.589/0.618/0.576/0.585`, with translated validity still `0.000`. The newly completed train-1-to-25 NL seed has OOD/depth-50 correct@16 `0.575/0.531`, preserves the intended `<think>/<answer>` surface, and still has `nl_logic_parse=0.000`; full paired-family analysis remains deferred until `maze_navigation` and hard `attribute_constraints` finish. Conditioned-dual 50k rows `3674883_4` and `3674883_5` also completed cleanly, leaving rows `6..9` running and final/checkpoint evals dependency-pending.
 - 2026-06-01 06:35 ablation/report refresh regenerated and mirrored the report after new eval JSONs appeared: shortcut-kind is now `21/24`, hybrid order is `20/30`, paired iGSM is `29/30`, and trace controls remain `18/18`. New partials: `initial_marker` logic shortcut `0.8` is three-seed with OOD correct/joint@16 `0.885/0.610` and depth-50 `0.865/0.344`; `initial_marker` `nl_exact` shortcut `0.5` is three-seed with OOD `0.469/0.421` and depth-50 `0.115/0.094`; `formal_think` train-1-to-10 is two-seed with OOD correct/formal-joint/translated-joint@16 `0.602/0.242/0.363`; paired iGSM logic train-1-to-25 is three-seed OOD correct/internal-joint@16 `0.488/0.106`, and paired iGSM NL train-1-to-25 is two-seed OOD correct@16 `0.591` with translated validity still `0.000`. Sample inspection found intended wrappers and answer extraction with expected depth/validity fragility. No failure, scheduler edit, partition edit, cancellation, resubmission, or broad launch was made.
 - 2026-06-01 02:50 paired oversight `3686267` completed cleanly (`0:0`) after recording the 02:36 paired partial readout and scheduling successor `3686895`. No additional scheduler edit, partition edit, cancellation, resubmission, or broad launch was made.
