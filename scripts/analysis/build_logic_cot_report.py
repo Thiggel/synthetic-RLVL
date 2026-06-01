@@ -2639,7 +2639,13 @@ def write_report(
 \end{figure}
 """
     shortcut_kind_eval_count = int(shortcut_kind_rows["n"].sum()) if not shortcut_kind_rows.empty else 0
-    if shortcut_kind_eval_count:
+    if shortcut_kind_eval_count >= 24:
+        shortcut_kind_status_sentence = (
+            "At this report generation time, SFT and shortcut-kind eval are complete; "
+            "all eval artifacts are summarized below."
+        )
+        shortcut_kind_exec_sentence = "The shortcut-kind eval is complete at 24/24 JSONs."
+    elif shortcut_kind_eval_count:
         shortcut_kind_status_sentence = (
             "At this report generation time, SFT is complete and shortcut-kind eval is running; "
             "the completed eval artifacts are summarized below."
@@ -3165,7 +3171,7 @@ This table is artifact-based at report-generation time: it counts completed SFT 
 \end{{table}}
 
 \section{{Paired-family full-suite partial readout}}
-The replacement paired-family eval has started writing artifacts. The table below is intentionally partial: at this report generation time, only \texttt{{official\_igsm}} rows have completed. The \texttt{{joint}} column is template-specific: citation-free internal formal validity for logic and translated NL-to-FOL validity for \texttt{{nl\_exact}}. For iGSM, grounded joint validity is currently zero away from trivial retrieval cases because generated variable names and arithmetic-substitution citations do not reliably align with the canonical grounded checker. The \texttt{{nl\_exact}} rows also still have zero parser coverage, so use correctness as the main provisional paired-family signal until the translator/grounded-validity caveats are resolved.
+The replacement paired-family eval has started writing artifacts. The table below is intentionally partial: at this report generation time, \texttt{{official\_igsm}} is complete and the first \texttt{{maze\_navigation}} row has completed, while remaining maze and hard attribute-constraint rows are still running or pending. The \texttt{{joint}} column is template-specific: citation-free internal formal validity for logic and translated NL-to-FOL validity for \texttt{{nl\_exact}}. For iGSM, grounded joint validity is currently zero away from trivial retrieval cases because generated variable names and arithmetic-substitution citations do not reliably align with the canonical grounded checker. The targeted iGSM NL rerun has improved parser coverage on completed rerun rows, but generated NL translated-validity is still zero so far; use correctness and parser coverage as provisional diagnostics until the rerun and non-iGSM rows complete.
 
 \begin{{table}}[H]
 \centering
