@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-06-01 02:45 CEST.
+Last updated: 2026-06-01 02:50 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -29,7 +29,8 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 
 ## Report/Artifact Work
 
-- Plan-driven oversight is active through refreshed jobs: paired `3686267` and ablation `3686268` are running, with next passes `3686895` and `3686897` begin-time pending. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
+- Plan-driven oversight is active through refreshed jobs: paired `3686267` completed cleanly after the 02:36 refresh, ablation `3686268` is running, and next passes `3686895` and `3686897` are begin-time pending. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
+- 2026-06-01 02:50 paired oversight `3686267` completed cleanly (`0:0`) after recording the 02:36 paired partial readout and scheduling successor `3686895`. No additional scheduler edit, partition edit, cancellation, resubmission, or broad launch was made.
 - 2026-06-01 02:45 ablation oversight regenerated and mirrored the report after shortcut-kind rows `15/16` completed: shortcut-kind is now `17/24`, with `initial_marker` `nl_exact` rate `0.5` two-seed OOD correct/translated-joint@16 `0.509/0.481` and depth-50 `0.125/0.109`. Conditioned-dual 40k is complete and 50k chunk `3674883` is running rows `0..3`; final/checkpoint evals are still dependency-pending. Hybrid remains `18/30`. No failure, scheduler edit, partition edit, cancellation, resubmission, or broad launch was made.
 - 2026-06-01 02:36 paired oversight regenerated the diagnostics-only partial readout for the first `22` `official_igsm` eval JSONs from `3682449`: `tables/paired_full_suite_partial_by_seed.csv`, `tables/paired_full_suite_partial_summary.csv`, `figures/paired_full_suite_official_igsm_partial.{pdf,png}`, `paired_full_suite_partial_samples_2026-05-31.md`, and `paired_full_suite_partial_samples_2026-06-01.md`. The report was mirrored with `65` PDFs, `57` CSVs, and `5` Markdown supplements. The full paired-family trigger is still deferred until `3682449` completes, and paired NL validity claims remain blocked on translator coverage.
 - 2026-05-30 18:40-22:39 ablation oversight recovered interrupted rows by submitting `3682457_[3,6-14%4]` plus later `3682492_[5%1]` for conditioned-dual 30k, `3682458_[22%1]` for shortcut-kind SFT, `3682459_[12,14-17%3]` for original trace-control eval, `3682460_[5-8%3]` for fixed-translator trace repair, and `3682461_[13,15-29%4]` for hybrid-order eval. `3682492_5` completed cleanly, so `3674882` now waits only on `afterok:3682457`; `3674888` now waits only on replacement row `3682458`.

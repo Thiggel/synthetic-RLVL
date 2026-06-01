@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-06-01 02:45 CEST.
+Last updated: 2026-06-01 02:50 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -34,7 +34,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 The active Slurm work is summarized in `docs/running_experiments.md`. Current high-priority active chains are:
 
-- full paired-family suite: original SFT `3672212` is complete except the intentionally canceled/replaced failed rows; replacement SFT `3682411_[55,57,59-89%6]` and row-56 replacement `3683070_56` are complete, bringing paired SFT final adapters to `90/90`; stale eval `3672213` was canceled and replacement eval `3682449_[0-89%4]` has released, with rows `0..21` complete, rows `22..25` running, and rows `26..89` pending by eval array throttle; paired oversight `3685570` completed, current pass `3686267` is running, and next pass `3686895` is begin-time pending; a diagnostics-only `official_igsm` partial table/figure and sample supplement were regenerated from the first 22 eval rows
+- full paired-family suite: original SFT `3672212` is complete except the intentionally canceled/replaced failed rows; replacement SFT `3682411_[55,57,59-89%6]` and row-56 replacement `3683070_56` are complete, bringing paired SFT final adapters to `90/90`; stale eval `3672213` was canceled and replacement eval `3682449_[0-89%4]` has released, with rows `0..21` complete, rows `22..25` running, and rows `26..89` pending by eval array throttle; paired oversight `3686267` completed cleanly after the 02:36 refresh, and next pass `3686895` is begin-time pending; a diagnostics-only `official_igsm` partial table/figure and sample supplement were regenerated from the first 22 eval rows
 - trace-control ablations: SFT `3661118` complete; original eval `3661119` rows `0..5`, `9..11`, and `13` complete, with rows `12/14/15..17` failed or killed; replacement eval `3682459_[12,14-17%3]` and replacement repair eval `3682460_[5-8%3]` are complete, yielding `18/18` JSONs plus sample JSONLs
 - shortcut-rate `0.3`: SFT `3671431` rows `0..5` complete; eval `3671432` complete; all `0.3` logic and NL rows now have 3-seed JSONs
 - hybrid-order eval: original `3670783` rows `0..12` and `14` completed; row `13` failed and `15..29` failed/killed; replacement eval `3682461_13/15/16/17` completed, rows `18/19/20/21` are running, and `22..29` are pending by throttle, yielding `18/30` JSONs so far
