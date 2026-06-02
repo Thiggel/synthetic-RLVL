@@ -48,6 +48,69 @@ def test_official_igsm_uses_official_generator_and_mod23_trace():
     assert any("MOD23" in line for line in ex.proof_fol)
 
 
+def test_official_igsm_targets_use_semantic_bare_variables():
+    if not _has_official_igsm_repo():
+        pytest.skip("official iGSM repo is not available")
+    ex = PairedSyntheticGenerator(PairedGeneratorConfig(kind="official_igsm", depth=5, seed=3407)).generate(0)
+    logic_sample = task_sample_from_logic_example(ex, cfg=_task_cfg(TemplateName.LOGIC), depth=5)
+    nl_sample = task_sample_from_logic_example(ex, cfg=_task_cfg(TemplateName.NL_EXACT), depth=5)
+
+    assert validate_logic_example(ex).ok
+    assert "official iGSM variable" not in logic_sample.target
+    assert "v_" not in logic_sample.target
+    assert "v_" not in nl_sample.target
+    assert "iGSM" not in nl_sample.target
+    assert "From the definition of " in nl_sample.target
+    assert any(" = the number of each " in constant for constant in ex.constants)
+
+
+def test_logic_engine_allows_bare_lowercase_registers_only_for_equalities():
+    from logic_engine import LogicEngine
+
+    engine = LogicEngine()
+    equality_report = engine.analyze_proof(
+        "s = 2\nz = 6 + s",
+        "z = 8",
+        "3. s = 2 ; R,1\n4. z = 6 + s ; R,2\n5. z = 6 + 2 ; =E,3,4\n6. z = 8 ; MOD23,5",
+    )
+    predicate_report = engine.analyze_proof("P(s)", "P(s)", "2. P(s) ; R,1")
+
+    assert equality_report.ok, equality_report.error
+    assert not predicate_report.ok
+    assert predicate_report.error is not None
+
+
+def test_official_igsm_semantic_bare_variable_targets_validate_across_depths():
+    if not _has_official_igsm_repo():
+        pytest.skip("official iGSM repo is not available")
+    from synthrlvl.metrics import OutputEvaluator
+
+    evaluator = OutputEvaluator()
+    for depth in (1, 2, 5, 10):
+        for index in (0, 1, 2):
+            ex = PairedSyntheticGenerator(PairedGeneratorConfig(kind="official_igsm", depth=depth, seed=3407)).generate(index)
+            validation = validate_logic_example(ex)
+            assert validation.ok, (depth, index, validation.error, validation.line_errors)
+            for template in (TemplateName.LOGIC, TemplateName.NL_EXACT):
+                sample = task_sample_from_logic_example(ex, cfg=_task_cfg(template), depth=depth)
+                result = evaluator.evaluate(
+                    sample.target,
+                    template=template,
+                    gold_answer=sample.answer,
+                    gold_logic_premises=sample.logic_premises,
+                    gold_logic_conclusion=sample.logic_conclusion,
+                    gold_logic_constants=sample.logic_constants,
+                    gold_logic_predicates=sample.logic_predicates,
+                )
+                assert result.format_ok == 1.0, (depth, index, template, sample.target)
+                assert result.correct == 1.0, (depth, index, template, sample.target)
+                if template == TemplateName.LOGIC:
+                    assert result.grounded_valid == 1.0, (depth, index, sample.target)
+                else:
+                    assert result.nl_logic_parse == 1.0, (depth, index, sample.target)
+                    assert result.nl_logic_citation_free_valid == 1.0, (depth, index, sample.target)
+
+
 def test_maze_navigation_is_key_constrained_graph_with_blocked_decoys():
     ex = PairedSyntheticGenerator(PairedGeneratorConfig(kind="maze_navigation", depth=3, seed=3407)).generate(0)
     validation = validate_logic_example(ex)

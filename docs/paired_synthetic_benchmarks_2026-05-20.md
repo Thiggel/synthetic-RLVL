@@ -293,7 +293,7 @@ OOD lm-eval update 2026-05-27 11:30 CEST: broad OOD array `3659356` completed al
 
 ## Benchmark 1: `official_igsm`
 
-Current status: fixed locally and submitted for train-10 seed-3407 SFT/eval as of 2026-05-28. Addition and subtraction chains validate in the local depth-50 smoke after the tokenizer fix above. The full 50k train-10 chain `3671601 -> 3671602 -> 3671603` completed with no validation or runtime failures. A full 3-seed, 5-train-depth paired suite was submitted later the same day as `3672195 -> 3672212 -> 3672213`, repaired through replacement SFT/eval arrays, and now has `official_igsm` sparse eval complete under `3682449`. Important 2026-06-02 update: those completed iGSM artifacts use the old under-grounded target surface (`v_X = official iGSM variable X` and `From the official iGSM relation...`). The generator now preserves semantic bindings from the official solution (`Define <quantity> as <letter>`) and should be rebuilt/rerun before using iGSM as evidence for logic-vs-NL grounding.
+Current status: fixed locally and submitted for train-10 seed-3407 SFT/eval as of 2026-05-28. Addition and subtraction chains validate in the local depth-50 smoke after the tokenizer fix above. The full 50k train-10 chain `3671601 -> 3671602 -> 3671603` completed with no validation or runtime failures. A full 3-seed, 5-train-depth paired suite was submitted later the same day as `3672195 -> 3672212 -> 3672213`, repaired through replacement SFT/eval arrays, and now has `official_igsm` sparse eval complete under `3682449`. Important 2026-06-02 update: those completed iGSM artifacts use the old under-grounded target surface (`v_X = official iGSM variable X` and `From the official iGSM relation...`). The generator now preserves semantic bindings from the official solution (`Define <quantity> as <letter>`), emits safe bare one-letter formal symbols, and should be rebuilt/rerun before using iGSM as evidence for logic-vs-NL grounding.
 
 ### What It Tests
 
@@ -304,10 +304,10 @@ Current status: fixed locally and submitted for train-10 seed-3407 SFT/eval as o
 For a requested depth `D`, the generator samples an official iGSM problem from the local `facebookresearch/iGSM` generator with roughly `D` operations. The official problem contains a natural-language prompt, an official solution trace, and an answer. We parse the official solution into equation-chain records:
 
 ```text
-v_i = expression_i
+q = expression_i
 ```
 
-where each expression may depend on earlier variables. The formal premises are exactly these parsed equation relations. As of 2026-06-02, the formal constants also carry the original iGSM semantic binding, for example `v_h = the number of each Swan's Gallbladder`; temporary helper variables are labeled as intermediate calculations for the semantic quantity they support. The proof then proceeds by:
+where each expression may depend on earlier variables. The formal premises are exactly these parsed equation relations. As of 2026-06-02, the formal constants also carry the original semantic binding, for example `h = the number of each Swan's Gallbladder`; temporary helper variables are labeled as intermediate calculations for the semantic quantity they support. The proof engine now treats free one-letter terms as valid arithmetic registers in equality formulas, so official lowercase `s..z` variables can remain one-letter symbols without becoming invalid free predicate variables. The proof then proceeds by:
 
 1. Retrieving an equation premise with `R`.
 2. Substituting previously derived numeric variable values with `=E`.
@@ -318,11 +318,11 @@ The `<predicates>` block is intentionally empty because iGSM is represented with
 The natural-language trace now mirrors the same semantic binding instead of using generic relation prose:
 
 ```text
-From the iGSM definition of Swan's Gallbladder (v_h), v_h equals 6 + v_a.
-From the iGSM intermediate calculation for Swan's Rectum (v_B), v_B equals v_a - v_h.
+From the definition of Swan's Gallbladder (h), h equals 6 + a.
+From the intermediate calculation for Swan's Rectum (B), B equals a - h.
 ```
 
-The NL translator accepts both this semantic wording and the old `From the official iGSM relation...` wording so old artifacts remain evaluable, but old artifacts remain stale for semantic-grounding conclusions.
+The NL translator accepts both this semantic wording and the old `From the official iGSM relation...`/`v_` wording so old artifacts remain evaluable, but old artifacts remain stale for semantic-grounding conclusions.
 
 ### Why This Is Included
 
@@ -333,18 +333,22 @@ This task tests whether formal logic traces help with symbolic arithmetic depend
 A full exact generated sequence is included in the appendix under `official_igsm`. The key formal core is:
 
 ```text
+<constants>
+e = the number of each Briefcase Backpack's Diary
+W = the number of each Briefcase Backpack's Construction Paper
+</constants>
 <premises>
-v_e = 21
-v_W = 11 + v_e
+e = 21
+W = 11 + e
 </premises>
 <proof>
-v_e = 21 ; R,1
-v_W = 11 + v_e ; R,2
-v_W = 11 + 21 ; =E,3,4
-v_W = 9 ; MOD23,5
+e = 21 ; R,1
+W = 11 + e ; R,2
+W = 11 + 21 ; =E,3,4
+W = 9 ; MOD23,5
 </proof>
 <conclusion>
-v_W = 9
+W = 9
 </conclusion>
 <answer>
 9

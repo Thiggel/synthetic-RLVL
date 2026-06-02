@@ -193,8 +193,8 @@ def _igsm_semantic_constant_text(var: str, semantic_name: str) -> str:
 def _igsm_semantic_proof_source(semantic_name: str) -> str:
     prefix = "intermediate value used to compute the number of each "
     if semantic_name.startswith(prefix):
-        return f"the iGSM intermediate calculation for {semantic_name[len(prefix):]}"
-    return f"the iGSM definition of {semantic_name}"
+        return f"the intermediate calculation for {semantic_name[len(prefix):]}"
+    return f"the definition of {semantic_name}"
 
 
 class PairedSyntheticGenerator:
@@ -256,7 +256,7 @@ class PairedSyntheticGenerator:
         constants = [
             _igsm_semantic_constant_text(chain.var, chain.semantic_name)
             if chain.semantic_name
-            else f"{chain.var} = official iGSM variable {chain.original_var}"
+            else f"{chain.var} = quantity named {chain.original_var}"
             for chain in sorted(chains, key=lambda item: item.original_var)
         ]
 
@@ -339,7 +339,7 @@ class PairedSyntheticGenerator:
 
     @staticmethod
     def _equation_chains_from_igsm_solution(solution_lines: Sequence[str]) -> list[_EquationChain]:
-        chains: list[_EquationChain] = []
+        raw_chains: list[dict[str, Any]] = []
         semantic_by_var: dict[str, str] = {}
         for raw_line in solution_lines:
             text = str(raw_line).strip().rstrip(".")
@@ -371,27 +371,38 @@ class PairedSyntheticGenerator:
                 except ValueError:
                     continue
                 original_var = parts[0]
-                expr = _normalize_igsm_expr(parts[1])
                 semantic_name = semantic_by_var.get(original_var)
                 if semantic_name is None and current_semantic:
                     semantic_name = f"intermediate value used to compute the number of each {current_semantic}"
-                chains.append(
-                    _EquationChain(
-                        original_var=original_var,
-                        var=_official_var_name(original_var),
-                        expr=expr,
-                        result=result,
-                        official_text=clause,
-                        semantic_name=semantic_name,
-                    )
+                raw_chains.append(
+                    {
+                        "original_var": original_var,
+                        "raw_expr": parts[1],
+                        "result": result,
+                        "official_text": clause,
+                        "semantic_name": semantic_name,
+                    }
                 )
-        return chains
+        var_map = _igsm_safe_symbol_map([str(chain["original_var"]) for chain in raw_chains])
+        return [
+            _EquationChain(
+                original_var=str(chain["original_var"]),
+                var=var_map[str(chain["original_var"])],
+                expr=_normalize_igsm_expr(str(chain["raw_expr"]), var_map=var_map),
+                result=int(chain["result"]),
+                official_text=str(chain["official_text"]),
+                semantic_name=chain["semantic_name"],
+            )
+            for chain in raw_chains
+        ]
 
     def _prove_igsm_chains(self, chains: Sequence[_EquationChain]) -> tuple[list[str], list[str], int | None, dict[str, int]]:
         proof_fol: list[str] = []
         proof_nl: list[str] = []
         known_lines: dict[str, int] = {}
         known_values: dict[str, int] = {}
+        symbol_by_original = {chain.original_var: chain.var for chain in chains}
+        original_by_symbol = {symbol: original for original, symbol in symbol_by_original.items()}
         next_line = len(chains) + 1
         final_line: int | None = None
 
@@ -409,14 +420,15 @@ class PairedSyntheticGenerator:
             current_line = next_line
             next_line += 1
 
-            for var in _expr_vars(current_expr):
+            for symbol in _expr_vars(current_expr):
+                var = original_by_symbol.get(symbol, symbol)
                 if var not in known_lines:
                     continue
                 value = str(known_values[var])
-                current_expr = _replace_token(current_expr, _official_var_name(var), value)
+                current_expr = _replace_token(current_expr, symbol, value)
                 current_formula = f"{chain.var} = {current_expr}"
                 proof_fol.append(ProofLine(next_line, current_formula, f"=E,{known_lines[var]},{current_line}").render())
-                proof_nl.append(f"{next_line}. Substitute {var} = {value} into the current expression.")
+                proof_nl.append(f"{next_line}. Substitute {symbol} = {value} into the current expression.")
                 current_line = next_line
                 next_line += 1
 
@@ -967,7 +979,29 @@ def _looks_like_igsm_var(text: str) -> bool:
 
 def _official_var_name(var: str) -> str:
     cleaned = re.sub(r"[^A-Za-z0-9_]", "_", var.strip())
-    return f"v_{cleaned}"
+    return cleaned
+
+
+def _is_safe_bare_igsm_symbol(symbol: str) -> bool:
+    return bool(re.fullmatch(r"[A-Za-z]", symbol))
+
+
+def _igsm_safe_symbol_map(original_vars: Sequence[str]) -> dict[str, str]:
+    used: set[str] = set()
+    mapping: dict[str, str] = {}
+    pool = list("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+    for original in original_vars:
+        if original in mapping:
+            continue
+        candidates = [original] + pool
+        for candidate in candidates:
+            if _is_safe_bare_igsm_symbol(candidate) and candidate not in used:
+                mapping[original] = candidate
+                used.add(candidate)
+                break
+        else:
+            raise RuntimeError("official iGSM example uses more one-letter variables than the safe symbol pool")
+    return mapping
 
 
 def _maze_key_bank(size: int) -> list[str]:
@@ -991,15 +1025,17 @@ def _attribute_value_bank(size: int) -> list[str]:
     return values[: int(size)]
 
 
-def _normalize_igsm_expr(expr: str) -> str:
+def _normalize_igsm_expr(expr: str, *, var_map: dict[str, str] | None = None) -> str:
     expr = expr.strip()
-    expr = re.sub(r"\b([A-Za-z])\b", lambda m: _official_var_name(m.group(1)), expr)
+    if var_map is None:
+        var_map = {var: _official_var_name(var) for var in re.findall(r"\b([A-Za-z])\b", expr)}
+    expr = re.sub(r"\b([A-Za-z])\b", lambda m: var_map.get(m.group(1), _official_var_name(m.group(1))), expr)
     return expr
 
 
 def _expr_vars(expr: str) -> list[str]:
     vars_seen: list[str] = []
-    for match in re.finditer(r"\bv_([A-Za-z])\b", expr):
+    for match in re.finditer(r"\b([A-Za-z])\b", expr):
         var = match.group(1)
         if var not in vars_seen:
             vars_seen.append(var)

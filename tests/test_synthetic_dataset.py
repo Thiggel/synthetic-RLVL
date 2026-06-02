@@ -21,7 +21,10 @@ def _extract_premise_formula(line: str) -> str:
 def _predicate_texts(example) -> dict[str, str]:
     out: dict[str, str] = {}
     for line in example.predicates:
-        pred, text = line.split("x:", 1)
+        if "x:" in line:
+            pred, text = line.split("x:", 1)
+        else:
+            pred, text = line.split("(x):", 1)
         out[pred.strip()] = text.strip().removeprefix("x is ").strip()
     return out
 

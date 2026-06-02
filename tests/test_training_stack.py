@@ -486,7 +486,45 @@ The number of each Grizzly Bear's Pericardium equals 20.
 The number of each African Elephant's Pericardium equals 9 times as much as each Grizzly Bear's Pericardium.
 </premises>
 <proof>
-From the iGSM definition of Grizzly Bear's Pericardium (v_k), v_k equals 20.
+From the definition of Grizzly Bear's Pericardium (k), k equals 20.
+From the definition of African Elephant's Pericardium (V), V equals 9 * k.
+Substitute k = 20 into the current expression.
+Evaluate the arithmetic modulo 23 to get V = 19.
+</proof>
+<conclusion>
+Evaluate the arithmetic modulo 23 to get V = 19.
+</conclusion>
+</think>
+<answer>
+19
+</answer>"""
+    result = OutputEvaluator().evaluate(
+        output,
+        template=TemplateName.NL_EXACT,
+        gold_answer="19",
+        gold_logic_premises="k = 20\nV = 9 * k",
+        gold_logic_conclusion="V = 19",
+        gold_logic_constants=(
+            "k = the number of each Grizzly Bear's Pericardium\n"
+            "V = the number of each African Elephant's Pericardium"
+        ),
+        gold_logic_predicates="",
+    )
+
+    assert result.format_ok == 1.0
+    assert result.correct == 1.0
+    assert result.nl_logic_parse == 1.0
+    assert result.nl_logic_citation_free_valid == 1.0
+
+
+def test_igsm_legacy_v_prefixed_trace_still_translates_to_valid_logic():
+    output = """<think>
+<premises>
+The number of each Grizzly Bear's Pericardium equals 20.
+The number of each African Elephant's Pericardium equals 9 times as much as each Grizzly Bear's Pericardium.
+</premises>
+<proof>
+From the official iGSM relation, v_k equals 20.
 From the iGSM definition of African Elephant's Pericardium (v_v), v_v equals 9 * v_k.
 Substitute k = 20 into the current expression.
 Evaluate the arithmetic modulo 23 to get v_v = 19.
@@ -523,11 +561,11 @@ def test_igsm_nl_exact_trace_must_match_gold_chain():
 The number of each Grizzly Bear's Pericardium equals 20.
 </premises>
 <proof>
-From the official iGSM relation, v_m equals 20.
-Evaluate the arithmetic modulo 23 to get v_m = 20.
+From the definition of unrelated quantity (m), m equals 20.
+Evaluate the arithmetic modulo 23 to get m = 20.
 </proof>
 <conclusion>
-Evaluate the arithmetic modulo 23 to get v_m = 20.
+Evaluate the arithmetic modulo 23 to get m = 20.
 </conclusion>
 </think>
 <answer>
@@ -537,11 +575,11 @@ Evaluate the arithmetic modulo 23 to get v_m = 20.
         output,
         template=TemplateName.NL_EXACT,
         gold_answer="20",
-        gold_logic_premises="v_k = 20",
-        gold_logic_conclusion="v_k = 20",
+        gold_logic_premises="k = 20",
+        gold_logic_conclusion="k = 20",
         gold_logic_constants=(
-            "v_k = the number of each Grizzly Bear's Pericardium\n"
-            "v_m = the number of each unrelated quantity"
+            "k = the number of each Grizzly Bear's Pericardium\n"
+            "m = the number of each unrelated quantity"
         ),
         gold_logic_predicates="",
     )

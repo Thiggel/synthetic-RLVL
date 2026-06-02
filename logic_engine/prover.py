@@ -834,7 +834,11 @@ def is_fol_formula(formula):
 
 
 def is_fol_sentence(formula):
-    return is_fol_formula(formula) and not free_vars(formula)
+    if not is_fol_formula(formula):
+        return False
+    if isinstance(formula, Eq):
+        return True
+    return not free_vars(formula)
 
 
 def is_ml_sentence(formula):

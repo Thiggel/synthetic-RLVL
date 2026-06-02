@@ -127,6 +127,14 @@ def _official_var_name(var: str) -> str:
     return f"v_{cleaned}"
 
 
+def _bare_igsm_var(var: str) -> str:
+    return _original_igsm_var(var)
+
+
+def _igsm_var_for_style(var: str, *, use_v_prefix: bool) -> str:
+    return _official_var_name(var) if use_v_prefix else _bare_igsm_var(var)
+
+
 def _original_igsm_var(var: str) -> str:
     var = var.strip()
     if var.startswith("v_"):
@@ -138,16 +146,20 @@ def _replace_igsm_token(expr: str, token: str, value: str) -> str:
     return re.sub(rf"\b{re.escape(token)}\b", str(value), expr)
 
 
-def _normalize_igsm_expr(expr: str) -> str:
-    return re.sub(r"\b([A-Za-z])\b", lambda m: _official_var_name(m.group(1)), (expr or "").strip())
+def _normalize_igsm_expr(expr: str, *, use_v_prefix: bool) -> str:
+    normalized = (expr or "").strip()
+    if use_v_prefix:
+        return re.sub(r"\b([A-Za-z])\b", lambda m: _official_var_name(m.group(1)), normalized)
+    return re.sub(r"\bv_([A-Za-z0-9_]+)\b", lambda m: m.group(1), normalized)
 
 
 def _normalize_igsm_formula(lhs: str, rhs: str) -> str:
-    return f"{_official_var_name(lhs)} = {_normalize_igsm_expr(rhs)}"
+    use_v_prefix = lhs.strip().startswith("v_")
+    return f"{_igsm_var_for_style(lhs, use_v_prefix=use_v_prefix)} = {_normalize_igsm_expr(rhs, use_v_prefix=use_v_prefix)}"
 
 
 def _numeric_rhs(formula: str) -> tuple[str, int] | None:
-    m = re.match(r"^\s*(v_[A-Za-z0-9_]+)\s*=\s*(-?\d+)\s*$", formula)
+    m = re.match(r"^\s*(v_[A-Za-z0-9_]+|[A-Za-z])\s*=\s*(-?\d+)\s*$", formula)
     if not m:
         return None
     return m.group(1), int(m.group(2)) % 23
@@ -182,15 +194,15 @@ class _IgsmTranslationState:
 _IGSM_RELATION_RE = re.compile(
     r"(?is)^from\s+(?:"
     r"the\s+official\s+igsm\s+relation,\s*"
-    r"|the\s+igsm\s+(?:definition\s+of|intermediate\s+calculation\s+for)\s+.+?\(\s*(?P<defined_lhs>v_[A-Za-z0-9_]+)\s*\),\s*"
-    r")(?P<lhs>v_[A-Za-z0-9_]+)\s+equals\s+(?P<rhs>.+?)\s*$"
+    r"|(?:the\s+)?(?:igsm\s+)?(?:definition\s+of|intermediate\s+calculation\s+for)\s+.+?\(\s*(?P<defined_lhs>v_[A-Za-z0-9_]+|[A-Za-z])\s*\),\s*"
+    r")(?P<lhs>v_[A-Za-z0-9_]+|[A-Za-z])\s+equals\s+(?P<rhs>.+?)\s*$"
 )
 _IGSM_SUBSTITUTE_RE = re.compile(
     r"(?is)^substitute\s+(?P<var>v_[A-Za-z0-9_]+|[A-Za-z])\s*=\s*(?P<value>-?\d+)\s+into\s+the\s+current\s+expression\s*$"
 )
 _IGSM_MOD_RE = re.compile(
     r"(?is)^(?:evaluate\s+the\s+arithmetic|reduce\s+the\s+value)\s+modulo\s+23\s+to\s+get\s+"
-    r"(?P<lhs>v_[A-Za-z0-9_]+)\s*=\s*(?P<value>-?\d+)\s*$"
+    r"(?P<lhs>v_[A-Za-z0-9_]+|[A-Za-z])\s*=\s*(?P<value>-?\d+)\s*$"
 )
 
 
@@ -200,7 +212,7 @@ def _translate_igsm_line(text: str, *, state: _IgsmTranslationState, line_number
     if relation:
         formula = _normalize_igsm_formula(relation.group("lhs"), relation.group("rhs"))
         premise_line = state.premise_by_formula.get(_canonical_formula_text(formula), 1)
-        state.current_var = _official_var_name(relation.group("lhs"))
+        state.current_var = formula.split("=", 1)[0].strip()
         state.current_expr = formula.split("=", 1)[1].strip()
         state.current_line = line_number
         state.remember_if_numeric(formula, line_number)
@@ -213,8 +225,8 @@ def _translate_igsm_line(text: str, *, state: _IgsmTranslationState, line_number
         raw_var = substitute.group("var")
         value = str(int(substitute.group("value")) % 23)
         original = _original_igsm_var(raw_var)
-        token = _official_var_name(raw_var)
-        state.current_expr = _replace_igsm_token(state.current_expr, token, value)
+        state.current_expr = _replace_igsm_token(state.current_expr, _official_var_name(raw_var), value)
+        state.current_expr = _replace_igsm_token(state.current_expr, _bare_igsm_var(raw_var), value)
         formula = f"{state.current_var} = {state.current_expr}"
         known_line = (state.known_lines or {}).get(original, 1)
         justification = f"=E,{known_line},{state.current_line}"
@@ -224,9 +236,11 @@ def _translate_igsm_line(text: str, *, state: _IgsmTranslationState, line_number
 
     mod_line = _IGSM_MOD_RE.match(clause)
     if mod_line:
-        formula = f"{_official_var_name(mod_line.group('lhs'))} = {int(mod_line.group('value')) % 23}"
+        use_v_prefix = mod_line.group("lhs").strip().startswith("v_")
+        lhs = _igsm_var_for_style(mod_line.group("lhs"), use_v_prefix=use_v_prefix)
+        formula = f"{lhs} = {int(mod_line.group('value')) % 23}"
         cite = state.current_line if state.current_line is not None else 1
-        state.current_var = _official_var_name(mod_line.group("lhs"))
+        state.current_var = lhs
         state.current_expr = str(int(mod_line.group("value")) % 23)
         state.current_line = line_number
         state.remember_if_numeric(formula, line_number)
