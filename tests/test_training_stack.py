@@ -486,8 +486,8 @@ The number of each Grizzly Bear's Pericardium equals 20.
 The number of each African Elephant's Pericardium equals 9 times as much as each Grizzly Bear's Pericardium.
 </premises>
 <proof>
-From the official iGSM relation, v_k equals 20.
-From the official iGSM relation, v_v equals 9 * v_k.
+From the iGSM definition of Grizzly Bear's Pericardium (v_k), v_k equals 20.
+From the iGSM definition of African Elephant's Pericardium (v_v), v_v equals 9 * v_k.
 Substitute k = 20 into the current expression.
 Evaluate the arithmetic modulo 23 to get v_v = 19.
 </proof>
@@ -504,7 +504,10 @@ Evaluate the arithmetic modulo 23 to get v_v = 19.
         gold_answer="19",
         gold_logic_premises="v_k = 20\nv_v = 9 * v_k",
         gold_logic_conclusion="v_v = 19",
-        gold_logic_constants="v_k = official iGSM variable k\nv_v = official iGSM variable v",
+        gold_logic_constants=(
+            "v_k = the number of each Grizzly Bear's Pericardium\n"
+            "v_v = the number of each African Elephant's Pericardium"
+        ),
         gold_logic_predicates="",
     )
 
@@ -536,7 +539,10 @@ Evaluate the arithmetic modulo 23 to get v_m = 20.
         gold_answer="20",
         gold_logic_premises="v_k = 20",
         gold_logic_conclusion="v_k = 20",
-        gold_logic_constants="v_k = official iGSM variable k\nv_m = official iGSM variable m",
+        gold_logic_constants=(
+            "v_k = the number of each Grizzly Bear's Pericardium\n"
+            "v_m = the number of each unrelated quantity"
+        ),
         gold_logic_predicates="",
     )
 

@@ -180,7 +180,10 @@ class _IgsmTranslationState:
 
 
 _IGSM_RELATION_RE = re.compile(
-    r"(?is)^from\s+the\s+official\s+igsm\s+relation,\s*(?P<lhs>v_[A-Za-z0-9_]+)\s+equals\s+(?P<rhs>.+?)\s*$"
+    r"(?is)^from\s+(?:"
+    r"the\s+official\s+igsm\s+relation,\s*"
+    r"|the\s+igsm\s+(?:definition\s+of|intermediate\s+calculation\s+for)\s+.+?\(\s*(?P<defined_lhs>v_[A-Za-z0-9_]+)\s*\),\s*"
+    r")(?P<lhs>v_[A-Za-z0-9_]+)\s+equals\s+(?P<rhs>.+?)\s*$"
 )
 _IGSM_SUBSTITUTE_RE = re.compile(
     r"(?is)^substitute\s+(?P<var>v_[A-Za-z0-9_]+|[A-Za-z])\s*=\s*(?P<value>-?\d+)\s+into\s+the\s+current\s+expression\s*$"

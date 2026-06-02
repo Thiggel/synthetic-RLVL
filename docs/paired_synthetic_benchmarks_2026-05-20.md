@@ -293,7 +293,7 @@ OOD lm-eval update 2026-05-27 11:30 CEST: broad OOD array `3659356` completed al
 
 ## Benchmark 1: `official_igsm`
 
-Current status: fixed locally and submitted for train-10 seed-3407 SFT/eval as of 2026-05-28. Addition and subtraction chains validate in the local depth-50 smoke after the tokenizer fix above. The full 50k train-10 chain `3671601 -> 3671602 -> 3671603` completed with no validation or runtime failures. A full 3-seed, 5-train-depth paired suite was submitted later the same day as `3672195 -> 3672212 -> 3672213`, repaired through replacement SFT/eval arrays, and now has `official_igsm` sparse eval partially complete under `3682449`.
+Current status: fixed locally and submitted for train-10 seed-3407 SFT/eval as of 2026-05-28. Addition and subtraction chains validate in the local depth-50 smoke after the tokenizer fix above. The full 50k train-10 chain `3671601 -> 3671602 -> 3671603` completed with no validation or runtime failures. A full 3-seed, 5-train-depth paired suite was submitted later the same day as `3672195 -> 3672212 -> 3672213`, repaired through replacement SFT/eval arrays, and now has `official_igsm` sparse eval complete under `3682449`. Important 2026-06-02 update: those completed iGSM artifacts use the old under-grounded target surface (`v_X = official iGSM variable X` and `From the official iGSM relation...`). The generator now preserves semantic bindings from the official solution (`Define <quantity> as <letter>`) and should be rebuilt/rerun before using iGSM as evidence for logic-vs-NL grounding.
 
 ### What It Tests
 
@@ -307,13 +307,22 @@ For a requested depth `D`, the generator samples an official iGSM problem from t
 v_i = expression_i
 ```
 
-where each expression may depend on earlier variables. The formal premises are exactly these parsed equation relations. The proof then proceeds by:
+where each expression may depend on earlier variables. The formal premises are exactly these parsed equation relations. As of 2026-06-02, the formal constants also carry the original iGSM semantic binding, for example `v_h = the number of each Swan's Gallbladder`; temporary helper variables are labeled as intermediate calculations for the semantic quantity they support. The proof then proceeds by:
 
 1. Retrieving an equation premise with `R`.
 2. Substituting previously derived numeric variable values with `=E`.
 3. Evaluating arithmetic modulo 23 with `MOD23`.
 
 The `<predicates>` block is intentionally empty because iGSM is represented with equations, not predicate atoms.
+
+The natural-language trace now mirrors the same semantic binding instead of using generic relation prose:
+
+```text
+From the iGSM definition of Swan's Gallbladder (v_h), v_h equals 6 + v_a.
+From the iGSM intermediate calculation for Swan's Rectum (v_B), v_B equals v_a - v_h.
+```
+
+The NL translator accepts both this semantic wording and the old `From the official iGSM relation...` wording so old artifacts remain evaluable, but old artifacts remain stale for semantic-grounding conclusions.
 
 ### Why This Is Included
 

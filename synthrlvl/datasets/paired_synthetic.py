@@ -181,6 +181,20 @@ class _EquationChain:
     expr: str
     result: int
     official_text: str
+    semantic_name: str | None = None
+
+
+def _igsm_semantic_constant_text(var: str, semantic_name: str) -> str:
+    if semantic_name.startswith("intermediate value "):
+        return f"{var} = {semantic_name}"
+    return f"{var} = the number of each {semantic_name}"
+
+
+def _igsm_semantic_proof_source(semantic_name: str) -> str:
+    prefix = "intermediate value used to compute the number of each "
+    if semantic_name.startswith(prefix):
+        return f"the iGSM intermediate calculation for {semantic_name[len(prefix):]}"
+    return f"the iGSM definition of {semantic_name}"
 
 
 class PairedSyntheticGenerator:
@@ -239,8 +253,12 @@ class PairedSyntheticGenerator:
         conclusion = proof_fol[-1].split(". ", 1)[1].split(" ; ", 1)[0]
         question = str(getattr(problem, "problem", ["What is the answer?"])[-1]).strip()
 
-        official_vars = sorted({chain.original_var for chain in chains})
-        constants = [f"{_official_var_name(var)} = official iGSM variable {var}" for var in official_vars]
+        constants = [
+            _igsm_semantic_constant_text(chain.var, chain.semantic_name)
+            if chain.semantic_name
+            else f"{chain.var} = official iGSM variable {chain.original_var}"
+            for chain in sorted(chains, key=lambda item: item.original_var)
+        ]
 
         return LogicExample(
             constants=constants,
@@ -322,12 +340,19 @@ class PairedSyntheticGenerator:
     @staticmethod
     def _equation_chains_from_igsm_solution(solution_lines: Sequence[str]) -> list[_EquationChain]:
         chains: list[_EquationChain] = []
+        semantic_by_var: dict[str, str] = {}
         for raw_line in solution_lines:
             text = str(raw_line).strip().rstrip(".")
             if not text:
                 continue
+            for match in re.finditer(r"\bDefine\s+(.+?)\s+as\s+([A-Za-z])\b", text):
+                semantic_by_var[match.group(2)] = match.group(1).strip()
             clauses = [part.strip() for part in text.split(";") if part.strip()]
+            current_semantic: str | None = None
             for clause in clauses:
+                define_match = re.search(r"\bDefine\s+(.+?)\s+as\s+([A-Za-z])\b", clause)
+                if define_match:
+                    current_semantic = define_match.group(1).strip()
                 if clause.lower().startswith("define ") and ";" not in clause:
                     # Keep only the assignment part if the define clause also contains `so`.
                     if " so " not in clause:
@@ -347,6 +372,9 @@ class PairedSyntheticGenerator:
                     continue
                 original_var = parts[0]
                 expr = _normalize_igsm_expr(parts[1])
+                semantic_name = semantic_by_var.get(original_var)
+                if semantic_name is None and current_semantic:
+                    semantic_name = f"intermediate value used to compute the number of each {current_semantic}"
                 chains.append(
                     _EquationChain(
                         original_var=original_var,
@@ -354,6 +382,7 @@ class PairedSyntheticGenerator:
                         expr=expr,
                         result=result,
                         official_text=clause,
+                        semantic_name=semantic_name,
                     )
                 )
         return chains
@@ -370,7 +399,13 @@ class PairedSyntheticGenerator:
             current_expr = chain.expr
             current_formula = f"{chain.var} = {current_expr}"
             proof_fol.append(ProofLine(next_line, current_formula, f"R,{premise_idx}").render())
-            proof_nl.append(f"{next_line}. From the official iGSM relation, {chain.var} equals {current_expr}.")
+            if chain.semantic_name:
+                proof_nl.append(
+                    f"{next_line}. From {_igsm_semantic_proof_source(chain.semantic_name)} ({chain.var}), "
+                    f"{chain.var} equals {current_expr}."
+                )
+            else:
+                proof_nl.append(f"{next_line}. From the official iGSM relation, {chain.var} equals {current_expr}.")
             current_line = next_line
             next_line += 1
 
