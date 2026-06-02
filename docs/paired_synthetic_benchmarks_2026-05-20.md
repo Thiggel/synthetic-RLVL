@@ -69,6 +69,8 @@ Focused iGSM eval audit 2026-06-01 15:16 CEST: the completed `official_igsm` ful
 
 Fix update 2026-06-01 15:29 CEST, refreshed 22:37 CEST: the iGSM NL translator/evaluator gap is patched for official-relation, substitution, and modulo-23 proof lines, with regression tests and gold materialized target checks passing. Minimal rerun `3689003_[3-5,9-11,15-17,21-23,27-29%4]` recomputed only the completed official_iGSM `nl_exact` rows and is complete at `15/15`. The rerun recovers near-complete parser coverage for generated iGSM NL traces, but OOD/depth-50 translated joint validity remains `0.000` because generated variable chains often do not match gold formal premises.
 
+Grounding audit 2026-06-02 15:25 CEST: fresh generated `attribute_constraints` rows across depths `1/2/5/10/25/50` do not show the iGSM hidden-variable issue. Slot and value symbols are synthetic but explicit in the prompt and proof, strict validation passes, and no duplicate formal constants appeared in the scan. Fresh `maze_navigation` rows are also prompt-grounded in the relevant sense, because room/key names appear directly in the prompt and proof, but the current formal constants use an untyped namespace and can reuse the same word as both a room and a key (for example `silver = maze room silver` and `silver = maze key silver`). This is a semantic ambiguity in the formal naming scheme, not a strict proof-validation failure and not the same problem as old iGSM `v_` aliases. No generator patch was kept because typed room/key symbols would stale current maze materialization/SFT/eval artifacts and require reruns; treat this as a caveat unless a dedicated semantic-clean maze rerun is approved.
+
 The full-suite roots are:
 
 ```bash
