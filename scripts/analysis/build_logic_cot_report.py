@@ -2694,6 +2694,7 @@ def write_report(
             "and \\texttt{shuffled\\_nl} seeds 3408/3409."
         )
     think_formal_train25_n = 0
+    formal_think_complete_max = 0
     if not hybrid_order_rows.empty:
         match = hybrid_order_rows[
             (hybrid_order_rows["mode"] == "think_formal")
@@ -2701,19 +2702,29 @@ def write_report(
         ]
         if not match.empty:
             think_formal_train25_n = int(match.iloc[0]["n"])
+        formal_complete = hybrid_order_rows[
+            (hybrid_order_rows["mode"] == "formal_think") & (hybrid_order_rows["n"] >= 3)
+        ]
+        if not formal_complete.empty:
+            formal_think_complete_max = int(formal_complete["train_max"].max())
+    formal_think_status = "\\texttt{formal\\_think} is still incomplete."
+    if formal_think_complete_max:
+        formal_think_status = (
+            f"\\texttt{{formal\\_think}} is complete through train-1-to-{formal_think_complete_max}, "
+            "with deeper rows still incomplete."
+        )
     if think_formal_train25_n >= 3:
         hybrid_order_status_sentence = (
             "Current completed rows cover all \\texttt{think\\_formal} seeds through "
-            "train-1-to-25; \\texttt{formal\\_think} is still incomplete."
+            f"train-1-to-25; {formal_think_status}"
         )
         hybrid_order_table_caption = (
             "Hybrid-order partial summary. \\texttt{think\\_formal} train-1-to-25 "
-            "is now three-seed complete; \\texttt{formal\\_think} remains pending."
+            f"is now three-seed complete; {formal_think_status}"
         )
         hybrid_order_figure_caption = (
             "Hybrid order partial eval. \\texttt{think\\_formal} is NL then formal "
-            "and is complete through train-1-to-25; \\texttt{formal\\_think} is "
-            "still pending."
+            f"and is complete through train-1-to-25; {formal_think_status}"
         )
     else:
         hybrid_order_status_sentence = (
@@ -2743,7 +2754,7 @@ def write_report(
         conditioned_50k_curve_block = r"""
 \begin{figure}[H]\centering
 \includegraphics[width=0.95\linewidth]{figures/ablation_conditioned_dual_50k_convergence_train1to25.pdf}
-\caption{Conditioned dual-modality 50k convergence curves for train-1-to-25. Points are three-seed means for checkpoint evals available at report generation time; pending 30k/40k/50k points will appear as the eval array writes JSONs.}
+\caption{Conditioned dual-modality 50k convergence curves for train-1-to-25. Points are three-seed means for checkpoint evals available at report generation time; the conditioned-logic curve now reaches 50k, while conditioned-NL points will appear if the remaining checkpoint rows write JSONs.}
 \end{figure}
 """
     paired_full_figure_block = ""
