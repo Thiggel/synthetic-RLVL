@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-06-02 15:25 CEST.
+Last updated: 2026-06-03 12:04 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -15,6 +15,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 | P1 | Improve paired-family NL validity translation | iGSM coverage was patched at 2026-06-01 15:29 CEST: the translator now parses official-relation, substitution, and modulo-23 proof lines, and the NL metric accepts strict translated proofs for equality/MOD23. Gold materialized official_iGSM NL targets validate at depths `1/10/25/50`; targeted rerun `3689003` completed all `15/15` official_iGSM `nl_exact` rows and gives near-complete OOD/depth-50 parser coverage, but generated translated validity remains `0.000` because generated variable chains often do not match gold formal premises. | Before making NL-vs-logic validity claims on paired families, treat iGSM generated NL validity as unresolved despite parser coverage; later add family-specific validators for `maze_navigation` and hard `attribute_constraints` if validity metrics are needed. |
 | P1 | Build support-facts/context-QA reasoning eval | Current HotpotQA/2Wiki/MuSiQue are context-provided answer-only probes; they do not force or verify explicit multi-hop reasoning traces. | After current OOD tables are stable. |
 | P1 | Decide whether conditioned dual is undertrained | Current 10k conditioned dual is weaker than single-modality logic. The `conditioned_logic` train-1-to-25 checkpoint curve is now complete through 50k, but `conditioned_nl` checkpoint rows are still running, so the modality-level decision remains premature. | After all rows of 50k checkpoint eval `3674885` complete and representative logic/NL samples have been inspected. |
+| P1 | Analyze HFSA batch-size ablation | Submitted to test whether conditioned-dual weakness is partly caused by effective batch/modality mixing. First arrays `3695143/3695147` were canceled after `$WORK` quota failures; replacement SFT `3695197_[0-11%3]` trains batch sizes `2/4/8/16` for `logic`, `nl_exact`, and 50/50-balanced `conditioned_dual` at train-1-to-20, seed `3407`, `10k` optimizer steps; eval `3695199_[0-15%4]` depends on it and evaluates conditioned-dual in both conditioned modes. Replacement scripts write this ablation to `$HPCVAULT`. | When `3695199` writes eval JSONs under `$HPCVAULT/synthetic-RLVL/passk_eval/hfsa_batch_size_ablation_20260603/`, inspect representative samples before adding tables/figures to the report. If any SFT row OOMs, recover only that batch-size/condition row or reduce the affected setting. |
 
 ## Candidate Follow-Up Experiments
 

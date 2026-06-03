@@ -40,16 +40,20 @@ def build_sft_dataset_from_materialized_rows(
     if task_cfg.template == TemplateName.CONDITIONED_DUAL:
         logic_cfg = replace(task_cfg, template=TemplateName.CONDITIONED_LOGIC)
         nl_cfg = replace(task_cfg, template=TemplateName.CONDITIONED_NL)
-        train_task_rows = [
-            task_sample_from_materialized_row(r, cfg=cfg).__dict__
-            for r in train_rows
-            for cfg in (logic_cfg, nl_cfg)
-        ]
-        eval_task_rows = [
-            task_sample_from_materialized_row(r, cfg=cfg).__dict__
-            for r in eval_rows
-            for cfg in (logic_cfg, nl_cfg)
-        ]
+        train_task_rows = []
+        for row_index, row in enumerate(train_rows):
+            for modality, cfg in (("logic", logic_cfg), ("nl", nl_cfg)):
+                item = task_sample_from_materialized_row(row, cfg=cfg).__dict__
+                item["_sft_modality"] = modality
+                item["_sft_pair_index"] = row_index
+                train_task_rows.append(item)
+        eval_task_rows = []
+        for row_index, row in enumerate(eval_rows):
+            for modality, cfg in (("logic", logic_cfg), ("nl", nl_cfg)):
+                item = task_sample_from_materialized_row(row, cfg=cfg).__dict__
+                item["_sft_modality"] = modality
+                item["_sft_pair_index"] = row_index
+                eval_task_rows.append(item)
     else:
         train_task_rows = [task_sample_from_materialized_row(r, cfg=task_cfg).__dict__ for r in train_rows]
         eval_task_rows = [task_sample_from_materialized_row(r, cfg=task_cfg).__dict__ for r in eval_rows]
@@ -77,11 +81,16 @@ def _tokenize_sft_rows(
         labels = [-100] * min(len(prompt_ids), len(input_ids)) + input_ids[min(len(prompt_ids), len(input_ids)) :]
         if len(labels) < len(input_ids):
             labels += [-100] * (len(input_ids) - len(labels))
-        return {
+        item = {
             "input_ids": input_ids,
             "attention_mask": attention_mask,
             "labels": labels,
         }
+        if "_sft_modality" in row:
+            item["_sft_modality"] = row["_sft_modality"]
+        if "_sft_pair_index" in row:
+            item["_sft_pair_index"] = int(row["_sft_pair_index"])
+        return item
 
     cols_to_remove = train_ds.column_names
     train_tok = train_ds.map(tokenize_row, remove_columns=cols_to_remove)

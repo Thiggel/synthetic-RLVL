@@ -7,6 +7,7 @@ from synthrlvl.metrics import OutputEvaluator, RewardComputer
 from synthrlvl.sft_data import build_sft_dataset_from_materialized_rows
 from synthrlvl.task import TaskBuilder, task_sample_from_logic_example
 from synthrlvl.types import PrefillMode, RewardSchema, StepRange, TaskConfig, TemplateName
+from train_sft import BalancedModalityAccumulationSampler
 
 
 def make_task(template: TemplateName = TemplateName.LOGIC, prefill: PrefillMode = PrefillMode.NONE) -> TaskConfig:
@@ -179,6 +180,22 @@ def test_conditioned_dual_materialized_training_duplicates_modalities():
 
     assert len(bundle.train) == 2
     assert len(bundle.eval) == 2
+    assert bundle.train[0]["_sft_modality"] == "logic"
+    assert bundle.train[1]["_sft_modality"] == "nl"
+
+
+def test_balanced_modality_accumulation_sampler_balances_each_window():
+    dataset = {
+        "_sft_modality": ["logic"] * 8 + ["nl"] * 8,
+    }
+    sampler = BalancedModalityAccumulationSampler(dataset, accumulation_steps=4, seed=3407)
+    indices = list(sampler)
+
+    assert len(indices) == 16
+    for offset in range(0, len(indices), 4):
+        modalities = [dataset["_sft_modality"][index] for index in indices[offset : offset + 4]]
+        assert modalities.count("logic") == 2
+        assert modalities.count("nl") == 2
 
 
 def test_output_evaluator_positive_path_logic():

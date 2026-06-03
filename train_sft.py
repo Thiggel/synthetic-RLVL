@@ -3,11 +3,13 @@ from __future__ import annotations
 import os
 import inspect
 import shutil
+import random
 from pathlib import Path
 
 import hydra
 import torch
 import wandb
+from torch.utils.data import DataLoader, Sampler
 from huggingface_hub import HfApi
 from omegaconf import DictConfig, OmegaConf
 from peft import LoraConfig, get_peft_model
@@ -26,14 +28,126 @@ from synthrlvl.types import TaskConfig
 from synthrlvl.eval_loop import UnifiedEvaluator
 
 
+class BalancedModalityBatchSampler(Sampler[list[int]]):
+    def __init__(self, dataset, *, batch_size: int, seed: int):
+        if batch_size <= 0 or batch_size % 2 != 0:
+            raise ValueError("balanced modality batches require an even positive batch size.")
+        modalities = list(dataset["_sft_modality"])
+        logic = [index for index, modality in enumerate(modalities) if modality == "logic"]
+        nl = [index for index, modality in enumerate(modalities) if modality == "nl"]
+        if not logic or not nl:
+            raise ValueError("balanced modality batches require both logic and nl examples.")
+        self.logic_indices = logic
+        self.nl_indices = nl
+        self.batch_size = int(batch_size)
+        self.half_batch = self.batch_size // 2
+        self.seed = int(seed)
+        self._epoch = 0
+        self._length = min(len(logic), len(nl)) // self.half_batch
+
+    def __len__(self) -> int:
+        return self._length
+
+    def __iter__(self):
+        rng = random.Random(self.seed + self._epoch)
+        self._epoch += 1
+        logic = list(self.logic_indices)
+        nl = list(self.nl_indices)
+        rng.shuffle(logic)
+        rng.shuffle(nl)
+        for offset in range(0, self._length * self.half_batch, self.half_batch):
+            batch = logic[offset : offset + self.half_batch] + nl[offset : offset + self.half_batch]
+            rng.shuffle(batch)
+            yield batch
+
+
+class BalancedModalityAccumulationSampler(Sampler[int]):
+    def __init__(self, dataset, *, accumulation_steps: int, seed: int):
+        if accumulation_steps <= 0 or accumulation_steps % 2 != 0:
+            raise ValueError("balanced modality accumulation requires even positive grad_accum.")
+        modalities = list(dataset["_sft_modality"])
+        logic = [index for index, modality in enumerate(modalities) if modality == "logic"]
+        nl = [index for index, modality in enumerate(modalities) if modality == "nl"]
+        if not logic or not nl:
+            raise ValueError("balanced modality accumulation requires both logic and nl examples.")
+        self.logic_indices = logic
+        self.nl_indices = nl
+        self.half_window = int(accumulation_steps) // 2
+        self.seed = int(seed)
+        self._epoch = 0
+        self._length = 2 * (min(len(logic), len(nl)) // self.half_window) * self.half_window
+
+    def __len__(self) -> int:
+        return self._length
+
+    def __iter__(self):
+        rng = random.Random(self.seed + self._epoch)
+        self._epoch += 1
+        logic = list(self.logic_indices)
+        nl = list(self.nl_indices)
+        rng.shuffle(logic)
+        rng.shuffle(nl)
+        usable = self._length // 2
+        for offset in range(0, usable, self.half_window):
+            window = logic[offset : offset + self.half_window] + nl[offset : offset + self.half_window]
+            rng.shuffle(window)
+            yield from window
+
+
 class SFTTrainerWithGeneration(Trainer):
-    def __init__(self, *args, tokenizer, task_cfg: TaskConfig, eval_cfg, log_generations_cfg, **kwargs):
+    def __init__(
+        self,
+        *args,
+        tokenizer,
+        task_cfg: TaskConfig,
+        eval_cfg,
+        log_generations_cfg,
+        balanced_modality_batches: bool = False,
+        **kwargs,
+    ):
         super().__init__(*args, tokenizer=tokenizer, **kwargs)
         self._tokenizer = tokenizer
         self._task_cfg = task_cfg
         self._eval_cfg = eval_cfg
         self._log_generations_cfg = log_generations_cfg
         self._evaluator = UnifiedEvaluator()
+        self._balanced_modality_batches = bool(balanced_modality_batches)
+
+    def get_train_dataloader(self):
+        if not self._balanced_modality_batches:
+            return super().get_train_dataloader()
+        if self.train_dataset is None:
+            raise ValueError("Trainer: training requires a train_dataset.")
+        per_device_batch_size = int(self.args.per_device_train_batch_size)
+        grad_accum = int(self.args.gradient_accumulation_steps)
+        if per_device_batch_size == 1 and grad_accum > 1:
+            sampler = BalancedModalityAccumulationSampler(
+                self.train_dataset,
+                accumulation_steps=grad_accum,
+                seed=int(self.args.seed),
+            )
+            dataloader = DataLoader(
+                self.train_dataset,
+                batch_size=per_device_batch_size,
+                sampler=sampler,
+                collate_fn=self.data_collator,
+                num_workers=self.args.dataloader_num_workers,
+                pin_memory=self.args.dataloader_pin_memory,
+            )
+            return self.accelerator.prepare(dataloader)
+        sampler = BalancedModalityBatchSampler(
+            self.train_dataset,
+            batch_size=per_device_batch_size,
+            seed=int(self.args.seed),
+        )
+        dataloader = DataLoader(
+            self.train_dataset,
+            batch_sampler=sampler,
+            collate_fn=self.data_collator,
+            num_workers=self.args.dataloader_num_workers,
+            pin_memory=self.args.dataloader_pin_memory,
+        )
+        return self.accelerator.prepare(dataloader)
 
     def evaluate(self, *args, **kwargs):
         metrics = super().evaluate(*args, **kwargs)
@@ -271,6 +385,7 @@ def main(cfg: DictConfig):
         eval_cfg=eval_cfg,
         log_generations_cfg=cfg.log_generations,
         data_collator=make_sft_data_collator(tokenizer),
+        balanced_modality_batches=bool(cfg.train.get("balanced_modality_batches", False)),
     )
 
     resume_from_checkpoint = resolve_resume_from_checkpoint(cfg)
