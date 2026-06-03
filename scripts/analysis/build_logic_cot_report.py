@@ -15,6 +15,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
 
+from synthrlvl.task import TaskBuilder
+from synthrlvl.types import PrefillMode, StepRange, TaskConfig, TemplateName
+
 
 ROOT = Path(__file__).resolve().parents[2]
 WORK_ROOT = Path(os.environ.get("WORK", ROOT))
@@ -23,6 +26,7 @@ LM_EVAL_ROOT = WORK_ROOT / "synthetic-RLVL" / "lm_eval_results"
 OUT_ROOT = ROOT / "analysis" / "logic_cot_report_2026-05-25"
 FIG_DIR = OUT_ROOT / "figures"
 TABLE_DIR = OUT_ROOT / "tables"
+TOKENIZER_NAME = "allenai/Olmo-3-1025-7B"
 
 MAIN_RE = re.compile(r"sft_hfsa_depth_scaling_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$")
 MAIN_CKPT_RE = re.compile(
@@ -987,6 +991,46 @@ def plot_shortcut_comparison(main_summary: pd.DataFrame, shortcut_summary: pd.Da
     save(fig, "ablation_shortcut_rate_vs_main")
 
 
+def plot_shortcut_kind_summary(summary: pd.DataFrame) -> None:
+    if summary.empty:
+        return
+    df = summary.copy()
+    df["shortcut_rate_value"] = df["shortcut_rate"].astype(str).str.replace("0p", "0.", regex=False).astype(float)
+    df["condition"] = (
+        df["shortcut_kind"].astype(str).str.replace("_", " ", regex=False)
+        + "\nrate "
+        + df["shortcut_rate_value"].map(lambda value: f"{value:.1f}")
+    )
+    condition_order = (
+        df[["shortcut_kind", "shortcut_rate_value", "condition"]]
+        .drop_duplicates()
+        .sort_values(["shortcut_kind", "shortcut_rate_value"])
+    )
+    conditions = list(condition_order["condition"])
+    x = list(range(len(conditions)))
+    width = 0.36
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_joint@16", "OOD joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+        ("depth50_joint@16", "depth-50 joint@16"),
+    ]
+    fig, axes = plt.subplots(2, 2, figsize=(11.0, 7.0), sharey=True)
+    for ax, (col, title) in zip(axes.ravel(), metrics, strict=True):
+        for offset, template in [(-width / 2, "logic"), (width / 2, "nl_exact")]:
+            values = []
+            for condition in conditions:
+                match = df[(df["condition"] == condition) & (df["template"] == template)]
+                value = match.iloc[0][col] if not match.empty else None
+                values.append(float(value) if isinstance(value, Number) and not pd.isna(value) else 0.0)
+            ax.bar([pos + offset for pos in x], values, width=width, color=COLORS[template], label=TEMPLATE_LABEL[template])
+        ax.set_xticks(x)
+        ax.set_xticklabels(conditions, fontsize=8)
+        style_axes(ax, title)
+    axes[0, 0].legend(frameon=False, fontsize=8)
+    save(fig, "ablation_shortcut_kind_summary")
+
+
 def build_shortcut_comparison_table(main_summary: pd.DataFrame, shortcut_summary: pd.DataFrame) -> pd.DataFrame:
     if main_summary.empty:
         return pd.DataFrame()
@@ -1664,6 +1708,264 @@ def build_symbol_padded_eval_comparison_table(
     return df
 
 
+ABLATION_EXAMPLE_SPECS = [
+    ("main_logic", TemplateName.LOGIC, "Normal compact formal-logic baseline."),
+    ("main_nl_exact", TemplateName.NL_EXACT, "Normal exact natural-language baseline."),
+    ("terse_nl", TemplateName.TERSE_NL, "Natural-language trace with shorter proof wording."),
+    ("rule_annotated_nl", TemplateName.RULE_ANNOTATED_NL, "Natural-language trace with explicit rule labels."),
+    ("pseudocode", TemplateName.PSEUDOCODE, "Algorithm-like natural-language derivation trace."),
+    ("shuffled_logic", TemplateName.SHUFFLED_LOGIC, "Formal proof lines shuffled as an order negative control."),
+    ("invalid_logic", TemplateName.INVALID_LOGIC, "Formal-looking trace with invalid rule citations."),
+    ("shuffled_nl", TemplateName.SHUFFLED_NL, "Natural-language proof lines shuffled as an order negative control."),
+    ("symbol_padded_logic", TemplateName.LOGIC_SYMBOL_PADDED, "Formal atoms expanded into predicate-call syntax."),
+    ("wordified_logic", TemplateName.LOGIC_WORDIFIED, "Formal atoms expanded with natural-word predicate names."),
+]
+
+
+def _hard_fsa_config(template: TemplateName, *, seed: int = 3407, min_step: int = 1, max_step: int = 25) -> TaskConfig:
+    return TaskConfig(
+        template=template,
+        prefill=PrefillMode.NONE,
+        distractor_ratio=0.0,
+        train_steps=StepRange(min_step, max_step),
+        val_steps=StepRange(min_step, max_step),
+        seed=seed,
+        difficulty="hard_fsa",
+        branching_factor=3,
+        shortcut_rate=0.0,
+        require_unique_solution=True,
+    )
+
+
+def _token_count(tokenizer, text: str) -> int:
+    return len(tokenizer(text, add_special_tokens=False)["input_ids"])
+
+
+def _p95(values: list[int]) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    return float(ordered[min(len(ordered) - 1, int(0.95 * (len(ordered) - 1)))])
+
+
+def _extract_tag_block(text: str, tag: str) -> str:
+    match = re.search(rf"<{tag}>\s*(.*?)\s*</{tag}>", text, flags=re.DOTALL | re.IGNORECASE)
+    return match.group(1).strip() if match else ""
+
+
+SYNTAX_LEXEMES = [
+    "<formal>",
+    "</formal>",
+    "<think>",
+    "</think>",
+    "<constants>",
+    "</constants>",
+    "<predicates>",
+    "</predicates>",
+    "<premises>",
+    "</premises>",
+    "<proof>",
+    "</proof>",
+    "<conclusion>",
+    "</conclusion>",
+    "<answer>",
+    "</answer>",
+    "->",
+    "&",
+    ";",
+    "(",
+    ")",
+    "MP",
+    "R",
+    "step_",
+    "derive",
+    "using",
+    "[rule:",
+    "]",
+    "Therefore",
+    "Combining",
+]
+
+
+def _syntax_token_stats(tokenizer, target: str) -> tuple[int, int]:
+    occurrences = 0
+    tokens = 0
+    for lexeme in SYNTAX_LEXEMES:
+        count = target.count(lexeme)
+        if not count:
+            continue
+        occurrences += count
+        tokens += count * _token_count(tokenizer, lexeme)
+    return occurrences, tokens
+
+
+def build_ablation_training_examples() -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for label, template, description in ABLATION_EXAMPLE_SPECS:
+        cfg = _hard_fsa_config(template, min_step=2, max_step=2)
+        sample = TaskBuilder(cfg).sample(0, train=True)
+        rows.append(
+            {
+                "condition": label,
+                "template": template.value,
+                "depth": sample.depth,
+                "description": description,
+                "sequence": sample.prompt + sample.target,
+            }
+        )
+    write_csv(TABLE_DIR / "ablation_training_sequence_examples.csv", rows)
+    return rows
+
+
+def build_ablation_token_audit(sample_count: int = 512) -> pd.DataFrame:
+    from transformers import AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_NAME, local_files_only=True)
+    rows: list[dict[str, object]] = []
+    for label, template, description in ABLATION_EXAMPLE_SPECS:
+        cfg = _hard_fsa_config(template)
+        builder = TaskBuilder(cfg)
+        prompt_lengths: list[int] = []
+        target_lengths: list[int] = []
+        total_lengths: list[int] = []
+        proof_lengths: list[int] = []
+        syntax_occurrences: list[int] = []
+        syntax_tokens: list[int] = []
+        for index in range(sample_count):
+            sample = builder.sample(index, train=True)
+            prompt_len = _token_count(tokenizer, sample.prompt)
+            target_len = _token_count(tokenizer, sample.target)
+            proof_text = _extract_tag_block(sample.target, "proof")
+            proof_len = _token_count(tokenizer, proof_text) if proof_text else 0
+            syntax_occ, syntax_tok = _syntax_token_stats(tokenizer, sample.target)
+            prompt_lengths.append(prompt_len)
+            target_lengths.append(target_len)
+            total_lengths.append(prompt_len + target_len + 1)
+            proof_lengths.append(proof_len)
+            syntax_occurrences.append(syntax_occ)
+            syntax_tokens.append(syntax_tok)
+        target_mean = mean(target_lengths)
+        syntax_occ_mean = mean(syntax_occurrences)
+        syntax_tok_mean = mean(syntax_tokens)
+        rows.append(
+            {
+                "condition": label,
+                "template": template.value,
+                "n": sample_count,
+                "prompt_mean": mean(prompt_lengths),
+                "target_mean": target_mean,
+                "target_p95": _p95(target_lengths),
+                "total_mean": mean(total_lengths),
+                "total_p95": _p95(total_lengths),
+                "proof_mean": mean(proof_lengths),
+                "syntax_occ_mean": syntax_occ_mean,
+                "syntax_tok_mean": syntax_tok_mean,
+                "tok_per_syntax_occ": syntax_tok_mean / syntax_occ_mean if syntax_occ_mean else 0.0,
+                "syntax_tok_share": syntax_tok_mean / target_mean if target_mean else 0.0,
+                "description": description,
+            }
+        )
+    df = pd.DataFrame(rows)
+    write_csv(TABLE_DIR / "ablation_training_token_audit_512.csv", df.to_dict("records"))
+    return df
+
+
+def build_trace_control_with_baselines(main_summary: pd.DataFrame, trace_control_rows: pd.DataFrame) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    if not main_summary.empty:
+        main_pair = main_summary[
+            (main_summary.get("size", "") == "")
+            & (main_summary.get("train_max") == 25)
+            & (main_summary.get("template").isin(["logic", "nl_exact"]))
+        ]
+        labels = {"logic": "main_logic", "nl_exact": "main_nl_exact"}
+        for _, row in main_pair.sort_values("template").iterrows():
+            is_logic = row["template"] == "logic"
+            rows.append(
+                {
+                    "template": labels.get(str(row["template"]), str(row["template"])),
+                    "n": row.get("n"),
+                    "ood_correct@16": row.get("ood_correct@16"),
+                    "ood_formal_joint@16": row.get("ood_joint@16") if is_logic else "",
+                    "ood_translated_joint@16": row.get("ood_joint@16") if not is_logic else "",
+                    "depth50_correct@16": row.get("depth50_correct@16"),
+                    "depth50_formal_joint@16": row.get("depth50_joint@16") if is_logic else "",
+                    "depth50_translated_joint@16": row.get("depth50_joint@16") if not is_logic else "",
+                }
+            )
+    if not trace_control_rows.empty:
+        for _, row in trace_control_rows.iterrows():
+            rows.append(row.to_dict())
+    df = pd.DataFrame(rows)
+    write_csv(TABLE_DIR / "trace_control_ablation_with_main_baselines.csv", df.to_dict("records"))
+    return df
+
+
+def build_hybrid_order_with_baselines(main_summary: pd.DataFrame, hybrid_order_rows: pd.DataFrame) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    train_max_values = {5, 10, 15, 20, 25}
+    if not hybrid_order_rows.empty and "train_max" in hybrid_order_rows:
+        train_max_values.update(int(value) for value in hybrid_order_rows["train_max"].dropna().tolist())
+    if not main_summary.empty:
+        main_rows = main_summary[
+            (main_summary.get("size", "") == "")
+            & (main_summary.get("template").isin(["logic", "nl_exact"]))
+            & (main_summary.get("train_max").isin(sorted(train_max_values)))
+        ]
+        for _, row in main_rows.iterrows():
+            is_logic = row["template"] == "logic"
+            rows.append(
+                {
+                    "mode": "main_logic" if is_logic else "main_nl_exact",
+                    "train_max": int(row["train_max"]),
+                    "n": row.get("n"),
+                    "ood_correct@16": row.get("ood_correct@16"),
+                    "ood_formal_joint@16": row.get("ood_joint@16") if is_logic else "",
+                    "ood_translated_joint@16": row.get("ood_joint@16") if not is_logic else "",
+                    "depth50_correct@16": row.get("depth50_correct@16"),
+                    "depth50_formal_joint@16": row.get("depth50_joint@16") if is_logic else "",
+                    "depth50_translated_joint@16": row.get("depth50_joint@16") if not is_logic else "",
+                }
+            )
+    if not hybrid_order_rows.empty:
+        for _, row in hybrid_order_rows.iterrows():
+            rows.append(row.to_dict())
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        order = {"main_logic": 0, "formal_think": 1, "think_formal": 2, "main_nl_exact": 3}
+        df["mode_order"] = df["mode"].map(order).fillna(99)
+        df = df.sort_values(["train_max", "mode_order"]).drop(columns=["mode_order"])
+        write_csv(TABLE_DIR / "hybrid_order_with_main_baselines.csv", df.to_dict("records"))
+    return df
+
+
+def latex_ablation_examples(rows: list[dict[str, object]]) -> str:
+    if not rows:
+        return "No ablation examples generated."
+    parts = [
+        (
+            "Each block below is a complete depth-2 SFT training sequence: prompt followed by target. "
+            "The examples are generated deterministically from the same underlying HFSA item where possible, "
+            "so differences are due to the trace template rather than a different task instance."
+        )
+    ]
+    for row in rows:
+        condition = str(row["condition"]).replace("_", r"\_")
+        description = str(row["description"]).replace("_", r"\_")
+        sequence = str(row["sequence"]).rstrip()
+        parts.append(
+            "\n".join(
+                [
+                    rf"\paragraph{{{condition}.}} {description}",
+                    r"\begin{verbatim}",
+                    sequence,
+                    r"\end{verbatim}",
+                ]
+            )
+        )
+    return "\n\n".join(parts)
+
+
 def clean_text(text: str, limit: int = 850) -> str:
     text = re.sub(r"\s+", " ", text.strip())
     if len(text) > limit:
@@ -1795,6 +2097,11 @@ def latex_table(
         "target_p95",
         "total_mean",
         "total_p95",
+        "prompt_mean",
+        "prompt_p95",
+        "proof_mean",
+        "syntax_occ_mean",
+        "syntax_tok_mean",
         "sft_done",
         "sft_expected",
         "eval_done",
@@ -2674,6 +2981,8 @@ def write_report(
     token_budget_comparison_rows = build_token_budget_comparison_table(main_summary, token_budget_rows)
     token_budget_exposure_rows = build_token_budget_exposure_table()
     symbol_padded_token_rows = build_symbol_padded_token_match_table()
+    ablation_example_rows = build_ablation_training_examples()
+    ablation_token_rows = build_ablation_token_audit()
     symbol_padded_eval_rows = build_symbol_padded_eval_comparison_table(
         main_summary,
         ablation_summaries.get("symbol_padded", pd.DataFrame()),
@@ -2691,6 +3000,8 @@ def write_report(
         paired_full_rows = paired_full_rows.sort_values(["family", "template", "train_max"])
     shortcut_comparison_rows = build_shortcut_comparison_table(main_summary, shortcut_rows)
     conditioned_comparison_rows = build_conditioned_comparison_table(main_summary, conditioned_rows)
+    trace_control_comparison_rows = build_trace_control_with_baselines(main_summary, trace_control_rows)
+    hybrid_order_comparison_rows = build_hybrid_order_with_baselines(main_summary, hybrid_order_rows)
     train_maxes = [5, 10, 15, 20, 25]
     tiny_sizes = ["50m", "100m", "200m"]
     trace_control_figure_block = ""
@@ -2918,7 +3229,7 @@ def write_report(
 \item Architecture ablations show that the phenomenon is not OLMo-only: Qwen and Gemma runs also show strong formal-trace transfer, with model-specific variation in joint validity.
 \item Shortcut-rich training hurts NL more clearly than logic in the completed 0.3/0.5/0.8 shortcut-rate runs, supporting the hypothesis that NL relies more on brittle shortcut associations. {shortcut_kind_exec_sentence}
 \item Conditioned dual-modality at 10k underperforms the best single-modality baselines, especially for conditioned logic at larger train ranges. The 50k continuation is running to test whether this is undertraining.
-\item {trace_control_exec_sentence} The repaired \texttt{{rule\_annotated\_nl}} rows now show nonzero translated validity, \texttt{{invalid\_logic}} keeps high answer accuracy but zero grounded validity, and shuffled NL parses while losing translated joint validity.
+\item {trace_control_exec_sentence} The repaired \texttt{{rule\_annotated\_nl}} rows now show nonzero translated validity, \texttt{{invalid\_logic}} keeps high answer accuracy but zero grounded validity, and shuffled NL parses while losing translated joint validity. The token audit shows current \texttt{{terse\_nl}} is not actually shorter than \texttt{{nl\_exact}} on HFSA because the default NL proof text is already terse.
 \end{{itemize}}
 
 \section{{Metric note for OOD benchmarks}}
@@ -2955,6 +3266,26 @@ This audit uses the OLMo tokenizer over the actual SFT training mixtures. NL tar
     ("truncation_rate", "trunc."),
 ])}
 \caption{{Token-length match for logic length-control ablations on the same 512 train-1-to-25 examples. Symbol-padded lengthens formal atoms mechanically; wordified logic uses natural attribute predicate names while preserving formal proof rules.}}
+\end{{table}}
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(ablation_token_rows, [
+    ("condition", "condition"),
+    ("n", "n"),
+    ("prompt_mean", "prompt"),
+    ("target_mean", "target"),
+    ("target_p95", "target p95"),
+    ("total_mean", "total"),
+    ("total_p95", "total p95"),
+    ("proof_mean", "proof/body"),
+    ("syntax_occ_mean", "syntax occ."),
+    ("syntax_tok_mean", "syntax tok."),
+    ("tok_per_syntax_occ", "tok/syntax"),
+    ("syntax_tok_share", "syntax share"),
+])}
+\caption{{Ablation token audit on 512 deterministic train-1-to-25 examples with the OLMo tokenizer. The syntax/operator columns count occurrences and tokenized length of a fixed audit lexeme set: proof tags, formal operators, rule labels, pseudocode markers, and common derivation words. They are diagnostics, not a model-internal category. In this generator, \texttt{{terse\_nl}} currently matches \texttt{{nl\_exact}} token-for-token because default HFSA NL proof lines are already short.}}
 \end{{table}}
 
 \section{{Main OLMo-7B downstream OOD}}
@@ -3373,14 +3704,18 @@ The shortcut-kind controls test two concrete shortcut mechanisms: a \texttt{{pos
 ])}
 \caption{{Shortcut-kind eval summary. No rows means the eval dependency has not started or has not written JSON yet.}}
 \end{{table}}
+\begin{{figure}}[H]\centering
+\includegraphics[width=0.95\linewidth]{{figures/ablation_shortcut_kind_summary.pdf}}
+\caption{{Shortcut-kind ablation for position and initial-marker shortcuts. Eval prompts are shortcut-neutral; bars show three-seed means for completed rows.}}
+\end{{figure}}
 
 \subsection{{Trace controls}}
-The trace-control ablation trains train-1-to-25 models with six altered trace styles, always over three seeds and evaluated on the same 1-to-50 sparse protocol. The six controls are: \texttt{{terse\_nl}} (shorter natural-language reasoning), \texttt{{rule\_annotated\_nl}} (NL with explicit rule names), \texttt{{pseudocode}} (algorithm-like trace), \texttt{{shuffled\_logic}} (formal lines shuffled as a negative control), \texttt{{invalid\_logic}} (formally invalid proof trace negative control), and \texttt{{shuffled\_nl}} (NL trace order shuffled). Manual inspection found that the early \texttt{{rule\_annotated\_nl}} translated-validity metrics were an evaluator artifact: lines such as \texttt{{a is teal. [rule: R]}} were not stripped before controlled NL-to-FOL parsing. The translator now unwraps rule annotations and pseudocode \texttt{{derive "..."}}, and the completed repair rows are included in the table. {trace_control_status_sentence}
+The trace-control ablation trains train-1-to-25 models with six altered trace styles, always over three seeds and evaluated on the same 1-to-50 sparse protocol. The six controls are: \texttt{{terse\_nl}} (intended shorter natural-language reasoning; currently token-identical to \texttt{{nl\_exact}} on HFSA), \texttt{{rule\_annotated\_nl}} (NL with explicit rule names), \texttt{{pseudocode}} (algorithm-like trace), \texttt{{shuffled\_logic}} (formal lines shuffled as a negative control), \texttt{{invalid\_logic}} (formally invalid proof trace negative control), and \texttt{{shuffled\_nl}} (NL trace order shuffled). The table includes the normal train-1-to-25 compact-logic and exact-NL baselines for direct comparison. Manual inspection found that the early \texttt{{rule\_annotated\_nl}} translated-validity metrics were an evaluator artifact: lines such as \texttt{{a is teal. [rule: R]}} were not stripped before controlled NL-to-FOL parsing. The translator now unwraps rule annotations and pseudocode \texttt{{derive "..."}}, and the completed repair rows are included in the table. {trace_control_status_sentence}
 
 \begin{{table}}[H]
 \centering
 \scriptsize
-{latex_table(trace_control_rows, [
+{latex_table(trace_control_comparison_rows, [
     ("template", "trace control"),
     ("n", "n"),
     ("ood_correct@16", "OOD c@16"),
@@ -3394,13 +3729,16 @@ The trace-control ablation trains train-1-to-25 models with six altered trace st
 \end{{table}}
 {trace_control_figure_block}
 
+\subsection{{Ablation training-sequence examples}}
+{latex_ablation_examples(ablation_example_rows)}
+
 \subsection{{Hybrid order}}
-The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means NL first, then formal logic; \texttt{{formal\_think}} means formal logic first, then NL. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. {hybrid_order_status_sentence}
+The hybrid-order ablation trains a single prompt containing both trace substrates and one answer at the end. \texttt{{think\_formal}} means NL first, then formal logic; \texttt{{formal\_think}} means formal logic first, then NL. The full suite is train-1-to-5/10/15/20/25 over three seeds and eval 1-to-50. The table includes the normal compact-logic and exact-NL baselines at each train depth. {hybrid_order_status_sentence}
 
 \begin{{table}}[H]
 \centering
 \scriptsize
-{latex_table(hybrid_order_rows, [
+{latex_table(hybrid_order_comparison_rows, [
     ("mode", "mode"),
     ("train_max", "train max"),
     ("n", "n"),
@@ -3529,6 +3867,7 @@ def main() -> None:
     plot_architecture_comparison(architecture_summary)
     plot_token_budget_comparison(main_summary, ablation_summaries.get("token_budget", pd.DataFrame()))
     plot_shortcut_comparison(main_summary, ablation_summaries.get("shortcut", pd.DataFrame()))
+    plot_shortcut_kind_summary(ablation_summaries.get("shortcut_kind", pd.DataFrame()))
     plot_trace_control_summary(ablation_summaries.get("trace_control", pd.DataFrame()))
     plot_hybrid_order_summary(ablation_summaries.get("hybrid_order", pd.DataFrame()))
     plot_paired_full_suite_partial(paired_full_summary)
