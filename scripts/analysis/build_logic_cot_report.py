@@ -1031,6 +1031,75 @@ def plot_shortcut_kind_summary(summary: pd.DataFrame) -> None:
     save(fig, "ablation_shortcut_kind_summary")
 
 
+def plot_shortcut_kind_lines(main_summary: pd.DataFrame, summary: pd.DataFrame) -> None:
+    if main_summary.empty or summary.empty:
+        return
+    rows: list[dict[str, object]] = []
+    baseline = main_summary[(main_summary["size"] == "") & (main_summary["train_max"] == 25)]
+    kinds = sorted(str(value) for value in summary["shortcut_kind"].dropna().unique())
+    for kind in kinds:
+        for _, row in baseline.iterrows():
+            if row["template"] not in {"logic", "nl_exact"}:
+                continue
+            rows.append(
+                {
+                    "shortcut_kind": kind,
+                    "shortcut_rate_value": 0.0,
+                    "template": row["template"],
+                    "ood_correct@16": row.get("ood_correct@16"),
+                    "ood_joint@16": row.get("ood_joint@16"),
+                    "depth50_correct@16": row.get("depth50_correct@16"),
+                    "depth50_joint@16": row.get("depth50_joint@16"),
+                }
+            )
+    for _, row in summary.iterrows():
+        rows.append(
+            {
+                "shortcut_kind": row["shortcut_kind"],
+                "shortcut_rate_value": float(str(row["shortcut_rate"]).replace("0p", "0.")),
+                "template": row["template"],
+                "ood_correct@16": row.get("ood_correct@16"),
+                "ood_joint@16": row.get("ood_joint@16"),
+                "depth50_correct@16": row.get("depth50_correct@16"),
+                "depth50_joint@16": row.get("depth50_joint@16"),
+            }
+        )
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return
+    write_csv(TABLE_DIR / "shortcut_kind_ablation_vs_main.csv", df.to_dict("records"))
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_joint@16", "OOD joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+        ("depth50_joint@16", "depth-50 joint@16"),
+    ]
+    fig, axes = plt.subplots(len(kinds), len(metrics), figsize=(13.5, 3.8 * len(kinds)), sharex=True, sharey=True)
+    if len(kinds) == 1:
+        axes = axes.reshape(1, -1)
+    for row_idx, kind in enumerate(kinds):
+        for col_idx, (metric, label) in enumerate(metrics):
+            ax = axes[row_idx, col_idx]
+            for template in ["logic", "nl_exact"]:
+                sub = df[(df["shortcut_kind"] == kind) & (df["template"] == template)].sort_values(
+                    "shortcut_rate_value"
+                )
+                if sub.empty:
+                    continue
+                ax.plot(
+                    sub["shortcut_rate_value"],
+                    sub[metric],
+                    marker="o",
+                    color=COLORS[template],
+                    label=TEMPLATE_LABEL[template],
+                )
+            style_axes(ax, f"{kind.replace('_', ' ')}\n{label}")
+            ax.set_xlabel("train shortcut rate")
+            ax.set_xticks([0.0, 0.5, 0.8])
+    axes[0, 0].legend(frameon=False, fontsize=8)
+    save(fig, "ablation_shortcut_kind_rate_lines_vs_main")
+
+
 def build_shortcut_comparison_table(main_summary: pd.DataFrame, shortcut_summary: pd.DataFrame) -> pd.DataFrame:
     if main_summary.empty:
         return pd.DataFrame()
@@ -1267,12 +1336,14 @@ def plot_trace_control_summary(summary: pd.DataFrame) -> None:
         return
     df = summary.copy()
     template_order = {
-        "terse_nl": 0,
-        "rule_annotated_nl": 1,
-        "pseudocode": 2,
-        "shuffled_logic": 3,
-        "invalid_logic": 4,
-        "shuffled_nl": 5,
+        "main_logic": 0,
+        "main_nl_exact": 1,
+        "terse_nl": 2,
+        "rule_annotated_nl": 3,
+        "pseudocode": 4,
+        "shuffled_logic": 5,
+        "invalid_logic": 6,
+        "shuffled_nl": 7,
     }
     df["order"] = df["template"].map(template_order).fillna(99)
     df = df.sort_values("order")
@@ -1284,9 +1355,17 @@ def plot_trace_control_summary(summary: pd.DataFrame) -> None:
         ("depth50_correct@16", "depth-50 correct@16"),
     ]
     fig, axes = plt.subplots(2, 2, figsize=(10.5, 6.8), sharey=True)
+    colors = [
+        COLORS["logic"]
+        if str(template) == "main_logic"
+        else COLORS["nl_exact"]
+        if str(template) == "main_nl_exact"
+        else "#4c78a8"
+        for template in df["template"]
+    ]
     for ax, (col, title) in zip(axes.ravel(), metrics, strict=True):
         values = [float(value) if isinstance(value, Number) and not pd.isna(value) else 0.0 for value in df[col]]
-        ax.bar(range(len(df)), values, color="#4c78a8")
+        ax.bar(range(len(df)), values, color=colors)
         ax.set_xticks(range(len(df)))
         ax.set_xticklabels(labels, rotation=0, fontsize=8)
         style_axes(ax, title)
@@ -1302,14 +1381,21 @@ def plot_hybrid_order_summary(summary: pd.DataFrame) -> None:
         ("ood_translated_joint@16", "OOD translated joint@16"),
         ("depth50_correct@16", "depth-50 correct@16"),
     ]
-    styles = {"think_formal": ("#1f77b4", "NL then formal"), "formal_think": ("#d62728", "formal then NL")}
+    styles = {
+        "main_logic": ("#1f77b4", "-", "main logic"),
+        "formal_think": ("#d62728", "-", "formal then NL"),
+        "think_formal": ("#9467bd", "-", "NL then formal"),
+        "main_nl_exact": ("#ff7f0e", "-", "main NL exact"),
+    }
     fig, axes = plt.subplots(2, 2, figsize=(10.2, 6.5), sharex=True, sharey=True)
     for ax, (col, title) in zip(axes.ravel(), metrics, strict=True):
-        for mode, (color, label) in styles.items():
-            sub = summary[summary["mode"] == mode].dropna(subset=[col]).sort_values("train_max")
+        for mode, (color, linestyle, label) in styles.items():
+            sub = summary[summary["mode"] == mode].copy()
+            sub[col] = pd.to_numeric(sub[col], errors="coerce")
+            sub = sub.dropna(subset=[col]).sort_values("train_max")
             if sub.empty:
                 continue
-            ax.plot(sub["train_max"], sub[col], marker="o", color=color, label=label)
+            ax.plot(sub["train_max"], sub[col], marker="o", color=color, linestyle=linestyle, label=label)
         style_axes(ax, title)
         ax.set_xlabel("max train depth")
     axes[0, 0].legend(frameon=False, fontsize=8)
@@ -1959,6 +2045,70 @@ def latex_ablation_examples(rows: list[dict[str, object]]) -> str:
                     rf"\paragraph{{{condition}.}} {description}",
                     r"\begin{verbatim}",
                     sequence,
+                    r"\end{verbatim}",
+                ]
+            )
+        )
+    return "\n\n".join(parts)
+
+
+def build_length_control_surface_examples() -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for label, template, description in [
+        ("compact_logic", TemplateName.LOGIC, "Compact baseline formal symbols."),
+        ("symbol_padded_logic", TemplateName.LOGIC_SYMBOL_PADDED, "Predicate-call symbols with padded constants."),
+        ("wordified_logic", TemplateName.LOGIC_WORDIFIED, "Predicate-call symbols using semantic attribute words."),
+    ]:
+        cfg = _hard_fsa_config(template, min_step=2, max_step=2)
+        sample = TaskBuilder(cfg).sample(0, train=True)
+        target = sample.target
+        predicates = "\n".join(_extract_tag_block(target, "predicates").splitlines()[:5])
+        premises = "\n".join(_extract_tag_block(target, "premises").splitlines()[:4])
+        proof = "\n".join(_extract_tag_block(target, "proof").splitlines()[:5])
+        rows.append(
+            {
+                "condition": label,
+                "description": description,
+                "predicates": predicates,
+                "premises": premises,
+                "proof": proof,
+            }
+        )
+    write_csv(TABLE_DIR / "logic_length_control_surface_examples.csv", rows)
+    return rows
+
+
+def latex_length_control_surface_examples(rows: list[dict[str, object]]) -> str:
+    if not rows:
+        return "No length-control surface examples generated."
+    parts = [
+        (
+            "The examples below show the same depth-2 training item under the three formal surfaces. "
+            "They are all valid gold targets; the difference is surface representation and tokenizer burden, "
+            "not a different underlying task."
+        )
+    ]
+    for row in rows:
+        condition = str(row["condition"]).replace("_", r"\_")
+        description = str(row["description"]).replace("_", r"\_")
+        snippet = "\n".join(
+            [
+                "predicates:",
+                str(row["predicates"]),
+                "",
+                "premises:",
+                str(row["premises"]),
+                "",
+                "proof:",
+                str(row["proof"]),
+            ]
+        )
+        parts.append(
+            "\n".join(
+                [
+                    rf"\paragraph{{{condition}.}} {description}",
+                    r"\begin{verbatim}",
+                    snippet,
                     r"\end{verbatim}",
                 ]
             )
@@ -2983,6 +3133,7 @@ def write_report(
     symbol_padded_token_rows = build_symbol_padded_token_match_table()
     ablation_example_rows = build_ablation_training_examples()
     ablation_token_rows = build_ablation_token_audit()
+    length_control_surface_rows = build_length_control_surface_examples()
     symbol_padded_eval_rows = build_symbol_padded_eval_comparison_table(
         main_summary,
         ablation_summaries.get("symbol_padded", pd.DataFrame()),
@@ -3009,7 +3160,15 @@ def write_report(
         trace_control_figure_block = r"""
 \begin{figure}[H]\centering
 \includegraphics[width=0.95\linewidth]{figures/ablation_trace_controls_summary.pdf}
-\caption{Trace-control ablation summary for completed rows. Formal joint is citation-free formal validity; translated joint is NL-to-FOL translated validity.}
+\caption{Trace-control ablation summary for completed rows, including normal train-1-to-25 logic/NL baselines. Formal joint is citation-free formal validity; translated joint is NL-to-FOL translated validity.}
+\end{figure}
+"""
+    shortcut_kind_line_figure_block = ""
+    if not shortcut_kind_rows.empty and (FIG_DIR / "ablation_shortcut_kind_rate_lines_vs_main.pdf").exists():
+        shortcut_kind_line_figure_block = r"""
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\linewidth]{figures/ablation_shortcut_kind_rate_lines_vs_main.pdf}
+\caption{Shortcut-kind ablation as rate curves with the normal train-1-to-25 shortcut-neutral baselines at rate 0. Evaluation is shortcut-neutral for all rows.}
 \end{figure}
 """
     shortcut_kind_eval_count = int(shortcut_kind_rows["n"].sum()) if not shortcut_kind_rows.empty else 0
@@ -3091,7 +3250,7 @@ def write_report(
             f"is now three-seed complete; {formal_think_status}"
         )
         hybrid_order_figure_caption = (
-            "Hybrid order partial eval. \\texttt{think\\_formal} is NL then formal "
+            "Hybrid order partial eval with normal logic/NL baseline curves. \\texttt{think\\_formal} is NL then formal "
             f"and is complete through train-1-to-25; {formal_think_status}"
         )
     else:
@@ -3105,7 +3264,7 @@ def write_report(
             "is still partial; \\texttt{formal\\_think} remains pending."
         )
         hybrid_order_figure_caption = (
-            "Hybrid order partial eval. \\texttt{think\\_formal} is NL then formal "
+            "Hybrid order partial eval with normal logic/NL baseline curves. \\texttt{think\\_formal} is NL then formal "
             "and is complete through train-1-to-20, with train-1-to-25 partial; "
             "\\texttt{formal\\_think} is still pending."
         )
@@ -3228,7 +3387,7 @@ def write_report(
 \item Tiny random-init Llama pretraining is a mechanism smoke test. Logic is stronger than matched NL on answer-only synthetic OOD pass@8, but strict depth-50 joint validity is essentially absent.
 \item Architecture ablations show that the phenomenon is not OLMo-only: Qwen and Gemma runs also show strong formal-trace transfer, with model-specific variation in joint validity.
 \item Shortcut-rich training hurts NL more clearly than logic in the completed 0.3/0.5/0.8 shortcut-rate runs, supporting the hypothesis that NL relies more on brittle shortcut associations. {shortcut_kind_exec_sentence}
-\item Conditioned dual-modality at 10k underperforms the best single-modality baselines, especially for conditioned logic at larger train ranges. The 50k continuation is running to test whether this is undertraining.
+\item Conditioned dual-modality at 10k underperforms the best single-modality baselines, especially for conditioned logic at larger train ranges. The implementation trains separate mode-conditioned examples, not both modalities inside one datapoint; likely confounds are per-modality underexposure at fixed optimizer steps, mode-conditioning overhead, and cross-modality interference. The 50k continuation is running to test whether this is undertraining.
 \item {trace_control_exec_sentence} The repaired \texttt{{rule\_annotated\_nl}} rows now show nonzero translated validity, \texttt{{invalid\_logic}} keeps high answer accuracy but zero grounded validity, and shuffled NL parses while losing translated joint validity. The token audit shows current \texttt{{terse\_nl}} is not actually shorter than \texttt{{nl\_exact}} on HFSA because the default NL proof text is already terse.
 \end{{itemize}}
 
@@ -3642,6 +3801,11 @@ The shortcut-rate ablation changes only the training distribution. With probabil
 \caption{{Logic length-control ablations compared with the main train-1-to-25 runs.}}
 \end{{table}}
 
+The length-control formal variants are not broken gold targets: focused tests and generated examples validate the symbol-padded and wordified training traces. They are worse because the representation changes the model-facing problem. Symbol padding turns compact atoms such as \texttt{{Fa}} into predicate-call forms such as \texttt{{PF(ca)}}, adding punctuation and multi-token syntax pieces. Wordified logic keeps formal rules but expands predicate symbols into natural attribute names such as \texttt{{North(a)}} and \texttt{{Teal(a)}}, so the model loses the compact symbolic alphabet while still needing formal proof discipline.
+
+\subsection{{Length-control surface examples}}
+{latex_length_control_surface_examples(length_control_surface_rows)}
+
 \begin{{figure}}[H]
 \centering
 \includegraphics[width=\linewidth]{{figures/ablation_logic_length_control_depth_curve_train1to25.pdf}}
@@ -3708,6 +3872,8 @@ The shortcut-kind controls test two concrete shortcut mechanisms: a \texttt{{pos
 \includegraphics[width=0.95\linewidth]{{figures/ablation_shortcut_kind_summary.pdf}}
 \caption{{Shortcut-kind ablation for position and initial-marker shortcuts. Eval prompts are shortcut-neutral; bars show three-seed means for completed rows.}}
 \end{{figure}}
+{shortcut_kind_line_figure_block}
+Sample metadata checks over the shortcut-kind sample JSONLs found \texttt{{active\_branch\_first=None}} for completed eval rows, confirming that these evals are shortcut-neutral. The \texttt{{initial\_marker}} NL improvement at rate 0.8 is therefore not explained by leaving the shortcut active at eval time. It remains a surprising regularization/distribution result rather than clean evidence that increasing shortcut rate generally helps NL; the original schema shortcut-rate ablation still shows NL degradation as shortcut rate increases.
 
 \subsection{{Trace controls}}
 The trace-control ablation trains train-1-to-25 models with six altered trace styles, always over three seeds and evaluated on the same 1-to-50 sparse protocol. The six controls are: \texttt{{terse\_nl}} (intended shorter natural-language reasoning; currently token-identical to \texttt{{nl\_exact}} on HFSA), \texttt{{rule\_annotated\_nl}} (NL with explicit rule names), \texttt{{pseudocode}} (algorithm-like trace), \texttt{{shuffled\_logic}} (formal lines shuffled as a negative control), \texttt{{invalid\_logic}} (formally invalid proof trace negative control), and \texttt{{shuffled\_nl}} (NL trace order shuffled). The table includes the normal train-1-to-25 compact-logic and exact-NL baselines for direct comparison. Manual inspection found that the early \texttt{{rule\_annotated\_nl}} translated-validity metrics were an evaluator artifact: lines such as \texttt{{a is teal. [rule: R]}} were not stripped before controlled NL-to-FOL parsing. The translator now unwraps rule annotations and pseudocode \texttt{{derive "..."}}, and the completed repair rows are included in the table. {trace_control_status_sentence}
@@ -3752,6 +3918,8 @@ The hybrid-order ablation trains a single prompt containing both trace substrate
 \caption{{{hybrid_order_table_caption}}}
 \end{{table}}
 {hybrid_order_figure_block}
+
+Conditioned dual-modality is different from the hybrid-order setup: the SFT data builder duplicates each materialized row into two separate examples, one prompted with \texttt{{<reasoning\_mode>formal\_logic</reasoning\_mode>}} and one prompted with \texttt{{<reasoning\_mode>natural\_language</reasoning\_mode>}}. Evaluation uses the same mode prompt. Thus there is no direct train-test mismatch where training has both traces in one target but eval asks for only one. The main caveat is exposure/interference: at fixed optimizer steps, each modality receives roughly half the updates of a single-modality run, and the shared adapter must fit both surfaces.
 
 \begin{{table}}[H]
 \centering
@@ -3868,8 +4036,9 @@ def main() -> None:
     plot_token_budget_comparison(main_summary, ablation_summaries.get("token_budget", pd.DataFrame()))
     plot_shortcut_comparison(main_summary, ablation_summaries.get("shortcut", pd.DataFrame()))
     plot_shortcut_kind_summary(ablation_summaries.get("shortcut_kind", pd.DataFrame()))
-    plot_trace_control_summary(ablation_summaries.get("trace_control", pd.DataFrame()))
-    plot_hybrid_order_summary(ablation_summaries.get("hybrid_order", pd.DataFrame()))
+    plot_shortcut_kind_lines(main_summary, ablation_summaries.get("shortcut_kind", pd.DataFrame()))
+    plot_trace_control_summary(build_trace_control_with_baselines(main_summary, ablation_summaries.get("trace_control", pd.DataFrame())))
+    plot_hybrid_order_summary(build_hybrid_order_with_baselines(main_summary, ablation_summaries.get("hybrid_order", pd.DataFrame())))
     plot_paired_full_suite_partial(paired_full_summary)
     plot_paired_full_suite_family_partial(paired_full_summary)
     conditioned_comparison = build_conditioned_comparison_table(
