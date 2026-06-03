@@ -128,6 +128,26 @@ def test_maze_navigation_is_key_constrained_graph_with_blocked_decoys():
     assert ex.answer in ex.metadata["treasure_rooms"]
 
 
+def test_maze_navigation_uses_typed_room_and_key_symbols():
+    ex = PairedSyntheticGenerator(PairedGeneratorConfig(kind="maze_navigation", depth=8, seed=3407)).generate(0)
+    validation = validate_logic_example(ex)
+    room_symbols = {entry["name"]: entry["symbol"] for entry in ex.metadata["room_symbols"]}
+    key_symbols = {entry["name"]: entry["symbol"] for entry in ex.metadata["key_symbols"]}
+
+    assert validation.ok, (validation.error, validation.line_errors)
+    assert room_symbols
+    assert key_symbols
+    assert set(room_symbols.values()).isdisjoint(set(key_symbols.values()))
+    assert all(symbol.startswith("r_") for symbol in room_symbols.values())
+    assert all(symbol.startswith("k_") for symbol in key_symbols.values())
+    assert any(constant.startswith("r_") and " = maze room " in constant for constant in ex.constants)
+    assert any(constant.startswith("k_") and " = maze key " in constant for constant in ex.constants)
+    assert any("Door(r_" in line and ",k_" in line for line in ex.premises_fol)
+    assert any("Finds(r_" in line and ",k_" in line for line in ex.premises_fol)
+    assert not any("silver = maze room silver" == constant for constant in ex.constants)
+    assert not any("silver = maze key silver" == constant for constant in ex.constants)
+
+
 def test_attribute_constraints_solve_slots_directly_without_feedback_or_assignments():
     ex = PairedSyntheticGenerator(PairedGeneratorConfig(kind="attribute_constraints", depth=4, seed=3407)).generate(0)
     validation = validate_logic_example(ex)

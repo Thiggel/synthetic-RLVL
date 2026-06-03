@@ -566,11 +566,19 @@ class PairedSyntheticGenerator:
         target = room_path[-1]
         key_bank = _maze_key_bank(max(depth + width + 2, 6))
         key_path = rng.sample(key_bank, depth + 1)
+        room_symbols = {room: _maze_room_symbol(room) for room in sorted(set(room_path) | set(decoy_rooms) | set(treasure_decoys))}
+        key_symbols = {key: _maze_key_symbol(key) for key in sorted(set(key_bank))}
+
+        def r(room: str) -> str:
+            return room_symbols[room]
+
+        def k(key: str) -> str:
+            return key_symbols[key]
 
         treasure_rooms = [target, *treasure_decoys]
         rng.shuffle(treasure_rooms)
 
-        premises_fol: list[str] = [f"1. At0({start})", f"2. Have0({key_path[0]})"]
+        premises_fol: list[str] = [f"1. At0({r(start)})", f"2. Have0({k(key_path[0])})"]
         premises_nl: list[str] = [
             f"1. The explorer starts in room {start}.",
             f"2. The explorer initially holds the {key_path[0]} key.",
@@ -601,30 +609,30 @@ class PairedSyntheticGenerator:
 
             for required_key, dst_room, is_gold in edge_specs:
                 door_line = len(premises_fol) + 1
-                premises_fol.append(f"{door_line}. Door({src},{required_key},{dst_room})")
+                premises_fol.append(f"{door_line}. Door({r(src)},{k(required_key)},{r(dst_room)})")
                 premises_nl.append(
                     f"{door_line}. There is a door from {src} to {dst_room} that requires the {required_key} key."
                 )
                 rule_line = len(premises_fol) + 1
                 antecedent = _nested_and(
                     [
-                        f"At{step}({src})",
-                        f"Have{step}({required_key})",
-                        f"Door({src},{required_key},{dst_room})",
+                        f"At{step}({r(src)})",
+                        f"Have{step}({k(required_key)})",
+                        f"Door({r(src)},{k(required_key)},{r(dst_room)})",
                     ]
                 )
-                premises_fol.append(f"{rule_line}. {antecedent} -> At{step + 1}({dst_room})")
+                premises_fol.append(f"{rule_line}. {antecedent} -> At{step + 1}({r(dst_room)})")
                 premises_nl.append(
                     f"{rule_line}. If the explorer is in {src} after {step} moves, has the {required_key} key, "
                     f"and the matching door leads to {dst_room}, then {dst_room} is reachable after {step + 1} moves."
                 )
                 if is_gold:
                     find_line = len(premises_fol) + 1
-                    premises_fol.append(f"{find_line}. Finds({dst},{next_key})")
+                    premises_fol.append(f"{find_line}. Finds({r(dst)},{k(next_key)})")
                     premises_nl.append(f"{find_line}. Room {dst} contains the {next_key} key.")
                     key_rule_line = len(premises_fol) + 1
                     premises_fol.append(
-                        f"{key_rule_line}. At{step + 1}({dst}) & Finds({dst},{next_key}) -> Have{step + 1}({next_key})"
+                        f"{key_rule_line}. At{step + 1}({r(dst)}) & Finds({r(dst)},{k(next_key)}) -> Have{step + 1}({k(next_key)})"
                     )
                     premises_nl.append(
                         f"{key_rule_line}. If the explorer reaches {dst} after {step + 1} moves and {dst} contains "
@@ -635,13 +643,13 @@ class PairedSyntheticGenerator:
         treasure_lines: dict[str, int] = {}
         for room in treasure_rooms:
             line = len(premises_fol) + 1
-            premises_fol.append(f"{line}. Treasure({room})")
+            premises_fol.append(f"{line}. Treasure({r(room)})")
             premises_nl.append(f"{line}. Room {room} contains a marked treasure.")
             treasure_lines[room] = line
         found_rule_lines: dict[str, int] = {}
         for room in treasure_rooms:
             found_rule_line = len(premises_fol) + 1
-            premises_fol.append(f"{found_rule_line}. At{depth}({room}) & Treasure({room}) -> Found({room})")
+            premises_fol.append(f"{found_rule_line}. At{depth}({r(room)}) & Treasure({r(room)}) -> Found({r(room)})")
             premises_nl.append(
                 f"{found_rule_line}. If room {room} is reachable after exactly {depth} key-constrained moves and contains "
                 f"a treasure, then the treasure in {room} is found."
@@ -651,11 +659,11 @@ class PairedSyntheticGenerator:
         proof_fol: list[str] = []
         proof_nl: list[str] = []
         next_line = len(premises_fol) + 1
-        proof_fol.append(ProofLine(next_line, f"At0({start})", "R,1").render())
+        proof_fol.append(ProofLine(next_line, f"At0({r(start)})", "R,1").render())
         proof_nl.append(f"{next_line}. The explorer is at {start} after 0 moves.")
         at_line = next_line
         next_line += 1
-        proof_fol.append(ProofLine(next_line, f"Have0({key_path[0]})", "R,2").render())
+        proof_fol.append(ProofLine(next_line, f"Have0({k(key_path[0])})", "R,2").render())
         proof_nl.append(f"{next_line}. The explorer has the {key_path[0]} key after 0 moves.")
         key_line = next_line
         next_line += 1
@@ -667,13 +675,13 @@ class PairedSyntheticGenerator:
             next_key = key_path[step + 1]
             door_line, rule_line, find_line, key_rule_line = transition_refs[step]
 
-            door_formula = f"Door({src},{key},{dst})"
+            door_formula = f"Door({r(src)},{k(key)},{r(dst)})"
             proof_fol.append(ProofLine(next_line, door_formula, f"R,{door_line}").render())
             proof_nl.append(f"{next_line}. The door from {src} to {dst} requires the {key} key.")
             door_proof_line = next_line
             next_line += 1
 
-            at_key = f"At{step}({src}) & Have{step}({key})"
+            at_key = f"At{step}({r(src)}) & Have{step}({k(key)})"
             proof_fol.append(ProofLine(next_line, at_key, f"∧I,{at_line},{key_line}").render())
             proof_nl.append(f"{next_line}. The explorer is at {src} and has the required {key} key.")
             at_key_line = next_line
@@ -685,13 +693,13 @@ class PairedSyntheticGenerator:
             transition_condition_line = next_line
             next_line += 1
 
-            at_formula = f"At{step + 1}({dst})"
+            at_formula = f"At{step + 1}({r(dst)})"
             proof_fol.append(ProofLine(next_line, at_formula, f"->E,{rule_line},{transition_condition_line}").render())
             proof_nl.append(f"{next_line}. Therefore {dst} is reachable after {step + 1} moves.")
             at_line = next_line
             next_line += 1
 
-            find_formula = f"Finds({dst},{next_key})"
+            find_formula = f"Finds({r(dst)},{k(next_key)})"
             proof_fol.append(ProofLine(next_line, find_formula, f"R,{find_line}").render())
             proof_nl.append(f"{next_line}. Room {dst} contains the {next_key} key.")
             find_proof_line = next_line
@@ -703,27 +711,27 @@ class PairedSyntheticGenerator:
             key_condition_line = next_line
             next_line += 1
 
-            have_formula = f"Have{step + 1}({next_key})"
+            have_formula = f"Have{step + 1}({k(next_key)})"
             proof_fol.append(ProofLine(next_line, have_formula, f"->E,{key_rule_line},{key_condition_line}").render())
             proof_nl.append(f"{next_line}. Therefore the explorer has the {next_key} key after {step + 1} moves.")
             key_line = next_line
             next_line += 1
 
-        proof_fol.append(ProofLine(next_line, f"Treasure({target})", f"R,{treasure_lines[target]}").render())
+        proof_fol.append(ProofLine(next_line, f"Treasure({r(target)})", f"R,{treasure_lines[target]}").render())
         proof_nl.append(f"{next_line}. Room {target} contains a marked treasure.")
         treasure_proof_line = next_line
         next_line += 1
-        conj = f"At{depth}({target}) & Treasure({target})"
+        conj = f"At{depth}({r(target)}) & Treasure({r(target)})"
         proof_fol.append(ProofLine(next_line, conj, f"∧I,{at_line},{treasure_proof_line}").render())
         proof_nl.append(f"{next_line}. The reachable room {target} contains a treasure.")
         conj_line = next_line
         next_line += 1
-        proof_fol.append(ProofLine(next_line, f"Found({target})", f"->E,{found_rule_lines[target]},{conj_line}").render())
+        proof_fol.append(ProofLine(next_line, f"Found({r(target)})", f"->E,{found_rule_lines[target]},{conj_line}").render())
         proof_nl.append(f"{next_line}. Therefore the found treasure is in {target}.")
 
         return LogicExample(
-            constants=[f"{room} = maze room {room}" for room in sorted(set(room_path) | set(decoy_rooms) | set(treasure_decoys))]
-            + [f"{key} = maze key {key}" for key in sorted(set(key_bank))],
+            constants=[f"{symbol} = maze room {room}" for room, symbol in sorted(room_symbols.items())]
+            + [f"{symbol} = maze key {key}" for key, symbol in sorted(key_symbols.items())],
             predicates=[
                 "AtN(x): the explorer can be at room x after N moves",
                 "HaveN(x): the explorer has key x after N moves",
@@ -749,6 +757,8 @@ class PairedSyntheticGenerator:
                 "start": start,
                 "gold_path": room_path,
                 "key_path": key_path,
+                "room_symbols": [{"name": room, "symbol": symbol} for room, symbol in sorted(room_symbols.items())],
+                "key_symbols": [{"name": key, "symbol": symbol} for key, symbol in sorted(key_symbols.items())],
                 "blocked_edges": blocked_edges,
                 "treasure_rooms": treasure_rooms,
                 "unreachable_treasure_rooms": treasure_decoys,
@@ -1016,6 +1026,20 @@ def _maze_room_bank(size: int) -> list[str]:
     while len(rooms) < int(size):
         rooms.append(f"room_{len(rooms):03d}")
     return rooms[: int(size)]
+
+
+def _maze_safe_symbol(text: str) -> str:
+    symbol = re.sub(r"[^A-Za-z0-9_]", "_", str(text).strip().lower())
+    symbol = re.sub(r"_+", "_", symbol).strip("_")
+    return symbol or "unnamed"
+
+
+def _maze_room_symbol(room: str) -> str:
+    return f"r_{_maze_safe_symbol(room)}"
+
+
+def _maze_key_symbol(key: str) -> str:
+    return f"k_{_maze_safe_symbol(key)}"
 
 
 def _attribute_value_bank(size: int) -> list[str]:
