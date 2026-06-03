@@ -1291,6 +1291,12 @@ def summarize_paired_full_suite() -> pd.DataFrame:
                 "template": template,
                 "train_max": int(train_max),
                 "seed": int(seed),
+                "train_correct@16": metrics.get("synthetic_sampled/band_train/correct_pass@16"),
+                "train_joint@16": metrics.get(f"synthetic_sampled/band_train/{joint}@16"),
+                "train_grounded_joint@16": metrics.get(
+                    "synthetic_sampled/band_train/citation_free_grounded_joint_pass@16"
+                ),
+                "train_nl_parse@16": metrics.get("synthetic_sampled/band_train/nl_logic_parse_pass@16"),
                 "ood_correct@16": metrics.get("synthetic_sampled/band_ood/correct_pass@16"),
                 "ood_joint@16": metrics.get(f"synthetic_sampled/band_ood/{joint}@16"),
                 "ood_grounded_joint@16": metrics.get(
@@ -1311,6 +1317,10 @@ def summarize_paired_full_suite() -> pd.DataFrame:
     if df.empty:
         return df
     metric_cols = [
+        "train_correct@16",
+        "train_joint@16",
+        "train_grounded_joint@16",
+        "train_nl_parse@16",
         "ood_correct@16",
         "ood_joint@16",
         "ood_grounded_joint@16",
@@ -1354,6 +1364,53 @@ def plot_paired_full_suite_partial(summary: pd.DataFrame) -> None:
         ax.set_xlabel("max train depth")
     axes[0].legend(frameon=False, fontsize=8)
     save(fig, "paired_full_suite_official_igsm_partial")
+
+
+def plot_paired_full_suite_family_partial(summary: pd.DataFrame) -> None:
+    if summary.empty:
+        return
+    metrics = [
+        ("train_correct@16", "train correct@16"),
+        ("ood_correct@16", "OOD correct@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+    ]
+    families = [
+        ("official_igsm", "iGSM"),
+        ("maze_navigation", "maze"),
+        ("attribute_constraints_hard", "attribute constraints"),
+    ]
+    fig, axes = plt.subplots(len(families), len(metrics), figsize=(10.8, 7.4), sharex=True, sharey="col")
+    for row_idx, (family, family_label) in enumerate(families):
+        fam = summary[summary["family"] == family].copy()
+        for col_idx, (metric_col, title) in enumerate(metrics):
+            ax = axes[row_idx, col_idx]
+            for template, color in [("logic", COLORS["logic"]), ("nl_exact", COLORS["nl_exact"])]:
+                sub = fam[fam["template"] == template].dropna(subset=[metric_col]).sort_values("train_max")
+                if sub.empty:
+                    continue
+                ax.plot(
+                    sub["train_max"],
+                    sub[metric_col],
+                    marker="o",
+                    color=color,
+                    label=TEMPLATE_LABEL.get(template, template),
+                )
+                for _, point in sub.iterrows():
+                    if int(point["n"]) < 3:
+                        ax.annotate(
+                            f"n={int(point['n'])}",
+                            (point["train_max"], point[metric_col]),
+                            fontsize=7,
+                            xytext=(3, 3),
+                            textcoords="offset points",
+                        )
+            style_axes(ax, f"{family_label}: {title}")
+            if row_idx == len(families) - 1:
+                ax.set_xlabel("max train depth")
+            if col_idx == 0:
+                ax.set_ylabel("pass@16")
+    axes[0, 0].legend(frameon=False, fontsize=8)
+    save(fig, "paired_full_suite_family_partial")
 
 
 def build_experiment_artifact_status() -> pd.DataFrame:
@@ -2765,6 +2822,14 @@ def write_report(
 \caption{Partial official-iGSM full-suite readout from currently completed paired eval rows. Inline n annotations mark any train-depth slices that are not yet three-seed complete.}
 \end{figure}
 """
+    paired_full_family_figure_block = ""
+    if not paired_full_rows.empty and (FIG_DIR / "paired_full_suite_family_partial.pdf").exists():
+        paired_full_family_figure_block = r"""
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\linewidth]{figures/paired_full_suite_family_partial.pdf}
+\caption{Partial paired-family readout for completed eval rows. Empty panels mark family/train-depth slices with no completed JSON yet; inline n annotations mark slices that are not yet three-seed complete.}
+\end{figure}
+"""
     olmo_ckpt_figures = "\n".join(
         f"""\\begin{{figure}}[H]\\centering
 \\includegraphics[width=\\linewidth]{{figures/olmo7b_checkpoint_train1to{train_max}_correct16.pdf}}
@@ -3188,7 +3253,7 @@ This table is artifact-based at report-generation time: it counts completed SFT 
 \end{{table}}
 
 \section{{Paired-family full-suite partial readout}}
-The replacement paired-family eval has started writing artifacts. The table below is intentionally partial: at this report generation time, \texttt{{official\_igsm}} is complete and the first \texttt{{maze\_navigation}} row has completed, while remaining maze and hard attribute-constraint rows are still running or pending. The \texttt{{joint}} column is template-specific: citation-free internal formal validity for logic and translated NL-to-FOL validity for \texttt{{nl\_exact}}. For iGSM, grounded joint validity is currently zero away from trivial retrieval cases because generated variable names and arithmetic-substitution citations do not reliably align with the canonical grounded checker. The targeted iGSM NL rerun has completed all 15 NL rows and recovers near-complete parser coverage, but generated NL translated-validity is still zero on OOD/depth-50 slices; use correctness and parser coverage as provisional diagnostics until non-iGSM rows complete and grounded/canonical checks are improved.
+The replacement paired-family eval is still partial. At this report generation time, \texttt{{official\_igsm}} is complete, \texttt{{maze\_navigation}} has the full train-1-to-5 logic/NL slice, and hard attribute-constraint rows have no completed eval JSONs. The \texttt{{joint}} columns are template-specific: citation-free internal formal validity for logic and translated NL-to-FOL validity for \texttt{{nl\_exact}}. Maze train-1-to-5 shows a sharp train/OOD split rather than a bad gold generator: completed logic rows are perfect in-band but near-zero OOD/depth-50, while completed NL rows are also perfect in-band, somewhat higher on OOD answer correctness, and zero at depth 50. Sample inspection shows coherent complete depth-5 traces, occasional depth-10 success, and depth-25/50 failures dominated by long premise copying, malformed/truncated traces, and generation-cap pressure. For iGSM, grounded joint validity is currently zero away from trivial retrieval cases because generated variable names and arithmetic-substitution citations do not reliably align with the canonical grounded checker. The targeted iGSM NL rerun has completed all 15 NL rows and recovers near-complete parser coverage, but generated NL translated-validity is still zero on OOD/depth-50 slices; use correctness and parser coverage as provisional diagnostics until non-iGSM rows complete and grounded/canonical checks are improved.
 
 \begin{{table}}[H]
 \centering
@@ -3198,6 +3263,8 @@ The replacement paired-family eval has started writing artifacts. The table belo
     ("template", "template"),
     ("train_max", "train max"),
     ("n", "n"),
+    ("train_correct@16", "train c@16"),
+    ("train_joint@16", "train joint@16"),
     ("ood_correct@16", "OOD c@16"),
     ("ood_joint@16", "OOD joint@16"),
     ("ood_grounded_joint@16", "OOD grounded joint"),
@@ -3208,6 +3275,7 @@ The replacement paired-family eval has started writing artifacts. The table belo
 \caption{{Partial paired full-suite summary for completed eval JSONs.}}
 \end{{table}}
 {paired_full_figure_block}
+{paired_full_family_figure_block}
 
 \section{{Targeted ablations}}
 Completed ablation results are shown here; active arrays are tracked in the handoff documents. The current same-token-budget experiment is more precisely a same target-token budget experiment. The logic row in that experiment is a control rerun at 10k steps; the NL row is shortened to 7140 steps so target-token exposure approximately matches 10k logic steps. It does not match total prompt-plus-target tokens; that would require roughly 8600 NL steps and has not been run yet. The symbol-padded logic control is the completed total-sequence-length match to NL at the same optimizer-step budget; the wordified logic length-control is the cleaner equal-length formal follow-up and is now complete. Shortcut rates 0.3, 0.5, and 0.8 are complete. Conditioned dual-modality 10k eval is complete, and the 50k continuation is running.
@@ -3464,6 +3532,7 @@ def main() -> None:
     plot_trace_control_summary(ablation_summaries.get("trace_control", pd.DataFrame()))
     plot_hybrid_order_summary(ablation_summaries.get("hybrid_order", pd.DataFrame()))
     plot_paired_full_suite_partial(paired_full_summary)
+    plot_paired_full_suite_family_partial(paired_full_summary)
     conditioned_comparison = build_conditioned_comparison_table(
         main_summary, ablation_summaries.get("conditioned", pd.DataFrame())
     )
