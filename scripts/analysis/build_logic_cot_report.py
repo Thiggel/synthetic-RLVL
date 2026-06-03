@@ -1287,6 +1287,9 @@ def _summarize_dual_joint_passk(
         if not match:
             continue
         group_map: dict[str, object] = dict(zip(field_names, match.groups(), strict=True))
+        formal_joint_metric = "citation_free_joint_pass"
+        if table_prefix == "trace_control_ablation":
+            formal_joint_metric = "grounded_joint_pass"
         for numeric_field in ("train_max", "seed"):
             if numeric_field in group_map:
                 group_map[numeric_field] = int(group_map[numeric_field])
@@ -1295,10 +1298,10 @@ def _summarize_dual_joint_passk(
             {
                 **group_map,
                 "ood_correct@16": metrics.get("synthetic_sampled/band_ood/correct_pass@16"),
-                "ood_formal_joint@16": metrics.get("synthetic_sampled/band_ood/citation_free_joint_pass@16"),
+                "ood_formal_joint@16": metrics.get(f"synthetic_sampled/band_ood/{formal_joint_metric}@16"),
                 "ood_translated_joint@16": metrics.get("synthetic_sampled/band_ood/nl_logic_joint_pass@16"),
                 "depth50_correct@16": metrics.get("synthetic_sampled/step_50/correct_pass@16"),
-                "depth50_formal_joint@16": metrics.get("synthetic_sampled/step_50/citation_free_joint_pass@16"),
+                "depth50_formal_joint@16": metrics.get(f"synthetic_sampled/step_50/{formal_joint_metric}@16"),
                 "depth50_translated_joint@16": metrics.get("synthetic_sampled/step_50/nl_logic_joint_pass@16"),
             }
         )

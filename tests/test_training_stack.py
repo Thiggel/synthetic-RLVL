@@ -66,7 +66,7 @@ def test_ablation_templates_emit_scorable_targets(template: TemplateName, block_
     assert result.correct == 1.0
 
 
-@pytest.mark.parametrize("template", [TemplateName.RULE_ANNOTATED_NL, TemplateName.PSEUDOCODE])
+@pytest.mark.parametrize("template", [TemplateName.TERSE_NL, TemplateName.RULE_ANNOTATED_NL, TemplateName.PSEUDOCODE])
 def test_controlled_nl_trace_wrappers_translate_to_valid_logic(template: TemplateName):
     gen = LogicDatasetGenerator(DatasetConfig(depth=3, distractor_ratio=0.5, seed=123))
     ex = gen.generate(0)
@@ -106,6 +106,27 @@ def test_invalid_logic_template_breaks_proof_validity():
         gold_first_modality_lines=sample.gold_first_modality_lines,
     )
     assert result.valid == 0.0
+    assert result.grounded_valid == 0.0
+
+
+def test_invalid_logic_citation_free_validity_is_not_grounded_proof_validity():
+    gen = LogicDatasetGenerator(DatasetConfig(depth=3, distractor_ratio=0.5, seed=123))
+    ex = gen.generate(0)
+    cfg = make_task(template=TemplateName.INVALID_LOGIC)
+    sample = task_sample_from_logic_example(ex, cfg=cfg, depth=3)
+
+    result = OutputEvaluator().evaluate(
+        sample.target,
+        template=cfg.template,
+        gold_answer=sample.answer,
+        gold_logic_premises=sample.logic_premises,
+        gold_logic_conclusion=sample.logic_conclusion,
+        prefill=cfg.prefill,
+        gold_first_modality_lines=sample.gold_first_modality_lines,
+    )
+
+    assert result.grounded_valid == 0.0
+    assert result.citation_free_grounded_valid == 1.0
 
 
 def test_high_depth_shortcut_schema_extended_predicates_are_scorable():
