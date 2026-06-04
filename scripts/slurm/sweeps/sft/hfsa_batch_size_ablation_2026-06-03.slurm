@@ -52,6 +52,12 @@ BALANCED=false
 if [[ "${CONDITION}" == "conditioned_dual" ]]; then
   BALANCED=true
 fi
+PER_DEVICE_BATCH_SIZE="${BATCH_SIZE}"
+GRAD_ACCUM_VALUE="${GRAD_ACCUM:-1}"
+if [[ "${BATCH_SIZE}" -ge 16 && "${BSZ16_USE_GRAD_ACCUM:-1}" == "1" ]]; then
+  PER_DEVICE_BATCH_SIZE="${BSZ16_PER_DEVICE_BATCH_SIZE:-8}"
+  GRAD_ACCUM_VALUE="${BSZ16_GRAD_ACCUM:-2}"
+fi
 
 TAG="batch_bsz${BATCH_SIZE}_${CONDITION}_train1to${TRAIN_MAX}"
 RUN_NAME="sft_hfsa_${TAG}_10k_seed${SEED}"
@@ -83,8 +89,8 @@ python train_sft.py \
   data.train_samples="${TRAIN_SAMPLES:-50000}" \
   data.eval_samples="${DATA_EVAL_SAMPLES:-256}" \
   data.max_length="${SFT_MAX_LENGTH:-8192}" \
-  train.per_device_batch_size="${BATCH_SIZE}" \
-  train.grad_accum=1 \
+  train.per_device_batch_size="${PER_DEVICE_BATCH_SIZE}" \
+  train.grad_accum="${GRAD_ACCUM_VALUE}" \
   train.lr="${LR:-1e-4}" \
   train.max_steps="${MAX_STEPS_VALUE}" \
   train.eval_steps="${EVAL_STEPS_VALUE}" \
