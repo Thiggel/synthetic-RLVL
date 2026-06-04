@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-06-03 13:58 CEST.
+Last updated: 2026-06-04 09:42 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -42,6 +42,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - Semantic official-iGSM rerun launched at 2026-06-03 13:28 CEST: failed first build `3695464`, canceled dependents `3695465`/`3695466`, replacement build `3695525`, SFT `3695526_[0-29%3]`, and eval `3695527_[0-29%3]` use fresh `$HPCVAULT` roots and the semantic bare-symbol generator. Old iGSM artifacts are stale because their parquet was materialized before the generator fix and used hidden `v_` constants plus generic `official iGSM relation` NL wording. The new build uses `100k` train rows per train-depth subset so 10k-step, batch-size-1 SFT runs should not repeat examples under the normal no-replacement sampler.
 - Trace-control validator/report correction at 2026-06-03 13:28 CEST: `terse_nl`, `rule_annotated_nl`, and `pseudocode` gold HFSA targets translate to valid logic; symbol-padded and wordified logic validate formally. The issue is that citation-free reconstruction can over-credit `invalid_logic` after deliberately broken citations, so report aggregation now uses strict grounded formal joint for formal trace-control rows. The report was regenerated and mirrored after this correction; refreshed trace-control tables now show `invalid_logic` and `shuffled_logic` formal joint validity as `0.000`, as intended.
 - Old paired-family recovery issue at 2026-06-03 13:58 CEST: recovery array `3694619_[40-89%4]` failed quickly because the old paired eval script still merges adapters into `/home/atuin/.../tmp`, and `$WORK` quota blocked directory creation. Do not resubmit that old recovery unchanged; either patch it to merge under `$HPCVAULT` or deprioritize the stale old full-suite recovery in favor of the semantic iGSM and typed maze reruns.
+- 2026-06-04 09:42 CEST live refresh: semantic iGSM build and all `30/30` SFT rows are complete; eval has `3/30` JSONs, rows `3/4` running, and rows `5..29` throttle-pending. The completed train-1-to-5 logic rows have high train-band joint@16 (`0.969-1.000`) and OOD correct@16 around `0.50-0.54`, but strict grounded joint remains `0.000`. Sample inspection shows generated traces now use semantic object/property labels, but formal handles/premise ordering can differ from gold, so current strict grounded validity is still likely too brittle for variable-renaming/premise-order equivalence and should not be interpreted without more diagnostics.
+- Typed maze build is complete; typed maze SFT has `9/30` finals, rows `9..11` running, and eval is dependency-pending. HFSA batch-size ablation has `3` completed finals, rows `2/5/6` running, bsz16-logic row `3` failed with CUDA OOM on the first step, and bsz16 pending rows `7/11` were canceled as infeasible. The original batch-size eval `3695199` was canceled because its `afterok:3695197` dependency was dead after the OOM; replacement eval `3698280` is submitted for feasible bsz `2/4/8` rows only with `afterany:3695197`.
 
 ## Active Work
 
