@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-06-04 10:18 CEST.
+Last updated: 2026-06-04 13:12 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -44,6 +44,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - Old paired-family recovery issue at 2026-06-03 13:58 CEST: recovery array `3694619_[40-89%4]` failed quickly because the old paired eval script still merges adapters into `/home/atuin/.../tmp`, and `$WORK` quota blocked directory creation. Do not resubmit that old recovery unchanged; either patch it to merge under `$HPCVAULT` or deprioritize the stale old full-suite recovery in favor of the semantic iGSM and typed maze reruns.
 - 2026-06-04 09:42 CEST live refresh: semantic iGSM build and all `30/30` SFT rows are complete; eval has `3/30` JSONs, rows `3/4` running, and rows `5..29` throttle-pending. The completed train-1-to-5 logic rows have high train-band joint@16 (`0.969-1.000`) and OOD correct@16 around `0.50-0.54`, but strict grounded joint remains `0.000`. Sample inspection shows generated traces now use semantic object/property labels, but formal handles/premise ordering can differ from gold, so current strict grounded validity is still likely too brittle for variable-renaming/premise-order equivalence and should not be interpreted without more diagnostics.
 - Typed maze build is complete; typed maze SFT has `9/30` finals, rows `9..11` running, and eval is dependency-pending. HFSA batch-size ablation has `3` completed finals, rows `2/5/6` running, and bsz16-logic row `3` failed with CUDA OOM on the first step under physical microbatch 16. The SFT script now recovers bsz16 as effective batch 16 with microbatch `8` and `grad_accum=2`; bsz16 recovery SFT `3698380_[3,7,11%3]` and full eval `3698381_[0-15%4]` after `afterany:3695197:3698380` replace the earlier feasible-only eval `3698280`. `3698380` was widened from `%1` to `%3` at 10:18 CEST.
+- 2026-06-04 13:12 CEST live refresh: semantic iGSM eval has `6/30` JSONs and rows `6/7/8` running. Typed maze SFT has `12/30` finals and rows `12/13/14` running. Batch-size row `3695197_2` (`bsz8 logic`) timed out at step ~6207 but left `checkpoint-5000`; the SFT script now supports env-controlled `train.resume_from_checkpoint`, and row-2 recovery `3698877_[2%1]` was submitted with `SFT_RESUME_FROM_CHECKPOINT=auto,FORCE_SFT=1`. Canceled stale eval `3698381`; replacement full eval `3698878_[0-15%4]` waits on `afterany:3695197:3698380:3698877`.
 
 ## Active Work
 
