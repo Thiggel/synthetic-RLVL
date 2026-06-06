@@ -52,9 +52,20 @@ def _constant_map(constants: str | Iterable[str] | None) -> dict[str, str]:
                 mapping[_norm(left)] = left
             if right:
                 mapping[_norm(right)] = left
+                for variant in _igsm_quantity_variants(right):
+                    mapping[_norm(variant)] = left
         else:
             mapping[_norm(text)] = text
     return mapping
+
+
+def _igsm_quantity_variants(quantity: str) -> list[str]:
+    text = (quantity or "").strip()
+    variants = [text]
+    for prefix in ("the number of each ", "number of each "):
+        if text.lower().startswith(prefix):
+            variants.append(text[len(prefix) :].strip())
+    return [variant for variant in variants if variant]
 
 
 def _predicate_map(predicates: str | Iterable[str] | None) -> dict[str, str]:
@@ -168,17 +179,23 @@ def _numeric_rhs(formula: str) -> tuple[str, int] | None:
 @dataclass
 class _IgsmTranslationState:
     premise_by_formula: dict[str, int]
+    const_by_name: dict[str, str] | None = None
     current_var: str | None = None
     current_expr: str | None = None
     current_line: int | None = None
     known_lines: dict[str, int] | None = None
     known_values: dict[str, int] | None = None
+    aliases: dict[str, str] | None = None
 
     def __post_init__(self) -> None:
+        if self.const_by_name is None:
+            self.const_by_name = {}
         if self.known_lines is None:
             self.known_lines = {}
         if self.known_values is None:
             self.known_values = {}
+        if self.aliases is None:
+            self.aliases = {}
 
     def remember_if_numeric(self, formula: str, line_number: int) -> None:
         parsed = _numeric_rhs(formula)
@@ -190,11 +207,34 @@ class _IgsmTranslationState:
         self.known_lines[original] = line_number
         self.known_values[original] = value
 
+    def canonical_var_for(self, raw_var: str, quantity: str | None = None) -> str:
+        assert self.aliases is not None and self.const_by_name is not None
+        original = _original_igsm_var(raw_var)
+        if quantity:
+            for variant in _igsm_quantity_variants(quantity):
+                mapped = self.const_by_name.get(_norm(variant))
+                if mapped:
+                    self.aliases[original] = mapped
+                    return mapped
+        mapped = self.aliases.get(original)
+        if mapped:
+            return mapped
+        return _igsm_var_for_style(raw_var, use_v_prefix=raw_var.strip().startswith("v_"))
+
+    def canonicalize_expr(self, expr: str, *, use_v_prefix: bool) -> str:
+        normalized = _normalize_igsm_expr(expr, use_v_prefix=use_v_prefix)
+        assert self.aliases is not None
+        for raw, canonical in sorted(self.aliases.items(), key=lambda item: -len(item[0])):
+            normalized = _replace_igsm_token(normalized, _official_var_name(raw), canonical)
+            normalized = _replace_igsm_token(normalized, _bare_igsm_var(raw), canonical)
+        return normalized
+
 
 _IGSM_RELATION_RE = re.compile(
     r"(?is)^from\s+(?:"
     r"the\s+official\s+igsm\s+relation,\s*"
-    r"|(?:the\s+)?(?:igsm\s+)?(?:definition\s+of|intermediate\s+calculation\s+for)\s+.+?\(\s*(?P<defined_lhs>v_[A-Za-z0-9_]+|[A-Za-z])\s*\),\s*"
+    r"|(?:the\s+)?(?:igsm\s+)?(?P<relation_kind>definition\s+of|intermediate\s+calculation\s+for)\s+"
+    r"(?P<defined_quantity>.+?)\s+\(\s*(?P<defined_lhs>v_[A-Za-z0-9_]+|[A-Za-z])\s*\),\s*"
     r")(?P<lhs>v_[A-Za-z0-9_]+|[A-Za-z])\s+equals\s+(?P<rhs>.+?)\s*$"
 )
 _IGSM_SUBSTITUTE_RE = re.compile(
@@ -210,12 +250,25 @@ def _translate_igsm_line(text: str, *, state: _IgsmTranslationState, line_number
     clause = _unwrap_controlled_trace_line(text).strip().rstrip(".").strip()
     relation = _IGSM_RELATION_RE.match(clause)
     if relation:
-        formula = _normalize_igsm_formula(relation.group("lhs"), relation.group("rhs"))
+        lhs = state.canonical_var_for(
+            relation.group("lhs"),
+            quantity=(
+                relation.groupdict().get("defined_quantity")
+                if (relation.groupdict().get("relation_kind") or "").lower().strip() == "definition of"
+                else None
+            ),
+        )
+        rhs = state.canonicalize_expr(relation.group("rhs"), use_v_prefix=lhs.startswith("v_"))
+        formula = f"{lhs} = {rhs}"
         premise_line = state.premise_by_formula.get(_canonical_formula_text(formula), 1)
         state.current_var = formula.split("=", 1)[0].strip()
         state.current_expr = formula.split("=", 1)[1].strip()
         state.current_line = line_number
         state.remember_if_numeric(formula, line_number)
+        assert state.aliases is not None and state.known_lines is not None
+        raw_original = _original_igsm_var(relation.group("lhs"))
+        state.aliases[raw_original] = state.current_var
+        state.known_lines[raw_original] = line_number
         return formula, f"R,{premise_line}"
 
     substitute = _IGSM_SUBSTITUTE_RE.match(clause)
@@ -225,10 +278,12 @@ def _translate_igsm_line(text: str, *, state: _IgsmTranslationState, line_number
         raw_var = substitute.group("var")
         value = str(int(substitute.group("value")) % 23)
         original = _original_igsm_var(raw_var)
+        canonical = state.canonical_var_for(raw_var)
         state.current_expr = _replace_igsm_token(state.current_expr, _official_var_name(raw_var), value)
         state.current_expr = _replace_igsm_token(state.current_expr, _bare_igsm_var(raw_var), value)
+        state.current_expr = _replace_igsm_token(state.current_expr, canonical, value)
         formula = f"{state.current_var} = {state.current_expr}"
-        known_line = (state.known_lines or {}).get(original, 1)
+        known_line = (state.known_lines or {}).get(original, (state.known_lines or {}).get(_original_igsm_var(canonical), 1))
         justification = f"=E,{known_line},{state.current_line}"
         state.current_line = line_number
         state.remember_if_numeric(formula, line_number)
@@ -236,8 +291,7 @@ def _translate_igsm_line(text: str, *, state: _IgsmTranslationState, line_number
 
     mod_line = _IGSM_MOD_RE.match(clause)
     if mod_line:
-        use_v_prefix = mod_line.group("lhs").strip().startswith("v_")
-        lhs = _igsm_var_for_style(mod_line.group("lhs"), use_v_prefix=use_v_prefix)
+        lhs = state.canonical_var_for(mod_line.group("lhs"))
         formula = f"{lhs} = {int(mod_line.group('value')) % 23}"
         cite = state.current_line if state.current_line is not None else 1
         state.current_var = lhs
@@ -304,7 +358,10 @@ def translate_natural_proof_to_fol(
     parsed = 0
     total = 0
     next_line = int(premise_count) + 1
-    igsm_state = _IgsmTranslationState(premise_by_formula=_proof_premise_map(premises))
+    igsm_state = _IgsmTranslationState(
+        premise_by_formula=_proof_premise_map(premises),
+        const_by_name=_constant_map(constants),
+    )
     for raw in (proof_text or "").splitlines():
         text = raw.strip()
         if not text:

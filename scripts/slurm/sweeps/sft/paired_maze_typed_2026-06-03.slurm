@@ -98,6 +98,7 @@ python train_sft.py \
   train.eval_steps="${EVAL_STEPS_VALUE}" \
   train.save_steps="${SAVE_STEPS:-5000}" \
   train.save_total_limit="${SAVE_TOTAL_LIMIT:-3}" \
+  train.resume_from_checkpoint="${SFT_RESUME_FROM_CHECKPOINT:-null}" \
   train.gradient_checkpointing="${GRADIENT_CHECKPOINTING:-true}" \
   validation.step_max="${ONLINE_VAL_MAX:-25}" \
   validation.samples_per_step="${ONLINE_SAMPLES_PER_STEP:-4}" \

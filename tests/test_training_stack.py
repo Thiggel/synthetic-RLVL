@@ -555,6 +555,44 @@ Evaluate the arithmetic modulo 23 to get V = 19.
     assert result.nl_logic_citation_free_valid == 1.0
 
 
+def test_igsm_nl_exact_trace_canonicalizes_semantic_variable_aliases():
+    output = """<think>
+<premises>
+The number of each Grizzly Bear's Pericardium equals 20.
+The number of each African Elephant's Pericardium equals 9 times as much as each Grizzly Bear's Pericardium.
+</premises>
+<proof>
+From the definition of Grizzly Bear's Pericardium (c), c equals 20.
+From the definition of African Elephant's Pericardium (s), s equals 9 * c.
+Substitute c = 20 into the current expression.
+Evaluate the arithmetic modulo 23 to get s = 19.
+</proof>
+<conclusion>
+Evaluate the arithmetic modulo 23 to get s = 19.
+</conclusion>
+</think>
+<answer>
+19
+</answer>"""
+    result = OutputEvaluator().evaluate(
+        output,
+        template=TemplateName.NL_EXACT,
+        gold_answer="19",
+        gold_logic_premises="k = 20\nV = 9 * k",
+        gold_logic_conclusion="V = 19",
+        gold_logic_constants=(
+            "k = the number of each Grizzly Bear's Pericardium\n"
+            "V = the number of each African Elephant's Pericardium"
+        ),
+        gold_logic_predicates="",
+    )
+
+    assert result.format_ok == 1.0
+    assert result.correct == 1.0
+    assert result.nl_logic_parse == 1.0
+    assert result.nl_logic_citation_free_valid == 1.0
+
+
 def test_igsm_legacy_v_prefixed_trace_still_translates_to_valid_logic():
     output = """<think>
 <premises>
