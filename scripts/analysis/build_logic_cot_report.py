@@ -1578,6 +1578,36 @@ def summarize_paired_igsm_semantic() -> pd.DataFrame:
     return summary
 
 
+def plot_paired_igsm_semantic(summary: pd.DataFrame) -> None:
+    if summary.empty:
+        return
+    metrics = [
+        ("ood_correct@16", "OOD hard-tail correct@16"),
+        ("ood_valid_or_parse@16", "OOD valid/parse@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+        ("depth50_valid_or_parse@16", "depth-50 valid/parse@16"),
+    ]
+    fig, axes = plt.subplots(2, 2, figsize=(9.4, 6.0), sharex=True, sharey=True)
+    for ax, (col, title) in zip(axes.ravel(), metrics, strict=True):
+        for template, color in [("logic", COLORS["logic"]), ("nl_exact", COLORS["nl_exact"])]:
+            sub = summary[summary["template"] == template].copy()
+            sub[col] = pd.to_numeric(sub[col], errors="coerce")
+            sub = sub.dropna(subset=[col]).sort_values("train_max")
+            if sub.empty:
+                continue
+            ax.plot(
+                sub["train_max"],
+                sub[col],
+                marker="o",
+                color=color,
+                label=TEMPLATE_LABEL.get(template, template),
+            )
+        style_axes(ax, title)
+        ax.set_xlabel("max train depth")
+    axes[0, 0].legend(frameon=False, fontsize=8)
+    save(fig, "paired_igsm_semantic_summary")
+
+
 def plot_paired_full_suite_partial(summary: pd.DataFrame) -> None:
     if summary.empty:
         return
@@ -3415,6 +3445,14 @@ def write_report(
 \caption{Partial paired-family readout for completed eval rows. Empty panels mark family/train-depth slices with no completed JSON yet; inline n annotations mark slices that are not yet three-seed complete.}
 \end{figure}
 """
+    paired_igsm_semantic_figure_block = ""
+    if not paired_igsm_semantic_rows.empty and (FIG_DIR / "paired_igsm_semantic_summary.pdf").exists():
+        paired_igsm_semantic_figure_block = r"""
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\linewidth]{figures/paired_igsm_semantic_summary.pdf}
+\caption{Corrected semantic iGSM curves over train-depth range. For logic, valid/parse is internal citation-free proof validity; for NL, valid/parse is NL-to-logic parse coverage after semantic alias canonicalization.}
+\end{figure}
+"""
     olmo_ckpt_figures = "\n".join(
         f"""\\begin{{figure}}[H]\\centering
 \\includegraphics[width=\\linewidth]{{figures/olmo7b_checkpoint_train1to{train_max}_correct16.pdf}}
@@ -3902,6 +3940,7 @@ The semantic iGSM rerun is the current iGSM result: it uses bare semantic variab
 ])}
 \caption{{Corrected semantic iGSM pass@16 summary over three seeds. OOD is the hard-tail band.}}
 \end{{table}}
+{paired_igsm_semantic_figure_block}
 
 \section{{Targeted ablations}}
 Completed ablation results are shown here; active arrays are tracked in the handoff documents. The current same-token-budget experiment is more precisely a same target-token budget experiment. The logic row in that experiment is a control rerun at 10k steps; the NL row is shortened to 7140 steps so target-token exposure approximately matches 10k logic steps. It does not match total prompt-plus-target tokens; that would require roughly 8600 NL steps and has not been run yet. The symbol-padded logic control is the completed total-sequence-length match to NL at the same optimizer-step budget; the wordified logic length-control is the cleaner equal-length formal follow-up and is now complete. Shortcut rates 0.3, 0.5, and 0.8 are complete. Conditioned dual-modality 10k eval is complete, and the 50k continuation is running.
@@ -4178,6 +4217,7 @@ def main() -> None:
     plot_hybrid_order_summary(build_hybrid_order_with_baselines(main_summary, ablation_summaries.get("hybrid_order", pd.DataFrame())))
     plot_paired_full_suite_partial(paired_full_summary)
     plot_paired_full_suite_family_partial(paired_full_summary)
+    plot_paired_igsm_semantic(paired_igsm_semantic_summary)
     conditioned_comparison = build_conditioned_comparison_table(
         main_summary, ablation_summaries.get("conditioned", pd.DataFrame())
     )
