@@ -93,6 +93,9 @@ WORDIFIED_RE = re.compile(
 PAIRED_FULL_RE = re.compile(
     r"sft_paired_full_(official_igsm|maze_navigation|attribute_constraints_hard)_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
 )
+PAIRED_IGSM_SEMANTIC_RE = re.compile(
+    r"sft_paired_igsm_semantic_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
+)
 
 DEPTHS_FINAL = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 35, 40, 45, 50]
 DEPTHS_TINY = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 40, 50]
@@ -1469,6 +1472,109 @@ def summarize_paired_full_suite() -> pd.DataFrame:
     )
     summary = summary.sort_values(["family", "template", "train_max"])
     write_csv(TABLE_DIR / "paired_full_suite_partial_summary.csv", summary.to_dict("records"))
+    return summary
+
+
+def _metric_any(metrics: dict[str, float], names: list[str]) -> float | None:
+    for name in names:
+        value = metrics.get(name)
+        if isinstance(value, (int, float)):
+            return float(value)
+    return None
+
+
+def _semantic_igsm_roots() -> list[Path]:
+    candidates = [PASSK_ROOT / "paired_igsm_semantic_sparse_20260603"]
+    hpcvault = os.environ.get("HPCVAULT")
+    if hpcvault:
+        candidates.append(
+            Path(hpcvault) / "synthetic-RLVL" / "passk_eval" / "paired_igsm_semantic_sparse_20260603"
+        )
+    roots: list[Path] = []
+    seen: set[Path] = set()
+    for root in candidates:
+        resolved = root.resolve() if root.exists() else root
+        if resolved not in seen:
+            seen.add(resolved)
+            roots.append(root)
+    return roots
+
+
+def summarize_paired_igsm_semantic() -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    for root in _semantic_igsm_roots():
+        if not root.exists():
+            continue
+        for path in sorted(root.glob("*_passk.json")):
+            match = PAIRED_IGSM_SEMANTIC_RE.match(path.name)
+            if not match:
+                continue
+            template, train_max, seed = match.groups()
+            metrics = read_payload(path)["metrics"]
+            valid_name = "citation_free_valid_pass" if template == "logic" else "nl_logic_parse_pass"
+            joint_name = "citation_free_joint_pass" if template == "logic" else "nl_logic_joint_pass"
+            rows.append(
+                {
+                    "template": template,
+                    "train_max": int(train_max),
+                    "seed": int(seed),
+                    "ood_correct@16": _metric_any(
+                        metrics,
+                        [
+                            "synthetic_sampled/band_hard_tail/correct_pass@16",
+                            "synthetic_sampled/band_ood/correct_pass@16",
+                        ],
+                    ),
+                    "ood_valid_or_parse@16": _metric_any(
+                        metrics,
+                        [
+                            f"synthetic_sampled/band_hard_tail/{valid_name}@16",
+                            f"synthetic_sampled/band_ood/{valid_name}@16",
+                        ],
+                    ),
+                    "ood_joint@16": _metric_any(
+                        metrics,
+                        [
+                            f"synthetic_sampled/band_hard_tail/{joint_name}@16",
+                            f"synthetic_sampled/band_ood/{joint_name}@16",
+                        ],
+                    ),
+                    "ood_grounded_joint@16": _metric_any(
+                        metrics,
+                        [
+                            "synthetic_sampled/band_hard_tail/citation_free_grounded_joint_pass@16",
+                            "synthetic_sampled/band_ood/citation_free_grounded_joint_pass@16",
+                        ],
+                    ),
+                    "depth50_correct@16": metrics.get("synthetic_sampled/step_50/correct_pass@16"),
+                    "depth50_valid_or_parse@16": metrics.get(f"synthetic_sampled/step_50/{valid_name}@16"),
+                    "depth50_joint@16": metrics.get(f"synthetic_sampled/step_50/{joint_name}@16"),
+                    "depth50_grounded_joint@16": metrics.get(
+                        "synthetic_sampled/step_50/citation_free_grounded_joint_pass@16"
+                    ),
+                }
+            )
+    if rows:
+        write_csv(TABLE_DIR / "paired_igsm_semantic_by_seed.csv", rows)
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df
+    metric_cols = [
+        "ood_correct@16",
+        "ood_valid_or_parse@16",
+        "ood_joint@16",
+        "ood_grounded_joint@16",
+        "depth50_correct@16",
+        "depth50_valid_or_parse@16",
+        "depth50_joint@16",
+        "depth50_grounded_joint@16",
+    ]
+    summary = df.groupby(["template", "train_max"], as_index=False).agg(
+        n=("seed", "nunique"),
+        **{col: (col, "mean") for col in metric_cols},
+    )
+    summary = summary.sort_values(["template", "train_max"])
+    write_csv(TABLE_DIR / "paired_igsm_semantic_summary.csv", summary.to_dict("records"))
     return summary
 
 
@@ -3093,6 +3199,7 @@ def write_report(
     olmo32_cot_bare_gsm8k: pd.DataFrame,
     ablation_summaries: dict[str, pd.DataFrame],
     paired_full_summary: pd.DataFrame,
+    paired_igsm_semantic_summary: pd.DataFrame,
     cot_bare_examples: list[dict[str, object]],
     main_ckpt_note: str,
     tiny_ckpt_count: int,
@@ -3152,6 +3259,11 @@ def write_report(
     paired_full_rows = paired_full_summary.copy() if not paired_full_summary.empty else pd.DataFrame()
     if not paired_full_rows.empty:
         paired_full_rows = paired_full_rows.sort_values(["family", "template", "train_max"])
+    paired_igsm_semantic_rows = (
+        paired_igsm_semantic_summary.copy() if not paired_igsm_semantic_summary.empty else pd.DataFrame()
+    )
+    if not paired_igsm_semantic_rows.empty:
+        paired_igsm_semantic_rows = paired_igsm_semantic_rows.sort_values(["template", "train_max"])
     shortcut_comparison_rows = build_shortcut_comparison_table(main_summary, shortcut_rows)
     conditioned_comparison_rows = build_conditioned_comparison_table(main_summary, conditioned_rows)
     trace_control_comparison_rows = build_trace_control_with_baselines(main_summary, trace_control_rows)
@@ -3770,6 +3882,27 @@ The replacement paired-family eval is still partial. At this report generation t
 {paired_full_figure_block}
 {paired_full_family_figure_block}
 
+\subsection{{Semantic iGSM rerun}}
+The semantic iGSM rerun is the current iGSM result: it uses bare semantic variables and definition-style NL proof prose rather than the old hidden \texttt{{v\_}} handles and generic ``official iGSM relation'' wording. The table below uses the corrected NL alias canonicalizer and clean forced NL re-eval. For logic, ``valid/parse'' is internal citation-free proof validity; for NL it is NL-to-logic parse coverage. The corrected result separates answer accuracy from validated reasoning: NL answer accuracy rises strongly with train range, but OOD/depth-50 translated joint validity remains zero because long generated traces drift/truncate and only small prefixes validate. Logic has nonzero internal validity but lower answer accuracy and zero strict grounded joint.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(paired_igsm_semantic_rows, [
+    ("template", "template"),
+    ("train_max", "train max"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_valid_or_parse@16", "OOD valid/parse@16"),
+    ("ood_joint@16", "OOD joint@16"),
+    ("ood_grounded_joint@16", "OOD grounded joint"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_valid_or_parse@16", "d50 valid/parse@16"),
+    ("depth50_joint@16", "d50 joint@16"),
+])}
+\caption{{Corrected semantic iGSM pass@16 summary over three seeds. OOD is the hard-tail band.}}
+\end{{table}}
+
 \section{{Targeted ablations}}
 Completed ablation results are shown here; active arrays are tracked in the handoff documents. The current same-token-budget experiment is more precisely a same target-token budget experiment. The logic row in that experiment is a control rerun at 10k steps; the NL row is shortened to 7140 steps so target-token exposure approximately matches 10k logic steps. It does not match total prompt-plus-target tokens; that would require roughly 8600 NL steps and has not been run yet. The symbol-padded logic control is the completed total-sequence-length match to NL at the same optimizer-step budget; the wordified logic length-control is the cleaner equal-length formal follow-up and is now complete. Shortcut rates 0.3, 0.5, and 0.8 are complete. Conditioned dual-modality 10k eval is complete, and the 50k continuation is running.
 
@@ -4008,6 +4141,7 @@ def main() -> None:
     olmo32_cot_bare_gsm8k = load_olmo32_cot_bare_gsm8k()
     ablation_summaries = load_ablation_summaries()
     paired_full_summary = summarize_paired_full_suite()
+    paired_igsm_semantic_summary = summarize_paired_igsm_semantic()
     conditioned_50k_checkpoint_summary = load_conditioned_50k_checkpoint_summary()
 
     write_csv(TABLE_DIR / "main_olmo7b_summary.csv", main_summary.to_dict("records"))
@@ -4067,6 +4201,7 @@ def main() -> None:
         olmo32_cot_bare_gsm8k,
         ablation_summaries,
         paired_full_summary,
+        paired_igsm_semantic_summary,
         cot_bare_examples,
         main_checkpoint_note(main_ckpt),
         len(tiny_ckpt),
