@@ -23,7 +23,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 ## Partition Audit
 
-Checked at 2026-06-10 19:28 CEST. Typed maze eval `3705795_0..2` and bsz16 recovery `3715329_3/7/11` are running on compatible A100-80GB resources. Remaining maze eval rows are array-throttle pending, and batch-size eval `3715330` is dependency-pending on `afterany:3715329_*`. No partition widening is useful: the jobs request `a100_80&el9` with 240GB/GPU, and the visible blockers are array throttles or dependencies rather than an avoidable partition restriction. Oversight `3715439` completed cleanly; later one-off oversight jobs are pending on begin time. Visible `puzzle_*` and `babylm-*` jobs are unrelated to this handoff.
+Checked at 2026-06-10 19:42 CEST. Typed maze eval `3705795_0..2` and bsz16 recovery `3715329_3/7/11` are running on compatible A100-80GB resources. Remaining maze eval rows are array-throttle pending, and batch-size eval `3715330` is dependency-pending on `afterany:3715329_*`. No partition widening is useful: the jobs request `a100_80&el9` with 240GB/GPU, and the visible blockers are array throttles or dependencies rather than an avoidable partition restriction. No walltime extension is available because the active jobs already have `TimeLimit=1-00:00:00`, matching the `a100` partition `MaxTime`. Oversight `3715439` completed cleanly; later one-off oversight jobs are pending on begin time. Visible `puzzle_*` and `babylm-*` jobs are unrelated to this handoff.
 
 No visible `tjepa_*` or `seqedit_*` jobs were present in the queue check.
 
