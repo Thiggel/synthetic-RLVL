@@ -2,6 +2,10 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-06-10
+
+- 11:07 CEST live refresh/recovery: typed maze SFT is complete at `30/30` final adapters; eval `3705795_[0-29%3]` is maintenance-held with `0` JSONs. Bsz16 batch-size recovery `3711850_[3,7,11%3]` timed out after 20h but made checkpoint progress: logic reached `checkpoint-8000`, `nl_exact` reached `checkpoint-6000`, and conditioned-dual reached `checkpoint-6000`. Canceled stale eval `3711851` because its `afterany` dependency was satisfied by timeout while the three bsz16 finals were still missing. Submitted new recovery `3715329_[3,7,11%3]` and replacement eval `3715330_[0-15%4]` after `afterany:3695197:3698877:3702079:3705794:3715329`; both are pending behind active maintenance reservation `MAINT20260609` until 2026-06-11 18:00 CEST.
+
 ## 2026-06-08
 
 - 09:22 CEST report figure refresh: added `figures/paired_igsm_semantic_summary.{pdf,png}` to the report builder and embedded it in the semantic-iGSM subsection, so the corrected iGSM rerun now has both table and train-depth curves analogous to the original synthetic-task plots. Regenerated and mirrored the report; verification found `70` LaTeX figure references and zero missing figures.
