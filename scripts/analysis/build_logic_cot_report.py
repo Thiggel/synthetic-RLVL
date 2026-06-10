@@ -1684,9 +1684,18 @@ def plot_paired_full_suite_family_partial(summary: pd.DataFrame) -> None:
 
 def build_experiment_artifact_status() -> pd.DataFrame:
     runs_root = WORK_ROOT / "synthetic-RLVL" / "runs"
+    hpcvault = os.environ.get("HPCVAULT")
+    extra_runs_root = Path(hpcvault) / "synthetic-RLVL" / "runs" if hpcvault else None
+    extra_passk_root = Path(hpcvault) / "synthetic-RLVL" / "passk_eval" if hpcvault else None
 
     def has_final(run_name: str) -> bool:
-        return (runs_root / run_name / "final" / "adapter_config.json").exists()
+        candidates = [runs_root / run_name / "final" / "adapter_config.json"]
+        if extra_runs_root is not None:
+            candidates.append(extra_runs_root / run_name / "final" / "adapter_config.json")
+        return any(path.exists() for path in candidates)
+
+    def count_jsons(root: Path | None, pattern: str = "*_passk.json") -> int:
+        return len(list(root.glob(pattern))) if root is not None and root.exists() else 0
 
     rows: list[dict[str, object]] = []
     paired_eval_root = PASSK_ROOT / "paired_full_suite_sparse_20260528"
@@ -1702,7 +1711,7 @@ def build_experiment_artifact_status() -> pd.DataFrame:
                 for seed in [3407, 3408, 3409]:
                     run_name = f"sft_paired_full_{family}_{template}_train1to{train_max}_10k_seed{seed}"
                     sft_done += int(has_final(run_name))
-        eval_done = len(list(paired_eval_root.glob(f"sft_paired_full_{family}_*_passk.json")))
+        eval_done = count_jsons(paired_eval_root, f"sft_paired_full_{family}_*_passk.json")
         rows.append(
             {
                 "experiment": label,
@@ -1714,6 +1723,65 @@ def build_experiment_artifact_status() -> pd.DataFrame:
                 "status": "eval pending" if eval_done == 0 else ("complete" if eval_done == expected else "partial eval"),
             }
         )
+
+    semantic_sft = 0
+    for train_max in [5, 10, 15, 20, 25]:
+        for template in ["logic", "nl_exact"]:
+            for seed in [3407, 3408, 3409]:
+                semantic_sft += int(has_final(f"sft_paired_igsm_semantic_{template}_train1to{train_max}_10k_seed{seed}"))
+    semantic_eval = sum(
+        count_jsons(root, "sft_paired_igsm_semantic_*_passk.json") for root in _semantic_igsm_roots()
+    )
+    rows.append(
+        {
+            "experiment": "semantic iGSM",
+            "scope": "semantic bare-symbol paired rerun",
+            "sft_done": semantic_sft,
+            "sft_expected": 30,
+            "eval_done": semantic_eval,
+            "eval_expected": 30,
+            "status": "complete" if semantic_eval == 30 else ("eval pending" if semantic_eval == 0 else "partial eval"),
+        }
+    )
+
+    typed_maze_root = (
+        extra_passk_root / "paired_maze_typed_sparse_20260603" if extra_passk_root is not None else None
+    )
+    typed_maze_sft = 0
+    for train_max in [5, 10, 15, 20, 25]:
+        for template in ["logic", "nl_exact"]:
+            for seed in [3407, 3408, 3409]:
+                typed_maze_sft += int(has_final(f"sft_paired_maze_typed_{template}_train1to{train_max}_10k_seed{seed}"))
+    typed_maze_eval = count_jsons(typed_maze_root, "sft_paired_maze_typed_*_passk.json")
+    rows.append(
+        {
+            "experiment": "typed maze",
+            "scope": "typed-symbol paired rerun",
+            "sft_done": typed_maze_sft,
+            "sft_expected": 30,
+            "eval_done": typed_maze_eval,
+            "eval_expected": 30,
+            "status": "complete" if typed_maze_eval == 30 else ("eval running" if typed_maze_eval == 0 and typed_maze_sft == 30 else "partial eval"),
+        }
+    )
+
+    hard_attr_root = (
+        extra_passk_root / "paired_attribute_constraints_hard_full_20260610"
+        if extra_passk_root is not None
+        else None
+    )
+    hard_attr_eval = count_jsons(hard_attr_root, "sft_paired_full_attribute_constraints_hard_*_passk.json")
+    rows.append(
+        {
+            "experiment": "hard attribute fresh",
+            "scope": "fresh hard-attribute-only eval",
+            "sft_done": 30,
+            "sft_expected": 30,
+            "eval_done": hard_attr_eval,
+            "eval_expected": 30,
+            "status": "complete" if hard_attr_eval == 30 else ("eval running" if hard_attr_eval == 0 else "partial eval"),
+        }
+    )
 
     for name, scope, expected, root in [
         ("trace controls", "six train-1-to-25 perturbations", 18, PASSK_ROOT / "hfsa_ablation_trace_controls_20260525"),
@@ -1741,6 +1809,24 @@ def build_experiment_artifact_status() -> pd.DataFrame:
                 "status": status,
             }
         )
+
+    batch_root = extra_passk_root / "hfsa_batch_size_ablation_20260603" if extra_passk_root is not None else None
+    batch_sft = 0
+    for bsz in [2, 4, 8, 16]:
+        for template in ["logic", "nl_exact", "conditioned_dual"]:
+            batch_sft += int(has_final(f"sft_hfsa_batch_bsz{bsz}_{template}_train1to20_10k_seed3407"))
+    batch_eval = count_jsons(batch_root, "*_passk.json")
+    rows.append(
+        {
+            "experiment": "batch-size",
+            "scope": "logic/NL/conditioned dual bsz 2/4/8/16",
+            "sft_done": batch_sft,
+            "sft_expected": 12,
+            "eval_done": batch_eval,
+            "eval_expected": 16,
+            "status": "complete" if batch_eval == 16 else ("SFT recovery running" if batch_sft < 12 else ("eval pending" if batch_eval == 0 else "partial eval")),
+        }
+    )
 
     df = pd.DataFrame(rows)
     write_csv(TABLE_DIR / "active_experiment_artifact_status.csv", df.to_dict("records"))
@@ -3285,6 +3371,16 @@ def write_report(
     hybrid_order_rows = ablation_summaries.get("hybrid_order", pd.DataFrame())
     conditioned_rows = ablation_summaries.get("conditioned", pd.DataFrame())
     conditioned_50k_rows = ablation_summaries.get("conditioned_50k", pd.DataFrame())
+    conditioned_50k_eval_count = int(conditioned_50k_rows["n"].sum()) if not conditioned_50k_rows.empty else 0
+    if conditioned_50k_eval_count >= 30:
+        conditioned_50k_status_sentence = "The 50k final eval is complete at 30/30 rows."
+    elif conditioned_50k_eval_count:
+        conditioned_50k_status_sentence = (
+            f"The 50k final eval is partial at {conditioned_50k_eval_count}/30 rows; "
+            "the n column marks seed coverage and the missing conditioned-NL rows are in targeted recovery."
+        )
+    else:
+        conditioned_50k_status_sentence = "The 50k final eval has not written pass@k rows yet."
     experiment_status_rows = build_experiment_artifact_status()
     paired_full_rows = paired_full_summary.copy() if not paired_full_summary.empty else pd.DataFrame()
     if not paired_full_rows.empty:
@@ -3381,22 +3477,31 @@ def write_report(
             formal_think_complete_max = int(formal_complete["train_max"].max())
     formal_think_status = "\\texttt{formal\\_think} is still incomplete."
     if formal_think_complete_max:
-        formal_think_status = (
-            f"\\texttt{{formal\\_think}} is complete through train-1-to-{formal_think_complete_max}, "
-            "with deeper rows still incomplete."
-        )
+        if formal_think_complete_max >= 25:
+            formal_think_status = (
+                "\\texttt{formal\\_think} is complete through train-1-to-25, "
+                "so the full hybrid-order grid is complete."
+            )
+        else:
+            formal_think_status = (
+                f"\\texttt{{formal\\_think}} is complete through train-1-to-{formal_think_complete_max}, "
+                "with deeper rows still incomplete."
+            )
     if think_formal_train25_n >= 3:
+        hybrid_complete = formal_think_complete_max >= 25
         hybrid_order_status_sentence = (
             "Current completed rows cover all \\texttt{think\\_formal} seeds through "
             f"train-1-to-25; {formal_think_status}"
         )
         hybrid_order_table_caption = (
-            "Hybrid-order partial summary. \\texttt{think\\_formal} train-1-to-25 "
-            f"is now three-seed complete; {formal_think_status}"
+            ("Hybrid-order full-grid summary. " if hybrid_complete else "Hybrid-order partial summary. ")
+            + "\\texttt{think\\_formal} train-1-to-25 is three-seed complete; "
+            + formal_think_status
         )
         hybrid_order_figure_caption = (
-            "Hybrid order partial eval with normal logic/NL baseline curves. \\texttt{think\\_formal} is NL then formal "
-            f"and is complete through train-1-to-25; {formal_think_status}"
+            ("Hybrid order full eval with normal logic/NL baseline curves. " if hybrid_complete else "Hybrid order partial eval with normal logic/NL baseline curves. ")
+            + "\\texttt{think\\_formal} is NL then formal and is complete through train-1-to-25; "
+            + formal_think_status
         )
     else:
         hybrid_order_status_sentence = (
@@ -3426,7 +3531,7 @@ def write_report(
         conditioned_50k_curve_block = r"""
 \begin{figure}[H]\centering
 \includegraphics[width=0.95\linewidth]{figures/ablation_conditioned_dual_50k_convergence_train1to25.pdf}
-\caption{Conditioned dual-modality 50k convergence curves for train-1-to-25. Points are three-seed means for checkpoint evals available at report generation time; the conditioned-logic curve now reaches 50k, while conditioned-NL points will appear if the remaining checkpoint rows write JSONs.}
+\caption{Conditioned dual-modality 50k convergence curves for train-1-to-25. Points are three-seed means for completed checkpoint evals; both conditioned-logic and conditioned-NL checkpoint curves now reach 50k.}
 \end{figure}
 """
     paired_full_figure_block = ""
@@ -4094,6 +4199,8 @@ The hybrid-order ablation trains a single prompt containing both trace substrate
 \end{{table}}
 {hybrid_order_figure_block}
 
+Sample inspection of the completed train-1-to-20/25 hybrid rows matches the intended surfaces: \texttt{{formal\_think}} starts with a \texttt{{<formal>}} block followed by \texttt{{<think>}}/\texttt{{<answer>}}, and \texttt{{think\_formal}} reverses that order. Shallow and train-band successes often have correct answers and translated NL proofs, but the formal block frequently omits explicit proof citations, so strict grounded formal validity is much lower than citation-free formal validity. At depth 50, both orders often truncate, lose required tags, or drift into long premise copying. The hybrid result should therefore be read as a sequence-format/interference result, not as evidence that combining both substrates gives more robust long-depth reasoning.
+
 Conditioned dual-modality is different from the hybrid-order setup: the SFT data builder duplicates each materialized row into two separate examples, one prompted with \texttt{{<reasoning\_mode>formal\_logic</reasoning\_mode>}} and one prompted with \texttt{{<reasoning\_mode>natural\_language</reasoning\_mode>}}. Evaluation uses the same mode prompt. Thus there is no direct train-test mismatch where training has both traces in one target but eval asks for only one. The main caveat is exposure/interference: at fixed optimizer steps, each modality receives roughly half the updates of a single-modality run, and the shared adapter must fit both surfaces.
 
 \begin{{table}}[H]
@@ -4126,9 +4233,11 @@ Conditioned dual-modality is different from the hybrid-order setup: the SFT data
     ("depth50_correct@16", "d50 c@16"),
     ("depth50_joint@16", "d50 joint@16"),
 ])}
-\caption{{Conditioned dual-modality 50k final eval summary. No rows means the 50k continuation/eval chain has not reached final pass@k output yet.}}
+\caption{{Conditioned dual-modality 50k final eval summary. {conditioned_50k_status_sentence}}}
 \end{{table}}
 {conditioned_50k_curve_block}
+
+The completed 50k checkpoint samples preserve the intended conditioned prompts: formal-mode generations use \texttt{{<formal>}}/\texttt{{<answer>}}, while NL-mode generations use \texttt{{<think>}}/\texttt{{<answer>}}. The checkpoint curves therefore do not indicate a prompt mismatch. Instead, representative hard-depth samples show underexposure/interference symptoms: conditioned logic remains brittle on long proofs despite extra steps, and conditioned NL can produce valid translated train-band traces while depth-50 traces truncate or collapse into unsupported state lists. The pending final recovery rows are needed for the final 50k table, but the completed checkpoint sweep already argues against simple ``just train longer'' as a full explanation.
 
 \section{{Qualitative samples}}
 The companion PDF \texttt{{figures/sample\_generation\_panels.pdf}} contains synthetic generated examples with extracted answer, gold answer, correctness, and validity metadata. The following samples are from the completed bare-format OOD rerun for OLMo-7B train-1-to-25 seed 3407.
