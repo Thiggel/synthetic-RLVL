@@ -96,6 +96,16 @@ PAIRED_FULL_RE = re.compile(
 PAIRED_IGSM_SEMANTIC_RE = re.compile(
     r"sft_paired_igsm_semantic_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
 )
+PAIRED_MAZE_TYPED_RE = re.compile(
+    r"sft_paired_maze_typed_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
+)
+PAIRED_HARD_ATTR_FRESH_RE = re.compile(
+    r"sft_paired_full_attribute_constraints_hard_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$"
+)
+HFSA_BATCH_SIZE_RE = re.compile(
+    r"sft_hfsa_batch_bsz(\d+)_(logic|nl_exact|conditioned_dual)_train1to(\d+)_10k_seed(\d+)_"
+    r"(logic|nl_exact|conditioned_logic|conditioned_nl)_passk\.json$"
+)
 
 DEPTHS_FINAL = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 35, 40, 45, 50]
 DEPTHS_TINY = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 40, 50]
@@ -1500,6 +1510,22 @@ def _semantic_igsm_roots() -> list[Path]:
     return roots
 
 
+def _passk_roots(subdir: str) -> list[Path]:
+    candidates = [PASSK_ROOT / subdir]
+    hpcvault = os.environ.get("HPCVAULT")
+    if hpcvault:
+        candidates.append(Path(hpcvault) / "synthetic-RLVL" / "passk_eval" / subdir)
+    roots: list[Path] = []
+    seen: set[Path] = set()
+    for root in candidates:
+        resolved = root.resolve() if root.exists() else root
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        roots.append(root)
+    return roots
+
+
 def summarize_paired_igsm_semantic() -> pd.DataFrame:
     rows: list[dict[str, object]] = []
     for root in _semantic_igsm_roots():
@@ -1606,6 +1632,282 @@ def plot_paired_igsm_semantic(summary: pd.DataFrame) -> None:
         ax.set_xlabel("max train depth")
     axes[0, 0].legend(frameon=False, fontsize=8)
     save(fig, "paired_igsm_semantic_summary")
+
+
+def _paired_joint_name(template: str) -> str:
+    return "citation_free_joint_pass" if template == "logic" else "nl_logic_joint_pass"
+
+
+def _paired_valid_or_parse_name(template: str) -> str:
+    return "citation_free_valid_pass" if template == "logic" else "nl_logic_parse_pass"
+
+
+def _metric_from_bands(metrics: dict[str, float], band: str, name: str, k: int = 16) -> float | None:
+    return _metric_any(
+        metrics,
+        [
+            f"synthetic_sampled/band_{band}/{name}@{k}",
+            f"synthetic_sampled/{band}/{name}@{k}",
+        ],
+    )
+
+
+def _metric_from_step(metrics: dict[str, float], depth: int, name: str, k: int = 16) -> float | None:
+    return _metric_any(
+        metrics,
+        [
+            f"synthetic_sampled/step_{depth}/{name}@{k}",
+            f"synthetic_sampled/depth_{depth}/{name}@{k}",
+        ],
+    )
+
+
+def summarize_active_paired_partials() -> pd.DataFrame:
+    specs = [
+        (
+            "typed_maze",
+            "typed maze",
+            _passk_roots("paired_maze_typed_sparse_20260603"),
+            PAIRED_MAZE_TYPED_RE,
+            "formal cap 4096; NL cap 6144",
+        ),
+        (
+            "hard_attribute_fresh",
+            "hard attribute",
+            _passk_roots("paired_attribute_constraints_hard_full_20260610"),
+            PAIRED_HARD_ATTR_FRESH_RE,
+            "formal cap 12288 except targeted row-1 recovery at 8192; NL cap 8192",
+        ),
+    ]
+    rows: list[dict[str, object]] = []
+    for family, display_family, roots, regex, cap_note in specs:
+        for root in roots:
+            if not root.exists():
+                continue
+            for path in sorted(root.glob("*_passk.json")):
+                match = regex.match(path.name)
+                if not match:
+                    continue
+                template, train_max, seed = match.groups()
+                metrics = read_payload(path)["metrics"]
+                joint = _paired_joint_name(template)
+                valid_or_parse = _paired_valid_or_parse_name(template)
+                rows.append(
+                    {
+                        "family": family,
+                        "display_family": display_family,
+                        "template": template,
+                        "train_max": int(train_max),
+                        "seed": int(seed),
+                        "train_correct@16": _metric_from_bands(metrics, "train", "correct_pass"),
+                        "train_joint@16": _metric_from_bands(metrics, "train", joint),
+                        "ood_correct@16": _metric_any(
+                            metrics,
+                            [
+                                "synthetic_sampled/band_hard_tail/correct_pass@16",
+                                "synthetic_sampled/band_ood/correct_pass@16",
+                            ],
+                        ),
+                        "ood_valid_or_parse@16": _metric_any(
+                            metrics,
+                            [
+                                f"synthetic_sampled/band_hard_tail/{valid_or_parse}@16",
+                                f"synthetic_sampled/band_ood/{valid_or_parse}@16",
+                            ],
+                        ),
+                        "ood_joint@16": _metric_any(
+                            metrics,
+                            [
+                                f"synthetic_sampled/band_hard_tail/{joint}@16",
+                                f"synthetic_sampled/band_ood/{joint}@16",
+                            ],
+                        ),
+                        "ood_format@16": _metric_any(
+                            metrics,
+                            [
+                                "synthetic_sampled/band_hard_tail/format_pass@16",
+                                "synthetic_sampled/band_ood/format_pass@16",
+                            ],
+                        ),
+                        "depth50_correct@16": _metric_from_step(metrics, 50, "correct_pass"),
+                        "depth50_valid_or_parse@16": _metric_from_step(metrics, 50, valid_or_parse),
+                        "depth50_joint@16": _metric_from_step(metrics, 50, joint),
+                        "cap_note": cap_note,
+                    }
+                )
+    if rows:
+        write_csv(TABLE_DIR / "active_paired_partial_by_seed.csv", rows)
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df
+    metric_cols = [
+        "train_correct@16",
+        "train_joint@16",
+        "ood_correct@16",
+        "ood_valid_or_parse@16",
+        "ood_joint@16",
+        "ood_format@16",
+        "depth50_correct@16",
+        "depth50_valid_or_parse@16",
+        "depth50_joint@16",
+    ]
+    summary = df.groupby(["family", "display_family", "template", "train_max"], as_index=False).agg(
+        n=("seed", "nunique"),
+        cap_note=("cap_note", "first"),
+        **{col: (col, "mean") for col in metric_cols},
+    )
+    summary = summary.sort_values(["family", "template", "train_max"])
+    write_csv(TABLE_DIR / "active_paired_partial_summary.csv", summary.to_dict("records"))
+    return summary
+
+
+def plot_active_paired_partials(summary: pd.DataFrame) -> None:
+    if summary.empty:
+        return
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_joint@16", "OOD joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+        ("depth50_joint@16", "depth-50 joint@16"),
+    ]
+    families = [("typed_maze", "typed maze"), ("hard_attribute_fresh", "hard attribute")]
+    fig, axes = plt.subplots(len(families), len(metrics), figsize=(11.0, 6.0), sharex="row", sharey=True)
+    for row_idx, (family, label) in enumerate(families):
+        fam = summary[summary["family"] == family].copy()
+        for col_idx, (col, title) in enumerate(metrics):
+            ax = axes[row_idx, col_idx]
+            for template, color in [("logic", COLORS["logic"]), ("nl_exact", COLORS["nl_exact"])]:
+                sub = fam[fam["template"] == template].dropna(subset=[col]).sort_values("train_max")
+                if sub.empty:
+                    continue
+                ax.plot(sub["train_max"], sub[col], marker="o", color=color, label=TEMPLATE_LABEL.get(template, template))
+                for _, point in sub.iterrows():
+                    if int(point["n"]) < 3:
+                        ax.annotate(
+                            f"n={int(point['n'])}",
+                            (point["train_max"], point[col]),
+                            fontsize=7,
+                            xytext=(3, 3),
+                            textcoords="offset points",
+                        )
+            style_axes(ax, f"{label}: {title}")
+            ax.set_xlabel("max train depth")
+    axes[0, 0].legend(frameon=False, fontsize=8)
+    save(fig, "active_paired_partial_summary")
+
+
+def _batch_eval_joint_name(eval_condition: str) -> str:
+    return "citation_free_joint_pass" if eval_condition in {"logic", "conditioned_logic"} else "nl_logic_joint_pass"
+
+
+def _batch_eval_valid_or_parse_name(eval_condition: str) -> str:
+    return "citation_free_valid_pass" if eval_condition in {"logic", "conditioned_logic"} else "nl_logic_parse_pass"
+
+
+def summarize_hfsa_batch_size_partials() -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    for root in _passk_roots("hfsa_batch_size_ablation_20260603"):
+        if not root.exists():
+            continue
+        for path in sorted(root.glob("*_passk.json")):
+            match = HFSA_BATCH_SIZE_RE.match(path.name)
+            if not match:
+                continue
+            batch_size, train_condition, train_max, seed, eval_condition = match.groups()
+            metrics = read_payload(path)["metrics"]
+            joint = _batch_eval_joint_name(eval_condition)
+            valid_or_parse = _batch_eval_valid_or_parse_name(eval_condition)
+            rows.append(
+                {
+                    "batch_size": int(batch_size),
+                    "train_condition": train_condition,
+                    "eval_condition": eval_condition,
+                    "train_max": int(train_max),
+                    "seed": int(seed),
+                    "ood_correct@16": _metric_any(
+                        metrics,
+                        [
+                            "synthetic_sampled/band_hard_tail/correct_pass@16",
+                            "synthetic_sampled/band_ood/correct_pass@16",
+                        ],
+                    ),
+                    "ood_valid_or_parse@16": _metric_any(
+                        metrics,
+                        [
+                            f"synthetic_sampled/band_hard_tail/{valid_or_parse}@16",
+                            f"synthetic_sampled/band_ood/{valid_or_parse}@16",
+                        ],
+                    ),
+                    "ood_joint@16": _metric_any(
+                        metrics,
+                        [
+                            f"synthetic_sampled/band_hard_tail/{joint}@16",
+                            f"synthetic_sampled/band_ood/{joint}@16",
+                        ],
+                    ),
+                    "ood_format@16": _metric_any(
+                        metrics,
+                        [
+                            "synthetic_sampled/band_hard_tail/format_pass@16",
+                            "synthetic_sampled/band_ood/format_pass@16",
+                        ],
+                    ),
+                    "depth50_correct@16": _metric_from_step(metrics, 50, "correct_pass"),
+                    "depth50_valid_or_parse@16": _metric_from_step(metrics, 50, valid_or_parse),
+                    "depth50_joint@16": _metric_from_step(metrics, 50, joint),
+                }
+            )
+    if rows:
+        write_csv(TABLE_DIR / "hfsa_batch_size_ablation_partial_by_seed.csv", rows)
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df
+    metric_cols = [
+        "ood_correct@16",
+        "ood_valid_or_parse@16",
+        "ood_joint@16",
+        "ood_format@16",
+        "depth50_correct@16",
+        "depth50_valid_or_parse@16",
+        "depth50_joint@16",
+    ]
+    summary = df.groupby(["train_condition", "eval_condition", "train_max", "batch_size"], as_index=False).agg(
+        n=("seed", "nunique"),
+        **{col: (col, "mean") for col in metric_cols},
+    )
+    summary = summary.sort_values(["eval_condition", "batch_size"])
+    write_csv(TABLE_DIR / "hfsa_batch_size_ablation_partial_summary.csv", summary.to_dict("records"))
+    return summary
+
+
+def plot_hfsa_batch_size_partials(summary: pd.DataFrame) -> None:
+    if summary.empty:
+        return
+    metrics = [
+        ("ood_correct@16", "OOD correct@16"),
+        ("ood_joint@16", "OOD joint@16"),
+        ("depth50_correct@16", "depth-50 correct@16"),
+        ("depth50_joint@16", "depth-50 joint@16"),
+    ]
+    styles = {
+        "logic": ("#1f77b4", "logic"),
+        "nl_exact": ("#d62728", "NL exact"),
+        "conditioned_logic": ("#1f77b4", "conditioned logic"),
+        "conditioned_nl": ("#d62728", "conditioned NL"),
+    }
+    fig, axes = plt.subplots(2, 2, figsize=(9.8, 6.2), sharex=True, sharey=True)
+    for ax, (col, title) in zip(axes.ravel(), metrics, strict=True):
+        for condition, (color, label) in styles.items():
+            sub = summary[summary["eval_condition"] == condition].dropna(subset=[col]).sort_values("batch_size")
+            if sub.empty:
+                continue
+            linestyle = "--" if condition.startswith("conditioned") else "-"
+            ax.plot(sub["batch_size"], sub[col], marker="o", color=color, linestyle=linestyle, label=label)
+        style_axes(ax, title)
+        ax.set_xlabel("effective batch size")
+        ax.set_xticks([2, 4, 8, 16])
+    axes[0, 0].legend(frameon=False, fontsize=8)
+    save(fig, "hfsa_batch_size_ablation_partial")
 
 
 def plot_paired_full_suite_partial(summary: pd.DataFrame) -> None:
@@ -3316,6 +3618,8 @@ def write_report(
     ablation_summaries: dict[str, pd.DataFrame],
     paired_full_summary: pd.DataFrame,
     paired_igsm_semantic_summary: pd.DataFrame,
+    active_paired_partial_summary: pd.DataFrame,
+    batch_size_partial_summary: pd.DataFrame,
     cot_bare_examples: list[dict[str, object]],
     main_ckpt_note: str,
     tiny_ckpt_count: int,
@@ -3390,6 +3694,15 @@ def write_report(
     )
     if not paired_igsm_semantic_rows.empty:
         paired_igsm_semantic_rows = paired_igsm_semantic_rows.sort_values(["template", "train_max"])
+    active_paired_partial_rows = (
+        active_paired_partial_summary.copy() if not active_paired_partial_summary.empty else pd.DataFrame()
+    )
+    if not active_paired_partial_rows.empty:
+        active_paired_partial_rows = active_paired_partial_rows.sort_values(["family", "template", "train_max"])
+    batch_size_partial_rows = batch_size_partial_summary.copy() if not batch_size_partial_summary.empty else pd.DataFrame()
+    if not batch_size_partial_rows.empty:
+        batch_size_partial_rows = batch_size_partial_rows.sort_values(["eval_condition", "batch_size"])
+        batch_size_partial_rows["batch_size_label"] = batch_size_partial_rows["batch_size"].astype(int).astype(str)
     shortcut_comparison_rows = build_shortcut_comparison_table(main_summary, shortcut_rows)
     conditioned_comparison_rows = build_conditioned_comparison_table(main_summary, conditioned_rows)
     trace_control_comparison_rows = build_trace_control_with_baselines(main_summary, trace_control_rows)
@@ -4000,6 +4313,57 @@ This table is artifact-based at report-generation time: it counts completed SFT 
 \caption{{Artifact status for paired-family repeats and active ablation families.}}
 \end{{table}}
 
+\subsection{{Active partial rerun readouts}}
+The fresh active reruns have produced partial but already informative outputs. The typed-maze table is from the patched typed-symbol rerun, not the stale old maze root. It uses a formal max-new-token cap of 4096 because the earlier 8192-token formal eval could not finish within the A100 walltime; NL remains capped at 6144. The hard-attribute rows are from the fresh hard-attribute-only eval under \texttt{{\$HPCVAULT}}. Hard-attribute logic validity is meaningful under citation-free formal checking; hard-attribute NL validity remains unsupported because the generic NL-to-FOL translator does not yet parse this family, so the NL joint and parse columns should not be used as negative evidence about the model. Typed maze train-1-to-5 is extremely poor out of distribution even after the typed-symbol fix: sample checks show valid shallow traces but long OOD/depth-50 outputs mostly copy premises, hit the cap, omit answer tags, or drift before solving the path.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(active_paired_partial_rows, [
+    ("display_family", "family"),
+    ("template", "template"),
+    ("train_max", "train max"),
+    ("n", "n"),
+    ("train_correct@16", "train c@16"),
+    ("train_joint@16", "train joint@16"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_valid_or_parse@16", "OOD valid/parse@16"),
+    ("ood_joint@16", "OOD joint@16"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_joint@16", "d50 joint@16"),
+])}
+\caption{{Fresh typed-maze and hard-attribute partial results. For logic, valid/joint means citation-free formal validity; for NL, valid/parse is NL-to-FOL parse coverage and joint is translated-valid joint.}}
+\end{{table}}
+
+\begin{{figure}}[H]\centering
+\includegraphics[width=0.95\linewidth]{{figures/active_paired_partial_summary.pdf}}
+\caption{{Fresh typed-maze and hard-attribute partial curves. Inline n annotations mark incomplete seed coverage.}}
+\end{{figure}}
+
+The batch-size ablation has begun writing eval outputs after the bsz16 recovery finished. The current table is still partial: the rows shown are the completed eval rows at report generation time, while the remaining NL and conditioned-dual rows are still running or pending. The logic-trained/evaluated slice is complete and non-monotonic: effective batch 16 has high OOD answer correctness and the best available logic OOD joint among the completed logic rows, while batch 8 is worse. This is not yet evidence about the conditioned-dual weakness because the conditioned rows have not written JSONs.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(batch_size_partial_rows, [
+    ("train_condition", "train"),
+    ("eval_condition", "eval"),
+    ("batch_size_label", "bsz"),
+    ("n", "n"),
+    ("ood_correct@16", "OOD c@16"),
+    ("ood_valid_or_parse@16", "OOD valid/parse@16"),
+    ("ood_joint@16", "OOD joint@16"),
+    ("depth50_correct@16", "d50 c@16"),
+    ("depth50_joint@16", "d50 joint@16"),
+])}
+\caption{{HFSA batch-size ablation partial results. Batch size 16 is effective batch 16 implemented as microbatch 8 with gradient accumulation 2.}}
+\end{{table}}
+
+\begin{{figure}}[H]\centering
+\includegraphics[width=0.95\linewidth]{{figures/hfsa_batch_size_ablation_partial.pdf}}
+\caption{{HFSA batch-size ablation partial curves over effective batch size. Missing lines indicate eval conditions that have not written JSONs yet.}}
+\end{{figure}}
+
 \section{{Paired-family full-suite partial readout}}
 The replacement paired-family eval is still partial. At this report generation time, \texttt{{official\_igsm}} is complete, \texttt{{maze\_navigation}} has the full train-1-to-5 logic/NL slice in the old paired-family root, and the old combined hard attribute-constraint rows have no completed eval JSONs. A separate fresh hard-attribute-only recovery is underway and has the first completed rows counted in the active-status table. The \texttt{{joint}} columns are template-specific: citation-free internal formal validity for logic and translated NL-to-FOL validity for \texttt{{nl\_exact}}. Maze train-1-to-5 shows a sharp train/OOD split rather than a bad gold generator: completed logic rows are perfect in-band but near-zero OOD/depth-50, while completed NL rows are also perfect in-band, somewhat higher on OOD answer correctness, and zero at depth 50. Sample inspection shows coherent complete depth-5 traces, occasional depth-10 success, and depth-25/50 failures dominated by long premise copying, malformed/truncated traces, and generation-cap pressure. For iGSM, grounded joint validity is currently zero away from trivial retrieval cases because generated variable names and arithmetic-substitution citations do not reliably align with the canonical grounded checker. The targeted iGSM NL rerun has completed all 15 NL rows and recovers near-complete parser coverage, but generated NL translated-validity is still zero on OOD/depth-50 slices; use correctness and parser coverage as provisional diagnostics until non-iGSM rows complete and grounded/canonical checks are improved.
 
@@ -4290,6 +4654,8 @@ def main() -> None:
     ablation_summaries = load_ablation_summaries()
     paired_full_summary = summarize_paired_full_suite()
     paired_igsm_semantic_summary = summarize_paired_igsm_semantic()
+    active_paired_partial_summary = summarize_active_paired_partials()
+    batch_size_partial_summary = summarize_hfsa_batch_size_partials()
     conditioned_50k_checkpoint_summary = load_conditioned_50k_checkpoint_summary()
 
     write_csv(TABLE_DIR / "main_olmo7b_summary.csv", main_summary.to_dict("records"))
@@ -4327,6 +4693,8 @@ def main() -> None:
     plot_paired_full_suite_partial(paired_full_summary)
     plot_paired_full_suite_family_partial(paired_full_summary)
     plot_paired_igsm_semantic(paired_igsm_semantic_summary)
+    plot_active_paired_partials(active_paired_partial_summary)
+    plot_hfsa_batch_size_partials(batch_size_partial_summary)
     conditioned_comparison = build_conditioned_comparison_table(
         main_summary, ablation_summaries.get("conditioned", pd.DataFrame())
     )
@@ -4351,6 +4719,8 @@ def main() -> None:
         ablation_summaries,
         paired_full_summary,
         paired_igsm_semantic_summary,
+        active_paired_partial_summary,
+        batch_size_partial_summary,
         cot_bare_examples,
         main_checkpoint_note(main_ckpt),
         len(tiny_ckpt),
