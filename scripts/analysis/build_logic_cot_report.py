@@ -1880,6 +1880,64 @@ def summarize_hfsa_batch_size_partials() -> pd.DataFrame:
     return summary
 
 
+def build_hfsa_batch_size_diagnostic_table(summary: pd.DataFrame) -> pd.DataFrame:
+    if summary.empty:
+        return pd.DataFrame()
+    rows: list[dict[str, object]] = []
+    singletons = {
+        ("conditioned_dual", "conditioned_logic"): ("logic", "logic"),
+        ("conditioned_dual", "conditioned_nl"): ("nl_exact", "nl_exact"),
+    }
+    keyed = {
+        (str(r["train_condition"]), str(r["eval_condition"]), int(r["batch_size"])): r
+        for _, r in summary.iterrows()
+    }
+    for (train_condition, eval_condition), group in summary.groupby(["train_condition", "eval_condition"], sort=True):
+        group = group.sort_values("batch_size")
+        ood_best = group.dropna(subset=["ood_joint@16"]).sort_values(
+            ["ood_joint@16", "batch_size"], ascending=[False, True]
+        )
+        d50_best = group.dropna(subset=["depth50_joint@16"]).sort_values(
+            ["depth50_joint@16", "batch_size"], ascending=[False, True]
+        )
+        row: dict[str, object] = {
+            "train_condition": train_condition,
+            "eval_condition": eval_condition,
+            "best_ood_joint_bsz": int(ood_best.iloc[0]["batch_size"]) if not ood_best.empty else "",
+            "best_ood_joint@16": float(ood_best.iloc[0]["ood_joint@16"]) if not ood_best.empty else float("nan"),
+            "best_depth50_joint_bsz": int(d50_best.iloc[0]["batch_size"]) if not d50_best.empty else "",
+            "best_depth50_joint@16": float(d50_best.iloc[0]["depth50_joint@16"]) if not d50_best.empty else float("nan"),
+            "ood_joint_range": float(group["ood_joint@16"].max() - group["ood_joint@16"].min()),
+            "depth50_joint_range": float(group["depth50_joint@16"].max() - group["depth50_joint@16"].min()),
+        }
+        baseline_key = singletons.get((train_condition, eval_condition))
+        if baseline_key:
+            deltas = []
+            for batch_size in sorted(group["batch_size"].astype(int).unique()):
+                current = keyed.get((train_condition, eval_condition, int(batch_size)))
+                baseline = keyed.get((baseline_key[0], baseline_key[1], int(batch_size)))
+                if current is None or baseline is None:
+                    continue
+                deltas.append(float(current["ood_joint@16"]) - float(baseline["ood_joint@16"]))
+            row["mean_ood_joint_delta_vs_single"] = float(mean(deltas)) if deltas else float("nan")
+            row["best_ood_joint_delta_vs_single"] = (
+                float(ood_best.iloc[0]["ood_joint@16"])
+                - float(
+                    keyed[(baseline_key[0], baseline_key[1], int(ood_best.iloc[0]["batch_size"]))]["ood_joint@16"]
+                )
+                if not ood_best.empty
+                and (baseline_key[0], baseline_key[1], int(ood_best.iloc[0]["batch_size"])) in keyed
+                else float("nan")
+            )
+        else:
+            row["mean_ood_joint_delta_vs_single"] = float("nan")
+            row["best_ood_joint_delta_vs_single"] = float("nan")
+        rows.append(row)
+    out = pd.DataFrame(rows).sort_values(["eval_condition", "train_condition"])
+    write_csv(TABLE_DIR / "hfsa_batch_size_ablation_diagnostics.csv", out.to_dict("records"))
+    return out
+
+
 def plot_hfsa_batch_size_partials(summary: pd.DataFrame) -> None:
     if summary.empty:
         return
@@ -1908,6 +1966,41 @@ def plot_hfsa_batch_size_partials(summary: pd.DataFrame) -> None:
         ax.set_xticks([2, 4, 8, 16])
     axes[0, 0].legend(frameon=False, fontsize=8)
     save(fig, "hfsa_batch_size_ablation_partial")
+
+
+def plot_hfsa_batch_size_conditioned_deltas(summary: pd.DataFrame) -> None:
+    if summary.empty:
+        return
+    keyed = {
+        (str(r["train_condition"]), str(r["eval_condition"]), int(r["batch_size"])): r
+        for _, r in summary.iterrows()
+    }
+    pairs = [
+        ("conditioned_dual", "conditioned_logic", "logic", "logic", "conditioned logic - logic", "#1f77b4"),
+        ("conditioned_dual", "conditioned_nl", "nl_exact", "nl_exact", "conditioned NL - NL", "#d62728"),
+    ]
+    metrics = [("ood_joint@16", "OOD joint@16 delta"), ("depth50_joint@16", "depth-50 joint@16 delta")]
+    fig, axes = plt.subplots(1, 2, figsize=(8.8, 3.2), sharex=True, sharey=True)
+    for ax, (metric, title) in zip(axes, metrics, strict=True):
+        for train, eval_condition, base_train, base_eval, label, color in pairs:
+            xs: list[int] = []
+            ys: list[float] = []
+            for batch_size in [2, 4, 8, 16]:
+                current = keyed.get((train, eval_condition, batch_size))
+                baseline = keyed.get((base_train, base_eval, batch_size))
+                if current is None or baseline is None:
+                    continue
+                xs.append(batch_size)
+                ys.append(float(current[metric]) - float(baseline[metric]))
+            if xs:
+                ax.plot(xs, ys, marker="o", label=label, color=color)
+        ax.axhline(0.0, color="#444444", linewidth=0.8)
+        style_axes(ax, title)
+        ax.set_xlabel("effective batch size")
+        ax.set_xticks([2, 4, 8, 16])
+    axes[0].set_ylabel("conditioned minus single-modality")
+    axes[0].legend(frameon=False, fontsize=8)
+    save(fig, "hfsa_batch_size_conditioned_delta")
 
 
 def plot_paired_full_suite_partial(summary: pd.DataFrame) -> None:
@@ -3703,6 +3796,7 @@ def write_report(
     if not batch_size_partial_rows.empty:
         batch_size_partial_rows = batch_size_partial_rows.sort_values(["eval_condition", "batch_size"])
         batch_size_partial_rows["batch_size_label"] = batch_size_partial_rows["batch_size"].astype(int).astype(str)
+    batch_size_diagnostic_rows = build_hfsa_batch_size_diagnostic_table(batch_size_partial_summary)
     shortcut_comparison_rows = build_shortcut_comparison_table(main_summary, shortcut_rows)
     conditioned_comparison_rows = build_conditioned_comparison_table(main_summary, conditioned_rows)
     trace_control_comparison_rows = build_trace_control_with_baselines(main_summary, trace_control_rows)
@@ -4340,7 +4434,7 @@ The fresh active reruns have produced partial but already informative outputs. T
 \caption{{Fresh typed-maze and hard-attribute partial curves. Inline n annotations mark incomplete seed coverage.}}
 \end{{figure}}
 
-The batch-size ablation has begun writing eval outputs after the bsz16 recovery finished. The current table is still partial: the rows shown are the completed eval rows at report generation time, while the remaining NL and conditioned-dual rows are still running or pending. The logic-trained/evaluated slice is complete and non-monotonic: effective batch 16 has high OOD answer correctness and the best available logic OOD joint among the completed logic rows, while batch 8 is worse. This is not yet evidence about the conditioned-dual weakness because the conditioned rows have not written JSONs.
+The batch-size ablation is complete for the planned seed-3407 diagnostic grid: single-modality logic, single-modality NL, and 50--50 conditioned-dual training at effective batch sizes 2, 4, 8, and 16. Batch size 16 should be read as effective batch 16, implemented by microbatch 8 and gradient accumulation 2 after true physical bsz16 OOMed on A100-80GB. The result is non-monotonic and does not support the simple hypothesis that larger stratified batches rescue conditioned dual. Conditioned-NL is strongest at bsz2 and worsens at larger batches on OOD joint; conditioned-logic recovers at bsz16 but is still not a clean monotone batch-size effect. Because this is one seed, it is a diagnostic ablation rather than final causal evidence.
 
 \begin{{table}}[H]
 \centering
@@ -4356,13 +4450,38 @@ The batch-size ablation has begun writing eval outputs after the bsz16 recovery 
     ("depth50_correct@16", "d50 c@16"),
     ("depth50_joint@16", "d50 joint@16"),
 ])}
-\caption{{HFSA batch-size ablation partial results. Batch size 16 is effective batch 16 implemented as microbatch 8 with gradient accumulation 2.}}
+\caption{{HFSA batch-size ablation results. Batch size 16 is effective batch 16 implemented as microbatch 8 with gradient accumulation 2.}}
+\end{{table}}
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{latex_table(batch_size_diagnostic_rows, [
+    ("train_condition", "train"),
+    ("eval_condition", "eval"),
+    ("best_ood_joint_bsz", "best OOD bsz"),
+    ("best_ood_joint@16", "best OOD joint@16"),
+    ("best_depth50_joint_bsz", "best d50 bsz"),
+    ("best_depth50_joint@16", "best d50 joint@16"),
+    ("ood_joint_range", "OOD joint range"),
+    ("depth50_joint_range", "d50 joint range"),
+    ("mean_ood_joint_delta_vs_single", "mean OOD delta vs single"),
+    ("best_ood_joint_delta_vs_single", "best OOD delta vs single"),
+])}
+\caption{{Distilled batch-size diagnostics. Delta columns compare conditioned-dual rows to the matched single-modality row at the same effective batch size; blank deltas denote the single-modality baselines themselves.}}
 \end{{table}}
 
 \begin{{figure}}[H]\centering
 \includegraphics[width=0.95\linewidth]{{figures/hfsa_batch_size_ablation_partial.pdf}}
-\caption{{HFSA batch-size ablation partial curves over effective batch size. Missing lines indicate eval conditions that have not written JSONs yet.}}
+\caption{{HFSA batch-size ablation curves over effective batch size. Solid lines are single-modality runs; dashed lines are conditioned-dual eval modes.}}
 \end{{figure}}
+
+\begin{{figure}}[H]\centering
+\includegraphics[width=0.85\linewidth]{{figures/hfsa_batch_size_conditioned_delta.pdf}}
+\caption{{Conditioned-dual joint-validity deltas relative to matched single-modality runs at the same effective batch size. Positive means conditioned dual is better; negative means it is worse.}}
+\end{{figure}}
+
+Representative sample inspection is consistent with the aggregate story. The conditioned prompts are correct: formal-mode rows use \texttt{{<reasoning\_mode>formal\_logic</reasoning\_mode>}} and \texttt{{<formal>}}, while NL-mode rows use natural-language traces. The failures are not a train--test prompt mismatch. Instead, high-depth formal samples often emit long constant/predicate/premise blocks and then lose strict cited/grounded validity; citation-free validity can still be high when the formulas are recoverable without citations. High-depth NL samples preserve the \texttt{{<think>}} surface but copy long premise lists, drift, or truncate before a translated proof/answer is complete. The bsz2 conditioned rows sometimes beat the matched single-modality row, but the effect is not stable across batch sizes or depth-50, so the safest conclusion is that batch composition alone does not explain the conditioned-dual gap.
 
 \section{{Paired-family full-suite partial readout}}
 The replacement paired-family eval is still partial. At this report generation time, \texttt{{official\_igsm}} is complete, \texttt{{maze\_navigation}} has the full train-1-to-5 logic/NL slice in the old paired-family root, and the old combined hard attribute-constraint rows have no completed eval JSONs. A separate fresh hard-attribute-only recovery is underway and has the first completed rows counted in the active-status table. The \texttt{{joint}} columns are template-specific: citation-free internal formal validity for logic and translated NL-to-FOL validity for \texttt{{nl\_exact}}. Maze train-1-to-5 shows a sharp train/OOD split rather than a bad gold generator: completed logic rows are perfect in-band but near-zero OOD/depth-50, while completed NL rows are also perfect in-band, somewhat higher on OOD answer correctness, and zero at depth 50. Sample inspection shows coherent complete depth-5 traces, occasional depth-10 success, and depth-25/50 failures dominated by long premise copying, malformed/truncated traces, and generation-cap pressure. For iGSM, grounded joint validity is currently zero away from trivial retrieval cases because generated variable names and arithmetic-substitution citations do not reliably align with the canonical grounded checker. The targeted iGSM NL rerun has completed all 15 NL rows and recovers near-complete parser coverage, but generated NL translated-validity is still zero on OOD/depth-50 slices; use correctness and parser coverage as provisional diagnostics until non-iGSM rows complete and grounded/canonical checks are improved.
@@ -4695,6 +4814,7 @@ def main() -> None:
     plot_paired_igsm_semantic(paired_igsm_semantic_summary)
     plot_active_paired_partials(active_paired_partial_summary)
     plot_hfsa_batch_size_partials(batch_size_partial_summary)
+    plot_hfsa_batch_size_conditioned_deltas(batch_size_partial_summary)
     conditioned_comparison = build_conditioned_comparison_table(
         main_summary, ablation_summaries.get("conditioned", pd.DataFrame())
     )
