@@ -2,6 +2,10 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-06-17
+
+- 09:08 CEST live recovery check: hard-attribute final recovery `3748682_[27-29%3]` has started. Rows `27` and `28` are running on A100, with row `27` actively sampling around chunk `68/112`; row `29` remains priority-pending. No new hard-attribute JSONs yet, so coverage remains `27/30`. Typed-maze final recovery `3748683_[15-29%15]` is still priority-pending, so typed-maze coverage remains `15/30`. No fatal log signatures were seen in the running hard-attribute rows.
+
 ## 2026-06-16
 
 - 17:55 CEST scheduler edit: raised typed-maze final recovery array throttle from `3748683_[15-29%3]` to `3748683_[15-29%15]` with `scontrol update JobId=3748683 ArrayTaskThrottle=15`. Hard-attribute final recovery `3748682_[27-29%3]` is already at maximum useful concurrency because only three rows remain. Both arrays are pending on A100 for priority; no new artifacts were written by this scheduler edit.
