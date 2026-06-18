@@ -2,6 +2,12 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-06-18
+
+- 08:50 CEST live recovery/report refresh: hard-attribute final recovery `3748682_[27-29%3]` completed cleanly, bringing fresh hard attribute to `30/30` JSONs/sample JSONLs. Typed-maze final recovery `3748683_[15-29%15]` advanced to `27/30`; only rows `27..29` (`nl_exact` train-1-to-25 seeds) remain running on A100, all actively sampling around chunks `109..110/112` with only known tokenizer/torch warnings.
+- 08:50 CEST result readout: report refresh marks semantic iGSM `30/30`, hard attribute `30/30`, typed maze `27/30`, and all HFSA ablations complete. Hard-attribute logic OOD joint@16 rises with train max (`0.108/0.455/0.500/0.737/0.736`) but depth-50 joint remains `0.000`; hard-attribute NL train-1-to-25 OOD/depth-50 correct@16 is `0.817/0.104`, with translated validity still unsupported (`nl_logic_parse=0`). Typed maze remains poor after typed symbols: logic OOD/depth-50 joint is `0.000` through train-1-to-25, completed NL train-1-to-5/10/15/20 OOD correct@16 is `0.030/0.106/0.111/0.111`, and completed depth-50 rows are `0.000`.
+- 08:50 CEST report/handoff update: regenerated `analysis/logic_cot_report_2026-05-25/` and updated `active_experiment_artifact_status.csv`, `active_paired_partial_summary.csv`, and `active_paired_partial_summary.{pdf,png}`. Handoff docs now record hard attribute as complete and typed maze as last-three-running.
+
 ## 2026-06-17
 
 - 09:08 CEST live recovery check: hard-attribute final recovery `3748682_[27-29%3]` has started. Rows `27` and `28` are running on A100, with row `27` actively sampling around chunk `68/112`; row `29` remains priority-pending. No new hard-attribute JSONs yet, so coverage remains `27/30`. Typed-maze final recovery `3748683_[15-29%15]` is still priority-pending, so typed-maze coverage remains `15/30`. No fatal log signatures were seen in the running hard-attribute rows.
