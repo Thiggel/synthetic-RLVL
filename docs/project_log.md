@@ -2,6 +2,11 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-06-19
+
+- 09:30 CEST final paired recovery/report refresh: typed-maze final recovery `3748683_[15-29%15]` completed cleanly on 2026-06-18, bringing typed maze to `30/30` JSONs/sample JSONLs. A live queue check found no remaining `maze_typed_eval` or hard-attribute recovery rows. Regenerated `analysis/logic_cot_report_2026-05-25/` after the final rows landed and patched report-builder prose so the report no longer describes fresh paired readouts as partial.
+- 09:30 CEST typed-maze result: the typed-symbol fix did not rescue maze. Logic train-1-to-25 OOD/depth-50 joint@16 is `0.000/0.000`; NL train-1-to-25 OOD/depth-50 correct@16 is `0.111/0.000`; NL translated validity remains unsupported for maze. Sample inspection across train-1-to-25 logic/NL rows shows valid shallow traces, but depth-25/50 logic generations spend the budget on constants/premises/partial derivations and omit `<answer>`, while NL depth-25/50 copies premise chains through roughly move `18..20` and also omits `<answer>`. Treat this as a negative result/generation-budget failure mode rather than a typed-symbol evaluator bug.
+
 ## 2026-06-18
 
 - 08:50 CEST live recovery/report refresh: hard-attribute final recovery `3748682_[27-29%3]` completed cleanly, bringing fresh hard attribute to `30/30` JSONs/sample JSONLs. Typed-maze final recovery `3748683_[15-29%15]` advanced to `27/30`; only rows `27..29` (`nl_exact` train-1-to-25 seeds) remain running on A100, all actively sampling around chunks `109..110/112` with only known tokenizer/torch warnings.
