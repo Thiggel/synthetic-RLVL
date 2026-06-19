@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-06-19 10:51 CEST.
+Last updated: 2026-06-19 12:12 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -25,6 +25,8 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 | Experiment | Current status | Notes |
 | --- | --- | --- |
 | Batch-size replication for seeds 3408/3409 | Not running | Current batch-size ablation is a single-seed diagnostic. It is enough to reject a simple monotone "larger stratified batch fixes conditioned dual" story, but not enough for a strong causal batch-size claim. If this becomes central, repeat the same `logic`, `nl_exact`, and `conditioned_dual` bsz `2/4/8/16` grid for seeds `3408/3409`; defer while paired-family recoveries are active unless the batch-size claim becomes urgent. |
+| OLMo-2-32B conditioned-dual follow-up | Not running | New scope from 2026-06-19: test whether conditioned-dual underperformance is partly a 7B capacity issue. Minimal run should repeat the 50/50 mode-conditioned dual setup only at train-1-to-25 first, using OLMo-2-32B with the same logic/NL mode prompts and pass@k eval for both `conditioned_logic` and `conditioned_nl`, plus matched vanilla 32B logic/NL baselines if the current short-context 32B baselines are insufficient for the chosen context/eval. Treat this as the direct missing experiment for the revised claim that logic CoT improves reasoning even when the model is not forced to use only logic during CoT. |
+| Formal-logic-mixture midtraining pilot | Not running | New scope from 2026-06-19: stage a midtraining study on base OLMo-7B before any 32B launch. Use a normal OLMo-compatible continuation corpus plus proof-chain synthetic examples mixed at `0/5/10/20/30%` by tokens, and a matched NL variant at the same fractions. First build token-budgeted JSONL mixtures with `scripts/data/export_midtraining_mixture.py` or an equivalent streaming mixer, then run a small throughput/loss pilot before launching the full grid. Recommended first full pilot is one seed, fixed token budget, identical optimizer schedule across fractions, then evaluate HFSA correctness/joint, shortcut robustness, attribute constraints, and downstream context-QA/GSM8K. Use this repo for data generation/eval and small LoRA pilot only; use Nanotron/Megatron/DeepSpeed-style full-parameter training for serious midtraining throughput. |
 | Total-token-matched NL budget | Not running | Earlier "same-token" run matched target-token exposure only. Total prompt-plus-target matching would be about `8600` NL steps for train-1-to-25, but the wordified logic control is now the cleaner length-control test. |
 | More shortcut mechanisms | Current two complete | The two highest-value mechanisms, `position` and `initial_marker`, are complete and report-ingested. Additional shortcut mechanisms should wait until these results are interpreted. |
 | Proof-only targets | Not running | Could separate premise-copy/translation overhead from proof construction, but lower priority than current ablations. |
@@ -32,7 +34,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 | Maze typed-symbol cleanup | Patched and rerun submitted | `synthrlvl/datasets/paired_synthetic.py` now emits typed maze formal symbols (`r_<room>`, `k_<key>`) while preserving natural room/key names in NL/final answers. Build/SFT/eval chain `3695237 -> 3695238 -> 3695239` is tracked in `docs/running_experiments.md`. |
 | Grounded validity verifier | Not running | Needed only if we want grounded/canonical validity claims for HFSA; current citation-free validity is the stable metric. |
 | Full finetune / non-LoRA SFT | Not running | Useful if reviewers argue LoRA-specific effects; lower priority while tiny scratch pretraining and architecture ablations already provide some substrate checks. |
-| Larger pretraining / midtraining | Not running | The repo's tiny scratch trainer is a mechanism smoke path, not serious large-scale pretraining infrastructure. Use Nanotron or equivalent before any 50B-scale run. |
+| Larger pretraining / midtraining | Superseded by formal-logic-mixture pilot | The repo's tiny scratch trainer is a mechanism smoke path, not serious large-scale pretraining infrastructure. Use Nanotron or equivalent for serious full-parameter continuation training; keep this repo as the data-generation, LoRA smoke-test, and evaluation/reporting layer. |
 | More architecture repeats | Not running | Qwen-2.5-7B, Qwen-2.5-1.5B, Gemma-3-4B, and OLMo-2-32B short-context are already complete. Further architectures should wait for current ablation analysis. |
 
 ## Report/Artifact Work
