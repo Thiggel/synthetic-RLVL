@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-06-19 09:30 CEST.
+Last updated: 2026-06-19 10:51 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -37,6 +37,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 
 ## Report/Artifact Work
 
+- 2026-06-19 10:51 official preprint draft created in `../synthetic-RLVL-report/official_preprint/` using the new report-repo template. The old generated `../synthetic-RLVL-report/main.tex` remains the informal report. The preprint currently uses `BranchProof`/`AttrCon` as concise dataset names, omits iGSM/Maze from the main narrative, centers the claim on answer correctness, and includes dedicated figures for main correctness, attribute correctness, shortcut robustness, syntax controls, trace integrity, hybrid order, conditioned dual, and architecture transfer. Static figure/citation checks pass; TeX compilation still needs a machine with `latexmk`, `pdflatex`, `tectonic`, or `xelatex`.
 - Plan-driven oversight is active through refreshed jobs: paired `3690207` completed cleanly and current paired pass `3690641` is running; ablation `3690212` and `3690645` completed cleanly, and next ablation pass `3691029` is begin-time pending. Each pass should read/update this backlog, inspect sample generations and evaluator assumptions, analyze newly finished outputs, create justified plots/tables, regenerate/mirror the report when results change, and submit only the smallest safe triggered or recovery jobs.
 - One-off active recovery oversight jobs scheduled on 2026-06-10 are complete. Batch-size eval `3722467`, hard-attribute eval `3748682`, and typed-maze recovery `3748683` are complete. There are no active recovery chains for the tracked experiments.
 - 2026-06-02 06:45 HFSA ablation/report refresh found no unrecovered HFSA failures or partition edits to make. Hybrid remains `26/30` with rows `3682461_26..29` running; `formal_think` train-1-to-20 has two seeds in the report and train-1-to-25 remains pending/running. Conditioned-dual final eval `3674884` advanced to `5/30` JSONs, with rows `5..8` running and `9..29` throttle-pending; checkpoint eval remains `21/30` JSONs with rows `3/4/5` running. Representative sample checks confirm intended hybrid `<formal>` then `<think>/<answer>` and conditioned formal/NL wrappers with normal answer extraction; validity failures remain trace/generation fragility rather than a parser breakage. Regenerated and mirrored the report with `66` PDFs, `61` CSVs, `5` Markdown supplements, and zero missing LaTeX figure references; TeX compilation remains unavailable. Broad launches and the conditioned-undertraining decision remain deferred until remaining hybrid, conditioned-final, and conditioned-checkpoint rows finish.
