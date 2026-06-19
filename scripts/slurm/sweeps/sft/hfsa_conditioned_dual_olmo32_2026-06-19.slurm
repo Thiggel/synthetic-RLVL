@@ -60,7 +60,7 @@ python train_sft.py \
   data.max_length="${SFT_MAX_LENGTH:-8192}" \
   train.per_device_batch_size="${PER_DEVICE_BATCH_SIZE:-1}" \
   train.grad_accum="${GRAD_ACCUM:-2}" \
-  train.balanced_modality_batches="${BALANCED_MODALITY_BATCHES:-true}" \
+  +train.balanced_modality_batches="${BALANCED_MODALITY_BATCHES:-true}" \
   train.lr="${LR:-1e-4}" \
   train.max_steps="${MAX_STEPS:-10000}" \
   train.eval_steps="${EVAL_STEPS:-10001}" \

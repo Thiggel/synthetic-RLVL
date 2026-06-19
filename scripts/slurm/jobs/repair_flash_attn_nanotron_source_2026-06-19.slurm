@@ -41,7 +41,7 @@ PY
 
 uv pip uninstall flash-attn || true
 uv pip install ninja triton
-uv pip install --reinstall --no-cache --no-binary flash-attn "flash-attn>=2.5.0,<2.8.0" --no-build-isolation
+uv pip install --reinstall --no-cache --no-deps --no-binary flash-attn "flash-attn==2.7.4.post1" --no-build-isolation
 
 python - <<'PY'
 import flash_attn
