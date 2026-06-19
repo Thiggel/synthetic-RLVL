@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=sft_hfsa_cdual32
+#SBATCH --job-name=sft_hfsa_32b_t25
 #SBATCH --partition=a100
 #SBATCH --constraint=a100_80
 #SBATCH --gres=gpu:a100:4
 #SBATCH --cpus-per-task=32
 #SBATCH --time=24:00:00
-#SBATCH --array=0-2%1
+#SBATCH --array=0-11%1
 #SBATCH --output=logs/%x_%A_%a.out
 #SBATCH --error=logs/%x_%A_%a.err
 
@@ -21,16 +21,23 @@ export PATH="${VENV_PATH}/bin:${PATH}"
 hash -r 2>/dev/null || true
 
 SEEDS=(3407 3408 3409)
-SEED="${SEEDS[${SLURM_ARRAY_TASK_ID}]}"
+TEMPLATES=(logic nl_exact)
+MODEL_NAMES=(allenai/Olmo-3-1125-32B Qwen/Qwen3-32B)
+MODEL_TAGS=(olmo3_1125_32b qwen3_32b)
 TRAIN_MAX="${TRAIN_MAX:-25}"
 TRAIN_SUBSET="${TRAIN_SUBSET:-train_fixedtarget_up_to_25_50k}"
-MODEL_NAME="${MODEL_NAME:-allenai/Olmo-3-1125-32B}"
-MODEL_TAG="${MODEL_TAG:-olmo3_1125_32b}"
 DATASET_ID="${DATASET_ID:-flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget-depth50}"
-TAG="conditioned_dual_train1to${TRAIN_MAX}"
+
+IDX="${SLURM_ARRAY_TASK_ID}"
+SEED="${SEEDS[$((IDX % 3))]}"
+TEMPLATE="${TEMPLATES[$(((IDX / 3) % 2))]}"
+MODEL_IDX=$((IDX / 6))
+MODEL_NAME="${MODEL_NAMES[${MODEL_IDX}]}"
+MODEL_TAG="${MODEL_TAGS[${MODEL_IDX}]}"
+TAG="${TEMPLATE}_train1to${TRAIN_MAX}"
 RUN_NAME="sft_hfsa_modelablate_${MODEL_TAG}_${TAG}_10k_seed${SEED}"
 OUTPUT_DIR="${OUTPUT_ROOT:-${HPCVAULT:-${WORK}}/synthetic-RLVL/runs}/${RUN_NAME}"
-GROUP="sft_hfsa_conditioned_dual/${MODEL_TAG}/${TAG}"
+GROUP="sft_hfsa_model_ablation/${MODEL_TAG}/${TAG}"
 
 export WANDB_PROJECT="${WANDB_PROJECT:-synthetic-rlvl}"
 export WANDB_GROUP="${GROUP}"
@@ -50,17 +57,16 @@ python train_sft.py \
   run_name="${RUN_NAME}" \
   output_dir="${OUTPUT_DIR}" \
   model.name="${MODEL_NAME}" \
-  task.template=conditioned_dual \
+  task.template="${TEMPLATE}" \
   task.train_max_step="${TRAIN_MAX}" \
-  task.val_max_step="${ONLINE_VAL_MAX:-15}" \
+  task.val_max_step="${ONLINE_VAL_MAX:-25}" \
   data.materialized.dataset_id="${DATASET_ID}" \
   data.materialized.train_subset="${TRAIN_SUBSET}" \
   data.train_samples="${TRAIN_SAMPLES:-50000}" \
   data.eval_samples="${DATA_EVAL_SAMPLES:-128}" \
   data.max_length="${SFT_MAX_LENGTH:-8192}" \
   train.per_device_batch_size="${PER_DEVICE_BATCH_SIZE:-1}" \
-  train.grad_accum="${GRAD_ACCUM:-2}" \
-  train.balanced_modality_batches="${BALANCED_MODALITY_BATCHES:-true}" \
+  train.grad_accum="${GRAD_ACCUM:-1}" \
   train.lr="${LR:-1e-4}" \
   train.max_steps="${MAX_STEPS:-10000}" \
   train.eval_steps="${EVAL_STEPS:-10001}" \

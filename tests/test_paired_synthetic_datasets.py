@@ -165,6 +165,29 @@ def test_attribute_constraints_solve_slots_directly_without_feedback_or_assignme
     assert all(f"Value({slot['slot']},{slot['value']})" in ex.proof_fol[-1] for slot in slots)
 
 
+def test_attribute_constraints_nl_exact_trace_translates_to_valid_logic():
+    from synthrlvl.metrics import OutputEvaluator
+
+    evaluator = OutputEvaluator()
+    for depth in (4, 10, 25):
+        ex = PairedSyntheticGenerator(PairedGeneratorConfig(kind="attribute_constraints", depth=depth, seed=3407)).generate(0)
+        sample = task_sample_from_logic_example(ex, cfg=_task_cfg(TemplateName.NL_EXACT), depth=depth)
+        result = evaluator.evaluate(
+            sample.target,
+            template=TemplateName.NL_EXACT,
+            gold_answer=sample.answer,
+            gold_logic_premises=sample.logic_premises,
+            gold_logic_conclusion=sample.logic_conclusion,
+            gold_logic_constants=sample.logic_constants,
+            gold_logic_predicates=sample.logic_predicates,
+        )
+
+        assert result.format_ok == 1.0, (depth, sample.target)
+        assert result.correct == 1.0, (depth, sample.target)
+        assert result.nl_logic_parse == 1.0, (depth, sample.target)
+        assert result.nl_logic_citation_free_valid == 1.0, (depth, sample.target)
+
+
 def test_attribute_constraints_depth_is_not_capped_at_six():
     ex = PairedSyntheticGenerator(PairedGeneratorConfig(kind="attribute_constraints", depth=12, seed=3407)).generate(0)
     validation = validate_logic_example(ex)

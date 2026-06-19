@@ -303,6 +303,107 @@ def _translate_igsm_line(text: str, *, state: _IgsmTranslationState, line_number
     return None
 
 
+@dataclass
+class _AttributeTranslationState:
+    values_by_slot: dict[str, str] | None = None
+    last_constraint: tuple[str, str, str, str, str, str] | None = None
+    last_prereq_pair: str | None = None
+    last_antecedent: str | None = None
+    conclusion: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.values_by_slot is None:
+            self.values_by_slot = {}
+
+    def remember_value_formula(self, formula: str) -> None:
+        m = re.match(r"^\s*Value\(\s*(?P<slot>[A-Za-z0-9_]+)\s*,\s*(?P<value>[A-Za-z0-9_]+)\s*\)\s*$", formula)
+        if m:
+            assert self.values_by_slot is not None
+            self.values_by_slot[m.group("slot")] = m.group("value")
+
+
+_ATTR_VALUE_RE = re.compile(
+    r"(?is)^(?:therefore\s+)?(?P<slot>s\d+)\s+has\s+(?:value\s+)?(?P<value>[A-Za-z0-9_]+)\s*$"
+)
+_ATTR_CONSTRAINT_RE = re.compile(
+    r"(?is)^the\s+applicable\s+joint\s+constraint\s+maps\s+"
+    r"(?P<slot_a>s\d+)\s*=\s*(?P<value_a>[A-Za-z0-9_]+)\s+and\s+"
+    r"(?P<slot_b>s\d+)\s*=\s*(?P<value_b>[A-Za-z0-9_]+)\s+to\s+"
+    r"(?P<slot>s\d+)\s*=\s*(?P<value>[A-Za-z0-9_]+)\s*$"
+)
+_ATTR_COMBINE_THROUGH_RE = re.compile(r"(?is)^combine\s+the\s+solved\s+values\s+through\s+(?P<slot>s\d+)\s*$")
+
+
+def _value_formula(slot: str, value: str) -> str:
+    return f"Value({slot},{value})"
+
+
+def _constraint_formula(slot_a: str, value_a: str, slot_b: str, value_b: str, slot: str, value: str) -> str:
+    return f"Constraint({slot_a},{value_a},{slot_b},{value_b},{slot},{value})"
+
+
+def _attribute_nested_and(items: list[str]) -> str:
+    if not items:
+        return ""
+    expr = items[0]
+    for item in items[1:]:
+        expr = f"{expr} & {item}"
+    return expr
+
+
+def _translate_attribute_line(text: str, *, state: _AttributeTranslationState) -> str | None:
+    clause = _unwrap_controlled_trace_line(text).strip().rstrip(".").strip()
+    value_match = _ATTR_VALUE_RE.match(clause)
+    if value_match:
+        formula = _value_formula(value_match.group("slot"), value_match.group("value"))
+        state.remember_value_formula(formula)
+        return formula
+
+    constraint_match = _ATTR_CONSTRAINT_RE.match(clause)
+    if constraint_match:
+        slot_a = constraint_match.group("slot_a")
+        value_a = constraint_match.group("value_a")
+        slot_b = constraint_match.group("slot_b")
+        value_b = constraint_match.group("value_b")
+        slot = constraint_match.group("slot")
+        value = constraint_match.group("value")
+        state.last_constraint = (slot_a, value_a, slot_b, value_b, slot, value)
+        return _constraint_formula(slot_a, value_a, slot_b, value_b, slot, value)
+
+    if re.match(r"(?is)^combine\s+the\s+two\s+prerequisite\s+slot\s+values\s*$", clause):
+        if state.last_constraint is None:
+            return None
+        slot_a, value_a, slot_b, value_b, _slot, _value = state.last_constraint
+        state.last_prereq_pair = f"{_value_formula(slot_a, value_a)} & {_value_formula(slot_b, value_b)}"
+        return state.last_prereq_pair
+
+    if re.match(r"(?is)^combine\s+the\s+prerequisites\s+with\s+the\s+applicable\s+joint\s+constraint\s*$", clause):
+        if state.last_constraint is None or state.last_prereq_pair is None:
+            return None
+        constraint = _constraint_formula(*state.last_constraint)
+        state.last_antecedent = f"{state.last_prereq_pair} & {constraint}"
+        return state.last_antecedent
+
+    combine_through = _ATTR_COMBINE_THROUGH_RE.match(clause)
+    if combine_through:
+        assert state.values_by_slot is not None
+        slot = combine_through.group("slot")
+        if state.conclusion is None:
+            # The generator starts final conjunction building from s0 and then
+            # emits "through s1", "through s2", ...
+            first_value = state.values_by_slot.get("s0")
+            if first_value is None:
+                return None
+            state.conclusion = _value_formula("s0", first_value)
+        value = state.values_by_slot.get(slot)
+        if value is None:
+            return None
+        state.conclusion = f"{state.conclusion} & {_value_formula(slot, value)}"
+        return state.conclusion
+
+    return None
+
+
 def _split_attributes(raw_attrs: str) -> list[str]:
     attrs = _norm(raw_attrs)
     if attrs.startswith("both "):
@@ -362,6 +463,7 @@ def translate_natural_proof_to_fol(
         premise_by_formula=_proof_premise_map(premises),
         const_by_name=_constant_map(constants),
     )
+    attribute_state = _AttributeTranslationState()
     for raw in (proof_text or "").splitlines():
         text = raw.strip()
         if not text:
@@ -371,7 +473,11 @@ def translate_natural_proof_to_fol(
         if translated_igsm is not None:
             formula, justification = translated_igsm
         else:
-            formula = translate_natural_sentence_to_formula(text, constants=constants, predicates=predicates)
+            translated_attribute = _translate_attribute_line(text, state=attribute_state)
+            if translated_attribute is not None:
+                formula = translated_attribute
+            else:
+                formula = translate_natural_sentence_to_formula(text, constants=constants, predicates=predicates)
             justification = "R"
         if formula is None:
             formula = "INVALID"
