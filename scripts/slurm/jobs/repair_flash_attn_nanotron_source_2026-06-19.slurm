@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=repair_flash_nanotron
 #SBATCH --partition=a40,a100,rtxpro6k
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=16
 #SBATCH --time=24:00:00
 #SBATCH --output=logs/%x_%j.out
@@ -20,7 +20,7 @@ export UV_LINK_MODE="${UV_LINK_MODE:-copy}"
 export UV_CACHE_DIR="${UV_CACHE_DIR:-${WORK}/.cache/uv}"
 export PIP_CACHE_DIR="${PIP_CACHE_DIR:-${WORK}/.cache/pip}"
 export TORCH_EXTENSIONS_DIR="${TORCH_EXTENSIONS_DIR:-${WORK}/.cache/torch_extensions}"
-export MAX_JOBS="${MAX_JOBS:-${SLURM_CPUS_PER_TASK:-8}}"
+export MAX_JOBS="${MAX_JOBS:-2}"
 export FLASH_ATTENTION_FORCE_BUILD="${FLASH_ATTENTION_FORCE_BUILD:-TRUE}"
 
 if [[ ! -f "${WORK}/nanotron/bin/activate" ]]; then
