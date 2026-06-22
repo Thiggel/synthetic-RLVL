@@ -2,6 +2,10 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-06-22
+
+- 09:05 CEST Nanotron feasibility: `$WORK/nanotron` imports `torch 2.6.0+cu124`, `flash_attn 2.7.4.post1`, and `nanotron`. Initial dense launch attempts failed on optional `grouped_gemm` and a Llama initializer mismatch; local Nanotron patches now bypass optional MoE `grouped_gemm` registration when unavailable/broken and pass the full config to the Llama parametrizer, matching Qwen. Tiny 4-GPU dummy-data smoke `3768319` completed 3 train steps and saved a checkpoint. Submitted 8xA100-80GB OLMo-3-7B-shaped random-init memory probe `3768322_[0-4%1]` with seq len `4096`, TP=8, and micro-batches `1/2/4/8/16`. Caveat: this is not true OLMo3 checkpoint support; native/compatible OLMo3 model/conversion remains required before real base `allenai/Olmo-3-1025-7B` midtraining.
+
 ## 2026-06-19
 
 - 11:35 CEST official preprint revision: pulled user report-repo edits (`b73995d`) before changing the draft. Rewrote root `../synthetic-RLVL-report/main.tex` to a more NeurIPS-style structure with Introduction, Related Work, Experimental Setup, Results, Discussion, Limitations, Conclusion, and Appendix. The draft now uses descriptive task names ("branching proof chains" and "attribute constraints"), removes paragraph headings that caused double-dot rendering, replaces bar-plot-style evidence with tables, keeps only two line figures where the trend is the claim, adds main/architecture/shortcut/syntax/integrity/hybrid/appendix tables, and includes the OLMo-2-32B short-context sanity rows with an explicit non-OOD caveat. Static checks: `8` tables, `2` figure refs, zero missing figures/citations, zero `\paragraph` commands, and `git diff --check` passes for the report repo. Local TeX compilation remains unavailable.
