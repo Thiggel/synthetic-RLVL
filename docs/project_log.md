@@ -2,6 +2,11 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-06-23
+
+- 15:28 CEST live job update: older carried-over SFT rows `3770814` (normal 32B proof-chain baseline) and `3768361` (OLMo-3-32B conditioned-dual) completed cleanly. Current active SFT children are normal 32B `3771012_7` running since 10:25 CEST and conditioned-dual `3771013_1` running since 2026-06-22 21:56 CEST; remaining rows `3771012_[8-11%1]` and `3771013_[2%1]` are pending by array task limit. Evals `3771014` and `3771015` remain dependency-pending.
+- 15:28 CEST Nanotron update: Qwen2.5 random-init batch probe `3771016_[0-4%1]` completed rows for microbatches `1/2/4`; microbatches `8/16` OOMed on A100-80GB at seq len `4096` under TP=4/DP=2, so the current safe envelope is microbatch `<=4` unless recompute/sequence length/parallelism changes. Pretrained real-data smoke `3771017` exported and debug-printed the intended packed dataset mixture (4 normal, 16 logic, 16 NL records); the printed logic/NL samples and packed chunk look structurally correct. It failed before training because `examples/llama/convert_hf_to_nanotron.py` was invoked as a script and hit `ImportError: attempted relative import with no known parent package`. Fix the converter invocation before resubmitting the smoke.
+
 ## 2026-06-22
 
 - 20:28 CEST resubmitted the paused repo jobs again. New jobs: normal 32B SFT recovery `3771012_[6-11%1]`, normal 32B eval `3771014_[0-11%1]` with `afterok:3770814:3771012_*`, conditioned-dual 32B SFT recovery `3771013_[1-2%1]`, conditioned-dual eval `3771015_[0-5%1]` with `afterok:3768361:3771013_*`, Qwen2.5 random-init Nanotron probe `3771016_[0-4%1]`, and Qwen2.5 pretrained real-data smoke `3771017`. Slurm currently reports `START_TIME=N/A` for all newly submitted non-dependent rows; evals are dependency-pending.
