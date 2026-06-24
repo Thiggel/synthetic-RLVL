@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-06-24 10:25 CEST.
+Last updated: 2026-06-24 11:30 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -30,7 +30,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 ## Partition Audit
 
-Checked at 2026-06-24 10:25 CEST. `$WORK` cache writes are restored after cleanup/offload, and the large HF hub model cache paths under `$WORK/.cache/hf/hub` are symlinks to `/home/vault/c107fa/c107fa12/cache_offload/hf_hub`. Running repo job is normal 32B SFT child `3771012_9`; original rows `3771012_[10-11%1]`, normal recovery `3775860_[8%1]`, and conditioned-dual recovery `3775861_[1-2%1]` are pending. Replacement evals `3775864` and `3775868` are pending behind dependencies. Stale evals `3771014` and `3771015` were canceled.
+Checked at 2026-06-24 11:30 CEST. `$WORK` cache writes are restored after cleanup/offload, and the large HF hub model cache paths under `$WORK/.cache/hf/hub` are symlinks to `/home/vault/c107fa/c107fa12/cache_offload/hf_hub`. Follow-up cleanup removed only disposable Nanotron smoke/probe checkpoints, stale merged eval output, canceled OLMo-3-1025-7B cache, pip cache, and old completed experiment-specific HF caches; `$HPCVAULT` quota usage is now about `1204G`, `$WORK/synthetic-RLVL` about `168G`, `$HPCVAULT/synthetic-RLVL` about `41G`, and `$HPCVAULT/cache_offload` about `243G`. Do not delete the Qwen3-32B or OLMo-3-1125-32B cache-offload dirs until the current 32B SFT/eval chain is complete. Running repo job is normal 32B SFT child `3771012_9`; original rows `3771012_[10-11%1]`, normal recovery `3775860_[8%1]`, and conditioned-dual recovery `3775861_[1-2%1]` are pending. Replacement evals `3775864` and `3775868` are pending behind dependencies. Stale evals `3771014` and `3771015` were canceled.
 
 No visible `tjepa_*` or `seqedit_*` jobs were present in the queue check.
 
