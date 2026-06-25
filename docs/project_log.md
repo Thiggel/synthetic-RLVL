@@ -2,6 +2,10 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-06-25
+
+- 09:34 CEST live job update: normal 32B baseline recovery is progressing. Original row `3771012_9` completed cleanly, targeted row-8 recovery `3775860_8` completed cleanly, original row `3771012_10` is running, and original row `3771012_11` remains array-pending. Conditioned-dual recovery row `3775861_1` completed cleanly and row `3775861_2` is running. Replacement evals `3775864` and `3775868` remain dependency-pending. Qwen2.5 midtraining array `3776105` remains held; prerequisite check still reports missing `$HPCVAULT/synthetic-RLVL/nanosets/qwen25/{normal_continuation,logical_deduction_logic,logical_deduction_nl_exact}` and `$HPCVAULT/synthetic-RLVL/nanotron_checkpoints/qwen25_7b_tp1`.
+
 ## 2026-06-24
 
 - 12:11 CEST Qwen2.5 midtraining orchestration: added Qwen2 Nanotron-to-HF conversion/upload tooling and Slurm wrappers for final-checkpoint proof-mixture midtraining plus downstream evaluation. Submitted training array `3776105_[0-10%1]` in held state, with dependent HF push `3776106`, direct downstream eval `3776107`, UltraChat instruction SFT `3776108`, and instruction downstream eval `3776109` behind `aftercorr` dependencies. The grid is `0%` control plus `{logic,nl_exact} x {5,10,15,20,25}` at 8192 steps, seq4096, TP=4/DP=2, microbatch `4`, grad accumulation `16`, about `4.29B` tokens/run. Validation passed for `bash -n`, converter `py_compile`, and Slurm `--test-only`; HF token is present. Release blockers recorded: missing Qwen-tokenized normal/logic/NL Nanoset roots and missing `$HPCVAULT/synthetic-RLVL/nanotron_checkpoints/qwen25_7b_tp1`; keep `3776105` held until these exist and reviewer lm-eval tasks are validated.
