@@ -151,7 +151,7 @@ if [[ ! -f "${CONVERTED_CKPT}/model_config.json" ]]; then
   mkdir -p "${CONVERTED_CKPT}.tmp"
   (
     cd ../nanotron
-    python -m examples.llama.convert_hf_to_nanotron \
+    torchrun --standalone --nproc_per_node=1 -m examples.llama.convert_hf_to_nanotron \
       --checkpoint_path "${MODEL_ID}" \
       --save_path "${CONVERTED_CKPT}.tmp"
   )

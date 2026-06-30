@@ -112,7 +112,7 @@ PY
 echo "### Converting ${MODEL_ID} to Nanotron checkpoint if needed"
 if [ ! -f "${CONVERTED_CKPT}/model_config.json" ]; then
   cd ../nanotron
-  python -m examples.llama.convert_hf_to_nanotron \
+  torchrun --standalone --nproc_per_node=1 -m examples.llama.convert_hf_to_nanotron \
     --checkpoint_path "${MODEL_ID}" \
     --save_path "${CONVERTED_CKPT}"
   cd "${SLURM_SUBMIT_DIR:-$PWD}"
