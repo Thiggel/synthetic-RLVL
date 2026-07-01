@@ -125,7 +125,9 @@ data_stages:
 - data:
     dataset:
 ${DATASET_YAML}
+      token_size_in_bytes: 4
       tokenizer_name: ${MODEL_ID}
+      vocab_size: 152064
       shuffle_files: true
     num_loading_workers: 4
     seed: 42

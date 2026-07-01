@@ -2,6 +2,10 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-01
+
+- 11:06 CEST Nanotron midtraining recovery: first Qwen2.5 proof-mixture training array `3776105_[0-10%1]` started but all 11 rows failed before optimizer progress with `dacite.exceptions.UnionMatchError` on `data_stages.data.dataset`. Root cause is the generated Nanoset YAML: it passed `tokenizer_name` but omitted explicit `token_size_in_bytes`/`vocab_size`, causing Nanotron's strict union parser to swallow the metadata assertion as a generic union mismatch. Patched `scripts/slurm/jobs/nanotron_qwen25_midtrain_grid_2026-06-24.slurm` to emit `token_size_in_bytes: 4` and `vocab_size: 152064`; validation passed with `bash -n`, `sbatch --test-only`, and `git diff --check`. Canceled stale dependents `3776106`/`3776107`/`3776108`/`3776109` and submitted fresh chain: training `3801554`, HF push `3801555`, direct eval `3801556`, instruction SFT `3801557`, instruction eval `3801558`. `3801554` is priority-pending with Slurm estimate 2026-07-01 21:22 CEST on `a0633`.
+
 ## 2026-06-30
 
 - 10:18 CEST conditioned-dual 32B result: replacement eval `3795089` completed all `6/6` OLMo-3-32B conditioned-dual rows. Summary: conditioned logic OOD/hard-tail correct@16 `0.963/0.979`, citation-free joint@16 `0.487/0.715`, strict/grounded joint `0.000`; conditioned NL OOD/hard-tail correct@16 `0.608/0.782`, translated joint@16 `0.537/0.743`, parse@16 `0.938/0.965`. Compared with single-modality OLMo-3-32B, conditioned logic is similar OOD and much stronger on hard-tail citation-free joint (`0.715` vs `0.115`), and conditioned NL is close/slightly lower OOD but much stronger on hard-tail translated joint (`0.743` vs `0.208`). Sample checks found intended mode prompts and surfaces; formal validity is still citation/grounding fragile rather than clean strict proof validity.
