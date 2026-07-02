@@ -2,6 +2,10 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-02
+
+- 09:36 CEST experiment status refresh: live `squeue`, `sacct`, `scontrol`, partition availability, prerequisite paths, and Nanotron output roots were checked. The only active `synthetic-RLVL` science chain is the Qwen2.5 proof-mixture Nanotron chain: training `3801554_[0-10%1]` is still priority-pending with Slurm estimate 2026-07-02 18:08 CEST on `a0535`; downstream `3801555/3801556/3801557/3801558` are dependency-pending as intended. All three Qwen Nanosets and the converted checkpoint exist, and no new repo job failures were found after the fixed resubmission. No partition widening was made because the job requires a full 8xA100-80GB node and visible alternatives would require a real memory/config change. Visible `babylm-*` jobs are unrelated to this repo.
+
 ## 2026-07-01
 
 - 13:34 CEST OLMo-3-32B conditioned-dual sample audit: inspected seed-level pass@16 metrics and matched stored samples for single vs conditioned logic/NL. Exact prompt matching found `240/240` matches for both modes, with no visible mode leakage (`conditioned_logic` all `<formal>`, `conditioned_nl` all `<think>`). The correct interpretation is same-step mixed exposure, not additive data. Conditioned logic slightly exceeds single logic on correctness in Table 7, but the effect is small; conditioned NL is high-variance, with seed `3409` better than single NL and seeds `3407/3408` worse. Representative samples fail by wrong branch/state continuation, not parser or prompt-format collapse. Added audit note `analysis/logic_cot_report_2026-05-25/conditioned_dual_32b_sample_audit_2026-07-01.md` and tightened the official preprint wording in `../synthetic-RLVL-report/main.tex`.
