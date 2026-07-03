@@ -2,6 +2,10 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-03
+
+- 10:36 CEST Nanotron midtraining recovery: Qwen2.5 proof-mixture training array `3801554_[0-10%1]` started on 2026-07-02 and all rows failed before optimizer progress with `AssertionError: Tokenizer vocab size (151665) does not match model config vocab size (152064)`. This is Qwen2.5's padded model vocabulary, not a bad Nanoset: token IDs fit inside the embedding table, but local Nanotron required exact tokenizer/model vocab equality. Patched local `../nanotron/run_train.py` so Nanoset loading accepts `len(tokenizer) <= model_config.vocab_size` and logs a rank-0 warning for padded vocabularies. Canceled poisoned downstream arrays `3801555/3801556/3801557/3801558` and submitted replacement dependency chain: training `3808220_[0-10%1]`, HF push `3808241_[0-10%2]`, direct eval `3808252_[0-10%3]`, instruction SFT `3808253_[0-10%2]`, and instruction eval `3808274_[0-10%3]`. The chain is priority/dependency-pending on `a100`; no partition widening is safe because training still needs a full 8xA100-80GB node.
+
 ## 2026-07-02
 
 - 09:36 CEST experiment status refresh: live `squeue`, `sacct`, `scontrol`, partition availability, prerequisite paths, and Nanotron output roots were checked. The only active `synthetic-RLVL` science chain is the Qwen2.5 proof-mixture Nanotron chain: training `3801554_[0-10%1]` is still priority-pending with Slurm estimate 2026-07-02 18:08 CEST on `a0535`; downstream `3801555/3801556/3801557/3801558` are dependency-pending as intended. All three Qwen Nanosets and the converted checkpoint exist, and no new repo job failures were found after the fixed resubmission. No partition widening was made because the job requires a full 8xA100-80GB node and visible alternatives would require a real memory/config change. Visible `babylm-*` jobs are unrelated to this repo.
