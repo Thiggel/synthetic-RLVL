@@ -56,10 +56,14 @@ require_nanoset() {
 }
 
 RESUME_CKPT="${PRETRAINED_NANOTRON_CKPT}"
+LOAD_OPTIMIZER="${LOAD_OPTIMIZER:-false}"
+LOAD_LR_SCHEDULER="${LOAD_LR_SCHEDULER:-false}"
 if compgen -G "${RUN_ROOT}/checkpoints/[0-9]*" >/dev/null; then
   LATEST_STEP="$(find "${RUN_ROOT}/checkpoints" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | rg '^[0-9]+$' | sort -n | tail -1)"
   if [[ -n "${LATEST_STEP}" ]]; then
     RESUME_CKPT="${RUN_ROOT}/checkpoints/${LATEST_STEP}"
+    LOAD_OPTIMIZER="${LOAD_OPTIMIZER_FOR_RUN_CKPT:-true}"
+    LOAD_LR_SCHEDULER="${LOAD_LR_SCHEDULER_FOR_RUN_CKPT:-true}"
   fi
 fi
 
@@ -116,8 +120,8 @@ checkpoints:
   checkpoint_interval: ${CHECKPOINT_INTERVAL}
   checkpoints_path: ${RUN_ROOT}/checkpoints
   checkpoints_path_is_shared_file_system: false
-  load_lr_scheduler: false
-  load_optimizer: false
+  load_lr_scheduler: ${LOAD_LR_SCHEDULER}
+  load_optimizer: ${LOAD_OPTIMIZER}
   resume_checkpoint_path: ${RESUME_CKPT}
   save_final_state: true
   save_initial_state: false
@@ -218,3 +222,7 @@ YAML
 
 cd ../nanotron
 torchrun --nproc_per_node=8 run_train.py --config-file "${CONFIG}"
+
+if [[ -n "${FINAL_CHECKPOINT_ALIAS:-}" && -d "${RUN_ROOT}/checkpoints/${TRAIN_STEPS}" ]]; then
+  ln -sfn "${TRAIN_STEPS}" "${RUN_ROOT}/checkpoints/${FINAL_CHECKPOINT_ALIAS}"
+fi
