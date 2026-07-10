@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-10
 
+- 16:23 CEST corrected SFT artifact gate: added
+  `audit_branchproof_unique_v2_pilot_eval.py` plus three regression tests. The
+  gate checks all 14 depths, greedy and pass@`1/2/4/8/16` metric cells,
+  monotonic/finite pass@k values, exactly 128 retained raw generations, and
+  contiguous prompt constants `c0..c_depth`; the stale depth-18 wrapped form
+  and missing metrics are rejected. Tests pass (`3 passed`). Submitted audit
+  `3831023` after pilot eval `3829070` and dependency-edited full SFT
+  `3829072` to `afterok:3831023`. Pilot SFT is healthy around step `3300`; the
+  normal Nanotron control is healthy at iteration `4711/8192` (`2.47B`
+  tokens, `30.8K` tokens/s).
+
 - 16:06 CEST normal-control checkpoint gate: while `3823434_0` continued at
   iteration `4641/8192`, verified checkpoint `4096` has complete metadata, 625
   model files, four equal `22,848,937,060`-byte optimizer shards, no zero-byte

@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-07-10 16:06 CEST.
+Last updated: 2026-07-10 16:23 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -12,12 +12,12 @@ This includes old architecture, syntax, shortcut, hybrid, conditioned-dual,
 batch-size, and proof-mixture results. See
 `docs/branchproof_uniqueness_audit_2026-07-10.md`.
 
-| Experiment | Jobs | Live state at 2026-07-10 16:06 CEST | Outputs / next gate |
+| Experiment | Jobs | Live state at 2026-07-10 16:23 CEST | Outputs / next gate |
 | --- | --- | --- | --- |
 | Corrected BranchProof-v2 materialization | build/push `3829067` | Completed cleanly in `00:06:54`. Production gate passed on 3,000 examples with unique-solution rate `1.0`, max one derived answer, no failures, and balanced gold positions; HF smoke loads also passed. | `$HPCVAULT/synthetic-RLVL/datasets/branchproof_unique_v2_20260710`; private HF repo `flaitenberger/BranchProof-unique-v2`. |
-| Corrected BranchProof-v2 SFT/eval | pilot SFT `3829069_[12%1]`; pilot eval `3829070_12`; full SFT `3829072_[0-29%12]`; full eval `3829073_[0-29%6]` | Pilot SFT is running on A40 `a0128`, around step `2725/10000` at 15:37 with no fatal signatures. Pilot eval is dependency-pending. The full SFT dependency was tightened to `afterok:3829070`, so it cannot start merely because training finished; full eval remains behind the full SFT array. | Pilot is OLMo-3-7B logic, train depth 25, seed 3407. Eval uses equal logic/NL cap `7168`, context `16384`, greedy plus pass@`1/2/4/8/16`. Inspect pilot raw generations, extraction, truncation, correctness, and validity before accepting the full grid. |
+| Corrected BranchProof-v2 SFT/eval | pilot SFT `3829069_[12%1]`; pilot eval `3829070_12`; structural audit `3831023`; full SFT `3829072_[0-29%12]`; full eval `3829073_[0-29%6]` | Pilot SFT is running on A40 `a0128`, around step `3300/10000` with no fatal signatures. Pilot eval and audit are dependency-pending. Audit `3831023` waits on `3829070`; full SFT was edited to `afterok:3831023`, so the 30-row grid releases only after the output schema, depth coverage, retained generations, and corrected constants pass. Full eval remains behind full SFT. | Pilot is OLMo-3-7B logic, train depth 25, seed 3407. Eval uses equal logic/NL cap `7168`, context `16384`, greedy plus pass@`1/2/4/8/16`. Audit output will be `analysis/branchproof_unique_v2_pilot_eval_audit_2026-07-10.json`; manually inspect representative success/failure generations after the automated gate. |
 | Corrected BranchProof-v2 Nanotron corpora and pilot | completed builds `3829068_1` and raw array job `3829071` for row 0; completed packed audit `3830855`; completed smoke `3830924`; pilot train/recovery/push/eval `3830927 -> 3830928 -> 3830939 -> 3830940` | Both 1.2B-token exports/Nanosets completed cleanly. Logic: `311,301` records, `1,200,002,513` source tokens, `1,200,313,814` packed tokens. NL: `307,329` records, `1,200,004,689` source tokens, `1,200,312,018` packed tokens. Full `307,329`-record paired scan and 15-record packed token/decode audit passed with zero mismatches. The 85/15 corrected logic integration smoke completed three optimizer steps; full-node 15% logic pilot `3830927_3` is priority-pending with a current Slurm start estimate of 18:44 CEST today. | Fresh run root `$HPCVAULT/synthetic-RLVL/nanotron_midtrain/qwen25_7b_midtrain_logic_p15_bp_unique_v2_4p3b`; HF target prefix `flaitenberger/qwen25-7b-branchproof-unique-v2-midtrain-*`; direct eval root `$HPCVAULT/synthetic-RLVL/lm_eval_results/qwen25_branchproof_unique_v2_pilot_20260710`. Inspect pilot train/checkpoint/eval before restoring the broader percentage grid. |
-| Qwen2.5 normal-continuation control | active train `3823434_0`; automatic recovery/skip `3828946_[0%1]`; push/eval/instruction chain `3828947..3828950` | `3823434_0` is running on A100 node `a0833`; at 15:59 it was iteration `4641/8192`, `2.43B` consumed tokens, about `30.7K` tokens/s, with roughly 17h ETA. The current allocation ends around 17:58, so recovery is expected. Step `4096` is verified complete: 625 model files, four equal 22.85GB optimizer shards, complete metadata, and no zero-byte files. | This row uses only normal continuation text and is unaffected by the BranchProof defect. Checkpoint integrity guard is active; `3828946_0` can safely resume from step `4096`, then downstream jobs remain dependency-gated. |
+| Qwen2.5 normal-continuation control | active train `3823434_0`; automatic recovery/skip `3828946_[0%1]`; push/eval/instruction chain `3828947..3828950` | `3823434_0` is running on A100 node `a0833`; at 16:19 it was iteration `4711/8192`, `2.47B` consumed tokens, about `30.8K` tokens/s, with roughly 16.5h ETA. The current allocation ends around 17:58, so recovery is expected. Step `4096` is verified complete: 625 model files, four equal 22.85GB optimizer shards, complete metadata, and no zero-byte files. | This row uses only normal continuation text and is unaffected by the BranchProof defect. Checkpoint integrity guard is active; `3828946_0` can safely resume from step `4096`, then downstream jobs remain dependency-gated. |
 
 All old proof-mixture training rows and dependents were canceled, and their
 stale/incomplete proof checkpoints were removed. Do not resubmit them against
@@ -52,11 +52,11 @@ not managed here.
 
 ## Partition Audit
 
-Checked at 2026-07-10 16:06 CEST. Active repo jobs are the corrected
-BranchProof SFT pilot, its dependency-gated eval/full grid, packed-corpus audit
-`3830855`, and the unaffected Nanotron normal control plus recovery/downstream
-chain. The A100-MIG partition had one idle node and was selected for the
-CPU/I/O-heavy packed audit. Do not widen full Nanotron training to
+Checked at 2026-07-10 16:23 CEST. Active repo jobs are the corrected
+BranchProof SFT pilot, its dependency-gated eval/audit/full grid, the corrected
+Nanotron pilot chain, and the unaffected Nanotron normal control plus
+recovery/downstream chain. Audit `3831023` uses A100-MIG after pilot eval; full
+SFT `3829072` now waits on that audit. Do not widen full Nanotron training to
 `rtxpro6k`: current torch does not support Blackwell `sm_120`.
 
 No visible `tjepa_*` or `seqedit_*` jobs were present in the queue check. Visible `babylm-*` jobs are unrelated to this repo.
@@ -67,8 +67,10 @@ No visible `tjepa_*` or `seqedit_*` jobs were present in the queue check. Visibl
   run root, 85/15 dataset weights, pretrained checkpoint load, and early loss.
   Then verify automatic recovery `3830928_3`, upload `3830939_3`, and direct
   eval `3830940_3` in order.
-- Watch pilot SFT `3829069_12`, then inspect pilot eval `3829070_12` raw
-  generations before treating full grid `3829072` as accepted evidence.
+- Watch pilot SFT `3829069_12`, pilot eval `3829070_12`, and structural audit
+  `3831023`. The audit automatically blocks stale constants, incomplete depth
+  coverage, malformed metrics, and empty generations. Manually inspect its raw
+  success/failure samples before treating full-grid outputs as evidence.
 - Watch clean control `3823434_0`; it should time out only after a complete
   checkpoint. Then guarded recovery `3828946_0` should resume from that
   checkpoint or skip if step `8192` already exists.
@@ -80,7 +82,7 @@ No visible `tjepa_*` or `seqedit_*` jobs were present in the queue check. Visibl
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3828947,3828948,3828949,3828950,3829067,3829068,3829069,3829070,3829072,3829073,3830855,3830924,3830927,3830928,3830939,3830940 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3828947,3828948,3828949,3828950,3829067,3829068,3829069,3829070,3829072,3829073,3830855,3830924,3830927,3830928,3830939,3830940,3831023 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```
 
 Useful log tails:

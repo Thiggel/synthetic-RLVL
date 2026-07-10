@@ -93,6 +93,14 @@ The corrected midtraining corpora have an independent packed-data audit at
 source/packed token counts, all-record paired-prefix checks, and Qwen-tokenizer
 round trips with decoded samples across depths and both modalities.
 
+The SFT pilot now has a separate post-evaluation structural gate implemented
+by `scripts/analysis/audit_branchproof_unique_v2_pilot_eval.py`. Before the
+full grid can run, it requires all requested greedy and pass@k cells, finite
+unit-range metrics, monotonic pass@k curves, all 14 requested depths, exactly
+128 round-robin retained generations, and contiguous prompt constants
+`c0..c_depth`. Regression tests explicitly reject the old depth-18 wrapped
+constant surface and missing primary metrics.
+
 At the planned 4,096-token Nanotron context, `44.3%` of formal documents and
 `47.8%` of NL documents are longer than one context; none exceeds 8,192 tokens.
 Nanotron therefore treats these as ordinary packed continuation documents, not
@@ -106,8 +114,8 @@ midtraining rather than full-trace supervision.
 | --- | --- | --- |
 | Materialized paired dataset | `3829067` complete | Probe accepted, all subsets present, private HF push succeeds |
 | One-seed SFT pilot | `3829069_12` running | Training completes with no truncation/data errors |
-| Pilot post-hoc eval | `3829070_12` | Inspect raw successes/failures at train, held-out, and depth 50; verify answer extraction, unique gold, caps, and validators |
-| Three-seed main grid | `3829072 -> 3829073` | Full SFT now depends on pilot eval `3829070`; report greedy and pass@1 before pass@k |
+| Pilot post-hoc eval | `3829070_12 -> 3831023` | Automated audit verifies schema, all depths, corrected constants, and nonempty outputs; then inspect raw successes/failures at train, held-out, and depth 50 |
+| Three-seed main grid | `3829072 -> 3829073` | Full SFT now depends on audit `3831023`, not process success alone; report greedy and pass@1 before pass@k |
 | Corrected 1.2B-token corpora | builds and packed audit `3830855` complete | Full paired-prefix scan, metadata counts, and exact source-token/decode round trips passed |
 | Midtraining mixtures | smoke `3830924` complete; pilot `3830927 -> 3830928 -> 3830939 -> 3830940` | Launch the broader grid only after the isolated 15% logic pilot trains, converts, and evaluates cleanly |
 

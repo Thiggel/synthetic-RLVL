@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-10 16:06 CEST.
+Last updated: 2026-07-10 16:23 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -52,10 +52,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   explicit atom form; focused regression tests pass (`84 passed`).
 - Corrected materialization/push `3829067` completed cleanly. The one-seed
   train-1-to-25 logic SFT pilot `3829069_12` is healthy at about step
-  `2725/10000`; equal-cap eval `3829070_12` remains dependency-pending. The
-  full 30-row SFT grid `3829072` was dependency-edited from `afterok:3829069`
-  to `afterok:3829070`, so it cannot release before the pilot evaluation
-  succeeds; full eval `3829073` remains behind it. Evaluation uses the same
+  `3300/10000`; equal-cap eval `3829070_12` remains dependency-pending.
+  Structural audit `3831023` now follows the pilot eval and checks all expected
+  greedy/pass@k metrics, all 14 depths, 128 retained raw generations, and exact
+  `c0..c_depth` prompt constants. Full SFT `3829072` was dependency-edited to
+  `afterok:3831023`, so process success alone cannot release the 30-row grid;
+  full eval `3829073` remains behind it. Evaluation uses the same
   `7168`-token generation cap for logic and NL, context length `16384`, greedy
   accuracy, and pass@`1/2/4/8/16`.
 - Both corrected 1.2B-token Nanotron corpus rows completed cleanly: logic has
@@ -78,8 +80,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   deleted because their logic/NL corpora inherited the same generator defect.
   Only the unaffected `0%` normal-corpus control `3823434_0` remains running,
   with recovery/skip `3828946_0` and downstream `3828947..3828950` dependency
-  held. At 15:59 it was at iteration `4641/8192`, `2.43B` consumed tokens,
-  about `30.7K` tokens/s, and an ETA near 17 hours. Step `4096` was explicitly
+  held. At 16:19 it was at iteration `4711/8192`, `2.47B` consumed tokens,
+  about `30.8K` tokens/s, and an ETA near 16.5 hours. Step `4096` was explicitly
   verified complete: 625 model files, four equal `22,848,937,060`-byte
   optimizer shards, no zero-byte files, and complete metadata. Its current
   allocation ends before the ETA, so guarded recovery can safely resume.
@@ -263,5 +265,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3801554,3801555,3801556,3801557,3801558,3808220,3808241,3808252,3808253,3808274 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3828947,3828948,3828949,3828950,3829069,3829070,3829072,3829073,3830927,3830928,3830939,3830940,3831023 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```
