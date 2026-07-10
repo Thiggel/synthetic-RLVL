@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 01:42 CEST provisional BranchProof length diagnostic: completed greedy gate
+  chunks 1--3 differ from the corresponding per-depth median-gold target-token
+  totals by only `-0.01%`, `-0.06%`, and `+0.19%`. Together with maximum
+  generated length `5212 < 7168`, this rules out gross under-generation,
+  truncation, or runaway repetition through depth 40. It does not establish
+  answer correctness or proof validity; those remain blocked on scored
+  artifacts and raw-generation review.
 - 01:35 CEST strengthened pilot runtime evidence while gate `3832945_12` is
   running. `audit_branchproof_unique_v2_pilot_eval.py` now parses vLLM
   completion records, requires all four greedy and 28 sampled chunks exactly

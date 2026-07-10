@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 01:35 CEST.
+Last updated: 2026-07-11 01:42 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -79,7 +79,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   invalidating the experiment. At 01:35, greedy chunks 1--3 were complete;
   chunk 3 (depths 25--40) produced 264,625 tokens in 1,682.2 seconds with
   maximum length 5,212, so no greedy chunk has hit the 7,168 cap. Final greedy
-  chunk 4 is running at 99% GPU utilization.
+  chunk 4 is running at 99% GPU utilization. Relative to the corresponding
+  per-depth median gold target lengths, completed chunk totals differ by only
+  `-0.01%`, `-0.06%`, and `+0.19%`. This rules out gross truncation or runaway
+  length drift through depth 40, but is not evidence of correctness or proof
+  validity.
 - An exhaustive OLMo-tokenizer audit now covers all 1,000 corrected validation
   records at each of the 14 depths in both modalities (28,000 rendered gold
   traces). No target exceeds the shared 7,168-token generation cap and no
