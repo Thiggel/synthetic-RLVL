@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-10 17:17 CEST.
+Last updated: 2026-07-11 00:49 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -52,13 +52,17 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   answer positions. Symbol-padded and wordified rewrites were extended to the
   explicit atom form; focused regression tests pass (`84 passed`).
 - Corrected materialization/push `3829067` completed cleanly. The one-seed
-  train-1-to-25 logic SFT pilot `3829069_12` is healthy at about step
-  `4030/10000`. The original full-size pilot eval/audit `3829070 -> 3831023`
+  train-1-to-25 logic SFT pilot `3829069_12` completed all `10000` steps in
+  `12:39:51` with final train loss `0.0171`; its final adapter and complete
+  step-5000/10000 checkpoints are present. The original full-size pilot
+  eval/audit `3829070 -> 3831023`
   was canceled before start because comparable eval rows take 13--23 hours and
   risk the 24-hour limit. Replacement gate eval `3831135_12` uses 16 prompts
   per depth, 8 samples, greedy plus pass@`1/2/4/8`, the same equal `7168` cap,
-  and all 14 depths; structural audit `3831136` checks its 128 retained raw
-  generations and exact `c0..c_depth` prompts. Full SFT `3829072` now depends
+  and all 14 depths. Its pending row was widened from A100-only to compatible
+  `a40,a100` resources and started immediately on A40 `a0226` at 00:45 CEST;
+  structural audit `3831136` checks its 128 retained raw generations and exact
+  `c0..c_depth` prompts. Full SFT `3829072` now depends
   on `afterok:3831136`. The eventual full eval `3829073` remains at 32 prompts,
   16 samples, and pass@`1/2/4/8/16` for the scientific result.
 - Both corrected 1.2B-token Nanotron corpus rows completed cleanly: logic has
@@ -75,8 +79,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   comparison: normal control, logic, and NL. Logic train/recovery is
   `3830927_3 -> 3830928_3`; NL integration smoke `3831110` completed all three
   steps after loading the intended `0.85/0.15` normal/NL mix, releasing NL
-  train/recovery `3831111_8 -> 3831112_8`. Slurm currently estimates starts
-  near 2026-07-11 06:45 for logic and 10:21 for NL. New upload/direct-eval/
+  train/recovery `3831111_8 -> 3831112_8`. At 00:44 CEST, Slurm estimated
+  starts near 2026-07-11 11:13 for logic and 11:46 for NL. New upload/direct-eval/
   instruction-SFT/instruction-eval chains are logic `3831123..3831126` and NL
   `3831113..3831116`; both use the isolated `bp_unique_v2` names and HF prefix.
 - A direct audit of Nanotron's production `TokenizedBytes`/
@@ -88,9 +92,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   recovery. Details are in `docs/nanotron_mixture_schedule_audit_2026-07-10.md`.
 - All old proof-mixture Nanotron jobs and stale proof checkpoints were canceled and
   deleted because their logic/NL corpora inherited the same generator defect.
-  Only the unaffected `0%` normal-corpus control `3823434_0` remains running,
-  with recovery/skip `3828946_0`. At 17:14 it was at iteration `4901/8192`,
-  `2.57B` consumed tokens, about `30.8K` tokens/s, and an ETA near 15.6 hours.
+  The unaffected `0%` normal-corpus control `3823434_0` reached its exact
+  24-hour wall limit after logged iteration `5051`, as expected, and recovery/skip
+  `3828946_0` is priority-pending with a 15:04 CEST start estimate.
   Step `4096` was explicitly verified complete: 625 model files, four equal
   `22,848,937,060`-byte optimizer shards, no zero-byte files, and complete
   metadata. The full filesystem-accounted checkpoint footprint is about

@@ -2,6 +2,22 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-11
+
+- 00:49 CEST corrected BranchProof gate release: one-seed pilot SFT
+  `3829069_12` completed all 10,000 steps in `12:39:51`, with final train loss
+  `0.0171`, a final adapter, and complete step-5000/10000 checkpoints. Pending
+  gate eval `3831135_12` was safely widened from A100-only to `a40,a100`
+  without changing its job ID or dependencies and started immediately on A40
+  `a0226`. The 30-row SFT remains gated on structural audit `3831136`.
+- 00:49 CEST Nanotron control transition: unaffected control `3823434_0`
+  reached its exact 24-hour wall limit after logged iteration `5051`, as expected.
+  Direct post-timeout inspection reconfirmed step 4096 as a complete `199G`
+  recovery checkpoint with model, four equal optimizer shards, scheduler, RNG,
+  and metadata recording exactly `2,147,483,648` consumed tokens. Guarded
+  recovery `3828946_0` is priority-pending; current control/logic/NL start
+  estimates are 15:04/11:13/11:46 CEST.
+
 ## 2026-07-10
 
 - 17:14 CEST Nanotron mixture-schedule audit: verified that production uses
