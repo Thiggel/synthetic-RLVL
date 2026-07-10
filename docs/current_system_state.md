@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-10 16:50 CEST.
+Last updated: 2026-07-10 17:17 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -17,6 +17,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Dataset materialization details | `docs/materialized_dataset.md` |
 | Paired synthetic benchmark details | `docs/paired_synthetic_benchmarks_2026-05-20.md` |
 | Paired iGSM validity audit | `docs/paired_igsm_validity_audit_2026-06-01.md` |
+| Nanotron mixture/resume audit | `docs/nanotron_mixture_schedule_audit_2026-07-10.md` |
 | Ongoing LaTeX report | `analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex` |
 | Official preprint draft | `../synthetic-RLVL-report/main.tex` |
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
@@ -52,7 +53,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   explicit atom form; focused regression tests pass (`84 passed`).
 - Corrected materialization/push `3829067` completed cleanly. The one-seed
   train-1-to-25 logic SFT pilot `3829069_12` is healthy at about step
-  `3700/10000`. The original full-size pilot eval/audit `3829070 -> 3831023`
+  `4030/10000`. The original full-size pilot eval/audit `3829070 -> 3831023`
   was canceled before start because comparable eval rows take 13--23 hours and
   risk the 24-hour limit. Replacement gate eval `3831135_12` uses 16 prompts
   per depth, 8 samples, greedy plus pass@`1/2/4/8`, the same equal `7168` cap,
@@ -75,14 +76,21 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3830927_3 -> 3830928_3`; NL integration smoke `3831110` completed all three
   steps after loading the intended `0.85/0.15` normal/NL mix, releasing NL
   train/recovery `3831111_8 -> 3831112_8`. Slurm currently estimates starts
-  near 2026-07-11 10:21 for logic and 11:07 for NL. New upload/direct-eval/
+  near 2026-07-11 06:45 for logic and 10:21 for NL. New upload/direct-eval/
   instruction-SFT/instruction-eval chains are logic `3831123..3831126` and NL
   `3831113..3831116`; both use the isolated `bp_unique_v2` names and HF prefix.
+- A direct audit of Nanotron's production `TokenizedBytes`/
+  `BlendableDataset` path found no mixture bug. The run blends 4,096-token
+  chunks; each p15 arm realizes `157,287/1,048,576` proof chunks, or
+  `644,247,552/4,294,967,296` tokens (`15.000057%`). The normal, corrected
+  logic, and corrected NL streams are all large enough to avoid wraparound.
+  Step-4096 metadata and absolute sampler offsets preserve the blend across
+  recovery. Details are in `docs/nanotron_mixture_schedule_audit_2026-07-10.md`.
 - All old proof-mixture Nanotron jobs and stale proof checkpoints were canceled and
   deleted because their logic/NL corpora inherited the same generator defect.
   Only the unaffected `0%` normal-corpus control `3823434_0` remains running,
-  with recovery/skip `3828946_0`. At 16:48 it was at iteration `4811/8192`,
-  `2.52B` consumed tokens, about `30.7K` tokens/s, and an ETA near 16 hours.
+  with recovery/skip `3828946_0`. At 17:14 it was at iteration `4901/8192`,
+  `2.57B` consumed tokens, about `30.8K` tokens/s, and an ETA near 15.6 hours.
   Step `4096` was explicitly verified complete: 625 model files, four equal
   `22,848,937,060`-byte optimizer shards, no zero-byte files, and complete
   metadata. The full filesystem-accounted checkpoint footprint is about

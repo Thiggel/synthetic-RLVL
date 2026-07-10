@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-10
 
+- 17:14 CEST Nanotron mixture-schedule audit: verified that production uses
+  `TokenizedBytes` plus `BlendableDataset` over 4,096-token packed chunks.
+  Nanotron's exact compiled helper realizes 157,287 proof chunks out of
+  1,048,576 (`644,247,552/4,294,967,296` tokens, `15.000057%`) for both logic
+  and NL p15. Normal and corrected proof corpora have enough capacity to avoid
+  wraparound. Step-4096 control metadata records the exact consumed token
+  count, and absolute sampler/consumption offsets preserve the blend after
+  recovery. The three-step smoke's one-of-three proof share is only small-smoke
+  granularity. Added `docs/nanotron_mixture_schedule_audit_2026-07-10.md`.
+  Current Slurm estimates improved to 2026-07-11 06:45 for corrected logic and
+  10:21 for corrected NL.
+
 - 16:50 CEST instruction-transfer format repair: audited the held downstream
   branch and found a train-eval mismatch. UltraChat SFT used custom
   `<question>/<answer>` wrappers, while lm-eval used neither those wrappers nor
