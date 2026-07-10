@@ -42,8 +42,8 @@ MIX_PCTS=(0 5 10 15 20 25 5 10 15 20 25)
 IDX="${SLURM_ARRAY_TASK_ID}"
 MIX_KIND="${MIX_KINDS[$IDX]}"
 MIX_PCT="${MIX_PCTS[$IDX]}"
-RUN_TAG="qwen25_7b_midtrain_${MIX_KIND}_p${MIX_PCT}_4p3b"
-RUN_ROOT="${HPCVAULT}/synthetic-RLVL/nanotron_midtrain/${RUN_TAG}"
+RUN_TAG="${RUN_TAG_OVERRIDE:-qwen25_7b_midtrain_${MIX_KIND}_p${MIX_PCT}_4p3b}"
+RUN_ROOT="${RUN_ROOT_OVERRIDE:-${HPCVAULT}/synthetic-RLVL/nanotron_midtrain/${RUN_TAG}}"
 CONFIG="${RUN_ROOT}/config.yaml"
 
 require_nanoset() {
@@ -55,11 +55,42 @@ require_nanoset() {
   fi
 }
 
+checkpoint_is_complete() {
+  local checkpoint_dir="$1"
+  local expected_optimizer_shards="${EXPECTED_OPTIMIZER_SHARDS:-4}"
+  local min_optimizer_shard_bytes="${MIN_OPTIMIZER_SHARD_BYTES:-20000000000}"
+  local optimizer_sizes=()
+  local size
+
+  [[ -s "${checkpoint_dir}/checkpoint_metadata.json" ]] || return 1
+  [[ -s "${checkpoint_dir}/config.yaml" ]] || return 1
+  [[ -s "${checkpoint_dir}/model_config.json" ]] || return 1
+  if find "${checkpoint_dir}" -type f -size 0 -print -quit | grep -q .; then
+    return 1
+  fi
+
+  mapfile -t optimizer_sizes < <(
+    find "${checkpoint_dir}/optimizer" -maxdepth 1 -type f -name 'optimizer_*.pt' -printf '%s\n' | sort -n
+  )
+  [[ "${#optimizer_sizes[@]}" -eq "${expected_optimizer_shards}" ]] || return 1
+  [[ "${optimizer_sizes[0]}" -ge "${min_optimizer_shard_bytes}" ]] || return 1
+  for size in "${optimizer_sizes[@]}"; do
+    [[ "${size}" -eq "${optimizer_sizes[0]}" ]] || return 1
+  done
+}
+
 RESUME_CKPT="${PRETRAINED_NANOTRON_CKPT}"
 LOAD_OPTIMIZER="${LOAD_OPTIMIZER:-false}"
 LOAD_LR_SCHEDULER="${LOAD_LR_SCHEDULER:-false}"
 if compgen -G "${RUN_ROOT}/checkpoints/[0-9]*" >/dev/null; then
-  LATEST_STEP="$(find "${RUN_ROOT}/checkpoints" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | rg '^[0-9]+$' | sort -n | tail -1)"
+  LATEST_STEP=""
+  while IFS= read -r CANDIDATE_STEP; do
+    if checkpoint_is_complete "${RUN_ROOT}/checkpoints/${CANDIDATE_STEP}"; then
+      LATEST_STEP="${CANDIDATE_STEP}"
+      break
+    fi
+    echo "Ignoring incomplete run checkpoint: ${RUN_ROOT}/checkpoints/${CANDIDATE_STEP}" >&2
+  done < <(find "${RUN_ROOT}/checkpoints" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | rg '^[0-9]+$' | sort -nr)
   if [[ -n "${LATEST_STEP}" ]]; then
     RESUME_CKPT="${RUN_ROOT}/checkpoints/${LATEST_STEP}"
     LOAD_OPTIMIZER="${LOAD_OPTIMIZER_FOR_RUN_CKPT:-true}"
@@ -84,7 +115,7 @@ else
   PROOF_DATASET_FOLDER=""
 fi
 
-if [[ -d "${RUN_ROOT}/checkpoints/${TRAIN_STEPS}" && "${FORCE_NANOTRON_TRAIN:-0}" != "1" ]]; then
+if checkpoint_is_complete "${RUN_ROOT}/checkpoints/${TRAIN_STEPS}" && [[ "${FORCE_NANOTRON_TRAIN:-0}" != "1" ]]; then
   echo "Final checkpoint exists for ${RUN_TAG}; skipping"
   exit 0
 fi
@@ -222,6 +253,11 @@ YAML
 
 cd ../nanotron
 torchrun --nproc_per_node=8 run_train.py --config-file "${CONFIG}"
+
+if ! checkpoint_is_complete "${RUN_ROOT}/checkpoints/${TRAIN_STEPS}"; then
+  echo "Training exited without a complete final checkpoint: ${RUN_ROOT}/checkpoints/${TRAIN_STEPS}" >&2
+  exit 3
+fi
 
 if [[ -n "${FINAL_CHECKPOINT_ALIAS:-}" && -d "${RUN_ROOT}/checkpoints/${TRAIN_STEPS}" ]]; then
   ln -sfn "${TRAIN_STEPS}" "${RUN_ROOT}/checkpoints/${FINAL_CHECKPOINT_ALIAS}"

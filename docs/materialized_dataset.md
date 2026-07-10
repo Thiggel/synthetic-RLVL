@@ -206,6 +206,12 @@ sbatch scripts/slurm/jobs/build_materialized_hard_fsa_schema_fixedtarget_2026-05
 
 ## Hard-FSA-Schema Fixed-Target Depth-50 Dataset (2026-05-19)
 
+> **Quarantined on 2026-07-10.** This materialization reused constants after
+> depth 17. A Horn-closure audit found multiple derivable candidate answers in
+> most depth-20-and-longer examples. Do not use this dataset or experiments
+> trained from it as long-depth scientific evidence. See
+> `docs/branchproof_uniqueness_audit_2026-07-10.md`.
+
 HF dataset: `flaitenberger/LogicalReasoning-hard-fsa-schema-fixedtarget-depth50`
 
 Purpose: extend the pure-SFT logic-vs-natural-language CoT scaling experiment to 3 seeds, train ranges through depth 25, and post-hoc pass@k evaluation through depth 50.
@@ -228,6 +234,46 @@ sbatch scripts/slurm/jobs/build_materialized_hfsa_fixedtarget_depth50_2026-05-19
 Experiment plan:
 
 - `docs/hfsa_depth_scaling_plan_2026-05-19.md`
+
+## BranchProof Unique-v2 Materialization (2026-07-10)
+
+This is the corrected replacement for all long-depth `hard_fsa_schema`
+experiments. Every layer has a fresh constant `c0..c_depth`; formal atoms use
+explicit syntax such as `A(c18)`. The build is gated by forward closure and is
+accepted only when every audited question has exactly one derivable candidate.
+
+Local root:
+
+```bash
+$HPCVAULT/synthetic-RLVL/datasets/branchproof_unique_v2_20260710
+```
+
+Private HF target:
+
+```bash
+flaitenberger/BranchProof-unique-v2
+```
+
+Subsets:
+
+- `train_fixedtarget_up_to_{5,10,15,20,25}_50k`
+- `val_step_01_1k` ... `val_step_50_1k`
+
+Build job/script:
+
+```bash
+3829067
+scripts/slurm/jobs/build_materialized_branchproof_unique_v2_2026-07-10.slurm
+```
+
+Job `3829067` completed cleanly in `00:06:54`, wrote all configured local
+subsets, pushed the private HF dataset, and passed one-row reload checks for
+train-depth 5, train-depth 25, and validation depth 50. The production
+preflight over 1,000 train and 2,000 eval examples passed with
+unique-solution rate `1.0`, maximum derived-candidate count `1`, no generator
+failures, and exactly balanced gold answer positions. Downstream evaluation
+uses a common `7168`-token cap for logic and NL and reports greedy plus
+pass@`1/2/4/8/16`.
 
 ## Hard-FSA-Schema Shortcut-Kind Depth-50 Datasets (2026-05-29)
 

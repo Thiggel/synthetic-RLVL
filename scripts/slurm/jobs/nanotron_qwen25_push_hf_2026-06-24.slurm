@@ -30,13 +30,24 @@ MIX_PCTS=(0 5 10 15 20 25 5 10 15 20 25)
 IDX="${SLURM_ARRAY_TASK_ID}"
 MIX_KIND="${MIX_KINDS[$IDX]}"
 MIX_PCT="${MIX_PCTS[$IDX]}"
-RUN_TAG="qwen25_7b_midtrain_${MIX_KIND}_p${MIX_PCT}_4p3b"
-NANOTRON_CKPT="${HPCVAULT}/synthetic-RLVL/nanotron_midtrain/${RUN_TAG}/checkpoints/${CHECKPOINT_STEP}"
+RUN_TAG="${RUN_TAG_OVERRIDE:-qwen25_7b_midtrain_${MIX_KIND}_p${MIX_PCT}_4p3b}"
+RUN_ROOT="${RUN_ROOT_OVERRIDE:-${HPCVAULT}/synthetic-RLVL/nanotron_midtrain/${RUN_TAG}}"
+NANOTRON_CKPT="${RUN_ROOT}/checkpoints/${CHECKPOINT_STEP}"
 HF_STAGING="${HPCVAULT}/synthetic-RLVL/hf_staging/${RUN_TAG}_step${CHECKPOINT_STEP}"
 REPO_ID="${HF_NAMESPACE}/${HF_REPO_PREFIX}-${MIX_KIND}-p${MIX_PCT}-step${CHECKPOINT_STEP}"
 
-if [[ ! -f "${NANOTRON_CKPT}/model_config.json" ]]; then
-  echo "Missing Nanotron checkpoint: ${NANOTRON_CKPT}" >&2
+if [[ ! -d "${NANOTRON_CKPT}/model" ]]; then
+  echo "Missing Nanotron model checkpoint: ${NANOTRON_CKPT}" >&2
+  exit 2
+fi
+MODEL_FILE_COUNT="$(find "${NANOTRON_CKPT}/model" -type f 2>/dev/null | wc -l)"
+MODEL_SIZE_BYTES="$(du -sb "${NANOTRON_CKPT}/model" 2>/dev/null | cut -f1)"
+if [[ ! -s "${NANOTRON_CKPT}/model_config.json" \
+      || ! -s "${NANOTRON_CKPT}/checkpoint_metadata.json" \
+      || "${MODEL_FILE_COUNT}" -ne "${EXPECTED_MODEL_FILES:-625}" \
+      || "${MODEL_SIZE_BYTES:-0}" -lt "${MIN_MODEL_SIZE_BYTES:-15000000000}" ]] \
+    || find "${NANOTRON_CKPT}/model" -type f -size 0 -print -quit 2>/dev/null | grep -q .; then
+  echo "Missing or incomplete Nanotron model checkpoint: ${NANOTRON_CKPT}" >&2
   exit 2
 fi
 
@@ -58,5 +69,5 @@ if [[ "${CLEANUP_NANOTRON_AFTER_UPLOAD:-0}" == "1" ]]; then
   rm -rf "${NANOTRON_CKPT}"
 fi
 
-echo "${REPO_ID}" > "${HPCVAULT}/synthetic-RLVL/nanotron_midtrain/${RUN_TAG}/hf_repo_step${CHECKPOINT_STEP}.txt"
+echo "${REPO_ID}" > "${RUN_ROOT}/hf_repo_step${CHECKPOINT_STEP}.txt"
 echo "Uploaded ${RUN_TAG} step ${CHECKPOINT_STEP} to ${REPO_ID}"

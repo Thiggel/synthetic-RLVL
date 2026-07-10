@@ -143,10 +143,14 @@ def _pad_logic_atoms(formula: str, *, pred_aliases: dict[str, str], const_aliase
         const_alias = const_aliases.get(const, const)
         return f"{pred_alias}({const_alias})"
 
-    # HFSA traces use legacy unary atoms such as Ba. Padded traces use the
-    # parser's explicit predicate-call form so multi-character symbols stay
-    # atomic rather than being split into one-letter constants.
-    return re.sub(r"(?<![A-Za-z0-9_])([A-Z])([a-z])(?![A-Za-z0-9_(])", repl, formula)
+    # Accept both legacy atoms such as Ba and explicit atoms such as B(c18).
+    # Padded traces use explicit calls so multi-character aliases stay atomic.
+    padded = re.sub(
+        r"(?<![A-Za-z0-9_])([A-Z])\(([a-z][A-Za-z0-9_]*)\)",
+        repl,
+        formula,
+    )
+    return re.sub(r"(?<![A-Za-z0-9_])([A-Z])([a-z])(?![A-Za-z0-9_(])", repl, padded)
 
 
 def _pad_logic_line(line: str, *, pred_aliases: dict[str, str], const_aliases: dict[str, str]) -> str:
@@ -227,7 +231,12 @@ def _wordify_logic_atoms(formula: str, *, pred_aliases: dict[str, str], const_al
         const_alias = const_aliases.get(const, const)
         return f"{pred_alias}({const_alias})"
 
-    return re.sub(r"(?<![A-Za-z0-9_])([A-Z])([a-z])(?![A-Za-z0-9_(])", repl, formula)
+    wordified = re.sub(
+        r"(?<![A-Za-z0-9_])([A-Z])\(([a-z][A-Za-z0-9_]*)\)",
+        repl,
+        formula,
+    )
+    return re.sub(r"(?<![A-Za-z0-9_])([A-Z])([a-z])(?![A-Za-z0-9_(])", repl, wordified)
 
 
 def _wordify_logic_line(line: str, *, pred_aliases: dict[str, str], const_aliases: dict[str, str]) -> str:

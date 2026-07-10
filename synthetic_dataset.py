@@ -339,7 +339,7 @@ class Atom:
 
 
 def render_predicate_atom(predicate: str, term: str) -> str:
-    if len(predicate) == 1 and predicate.isalpha():
+    if len(predicate) == 1 and predicate.isalpha() and len(term) == 1 and term.isalpha():
         return f"{predicate}{term}"
     return f"{predicate}({term})"
 
@@ -1148,8 +1148,7 @@ class LogicDatasetGenerator:
         branch_factor = int(self.config.branching_factor or 4)
         if branch_factor < 2:
             raise ValueError("hard_fsa requires branching_factor >= 2")
-        fol_constants = SymbolPool.CONSTS[:18]
-        constants = fol_constants[: min(depth + 1, len(fol_constants))]
+        constants = [f"c{i}" for i in range(depth + 1)]
         max_state_symbols = min(len(HARD_V5_STATE_WORDS), len(SymbolPool.PREDS) - branch_factor)
         if branch_factor + 1 > max_state_symbols:
             raise ValueError(
@@ -1157,10 +1156,8 @@ class LogicDatasetGenerator:
                 f"state predicates plus {branch_factor} marker predicates, but only {len(SymbolPool.PREDS)} "
                 "predicate symbols are available"
             )
-        # Long OOD depths cannot use a fresh predicate for every hidden state:
-        # the parser has only one-letter predicates. Reusing state predicates at
-        # different constants keeps the formal task valid because atoms are
-        # `(predicate, constant)` pairs; we still forbid repeated output atoms.
+        # Long OOD depths cannot use a fresh predicate for every hidden state.
+        # Reusing state predicates at unique constants keeps atoms distinct.
         num_state_symbols = min(max(depth + 1, branch_factor + 1), max_state_symbols)
 
         states = rng.sample(HARD_V5_STATE_WORDS, num_state_symbols)
@@ -1189,10 +1186,9 @@ class LogicDatasetGenerator:
                 # Invariants:
                 # - states are unique within a layer, so `state -> marker`
                 #   premises cannot create duplicate same-layer marker updates;
-                # - no output atom `(state, constant)` is reused, which matters
-                #   when depth > 17 and constants wrap from r back to a;
+                # - no output atom `(state, constant)` is reused;
                 # - every branch has a full coherent continuation.
-                dst_const = constants[(layer_idx + 1) % len(constants)]
+                dst_const = constants[layer_idx + 1]
                 candidates = [
                     state
                     for state in non_initial_states
@@ -1236,8 +1232,8 @@ class LogicDatasetGenerator:
 
         branch_orders: list[list[str]] = []
         for step in range(depth):
-            src_const = constants[step % len(constants)]
-            dst_const = constants[(step + 1) % len(constants)]
+            src_const = constants[step]
+            dst_const = constants[step + 1]
             branches: list[tuple[int, str, str, str, str]] = []
             for branch_idx in range(branch_factor):
                 branches.append((
@@ -1268,7 +1264,7 @@ class LogicDatasetGenerator:
         proof_entries: list[tuple[str, str]] = [(atom(branch_states[0][0], first_const), "R"), (atom(branch_markers[0][0], first_const), "R")]
         proof_nl_entries: list[str] = [f"{first_const} is {branch_states[0][0]}.", f"{first_const} is {branch_markers[0][0]}."]
         for step in range(depth):
-            dst_const = constants[(step + 1) % len(constants)]
+            dst_const = constants[step + 1]
             proof_entries.append((atom(branch_states[0][step + 1], dst_const), "->E"))
             proof_nl_entries.append(f"{dst_const} is {branch_states[0][step + 1]}.")
             if step < depth - 1:
@@ -1277,7 +1273,7 @@ class LogicDatasetGenerator:
 
         proof_fol = [ProofLine(total_premises + idx, formula, just).render() for idx, (formula, just) in enumerate(proof_entries, start=1)]
         proof_nl = [f"{total_premises + idx}. {text}" for idx, text in enumerate(proof_nl_entries, start=1)]
-        final_const = constants[depth % len(constants)]
+        final_const = constants[depth]
         answer = branch_states[0][-1]
         shortcut_answer = branch_states[1][-1]
 
@@ -1303,7 +1299,7 @@ class LogicDatasetGenerator:
                 "path_markers": branch_markers[0],
                 "branch_states": branch_states,
                 "branch_markers": branch_markers,
-                "path_constants": [constants[i % len(constants)] for i in range(depth + 1)],
+                "path_constants": constants.copy(),
                 "branch_orders": branch_orders,
                 "citation_free_gold": True,
                 "final_conclusion_kind": "state",
@@ -1413,8 +1409,7 @@ class LogicDatasetGenerator:
         schema_families = HARD_FSA_SCHEMA_FAMILIES[:branch_factor]
         family_names = [name for name, _ in schema_families]
         family_words = {name: list(words) for name, words in schema_families}
-        fol_constants = SymbolPool.CONSTS[:18]
-        constants = fol_constants[: min(depth + 1, len(fol_constants))]
+        constants = [f"c{i}" for i in range(depth + 1)]
         family_to_marker = dict(zip(family_names, marker_names, strict=True))
         marker_to_perm = {
             marker: tuple((family_idx + marker_idx + 1) % branch_factor for family_idx in range(branch_factor))
@@ -1483,7 +1478,7 @@ class LogicDatasetGenerator:
             for branch_idx in range(branch_factor)
         }
         for step in range(depth):
-            dst_const = constants[(step + 1) % len(constants)]
+            dst_const = constants[step + 1]
             layer_words: set[str] = set()
             for branch_idx in range(branch_factor):
                 fam_idx = branch_family_indices[branch_idx][step + 1]
@@ -1491,7 +1486,7 @@ class LogicDatasetGenerator:
                 if step + 1 < depth:
                     next_source_key = (
                         branch_markers[branch_idx][step + 1],
-                        constants[(step + 1) % len(constants)],
+                        constants[step + 1],
                     )
                 for _attempt in range(30):
                     word = next_word(fam_idx)
@@ -1536,8 +1531,8 @@ class LogicDatasetGenerator:
         branch_orders: list[list[str]] = []
         seen_antecedents: set[str] = set()
         for step in range(depth):
-            src_const = constants[step % len(constants)]
-            dst_const = constants[(step + 1) % len(constants)]
+            src_const = constants[step]
+            dst_const = constants[step + 1]
             branches: list[tuple[int, str, str, str, str]] = []
             for branch_idx in range(branch_factor):
                 branches.append((
@@ -1567,7 +1562,7 @@ class LogicDatasetGenerator:
         proof_entries: list[tuple[str, str]] = [(atom(branch_states[0][0], first_const), "R"), (atom(branch_markers[0][0], first_const), "R")]
         proof_nl_entries: list[str] = [f"{first_const} is {branch_states[0][0]}.", f"{first_const} is {branch_markers[0][0]}."]
         for step in range(depth):
-            dst_const = constants[(step + 1) % len(constants)]
+            dst_const = constants[step + 1]
             proof_entries.append((atom(branch_states[0][step + 1], dst_const), "->E"))
             proof_nl_entries.append(f"{dst_const} is {branch_states[0][step + 1]}.")
             if step < depth - 1:
@@ -1576,7 +1571,7 @@ class LogicDatasetGenerator:
 
         proof_fol = [ProofLine(total_premises + idx, formula, just).render() for idx, (formula, just) in enumerate(proof_entries, start=1)]
         proof_nl = [f"{total_premises + idx}. {text}" for idx, text in enumerate(proof_nl_entries, start=1)]
-        final_const = constants[depth % len(constants)]
+        final_const = constants[depth]
         answer = branch_states[0][-1]
         candidate_answers = [path[-1] for path in branch_states]
         wrong_candidates = [cand for cand in candidate_answers if cand != answer]
@@ -1616,7 +1611,7 @@ class LogicDatasetGenerator:
                 "branch_states": branch_states,
                 "branch_markers": branch_markers,
                 "branch_families": [[family_names[i] for i in fams] for fams in branch_family_indices],
-                "path_constants": [constants[i % len(constants)] for i in range(depth + 1)],
+                "path_constants": constants.copy(),
                 "branch_orders": branch_orders,
                 "schema_predicted_family": family_names[gold_family_indices[-1]],
                 "schema_predicted_answer": answer,

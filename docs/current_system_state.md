@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-08 10:20 CEST.
+Last updated: 2026-07-10 16:06 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -22,6 +22,71 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### P0 correction: old BranchProof long-depth evidence is quarantined
+
+- A 2026-07-10 forward-closure audit found that the old `hard_fsa` and
+  `hard_fsa_schema` generators wrapped constants after 18 layers. Reused
+  `(predicate, constant)` atoms let distinct branches re-enter one another, so
+  many long-depth questions had multiple derivable candidate answers despite
+  having one labeled answer. The ambiguity rate was `0/96` at depths
+  `5/10/15`, `73/96` at depth `20`, `74/96` at depths `25/30/35`, and `92/96`
+  at depths `40/45/50` in the audited seed/index grid.
+- Therefore, all old BranchProof results involving depth above 17 are
+  scientifically quarantined, including the headline depth-scaling result and
+  derived architecture, syntax, shortcut, hybrid, conditioned-dual, and batch
+  ablations. They remain useful only as diagnostics until selectively rerun on
+  the corrected generator. They must not be used as paper evidence.
+- The old headline also depended strongly on sampling: for the OLMo-7B
+  train-1-to-25 run, long-depth pass@1 was logic `0.513` versus NL `0.574`,
+  while pass@16 was logic `0.921` versus NL `0.794`. At depth 50, pass@1 was
+  logic `0.241` versus NL `0.147`, while pass@16 was `0.833` versus `0.510`.
+  A stored logic generation independently exhibited the ambiguity: it answered
+  a non-gold state that the proof validator accepted as citation-free valid.
+- `synthetic_dataset.py` now uses a fresh constant `c0..c_depth` at every
+  layer and explicit atoms such as `A(c18)`. The probe gate now computes Horn
+  closure and requires exactly one derivable answer. A production probe over
+  1,000 train and 2,000 eval examples passed with unique-solution rate `1.0`,
+  maximum derived-candidate count `1`, no generation failures, and balanced
+  answer positions. Symbol-padded and wordified rewrites were extended to the
+  explicit atom form; focused regression tests pass (`84 passed`).
+- Corrected materialization/push `3829067` completed cleanly. The one-seed
+  train-1-to-25 logic SFT pilot `3829069_12` is healthy at about step
+  `2725/10000`; equal-cap eval `3829070_12` remains dependency-pending. The
+  full 30-row SFT grid `3829072` was dependency-edited from `afterok:3829069`
+  to `afterok:3829070`, so it cannot release before the pilot evaluation
+  succeeds; full eval `3829073` remains behind it. Evaluation uses the same
+  `7168`-token generation cap for logic and NL, context length `16384`, greedy
+  accuracy, and pass@`1/2/4/8/16`.
+- Both corrected 1.2B-token Nanotron corpus rows completed cleanly: logic has
+  `311,301` records / `1,200,002,513` source tokens and NL has `307,329`
+  records / `1,200,004,689` source tokens. Their packed Nanosets contain one
+  additional EOS token per record. A full scan of all `307,329` matched
+  records found zero prompt, answer, wrapper, or fresh-constant-contiguity
+  mismatches. Packed token/source round-trip audit `3830855` completed cleanly:
+  all metadata/file counts agree and 15 sampled records spanning depths 3--24
+  exactly match source tokenization and decode round trips in both modalities.
+  A corrected 15% logic integration smoke `3830924` then loaded the intended
+  `0.85/0.15` normal/proof blend and completed three optimizer steps.
+- The first corrected proof-mixture pilot is submitted as 15% logic train
+  `3830927_3`, automatic resume/skip `3830928_3`, isolated HF upload
+  `3830939_3`, and direct reviewer eval `3830940_3`. It uses a fresh
+  `bp_unique_v2` run root and checkpoint interval `4096`; the train row is
+  ordinary priority-pending on a full A100-80GB node, with Slurm currently
+  estimating a 2026-07-10 18:44 CEST start.
+- All proof-mixture Nanotron jobs and stale proof checkpoints were canceled and
+  deleted because their logic/NL corpora inherited the same generator defect.
+  Only the unaffected `0%` normal-corpus control `3823434_0` remains running,
+  with recovery/skip `3828946_0` and downstream `3828947..3828950` dependency
+  held. At 15:59 it was at iteration `4641/8192`, `2.43B` consumed tokens,
+  about `30.7K` tokens/s, and an ETA near 17 hours. Step `4096` was explicitly
+  verified complete: 625 model files, four equal `22,848,937,060`-byte
+  optimizer shards, no zero-byte files, and complete metadata. Its current
+  allocation ends before the ETA, so guarded recovery can safely resume.
+- Detailed evidence, scope, remediation, and decision gates are in
+  `docs/branchproof_uniqueness_audit_2026-07-10.md`.
+
+### Other established results
 
 - Main HFSA OLMo-7B 3-seed depth-scaling grid is complete: 30 SFT rows and sparse final pass@k eval are done.
 - Main result: logic is more depth/sample efficient at intermediate train ranges; `nl_exact` catches up at train-1-to-25 on joint validity. Depth-50 joint@16 at train-1-to-25 is similar: logic `0.417`, NL `0.427`.

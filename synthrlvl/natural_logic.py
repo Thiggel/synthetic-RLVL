@@ -83,7 +83,7 @@ def _predicate_map(predicates: str | Iterable[str] | None) -> dict[str, str]:
 
 
 def _predicate_atom(predicate: str, constant: str) -> str:
-    if len(predicate) == 1 and predicate.isalpha():
+    if len(predicate) == 1 and predicate.isalpha() and len(constant) == 1 and constant.isalpha():
         return f"{predicate}{constant}"
     return f"{predicate}({constant})"
 

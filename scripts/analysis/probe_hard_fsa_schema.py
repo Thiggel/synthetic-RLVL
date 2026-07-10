@@ -15,6 +15,57 @@ if str(REPO_ROOT) not in sys.path:
 from synthetic_dataset import DatasetConfig, LogicDatasetGenerator
 
 
+def _strip_number(line: str) -> str:
+    return line.split(". ", 1)[1].strip() if ". " in line else line.strip()
+
+
+def _horn_closure(premises: list[str]) -> set[str]:
+    facts: set[str] = set()
+    rules: list[tuple[tuple[str, ...], str]] = []
+    for raw in premises:
+        formula = _strip_number(raw)
+        if " -> " not in formula:
+            facts.add(formula)
+            continue
+        antecedent, consequent = formula.split(" -> ", 1)
+        rules.append((tuple(antecedent.split(" & ")), consequent))
+
+    changed = True
+    while changed:
+        changed = False
+        for antecedents, consequent in rules:
+            if consequent not in facts and all(atom in facts for atom in antecedents):
+                facts.add(consequent)
+                changed = True
+    return facts
+
+
+def _derived_candidate_answers(example) -> list[str]:
+    predicate_by_text: dict[str, str] = {}
+    for line in example.predicates:
+        declaration, text = line.split(": x is ", 1)
+        if declaration.endswith("(x)"):
+            predicate = declaration[:-3]
+        else:
+            predicate = declaration[:-1]
+        predicate_by_text[text] = predicate
+
+    query_constant = str(example.metadata["query_constant"])
+    closure = _horn_closure(example.premises_fol)
+    answers = [path[-1] for path in example.metadata["branch_states"]]
+    derived: list[str] = []
+    for answer in answers:
+        predicate = predicate_by_text[answer]
+        atom = (
+            f"{predicate}{query_constant}"
+            if len(predicate) == 1 and len(query_constant) == 1
+            else f"{predicate}({query_constant})"
+        )
+        if atom in closure:
+            derived.append(answer)
+    return derived
+
+
 def evaluate_split(
     *,
     depths: list[int],
@@ -47,6 +98,7 @@ def evaluate_split(
             cands = list(meta.get("candidate_answers", []))
             branch_orders = list(meta.get("branch_orders", []))
             path_markers = list(meta.get("path_markers", []))
+            derived_candidates = _derived_candidate_answers(ex)
             first_gold_branch = bool(branch_orders and all(str(order[0]).startswith("branch0:") for order in branch_orders if order))
             initial_marker_correct = bool(path_markers and str(path_markers[0]) == "north")
             rows.append(
@@ -57,6 +109,8 @@ def evaluate_split(
                     "gold_candidate_position": int(meta.get("gold_candidate_position", -1)),
                     "schema_prediction_correct": bool(meta.get("schema_prediction_correct", False)),
                     "shortcut_enabled": bool(meta.get("shortcut_enabled", False)),
+                    "derived_candidate_count": len(derived_candidates),
+                    "unique_solution": derived_candidates == [ex.answer],
                     "first_gold_branch": first_gold_branch,
                     "initial_marker_correct": initial_marker_correct,
                     "first_candidate_correct": bool(cands and cands[0] == ex.answer),
@@ -72,6 +126,8 @@ def evaluate_split(
         "num_failures": len(failures),
         "failure_examples": failures[:10],
         "shortcut_enabled_rate": mean([float(r["shortcut_enabled"]) for r in rows]) if rows else 0.0,
+        "unique_solution_rate": mean([float(r["unique_solution"]) for r in rows]) if rows else 0.0,
+        "max_derived_candidate_count": max((r["derived_candidate_count"] for r in rows), default=0),
         "schema_predictor_accuracy": mean([float(r["schema_prediction_correct"]) for r in rows]) if rows else 0.0,
         "position_predictor_accuracy": mean([float(r["first_gold_branch"]) for r in rows]) if rows else 0.0,
         "initial_marker_predictor_accuracy": mean([float(r["initial_marker_correct"]) for r in rows]) if rows else 0.0,
@@ -139,6 +195,10 @@ def main() -> None:
         "accepted": (
             train["num_failures"] == 0
             and eval_["num_failures"] == 0
+            and train["unique_solution_rate"] == 1.0
+            and eval_["unique_solution_rate"] == 1.0
+            and train["max_derived_candidate_count"] == 1
+            and eval_["max_derived_candidate_count"] == 1
             and abs(train["shortcut_enabled_rate"] - train_shortcut_expected) <= max(0.05, tolerance)
             and abs(eval_["shortcut_enabled_rate"] - eval_shortcut_expected) <= max(0.05, tolerance)
             and abs(train[predictor_key] - train_predictor_expected) <= max(0.05, tolerance)

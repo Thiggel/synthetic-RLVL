@@ -1,0 +1,317 @@
+{
+  "accepted": true,
+  "tokenizer": "Qwen/Qwen2.5-7B",
+  "eos_token_id": 151643,
+  "layouts": {
+    "logic": {
+      "source_records": 311301,
+      "source_tokens": 1200002513,
+      "packed_documents": 311301,
+      "packed_tokens": 1200313814,
+      "nonempty_shards": 1,
+      "total_shards": 16,
+      "document_length_tokens": {
+        "min": 409,
+        "p25": 1976,
+        "p50": 3753,
+        "p75": 5667,
+        "p90": 7034,
+        "p95": 7358,
+        "max": 7725,
+        "gt_4096_count": 137876,
+        "gt_4096_rate": 0.4429025284210459,
+        "gt_7168_count": 24918,
+        "gt_7168_rate": 0.08004471556467856,
+        "gt_8192_count": 0,
+        "gt_8192_rate": 0.0
+      }
+    },
+    "nl_exact": {
+      "source_records": 307329,
+      "source_tokens": 1200004689,
+      "packed_documents": 307329,
+      "packed_tokens": 1200312018,
+      "nonempty_shards": 1,
+      "total_shards": 16,
+      "document_length_tokens": {
+        "min": 344,
+        "p25": 1980,
+        "p50": 3826,
+        "p75": 5794,
+        "p90": 7074,
+        "p95": 7418,
+        "max": 7841,
+        "gt_4096_count": 146832,
+        "gt_4096_rate": 0.4777681247132552,
+        "gt_7168_count": 24599,
+        "gt_7168_rate": 0.08004125871622919,
+        "gt_8192_count": 0,
+        "gt_8192_rate": 0.0
+      }
+    }
+  },
+  "full_pair_audit": {
+    "paired_records_checked": 307329,
+    "prompt_mismatches": 0,
+    "answer_mismatches": 0,
+    "wrapper_mismatches": 0,
+    "constant_contiguity_failures": 0
+  },
+  "sampled_records": [
+    {
+      "index": 0,
+      "depth": 16,
+      "answer": "violet",
+      "logic": {
+        "tokens_including_eos": 4685,
+        "sha256": "4b0a98d9cac044cfb023cad4a9de2caaf792aedce57419fa1aaab38fb7fc6cd6",
+        "decoded_prefix": "<question>\n1. c0 is cedar.\n2. c0 is north.\n3. If c0 is west and c0 is cedar, then c1 is hazel.\n4. If c1 is hazel, then c1 is west.\n5. If c0 is south and c0 is cedar, then c1 is olive.\n6. If c1 is olive, then c1 is east.\n7. If c0 is north an",
+        "decoded_suffix": "\nI(c7) ; ->E\nS(c7) ; ->E\nJ(c8) ; ->E\nT(c8) ; ->E\nO(c9) ; ->E\nT(c9) ; ->E\nP(c10) ; ->E\nT(c10) ; ->E\nE(c11) ; ->E\nT(c11) ; ->E\nM(c12) ; ->E\nT(c12) ; ->E\nK(c13) ; ->E\nU(c13) ; ->E\nH(c14) ; ->E\nU(c14) ; ->E\nQ(c15) ; ->E\nR(c15) ; ->E\nD(c16) ; ->E\n</proof>\n<conclusion>\nD(c16)\n</conclusion>\n</formal>\n<answer>\nviolet\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 4764,
+        "sha256": "2903874d94cfbb735b624b6bf5f00cb58509bdb811e109fd7532b88db98c7b9d",
+        "decoded_prefix": "<question>\n1. c0 is cedar.\n2. c0 is north.\n3. If c0 is west and c0 is cedar, then c1 is hazel.\n4. If c1 is hazel, then c1 is west.\n5. If c0 is south and c0 is cedar, then c1 is olive.\n6. If c1 is olive, then c1 is east.\n7. If c0 is north an",
+        "decoded_suffix": "south.\nc8 is ruby.\nc8 is east.\nc9 is meadow.\nc9 is east.\nc10 is lime.\nc10 is east.\nc11 is hazel.\nc11 is east.\nc12 is slate.\nc12 is east.\nc13 is maple.\nc13 is west.\nc14 is laurel.\nc14 is west.\nc15 is pearl.\nc15 is north.\nc16 is violet.\n</proof>\n<conclusion>\nc16 is violet.\n</conclusion>\n</think>\n<answer>\nviolet\n</answer>"
+      }
+    },
+    {
+      "index": 1,
+      "depth": 3,
+      "answer": "laurel",
+      "logic": {
+        "tokens_including_eos": 946,
+        "sha256": "0ee4e8ba5bc18390de957a9a3b7d0c77cb9c3ecd8e378b3cee32e96f5bbc1139",
+        "decoded_prefix": "<question>\n1. c0 is ivory.\n2. c0 is east.\n3. If c0 is north and c0 is ivory, then c1 is meadow.\n4. If c1 is meadow, then c1 is west.\n5. If c0 is east and c0 is ivory, then c1 is cedar.\n6. If c1 is cedar, then c1 is north.\n7. If c0 is west a",
+        "decoded_suffix": "(c2) -> B(c3)\nB(c3) -> F(c3)\nI(c2) & B(c2) -> D(c3)\nD(c3) -> I(c3)\nH(c2) & D(c2) -> E(c3)\nE(c3) -> H(c3)\nG(c2) & C(c2) -> C(c3)\nC(c3) -> G(c3)\n</premises>\n<proof>\nA(c0) ; R\nH(c0) ; R\nD(c1) ; ->E\nF(c1) ; ->E\nC(c2) ; ->E\nG(c2) ; ->E\nC(c3) ; ->E\n</proof>\n<conclusion>\nC(c3)\n</conclusion>\n</formal>\n<answer>\nlaurel\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 929,
+        "sha256": "3d009e8e9e6b3fcc3e9f75257f7cd89f1660a5201162c8e1e991e194c87ed208",
+        "decoded_prefix": "<question>\n1. c0 is ivory.\n2. c0 is east.\n3. If c0 is north and c0 is ivory, then c1 is meadow.\n4. If c1 is meadow, then c1 is west.\n5. If c0 is east and c0 is ivory, then c1 is cedar.\n6. If c1 is cedar, then c1 is north.\n7. If c0 is west a",
+        "decoded_suffix": "d.\nIf c3 is orchid, then c3 is east.\nIf c2 is south and c2 is laurel, then c3 is laurel.\nIf c3 is laurel, then c3 is south.\n</premises>\n<proof>\nc0 is ivory.\nc0 is east.\nc1 is cedar.\nc1 is north.\nc2 is laurel.\nc2 is south.\nc3 is laurel.\n</proof>\n<conclusion>\nc3 is laurel.\n</conclusion>\n</think>\n<answer>\nlaurel\n</answer>"
+      }
+    },
+    {
+      "index": 2,
+      "depth": 3,
+      "answer": "ivory",
+      "logic": {
+        "tokens_including_eos": 933,
+        "sha256": "9d91ff844408a7a601d4d604c8a78a2f42afcbd62a89ef6405192cc456688226",
+        "decoded_prefix": "<question>\n1. c0 is laurel.\n2. c0 is south.\n3. If c0 is west and c0 is laurel, then c1 is ivory.\n4. If c1 is ivory, then c1 is south.\n5. If c0 is north and c0 is laurel, then c1 is violet.\n6. If c1 is violet, then c1 is north.\n7. If c0 is e",
+        "decoded_suffix": "D(c2) -> B(c3)\nB(c3) -> G(c3)\nF(c2) & A(c2) -> A(c3)\nA(c3) -> H(c3)\nH(c2) & B(c2) -> E(c3)\nE(c3) -> I(c3)\nI(c2) & E(c2) -> D(c3)\nD(c3) -> F(c3)\n</premises>\n<proof>\nC(c0) ; R\nG(c0) ; R\nE(c1) ; ->E\nH(c1) ; ->E\nA(c2) ; ->E\nF(c2) ; ->E\nA(c3) ; ->E\n</proof>\n<conclusion>\nA(c3)\n</conclusion>\n</formal>\n<answer>\nivory\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 904,
+        "sha256": "923e45ab10953b3b1ef813a22e7a141af674fcfb1fcfbb6be5db06b617cf3afe",
+        "decoded_prefix": "<question>\n1. c0 is laurel.\n2. c0 is south.\n3. If c0 is west and c0 is laurel, then c1 is ivory.\n4. If c1 is ivory, then c1 is south.\n5. If c0 is north and c0 is laurel, then c1 is violet.\n6. If c1 is violet, then c1 is north.\n7. If c0 is e",
+        "decoded_suffix": "c3 is ruby.\nIf c3 is ruby, then c3 is west.\nIf c2 is west and c2 is ruby, then c3 is violet.\nIf c3 is violet, then c3 is north.\n</premises>\n<proof>\nc0 is laurel.\nc0 is south.\nc1 is ruby.\nc1 is east.\nc2 is ivory.\nc2 is north.\nc3 is ivory.\n</proof>\n<conclusion>\nc3 is ivory.\n</conclusion>\n</think>\n<answer>\nivory\n</answer>"
+      }
+    },
+    {
+      "index": 7,
+      "depth": 19,
+      "answer": "olive",
+      "logic": {
+        "tokens_including_eos": 5660,
+        "sha256": "d2b1c20ab97e118c1c48304d339f049d4d6670faf6885e71e42835278f984860",
+        "decoded_prefix": "<question>\n1. c0 is orchid.\n2. c0 is north.\n3. If c0 is west and c0 is orchid, then c1 is poppy.\n4. If c1 is poppy, then c1 is west.\n5. If c0 is south and c0 is orchid, then c1 is birch.\n6. If c1 is birch, then c1 is north.\n7. If c0 is nort",
+        "decoded_suffix": "0) ; ->E\nW(c10) ; ->E\nN(c11) ; ->E\nX(c11) ; ->E\nL(c12) ; ->E\nU(c12) ; ->E\nL(c13) ; ->E\nW(c13) ; ->E\nQ(c14) ; ->E\nV(c14) ; ->E\nE(c15) ; ->E\nX(c15) ; ->E\nQ(c16) ; ->E\nV(c16) ; ->E\nR(c17) ; ->E\nU(c17) ; ->E\nF(c18) ; ->E\nV(c18) ; ->E\nL(c19) ; ->E\n</proof>\n<conclusion>\nL(c19)\n</conclusion>\n</formal>\n<answer>\nolive\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 5779,
+        "sha256": "0154a4beb1a6e919baa0712010d6425148b86c4492c1bab68c6fa83ffc76b65b",
+        "decoded_prefix": "<question>\n1. c0 is orchid.\n2. c0 is north.\n3. If c0 is west and c0 is orchid, then c1 is poppy.\n4. If c1 is poppy, then c1 is west.\n5. If c0 is south and c0 is orchid, then c1 is birch.\n6. If c1 is birch, then c1 is north.\n7. If c0 is nort",
+        "decoded_suffix": "st.\nc11 is maple.\nc11 is west.\nc12 is olive.\nc12 is north.\nc13 is olive.\nc13 is east.\nc14 is coral.\nc14 is south.\nc15 is teal.\nc15 is west.\nc16 is coral.\nc16 is south.\nc17 is elm.\nc17 is north.\nc18 is laurel.\nc18 is south.\nc19 is olive.\n</proof>\n<conclusion>\nc19 is olive.\n</conclusion>\n</think>\n<answer>\nolive\n</answer>"
+      }
+    },
+    {
+      "index": 31,
+      "depth": 13,
+      "answer": "hazel",
+      "logic": {
+        "tokens_including_eos": 3753,
+        "sha256": "188f4e5c3ec1ffbb58e4e59af3cc1f7f8eefe6793563b0e7870fe2e7f23ca216",
+        "decoded_prefix": "<question>\n1. c0 is olive.\n2. c0 is south.\n3. If c0 is west and c0 is olive, then c1 is juniper.\n4. If c1 is juniper, then c1 is south.\n5. If c0 is east and c0 is olive, then c1 is cedar.\n6. If c1 is cedar, then c1 is west.\n7. If c0 is sout",
+        "decoded_suffix": ") ; ->E\nD(c4) ; ->E\nO(c4) ; ->E\nK(c5) ; ->E\nO(c5) ; ->E\nK(c6) ; ->E\nQ(c6) ; ->E\nF(c7) ; ->E\nO(c7) ; ->E\nB(c8) ; ->E\nR(c8) ; ->E\nG(c9) ; ->E\nQ(c9) ; ->E\nJ(c10) ; ->E\nP(c10) ; ->E\nA(c11) ; ->E\nO(c11) ; ->E\nM(c12) ; ->E\nR(c12) ; ->E\nA(c13) ; ->E\n</proof>\n<conclusion>\nA(c13)\n</conclusion>\n</formal>\n<answer>\nhazel\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 3827,
+        "sha256": "a684552758f5b7afc3b7c49d474790e3fd5512b0f3aa9d6f4f5d3873d3ad5fff",
+        "decoded_prefix": "<question>\n1. c0 is olive.\n2. c0 is south.\n3. If c0 is west and c0 is olive, then c1 is juniper.\n4. If c1 is juniper, then c1 is south.\n5. If c0 is east and c0 is olive, then c1 is cedar.\n6. If c1 is cedar, then c1 is west.\n7. If c0 is sout",
+        "decoded_suffix": ".\nc4 is north.\nc5 is pearl.\nc5 is north.\nc6 is pearl.\nc6 is east.\nc7 is poppy.\nc7 is north.\nc8 is cedar.\nc8 is west.\nc9 is teal.\nc9 is east.\nc10 is elm.\nc10 is south.\nc11 is hazel.\nc11 is north.\nc12 is violet.\nc12 is west.\nc13 is hazel.\n</proof>\n<conclusion>\nc13 is hazel.\n</conclusion>\n</think>\n<answer>\nhazel\n</answer>"
+      }
+    },
+    {
+      "index": 127,
+      "depth": 23,
+      "answer": "cobalt",
+      "logic": {
+        "tokens_including_eos": 7027,
+        "sha256": "9301a713e4f18b79b7d4adcce842476ea104ee64e207ec21fd14d77ac3133d40",
+        "decoded_prefix": "<question>\n1. c0 is harbor.\n2. c0 is east.\n3. If c0 is south and c0 is harbor, then c1 is maple.\n4. If c1 is maple, then c1 is south.\n5. If c0 is east and c0 is harbor, then c1 is ivory.\n6. If c1 is ivory, then c1 is north.\n7. If c0 is west",
+        "decoded_suffix": "->E\nZ(c14) ; ->E\nN(c15) ; ->E\nP1(c15) ; ->E\nP(c16) ; ->E\nP1(c16) ; ->E\nN(c17) ; ->E\nZ(c17) ; ->E\nW(c18) ; ->E\nP1(c18) ; ->E\nI(c19) ; ->E\nY(c19) ; ->E\nI(c20) ; ->E\nP1(c20) ; ->E\nO(c21) ; ->E\nZ(c21) ; ->E\nK(c22) ; ->E\nZ(c22) ; ->E\nO(c23) ; ->E\n</proof>\n<conclusion>\nO(c23)\n</conclusion>\n</formal>\n<answer>\ncobalt\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 7060,
+        "sha256": "894262303f27650b9ce68207ead08574141ca1b0a9f341f91222d0e7bd1f1be0",
+        "decoded_prefix": "<question>\n1. c0 is harbor.\n2. c0 is east.\n3. If c0 is south and c0 is harbor, then c1 is maple.\n4. If c1 is maple, then c1 is south.\n5. If c0 is east and c0 is harbor, then c1 is ivory.\n6. If c1 is ivory, then c1 is north.\n7. If c0 is west",
+        "decoded_suffix": "c15 is cedar.\nc15 is west.\nc16 is ruby.\nc16 is west.\nc17 is cedar.\nc17 is south.\nc18 is willow.\nc18 is west.\nc19 is slate.\nc19 is north.\nc20 is slate.\nc20 is west.\nc21 is cobalt.\nc21 is south.\nc22 is lime.\nc22 is south.\nc23 is cobalt.\n</proof>\n<conclusion>\nc23 is cobalt.\n</conclusion>\n</think>\n<answer>\ncobalt\n</answer>"
+      }
+    },
+    {
+      "index": 511,
+      "depth": 24,
+      "answer": "olive",
+      "logic": {
+        "tokens_including_eos": 7330,
+        "sha256": "9553ecdbeae207b176e180974f1093475bbcc4b7421f2d07048f1cb8925acd17",
+        "decoded_prefix": "<question>\n1. c0 is orchid.\n2. c0 is west.\n3. If c0 is east and c0 is orchid, then c1 is amber.\n4. If c1 is amber, then c1 is south.\n5. If c0 is south and c0 is orchid, then c1 is cobalt.\n6. If c1 is cobalt, then c1 is north.\n7. If c0 is no",
+        "decoded_suffix": " ; ->E\nY(c15) ; ->E\nS(c16) ; ->E\nY(c16) ; ->E\nG(c17) ; ->E\nZ(c17) ; ->E\nE(c18) ; ->E\nP1(c18) ; ->E\nM(c19) ; ->E\nP0(c19) ; ->E\nW(c20) ; ->E\nY(c20) ; ->E\nR(c21) ; ->E\nY(c21) ; ->E\nW(c22) ; ->E\nY(c22) ; ->E\nO(c23) ; ->E\nY(c23) ; ->E\nK(c24) ; ->E\n</proof>\n<conclusion>\nK(c24)\n</conclusion>\n</formal>\n<answer>\nolive\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 7364,
+        "sha256": "0a813d95f0c7e43c94eaab8300f4bc760ef88137759e3e44a1c700a4b750b066",
+        "decoded_prefix": "<question>\n1. c0 is orchid.\n2. c0 is west.\n3. If c0 is east and c0 is orchid, then c1 is amber.\n4. If c1 is amber, then c1 is south.\n5. If c0 is south and c0 is orchid, then c1 is cobalt.\n6. If c1 is cobalt, then c1 is north.\n7. If c0 is no",
+        "decoded_suffix": "6 is amber.\nc16 is north.\nc17 is ruby.\nc17 is south.\nc18 is lime.\nc18 is west.\nc19 is laurel.\nc19 is east.\nc20 is granite.\nc20 is north.\nc21 is maple.\nc21 is north.\nc22 is granite.\nc22 is north.\nc23 is slate.\nc23 is north.\nc24 is olive.\n</proof>\n<conclusion>\nc24 is olive.\n</conclusion>\n</think>\n<answer>\nolive\n</answer>"
+      }
+    },
+    {
+      "index": 2047,
+      "depth": 23,
+      "answer": "orchid",
+      "logic": {
+        "tokens_including_eos": 7009,
+        "sha256": "60919ad612e4855d221466a2c3081f7f44c40f2e838c14ae46e5fa6597a39a3c",
+        "decoded_prefix": "<question>\n1. c0 is meadow.\n2. c0 is north.\n3. If c0 is north and c0 is meadow, then c1 is slate.\n4. If c1 is slate, then c1 is north.\n5. If c0 is west and c0 is meadow, then c1 is lime.\n6. If c1 is lime, then c1 is east.\n7. If c0 is east a",
+        "decoded_suffix": "->E\nZ(c14) ; ->E\nJ(c15) ; ->E\nZ(c15) ; ->E\nM(c16) ; ->E\nZ(c16) ; ->E\nH(c17) ; ->E\nP0(c17) ; ->E\nE(c18) ; ->E\nY(c18) ; ->E\nN(c19) ; ->E\nP1(c19) ; ->E\nI(c20) ; ->E\nP0(c20) ; ->E\nH(c21) ; ->E\nP0(c21) ; ->E\nD(c22) ; ->E\nZ(c22) ; ->E\nD(c23) ; ->E\n</proof>\n<conclusion>\nD(c23)\n</conclusion>\n</formal>\n<answer>\norchid\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 7036,
+        "sha256": "0457d4b98191b25cdab0c592958e9753557d94526ca6353bdefbbd53685e4289",
+        "decoded_prefix": "<question>\n1. c0 is meadow.\n2. c0 is north.\n3. If c0 is north and c0 is meadow, then c1 is slate.\n4. If c1 is slate, then c1 is north.\n5. If c0 is west and c0 is meadow, then c1 is lime.\n6. If c1 is lime, then c1 is east.\n7. If c0 is east a",
+        "decoded_suffix": "c15 is hazel.\nc15 is south.\nc16 is elm.\nc16 is south.\nc17 is willow.\nc17 is east.\nc18 is pearl.\nc18 is north.\nc19 is amber.\nc19 is west.\nc20 is lime.\nc20 is east.\nc21 is willow.\nc21 is east.\nc22 is orchid.\nc22 is south.\nc23 is orchid.\n</proof>\n<conclusion>\nc23 is orchid.\n</conclusion>\n</think>\n<answer>\norchid\n</answer>"
+      }
+    },
+    {
+      "index": 8191,
+      "depth": 23,
+      "answer": "harbor",
+      "logic": {
+        "tokens_including_eos": 7022,
+        "sha256": "e87bbb18f78858c77b826efee0442a279d0d72974f5f311a03b96cdcda9a1afd",
+        "decoded_prefix": "<question>\n1. c0 is pearl.\n2. c0 is north.\n3. If c0 is east and c0 is pearl, then c1 is coral.\n4. If c1 is coral, then c1 is east.\n5. If c0 is west and c0 is pearl, then c1 is maple.\n6. If c1 is maple, then c1 is north.\n7. If c0 is north an",
+        "decoded_suffix": " ->E\nZ(c14) ; ->E\nT(c15) ; ->E\nY(c15) ; ->E\nW(c16) ; ->E\nP0(c16) ; ->E\nJ(c17) ; ->E\nZ(c17) ; ->E\nI(c18) ; ->E\nP0(c18) ; ->E\nX(c19) ; ->E\nZ(c19) ; ->E\nI(c20) ; ->E\nZ(c20) ; ->E\nB(c21) ; ->E\nY(c21) ; ->E\nX(c22) ; ->E\nP0(c22) ; ->E\nA(c23) ; ->E\n</proof>\n<conclusion>\nA(c23)\n</conclusion>\n</formal>\n<answer>\nharbor\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 7046,
+        "sha256": "f98237569b77dbc10348b64915768baf2447fa9c6d14af53d751f512c72c73f9",
+        "decoded_prefix": "<question>\n1. c0 is pearl.\n2. c0 is north.\n3. If c0 is east and c0 is pearl, then c1 is coral.\n4. If c1 is coral, then c1 is east.\n5. If c0 is west and c0 is pearl, then c1 is maple.\n6. If c1 is maple, then c1 is north.\n7. If c0 is north an",
+        "decoded_suffix": "15 is ivory.\nc15 is north.\nc16 is violet.\nc16 is east.\nc17 is juniper.\nc17 is south.\nc18 is teal.\nc18 is east.\nc19 is amber.\nc19 is south.\nc20 is teal.\nc20 is south.\nc21 is lime.\nc21 is north.\nc22 is amber.\nc22 is east.\nc23 is harbor.\n</proof>\n<conclusion>\nc23 is harbor.\n</conclusion>\n</think>\n<answer>\nharbor\n</answer>"
+      }
+    },
+    {
+      "index": 32767,
+      "depth": 4,
+      "answer": "cobalt",
+      "logic": {
+        "tokens_including_eos": 1184,
+        "sha256": "aff611aacbcf0cf077d84243b644933129cd60796341fbe348bfa76da166e1c2",
+        "decoded_prefix": "<question>\n1. c0 is maple.\n2. c0 is south.\n3. If c0 is south and c0 is maple, then c1 is cobalt.\n4. If c1 is cobalt, then c1 is north.\n5. If c0 is north and c0 is maple, then c1 is ivory.\n6. If c1 is ivory, then c1 is west.\n7. If c0 is east",
+        "decoded_suffix": "(c4)\nG(c3) & B(c3) -> C(c4)\nC(c4) -> F(c4)\nF(c3) & C(c3) -> A(c4)\nA(c4) -> I(c4)\nI(c3) & E(c3) -> E(c4)\nE(c4) -> G(c4)\n</premises>\n<proof>\nD(c0) ; R\nG(c0) ; R\nE(c1) ; ->E\nF(c1) ; ->E\nA(c2) ; ->E\nH(c2) ; ->E\nE(c3) ; ->E\nI(c3) ; ->E\nE(c4) ; ->E\n</proof>\n<conclusion>\nE(c4)\n</conclusion>\n</formal>\n<answer>\ncobalt\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 1169,
+        "sha256": "1a9b91a226740d08bc52f4dc6226055a1988d42ec2b6c718c7ad192680f3969f",
+        "decoded_prefix": "<question>\n1. c0 is maple.\n2. c0 is south.\n3. If c0 is south and c0 is maple, then c1 is cobalt.\n4. If c1 is cobalt, then c1 is north.\n5. If c0 is north and c0 is maple, then c1 is ivory.\n6. If c1 is ivory, then c1 is west.\n7. If c0 is east",
+        "decoded_suffix": "c4 is west.\nIf c3 is west and c3 is cobalt, then c4 is cobalt.\nIf c4 is cobalt, then c4 is south.\n</premises>\n<proof>\nc0 is maple.\nc0 is south.\nc1 is cobalt.\nc1 is north.\nc2 is olive.\nc2 is east.\nc3 is cobalt.\nc3 is west.\nc4 is cobalt.\n</proof>\n<conclusion>\nc4 is cobalt.\n</conclusion>\n</think>\n<answer>\ncobalt\n</answer>"
+      }
+    },
+    {
+      "index": 65535,
+      "depth": 20,
+      "answer": "coral",
+      "logic": {
+        "tokens_including_eos": 5990,
+        "sha256": "379c9e64f966bb2ba16640ee10c10728d56130d1a6f68b35e3d782d7ce0ea5af",
+        "decoded_prefix": "<question>\n1. c0 is poppy.\n2. c0 is south.\n3. If c0 is east and c0 is poppy, then c1 is laurel.\n4. If c1 is laurel, then c1 is east.\n5. If c0 is north and c0 is poppy, then c1 is ruby.\n6. If c1 is ruby, then c1 is south.\n7. If c0 is south a",
+        "decoded_suffix": "1) ; ->E\nY(c11) ; ->E\nO(c12) ; ->E\nX(c12) ; ->E\nQ(c13) ; ->E\nV(c13) ; ->E\nC(c14) ; ->E\nY(c14) ; ->E\nO(c15) ; ->E\nY(c15) ; ->E\nF(c16) ; ->E\nY(c16) ; ->E\nN(c17) ; ->E\nW(c17) ; ->E\nF(c18) ; ->E\nV(c18) ; ->E\nU(c19) ; ->E\nX(c19) ; ->E\nP(c20) ; ->E\n</proof>\n<conclusion>\nP(c20)\n</conclusion>\n</formal>\n<answer>\ncoral\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 6134,
+        "sha256": "3f4781d18a1c713836a662e8e70a617f00a203d80932366a7894b55db19d0a53",
+        "decoded_prefix": "<question>\n1. c0 is poppy.\n2. c0 is south.\n3. If c0 is east and c0 is poppy, then c1 is laurel.\n4. If c1 is laurel, then c1 is east.\n5. If c0 is north and c0 is poppy, then c1 is ruby.\n6. If c1 is ruby, then c1 is south.\n7. If c0 is south a",
+        "decoded_suffix": "t.\nc12 is hazel.\nc12 is east.\nc13 is orchid.\nc13 is north.\nc14 is cobalt.\nc14 is west.\nc15 is hazel.\nc15 is west.\nc16 is pearl.\nc16 is west.\nc17 is ruby.\nc17 is south.\nc18 is pearl.\nc18 is north.\nc19 is amber.\nc19 is east.\nc20 is coral.\n</proof>\n<conclusion>\nc20 is coral.\n</conclusion>\n</think>\n<answer>\ncoral\n</answer>"
+      }
+    },
+    {
+      "index": 131071,
+      "depth": 12,
+      "answer": "orchid",
+      "logic": {
+        "tokens_including_eos": 3460,
+        "sha256": "204ad9f47d1d317ebea5d1f41d21f73c394cbc1ed1a585ac1317846e31d1c1cd",
+        "decoded_prefix": "<question>\n1. c0 is poppy.\n2. c0 is east.\n3. If c0 is north and c0 is poppy, then c1 is coral.\n4. If c1 is coral, then c1 is south.\n5. If c0 is south and c0 is poppy, then c1 is olive.\n6. If c1 is olive, then c1 is west.\n7. If c0 is east an",
+        "decoded_suffix": "2) ; ->E\nK(c3) ; ->E\nQ(c3) ; ->E\nM(c4) ; ->E\nO(c4) ; ->E\nM(c5) ; ->E\nQ(c5) ; ->E\nA(c6) ; ->E\nN(c6) ; ->E\nM(c7) ; ->E\nQ(c7) ; ->E\nK(c8) ; ->E\nO(c8) ; ->E\nL(c9) ; ->E\nN(c9) ; ->E\nC(c10) ; ->E\nN(c10) ; ->E\nE(c11) ; ->E\nO(c11) ; ->E\nD(c12) ; ->E\n</proof>\n<conclusion>\nD(c12)\n</conclusion>\n</formal>\n<answer>\norchid\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 3547,
+        "sha256": "85a03833644b4fe2692302f80b4d6a9d78dc9ebe38af558547eedb31267287fc",
+        "decoded_prefix": "<question>\n1. c0 is poppy.\n2. c0 is east.\n3. If c0 is north and c0 is poppy, then c1 is coral.\n4. If c1 is coral, then c1 is south.\n5. If c0 is south and c0 is poppy, then c1 is olive.\n6. If c1 is olive, then c1 is west.\n7. If c0 is east an",
+        "decoded_suffix": " is west.\nc4 is lime.\nc4 is south.\nc5 is lime.\nc5 is west.\nc6 is cedar.\nc6 is north.\nc7 is lime.\nc7 is west.\nc8 is juniper.\nc8 is south.\nc9 is pearl.\nc9 is north.\nc10 is willow.\nc10 is north.\nc11 is birch.\nc11 is south.\nc12 is orchid.\n</proof>\n<conclusion>\nc12 is orchid.\n</conclusion>\n</think>\n<answer>\norchid\n</answer>"
+      }
+    },
+    {
+      "index": 196607,
+      "depth": 12,
+      "answer": "meadow",
+      "logic": {
+        "tokens_including_eos": 3460,
+        "sha256": "b1ab01be6633e8059508566db60ee7a8a744bdedce9ac31fcb60046b498730d9",
+        "decoded_prefix": "<question>\n1. c0 is orchid.\n2. c0 is west.\n3. If c0 is north and c0 is orchid, then c1 is slate.\n4. If c1 is slate, then c1 is south.\n5. If c0 is south and c0 is orchid, then c1 is elm.\n6. If c1 is elm, then c1 is west.\n7. If c0 is east and",
+        "decoded_suffix": "2) ; ->E\nF(c3) ; ->E\nN(c3) ; ->E\nC(c4) ; ->E\nO(c4) ; ->E\nC(c5) ; ->E\nN(c5) ; ->E\nI(c6) ; ->E\nN(c6) ; ->E\nJ(c7) ; ->E\nO(c7) ; ->E\nL(c8) ; ->E\nN(c8) ; ->E\nB(c9) ; ->E\nO(c9) ; ->E\nI(c10) ; ->E\nN(c10) ; ->E\nL(c11) ; ->E\nP(c11) ; ->E\nK(c12) ; ->E\n</proof>\n<conclusion>\nK(c12)\n</conclusion>\n</formal>\n<answer>\nmeadow\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 3548,
+        "sha256": "2ed0c07c6460b57a26b5d01e9ca364f926c69f0bba623dac6298446704a13e45",
+        "decoded_prefix": "<question>\n1. c0 is orchid.\n2. c0 is west.\n3. If c0 is north and c0 is orchid, then c1 is slate.\n4. If c1 is slate, then c1 is south.\n5. If c0 is south and c0 is orchid, then c1 is elm.\n6. If c1 is elm, then c1 is west.\n7. If c0 is east and",
+        "decoded_suffix": "\nc4 is birch.\nc4 is south.\nc5 is birch.\nc5 is north.\nc6 is juniper.\nc6 is north.\nc7 is maple.\nc7 is south.\nc8 is granite.\nc8 is north.\nc9 is olive.\nc9 is south.\nc10 is juniper.\nc10 is north.\nc11 is granite.\nc11 is east.\nc12 is meadow.\n</proof>\n<conclusion>\nc12 is meadow.\n</conclusion>\n</think>\n<answer>\nmeadow\n</answer>"
+      }
+    },
+    {
+      "index": 262143,
+      "depth": 4,
+      "answer": "hazel",
+      "logic": {
+        "tokens_including_eos": 1196,
+        "sha256": "885d420f77586c26a96a5c428abc171ccfb53055b1388a4366f958ad1821ea2d",
+        "decoded_prefix": "<question>\n1. c0 is olive.\n2. c0 is south.\n3. If c0 is north and c0 is olive, then c1 is laurel.\n4. If c1 is laurel, then c1 is west.\n5. If c0 is east and c0 is olive, then c1 is hazel.\n6. If c1 is hazel, then c1 is south.\n7. If c0 is south",
+        "decoded_suffix": "I(c4)\nH(c3) & D(c3) -> E(c4)\nE(c4) -> H(c4)\nF(c3) & E(c3) -> B(c4)\nB(c4) -> F(c4)\nG(c3) & C(c3) -> C(c4)\nC(c4) -> G(c4)\n</premises>\n<proof>\nA(c0) ; R\nG(c0) ; R\nB(c1) ; ->E\nH(c1) ; ->E\nE(c2) ; ->E\nI(c2) ; ->E\nD(c3) ; ->E\nH(c3) ; ->E\nE(c4) ; ->E\n</proof>\n<conclusion>\nE(c4)\n</conclusion>\n</formal>\n<answer>\nhazel\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 1191,
+        "sha256": "f29656ae5e2b153d109481b46c962eb8789c1128f1cf9ef8e1364c79b3fd8488",
+        "decoded_prefix": "<question>\n1. c0 is olive.\n2. c0 is south.\n3. If c0 is north and c0 is olive, then c1 is laurel.\n4. If c1 is laurel, then c1 is west.\n5. If c0 is east and c0 is olive, then c1 is hazel.\n6. If c1 is hazel, then c1 is south.\n7. If c0 is south",
+        "decoded_suffix": "c4 is north.\nIf c3 is south and c3 is granite, then c4 is granite.\nIf c4 is granite, then c4 is south.\n</premises>\n<proof>\nc0 is olive.\nc0 is south.\nc1 is coral.\nc1 is east.\nc2 is hazel.\nc2 is west.\nc3 is laurel.\nc3 is east.\nc4 is hazel.\n</proof>\n<conclusion>\nc4 is hazel.\n</conclusion>\n</think>\n<answer>\nhazel\n</answer>"
+      }
+    },
+    {
+      "index": 300000,
+      "depth": 21,
+      "answer": "pearl",
+      "logic": {
+        "tokens_including_eos": 6272,
+        "sha256": "bde0bc75791f3f86ffa348cc74707fd24702756b0bc66d114212d65f260c2f28",
+        "decoded_prefix": "<question>\n1. c0 is cedar.\n2. c0 is east.\n3. If c0 is north and c0 is cedar, then c1 is lime.\n4. If c1 is lime, then c1 is west.\n5. If c0 is west and c0 is cedar, then c1 is amber.\n6. If c1 is amber, then c1 is north.\n7. If c0 is south and ",
+        "decoded_suffix": "2) ; ->E\nW(c12) ; ->E\nD(c13) ; ->E\nZ(c13) ; ->E\nF(c14) ; ->E\nY(c14) ; ->E\nA(c15) ; ->E\nZ(c15) ; ->E\nB(c16) ; ->E\nY(c16) ; ->E\nU(c17) ; ->E\nY(c17) ; ->E\nC(c18) ; ->E\nW(c18) ; ->E\nI(c19) ; ->E\nY(c19) ; ->E\nU(c20) ; ->E\nW(c20) ; ->E\nU(c21) ; ->E\n</proof>\n<conclusion>\nU(c21)\n</conclusion>\n</formal>\n<answer>\npearl\n</answer>"
+      },
+      "nl_exact": {
+        "tokens_including_eos": 6382,
+        "sha256": "3f24f4c22608acafb59ac959f016cc2a7cfc97cf32ff3452d966b3f2c0e760bb",
+        "decoded_prefix": "<question>\n1. c0 is cedar.\n2. c0 is east.\n3. If c0 is north and c0 is cedar, then c1 is lime.\n4. If c1 is lime, then c1 is west.\n5. If c0 is west and c0 is cedar, then c1 is amber.\n6. If c1 is amber, then c1 is north.\n7. If c0 is south and ",
+        "decoded_suffix": "rth.\nc13 is granite.\nc13 is west.\nc14 is laurel.\nc14 is east.\nc15 is elm.\nc15 is west.\nc16 is olive.\nc16 is east.\nc17 is pearl.\nc17 is east.\nc18 is slate.\nc18 is north.\nc19 is teal.\nc19 is east.\nc20 is pearl.\nc20 is north.\nc21 is pearl.\n</proof>\n<conclusion>\nc21 is pearl.\n</conclusion>\n</think>\n<answer>\npearl\n</answer>"
+      }
+    }
+  ]
+}

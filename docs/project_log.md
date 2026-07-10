@@ -2,6 +2,82 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-10
+
+- 16:06 CEST normal-control checkpoint gate: while `3823434_0` continued at
+  iteration `4641/8192`, verified checkpoint `4096` has complete metadata, 625
+  model files, four equal `22,848,937,060`-byte optimizer shards, no zero-byte
+  files, and about `91.4G` total size. Guarded recovery `3828946_0` therefore
+  has a safe resume point when the current allocation ends.
+- 16:02 CEST corrected corpus context audit: packed document lengths are
+  closely matched but not always contained in one 4,096-token window. Logic
+  median/p95/max is `3753/7358/7725` tokens with `44.3%` above 4096; NL is
+  `3826/7418/7841` with `47.8%` above 4096; neither modality exceeds 8192.
+  Record this as packed continuation midtraining, not whole-example SFT.
+- 15:58 CEST corrected Nanotron release gate: packed audit `3830855`
+  completed cleanly in `00:01:46`. Metadata, binary file sizes, source token
+  counts, and one EOS per record all agree; 15 packed records spanning depths
+  3--24 exactly match Qwen source tokenization and decode round trips for both
+  logic and NL. Corrected 15% logic Nanoset smoke `3830924` then loaded the
+  intended 85/15 normal/proof blend and completed three optimizer steps.
+- 15:58 CEST corrected midtraining pilot: patched train/push/eval wrappers to
+  accept isolated run-tag/root overrides, avoiding stale `logic_p15` paths.
+  Submitted full-node 15% logic pilot `3830927_3`, automatic `afterany`
+  resume/skip `3830928_3`, HF upload `3830939_3`, and direct reviewer eval
+  `3830940_3`. The pilot uses checkpoint interval `4096` and a fresh
+  `qwen25_7b_midtrain_logic_p15_bp_unique_v2_4p3b` run root; broad corrected
+  mixture rows remain gated on its train/eval inspection.
+- 15:49 CEST corrected artifact audit: materialized build/push `3829067` and
+  both 1.2B-token proof corpus/Nanoset builds completed cleanly. Logic contains
+  `311,301` records and `1,200,002,513` source tokens; NL contains `307,329`
+  records and `1,200,004,689` source tokens. Packed totals equal source tokens
+  plus one EOS per record. A full scan of all `307,329` paired records found
+  zero prompt, answer, wrapper, or fresh-constant-contiguity mismatches.
+  Added exact packed-token/decode audit utility and submitted A100-MIG job
+  `3830855`; corrected proof-mixture training remains gated on it.
+- 15:49 CEST corrected SFT orchestration: pilot `3829069_12` is healthy around
+  step `2725/10000`; eval `3829070_12` is dependency-pending. Edited full SFT
+  `3829072` from `afterok:3829069` to `afterok:3829070`, preventing the 30-row
+  grid from releasing before pilot evaluation succeeds. Full eval `3829073`
+  remains behind the full SFT array.
+- 15:49 CEST normal-control status: unaffected Nanotron control `3823434_0`
+  reached iteration `4561/8192` (`2.39B` tokens, about `30.8K` tokens/s). Its
+  ETA exceeds the current allocation, so guarded recovery `3828946_0` is
+  expected to resume from the latest complete checkpoint; downstream
+  `3828947..3828950` remain dependency-gated.
+
+- 11:49 CEST BranchProof validity audit: forward-chaining the old
+  `hard_fsa_schema` prompts found no ambiguity through depth 15, but multiple
+  derivable candidate answers in `73/96` examples at depth 20, `74/96` at
+  depths 25/30/35, and `92/96` at depths 40/45/50. The generator reused its
+  18 one-letter constants at long depth, allowing branches to re-enter the
+  same formal atoms. A stored depth-50 logic generation was independently
+  wrong by the labeled answer but citation-free valid for another candidate.
+  Quarantined all old long-depth BranchProof results and derivative ablations.
+- 11:49 CEST generator/evaluator repair: changed `hard_fsa` and
+  `hard_fsa_schema` to use unique constants `c0..c_depth` and explicit atoms
+  such as `A(c18)`; extended the natural-logic renderer and the symbol-padded
+  and wordified syntax transforms; added closure/unique-answer checks to the
+  production probe and regression tests. Corrected closure audits found zero
+  ambiguous examples at every tested depth `5..50`; production probe passed
+  1,000 train plus 2,000 eval examples at unique-solution rate `1.0` and max
+  derived candidates `1`. Focused tests pass (`84 passed`); the full suite also
+  passes (`122 passed, 3 skipped`).
+- 11:49 CEST corrected reruns: submitted materialized build/push `3829067`,
+  corrected 1.2B-token Nanotron corpus builds `3829068_[0-1%2]`, one-row SFT
+  pilot/eval `3829069_12 -> 3829070_12`, and pilot-gated full SFT/eval
+  `3829072 -> 3829073`. Corrected eval uses equal `7168` generation caps,
+  context `16384`, greedy accuracy, and pass@`1/2/4/8/16`.
+- 11:49 CEST Nanotron containment and storage cleanup: checkpoint inspection
+  found silent zero-byte/truncated files under vault pressure, so train/push
+  wrappers now reject incomplete checkpoints and resume only from complete
+  optimizer/model snapshots. Canceled all old proof-mixture rows/dependents and
+  removed stale proof checkpoints/corpora, reducing
+  `$HPCVAULT/synthetic-RLVL/nanotron_midtrain` from about `1.7T` to essentially
+  empty before the normal control's next save. Kept unaffected normal-corpus
+  control `3823434_0` and its guarded recovery/downstream chain
+  `3828946..3828950`.
+
 ## 2026-07-08
 
 - 10:15 CEST Nanotron resume fix: Qwen2.5 row `3819135_3` (`logic_p15`) is running cleanly on `a0932` and passed local iteration `2531/8192`; it has complete checkpoints through local step `2048`. Recovery row `3819040_0` (`control_p0`) also started on `a0931` and reached local step `2521`, but log/checkpoint inspection showed the old wrapper loaded the previous `4096` weights while resetting the local step counter. Continuing that row to local `8192` would overtrain the control condition, so it was canceled after verifying a complete local-step-2048 checkpoint. Patched `scripts/slurm/jobs/nanotron_qwen25_midtrain_grid_2026-06-24.slurm` so run-checkpoint resumes load optimizer and LR scheduler state; pretrained Qwen loads remain weight-only. Added an optional `FINAL_CHECKPOINT_ALIAS` hook, but do not use it for the control baseline unless a shortened recovery is intentionally accepted.

@@ -4,6 +4,7 @@ import csv
 import json
 import os
 import re
+import sys
 import textwrap
 from collections import defaultdict
 from dataclasses import dataclass
@@ -15,11 +16,14 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
 
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from synthrlvl.task import TaskBuilder
 from synthrlvl.types import PrefillMode, StepRange, TaskConfig, TemplateName
 
 
-ROOT = Path(__file__).resolve().parents[2]
 WORK_ROOT = Path(os.environ.get("WORK", ROOT))
 PASSK_ROOT = WORK_ROOT / "synthetic-RLVL" / "passk_eval"
 LM_EVAL_ROOT = WORK_ROOT / "synthetic-RLVL" / "lm_eval_results"
@@ -4040,9 +4044,24 @@ def write_report(
 \usepackage{{float}}
 \usepackage{{hyperref}}
 \title{{Formal Logic CoT Synthetic Results Update}}
-\date{{2026-05-30}}
+\date{{2026-07-10}}
 \begin{{document}}
 \maketitle
+
+\section{{Critical BranchProof audit status}}
+All pre-2026-07-10 HFSA/BranchProof results above depth 17 in this report are
+quarantined historical artifacts. A forward-closure audit found that the old
+generator wrapped constants after 18 layers, creating multiple derivable
+candidate answers in 73/96 audited depth-20 examples and 92/96 audited
+depth-40/45/50 examples. The defect affects the main depth-scaling result and
+every architecture, syntax, shortcut, hybrid, conditioned-dual, batch-size,
+tiny-pretraining, downstream-transfer, and midtraining artifact trained from
+that construction. Do not cite these numbers. The corrected generator uses
+fresh constants at every layer, passes a unique-answer closure gate, and is
+being rerun with equal logic/NL generation caps plus greedy and pass@1 metrics.
+The independent AttrCon results are not affected. Full evidence and recovery
+jobs are recorded in
+\texttt{{docs/branchproof\_uniqueness\_audit\_2026-07-10.md}}.
 
 \section{{Executive insights}}
 \begin{{itemize}}

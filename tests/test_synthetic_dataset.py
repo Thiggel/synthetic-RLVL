@@ -18,6 +18,31 @@ def _extract_premise_formula(line: str) -> str:
     return line.split(". ", 1)[1].strip()
 
 
+def _formula_applies_to(formula: str, constant: str) -> bool:
+    return formula.endswith(constant) or formula.endswith(f"({constant})")
+
+
+def _horn_closure(example) -> set[str]:
+    facts: set[str] = set()
+    rules: list[tuple[tuple[str, ...], str]] = []
+    for raw in example.premises_fol:
+        formula = _extract_premise_formula(raw)
+        if " -> " not in formula:
+            facts.add(formula)
+            continue
+        antecedent, consequent = formula.split(" -> ", 1)
+        rules.append((tuple(antecedent.split(" & ")), consequent))
+
+    changed = True
+    while changed:
+        changed = False
+        for antecedents, consequent in rules:
+            if consequent not in facts and all(atom in facts for atom in antecedents):
+                facts.add(consequent)
+                changed = True
+    return facts
+
+
 def _predicate_texts(example) -> dict[str, str]:
     out: dict[str, str] = {}
     for line in example.predicates:
@@ -191,8 +216,8 @@ def test_hard_v5_uses_citation_free_clean_gold_trace(depth: int):
     assert ex.metadata["shortcut_path_states"][0] == ex.metadata["path_states"][0]
     assert ex.metadata["shortcut_path_states"][-1] == ex.metadata["shortcut_branch_answer"]
 
-@pytest.mark.parametrize("depth", [1, 3, 10, 20, 25])
-def test_hard_fsa_gold_trace_is_citation_free_valid_and_ambiguous(depth: int):
+@pytest.mark.parametrize("depth", [1, 3, 10, 20, 25, 50])
+def test_hard_fsa_gold_trace_is_citation_free_valid_and_uniquely_answered(depth: int):
     ex = LogicDatasetGenerator(
         DatasetConfig(depth=depth, difficulty="hard_fsa", branching_factor=4, seed=3407)
     ).generate(0)
@@ -208,7 +233,7 @@ def test_hard_fsa_gold_trace_is_citation_free_valid_and_ambiguous(depth: int):
     assert ex.metadata["expected_proof_lines"] == 2 * depth + 1
     assert ex.metadata["final_conclusion_kind"] == "state"
     assert _formula_text(ex, conclusion) == ex.answer
-    assert conclusion.endswith(ex.metadata["query_constant"])
+    assert _formula_applies_to(conclusion, ex.metadata["query_constant"])
     assert len(ex.premises_fol) == 2 + 8 * depth
     assert ex.metadata["shortcut_branch_answer"] != ex.metadata["gold_answer"]
     assert len(ex.metadata["branch_orders"]) == depth
@@ -234,6 +259,21 @@ def test_hard_fsa_gold_trace_is_citation_free_valid_and_ambiguous(depth: int):
         assert len({states[layer] for states in branch_states}) == 4
     assert len({states[-1] for states in branch_states}) == 4
 
+    predicate_by_text = {text: predicate for predicate, text in _predicate_texts(ex).items()}
+    query_constant = ex.metadata["query_constant"]
+
+    def candidate_atom(state: str) -> str:
+        predicate = predicate_by_text[state]
+        if len(predicate) == 1 and len(query_constant) == 1:
+            return f"{predicate}{query_constant}"
+        return f"{predicate}({query_constant})"
+
+    closure = _horn_closure(ex)
+    derived_candidates = [
+        state for state in (path[-1] for path in branch_states) if candidate_atom(state) in closure
+    ]
+    assert derived_candidates == [ex.answer]
+
 
 @pytest.mark.parametrize("shortcut_rate,enabled", [(1.0, True), (0.0, False)])
 def test_hard_fsa_schema_shortcut_mode_and_gold_validity(shortcut_rate: float, enabled: bool):
@@ -248,7 +288,7 @@ def test_hard_fsa_schema_shortcut_mode_and_gold_validity(shortcut_rate: float, e
     assert ex.metadata["final_conclusion_kind"] == "state"
     assert ex.metadata["expected_proof_lines"] == 2 * ex.metadata["depth"] + 1
     assert _formula_text(ex, conclusion) == ex.answer
-    assert conclusion.endswith(ex.metadata["query_constant"])
+    assert _formula_applies_to(conclusion, ex.metadata["query_constant"])
     assert ex.metadata["shortcut_enabled"] is enabled
     assert len(ex.metadata["candidate_answers"]) == 4
     assert len(set(ex.metadata["candidate_answers"])) == 4
@@ -273,7 +313,7 @@ def test_hard_fsa_schema_supports_easy_two_branch_curriculum():
     assert ex.metadata["final_conclusion_kind"] == "state"
     assert ex.metadata["expected_proof_lines"] == 2 * ex.metadata["depth"] + 1
     assert _formula_text(ex, conclusion) == ex.answer
-    assert conclusion.endswith(ex.metadata["query_constant"])
+    assert _formula_applies_to(conclusion, ex.metadata["query_constant"])
     assert ex.metadata["shortcut_enabled"] is True
     assert ex.metadata["branching_factor"] == 2
     assert len(ex.metadata["candidate_answers"]) == 2

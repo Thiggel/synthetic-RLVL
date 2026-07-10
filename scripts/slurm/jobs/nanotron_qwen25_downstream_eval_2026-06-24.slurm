@@ -34,9 +34,9 @@ MIX_PCTS=(0 5 10 15 20 25 5 10 15 20 25)
 IDX="${SLURM_ARRAY_TASK_ID}"
 MIX_KIND="${MIX_KINDS[$IDX]}"
 MIX_PCT="${MIX_PCTS[$IDX]}"
-BASE_RUN_TAG="qwen25_7b_midtrain_${MIX_KIND}_p${MIX_PCT}_4p3b"
+BASE_RUN_TAG="${BASE_RUN_TAG_OVERRIDE:-qwen25_7b_midtrain_${MIX_KIND}_p${MIX_PCT}_4p3b}"
 BASE_REPO_ID="${HF_NAMESPACE}/${HF_REPO_PREFIX}-${MIX_KIND}-p${MIX_PCT}-step${CHECKPOINT_STEP}"
-OUT_ROOT="${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_midtrain_downstream_20260624"
+OUT_ROOT="${OUT_ROOT_OVERRIDE:-${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_midtrain_downstream_20260624}"
 
 if [[ "${EVAL_BRANCH}" == "direct" ]]; then
   CHECKPOINT="${BASE_REPO_ID}"

@@ -129,10 +129,11 @@ def test_invalid_logic_citation_free_validity_is_not_grounded_proof_validity():
     assert result.citation_free_grounded_valid == 1.0
 
 
-def test_high_depth_shortcut_schema_extended_predicates_are_scorable():
+@pytest.mark.parametrize("depth", [25, 50])
+def test_high_depth_shortcut_schema_extended_predicates_are_scorable(depth: int):
     gen = LogicDatasetGenerator(
         DatasetConfig(
-            depth=25,
+            depth=depth,
             difficulty="hard_fsa_schema",
             branching_factor=4,
             shortcut_rate=1.0,
@@ -143,7 +144,7 @@ def test_high_depth_shortcut_schema_extended_predicates_are_scorable():
     assert any("(x):" in line for line in ex.predicates)
 
     cfg = make_task(template=TemplateName.NL_EXACT)
-    sample = task_sample_from_logic_example(ex, cfg=cfg, depth=25)
+    sample = task_sample_from_logic_example(ex, cfg=cfg, depth=depth)
     result = OutputEvaluator().evaluate(
         sample.target,
         template=cfg.template,
