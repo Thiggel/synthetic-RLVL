@@ -102,7 +102,10 @@ by `scripts/analysis/audit_branchproof_unique_v2_pilot_eval.py`. Before the
 full grid can run, it requires all requested greedy and pass@k cells, finite
 unit-range metrics, monotonic pass@k curves, all 14 requested depths, exactly
 128 round-robin retained generations, and contiguous prompt constants
-`c0..c_depth`. The gate uses 16 prompts/depth and 8 generations to avoid the
+`c0..c_depth`. It also requires every expected vLLM chunk-completion record and
+stores greedy/sampled elapsed time, output-token throughput, maximum generated
+length, and cap-hit counts. A cap hit is a model-behavior diagnostic and does
+not by itself invalidate the evaluation. The gate uses 16 prompts/depth and 8 generations to avoid the
 13--23-hour runtime of comparable full-size evals; the final 30-row evaluation
 still uses 32 prompts/depth, 16 generations, and pass@16. Regression tests
 explicitly reject the old depth-18 wrapped constant surface and missing primary

@@ -91,3 +91,54 @@ def test_rejects_missing_primary_metric(tmp_path: Path):
     report = _audit(tmp_path, missing_metric=True)
     assert not report["accepted"]
     assert any("synthetic/step_18/correct" in error for error in report["errors"])
+
+
+def test_audits_complete_generation_log_and_records_cap_hits(tmp_path: Path):
+    log_path = tmp_path / "eval.out"
+    log_path.write_text(
+        "\n".join(
+            [
+                "[syntheval] greedy vLLM chunk 1/1 done in 2.0s "
+                "(100 output tokens, max=50)",
+                "[syntheval] sampled vLLM chunk 1/2 done in 3.0s "
+                "(200 output tokens, max=75)",
+                "[syntheval] sampled vLLM chunk 2/2 done in 5.0s "
+                "(300 output tokens, max=100)",
+            ]
+        )
+        + "\n"
+    )
+    errors = []
+
+    report = AUDIT._audit_eval_log(
+        log_path,
+        expected_greedy_chunks=1,
+        expected_sampled_chunks=2,
+        generation_cap=100,
+        errors=errors,
+    )
+
+    assert errors == []
+    assert report["greedy"]["tokens_per_second"] == 50.0
+    assert report["sampled"]["output_tokens"] == 500
+    assert report["sampled"]["max_output_tokens"] == 100
+    assert report["sampled"]["cap_hit_chunk_count"] == 1
+
+
+def test_rejects_incomplete_generation_log(tmp_path: Path):
+    log_path = tmp_path / "eval.out"
+    log_path.write_text(
+        "[syntheval] greedy vLLM chunk 1/1 done in 2.0s "
+        "(100 output tokens, max=50)\n"
+    )
+    errors = []
+
+    AUDIT._audit_eval_log(
+        log_path,
+        expected_greedy_chunks=1,
+        expected_sampled_chunks=2,
+        generation_cap=100,
+        errors=errors,
+    )
+
+    assert any("sampled completed chunk indices=[]" in error for error in errors)

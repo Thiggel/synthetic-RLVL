@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 01:35 CEST strengthened pilot runtime evidence while gate `3832945_12` is
+  running. `audit_branchproof_unique_v2_pilot_eval.py` now parses vLLM
+  completion records, requires all four greedy and 28 sampled chunks exactly
+  once, and records elapsed time, output tokens, throughput, maximum generated
+  length, and cap-hit count. Cap hits remain diagnostics, not automatic
+  rejection. Audit job `3831136` will read the current gate log. Focused tests,
+  `py_compile`, `bash -n`, Slurm `--test-only`, and `git diff --check` pass
+  (`7 passed`). Live greedy chunk 3 completed in `1682.2s` with `264625`
+  output tokens and max `5212`; no completed greedy chunk hit cap `7168`, and
+  final greedy chunk 4 is active at 99% GPU utilization.
 - 01:32 CEST enforced the manual BranchProof release gate: full corrected SFT
   array `3829072` still depends on `afterok:3831136` and is now additionally
   `JobHeldUser`. This prevents the 30 expensive runs from becoming eligible

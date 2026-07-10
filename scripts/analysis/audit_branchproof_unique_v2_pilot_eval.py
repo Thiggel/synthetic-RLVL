@@ -14,6 +14,11 @@ from typing import Any, Iterable
 
 QUESTION_RE = re.compile(r"<question>\s*(.*?)\s*</question>", re.DOTALL)
 CONSTANT_RE = re.compile(r"\bc(\d+)\b")
+CHUNK_DONE_RE = re.compile(
+    r"^\[syntheval\] (?P<mode>greedy|sampled) vLLM chunk "
+    r"(?P<index>\d+)/(?P<total>\d+) done in (?P<seconds>[0-9.]+)s "
+    r"\((?P<tokens>\d+) output tokens, max=(?P<maximum>\d+)\)$"
+)
 GREEDY_METRICS = (
     "syntactic",
     "format",
@@ -60,6 +65,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--generations-per-prompt", type=int, default=16)
     parser.add_argument("--expected-retained-samples", type=int, default=128)
     parser.add_argument("--train-max", type=int, default=25)
+    parser.add_argument("--eval-log", type=Path)
+    parser.add_argument("--batch-size", type=int, default=64)
+    parser.add_argument("--generation-cap", type=int, default=7168)
     return parser.parse_args()
 
 
@@ -159,6 +167,77 @@ def _read_samples(path: Path, errors: list[str]) -> list[dict[str, Any]]:
     return rows
 
 
+def _audit_eval_log(
+    path: Path,
+    *,
+    expected_greedy_chunks: int,
+    expected_sampled_chunks: int,
+    generation_cap: int,
+    errors: list[str],
+) -> dict[str, Any]:
+    if not path.is_file():
+        errors.append(f"evaluation log does not exist: {path}")
+        return {"path": str(path), "exists": False}
+
+    records: dict[str, list[dict[str, int | float]]] = {"greedy": [], "sampled": []}
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        match = CHUNK_DONE_RE.match(line.strip())
+        if match is None:
+            continue
+        records[match.group("mode")].append(
+            {
+                "index": int(match.group("index")),
+                "total": int(match.group("total")),
+                "seconds": float(match.group("seconds")),
+                "output_tokens": int(match.group("tokens")),
+                "max_output_tokens": int(match.group("maximum")),
+            }
+        )
+
+    result: dict[str, Any] = {"path": str(path), "exists": True}
+    for mode, expected_count in (
+        ("greedy", expected_greedy_chunks),
+        ("sampled", expected_sampled_chunks),
+    ):
+        mode_records = records[mode]
+        indices = [int(record["index"]) for record in mode_records]
+        totals = {int(record["total"]) for record in mode_records}
+        expected_indices = list(range(1, expected_count + 1))
+        if indices != expected_indices:
+            errors.append(
+                f"{mode} completed chunk indices={indices}, expected {expected_indices}"
+            )
+        if totals != {expected_count}:
+            errors.append(
+                f"{mode} logged chunk totals={sorted(totals)}, expected [{expected_count}]"
+            )
+
+        elapsed = sum(float(record["seconds"]) for record in mode_records)
+        output_tokens = sum(int(record["output_tokens"]) for record in mode_records)
+        max_output_tokens = max(
+            (int(record["max_output_tokens"]) for record in mode_records), default=0
+        )
+        if max_output_tokens > generation_cap:
+            errors.append(
+                f"{mode} max output tokens={max_output_tokens} exceeds cap {generation_cap}"
+            )
+        result[mode] = {
+            "expected_chunks": expected_count,
+            "completed_chunks": len(mode_records),
+            "elapsed_seconds": elapsed,
+            "output_tokens": output_tokens,
+            "tokens_per_second": output_tokens / elapsed if elapsed else 0.0,
+            "max_output_tokens": max_output_tokens,
+            "generation_cap": generation_cap,
+            "cap_hit_chunk_count": sum(
+                int(record["max_output_tokens"]) == generation_cap
+                for record in mode_records
+            ),
+            "chunks": mode_records,
+        }
+    return result
+
+
 def _audit_samples(
     rows: list[dict[str, Any]],
     *,
@@ -251,10 +330,15 @@ def audit_artifacts(
     generations_per_prompt: int,
     expected_retained_samples: int,
     train_max: int,
+    eval_log_path: Path | None = None,
+    batch_size: int = 64,
+    generation_cap: int = 7168,
 ) -> dict[str, Any]:
     errors: list[str] = []
     payload = json.loads(metrics_path.read_text(encoding="utf-8"))
     rows = _read_samples(samples_path, errors)
+    prompt_count = len(steps) * samples_per_step
+    sampled_prompt_batch_size = max(1, batch_size // generations_per_prompt)
     report = {
         "metrics_path": str(metrics_path),
         "samples_path": str(samples_path),
@@ -275,6 +359,17 @@ def audit_artifacts(
             expected_retained_samples=expected_retained_samples,
             errors=errors,
         ),
+        "generation_log_audit": (
+            _audit_eval_log(
+                eval_log_path,
+                expected_greedy_chunks=math.ceil(prompt_count / batch_size),
+                expected_sampled_chunks=math.ceil(prompt_count / sampled_prompt_batch_size),
+                generation_cap=generation_cap,
+                errors=errors,
+            )
+            if eval_log_path is not None
+            else None
+        ),
     }
     report["errors"] = errors
     report["accepted"] = not errors
@@ -292,6 +387,9 @@ def main() -> None:
         generations_per_prompt=args.generations_per_prompt,
         expected_retained_samples=args.expected_retained_samples,
         train_max=args.train_max,
+        eval_log_path=args.eval_log,
+        batch_size=args.batch_size,
+        generation_cap=args.generation_cap,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")

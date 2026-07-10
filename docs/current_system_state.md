@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 01:32 CEST.
+Last updated: 2026-07-11 01:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -72,6 +72,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   array with `scontrol release 3829072` only after that review passes. The
   eventual full eval `3829073` remains at 32 prompts, 16 samples, and
   pass@`1/2/4/8/16` for the scientific result.
+- The post-run audit now also parses every vLLM chunk-completion line. It
+  requires all four greedy and 28 sampled chunks exactly once and records
+  elapsed time, output tokens, throughput, maximum generated length, and cap
+  hits. A cap hit is retained as a diagnostic rather than automatically
+  invalidating the experiment. At 01:35, greedy chunks 1--3 were complete;
+  chunk 3 (depths 25--40) produced 264,625 tokens in 1,682.2 seconds with
+  maximum length 5,212, so no greedy chunk has hit the 7,168 cap. Final greedy
+  chunk 4 is running at 99% GPU utilization.
 - An exhaustive OLMo-tokenizer audit now covers all 1,000 corrected validation
   records at each of the 14 depths in both modalities (28,000 rendered gold
   traces). No target exceeds the shared 7,168-token generation cap and no
