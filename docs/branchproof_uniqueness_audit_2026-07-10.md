@@ -133,3 +133,8 @@ Selective ablation reruns are conditional on the corrected main result. If a
 formal advantage survives at greedy/pass@1 across seeds, rerun one compact
 syntax control, one shortcut mechanism, conditioned dual, and one independent
 architecture before considering the broader old ablation matrix.
+
+The official preprint now enforces this quarantine structurally. Its rendered
+results contain only AttrCon, the uniqueness audit, and the corrected protocol;
+all old BranchProof performance and derived ablation sections are behind a
+disabled provenance switch. The informal report remains the historical record.

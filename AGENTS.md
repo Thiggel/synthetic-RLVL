@@ -128,7 +128,7 @@ Update the handoff docs whenever operational or scientific state changes.
 
 - The primary ongoing LaTeX report lives inside this repo at `analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex`.
 - Regenerate the report with `scripts/analysis/build_logic_cot_report.py` whenever new results, plots, tables, sample generations, or important insights are produced.
-- After regenerating the in-repo report, mirror the full generated report bundle into `../synthetic-RLVL-report`: copy `logic_cot_report_2026-05-25.tex` to `main.tex`, copy `figures/`, copy `tables/`, and copy Markdown generation supplements.
+- After regenerating the in-repo report, mirror the full generated report bundle into `../synthetic-RLVL-report/informal_report`: copy `logic_cot_report_2026-05-25.tex` to `informal_report/main.tex`, and keep its generated figures, tables, and Markdown supplements under the informal-report bundle. Do not overwrite the root `../synthetic-RLVL-report/main.tex`; it is the official preprint rendered by default in Overleaf.
 - Push both this repo and `../synthetic-RLVL-report` after report updates when network/authentication permits.
 - The in-repo report should include all current generated result tables, figures, qualitative samples, and concise scientific insights, plus an artifact index for generated CSV/PDF/Markdown supplements.
 - If local TeX tooling is unavailable, still update the `.tex` sources and note that compilation was not run.

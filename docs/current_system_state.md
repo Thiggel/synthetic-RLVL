@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 00:52 CEST.
+Last updated: 2026-07-11 01:00 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -68,6 +68,16 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `c0..c_depth` prompts. Full SFT `3829072` now depends
   on `afterok:3831136`. The eventual full eval `3829073` remains at 32 prompts,
   16 samples, and pass@`1/2/4/8/16` for the scientific result.
+- The official preprint had a scientific-consistency gap after the quarantine:
+  its abstract warned that old BranchProof evidence was invalid, but its title,
+  introduction, main tables/figures, discussion, and conclusion still stated
+  the invalidated effect as fact. The root preprint now has a neutral title and
+  renders only the independent AttrCon signal, the measured uniqueness audit,
+  and the corrected acceptance protocol. Historical BranchProof performance,
+  architecture, syntax, shortcut, hybrid, conditioned-dual, and proof-mixture
+  sections are disabled in the official source and remain available in the
+  informal report. Corrected claims will replace them only after the gate and
+  full three-seed rerun pass artifact and raw-generation audits.
 - Both corrected 1.2B-token Nanotron corpus rows completed cleanly: logic has
   `311,301` records / `1,200,002,513` source tokens and NL has `307,329`
   records / `1,200,004,689` source tokens. Their packed Nanosets contain one

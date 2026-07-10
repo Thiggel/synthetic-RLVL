@@ -4,6 +4,21 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 01:00 CEST official-preprint integrity repair: a source audit found that the
+  abstract and status box quarantined old BranchProof evidence while the title,
+  introduction, contributions, main tables/figures, discussion, and conclusion
+  still asserted the invalidated effect. Pulled the report repo, changed the
+  title to the neutral `Formal Logic as a Substrate for Symbolic
+  Chain-of-Thought`, and made the rendered evidence contain only the independent
+  AttrCon signal, the closure audit, and the corrected evaluation protocol.
+  Old BranchProof performance, architecture, syntax, shortcut, hybrid,
+  conditioned-dual, and mixture sections remain behind a disabled provenance
+  switch and in the informal report. Static checks found one active evidence
+  figure, no duplicate active labels, no active references to hidden result
+  labels, and no whitespace errors. TeX compilation remains unavailable.
+  Updated `AGENTS.md` so future generated-report mirroring targets
+  `informal_report/main.tex` and cannot overwrite the official root preprint.
+  Pushed the report repair as `eba30a1`.
 - 00:52 CEST corrected a silent pilot-eval launch bug before significant GPU
   time was spent. Slurm interpreted `PASSK_K_VALUES=1,2,4,8` as an export list,
   and process inspection showed `3831135_12` had launched with only
