@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 01:42 CEST.
+Last updated: 2026-07-11 01:44 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -84,6 +84,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `-0.01%`, `-0.06%`, and `+0.19%`. This rules out gross truncation or runaway
   length drift through depth 40, but is not evidence of correctness or proof
   validity.
+- Both `a40` and `a100` enforce a 24-hour maximum, while the current evaluator
+  writes metrics and retained samples only after the full row completes. Once
+  the gate finishes, use its complete sampled throughput to project the final
+  32-prompt, 16-generation A100 runtime. If a conservative row estimate is
+  near 20 hours, make full eval `3829073` depth-sharded/resumable before it can
+  run; do not reduce prompts, generations, depths, or pass@16 to fit the limit.
 - An exhaustive OLMo-tokenizer audit now covers all 1,000 corrected validation
   records at each of the 14 depths in both modalities (28,000 rendered gold
   traces). No target exceeds the shared 7,168-token generation cap and no

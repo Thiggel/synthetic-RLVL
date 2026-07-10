@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 01:44 CEST full-eval recoverability check: both `a40` and `a100` have
+  `MaxTime=24:00:00`, and corrected full rows would contain 112 sampled chunks
+  while the evaluator writes outputs only at the end. Added a release trigger:
+  after gate `3832945` provides complete sampled throughput, project the
+  32-prompt, 16-generation A100 runtime. If a conservative row estimate
+  approaches 20 hours, make downstream eval `3829073` depth-sharded/resumable
+  before it starts. Preserve the full depth, prompt, generation, and pass@16
+  protocol rather than reducing evidence to fit walltime.
 - 01:42 CEST provisional BranchProof length diagnostic: completed greedy gate
   chunks 1--3 differ from the corresponding per-depth median-gold target-token
   totals by only `-0.01%`, `-0.06%`, and `+0.19%`. Together with maximum
