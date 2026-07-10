@@ -48,6 +48,8 @@ OUT_DIR="${HPCVAULT}/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710"
 OUT="${OUT_DIR}/${RUN_NAME}_passk.json"
 SAMPLES_OUT="${OUT_DIR}/${RUN_NAME}_samples.jsonl"
 DATASET_ID="${DATASET_ID:-flaitenberger/BranchProof-unique-v2}"
+PASSK_K_VALUES_RESOLVED="${PASSK_K_VALUES_COLON:-${PASSK_K_VALUES:-1,2,4,8,16}}"
+PASSK_K_VALUES_RESOLVED="${PASSK_K_VALUES_RESOLVED//:/,}"
 
 cleanup() {
   rm -rf "${MERGED_ROOT}"
@@ -83,7 +85,7 @@ python scripts/evaluate_checkpoint_passk.py \
   --steps "${PASSK_STEPS:-1,2,5,10,12,15,18,20,25,30,35,40,45,50}" \
   --samples-per-step "${PASSK_SAMPLES_PER_STEP:-32}" \
   --num-generations "${PASSK_NUM_GENERATIONS:-16}" \
-  --k-values "${PASSK_K_VALUES:-1,2,4,8,16}" \
+  --k-values "${PASSK_K_VALUES_RESOLVED}" \
   --temperature "${PASSK_TEMPERATURE:-1.0}" \
   --max-new-tokens "${PASSK_MAX_NEW_TOKENS:-7168}" \
   --batch-size "${PASSK_BATCH_SIZE:-64}" \

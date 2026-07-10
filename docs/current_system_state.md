@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 00:49 CEST.
+Last updated: 2026-07-11 00:52 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -57,11 +57,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   step-5000/10000 checkpoints are present. The original full-size pilot
   eval/audit `3829070 -> 3831023`
   was canceled before start because comparable eval rows take 13--23 hours and
-  risk the 24-hour limit. Replacement gate eval `3831135_12` uses 16 prompts
-  per depth, 8 samples, greedy plus pass@`1/2/4/8`, the same equal `7168` cap,
-  and all 14 depths. Its pending row was widened from A100-only to compatible
-  `a40,a100` resources and started immediately on A40 `a0226` at 00:45 CEST;
-  structural audit `3831136` checks its 128 retained raw generations and exact
+  risk the 24-hour limit. First replacement gate `3831135_12` was canceled
+  after four minutes when process inspection found Slurm had truncated the
+  comma-containing export to `--k-values 1`. The wrapper now accepts a
+  delimiter-safe `PASSK_K_VALUES_COLON`; corrected replacement `3832945_12`
+  uses 16 prompts per depth, 8 samples, greedy plus pass@`1/2/4/8`, the same
+  equal `7168` cap, and all 14 depths. It started immediately on A40 `a1721`
+  at 00:50 CEST. Structural audit `3831136` was dependency-edited to follow
+  `3832945_12` and checks its 128 retained raw generations and exact
   `c0..c_depth` prompts. Full SFT `3829072` now depends
   on `afterok:3831136`. The eventual full eval `3829073` remains at 32 prompts,
   16 samples, and pass@`1/2/4/8/16` for the scientific result.
@@ -297,5 +300,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

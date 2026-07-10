@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 00:52 CEST corrected a silent pilot-eval launch bug before significant GPU
+  time was spent. Slurm interpreted `PASSK_K_VALUES=1,2,4,8` as an export list,
+  and process inspection showed `3831135_12` had launched with only
+  `--k-values 1`. Canceled it after four minutes, removed its 14 GB merge temp,
+  added colon-delimited `PASSK_K_VALUES_COLON` resolution to the eval wrapper,
+  and verified the shell expansion plus `bash -n`. Corrected gate
+  `3832945_12` started immediately on A40 `a1721`; dependency-edited audit
+  `3831136` to `afterok:3832945_12`. Live process inspection confirms the
+  corrected command contains `--k-values 1,2,4,8`; focused audit tests pass
+  (`3 passed`). The vLLM tokenizer warning was also checked directly: base and
+  merged OLMo GPT-2 tokenizers produced identical IDs and lengths on formal,
+  prose, whitespace, and newline probes. Full SFT remains behind the audit.
 - 00:49 CEST corrected BranchProof gate release: one-seed pilot SFT
   `3829069_12` completed all 10,000 steps in `12:39:51`, with final train loss
   `0.0171`, a final adapter, and complete step-5000/10000 checkpoints. Pending

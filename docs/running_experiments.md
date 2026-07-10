@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-07-11 00:49 CEST.
+Last updated: 2026-07-11 00:52 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -12,10 +12,10 @@ This includes old architecture, syntax, shortcut, hybrid, conditioned-dual,
 batch-size, and proof-mixture results. See
 `docs/branchproof_uniqueness_audit_2026-07-10.md`.
 
-| Experiment | Jobs | Live state at 2026-07-11 00:49 CEST | Outputs / next gate |
+| Experiment | Jobs | Live state at 2026-07-11 00:52 CEST | Outputs / next gate |
 | --- | --- | --- | --- |
 | Corrected BranchProof-v2 materialization | build/push `3829067` | Completed cleanly in `00:06:54`. Production gate passed on 3,000 examples with unique-solution rate `1.0`, max one derived answer, no failures, and balanced gold positions; HF smoke loads also passed. | `$HPCVAULT/synthetic-RLVL/datasets/branchproof_unique_v2_20260710`; private HF repo `flaitenberger/BranchProof-unique-v2`. |
-| Corrected BranchProof-v2 SFT/eval | pilot SFT `3829069_[12%1]`; replacement gate eval `3831135_12`; structural audit `3831136`; full SFT `3829072_[0-29%12]`; full eval `3829073_[0-29%6]` | Pilot SFT completed all `10000` steps in `12:39:51` with final train loss `0.0171`; final adapter and complete step-5000/10000 checkpoints are present. The original full-size gate eval/audit `3829070 -> 3831023` was canceled before start because comparable eval rows take 13--23 hours. Replacement eval uses 16 prompts/depth, 8 generations, and pass@`1/2/4/8`. Its live row was safely widened from A100-only to `a40,a100`, preserving the job ID and dependencies, and started on A40 `a0226` at 00:45 CEST. Audit `3831136` then checks all 14 depths and 128 retained generations. Full SFT waits on `afterok:3831136`; full eval remains behind it at the complete 32-prompt, 16-generation protocol. | Pilot is OLMo-3-7B logic, train depth 25, seed 3407. Both gate and final eval use equal logic/NL cap `7168` and context `16384`. Audit output will be `analysis/branchproof_unique_v2_pilot_eval_audit_2026-07-10.json`; manually inspect representative success/failure generations after the automated gate. |
+| Corrected BranchProof-v2 SFT/eval | pilot SFT `3829069_[12%1]`; canceled malformed gate `3831135_12`; corrected gate `3832945_12`; structural audit `3831136`; full SFT `3829072_[0-29%12]`; full eval `3829073_[0-29%6]` | Pilot SFT completed all `10000` steps in `12:39:51` with final train loss `0.0171`; final adapter and complete step-5000/10000 checkpoints are present. The original full-size gate eval/audit `3829070 -> 3831023` was canceled before start because comparable eval rows take 13--23 hours. Process inspection caught a Slurm export bug four minutes into first reduced gate `3831135`: comma parsing reduced intended pass@`1/2/4/8` to pass@1 only. That row was canceled, its 14 GB merge temp removed, and the wrapper gained delimiter-safe `PASSK_K_VALUES_COLON`. Corrected gate `3832945_12` started on A40 `a1721` at 00:50 CEST with 16 prompts/depth, 8 generations, and pass@`1/2/4/8`; audit `3831136` was rewired to it. Full SFT waits on `afterok:3831136`; full eval remains behind it at the complete 32-prompt, 16-generation protocol. | Pilot is OLMo-3-7B logic, train depth 25, seed 3407. Both gate and final eval use equal logic/NL cap `7168` and context `16384`. Audit output will be `analysis/branchproof_unique_v2_pilot_eval_audit_2026-07-10.json`; manually inspect representative success/failure generations after the automated gate. |
 | Corrected BranchProof-v2 Nanotron corpora and matched p15 pilot | completed builds `3829068_1` and raw row `3829071`; packed audit `3830855`; logic smoke `3830924`; NL smoke `3831110`; instruction-format smoke `3831179`; logic chain `3830927 -> 3830928 -> 3831123..3831126`; NL chain `3831111 -> 3831112 -> 3831113..3831116` | Both 1.2B-token exports/Nanosets completed cleanly. Logic: `311,301` records, `1,200,002,513` source tokens and `1,200,313,814` packed tokens. NL: `307,329` records, `1,200,004,689` source tokens and `1,200,312,018` packed tokens. Full paired and packed audits passed. Both 85/15 integration smokes completed three optimizer steps. Exact production blend audit found `157,287/1,048,576` proof chunks (`15.000057%`), enough source capacity to avoid repeats, and resume-safe absolute offsets. Chat-format smoke retained all `32/32` train and `16/16` eval rows and verified native Qwen assistant-only supervision. Full-node logic and NL p15 trains are priority-pending with current start estimates 2026-07-11 11:13 and 11:46 CEST. | Fresh run roots end in `{logic,nl_exact}_p15_bp_unique_v2_4p3b`. Both branches upload under `flaitenberger/qwen25-7b-branchproof-unique-v2-midtrain-*`, run direct and native-chat UltraChat-instruction reviewer evals, and clean local checkpoints only after successful HF upload. Mixture evidence is in `docs/nanotron_mixture_schedule_audit_2026-07-10.md`. Restore the broader percentage grid only after this matched pilot is inspected. |
 | Qwen2.5 normal-continuation control | timed-out first allocation `3823434_0`; automatic recovery/skip `3828946_[0%1]`; replacement upload/direct/instruction chain `3831119..3831122` | `3823434_0` reached the exact 24-hour wall limit after logged iteration `5051`, with no training failure. Recovery `3828946_0` is priority-pending with a current 15:04 CEST estimate. Step `4096` remains the latest complete checkpoint and records exactly `2,147,483,648` consumed normal tokens; direct inspection after timeout confirms complete model, optimizer, scheduler, RNG, and metadata state. Its filesystem-accounted footprint is about `199G`: `29G` model and `171G` optimizer. Current vault accounting after the SFT pilot is `514.8G` used, `1048.6G` soft, `2097.2G` hard. | This row uses only normal continuation text and is unaffected by the BranchProof defect. Recovery resumes optimizer/scheduler from step `4096`; deterministic sampler offsets prevent first-half replay. After successful HF upload, guarded cleanup removes all local run checkpoints; direct and native-chat instruction-tuned evals use the uploaded model. |
 
@@ -70,13 +70,13 @@ visible `tjepa_*` job belongs to this repo.
   load, and early loss. Then verify recovery, upload, direct eval, instruction
   SFT, and instruction eval in each dependency chain. Instruction SFT jobs are
   additionally gated on completed chat-format smoke `3831179`.
-- Watch pilot SFT `3829069_12`, gate eval `3831135_12`, and structural audit
+- Watch corrected gate eval `3832945_12` and structural audit
   `3831136`. The audit automatically blocks stale constants, incomplete depth
   coverage, malformed metrics, and empty generations. Manually inspect its raw
   success/failure samples before treating full-grid outputs as evidence.
-- Watch clean control `3823434_0`; it should time out only after a complete
-  checkpoint. Then guarded recovery `3828946_0` should resume from that
-  checkpoint or skip if step `8192` already exists.
+- Watch guarded control recovery `3828946_0`; verify that it resolves step
+  `4096`, loads optimizer and scheduler state, resumes from the recorded token
+  offset, and either writes complete step `8192` or skips if it already exists.
 - If a Nanotron row fails again, inspect the matching `logs/nano_q25_midtrain_<array>_<row>.{out,err}` before touching downstream dependencies.
 - If new science jobs are launched later, restore normal watch rules: inspect `squeue`/`sacct`, logs, output roots, and compatible partitions; resubmit only failed rows; update handoff docs after every scheduler/report change.
 
@@ -85,7 +85,7 @@ visible `tjepa_*` job belongs to this repo.
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829067,3829068,3829069,3829072,3829073,3830855,3830924,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829067,3829068,3829069,3829072,3829073,3830855,3830924,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```
 
 Useful log tails:
