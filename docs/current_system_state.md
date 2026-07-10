@@ -101,8 +101,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   comparison: normal control, logic, and NL. Logic train/recovery is
   `3830927_3 -> 3830928_3`; NL integration smoke `3831110` completed all three
   steps after loading the intended `0.85/0.15` normal/NL mix, releasing NL
-  train/recovery `3831111_8 -> 3831112_8`. At 00:44 CEST, Slurm estimated
-  starts near 2026-07-11 11:13 for logic and 11:46 for NL. New upload/direct-eval/
+  train/recovery `3831111_8 -> 3831112_8`. At 01:22 CEST, Slurm estimated
+  starts near 2026-07-11 12:27 for logic and 11:13 for NL. New upload/direct-eval/
   instruction-SFT/instruction-eval chains are logic `3831123..3831126` and NL
   `3831113..3831116`; both use the isolated `bp_unique_v2` names and HF prefix.
 - A direct audit of Nanotron's production `TokenizedBytes`/

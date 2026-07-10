@@ -4,6 +4,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 01:22 CEST queue refresh: corrected Nanotron p15 NL, logic, and unaffected
+  control recovery remain priority-pending. Slurm's current, non-guaranteed
+  start estimates are 11:13, 12:27, and 15:04 CEST, respectively. No safe
+  partition widening is available for these full-node A100 jobs.
 - 01:20 CEST corrected-eval token-budget audit: added a reproducible audit over
   every corrected validation row at all 14 depths under the actual OLMo
   tokenizer and task renderer. All 14,000 formal and 14,000 NL gold traces fit
