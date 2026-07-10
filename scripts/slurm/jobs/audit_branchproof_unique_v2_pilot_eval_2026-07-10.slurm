@@ -23,4 +23,9 @@ OUT_DIR="${OUT_DIR:-${HPCVAULT}/synthetic-RLVL/passk_eval/branchproof_unique_v2_
 python scripts/analysis/audit_branchproof_unique_v2_pilot_eval.py \
   --metrics "${OUT_DIR}/${RUN_NAME}_passk.json" \
   --samples "${OUT_DIR}/${RUN_NAME}_samples.jsonl" \
-  --output analysis/branchproof_unique_v2_pilot_eval_audit_2026-07-10.json
+  --output analysis/branchproof_unique_v2_pilot_eval_audit_2026-07-10.json \
+  --steps "${PILOT_AUDIT_STEPS:-1,2,5,10,12,15,18,20,25,30,35,40,45,50}" \
+  --k-values "${PILOT_AUDIT_K_VALUES:-1,2,4,8}" \
+  --samples-per-step "${PILOT_AUDIT_SAMPLES_PER_STEP:-16}" \
+  --generations-per-prompt "${PILOT_AUDIT_GENERATIONS_PER_PROMPT:-8}" \
+  --expected-retained-samples "${PILOT_AUDIT_RETAINED_SAMPLES:-128}"

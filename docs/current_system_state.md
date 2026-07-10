@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-10 16:23 CEST.
+Last updated: 2026-07-10 16:50 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -52,14 +52,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   explicit atom form; focused regression tests pass (`84 passed`).
 - Corrected materialization/push `3829067` completed cleanly. The one-seed
   train-1-to-25 logic SFT pilot `3829069_12` is healthy at about step
-  `3300/10000`; equal-cap eval `3829070_12` remains dependency-pending.
-  Structural audit `3831023` now follows the pilot eval and checks all expected
-  greedy/pass@k metrics, all 14 depths, 128 retained raw generations, and exact
-  `c0..c_depth` prompt constants. Full SFT `3829072` was dependency-edited to
-  `afterok:3831023`, so process success alone cannot release the 30-row grid;
-  full eval `3829073` remains behind it. Evaluation uses the same
-  `7168`-token generation cap for logic and NL, context length `16384`, greedy
-  accuracy, and pass@`1/2/4/8/16`.
+  `3700/10000`. The original full-size pilot eval/audit `3829070 -> 3831023`
+  was canceled before start because comparable eval rows take 13--23 hours and
+  risk the 24-hour limit. Replacement gate eval `3831135_12` uses 16 prompts
+  per depth, 8 samples, greedy plus pass@`1/2/4/8`, the same equal `7168` cap,
+  and all 14 depths; structural audit `3831136` checks its 128 retained raw
+  generations and exact `c0..c_depth` prompts. Full SFT `3829072` now depends
+  on `afterok:3831136`. The eventual full eval `3829073` remains at 32 prompts,
+  16 samples, and pass@`1/2/4/8/16` for the scientific result.
 - Both corrected 1.2B-token Nanotron corpus rows completed cleanly: logic has
   `311,301` records / `1,200,002,513` source tokens and NL has `307,329`
   records / `1,200,004,689` source tokens. Their packed Nanosets contain one
@@ -70,21 +70,41 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   exactly match source tokenization and decode round trips in both modalities.
   A corrected 15% logic integration smoke `3830924` then loaded the intended
   `0.85/0.15` normal/proof blend and completed three optimizer steps.
-- The first corrected proof-mixture pilot is submitted as 15% logic train
-  `3830927_3`, automatic resume/skip `3830928_3`, isolated HF upload
-  `3830939_3`, and direct reviewer eval `3830940_3`. It uses a fresh
-  `bp_unique_v2` run root and checkpoint interval `4096`; the train row is
-  ordinary priority-pending on a full A100-80GB node, with Slurm currently
-  estimating a 2026-07-10 18:44 CEST start.
-- All proof-mixture Nanotron jobs and stale proof checkpoints were canceled and
+- The corrected 15% proof-mixture pilot is now a matched three-condition
+  comparison: normal control, logic, and NL. Logic train/recovery is
+  `3830927_3 -> 3830928_3`; NL integration smoke `3831110` completed all three
+  steps after loading the intended `0.85/0.15` normal/NL mix, releasing NL
+  train/recovery `3831111_8 -> 3831112_8`. Slurm currently estimates starts
+  near 2026-07-11 10:21 for logic and 11:07 for NL. New upload/direct-eval/
+  instruction-SFT/instruction-eval chains are logic `3831123..3831126` and NL
+  `3831113..3831116`; both use the isolated `bp_unique_v2` names and HF prefix.
+- All old proof-mixture Nanotron jobs and stale proof checkpoints were canceled and
   deleted because their logic/NL corpora inherited the same generator defect.
   Only the unaffected `0%` normal-corpus control `3823434_0` remains running,
-  with recovery/skip `3828946_0` and downstream `3828947..3828950` dependency
-  held. At 16:19 it was at iteration `4711/8192`, `2.47B` consumed tokens,
-  about `30.8K` tokens/s, and an ETA near 16.5 hours. Step `4096` was explicitly
-  verified complete: 625 model files, four equal `22,848,937,060`-byte
-  optimizer shards, no zero-byte files, and complete metadata. Its current
-  allocation ends before the ETA, so guarded recovery can safely resume.
+  with recovery/skip `3828946_0`. At 16:48 it was at iteration `4811/8192`,
+  `2.52B` consumed tokens, about `30.7K` tokens/s, and an ETA near 16 hours.
+  Step `4096` was explicitly verified complete: 625 model files, four equal
+  `22,848,937,060`-byte optimizer shards, no zero-byte files, and complete
+  metadata. The full filesystem-accounted checkpoint footprint is about
+  `199G` (`29G` model, `171G` optimizer), not the earlier optimizer-only
+  `91.4G` estimate. Its current allocation ends before the ETA, so guarded
+  recovery can safely resume. Replacement downstream chain `3831119..3831122`
+  uses `afterok` dependencies and both direct and instruction-tuned evals.
+- Upload jobs now have a path-guarded opt-in that removes all local Nanotron
+  checkpoints only after successful HF conversion/upload. It is enabled for
+  control, corrected logic, and corrected NL, preventing three-condition
+  checkpoint retention from exhausting the vault. Cluster epilogue accounting
+  reports `511.9G` currently used, `1048.6G` soft quota, and `2097.2G` hard
+  quota.
+- The held instruction branch had a real format mismatch: UltraChat was
+  trained with custom `<question>/<answer>` wrappers while lm-eval supplied
+  neither those wrappers nor a chat template. It now uses Qwen's native chat
+  template for training and instruction-branch evaluation, masks loss to the
+  assistant response, and drops rows truncated before any supervised token.
+  Data smoke `3831179` completed in `00:02:15`: all `32/32` train and `16/16`
+  eval rows retained targets, with lengths `71/537/1202` min/mean/max and a
+  verified native system/user/assistant rendering. Instruction jobs for all
+  three conditions are additionally dependency-gated on this smoke.
 - Detailed evidence, scope, remediation, and decision gates are in
   `docs/branchproof_uniqueness_audit_2026-07-10.md`.
 
@@ -265,5 +285,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3828947,3828948,3828949,3828950,3829069,3829070,3829072,3829073,3830927,3830928,3830939,3830940,3831023 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

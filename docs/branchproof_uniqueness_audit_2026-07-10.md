@@ -98,8 +98,11 @@ by `scripts/analysis/audit_branchproof_unique_v2_pilot_eval.py`. Before the
 full grid can run, it requires all requested greedy and pass@k cells, finite
 unit-range metrics, monotonic pass@k curves, all 14 requested depths, exactly
 128 round-robin retained generations, and contiguous prompt constants
-`c0..c_depth`. Regression tests explicitly reject the old depth-18 wrapped
-constant surface and missing primary metrics.
+`c0..c_depth`. The gate uses 16 prompts/depth and 8 generations to avoid the
+13--23-hour runtime of comparable full-size evals; the final 30-row evaluation
+still uses 32 prompts/depth, 16 generations, and pass@16. Regression tests
+explicitly reject the old depth-18 wrapped constant surface and missing primary
+metrics.
 
 At the planned 4,096-token Nanotron context, `44.3%` of formal documents and
 `47.8%` of NL documents are longer than one context; none exceeds 8,192 tokens.
@@ -108,16 +111,23 @@ whole-example SFT records. The split exposure is closely matched across
 modalities, but downstream claims should describe this as proof-corpus
 midtraining rather than full-trace supervision.
 
+The post-instruction downstream branch now uses Qwen's native chat template in
+both UltraChat training and lm-eval, with loss restricted to assistant tokens.
+Smoke `3831179` retained every sampled train/eval target and decoded to the
+expected system/user/assistant surface. This replaces the earlier mismatched
+custom-tag training plus untemplated evaluation path before any held
+instruction job starts.
+
 ## Active recovery plan
 
 | Stage | Jobs | Acceptance gate |
 | --- | --- | --- |
 | Materialized paired dataset | `3829067` complete | Probe accepted, all subsets present, private HF push succeeds |
 | One-seed SFT pilot | `3829069_12` running | Training completes with no truncation/data errors |
-| Pilot post-hoc eval | `3829070_12 -> 3831023` | Automated audit verifies schema, all depths, corrected constants, and nonempty outputs; then inspect raw successes/failures at train, held-out, and depth 50 |
-| Three-seed main grid | `3829072 -> 3829073` | Full SFT now depends on audit `3831023`, not process success alone; report greedy and pass@1 before pass@k |
+| Pilot post-hoc eval | `3831135_12 -> 3831136` | Automated audit verifies schema, all depths, corrected constants, and nonempty outputs; then inspect raw successes/failures at train, held-out, and depth 50 |
+| Three-seed main grid | `3829072 -> 3829073` | Full SFT now depends on audit `3831136`, not process success alone; report greedy and pass@1 before pass@k |
 | Corrected 1.2B-token corpora | builds and packed audit `3830855` complete | Full paired-prefix scan, metadata counts, and exact source-token/decode round trips passed |
-| Midtraining mixtures | smoke `3830924` complete; pilot `3830927 -> 3830928 -> 3830939 -> 3830940` | Launch the broader grid only after the isolated 15% logic pilot trains, converts, and evaluates cleanly |
+| Midtraining mixtures | logic/NL smokes `3830924`/`3831110` complete; matched control/logic/NL p15 chains active or held | Compare direct and instruction-tuned downstream results, and launch the remaining percentages only after all three p15 conditions train, upload, and evaluate cleanly |
 
 Selective ablation reruns are conditional on the corrected main result. If a
 formal advantage survives at greedy/pass@1 across seeds, rerun one compact

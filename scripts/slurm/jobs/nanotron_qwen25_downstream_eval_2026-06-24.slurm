@@ -42,6 +42,7 @@ if [[ "${EVAL_BRANCH}" == "direct" ]]; then
   CHECKPOINT="${BASE_REPO_ID}"
   OUT_DIR="${OUT_ROOT}/${BASE_RUN_TAG}_step${CHECKPOINT_STEP}_direct"
   WANDB_GROUP_VALUE="qwen25_midtrain_downstream/direct"
+  PROMPT_FORMAT_ARGS=()
 elif [[ "${EVAL_BRANCH}" == "instruction" ]]; then
   RUN_NAME="sft_instr_${BASE_RUN_TAG}_step${CHECKPOINT_STEP}_ultrachat"
   ADAPTER="${HPCVAULT}/synthetic-RLVL/runs/${RUN_NAME}/final"
@@ -58,6 +59,7 @@ elif [[ "${EVAL_BRANCH}" == "instruction" ]]; then
   mv "${CHECKPOINT}.tmp" "${CHECKPOINT}"
   OUT_DIR="${OUT_ROOT}/${BASE_RUN_TAG}_step${CHECKPOINT_STEP}_instruction"
   WANDB_GROUP_VALUE="qwen25_midtrain_downstream/instruction"
+  PROMPT_FORMAT_ARGS=(--apply-chat-template)
 else
   echo "Unknown EVAL_BRANCH=${EVAL_BRANCH}; expected direct or instruction" >&2
   exit 2
@@ -85,6 +87,7 @@ python scripts/evaluate_lm_eval.py \
   --model-arg "max_model_len=${LM_EVAL_MAX_MODEL_LEN:-8192}" \
   --trust-remote-code \
   --confirm-run-unsafe-code \
+  "${PROMPT_FORMAT_ARGS[@]}" \
   --log-samples \
   --wandb-project "${WANDB_PROJECT:-synthetic-rlvl}" \
   --wandb-group "${WANDB_GROUP_VALUE}" \

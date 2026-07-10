@@ -36,7 +36,12 @@ def _first_user_assistant(messages: list[dict[str, Any]]) -> tuple[str, str] | N
     return None
 
 
-def _row_to_prompt_target(row: dict[str, Any], *, wrap_answer_tags: bool) -> dict[str, str] | None:
+def _row_to_prompt_target(
+    row: dict[str, Any],
+    *,
+    wrap_question_tags: bool,
+    wrap_answer_tags: bool,
+) -> dict[str, str] | None:
     if isinstance(row.get("messages"), list):
         pair = _first_user_assistant(row["messages"])
         if pair is None:
@@ -53,7 +58,9 @@ def _row_to_prompt_target(row: dict[str, Any], *, wrap_answer_tags: bool) -> dic
     if not prompt_text.strip() or not answer_text.strip():
         return None
 
-    prompt = f"<question>\n{prompt_text.strip()}\n</question>\n"
+    prompt = prompt_text.strip()
+    if wrap_question_tags:
+        prompt = f"<question>\n{prompt}\n</question>\n"
     if wrap_answer_tags:
         target = f"<answer>\n{answer_text.strip()}\n</answer>"
     else:
@@ -61,12 +68,23 @@ def _row_to_prompt_target(row: dict[str, Any], *, wrap_answer_tags: bool) -> dic
     return {"prompt": prompt, "target": target}
 
 
-def _format_dataset(raw: Dataset, *, limit: int, seed: int, wrap_answer_tags: bool) -> Dataset:
+def _format_dataset(
+    raw: Dataset,
+    *,
+    limit: int,
+    seed: int,
+    format_mode: str,
+    wrap_answer_tags: bool,
+) -> Dataset:
     if limit > 0 and len(raw) > limit:
         raw = raw.shuffle(seed=seed).select(range(limit))
     rows: list[dict[str, str]] = []
     for row in raw:
-        formatted = _row_to_prompt_target(dict(row), wrap_answer_tags=wrap_answer_tags)
+        formatted = _row_to_prompt_target(
+            dict(row),
+            wrap_question_tags=format_mode == "tagged",
+            wrap_answer_tags=wrap_answer_tags and format_mode == "tagged",
+        )
         if formatted is not None:
             rows.append(formatted)
     if not rows:
@@ -74,11 +92,23 @@ def _format_dataset(raw: Dataset, *, limit: int, seed: int, wrap_answer_tags: bo
     return Dataset.from_list(rows)
 
 
-def _tokenize_dataset(ds: Dataset, tokenizer, *, max_length: int) -> Dataset:
+def _tokenize_dataset(ds: Dataset, tokenizer, *, max_length: int, format_mode: str) -> Dataset:
     def tokenize_row(row: dict[str, str]) -> dict[str, list[int]]:
-        prompt_ids = tokenizer(row["prompt"], add_special_tokens=False)["input_ids"]
-        target_ids = tokenizer(row["target"], add_special_tokens=False)["input_ids"]
-        input_ids = prompt_ids + target_ids + [tokenizer.eos_token_id]
+        if format_mode == "chat":
+            user = {"role": "user", "content": row["prompt"]}
+            assistant = {"role": "assistant", "content": row["target"]}
+            prompt_ids = tokenizer.apply_chat_template(
+                [user], tokenize=True, add_generation_prompt=True
+            )
+            input_ids = tokenizer.apply_chat_template(
+                [user, assistant], tokenize=True, add_generation_prompt=False
+            )
+            if input_ids[: len(prompt_ids)] != prompt_ids:
+                raise ValueError("Chat-template assistant response does not extend the user prompt.")
+        else:
+            prompt_ids = tokenizer(row["prompt"], add_special_tokens=False)["input_ids"]
+            target_ids = tokenizer(row["target"], add_special_tokens=False)["input_ids"]
+            input_ids = prompt_ids + target_ids + [tokenizer.eos_token_id]
         if len(input_ids) > max_length:
             input_ids = input_ids[:max_length]
         labels = [-100] * min(len(prompt_ids), len(input_ids)) + input_ids[min(len(prompt_ids), len(input_ids)) :]
@@ -90,7 +120,11 @@ def _tokenize_dataset(ds: Dataset, tokenizer, *, max_length: int) -> Dataset:
             "labels": labels,
         }
 
-    return ds.map(tokenize_row, remove_columns=ds.column_names)
+    tokenized = ds.map(tokenize_row, remove_columns=ds.column_names)
+    tokenized = tokenized.filter(lambda row: any(label != -100 for label in row["labels"]))
+    if len(tokenized) == 0:
+        raise ValueError("No instruction rows retain assistant target tokens after truncation.")
+    return tokenized
 
 
 def _load_instruction_splits(args: argparse.Namespace) -> tuple[Dataset, Dataset]:
@@ -100,6 +134,7 @@ def _load_instruction_splits(args: argparse.Namespace) -> tuple[Dataset, Dataset
         raw_train,
         limit=int(args.train_samples),
         seed=int(args.seed),
+        format_mode=str(args.format_mode),
         wrap_answer_tags=bool(args.wrap_answer_tags),
     )
     eval_limit = int(args.eval_samples)
@@ -109,6 +144,7 @@ def _load_instruction_splits(args: argparse.Namespace) -> tuple[Dataset, Dataset
         raw_eval,
         limit=0,
         seed=int(args.seed) + 1,
+        format_mode=str(args.format_mode),
         wrap_answer_tags=bool(args.wrap_answer_tags),
     )
     return train, eval_ds
@@ -139,6 +175,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
     parser.add_argument("--lora-dropout", type=float, default=0.05)
+    parser.add_argument("--format-mode", choices=["chat", "tagged"], default="tagged")
     parser.add_argument(
         "--lora-target-modules",
         nargs="+",
@@ -164,20 +201,43 @@ def main() -> None:
         tokenizer.pad_token = tokenizer.eos_token
 
     train_raw, eval_raw = _load_instruction_splits(args)
-    train_ds = _tokenize_dataset(train_raw, tokenizer, max_length=int(args.max_length))
-    eval_ds = _tokenize_dataset(eval_raw, tokenizer, max_length=int(args.max_length))
+    if args.format_mode == "chat" and not tokenizer.chat_template:
+        raise ValueError(f"Tokenizer for {args.model} does not define a chat template.")
+    train_ds = _tokenize_dataset(
+        train_raw,
+        tokenizer,
+        max_length=int(args.max_length),
+        format_mode=str(args.format_mode),
+    )
+    eval_ds = _tokenize_dataset(
+        eval_raw,
+        tokenizer,
+        max_length=int(args.max_length),
+        format_mode=str(args.format_mode),
+    )
 
     if args.dry_run:
         lengths = [len(row["input_ids"]) for row in train_ds.select(range(min(128, len(train_ds))))]
+        first = train_ds[0]
+        supervised_ids = [
+            token_id
+            for token_id, label in zip(first["input_ids"], first["labels"], strict=True)
+            if label != -100
+        ]
         print(
             {
-                "train_rows": len(train_ds),
-                "eval_rows": len(eval_ds),
+                "format_mode": args.format_mode,
+                "formatted_train_rows": len(train_raw),
+                "retained_train_rows": len(train_ds),
+                "formatted_eval_rows": len(eval_raw),
+                "retained_eval_rows": len(eval_ds),
                 "min_len": min(lengths),
                 "mean_len": sum(lengths) / len(lengths),
                 "max_len": max(lengths),
                 "first_prompt": train_raw[0]["prompt"][:500],
                 "first_target": train_raw[0]["target"][:500],
+                "first_rendered": tokenizer.decode(first["input_ids"][:1000]),
+                "first_supervised": tokenizer.decode(supervised_ids[:500]),
             }
         )
         return

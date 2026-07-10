@@ -32,7 +32,7 @@ MIX_PCTS=(0 5 10 15 20 25 5 10 15 20 25)
 IDX="${SLURM_ARRAY_TASK_ID}"
 MIX_KIND="${MIX_KINDS[$IDX]}"
 MIX_PCT="${MIX_PCTS[$IDX]}"
-BASE_RUN_TAG="qwen25_7b_midtrain_${MIX_KIND}_p${MIX_PCT}_4p3b"
+BASE_RUN_TAG="${BASE_RUN_TAG_OVERRIDE:-qwen25_7b_midtrain_${MIX_KIND}_p${MIX_PCT}_4p3b}"
 BASE_REPO_ID="${HF_NAMESPACE}/${HF_REPO_PREFIX}-${MIX_KIND}-p${MIX_PCT}-step${CHECKPOINT_STEP}"
 RUN_NAME="sft_instr_${BASE_RUN_TAG}_step${CHECKPOINT_STEP}_ultrachat"
 OUT_DIR="${HPCVAULT}/synthetic-RLVL/runs/${RUN_NAME}"
@@ -65,6 +65,7 @@ else
     --eval-steps "${EVAL_STEPS:-1000}" \
     --save-steps "${SAVE_STEPS:-1000}" \
     --save-total-limit "${SAVE_TOTAL_LIMIT:-3}" \
+    --format-mode "${INSTRUCTION_FORMAT_MODE:-chat}" \
     --gradient-checkpointing
 fi
 

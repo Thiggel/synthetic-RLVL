@@ -4,6 +4,43 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-10
 
+- 16:50 CEST instruction-transfer format repair: audited the held downstream
+  branch and found a train-eval mismatch. UltraChat SFT used custom
+  `<question>/<answer>` wrappers, while lm-eval used neither those wrappers nor
+  a chat template. `train_instruction_sft.py` now uses the Qwen tokenizer's
+  native system/user/assistant template, masks all prompt tokens, supervises
+  only the assistant response, and filters examples truncated before any target
+  token. Instruction-branch lm-eval now applies the same chat template; direct
+  base-model eval remains untemplated. Four focused tests, a real cached
+  Qwen-tokenizer prefix/masking check, and the full suite pass (`129 passed, 3
+  skipped`). A100-MIG data smoke `3831179`
+  completed in `00:02:15`: `32/32` train and `16/16` eval examples retained
+  targets, sampled lengths were `71/537/1202` min/mean/max, and decoded input/
+  supervised spans matched the intended native chat rendering. Dependency-
+  edited all three instruction jobs to require this smoke. Vault epilogue
+  accounting is `511.9G` used, `1048.6G` soft quota, `2097.2G` hard quota.
+
+- 16:38 CEST matched corrected midtraining pilot and quota guard: corrected NL
+  Nanoset smoke `3831110` completed in `00:00:34`, loaded the exact corrected
+  NL path at `0.85/0.15` normal/proof weights, and finished three optimizer
+  steps. Submitted NL p15 train/recovery `3831111 -> 3831112`, upload/direct
+  eval/instruction SFT/instruction eval `3831113..3831116`. Replaced the still
+  pending control downstream jobs by `3831119..3831122` and corrected-logic
+  upload/eval jobs by `3831123..3831126`; all dependencies now use `afterok`
+  after upload, and both logic/NL have direct plus instruction-tuned branches.
+  A complete Nanotron checkpoint occupies about `199G` on the vault (`29G`
+  model, `171G` optimizer), so the upload wrapper now supports a path-guarded
+  opt-in that deletes all run checkpoints only after successful HF upload; it
+  is enabled for all three p15 conditions. Logic/NL full-node starts are
+  currently estimated for 2026-07-11 10:21/11:07 CEST.
+- 16:38 CEST faster corrected SFT gate: comparable old eval rows took 13--23
+  hours, making the original full-size pilot eval a 24-hour timeout risk.
+  Canceled pending `3829070 -> 3831023` and submitted replacement gate eval
+  `3831135_12` with 16 prompts/depth, 8 generations, greedy and
+  pass@`1/2/4/8`, followed by structural audit `3831136`. Full SFT `3829072`
+  now waits on `afterok:3831136`. The eventual 30-row eval `3829073` is
+  unchanged at 32 prompts/depth, 16 generations, and pass@16.
+
 - 16:23 CEST corrected SFT artifact gate: added
   `audit_branchproof_unique_v2_pilot_eval.py` plus three regression tests. The
   gate checks all 14 depths, greedy and pass@`1/2/4/8/16` metric cells,
@@ -17,9 +54,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 - 16:06 CEST normal-control checkpoint gate: while `3823434_0` continued at
   iteration `4641/8192`, verified checkpoint `4096` has complete metadata, 625
-  model files, four equal `22,848,937,060`-byte optimizer shards, no zero-byte
-  files, and about `91.4G` total size. Guarded recovery `3828946_0` therefore
-  has a safe resume point when the current allocation ends.
+  model files, four equal `22,848,937,060`-byte optimizer shards, and no
+  zero-byte files. Correction at 16:38: `91.4G` was the logical optimizer total,
+  not the full checkpoint footprint; filesystem-accounted model plus optimizer
+  is about `199G`. Guarded recovery `3828946_0` has a safe resume point when the
+  current allocation ends.
 - 16:02 CEST corrected corpus context audit: packed document lengths are
   closely matched but not always contained in one 4,096-token window. Logic
   median/p95/max is `3753/7358/7725` tokens with `44.3%` above 4096; NL is

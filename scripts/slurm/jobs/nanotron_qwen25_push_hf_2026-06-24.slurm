@@ -65,9 +65,16 @@ mv "${HF_STAGING}.tmp" "${HF_STAGING}"
 if [[ "${CLEANUP_LOCAL_HF_STAGING:-1}" == "1" ]]; then
   rm -rf "${HF_STAGING}"
 fi
-if [[ "${CLEANUP_NANOTRON_AFTER_UPLOAD:-0}" == "1" ]]; then
-  rm -rf "${NANOTRON_CKPT}"
-fi
 
 echo "${REPO_ID}" > "${RUN_ROOT}/hf_repo_step${CHECKPOINT_STEP}.txt"
+if [[ "${CLEANUP_NANOTRON_RUN_CHECKPOINTS_AFTER_UPLOAD:-0}" == "1" ]]; then
+  EXPECTED_RUN_PREFIX="${HPCVAULT}/synthetic-RLVL/nanotron_midtrain/"
+  if [[ "${RUN_ROOT}" != "${EXPECTED_RUN_PREFIX}"* ]]; then
+    echo "Refusing checkpoint cleanup outside ${EXPECTED_RUN_PREFIX}: ${RUN_ROOT}" >&2
+    exit 2
+  fi
+  rm -rf -- "${RUN_ROOT}/checkpoints"
+elif [[ "${CLEANUP_NANOTRON_AFTER_UPLOAD:-0}" == "1" ]]; then
+  rm -rf "${NANOTRON_CKPT}"
+fi
 echo "Uploaded ${RUN_TAG} step ${CHECKPOINT_STEP} to ${REPO_ID}"
