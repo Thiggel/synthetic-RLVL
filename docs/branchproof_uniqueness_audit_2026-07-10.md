@@ -65,10 +65,14 @@ benchmark itself was non-unique, neither that interpretation nor the old
 architecture/syntax/shortcut/hybrid comparisons is publishable evidence.
 
 Old eval also used unequal generation caps (formal `4096`, NL `6144`). A
-corrected depth-50 token audit found gold prompt-plus-target totals below about
-13.5k tokens, but target lengths can exceed both old caps. Corrected evaluation
-therefore uses context length `16384` and the same `7168` new-token cap for both
-modalities.
+corrected exhaustive token audit rendered all 1,000 validation records at each
+of 14 depths in both modalities with the OLMo tokenizer. Formal target/total
+maxima are `6212/13123` tokens and NL maxima are `6674/13596`; zero of 28,000
+gold traces exceed the shared generation or context budgets. Corrected
+evaluation therefore uses context length `16384` and the same `7168`
+new-token cap for both modalities, with at least 494 generation tokens and
+2,788 context tokens of measured headroom. The accepted audit is
+`analysis/branchproof_unique_v2_eval_token_budget_2026-07-11.json`.
 
 ## Repair
 

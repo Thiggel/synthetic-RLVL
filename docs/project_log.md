@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 01:20 CEST corrected-eval token-budget audit: added a reproducible audit over
+  every corrected validation row at all 14 depths under the actual OLMo
+  tokenizer and task renderer. All 14,000 formal and 14,000 NL gold traces fit
+  the shared 7,168-new-token cap and 16,384-token context. Formal target/total
+  maxima are `6212/13123`; NL maxima are `6674/13596`, leaving minimum
+  headroom `494/2788`. The accepted machine-readable artifact is
+  `analysis/branchproof_unique_v2_eval_token_budget_2026-07-11.json`; focused
+  script/audit regression tests pass (`5 passed`). Live gate `3832945_12`
+  remains healthy on A40 and had completed two greedy chunks by 01:17.
 - 01:00 CEST official-preprint integrity repair: a source audit found that the
   abstract and status box quarantined old BranchProof evidence while the title,
   introduction, contributions, main tables/figures, discussion, and conclusion

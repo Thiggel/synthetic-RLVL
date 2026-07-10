@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 01:00 CEST.
+Last updated: 2026-07-11 01:20 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -68,6 +68,15 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `c0..c_depth` prompts. Full SFT `3829072` now depends
   on `afterok:3831136`. The eventual full eval `3829073` remains at 32 prompts,
   16 samples, and pass@`1/2/4/8/16` for the scientific result.
+- An exhaustive OLMo-tokenizer audit now covers all 1,000 corrected validation
+  records at each of the 14 depths in both modalities (28,000 rendered gold
+  traces). No target exceeds the shared 7,168-token generation cap and no
+  prompt-plus-target exceeds the 16,384-token context. Formal maxima are
+  6,212 target and 13,123 total tokens; NL maxima are 6,674 and 13,596,
+  leaving at least 494 generation tokens and 2,788 context tokens of headroom.
+  This rules out asymmetric gold truncation in the corrected protocol. The
+  reproducible accepted audit is
+  `analysis/branchproof_unique_v2_eval_token_budget_2026-07-11.json`.
 - The official preprint had a scientific-consistency gap after the quarantine:
   its abstract warned that old BranchProof evidence was invalid, but its title,
   introduction, main tables/figures, discussion, and conclusion still stated

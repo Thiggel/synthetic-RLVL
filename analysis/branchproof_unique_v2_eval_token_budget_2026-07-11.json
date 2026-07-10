@@ -1,0 +1,812 @@
+{
+  "accepted": true,
+  "context_limit": 16384,
+  "data_root": "/home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/branchproof_unique_v2_20260710",
+  "failures": [],
+  "generation_cap": 7168,
+  "steps": [
+    1,
+    2,
+    5,
+    10,
+    12,
+    15,
+    18,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50
+  ],
+  "templates": {
+    "logic": {
+      "by_depth": {
+        "1": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 15958,
+            "limit": 16384,
+            "max": 426,
+            "min": 407,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 414,
+            "p95": 420,
+            "p99": 423
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 6914,
+            "limit": 7168,
+            "max": 254,
+            "min": 248,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 251,
+            "p95": 253,
+            "p99": 253
+          }
+        },
+        "10": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 13621,
+            "limit": 16384,
+            "max": 2763,
+            "min": 2667,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 2713,
+            "p95": 2742,
+            "p99": 2751
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 5844,
+            "limit": 7168,
+            "max": 1324,
+            "min": 1317,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 1320,
+            "p95": 1322,
+            "p99": 1323
+          }
+        },
+        "12": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 13109,
+            "limit": 16384,
+            "max": 3275,
+            "min": 3181,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 3226,
+            "p95": 3257,
+            "p99": 3269
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 5603,
+            "limit": 7168,
+            "max": 1565,
+            "min": 1559,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 1562,
+            "p95": 1564,
+            "p99": 1565
+          }
+        },
+        "15": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 12331,
+            "limit": 16384,
+            "max": 4053,
+            "min": 3950,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 3999,
+            "p95": 4029,
+            "p99": 4039
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 5240,
+            "limit": 7168,
+            "max": 1928,
+            "min": 1920,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 1924,
+            "p95": 1926,
+            "p99": 1927
+          }
+        },
+        "18": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 11560,
+            "limit": 16384,
+            "max": 4824,
+            "min": 4724,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 4772,
+            "p95": 4800,
+            "p99": 4810
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 4877,
+            "limit": 7168,
+            "max": 2291,
+            "min": 2284,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 2288,
+            "p95": 2290,
+            "p99": 2290
+          }
+        },
+        "2": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 15700,
+            "limit": 16384,
+            "max": 684,
+            "min": 653,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 666,
+            "p95": 672,
+            "p99": 678
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 6800,
+            "limit": 7168,
+            "max": 368,
+            "min": 362,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 365,
+            "p95": 366,
+            "p99": 367
+          }
+        },
+        "20": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 11043,
+            "limit": 16384,
+            "max": 5341,
+            "min": 5239,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 5288,
+            "p95": 5314,
+            "p99": 5326
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 4635,
+            "limit": 7168,
+            "max": 2533,
+            "min": 2528,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 2531,
+            "p95": 2532,
+            "p99": 2532
+          }
+        },
+        "25": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 9654,
+            "limit": 16384,
+            "max": 6730,
+            "min": 6631,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 6678,
+            "p95": 6701,
+            "p99": 6711
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 3923,
+            "limit": 7168,
+            "max": 3245,
+            "min": 3229,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 3238,
+            "p95": 3242,
+            "p99": 3244
+          }
+        },
+        "30": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 8380,
+            "limit": 16384,
+            "max": 8004,
+            "min": 7902,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 7952,
+            "p95": 7978,
+            "p99": 7989
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 3327,
+            "limit": 7168,
+            "max": 3841,
+            "min": 3822,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 3831,
+            "p95": 3836,
+            "p99": 3837
+          }
+        },
+        "35": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 7100,
+            "limit": 16384,
+            "max": 9284,
+            "min": 9168,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 9228,
+            "p95": 9255,
+            "p99": 9265
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 2735,
+            "limit": 7168,
+            "max": 4433,
+            "min": 4412,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 4423,
+            "p95": 4428,
+            "p99": 4430
+          }
+        },
+        "40": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 5823,
+            "limit": 16384,
+            "max": 10561,
+            "min": 10454,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 10502,
+            "p95": 10534,
+            "p99": 10547
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 2142,
+            "limit": 7168,
+            "max": 5026,
+            "min": 5003,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 5015,
+            "p95": 5021,
+            "p99": 5023
+          }
+        },
+        "45": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 4538,
+            "limit": 16384,
+            "max": 11846,
+            "min": 11716,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 11778,
+            "p95": 11810,
+            "p99": 11826
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 1550,
+            "limit": 7168,
+            "max": 5618,
+            "min": 5598,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 5608,
+            "p95": 5614,
+            "p99": 5616
+          }
+        },
+        "5": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 14918,
+            "limit": 16384,
+            "max": 1466,
+            "min": 1398,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 1424,
+            "p95": 1445,
+            "p99": 1454
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 6450,
+            "limit": 7168,
+            "max": 718,
+            "min": 711,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 714,
+            "p95": 716,
+            "p99": 717
+          }
+        },
+        "50": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 3261,
+            "limit": 16384,
+            "max": 13123,
+            "min": 12986,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 13051,
+            "p95": 13088,
+            "p99": 13106
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 956,
+            "limit": 7168,
+            "max": 6212,
+            "min": 6188,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 6200,
+            "p95": 6206,
+            "p99": 6209
+          }
+        }
+      },
+      "prompt_plus_target_tokens": {
+        "count": 14000,
+        "headroom": 3261,
+        "limit": 16384,
+        "max": 13123,
+        "min": 407,
+        "over_limit_count": 0,
+        "over_limit_rate": 0.0,
+        "p50": 5239,
+        "p95": 13041,
+        "p99": 13074
+      },
+      "records": 14000,
+      "target_tokens": {
+        "count": 14000,
+        "headroom": 956,
+        "limit": 7168,
+        "max": 6212,
+        "min": 248,
+        "over_limit_count": 0,
+        "over_limit_rate": 0.0,
+        "p50": 2528,
+        "p95": 6199,
+        "p99": 6204
+      }
+    },
+    "nl_exact": {
+      "by_depth": {
+        "1": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 16012,
+            "limit": 16384,
+            "max": 372,
+            "min": 342,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 353,
+            "p95": 364,
+            "p99": 368
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 6968,
+            "limit": 7168,
+            "max": 200,
+            "min": 183,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 190,
+            "p95": 196,
+            "p99": 198
+          }
+        },
+        "10": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 13525,
+            "limit": 16384,
+            "max": 2859,
+            "min": 2671,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 2760,
+            "p95": 2818,
+            "p99": 2837
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 5747,
+            "limit": 7168,
+            "max": 1421,
+            "min": 1321,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 1367,
+            "p95": 1398,
+            "p99": 1408
+          }
+        },
+        "12": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 12996,
+            "limit": 16384,
+            "max": 3388,
+            "min": 3204,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 3293,
+            "p95": 3355,
+            "p99": 3378
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 5491,
+            "limit": 7168,
+            "max": 1677,
+            "min": 1582,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 1628,
+            "p95": 1661,
+            "p99": 1673
+          }
+        },
+        "15": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 12179,
+            "limit": 16384,
+            "max": 4205,
+            "min": 4003,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 4098,
+            "p95": 4156,
+            "p99": 4177
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 5090,
+            "limit": 7168,
+            "max": 2078,
+            "min": 1974,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 2023,
+            "p95": 2053,
+            "p99": 2064
+          }
+        },
+        "18": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 11380,
+            "limit": 16384,
+            "max": 5004,
+            "min": 4802,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 4898,
+            "p95": 4954,
+            "p99": 4975
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 4698,
+            "limit": 7168,
+            "max": 2470,
+            "min": 2363,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 2414,
+            "p95": 2443,
+            "p99": 2455
+          }
+        },
+        "2": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 15729,
+            "limit": 16384,
+            "max": 655,
+            "min": 600,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 622,
+            "p95": 635,
+            "p99": 645
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 6829,
+            "limit": 7168,
+            "max": 339,
+            "min": 309,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 321,
+            "p95": 329,
+            "p99": 334
+          }
+        },
+        "20": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 10838,
+            "limit": 16384,
+            "max": 5546,
+            "min": 5335,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 5434,
+            "p95": 5486,
+            "p99": 5512
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 4431,
+            "limit": 7168,
+            "max": 2737,
+            "min": 2625,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 2676,
+            "p95": 2704,
+            "p99": 2718
+          }
+        },
+        "25": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 9500,
+            "limit": 16384,
+            "max": 6884,
+            "min": 6678,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 6771,
+            "p95": 6818,
+            "p99": 6839
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 3778,
+            "limit": 7168,
+            "max": 3390,
+            "min": 3282,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 3331,
+            "p95": 3356,
+            "p99": 3367
+          }
+        },
+        "30": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 8172,
+            "limit": 16384,
+            "max": 8212,
+            "min": 8008,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 8106,
+            "p95": 8160,
+            "p99": 8183
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 3127,
+            "limit": 7168,
+            "max": 4041,
+            "min": 3933,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 3985,
+            "p95": 4013,
+            "p99": 4023
+          }
+        },
+        "35": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 6828,
+            "limit": 16384,
+            "max": 9556,
+            "min": 9320,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 9444,
+            "p95": 9502,
+            "p99": 9520
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 2470,
+            "limit": 7168,
+            "max": 4698,
+            "min": 4573,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 4639,
+            "p95": 4670,
+            "p99": 4681
+          }
+        },
+        "40": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 5484,
+            "limit": 16384,
+            "max": 10900,
+            "min": 10672,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 10780,
+            "p95": 10846,
+            "p99": 10878
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 1812,
+            "limit": 7168,
+            "max": 5356,
+            "min": 5237,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 5293,
+            "p95": 5328,
+            "p99": 5344
+          }
+        },
+        "45": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 4123,
+            "limit": 16384,
+            "max": 12261,
+            "min": 11987,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 12118,
+            "p95": 12185,
+            "p99": 12220
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 1142,
+            "limit": 7168,
+            "max": 6026,
+            "min": 5879,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 5948,
+            "p95": 5983,
+            "p99": 6000
+          }
+        },
+        "5": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 14880,
+            "limit": 16384,
+            "max": 1504,
+            "min": 1374,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 1423,
+            "p95": 1464,
+            "p99": 1483
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 6412,
+            "limit": 7168,
+            "max": 756,
+            "min": 687,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 713,
+            "p95": 735,
+            "p99": 745
+          }
+        },
+        "50": {
+          "prompt_plus_target_tokens": {
+            "count": 1000,
+            "headroom": 2788,
+            "limit": 16384,
+            "max": 13596,
+            "min": 13316,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 13452,
+            "p95": 13530,
+            "p99": 13562
+          },
+          "target_tokens": {
+            "count": 1000,
+            "headroom": 494,
+            "limit": 7168,
+            "max": 6674,
+            "min": 6529,
+            "over_limit_count": 0,
+            "over_limit_rate": 0.0,
+            "p50": 6601,
+            "p95": 6642,
+            "p99": 6658
+          }
+        }
+      },
+      "prompt_plus_target_tokens": {
+        "count": 14000,
+        "headroom": 2788,
+        "limit": 16384,
+        "max": 13596,
+        "min": 342,
+        "over_limit_count": 0,
+        "over_limit_rate": 0.0,
+        "p50": 5335,
+        "p95": 13430,
+        "p99": 13501
+      },
+      "records": 14000,
+      "target_tokens": {
+        "count": 14000,
+        "headroom": 494,
+        "limit": 7168,
+        "max": 6674,
+        "min": 183,
+        "over_limit_count": 0,
+        "over_limit_rate": 0.0,
+        "p50": 2625,
+        "p95": 6590,
+        "p99": 6627
+      }
+    }
+  },
+  "tokenizer": "allenai/Olmo-3-1025-7B"
+}
