@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 01:32 CEST enforced the manual BranchProof release gate: full corrected SFT
+  array `3829072` still depends on `afterok:3831136` and is now additionally
+  `JobHeldUser`. This prevents the 30 expensive runs from becoming eligible
+  immediately after a structural-only audit. After the audit passes, inspect
+  representative shallow, held-out, depth-50, correct, incorrect, and any
+  cap-length generations; release the same array with
+  `scontrol release 3829072` only if those samples confirm the intended task
+  and evaluator behavior. No resubmission or dependency loss occurred.
 - 01:22 CEST queue refresh: corrected Nanotron p15 NL, logic, and unaffected
   control recovery remain priority-pending. Slurm's current, non-guaranteed
   start estimates are 11:13, 12:27, and 15:04 CEST, respectively. No safe

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 01:20 CEST.
+Last updated: 2026-07-11 01:32 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -65,9 +65,13 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   equal `7168` cap, and all 14 depths. It started immediately on A40 `a1721`
   at 00:50 CEST. Structural audit `3831136` was dependency-edited to follow
   `3832945_12` and checks its 128 retained raw generations and exact
-  `c0..c_depth` prompts. Full SFT `3829072` now depends
-  on `afterok:3831136`. The eventual full eval `3829073` remains at 32 prompts,
-  16 samples, and pass@`1/2/4/8/16` for the scientific result.
+  `c0..c_depth` prompts. Full SFT `3829072` retains its
+  `afterok:3831136` dependency and is additionally `JobHeldUser`, preventing
+  automatic release before representative shallow, held-out, depth-50,
+  success, and failure generations are manually inspected. Release the same
+  array with `scontrol release 3829072` only after that review passes. The
+  eventual full eval `3829073` remains at 32 prompts, 16 samples, and
+  pass@`1/2/4/8/16` for the scientific result.
 - An exhaustive OLMo-tokenizer audit now covers all 1,000 corrected validation
   records at each of the 14 depths in both modalities (28,000 rendered gold
   traces). No target exceeds the shared 7,168-token generation cap and no

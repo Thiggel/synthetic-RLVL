@@ -129,7 +129,7 @@ instruction job starts.
 | Materialized paired dataset | `3829067` complete | Probe accepted, all subsets present, private HF push succeeds |
 | One-seed SFT pilot | `3829069_12` complete | Completed all 10,000 steps with final adapter and complete step-5000/10000 checkpoints; no truncation/data error |
 | Pilot post-hoc eval | malformed `3831135_12` canceled; corrected `3832945_12 -> 3831136` running on A40 | Process inspection caught Slurm truncating a comma-containing export to pass@1. The wrapper now accepts colon-delimited values and the live command must show pass@`1/2/4/8`; automated audit then verifies schema, all depths, corrected constants, and nonempty outputs before raw success/failure inspection |
-| Three-seed main grid | `3829072 -> 3829073` | Full SFT now depends on audit `3831136`, not process success alone; report greedy and pass@1 before pass@k |
+| Three-seed main grid | held `3829072 -> 3829073` | Full SFT depends on audit `3831136` and is additionally user-held. After the audit passes, manually inspect shallow, held-out, depth-50, correct, incorrect, and cap-length generations, then release `3829072` only if the intended task/evaluator behavior is confirmed; report greedy and pass@1 before pass@k |
 | Corrected 1.2B-token corpora | builds and packed audit `3830855` complete | Full paired-prefix scan, metadata counts, and exact source-token/decode round trips passed |
 | Midtraining mixtures | logic/NL smokes `3830924`/`3831110` complete; matched control/logic/NL p15 chains active or held | Compare direct and instruction-tuned downstream results, and launch the remaining percentages only after all three p15 conditions train, upload, and evaluate cleanly |
 
