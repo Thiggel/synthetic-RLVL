@@ -68,6 +68,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--eval-log", type=Path)
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--generation-cap", type=int, default=7168)
+    parser.add_argument("--greedy-optional", action="store_true")
+    parser.add_argument("--expected-sample-source", default="synthetic")
+    parser.add_argument("--expected-samples-per-step", type=int)
+    parser.add_argument("--expected-sample-indices", type=_csv_ints)
     return parser.parse_args()
 
 
@@ -91,6 +95,7 @@ def _audit_metrics(
     samples_per_step: int,
     generations_per_prompt: int,
     train_max: int,
+    greedy_required: bool,
     errors: list[str],
 ) -> dict[str, Any]:
     if payload.get("profile") != "sft":
@@ -119,11 +124,12 @@ def _audit_metrics(
     primary: dict[str, dict[str, float]] = defaultdict(dict)
     sampled: dict[str, dict[str, dict[str, float]]] = defaultdict(lambda: defaultdict(dict))
     for step in steps:
-        for metric_name in GREEDY_METRICS:
-            key = f"synthetic/step_{step}/{metric_name}"
-            value = _check_unit_metric(metrics, key, errors)
-            if value is not None:
-                primary[str(step)][metric_name] = value
+        if greedy_required:
+            for metric_name in GREEDY_METRICS:
+                key = f"synthetic/step_{step}/{metric_name}"
+                value = _check_unit_metric(metrics, key, errors)
+                if value is not None:
+                    primary[str(step)][metric_name] = value
         for metric_name in SAMPLED_METRICS:
             previous: float | None = None
             for k in k_values:
@@ -135,11 +141,12 @@ def _audit_metrics(
                         errors.append(f"non-monotonic pass@k metric: {key}={value} < {previous}")
                     previous = value
 
-    train_steps = [step for step in steps if step <= train_max]
-    for metric_name in ("syntactic", "format", "correct"):
-        values = [primary[str(step)].get(metric_name, 0.0) for step in train_steps]
-        if not any(value > 0.0 for value in values):
-            errors.append(f"all train-band greedy {metric_name} metrics are zero")
+    if greedy_required:
+        train_steps = [step for step in steps if step <= train_max]
+        for metric_name in ("syntactic", "format", "correct"):
+            values = [primary[str(step)].get(metric_name, 0.0) for step in train_steps]
+            if not any(value > 0.0 for value in values):
+                errors.append(f"all train-band greedy {metric_name} metrics are zero")
 
     return {
         "metric_count": len(metrics),
@@ -243,6 +250,9 @@ def _audit_samples(
     *,
     steps: Iterable[int],
     expected_retained_samples: int,
+    expected_source: str,
+    expected_samples_per_step: int | None,
+    expected_sample_indices: list[int] | None,
     errors: list[str],
 ) -> dict[str, Any]:
     expected_steps = set(steps)
@@ -253,6 +263,8 @@ def _audit_samples(
     nonempty_generations = 0
     constant_failures = 0
     by_step: dict[int, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    sample_indices_by_step: dict[int, Counter[int]] = defaultdict(Counter)
+    prompts_by_step: dict[int, set[str]] = defaultdict(set)
     representatives: dict[str, dict[str, Any]] = {}
     for index, row in enumerate(rows):
         step = row.get("step")
@@ -260,7 +272,7 @@ def _audit_samples(
             errors.append(f"sample {index} has unexpected step: {step!r}")
             continue
         counts[step] += 1
-        if row.get("source") != "synthetic":
+        if row.get("source") != expected_source:
             errors.append(f"sample {index} has unexpected source: {row.get('source')!r}")
 
         prompt = row.get("prompt")
@@ -271,6 +283,13 @@ def _audit_samples(
             continue
         if not isinstance(gold_answer, str) or not gold_answer.strip():
             errors.append(f"sample {index} has an empty gold answer")
+        prompts_by_step[step].add(prompt)
+        if expected_sample_indices is not None:
+            sample_index = row.get("sample_index")
+            if not isinstance(sample_index, int):
+                errors.append(f"sample {index} has invalid sample_index: {sample_index!r}")
+            else:
+                sample_indices_by_step[step][sample_index] += 1
         if isinstance(generation, str) and generation.strip():
             nonempty_generations += 1
             by_step[step]["nonempty_generation"] += 1
@@ -309,12 +328,48 @@ def _audit_samples(
         errors.append(f"retained samples do not cover steps: {missing_steps}")
     if rows and nonempty_generations == 0:
         errors.append("all retained generations are empty")
+    if expected_samples_per_step is not None:
+        for step in sorted(expected_steps):
+            if counts[step] != expected_samples_per_step:
+                errors.append(
+                    f"step {step} retained samples={counts[step]}, "
+                    f"expected {expected_samples_per_step}"
+                )
+    if expected_sample_indices is not None:
+        expected_index_set = set(expected_sample_indices)
+        expected_count_per_index = (
+            expected_samples_per_step // len(expected_sample_indices)
+            if expected_samples_per_step is not None and expected_sample_indices
+            else None
+        )
+        for step in sorted(expected_steps):
+            observed = sample_indices_by_step[step]
+            if set(observed) != expected_index_set:
+                errors.append(
+                    f"step {step} sample indices={sorted(observed)}, "
+                    f"expected {sorted(expected_index_set)}"
+                )
+            if expected_count_per_index is not None:
+                for sample_index in expected_sample_indices:
+                    if observed[sample_index] != expected_count_per_index:
+                        errors.append(
+                            f"step {step} sample_index {sample_index} count="
+                            f"{observed[sample_index]}, expected {expected_count_per_index}"
+                        )
 
     return {
         "sample_count": len(rows),
         "step_counts": {str(step): counts[step] for step in sorted(counts)},
         "nonempty_generation_count": nonempty_generations,
         "fresh_constant_failure_count": constant_failures,
+        "source": expected_source,
+        "unique_prompt_counts": {
+            str(step): len(prompts_by_step[step]) for step in sorted(prompts_by_step)
+        },
+        "sample_index_counts": {
+            str(step): dict(sorted(sample_indices_by_step[step].items()))
+            for step in sorted(sample_indices_by_step)
+        },
         "by_step": {str(step): dict(by_step[step]) for step in sorted(by_step)},
         "representative_samples": representatives,
     }
@@ -333,6 +388,10 @@ def audit_artifacts(
     eval_log_path: Path | None = None,
     batch_size: int = 64,
     generation_cap: int = 7168,
+    greedy_required: bool = True,
+    expected_sample_source: str = "synthetic",
+    expected_samples_per_step: int | None = None,
+    expected_sample_indices: list[int] | None = None,
 ) -> dict[str, Any]:
     errors: list[str] = []
     payload = json.loads(metrics_path.read_text(encoding="utf-8"))
@@ -351,12 +410,16 @@ def audit_artifacts(
             samples_per_step=samples_per_step,
             generations_per_prompt=generations_per_prompt,
             train_max=train_max,
+            greedy_required=greedy_required,
             errors=errors,
         ),
         "samples_audit": _audit_samples(
             rows,
             steps=steps,
             expected_retained_samples=expected_retained_samples,
+            expected_source=expected_sample_source,
+            expected_samples_per_step=expected_samples_per_step,
+            expected_sample_indices=expected_sample_indices,
             errors=errors,
         ),
         "generation_log_audit": (
@@ -390,6 +453,10 @@ def main() -> None:
         eval_log_path=args.eval_log,
         batch_size=args.batch_size,
         generation_cap=args.generation_cap,
+        greedy_required=not args.greedy_optional,
+        expected_sample_source=args.expected_sample_source,
+        expected_samples_per_step=args.expected_samples_per_step,
+        expected_sample_indices=args.expected_sample_indices,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")

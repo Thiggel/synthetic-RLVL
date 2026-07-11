@@ -142,3 +142,69 @@ def test_rejects_incomplete_generation_log(tmp_path: Path):
     )
 
     assert any("sampled completed chunk indices=[]" in error for error in errors)
+
+
+def test_accepts_complete_sampled_qualitative_artifacts(tmp_path: Path):
+    steps = [1, 25]
+    metrics = {
+        "posthoc/prompts": 4.0,
+        "posthoc/sampled_generations_per_prompt": 2.0,
+    }
+    for step in steps:
+        for name in AUDIT.SAMPLED_METRICS:
+            metrics[f"synthetic_sampled/step_{step}/{name}@1"] = 0.5
+            metrics[f"synthetic_sampled/step_{step}/{name}@2"] = 0.75
+    metrics_path = tmp_path / "sampled_metrics.json"
+    metrics_path.write_text(
+        json.dumps(
+            {
+                "checkpoint": "/tmp/branchproof_unique_v2_checkpoint",
+                "profile": "sft",
+                "metrics": metrics,
+            }
+        )
+    )
+
+    rows = []
+    for step in steps:
+        question = "\n".join(f"c{constant} is blue." for constant in range(step + 1))
+        for prompt_index in range(2):
+            for sample_index in range(2):
+                rows.append(
+                    {
+                        "source": "synthetic_sampled",
+                        "step": step,
+                        "prompt": f"<question>\n{question}\nitem {prompt_index}\n</question>",
+                        "generation": "<formal>proof</formal><answer>yes</answer>",
+                        "gold_answer": "yes",
+                        "sample_index": sample_index,
+                        "syntactic": 1.0,
+                        "format_ok": 1.0,
+                        "correct": 1.0,
+                        "valid": 1.0,
+                    }
+                )
+    samples_path = tmp_path / "sampled_samples.jsonl"
+    samples_path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+
+    report = AUDIT.audit_artifacts(
+        metrics_path,
+        samples_path,
+        steps=steps,
+        k_values=[1, 2],
+        samples_per_step=2,
+        generations_per_prompt=2,
+        expected_retained_samples=8,
+        train_max=25,
+        greedy_required=False,
+        expected_sample_source="synthetic_sampled",
+        expected_samples_per_step=4,
+        expected_sample_indices=[0, 1],
+    )
+
+    assert report["accepted"]
+    assert report["samples_audit"]["unique_prompt_counts"] == {"1": 2, "25": 2}
+    assert report["samples_audit"]["sample_index_counts"] == {
+        "1": {0: 2, 1: 2},
+        "25": {0: 2, 1: 2},
+    }

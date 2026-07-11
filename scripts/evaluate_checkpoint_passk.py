@@ -123,6 +123,12 @@ def main() -> None:
     parser.add_argument("--output", default=None, help="Metrics JSON output path.")
     parser.add_argument("--samples-output", default=None, help="Optional JSONL output path for logged generations.")
     parser.add_argument("--collect-samples", type=int, default=8)
+    parser.add_argument(
+        "--collect-sampled-samples",
+        type=int,
+        default=0,
+        help="Retain this many sampled generations in addition to greedy samples.",
+    )
     parser.add_argument("--backend", choices=["auto", "hf", "vllm"], default=None)
     parser.add_argument("--step-min", type=int, default=None)
     parser.add_argument("--step-max", type=int, default=None)
@@ -168,6 +174,7 @@ def main() -> None:
     metrics, samples = UnifiedEvaluator().evaluate_checkpoint(
         args.checkpoint,
         collect_samples=max(0, int(args.collect_samples)),
+        collect_sampled_samples=max(0, int(args.collect_sampled_samples)),
         task_cfg=task_cfg,
         eval_cfg=eval_cfg,
     )

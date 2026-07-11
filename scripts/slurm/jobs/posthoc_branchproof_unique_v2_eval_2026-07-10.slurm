@@ -41,15 +41,22 @@ TEMPLATE="${TEMPLATES[$TEMPLATE_IDX]}"
 TRAIN_MAX="${TRAIN_MAXES[$TRAIN_IDX]}"
 TRAIN_SUBSET="${TRAIN_SUBSETS[$TRAIN_IDX]}"
 RUN_NAME="sft_branchproof_unique_v2_${TEMPLATE}_train1to${TRAIN_MAX}_10k_seed${SEED}"
+OUTPUT_SUFFIX="${PASSK_OUTPUT_SUFFIX:-}"
 SFT_FINAL="${HPCVAULT}/synthetic-RLVL/runs/${RUN_NAME}/final"
 MERGED_ROOT="${HPCVAULT}/synthetic-RLVL/tmp/branchproof_unique_v2_${RUN_NAME}_${SLURM_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
 MERGED="${MERGED_ROOT}/merged"
 OUT_DIR="${HPCVAULT}/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710"
-OUT="${OUT_DIR}/${RUN_NAME}_passk.json"
-SAMPLES_OUT="${OUT_DIR}/${RUN_NAME}_samples.jsonl"
+OUT="${OUT_DIR}/${RUN_NAME}${OUTPUT_SUFFIX}_passk.json"
+SAMPLES_OUT="${OUT_DIR}/${RUN_NAME}${OUTPUT_SUFFIX}_samples.jsonl"
 DATASET_ID="${DATASET_ID:-flaitenberger/BranchProof-unique-v2}"
 PASSK_K_VALUES_RESOLVED="${PASSK_K_VALUES_COLON:-${PASSK_K_VALUES:-1,2,4,8,16}}"
 PASSK_K_VALUES_RESOLVED="${PASSK_K_VALUES_RESOLVED//:/,}"
+PASSK_STEPS_RESOLVED="${PASSK_STEPS_COLON:-${PASSK_STEPS:-1,2,5,10,12,15,18,20,25,30,35,40,45,50}}"
+PASSK_STEPS_RESOLVED="${PASSK_STEPS_RESOLVED//:/,}"
+SKIP_GREEDY_ARGS=()
+case "${PASSK_SKIP_GREEDY:-0}" in
+  1|true|TRUE|yes|YES) SKIP_GREEDY_ARGS=(--skip-greedy) ;;
+esac
 
 cleanup() {
   rm -rf "${MERGED_ROOT}"
@@ -82,7 +89,7 @@ python scripts/evaluate_checkpoint_passk.py \
   --config conf/sft_hard_fsa_schema_fixedtarget.yaml \
   --profile sft \
   --backend vllm \
-  --steps "${PASSK_STEPS:-1,2,5,10,12,15,18,20,25,30,35,40,45,50}" \
+  --steps "${PASSK_STEPS_RESOLVED}" \
   --samples-per-step "${PASSK_SAMPLES_PER_STEP:-32}" \
   --num-generations "${PASSK_NUM_GENERATIONS:-16}" \
   --k-values "${PASSK_K_VALUES_RESOLVED}" \
@@ -93,12 +100,14 @@ python scripts/evaluate_checkpoint_passk.py \
   --vllm-max-model-len "${PASSK_VLLM_MAX_MODEL_LEN:-16384}" \
   --scoring-log-interval 100 \
   --collect-samples "${PASSK_COLLECT_SAMPLES:-128}" \
+  --collect-sampled-samples "${PASSK_COLLECT_SAMPLED_SAMPLES:-0}" \
+  "${SKIP_GREEDY_ARGS[@]}" \
   --stop-strings '</answer>' \
   --output "${OUT}" \
   --samples-output "${SAMPLES_OUT}" \
   --wandb-project "${WANDB_PROJECT}" \
   --wandb-group "${WANDB_GROUP}" \
-  --wandb-run-name "${RUN_NAME}_passk" \
+  --wandb-run-name "${RUN_NAME}${OUTPUT_SUFFIX}_passk" \
   task.template="${TEMPLATE}" \
   task.train_max_step="${TRAIN_MAX}" \
   task.val_max_step=50 \

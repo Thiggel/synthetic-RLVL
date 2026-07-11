@@ -591,10 +591,14 @@ class UnifiedEvaluator:
     ) -> list[dict]:
         if collect_samples <= 0:
             return []
-        candidates_by_step: dict[int, list[tuple[_EvalPromptRecord, str]]] = defaultdict(list)
-        for rec, generations in zip(records, generations_by_record, strict=True):
-            if generations:
-                candidates_by_step[rec.step].append((rec, generations[0]))
+        candidates_by_step: dict[int, list[tuple[_EvalPromptRecord, str, int]]] = defaultdict(list)
+        max_generations = max((len(generations) for generations in generations_by_record), default=0)
+        for generation_index in range(max_generations):
+            for rec, generations in zip(records, generations_by_record, strict=True):
+                if generation_index < len(generations):
+                    candidates_by_step[rec.step].append(
+                        (rec, generations[generation_index], generation_index)
+                    )
 
         samples: list[dict] = []
         steps = eval_cfg.step_values()
@@ -606,7 +610,7 @@ class UnifiedEvaluator:
                 offset = offsets[step]
                 if offset >= len(candidates):
                     continue
-                rec, gen = candidates[offset]
+                rec, gen, generation_index = candidates[offset]
                 score = self.output_eval.evaluate(
                     gen,
                     template=rec.template,
@@ -618,7 +622,14 @@ class UnifiedEvaluator:
                     prefill=rec.prefill,
                     gold_first_modality_lines=rec.gold_first_modality_lines,
                 )
-                samples.append(self._build_synthetic_sample(rec=rec, gen=gen, score=score, source="synthetic_sampled"))
+                sample = self._build_synthetic_sample(
+                    rec=rec,
+                    gen=gen,
+                    score=score,
+                    source="synthetic_sampled",
+                )
+                sample["sample_index"] = generation_index
+                samples.append(sample)
                 offsets[step] = offset + 1
                 added = True
                 if len(samples) >= collect_samples:
@@ -633,6 +644,7 @@ class UnifiedEvaluator:
         task_cfg: TaskConfig,
         eval_cfg: EvalLoopConfig,
         collect_samples: int,
+        collect_sampled_samples: int,
         generate_texts: Callable[[Sequence[str], int, bool, float], list[str]],
         generate_samples: Callable[[Sequence[str], int, int, float], list[list[str]]] | None = None,
     ) -> tuple[Dict[str, float], List[dict]]:
@@ -688,7 +700,17 @@ class UnifiedEvaluator:
                         log_interval=eval_cfg.scoring_log_interval,
                     )
                 )
-                if len(samples) < collect_samples:
+                sampled_budget = max(0, int(collect_sampled_samples))
+                if sampled_budget > 0:
+                    samples.extend(
+                        self._collect_sampled_generation_examples(
+                            records=records,
+                            generations_by_record=sampled_generations,
+                            eval_cfg=eval_cfg,
+                            collect_samples=sampled_budget,
+                        )
+                    )
+                elif len(samples) < collect_samples:
                     samples.extend(
                         self._collect_sampled_generation_examples(
                             records=records,
@@ -839,6 +861,7 @@ class UnifiedEvaluator:
         eval_cfg: EvalLoopConfig,
         device: torch.device,
         collect_samples: int = 0,
+        collect_sampled_samples: int = 0,
     ) -> tuple[Dict[str, float], List[dict]]:
         model.eval()
         try:
@@ -853,6 +876,7 @@ class UnifiedEvaluator:
                 task_cfg=task_cfg,
                 eval_cfg=eval_cfg,
                 collect_samples=collect_samples,
+                collect_sampled_samples=collect_sampled_samples,
                 generate_texts=lambda prompts, max_tokens, do_sample, temperature: generator.generate(
                     prompts,
                     max_new_tokens=max_tokens,
@@ -901,6 +925,7 @@ class UnifiedEvaluator:
         tokenizer_path: str,
         adapter_dir: Path | None,
         collect_samples: int,
+        collect_sampled_samples: int,
         task_cfg: TaskConfig,
         eval_cfg: EvalLoopConfig,
     ) -> tuple[Dict[str, float], List[dict]]:
@@ -923,6 +948,7 @@ class UnifiedEvaluator:
                 tokenizer,
                 device=model.device,
                 collect_samples=collect_samples,
+                collect_sampled_samples=collect_sampled_samples,
                 task_cfg=task_cfg,
                 eval_cfg=eval_cfg,
             )
@@ -937,6 +963,7 @@ class UnifiedEvaluator:
         tokenizer_path: str,
         adapter_dir: Path | None,
         collect_samples: int,
+        collect_sampled_samples: int,
         task_cfg: TaskConfig,
         eval_cfg: EvalLoopConfig,
     ) -> tuple[Dict[str, float], List[dict]]:
@@ -967,6 +994,7 @@ class UnifiedEvaluator:
                 task_cfg=task_cfg,
                 eval_cfg=eval_cfg,
                 collect_samples=collect_samples,
+                collect_sampled_samples=collect_sampled_samples,
                 generate_texts=lambda prompts, max_tokens, do_sample, temperature: generator.generate(
                     prompts,
                     max_new_tokens=max_tokens,
@@ -989,6 +1017,7 @@ class UnifiedEvaluator:
         self,
         checkpoint_dir: str | Path,
         collect_samples: int = 0,
+        collect_sampled_samples: int = 0,
         **kwargs,
     ) -> tuple[Dict[str, float], List[dict]]:
         task_cfg: TaskConfig = kwargs["task_cfg"]
@@ -1005,6 +1034,7 @@ class UnifiedEvaluator:
                     tokenizer_path=tokenizer_path,
                     adapter_dir=adapter_dir,
                     collect_samples=collect_samples,
+                    collect_sampled_samples=collect_sampled_samples,
                     task_cfg=task_cfg,
                     eval_cfg=eval_cfg,
                 )
@@ -1017,6 +1047,7 @@ class UnifiedEvaluator:
             tokenizer_path=tokenizer_path,
             adapter_dir=adapter_dir,
             collect_samples=collect_samples,
+            collect_sampled_samples=collect_sampled_samples,
             task_cfg=task_cfg,
             eval_cfg=eval_cfg,
         )
