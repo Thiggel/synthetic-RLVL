@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 11:04 CEST submitted third reviewer smoke `3834738` with
+  `agieval_logiqa_en`, after directly constructing its 651-example test split.
+  Added `scripts/validate_lm_eval_tasks.py` so smoke and production wrappers
+  instantiate every task dataset before loading a model. Rewired all six held
+  evals from failed `3834737` to `afterok:3834738` while preserving their
+  model/instruction dependencies and A100-80GB constraints.
+- 11:02 CEST replacement smoke `3834737` showed `logiqa2` has the same hidden
+  legacy-script incompatibility as `logiqa`. Direct task construction of
+  `agieval_logiqa_en` succeeded on 651 examples, so it replaces both. Added a
+  reusable preflight that constructs every task dataset before model startup;
+  a third smoke and production dependency rewiring follow.
 - 10:58 CEST submitted corrected downstream-suite smoke `3834737` with
   `logiqa2` and rewired production NL `3834729/3834730`, control
   `3834731/3834732`, and logic `3834733/3834734` evals away from failed smoke

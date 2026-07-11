@@ -26,7 +26,7 @@ CHECKPOINT_STEP="${CHECKPOINT_STEP:-8192}"
 HF_NAMESPACE="${HF_NAMESPACE:-flaitenberger}"
 HF_REPO_PREFIX="${HF_REPO_PREFIX:-qwen25-7b-logic-cot-midtrain}"
 EVAL_BRANCH="${EVAL_BRANCH:-direct}"
-REVIEWER_TASKS_RESOLVED="${REVIEWER_TASKS_COLON:-${REVIEWER_TASKS:-gsm8k,arc_challenge,hellaswag,winogrande,piqa,logiqa2,fld_default,fld_logical_formula_default,bbh,mmlu,mmlu_pro}}"
+REVIEWER_TASKS_RESOLVED="${REVIEWER_TASKS_COLON:-${REVIEWER_TASKS:-gsm8k,arc_challenge,hellaswag,winogrande,piqa,agieval_logiqa_en,fld_default,fld_logical_formula_default,bbh,mmlu,mmlu_pro}}"
 REVIEWER_TASKS_RESOLVED="${REVIEWER_TASKS_RESOLVED//:/,}"
 
 MIX_KINDS=(control logic logic logic logic logic nl_exact nl_exact nl_exact nl_exact nl_exact)
@@ -66,17 +66,7 @@ else
   exit 2
 fi
 
-python - "${REVIEWER_TASKS_RESOLVED}" <<'PY'
-import sys
-from lm_eval.tasks import TaskManager
-
-tasks = [task for task in sys.argv[1].replace(",", " ").split() if task]
-manager = TaskManager()
-missing = [task for task in tasks if not manager.match_tasks([task])]
-if missing:
-    raise SystemExit(f"lm-eval tasks are unavailable: {missing}")
-print(f"Validated {len(tasks)} lm-eval task/group names: {','.join(tasks)}")
-PY
+python scripts/validate_lm_eval_tasks.py --tasks "${REVIEWER_TASKS_RESOLVED}"
 
 if [[ -d "${OUT_DIR}" && "${FORCE_LM_EVAL:-0}" != "1" ]]; then
   if find "${OUT_DIR}" -type f -name 'results_*.json' -size +0c -print -quit | grep -q .; then
