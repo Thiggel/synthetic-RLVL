@@ -111,6 +111,16 @@ still uses 32 prompts/depth, 16 generations, and pass@16. Regression tests
 explicitly reject the old depth-18 wrapped constant surface and missing primary
 metrics.
 
+The main gate's retained-sample budget is filled by greedy generations before
+sampled scoring, so it cannot establish qualitative pass@k behavior. The
+evaluator now accepts an independent sampled-sample budget and retains outputs
+round-robin across prompts and generation indices. Dependency chain
+`3833178_12 -> 3833179` reruns only a compact qualitative slice at depths
+`1/25/30/50`, four prompts per depth and eight generations per prompt, and
+requires all 128 sampled outputs with exact per-depth prompt/index coverage.
+The full SFT array remains user-held until both automated audits and manual
+greedy/sampled generation review pass.
+
 At the planned 4,096-token Nanotron context, `44.3%` of formal documents and
 `47.8%` of NL documents are longer than one context; none exceeds 8,192 tokens.
 Nanotron therefore treats these as ordinary packed continuation documents, not
@@ -131,7 +141,7 @@ instruction job starts.
 | --- | --- | --- |
 | Materialized paired dataset | `3829067` complete | Probe accepted, all subsets present, private HF push succeeds |
 | One-seed SFT pilot | `3829069_12` complete | Completed all 10,000 steps with final adapter and complete step-5000/10000 checkpoints; no truncation/data error |
-| Pilot post-hoc eval | malformed `3831135_12` canceled; corrected `3832945_12 -> 3831136` running on A40 | Process inspection caught Slurm truncating a comma-containing export to pass@1. The wrapper now accepts colon-delimited values and the live command must show pass@`1/2/4/8`; automated audit then verifies schema, all depths, corrected constants, and nonempty outputs before raw success/failure inspection |
+| Pilot post-hoc eval | malformed `3831135_12` canceled; corrected `3832945_12 -> 3831136` running on A40; sampled qualitative `3833178_12 -> 3833179` dependency-pending | Main audit verifies schema, all depths, corrected constants, runtime chunks, and cap diagnostics. Separate sampled probe retains all eight generations for four prompts at depths `1/25/30/50`; its audit verifies exact source, prompt, sample-index, and metric coverage before manual review |
 | Three-seed main grid | held `3829072 -> 3829073` | Full SFT depends on audit `3831136` and is additionally user-held. After the audit passes, manually inspect shallow, held-out, depth-50, correct, incorrect, and cap-length generations, then release `3829072` only if the intended task/evaluator behavior is confirmed; report greedy and pass@1 before pass@k |
 | Corrected 1.2B-token corpora | builds and packed audit `3830855` complete | Full paired-prefix scan, metadata counts, and exact source-token/decode round trips passed |
 | Midtraining mixtures | logic/NL smokes `3830924`/`3831110` complete; matched control/logic/NL p15 chains active or held | Compare direct and instruction-tuned downstream results, and launch the remaining percentages only after all three p15 conditions train, upload, and evaluate cleanly |

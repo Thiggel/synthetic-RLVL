@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 01:44 CEST.
+Last updated: 2026-07-11 02:10 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -64,8 +64,15 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   uses 16 prompts per depth, 8 samples, greedy plus pass@`1/2/4/8`, the same
   equal `7168` cap, and all 14 depths. It started immediately on A40 `a1721`
   at 00:50 CEST. Structural audit `3831136` was dependency-edited to follow
-  `3832945_12` and checks its 128 retained raw generations and exact
-  `c0..c_depth` prompts. Full SFT `3829072` retains its
+  `3832945_12` and checks its 128 retained greedy generations and exact
+  `c0..c_depth` prompts. The existing collector exhausts that budget during
+  greedy scoring, so it cannot support qualitative claims about sampled
+  pass@k outputs. The evaluator now supports a separate sampled budget and
+  round-robin prompt/sample-index collection. Targeted sampled probe
+  `3833178_12` follows the gate at depths `1/25/30/50`, four prompts/depth and
+  eight generations/prompt, retaining all 128 outputs; structural audit
+  `3833179` then requires 32 rows, four unique prompts, and sample indices
+  `0..7` at every depth. Full SFT `3829072` retains its
   `afterok:3831136` dependency and is additionally `JobHeldUser`, preventing
   automatic release before representative shallow, held-out, depth-50,
   success, and failure generations are manually inspected. Release the same
@@ -76,14 +83,17 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   requires all four greedy and 28 sampled chunks exactly once and records
   elapsed time, output tokens, throughput, maximum generated length, and cap
   hits. A cap hit is retained as a diagnostic rather than automatically
-  invalidating the experiment. At 01:35, greedy chunks 1--3 were complete;
-  chunk 3 (depths 25--40) produced 264,625 tokens in 1,682.2 seconds with
-  maximum length 5,212, so no greedy chunk has hit the 7,168 cap. Final greedy
-  chunk 4 is running at 99% GPU utilization. Relative to the corresponding
+  invalidating the experiment. All four greedy chunks are complete. Chunk 3
+  (depths 25--40) produced 264,625 tokens in 1,682.2 seconds with maximum
+  length 5,212. Chunk 4 (depths 45/50) produced 193,844 tokens in 1,463.2
+  seconds and at least one generation reached exactly 7,168 tokens. Since all
+  formal gold targets fit below 6,212, this is a model nontermination/length
+  failure to inspect, not insufficient gold budget. Relative to the corresponding
   per-depth median gold target lengths, completed chunk totals differ by only
   `-0.01%`, `-0.06%`, and `+0.19%`. This rules out gross truncation or runaway
   length drift through depth 40, but is not evidence of correctness or proof
-  validity.
+  validity. Sampled generation is active and completed chunks `1..8/28` by
+  02:10 without a sampled cap hit or fatal/OOM/quota signature.
 - Both `a40` and `a100` enforce a 24-hour maximum, while the current evaluator
   writes metrics and retained samples only after the full row completes. Once
   the gate finishes, use its complete sampled throughput to project the final
@@ -341,5 +351,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

@@ -4,6 +4,26 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 02:10 CEST sampled qualitative coverage repair: discovered that the gate's
+  `collect_samples=128` budget fills entirely during greedy scoring, leaving no
+  raw sampled pass@k generations. Added independent
+  `--collect-sampled-samples` support and changed sampled retention to cover
+  prompts before later generation indices while recording `sample_index`.
+  Focused/regression tests, `py_compile`, shell syntax, Slurm `--test-only`,
+  and `git diff --check` pass (`10 passed`). Submitted sampled-only probe
+  `3833178_12` after gate `3832945_12`: depths `1/25/30/50`, four prompts/depth,
+  eight generations, pass@`1/2/4/8`, all 128 outputs retained under a separate
+  suffix. Audit `3833179` then requires source `synthetic_sampled`, 32 rows,
+  four unique prompts, all indices `0..7`, fresh constants, and complete
+  sampled metrics at every depth. Full SFT remains held for both audits and
+  manual review.
+- 02:03 CEST corrected gate entered sampling. All four greedy chunks completed;
+  chunk 4 produced `193844` tokens in `1463.2s` with max exactly `7168`, so at
+  least one depth-45/50 model generation hit the cap. Every corrected formal
+  gold target is at most `6212` tokens, making this a model length/nontermination
+  failure rather than inadequate intended-target budget. Sampled chunks
+  `1..8/28` completed with expected shallow lengths and no sampled cap hit by
+  02:10.
 - 01:44 CEST full-eval recoverability check: both `a40` and `a100` have
   `MaxTime=24:00:00`, and corrected full rows would contain 112 sampled chunks
   while the evaluator writes outputs only at the end. Added a release trigger:
