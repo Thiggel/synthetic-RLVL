@@ -69,3 +69,10 @@ old array. No corrected BranchProof validity or joint result is accepted until
 all replacement rows pass the strengthened gate. Correctness is still the
 primary claim metric, but the rerun is necessary to keep the secondary
 correct-and-valid evidence defensible.
+
+Operationally, the replacement array was submitted after 22 SFT tasks had
+already completed, and Slurm left their wildcard `aftercorr` dependencies
+unfulfilled. At 00:41 CEST, those 22 parent rows were verified `COMPLETED 0:0`
+and their final adapters were checked before clearing only the corresponding
+eval-task dependencies. Rows `13/14/24..29` retain `aftercorr`; all eval tasks
+remain constrained to A100-80GB GPUs.

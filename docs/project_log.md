@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 00:41 CEST corrected a late-submission `aftercorr` scheduling issue without
+  weakening the SFT gate. Parent rows `0..12/15..23` were `COMPLETED 0:0` and
+  all 22 corresponding final adapters existed, but every replacement eval task
+  still showed the wildcard dependency unfulfilled. Cleared dependencies only
+  for those 22 eval tasks; they are now scheduler-eligible and remain pinned to
+  `a100_80`. Active SFT rows `13/14/24..29` retain their dependencies. The
+  watcher now applies the same parent-state plus final-adapter gate before
+  releasing any remaining stale child. The three Nanotron recoveries keep the
+  same approximate 05:14 start estimate.
 - 00:35 CEST reran the complete focused BranchProof validity and Nanotron
   checkpoint-verifier selection through the preferred project environment;
   all 26 tests passed in `0.34s`, closing the earlier transient vault-I/O

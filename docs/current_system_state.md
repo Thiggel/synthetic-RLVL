@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 00:35 CEST.
+Last updated: 2026-07-12 00:41 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -137,6 +137,13 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3838165` are dependency submitted with the unchanged 448-prompt,
   16-generation, all-depth protocol. Details are in
   `docs/branchproof_validity_evaluator_audit_2026-07-12.md`.
+- At 00:41 CEST, the late-submitted replacement array still showed every
+  `aftercorr` child dependency unfulfilled even though parent rows
+  `0..12/15..23` had completed successfully and all 22 corresponding final
+  adapters were present. Dependencies were cleared only for those 22 verified
+  eval tasks. They are now scheduler-eligible with `Features=a100_80`; unfinished
+  rows `13/14/24..29` retain their one-to-one SFT dependency. The three
+  Nanotron recovery start estimates remain approximately 05:14.
 - The pilot's primary self-contained metric is citation-free validity because
   training targets use rule labels (`R`, `->E`) without numbered premise
   citations. Strict `valid=0` is expected under that citation-demanding metric,
