@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import math
 from pathlib import Path
 import sys
 
@@ -118,3 +119,13 @@ def test_exports_greedy_and_all_sampling_budgets() -> None:
     delta = MODULE.paired_delta_rows([logic, nl])[0]
     assert abs(delta["delta_greedy_ood_correct"] - 0.2) < 1e-9
     assert abs(delta["delta_ood_correct4"] - 0.1) < 1e-9
+
+    delta_summary = MODULE.paired_delta_summary_rows([delta])[0]
+    assert delta_summary["n"] == 1
+    assert abs(delta_summary["delta_greedy_ood_correct_mean"] - 0.2) < 1e-9
+    assert delta_summary["delta_greedy_ood_correct_std"] == 0.0
+
+
+def test_missing_paired_metric_is_not_fabricated_as_zero() -> None:
+    assert math.isnan(MODULE.difference(None, 0.4))
+    assert math.isnan(MODULE.difference(0.4, None))

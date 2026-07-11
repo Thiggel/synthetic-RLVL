@@ -118,6 +118,12 @@ def stats(values: list[float]) -> tuple[float, float, int]:
     return mean(clean), pstdev(clean) if len(clean) > 1 else 0.0, len(clean)
 
 
+def difference(left: float | None, right: float | None) -> float:
+    if left is None or right is None:
+        return float("nan")
+    return left - right
+
+
 def trapezoid_auc(points: list[tuple[int, float]]) -> float:
     clean = sorted((x, y) for x, y in points if y == y)
     if not clean:
@@ -355,14 +361,14 @@ def paired_delta_rows(records: list[RunRecord]) -> list[dict[str, object]]:
             row: dict[str, object] = {
                 "train_max": train_max,
                 "seed": seed,
-                "delta_greedy_ood_correct": float(
-                    greedy_band_metric(logic, "ood", "correct") or 0.0
-                )
-                - float(greedy_band_metric(nl, "ood", "correct") or 0.0),
-                "delta_greedy_depth50_correct": float(
-                    greedy_step_metric(logic, 50, "correct") or 0.0
-                )
-                - float(greedy_step_metric(nl, 50, "correct") or 0.0),
+                "delta_greedy_ood_correct": difference(
+                    greedy_band_metric(logic, "ood", "correct"),
+                    greedy_band_metric(nl, "ood", "correct"),
+                ),
+                "delta_greedy_depth50_correct": difference(
+                    greedy_step_metric(logic, 50, "correct"),
+                    greedy_step_metric(nl, 50, "correct"),
+                ),
             }
             for k in K_VALUES:
                 row.update(
@@ -371,18 +377,58 @@ def paired_delta_rows(records: list[RunRecord]) -> list[dict[str, object]]:
                         - row_metric(nl, "ood", "correct_pass", k),
                         f"delta_ood_joint{k}": row_metric(logic, "ood", logic_joint, k)
                         - row_metric(nl, "ood", nl_joint, k),
-                        f"delta_depth50_correct{k}": float(
-                            step_metric(logic, 50, "correct_pass", k) or 0.0
-                        )
-                        - float(step_metric(nl, 50, "correct_pass", k) or 0.0),
-                        f"delta_depth50_joint{k}": float(
-                            step_metric(logic, 50, logic_joint, k) or 0.0
-                        )
-                        - float(step_metric(nl, 50, nl_joint, k) or 0.0),
+                        f"delta_depth50_correct{k}": difference(
+                            step_metric(logic, 50, "correct_pass", k),
+                            step_metric(nl, 50, "correct_pass", k),
+                        ),
+                        f"delta_depth50_joint{k}": difference(
+                            step_metric(logic, 50, logic_joint, k),
+                            step_metric(nl, 50, nl_joint, k),
+                        ),
                     }
                 )
             rows.append(row)
     return rows
+
+
+def paired_delta_summary_rows(rows: list[dict[str, object]]) -> list[dict[str, object]]:
+    grouped: dict[int, list[dict[str, object]]] = defaultdict(list)
+    for row in rows:
+        grouped[int(row["train_max"])].append(row)
+    output: list[dict[str, object]] = []
+    for train_max, items in sorted(grouped.items()):
+        summary: dict[str, object] = {"train_max": train_max, "n": len(items)}
+        metric_names = sorted(name for name in items[0] if name.startswith("delta_"))
+        for name in metric_names:
+            avg, std, _ = stats([float(item[name]) for item in items])
+            summary[f"{name}_mean"] = avg
+            summary[f"{name}_std"] = std
+        output.append(summary)
+    return output
+
+
+def write_paired_delta_markdown(path: Path, rows: list[dict[str, object]]) -> None:
+    def format_stat(row: dict[str, object], name: str) -> str:
+        avg = float(row[f"{name}_mean"])
+        std = float(row[f"{name}_std"])
+        return "N/A" if avg != avg or std != std else f"{avg:+.3f} $\\pm$ {std:.3f}"
+
+    lines = [
+        "| train | n | greedy OOD correct | OOD correct@1 | depth-50 correct@1 | OOD correct@16 | depth-50 correct@16 |",
+        "| ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for row in rows:
+        cells = [
+            str(int(row["train_max"])),
+            str(int(row["n"])),
+            format_stat(row, "delta_greedy_ood_correct"),
+            format_stat(row, "delta_ood_correct1"),
+            format_stat(row, "delta_depth50_correct1"),
+            format_stat(row, "delta_ood_correct16"),
+            format_stat(row, "delta_depth50_correct16"),
+        ]
+        lines.append("| " + " | ".join(cells) + " |")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def intermediate_rows(records: list[RunRecord]) -> list[dict[str, object]]:
@@ -718,6 +764,7 @@ def main() -> None:
     group_summary = group_summary_rows(final_records)
     depth_summary = grouped_depth_summary_rows(final_depth)
     deltas = paired_delta_rows(final_records)
+    delta_summary = paired_delta_summary_rows(deltas)
     inter = intermediate_rows(intermediate_records)
 
     write_csv(
@@ -747,6 +794,12 @@ def main() -> None:
         deltas,
         list(deltas[0].keys()),
     )
+    write_csv(
+        tables / "paired_delta_summary.csv",
+        delta_summary,
+        list(delta_summary[0].keys()),
+    )
+    write_paired_delta_markdown(tables / "paired_delta_primary.md", delta_summary)
     if inter:
         write_csv(
             tables / "intermediate_seed3407_metrics.csv",

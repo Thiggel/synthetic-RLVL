@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 17:12 CEST.
+Last updated: 2026-07-11 17:16 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -164,6 +164,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   full 30-row compatibility smoke writes all new CSV/Markdown/PDF/PNG outputs.
   The corrected strict grid, unlike some historical rows, is required to have
   complete greedy and band-level sampled metrics before aggregation succeeds.
+  It now also exports a five-row paired-delta summary with mean/std over the
+  three matched seeds for greedy and pass@`1/2/4/8/16` correctness and joint
+  metrics, plus a compact primary markdown table. Missing paired inputs remain
+  `NaN`/`N/A` rather than being silently converted to zero. Eighteen focused
+  tests and a 30-row compatibility smoke pass; the smoke produces five groups
+  with `n=3` and preserves historical missing-greedy evidence as missing.
 - An exhaustive OLMo-tokenizer audit now covers all 1,000 corrected validation
   records at each of the 14 depths in both modalities (28,000 rendered gold
   traces). No target exceeds the shared 7,168-token generation cap and no

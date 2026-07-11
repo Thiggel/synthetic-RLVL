@@ -193,7 +193,10 @@ completeness problems.
 The aggregation outputs now enforce the planned analysis order. They preserve
 the historical pass@16 columns while adding greedy correctness/validity and
 pass@`1/2/4/8/16` correctness, modality-appropriate validity, and joint values
-to per-run, grouped mean/std, depth, and paired-delta CSVs. A dedicated primary
+to per-run, grouped mean/std, depth, paired-seed, and paired-delta-summary CSVs.
+The paired summary reports mean/std across matched seeds for greedy and every
+sample budget; missing evidence remains `NaN` instead of becoming a fabricated
+zero delta. A dedicated primary
 figure separates greedy from sampled pass@1 OOD correctness; a second figure
 shows train-1-to-25 correctness and joint scaling with sample budget. Focused
 pytest passes (`4 passed`), and a 30-row compatibility smoke generated every

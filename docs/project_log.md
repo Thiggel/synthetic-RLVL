@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 17:16 CEST completed the paired-statistics export required for the corrected
+  claim decision. The aggregator previously wrote per-seed deltas and plotted
+  mean/std only for OOD joint@16; it now writes
+  `paired_delta_summary.csv` for all greedy and pass@`1/2/4/8/16`
+  correctness/joint deltas and `paired_delta_primary.md` for the primary
+  correctness readout. Removed silent `None -> 0` delta fallback, so absent
+  greedy evidence in historical compatibility data remains `NaN`/`N/A`.
+  Eighteen focused tests pass; a 30-row smoke emits five train-range groups,
+  each with three paired seeds.
 - 17:12 CEST closed a row-audit coverage gap before any production eval
   finalized. The strict final aggregator already required translated NL
   validity/joint metrics, but `audit_branchproof_unique_v2_pilot_eval.py` did
