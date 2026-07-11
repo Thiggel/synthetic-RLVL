@@ -12,7 +12,14 @@ AUDIT = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(AUDIT)
 
 
-def _write_artifacts(tmp_path: Path, *, stale_constants: bool = False, missing_metric: bool = False):
+def _write_artifacts(
+    tmp_path: Path,
+    *,
+    stale_constants: bool = False,
+    missing_metric: bool = False,
+    missing_nl_metric: bool = False,
+    missing_sample_metric: bool = False,
+):
     steps = [1, 18]
     k_values = [1, 2]
     metrics = {
@@ -20,19 +27,25 @@ def _write_artifacts(tmp_path: Path, *, stale_constants: bool = False, missing_m
         "posthoc/sampled_generations_per_prompt": 2.0,
     }
     for step in steps:
-        for name in AUDIT.GREEDY_METRICS:
+        for name in AUDIT.GREEDY_METRICS + AUDIT.NL_GREEDY_METRICS:
             metrics[f"synthetic/step_{step}/{name}"] = 0.5
-        for name in AUDIT.SAMPLED_METRICS:
+        for name in AUDIT.SAMPLED_METRICS + AUDIT.NL_SAMPLED_METRICS:
             metrics[f"synthetic_sampled/step_{step}/{name}@1"] = 0.5
             metrics[f"synthetic_sampled/step_{step}/{name}@2"] = 0.75
     if missing_metric:
         del metrics["synthetic/step_18/correct"]
+    if missing_nl_metric:
+        del metrics["synthetic_sampled/step_18/nl_logic_joint_pass@2"]
 
     metrics_path = tmp_path / "metrics.json"
     metrics_path.write_text(
         json.dumps(
             {
-                "checkpoint": "/tmp/branchproof_unique_v2_checkpoint",
+                "checkpoint": (
+                    "/tmp/branchproof_unique_v2_nl_exact_checkpoint"
+                    if missing_nl_metric
+                    else "/tmp/branchproof_unique_v2_checkpoint"
+                ),
                 "profile": "sft",
                 "metrics": metrics,
             }
@@ -54,8 +67,13 @@ def _write_artifacts(tmp_path: Path, *, stale_constants: bool = False, missing_m
                 "format_ok": 1.0,
                 "correct": 1.0,
                 "valid": 1.0,
+                "citation_free_valid": 1.0,
+                "nl_logic_parse": 0.0,
+                "nl_logic_citation_free_valid": 0.0,
             }
         )
+    if missing_sample_metric:
+        del rows[-1]["nl_logic_citation_free_valid"]
     samples_path.write_text("".join(json.dumps(row) + "\n" for row in rows))
     return metrics_path, samples_path
 
@@ -91,6 +109,18 @@ def test_rejects_missing_primary_metric(tmp_path: Path):
     report = _audit(tmp_path, missing_metric=True)
     assert not report["accepted"]
     assert any("synthetic/step_18/correct" in error for error in report["errors"])
+
+
+def test_rejects_missing_translated_nl_metric(tmp_path: Path):
+    report = _audit(tmp_path, missing_nl_metric=True)
+    assert not report["accepted"]
+    assert any("nl_logic_joint_pass@2" in error for error in report["errors"])
+
+
+def test_rejects_missing_sample_validity_metric(tmp_path: Path):
+    report = _audit(tmp_path, missing_sample_metric=True)
+    assert not report["accepted"]
+    assert any("invalid nl_logic_citation_free_valid" in error for error in report["errors"])
 
 
 def test_audits_complete_generation_log_and_records_cap_hits(tmp_path: Path):
@@ -182,6 +212,9 @@ def test_accepts_complete_sampled_qualitative_artifacts(tmp_path: Path):
                         "format_ok": 1.0,
                         "correct": 1.0,
                         "valid": 1.0,
+                        "citation_free_valid": 1.0,
+                        "nl_logic_parse": 0.0,
+                        "nl_logic_citation_free_valid": 0.0,
                     }
                 )
     samples_path = tmp_path / "sampled_samples.jsonl"
@@ -225,6 +258,13 @@ def test_filters_combined_greedy_and_sampled_retention(tmp_path: Path):
                         "generation": "<formal>proof</formal><answer>yes</answer>",
                         "gold_answer": "yes",
                         "sample_index": sample_index,
+                        "syntactic": 1.0,
+                        "format_ok": 1.0,
+                        "correct": 1.0,
+                        "valid": 1.0,
+                        "citation_free_valid": 1.0,
+                        "nl_logic_parse": 0.0,
+                        "nl_logic_citation_free_valid": 0.0,
                     }
                 )
     with samples_path.open("a", encoding="utf-8") as handle:

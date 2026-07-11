@@ -28,6 +28,11 @@ GREEDY_METRICS = (
     "grounded_valid",
     "citation_free_grounded_valid",
 )
+NL_GREEDY_METRICS = (
+    "nl_logic_parse",
+    "nl_logic_citation_free_valid",
+    "nl_logic_joint",
+)
 SAMPLED_METRICS = (
     "syntactic_pass",
     "format_pass",
@@ -40,6 +45,20 @@ SAMPLED_METRICS = (
     "grounded_joint_pass",
     "citation_free_grounded_valid_pass",
     "citation_free_grounded_joint_pass",
+)
+NL_SAMPLED_METRICS = (
+    "nl_logic_parse_pass",
+    "nl_logic_citation_free_valid_pass",
+    "nl_logic_joint_pass",
+)
+SAMPLE_METRICS = (
+    "syntactic",
+    "format_ok",
+    "correct",
+    "valid",
+    "citation_free_valid",
+    "nl_logic_parse",
+    "nl_logic_citation_free_valid",
 )
 
 
@@ -107,6 +126,9 @@ def _audit_metrics(
     checkpoint = payload.get("checkpoint")
     if not isinstance(checkpoint, str) or "branchproof_unique_v2" not in checkpoint:
         errors.append(f"unexpected checkpoint path: {checkpoint!r}")
+    is_nl = isinstance(checkpoint, str) and "_nl_exact_" in checkpoint
+    greedy_metrics = GREEDY_METRICS + (NL_GREEDY_METRICS if is_nl else ())
+    sampled_metrics = SAMPLED_METRICS + (NL_SAMPLED_METRICS if is_nl else ())
 
     metrics = payload.get("metrics")
     if not isinstance(metrics, dict):
@@ -129,12 +151,12 @@ def _audit_metrics(
     sampled: dict[str, dict[str, dict[str, float]]] = defaultdict(lambda: defaultdict(dict))
     for step in steps:
         if greedy_required:
-            for metric_name in GREEDY_METRICS:
+            for metric_name in greedy_metrics:
                 key = f"synthetic/step_{step}/{metric_name}"
                 value = _check_unit_metric(metrics, key, errors)
                 if value is not None:
                     primary[str(step)][metric_name] = value
-        for metric_name in SAMPLED_METRICS:
+        for metric_name in sampled_metrics:
             previous: float | None = None
             for k in k_values:
                 key = f"synthetic_sampled/step_{step}/{metric_name}@{k}"
@@ -315,9 +337,16 @@ def _audit_samples(
             else:
                 by_step[step]["fresh_constants"] += 1
 
-        for field in ("syntactic", "format_ok", "correct", "valid"):
+        for field in SAMPLE_METRICS:
             value = row.get(field)
-            if isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0:
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(float(value))
+                or not 0.0 <= float(value) <= 1.0
+            ):
+                errors.append(f"sample {index} has invalid {field}: {value!r}")
+            elif value > 0:
                 by_step[step][field] += 1
         representatives.setdefault(
             str(step),
@@ -329,6 +358,9 @@ def _audit_samples(
                 "format_ok": row.get("format_ok"),
                 "correct": row.get("correct"),
                 "valid": row.get("valid"),
+                "citation_free_valid": row.get("citation_free_valid"),
+                "nl_logic_parse": row.get("nl_logic_parse"),
+                "nl_logic_citation_free_valid": row.get("nl_logic_citation_free_valid"),
             },
         )
 

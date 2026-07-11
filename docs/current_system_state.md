@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 17:07 CEST.
+Last updated: 2026-07-11 17:12 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -81,7 +81,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   retains two sampled generations for every one of the 448 prompts so the
   required qualitative audit can cover all depths without changing compute.
   Row-level audit array `3834706_[0-29%8]` follows the eval with row-wise
-  `aftercorr` dependencies. It requires exact metrics, 1,024 retained rows,
+  `aftercorr` dependencies. It requires exact metrics, including translated NL
+  parse/citation-free-valid/joint metrics, plus 1,024 retained rows with
+  numeric formal and translated validity fields,
   all 448 prompts, sampled indices `0/1` for every prompt, complete chunk logs,
   cap diagnostics, and fresh constants in formal prompts. Replacement
   aggregation `3835779` releases only after all 30 row audits
@@ -92,6 +94,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   across both modalities, every train range, and all seeds. It also identifies
   retained examples from generation chunks that reached the `7168` cap and
   writes reviewable JSON/Markdown supplements before aggregation can succeed.
+  The modality-aware row gate passes 17 focused tests and re-accepts the real
+  corrected pilot with all 2,155 metrics and 128 retained samples. Because the
+  pending audit rows load the current Python at runtime, no resubmission was
+  needed after this strengthening.
   The pilot had occupied row 12's production filenames with a smaller
   224-prompt/8-generation artifact. Those files are preserved under the
   `_pilot_gate` suffix and the production names are now clear, so row 12 cannot

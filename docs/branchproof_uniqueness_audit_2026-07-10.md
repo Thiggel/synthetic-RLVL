@@ -202,6 +202,13 @@ therefore renders that panel empty, while corrected production is strict-gated
 on complete greedy cells.
 
 Row audit array `3834706_[0-29%8]` is dependency-linked to eval `3834582`.
+The row audit now treats translated NL evidence as a first-class required
+artifact: NL rows must contain greedy and sampled translation parse,
+citation-free validity, and correct-and-valid joint metrics, while every
+retained row must contain finite unit-valued formal and translated validity
+fields. This catches evaluator coverage loss per row rather than waiting for
+the final 30-row aggregator. Seventeen focused tests and a rerun against the
+real corrected pilot pass.
 For each row it requires all greedy and sampled metric cells, exactly 1,024
 retained generations, 896 sampled rows, 64 sampled rows and 32 unique prompts
 at each depth, sample indices `0/1`, complete greedy/sampled chunk logs, and cap

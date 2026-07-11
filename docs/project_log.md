@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 17:12 CEST closed a row-audit coverage gap before any production eval
+  finalized. The strict final aggregator already required translated NL
+  validity/joint metrics, but `audit_branchproof_unique_v2_pilot_eval.py` did
+  not require them per row and did not reject retained samples missing
+  modality-relevant validity fields. The row gate now requires NL translation
+  parse/citation-free-valid/joint metrics and finite unit-valued formal/NL
+  sample fields. Seventeen focused tests pass, including missing-NL-metric and
+  missing-sample-field regressions; the real corrected pilot is re-accepted
+  with 2,155 metrics and 128 samples. Pending audit array `3834706` uses the
+  current script at runtime, so no job resubmission was needed.
 - 17:07 CEST audited the `AssocGrpGRES` tradeoff rather than trusting the
   projected control start time. This repo currently uses 31 GPUs: 12 corrected
   BranchProof SFT A40s, 16 A100s for logic/NL Nanotron, and three A100-80GB
