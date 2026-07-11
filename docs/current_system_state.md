@@ -71,8 +71,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   transitions, and depth-50 repetition/nontermination, with no evidence of
   another ambiguous-data or extraction bug. User approval accepted the
   expected corrected runtime, so the manual hold on full SFT `3829072` was
-  released at 10:15 CEST. It is eligible on A40/A100 with throttle 12. Every
-  downstream eval row `3829073` remains constrained to `a100` plus feature
+  released at 10:15 CEST. Rows `0..11` started immediately on A40 nodes and
+  rows `12..29` wait only on the array throttle. Every downstream eval row
+  `3829073` remains constrained to `a100` plus feature
   `a100_80`, throttle 6, and starts only after its corresponding SFT row
   succeeds.
 - The accepted runtime audit records all four greedy and 28 sampled chunks.

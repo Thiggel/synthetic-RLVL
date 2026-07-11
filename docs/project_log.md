@@ -11,6 +11,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   SFT `3829072_[0-29%12]`; it is now eligible on `a40,a100`. Preserve the full
   32-prompt, 16-generation, all-depth, pass@16 eval protocol and use the first
   completed A100-80 row as the production runtime check.
+- 10:15 CEST released SFT rows `3829072_0..11` started immediately on A40
+  nodes; rows `12..29` are pending only on the array throttle. Representative
+  startup logs show no fatal/OOM/quota signature. Eval remains dependency-held
+  and A100-80-only.
 - 10:07 CEST corrected the runtime interpretation after direct node inspection:
   qualitative probe node `a0121` is also an A40, not an A100. Thus the
   above-25-hour full-row estimate is an A40 extrapolation, not a measured
