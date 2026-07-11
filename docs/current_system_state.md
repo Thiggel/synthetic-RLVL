@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 16:52 CEST.
+Last updated: 2026-07-11 16:58 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -226,7 +226,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `199G` (`29G` model, `171G` optimizer), not the earlier optimizer-only
   `91.4G` estimate. The checkpoint remained unchanged and complete.
   Replacement `3835438_0` is pending with W&B disabled and `a0831` excluded;
-  Slurm's current backfill estimate is 2026-07-12 12:00 on `a0932`. All
+  Slurm's current estimate moved forward to 2026-07-11 17:59. All
   compatible 8xA100-80GB nodes are currently allocated or mixed, so there is
   no safe partition widening or resource-preserving earlier placement. Upload
   `3831119` was rewired to it. Its downstream branch uses upload `3831119`,

@@ -4,6 +4,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 16:58 CEST verified every corrected BranchProof and Nanotron production eval
+  job still requests `Partition=a100` and `Features=a100_80`. BranchProof rows
+  `0/1/2` had completed sampled chunks `64/33/38` of `112`, respectively,
+  without a fatal signature. The control recovery scheduler estimate moved
+  forward from July 12 to 17:59 CEST today; no dependency edit was needed.
 - 16:52 CEST closed the Nanotron downstream comparison gap before eval release.
   Pending control evals `3834906/3834907` omitted the corrected unified output
   root; canceled them untouched and submitted otherwise identical A100-80GB
