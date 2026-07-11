@@ -4,6 +4,21 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 15:30 CEST control recovery `3828946_0` failed before its first resumed
+  optimizer step because W&B's local service did not publish a port file on
+  node `a0831`. Logs verified the intended step-4096 checkpoint, optimizer/LR
+  scheduler load, `524288` consumed samples, and `2147483648` consumed normal
+  tokens; the only checkpoint remains complete and unchanged at about `199G`.
+  Submitted W&B-disabled replacement `3835438_0` excluding `a0831` and rewired
+  upload `3831119`. Proactively replaced untouched logic/NL recoveries
+  `3830928_3/3831112_8` with W&B-disabled `3835442_3/3835443_8`, preserving
+  parents, isolated run roots, corrected corpus paths, and checkpoint interval;
+  rewired uploads `3831123/3831113` and canceled only the superseded recovery
+  rows. Logic/NL live training remained healthy near steps `2200/2210` and
+  `31K` tokens/s. BranchProof SFT completed rows `0..5`, `12`, and `15`; eval
+  `3834582_0/1/2` started on A100-80GB. Row 0 reached sampled chunk `48/112`
+  after about `2:37`, projecting below walltime, so the full protocol remains
+  unchanged. Recorded oversight successor `3835433` remains pending.
 - 11:35 CEST added a strict downstream production artifact gate. It verifies
   the exact ten-task command, all required task/group results, all 105 leaf
   sample files, full unique-document coverage, finite primary metrics, no

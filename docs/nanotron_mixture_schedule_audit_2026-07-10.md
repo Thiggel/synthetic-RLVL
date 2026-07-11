@@ -109,6 +109,18 @@ Consequently, the pre-submitted recovery jobs continue from the next absolute
 chunk and preserve both source proportions and per-source offsets. They do not
 restart the blend or replay the first half.
 
+Operational update 2026-07-11 15:30 CEST: normal-control recovery
+`3828946_0` resolved the complete step-4096 checkpoint and logged
+`start_iteration_step: 4096`, `consumed_samples: 524288`, and exactly
+`2147483648` consumed normal tokens. It then failed before its first resumed
+optimizer step because W&B's local service did not publish its port file on
+node `a0831`; no checkpoint or sampler state changed. Replacement control
+recovery `3835438_0` disables W&B and excludes `a0831`. Untouched logic/NL
+recoveries were proactively replaced by W&B-disabled `3835442_3/3835443_8`
+with the same after-any parents, run roots, corpus overrides, and step-4096
+checkpoint interval. Upload jobs `3831119/3831123/3831113` now depend on those
+replacement recoveries.
+
 ## Scientific Interpretation
 
 This is packed continuation midtraining, not whole-example SFT. A source proof

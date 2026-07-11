@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 11:35 CEST.
+Last updated: 2026-07-11 15:30 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -153,9 +153,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `0.85/0.15` normal/proof blend and completed three optimizer steps.
 - The corrected 15% proof-mixture pilot is now a matched three-condition
   comparison: normal control, logic, and NL. Logic train/recovery is
-  `3830927_3 -> 3830928_3`; NL integration smoke `3831110` completed all three
+  `3830927_3 -> 3835442_3`; NL integration smoke `3831110` completed all three
   steps after loading the intended `0.85/0.15` normal/NL mix, releasing NL
-  train/recovery `3831111_8 -> 3831112_8`. Logic and NL started together near
+  train/recovery `3831111_8 -> 3835443_8`. Logic and NL started together near
   04:46 CEST on full A100-80GB nodes `a0534/a0535`. At 11:20 they were at
   steps `1391/1401` of `8192`, `729M/735M` consumed tokens,
   `30.9--31.2K` tokens/s, and loss about `1.78`, with no fatal/OOM/quota
@@ -163,7 +163,13 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   allocations cannot finish all 8192 steps, so the existing `afterany`
   recovery rows will resume from the complete step-4096 checkpoint. The live
   jobs explicitly override checkpoint interval to `4096`; neither corrected
-  run retains 1024-step checkpoints.
+  run retains 1024-step checkpoints. At 15:20 they remained matched and healthy
+  near steps `2200/2210`, about `1.15B/1.16B` consumed tokens,
+  `30.9--31.2K` tokens/s, and loss about `1.73--1.80`. Superseded untouched
+  recoveries `3830928_3/3831112_8` were replaced before start by
+  `3835442_3/3835443_8`; the replacements preserve the same after-any parents,
+  isolated roots, corpus overrides, and step-4096 interval while disabling W&B
+  service startup and excluding nodes `a0803/a0831`.
   The corrected logic branch uses upload `3831123`, direct eval `3834908`,
   instruction SFT `3831125`, and instruction eval `3834909`; NL uses upload
   `3831113`, direct eval `3834904`, instruction SFT `3831115`, and instruction
@@ -178,14 +184,17 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - All old proof-mixture Nanotron jobs and stale proof checkpoints were canceled and
   deleted because their logic/NL corpora inherited the same generator defect.
   The unaffected `0%` normal-corpus control `3823434_0` reached its exact
-  24-hour wall limit after logged iteration `5051`, as expected, and recovery/skip
-  `3828946_0` is priority-pending with a 14:43 CEST start estimate.
+  24-hour wall limit after logged iteration `5051`, as expected. Recovery
+  `3828946_0` started at 14:36, resolved the correct step-4096 optimizer,
+  scheduler, RNG, and data offsets, then failed before its first resumed step
+  because the local W&B service did not publish its port file on `a0831`.
   Step `4096` was explicitly verified complete: 625 model files, four equal
   `22,848,937,060`-byte optimizer shards, no zero-byte files, and complete
   metadata. The full filesystem-accounted checkpoint footprint is about
   `199G` (`29G` model, `171G` optimizer), not the earlier optimizer-only
-  `91.4G` estimate. Its current allocation ends before the ETA, so guarded
-  recovery can safely resume. Its downstream branch uses upload `3831119`,
+  `91.4G` estimate. The checkpoint remained unchanged and complete.
+  Replacement `3835438_0` is pending with W&B disabled and `a0831` excluded;
+  upload `3831119` was rewired to it. Its downstream branch uses upload `3831119`,
   direct eval `3834906`, instruction SFT `3831121`, and instruction eval
   `3834907`, all with `afterok` dependencies.
 - Upload jobs now have a path-guarded opt-in that removes all local Nanotron
@@ -238,6 +247,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   chains, audits new generations/results, executes explicitly triggered
   follow-ups, updates reports/docs, and preserves the successor until the full
   plan is verified complete. No-op passes do not append handoff churn.
+- At 15:20 CEST full BranchProof SFT had completed rows `0..5`, `12`, and `15`;
+  rows `6..11`, `13..14`, and `16..19` were running, and `20..29` were held
+  only by the array throttle. A100-80 eval rows `3834582_0/1/2` started. Row 0
+  completed greedy generation and reached sampled chunk `48/112` after about
+  `2:37`; the observed long-chunk rate projects completion comfortably below
+  24 hours, so no protocol change or depth sharding is justified. Many deeper
+  train-1-to-5 logic chunks hit the `7168` cap, which remains a model-behavior
+  diagnostic pending the completed artifact and raw-generation audit.
 - Detailed evidence, scope, remediation, and decision gates are in
   `docs/branchproof_uniqueness_audit_2026-07-10.md`.
 
@@ -418,5 +435,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

@@ -155,6 +155,15 @@ row approaches the 24-hour limit. It replaces canceled pending array
 `3829073` and retains two sampled generations for every prompt so qualitative
 review spans all depths and rows.
 
+Operational update 2026-07-11 15:30 CEST: eval rows `3834582_0/1/2` started
+on A100-80GB without changing the protocol. Row 0 completed greedy generation
+and reached sampled chunk `48/112` after about `2:37`. Its completed deeper
+chunks take roughly three to five minutes each, projecting a whole-row runtime
+comfortably below 24 hours; no depth sharding is currently justified. Many
+deep train-1-to-5 formal chunks reach the shared `7168` cap. This is retained
+as a model-behavior diagnostic until the row audit and raw samples are
+available, not treated as a dataset or evaluator failure.
+
 ## Full-grid aggregation gate
 
 `scripts/analysis/aggregate_hfsa_depth_scaling.py` now recognizes both the old
