@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 00:48 CEST inspected the queued Slurm batch payload for oversight job
+  `3837467` and found it still named canceled pre-fix BranchProof jobs because
+  Slurm had snapshotted the earlier script. Submitted replacement watcher
+  `3839191` for the identical `03:15:38` begin time with hop `2/120`, verified
+  its stored payload names eval `3838163` and the final-adapter-gated stale
+  dependency rule, then canceled `3837467`. Six-hour continuity is preserved.
 - 00:46 CEST refreshed Nanotron peak-storage accounting before the three
   resumes. The project tree is `858G` and each accepted step-4096 checkpoint is
   `199G`. Using the larger recent Slurm-epilogue usage (`1072.3G`) plus three

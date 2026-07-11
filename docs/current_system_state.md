@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 00:46 CEST.
+Last updated: 2026-07-12 00:48 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -144,6 +144,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   eval tasks. They are now scheduler-eligible with `Features=a100_80`; unfinished
   rows `13/14/24..29` retain their one-to-one SFT dependency. The three
   Nanotron recovery start estimates remain approximately 05:14.
+- Slurm had captured the prior watcher script at submission, and queued watcher
+  `3837467` still named canceled pre-fix BranchProof jobs despite reading fresh
+  docs. It was replaced before start by `3839191` at the identical
+  `2026-07-12 03:15:38` begin time with hop `2/120`. The stored replacement
+  payload was checked for eval `3838163` and the verified per-task dependency
+  recovery rule before `3837467` was canceled.
 - The pilot's primary self-contained metric is citation-free validity because
   training targets use rule labels (`R`, `->E`) without numbered premise
   citations. Strict `valid=0` is expected under that citation-demanding metric,
