@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-07-11 10:05 CEST.
+Last updated: 2026-07-11 09:55 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -12,7 +12,7 @@ This includes old architecture, syntax, shortcut, hybrid, conditioned-dual,
 batch-size, and proof-mixture results. See
 `docs/branchproof_uniqueness_audit_2026-07-10.md`.
 
-| Experiment | Jobs | Live state at 2026-07-11 10:05 CEST | Outputs / next gate |
+| Experiment | Jobs | Live state at 2026-07-11 09:55 CEST | Outputs / next gate |
 | --- | --- | --- | --- |
 | Corrected BranchProof-v2 materialization | build/push `3829067` | Completed cleanly in `00:06:54`. Production gate passed on 3,000 examples with unique-solution rate `1.0`, max one derived answer, no failures, and balanced gold positions; HF smoke loads also passed. | `$HPCVAULT/synthetic-RLVL/datasets/branchproof_unique_v2_20260710`; private HF repo `flaitenberger/BranchProof-unique-v2`. |
 | Corrected BranchProof-v2 SFT/eval | pilot SFT `3829069_[12%1]`; canceled malformed gate `3831135_12`; completed gate/audit `3832945_12 -> 3831136`; completed sampled qualitative probe/audit `3833178_12 -> 3833179`; manually held full SFT `3829072_[0-29%12]`; full eval `3829073_[0-29%6]` | Pilot SFT completed all `10000` steps in `12:39:51`. Gate completed in `07:10:38`; both automated audits accepted exact depth/metric/sample coverage and fresh constants. Citation-free correct-and-valid is perfect through train depth 25; depth-30/40/50 pass@1 is `0.883/0.625/0.344` and pass@8 is `1.000/1.000/0.938`. Strict `valid=0` is expected because targets omit numbered citations; citation-free validity is the intended self-contained proof metric. The retained depth-50 slice has `15/32` correct, `11/32` citation-free joint, and `24/32` complete-format outputs. Manual samples show correct traces, late wrong transitions, and repetition/cap hits, not ambiguous prompts. Full SFT remains `JobHeldUser`. | Measured generation was `3826.3s` greedy plus `20677.8s` sampled on A40; a matched A100 slice was not materially faster. The final 32-prompt, 16-generation row projects above 25 hours before scoring, so `3829073` must become depth-sharded/resumable before releasing the SFT grid. Preserve full pass@16 protocol. Audit artifacts are `analysis/branchproof_unique_v2_{pilot_eval_audit_2026-07-10,sampled_qualitative_audit_2026-07-11}.json`. |
@@ -52,7 +52,7 @@ not managed here.
 
 ## Partition Audit
 
-Checked at 2026-07-11 10:05 CEST. Active repo jobs are the held corrected
+Checked at 2026-07-11 09:55 CEST. Active repo jobs are the held corrected
 BranchProof full grid, the running corrected Nanotron logic/NL p15 chains, and
 the unaffected Nanotron normal control recovery/downstream chain. Do not widen
 full Nanotron training to

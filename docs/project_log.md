@@ -4,7 +4,7 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
-- 10:05 CEST corrected BranchProof gate and qualitative review completed.
+- 09:55 CEST corrected BranchProof gate and qualitative review completed.
   Gate `3832945_12` finished in `07:10:38`; structural/runtime audit `3831136`,
   sampled probe `3833178_12`, and sampled audit `3833179` all completed and
   accepted. Citation-free joint is perfect through train depth 25 and reaches
@@ -15,7 +15,7 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   `11/32` citation-free joint, and `24/32` complete-format outputs. Failures
   are late branch transitions or repetitive cap hits; all prompts retain fresh
   constants and the corrected unique-answer construction.
-- 10:05 CEST runtime gate: measured A40 generation was `3826.3s` greedy plus
+- 09:55 CEST runtime gate: measured A40 generation was `3826.3s` greedy plus
   `20677.8s` sampled, with one greedy and seven sampled cap-hit chunks. A
   matched A100 qualitative slice was not materially faster. Scaling to 32
   prompts and 16 generations projects above 25 hours before scoring, so full
