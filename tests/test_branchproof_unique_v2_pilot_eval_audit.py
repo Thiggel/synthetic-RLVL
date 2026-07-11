@@ -208,3 +208,74 @@ def test_accepts_complete_sampled_qualitative_artifacts(tmp_path: Path):
         "1": {0: 2, 1: 2},
         "25": {0: 2, 1: 2},
     }
+
+
+def test_filters_combined_greedy_and_sampled_retention(tmp_path: Path):
+    metrics_path, samples_path = _write_artifacts(tmp_path)
+    sampled_rows = []
+    for step in [1, 18]:
+        question = "\n".join(f"c{constant} is blue." for constant in range(step + 1))
+        for prompt_index in range(2):
+            for sample_index in range(2):
+                sampled_rows.append(
+                    {
+                        "source": "synthetic_sampled",
+                        "step": step,
+                        "prompt": f"<question>\n{question}\nitem {prompt_index}\n</question>",
+                        "generation": "<formal>proof</formal><answer>yes</answer>",
+                        "gold_answer": "yes",
+                        "sample_index": sample_index,
+                    }
+                )
+    with samples_path.open("a", encoding="utf-8") as handle:
+        for row in sampled_rows:
+            handle.write(json.dumps(row) + "\n")
+
+    report = AUDIT.audit_artifacts(
+        metrics_path,
+        samples_path,
+        steps=[1, 18],
+        k_values=[1, 2],
+        samples_per_step=2,
+        generations_per_prompt=2,
+        expected_retained_samples=8,
+        train_max=18,
+        expected_sample_source="synthetic_sampled",
+        sample_source_filter="synthetic_sampled",
+        expected_total_samples=10,
+        expected_samples_per_step=4,
+        expected_unique_prompts_per_step=2,
+        expected_sample_indices=[0, 1],
+    )
+
+    assert report["accepted"]
+    assert report["total_sample_count"] == 10
+    assert report["samples_audit"]["sample_count"] == 8
+
+
+def test_rejects_incomplete_prompt_coverage_after_source_filter(tmp_path: Path):
+    metrics_path, samples_path = _write_artifacts(tmp_path)
+    rows = [json.loads(line) for line in samples_path.read_text().splitlines()]
+    for row in rows:
+        row["source"] = "synthetic_sampled"
+        row["sample_index"] = 0
+    samples_path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+
+    report = AUDIT.audit_artifacts(
+        metrics_path,
+        samples_path,
+        steps=[1, 18],
+        k_values=[1, 2],
+        samples_per_step=2,
+        generations_per_prompt=2,
+        expected_retained_samples=2,
+        train_max=18,
+        expected_sample_source="synthetic_sampled",
+        sample_source_filter="synthetic_sampled",
+        expected_total_samples=2,
+        expected_unique_prompts_per_step=2,
+        expected_sample_indices=[0],
+    )
+
+    assert not report["accepted"]
+    assert any("unique prompts=1, expected 2" in error for error in report["errors"])

@@ -70,8 +70,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--generation-cap", type=int, default=7168)
     parser.add_argument("--greedy-optional", action="store_true")
     parser.add_argument("--expected-sample-source", default="synthetic")
+    parser.add_argument("--sample-source-filter")
+    parser.add_argument("--expected-total-samples", type=int)
     parser.add_argument("--expected-samples-per-step", type=int)
+    parser.add_argument("--expected-unique-prompts-per-step", type=int)
     parser.add_argument("--expected-sample-indices", type=_csv_ints)
+    parser.add_argument("--skip-fresh-constant-check", action="store_true")
     return parser.parse_args()
 
 
@@ -252,7 +256,9 @@ def _audit_samples(
     expected_retained_samples: int,
     expected_source: str,
     expected_samples_per_step: int | None,
+    expected_unique_prompts_per_step: int | None,
     expected_sample_indices: list[int] | None,
+    require_fresh_constants: bool,
     errors: list[str],
 ) -> dict[str, Any]:
     expected_steps = set(steps)
@@ -294,17 +300,20 @@ def _audit_samples(
             nonempty_generations += 1
             by_step[step]["nonempty_generation"] += 1
 
-        question = QUESTION_RE.search(prompt)
-        constants = [] if question is None else sorted({int(value) for value in CONSTANT_RE.findall(question.group(1))})
-        expected_constants = list(range(step + 1))
-        if constants != expected_constants:
-            constant_failures += 1
-            errors.append(
-                f"sample {index} step {step} constants={constants[:4]}...{constants[-4:]}, "
-                f"expected c0..c{step}"
+        if require_fresh_constants:
+            question = QUESTION_RE.search(prompt)
+            constants = [] if question is None else sorted(
+                {int(value) for value in CONSTANT_RE.findall(question.group(1))}
             )
-        else:
-            by_step[step]["fresh_constants"] += 1
+            expected_constants = list(range(step + 1))
+            if constants != expected_constants:
+                constant_failures += 1
+                errors.append(
+                    f"sample {index} step {step} constants={constants[:4]}...{constants[-4:]}, "
+                    f"expected c0..c{step}"
+                )
+            else:
+                by_step[step]["fresh_constants"] += 1
 
         for field in ("syntactic", "format_ok", "correct", "valid"):
             value = row.get(field)
@@ -334,6 +343,14 @@ def _audit_samples(
                 errors.append(
                     f"step {step} retained samples={counts[step]}, "
                     f"expected {expected_samples_per_step}"
+                )
+    if expected_unique_prompts_per_step is not None:
+        for step in sorted(expected_steps):
+            observed = len(prompts_by_step[step])
+            if observed != expected_unique_prompts_per_step:
+                errors.append(
+                    f"step {step} unique prompts={observed}, "
+                    f"expected {expected_unique_prompts_per_step}"
                 )
     if expected_sample_indices is not None:
         expected_index_set = set(expected_sample_indices)
@@ -390,17 +407,32 @@ def audit_artifacts(
     generation_cap: int = 7168,
     greedy_required: bool = True,
     expected_sample_source: str = "synthetic",
+    sample_source_filter: str | None = None,
+    expected_total_samples: int | None = None,
     expected_samples_per_step: int | None = None,
+    expected_unique_prompts_per_step: int | None = None,
     expected_sample_indices: list[int] | None = None,
+    require_fresh_constants: bool = True,
 ) -> dict[str, Any]:
     errors: list[str] = []
     payload = json.loads(metrics_path.read_text(encoding="utf-8"))
-    rows = _read_samples(samples_path, errors)
+    all_rows = _read_samples(samples_path, errors)
+    if expected_total_samples is not None and len(all_rows) != expected_total_samples:
+        errors.append(
+            f"total retained sample count={len(all_rows)}, expected {expected_total_samples}"
+        )
+    rows = (
+        [row for row in all_rows if row.get("source") == sample_source_filter]
+        if sample_source_filter is not None
+        else all_rows
+    )
     prompt_count = len(steps) * samples_per_step
     sampled_prompt_batch_size = max(1, batch_size // generations_per_prompt)
     report = {
         "metrics_path": str(metrics_path),
         "samples_path": str(samples_path),
+        "total_sample_count": len(all_rows),
+        "sample_source_filter": sample_source_filter,
         "expected_steps": steps,
         "expected_k_values": k_values,
         "metrics_audit": _audit_metrics(
@@ -419,7 +451,9 @@ def audit_artifacts(
             expected_retained_samples=expected_retained_samples,
             expected_source=expected_sample_source,
             expected_samples_per_step=expected_samples_per_step,
+            expected_unique_prompts_per_step=expected_unique_prompts_per_step,
             expected_sample_indices=expected_sample_indices,
+            require_fresh_constants=require_fresh_constants,
             errors=errors,
         ),
         "generation_log_audit": (
@@ -455,8 +489,12 @@ def main() -> None:
         generation_cap=args.generation_cap,
         greedy_required=not args.greedy_optional,
         expected_sample_source=args.expected_sample_source,
+        sample_source_filter=args.sample_source_filter,
+        expected_total_samples=args.expected_total_samples,
         expected_samples_per_step=args.expected_samples_per_step,
+        expected_unique_prompts_per_step=args.expected_unique_prompts_per_step,
         expected_sample_indices=args.expected_sample_indices,
+        require_fresh_constants=not args.skip_fresh_constant_check,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")

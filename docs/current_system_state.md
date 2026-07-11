@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 10:34 CEST.
+Last updated: 2026-07-11 10:43 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -72,7 +72,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   another ambiguous-data or extraction bug. User approval accepted the
   expected corrected runtime, so the manual hold on full SFT `3829072` was
   released at 10:15 CEST. Rows `0..11` started immediately on A40 nodes and
-  entered optimizer training; at 10:25 they ranged from step `23` to `522` of
+  entered optimizer training; at 10:40 they ranged from step `239` to `1333` of
   `10000` with no fatal/OOM/quota signature. Rows `12..29` wait only on the
   array throttle. Every downstream eval row
   `3834582` remains constrained to `a100` plus feature
@@ -80,6 +80,16 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   succeeds. It replaces canceled pending array `3829073`; the replacement
   retains two sampled generations for every one of the 448 prompts so the
   required qualitative audit can cover all depths without changing compute.
+  Row-level audit array `3834706_[0-29%8]` follows the eval with row-wise
+  `aftercorr` dependencies. It requires exact metrics, 1,024 retained rows,
+  all 448 prompts, sampled indices `0/1` for every prompt, complete chunk logs,
+  cap diagnostics, and fresh constants in formal prompts. Strict aggregation
+  `3834707` releases only after all 30 row audits pass.
+  The pilot had occupied row 12's production filenames with a smaller
+  224-prompt/8-generation artifact. Those files are preserved under the
+  `_pilot_gate` suffix and the production names are now clear, so row 12 cannot
+  skip its full rerun. The local eval wrapper also refuses to skip an existing
+  artifact unless it has the exact 448-prompt/16-generation/1,024-row shape.
 - The accepted runtime audit records all four greedy and 28 sampled chunks.
   Greedy generation took `3826.3s`; sampled generation took `20677.8s` and
   produced `5,062,917` tokens. One greedy and seven sampled chunks hit the
@@ -102,7 +112,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   self-contained valid-and-correct, `24/32` completed the format, and failures
   were late derivation errors or repetitive cap hits. These are one-seed pilot
   diagnostics, not yet a logic-vs-NL result.
-- The full-grid aggregator now recognizes corrected `branchproof_unique_v2`
+- The full-grid sample audit now supports filtering combined greedy/sampled
+  retention while independently checking the total row count and unique prompt
+  coverage. The full-grid aggregator recognizes corrected `branchproof_unique_v2`
   filenames and has a strict acceptance mode. Corrected analysis uses
   `--skip-intermediate --strict-final-grid`, preventing old checkpoint mixing
   and refusing output unless all 30 unique rows, exact prompt/generation
@@ -145,8 +157,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   steps after loading the intended `0.85/0.15` normal/NL mix, releasing NL
   train/recovery `3831111_8 -> 3831112_8`. Logic and NL started together near
   04:46 CEST on full A100-80GB nodes `a0534/a0535`. At 09:49 both were near
-  step `1071/8192`, `562M/4.295B` consumed tokens, `31.0--31.3K` tokens/s,
-  and loss about `1.73`, with no fatal/OOM/quota signature. Their 24-hour
+  step `1241/8192`, `651M/4.295B` consumed tokens, `30.9--31.3K` tokens/s,
+  and loss about `1.77`, with no fatal/OOM/quota signature. Their 24-hour
   allocations cannot finish all 8192 steps, so the existing `afterany`
   recovery rows will resume from the complete step-4096 checkpoint. The live
   jobs explicitly override checkpoint interval to `4096`; neither corrected
@@ -177,8 +189,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   checkpoints only after successful HF conversion/upload. It is enabled for
   control, corrected logic, and corrected NL, preventing three-condition
   checkpoint retention from exhausting the vault. Cluster epilogue accounting
-  reports `511.9G` currently used, `1048.6G` soft quota, and `2097.2G` hard
-  quota.
+  reports a `1048.6G` soft quota and `2097.2G` hard quota. The project tree was
+  `411G` at 10:37 CEST; adding two roughly `199G` corrected step-4096
+  checkpoints should remain below the soft quota while the control checkpoint
+  is retained.
 - The held instruction branch had a real format mismatch: UltraChat was
   trained with custom `<question>/<answer>` wrappers while lm-eval supplied
   neither those wrappers nor a chat template. It now uses Qwen's native chat
@@ -377,5 +391,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582,3834706,3834707 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

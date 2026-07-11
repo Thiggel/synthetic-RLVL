@@ -4,6 +4,22 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:43 CEST prevented a stale pilot artifact from suppressing production row
+  12. The pilot gate had written an unsuffixed 224-prompt/8-generation JSON,
+  which the full wrapper would otherwise treat as complete. Preserved its
+  metrics/samples under `_pilot_gate`, cleared the production names before any
+  eval started, and hardened the local wrapper to skip only exact
+  448-prompt/16-generation artifacts with 1,024 retained rows and 896 sampled
+  rows. Shell syntax and diff checks pass.
+- 10:40 CEST installed the corrected full-grid artifact acceptance chain.
+  Extended the pilot auditor to filter mixed greedy/sampled JSONL rows while
+  checking total retention and unique prompt coverage. Added row audit array
+  `3834706_[0-29%8]` after eval `3834582` and strict aggregation `3834707`
+  after all audits pass. Each row requires complete metrics, 1,024 retained
+  rows, all 448 prompts, sample indices `0/1`, complete chunk logs/cap
+  diagnostics, and fresh formal constants. Tests and shell/Slurm checks pass
+  (`12 passed`). Live SFT rows were at `239..1333/10000`; Nanotron logic/NL
+  were matched at step `1241`, `651M` tokens, and `30.9--31.3K` tokens/s.
 - 10:34 CEST repaired full-grid qualitative retention before any eval started.
   The pending wrapper computed all 16 sampled generations but retained none.
   It now retains two sampled generations for each of the 448 prompts (896 rows)

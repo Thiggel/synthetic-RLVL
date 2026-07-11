@@ -70,8 +70,28 @@ if [[ ! -f "${SFT_FINAL}/adapter_config.json" ]]; then
   exit 2
 fi
 if [[ -s "${OUT}" && "${FORCE_PASSK_EVAL:-0}" != "1" ]]; then
-  echo "Output already exists: ${OUT}; skipping"
-  exit 0
+  if python - "${OUT}" "${SAMPLES_OUT}" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+metrics_path, samples_path = map(Path, sys.argv[1:])
+payload = json.loads(metrics_path.read_text(encoding="utf-8"))
+metrics = payload.get("metrics", {})
+rows = [json.loads(line) for line in samples_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+sampled = sum(row.get("source") == "synthetic_sampled" for row in rows)
+if metrics.get("posthoc/prompts") != 448 or metrics.get("posthoc/sampled_generations_per_prompt") != 16:
+    raise SystemExit(1)
+if len(rows) != 1024 or sampled != 896:
+    raise SystemExit(1)
+PY
+  then
+    echo "Complete production output already exists: ${OUT}; skipping"
+    exit 0
+  fi
+  echo "Existing output is not a complete production artifact: ${OUT}" >&2
+  echo "Archive it or set FORCE_PASSK_EVAL=1 before retrying." >&2
+  exit 3
 fi
 
 mkdir -p "${MERGED_ROOT}" "${OUT_DIR}"

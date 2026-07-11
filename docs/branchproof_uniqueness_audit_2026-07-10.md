@@ -181,6 +181,23 @@ machine-readable incomplete manifest. Focused tests and old-grid compatibility
 checks pass; the existing old directory still resolves exactly 30 rows with no
 completeness problems.
 
+Row audit array `3834706_[0-29%8]` is dependency-linked to eval `3834582`.
+For each row it requires all greedy and sampled metric cells, exactly 1,024
+retained generations, 896 sampled rows, 64 sampled rows and 32 unique prompts
+at each depth, sample indices `0/1`, complete greedy/sampled chunk logs, and cap
+diagnostics. Formal rows additionally require fresh `c0..c_depth` constants;
+NL prompts are exempt from this surface-only check because they intentionally
+render natural names. Strict aggregation `3834707` depends on all 30 audits
+succeeding. Focused tests for combined-source filtering, prompt coverage, and
+the existing metric/sample gates pass (`12 passed`).
+
+The pilot gate initially used row 12's production filenames even though it had
+only 224 prompts and eight sampled generations per prompt. The metrics and
+samples are preserved with the row-12 run stem and a `_pilot_gate` suffix;
+the unsuffixed names were cleared before any production eval started. Future
+wrapper runs skip an existing output only after verifying 448 prompts, 16
+sampled generations per prompt, 1,024 retained rows, and 896 sampled rows.
+
 At the planned 4,096-token Nanotron context, `44.3%` of formal documents and
 `47.8%` of NL documents are longer than one context; none exceeds 8,192 tokens.
 Nanotron therefore treats these as ordinary packed continuation documents, not
@@ -202,7 +219,7 @@ instruction job starts.
 | Materialized paired dataset | `3829067` complete | Probe accepted, all subsets present, private HF push succeeds |
 | One-seed SFT pilot | `3829069_12` complete | Completed all 10,000 steps with final adapter and complete step-5000/10000 checkpoints; no truncation/data error |
 | Pilot post-hoc eval | corrected `3832945_12 -> 3831136` and sampled qualitative `3833178_12 -> 3833179` complete | Both audits accepted; manual review confirms intended prompt/extraction behavior and ordinary long-trace failures |
-| Three-seed main grid | released `3829072 -> 3834582` | SFT hold released after user runtime approval. Eval is A100-80-only with unchanged full protocol and two retained sampled generations per prompt; inspect the first row's runtime/raw outputs, then pass the strict 30-row aggregation gate and report greedy/pass@1 before pass@k |
+| Three-seed main grid | released `3829072 -> 3834582 -> 3834706 -> 3834707` | SFT hold released after user runtime approval. Eval is A100-80-only with unchanged full protocol and two retained sampled generations per prompt; row audits and strict aggregation are dependency-gated. Inspect the first row's runtime/raw outputs, then report greedy/pass@1 before pass@k |
 | Corrected 1.2B-token corpora | builds and packed audit `3830855` complete | Full paired-prefix scan, metadata counts, and exact source-token/decode round trips passed |
 | Midtraining mixtures | logic/NL smokes `3830924`/`3831110` complete; matched control/logic/NL p15 chains active or held | Compare direct and instruction-tuned downstream results, and launch the remaining percentages only after all three p15 conditions train, upload, and evaluate cleanly |
 

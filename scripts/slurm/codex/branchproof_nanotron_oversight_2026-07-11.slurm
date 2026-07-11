@@ -74,6 +74,7 @@ Use source ./scripts/env.sh before shell commands. Do not touch unrelated puzzle
 
 Active critical paths:
 - Corrected BranchProof full SFT 3829072_[0-29%12], followed per row by eval 3834582_[0-29%6]. Eval must remain on partition a100 with feature a100_80 and retain 32 prompts/depth, 16 generations, all 14 depths, pass@1/2/4/8/16, context 16384, equal cap 7168, and two sampled generations per prompt for qualitative review.
+- BranchProof row audits 3834706_[0-29%8] follow eval rows with aftercorr dependencies; strict aggregation 3834707 runs only after all 30 audits pass. Recover any failed eval/audit rows before aggregation rather than bypassing either gate.
 - Nanotron normal control 3823434_0 -> recovery 3828946_0 -> upload/direct-eval/instruction-SFT/instruction-eval 3831119..3831122.
 - Corrected Nanotron logic p15 3830927_3 -> recovery 3830928_3 -> 3831123..3831126.
 - Corrected Nanotron NL p15 3831111_8 -> recovery 3831112_8 -> 3831113..3831116.
