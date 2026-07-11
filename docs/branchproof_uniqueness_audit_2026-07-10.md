@@ -118,8 +118,9 @@ round-robin across prompts and generation indices. Dependency chain
 `3833178_12 -> 3833179` reruns only a compact qualitative slice at depths
 `1/25/30/50`, four prompts per depth and eight generations per prompt, and
 requires all 128 sampled outputs with exact per-depth prompt/index coverage.
-The full SFT array remains user-held until both automated audits and manual
-greedy/sampled generation review pass.
+The full SFT array was held until both automated audits and manual
+greedy/sampled generation review passed. The user approved the corrected
+runtime protocol and the hold was released on 2026-07-11 at 10:15 CEST.
 
 ## One-seed corrected pilot outcome
 
@@ -146,9 +147,37 @@ above-25-hour full-protocol projection is therefore A40-specific. Old full
 A100-80 rows took roughly 3.5--8 hours, including `03:56:41` for matched old
 row 12. Corrected retained outputs are substantially longer (depth-25 mean
 `3236` vs `1923` tokens; depth-50 `6475` vs `2678`), use cap `7168` instead of
-`4096`, batch `64` instead of `128`, and add greedy generation. A corrected
-A100-80 timing probe is required before choosing whole-row or depth-sharded
-full evaluation.
+`4096`, batch `64` instead of `128`, and add greedy generation. The user
+approved running the unchanged full protocol on A100-80GB. Eval array
+`3829073` is hard-constrained accordingly; its first completed row is the
+production timing gate, and only unfinished rows should be depth-sharded if a
+row approaches the 24-hour limit.
+
+## Full-grid aggregation gate
+
+`scripts/analysis/aggregate_hfsa_depth_scaling.py` now recognizes both the old
+HFSA and corrected BranchProof-v2 run names. Corrected analysis must use
+`--skip-intermediate` so old checkpoint curves cannot be mixed into the new
+result, and `--strict-final-grid` so no tables or figures are written unless
+all 30 unique logic/NL, train-range, and seed rows are present. Strict mode
+also requires 448 prompts, 16 sampled generations, greedy correctness and
+substrate-validity cells, and pass@`1/2/4/8/16` correctness, validity, and joint
+cells at every depth, including monotonic pass@k checks.
+
+```bash
+source ./scripts/env.sh
+${HPCVAULT}/.venv_rlvl_posttrain/bin/python \
+  scripts/analysis/aggregate_hfsa_depth_scaling.py \
+  --final-dir "${HPCVAULT}/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710" \
+  --skip-intermediate \
+  --strict-final-grid \
+  --out-dir analysis/branchproof_unique_v2_20260711
+```
+
+The gate smoke correctly rejected the current one-row pilot and wrote a
+machine-readable incomplete manifest. Focused tests and old-grid compatibility
+checks pass; the existing old directory still resolves exactly 30 rows with no
+completeness problems.
 
 At the planned 4,096-token Nanotron context, `44.3%` of formal documents and
 `47.8%` of NL documents are longer than one context; none exceeds 8,192 tokens.
@@ -171,7 +200,7 @@ instruction job starts.
 | Materialized paired dataset | `3829067` complete | Probe accepted, all subsets present, private HF push succeeds |
 | One-seed SFT pilot | `3829069_12` complete | Completed all 10,000 steps with final adapter and complete step-5000/10000 checkpoints; no truncation/data error |
 | Pilot post-hoc eval | corrected `3832945_12 -> 3831136` and sampled qualitative `3833178_12 -> 3833179` complete | Both audits accepted; manual review confirms intended prompt/extraction behavior and ordinary long-trace failures |
-| Three-seed main grid | released `3829072 -> 3829073` | SFT hold released after user runtime approval. Eval is A100-80-only with unchanged full protocol; inspect the first row's runtime and raw outputs, then report greedy and pass@1 before pass@k |
+| Three-seed main grid | released `3829072 -> 3829073` | SFT hold released after user runtime approval. Eval is A100-80-only with unchanged full protocol; inspect the first row's runtime/raw outputs, then pass the strict 30-row aggregation gate and report greedy/pass@1 before pass@k |
 | Corrected 1.2B-token corpora | builds and packed audit `3830855` complete | Full paired-prefix scan, metadata counts, and exact source-token/decode round trips passed |
 | Midtraining mixtures | logic/NL smokes `3830924`/`3831110` complete; matched control/logic/NL p15 chains active or held | Compare direct and instruction-tuned downstream results, and launch the remaining percentages only after all three p15 conditions train, upload, and evaluate cleanly |
 

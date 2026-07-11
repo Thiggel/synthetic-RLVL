@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:30 CEST prepared the corrected full-grid analysis gate. Extended
+  `aggregate_hfsa_depth_scaling.py` to recognize `branchproof_unique_v2` run
+  names, explicitly skip old intermediate checkpoints, and reject aggregation
+  unless all 30 unique rows have exact prompt/generation metadata plus complete
+  greedy and pass@`1/2/4/8/16` correctness/validity/joint cells at every depth.
+  It also checks pass@k monotonicity. Focused tests pass (`9 passed`),
+  `py_compile` passes, old-grid compatibility still finds `30/30`, and a strict
+  smoke rejects the current one-row pilot with an incomplete manifest.
 - 10:27 CEST live continuation: all released BranchProof SFT rows `0..11`
   entered optimizer training and ranged from steps `23..522/10000`, with
   sampled GPUs at 100% utilization and no fatal/OOM/quota signature. The

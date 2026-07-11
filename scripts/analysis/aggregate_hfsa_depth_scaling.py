@@ -13,7 +13,8 @@ import matplotlib.pyplot as plt
 
 
 FINAL_RE = re.compile(
-    r"sft_hfsa_depth_scaling_(?P<template>logic|nl_exact)_train1to(?P<train>\d+)_10k_seed(?P<seed>\d+)_passk\.json$"
+    r"sft_(?:hfsa_depth_scaling|branchproof_unique_v2)_(?P<template>logic|nl_exact)_"
+    r"train1to(?P<train>\d+)_10k_seed(?P<seed>\d+)_passk\.json$"
 )
 INTERMEDIATE_RE = re.compile(
     r"sft_hfsa_depth_scaling_(?P<template>logic|nl_exact)_train1to(?P<train>\d+)_10k_seed(?P<seed>\d+)_"
@@ -305,12 +306,50 @@ def intermediate_rows(records: list[RunRecord]) -> list[dict[str, object]]:
     return rows
 
 
-def final_records_complete(records: list[RunRecord]) -> list[str]:
+def final_records_complete(records: list[RunRecord], *, strict_metrics: bool = False) -> list[str]:
     problems: list[str] = []
     expected = {(template, train, seed) for template in ("logic", "nl_exact") for train in (5, 10, 15, 20, 25) for seed in (3407, 3408, 3409)}
-    observed = {(r.template, r.train_max, r.seed) for r in records}
+    observed_keys = [(r.template, r.train_max, r.seed) for r in records]
+    observed = set(observed_keys)
     for missing in sorted(expected - observed):
         problems.append(f"missing final {missing}")
+    duplicates = sorted(key for key in observed if observed_keys.count(key) > 1)
+    for duplicate in duplicates:
+        problems.append(f"duplicate final {duplicate}")
+    if not strict_metrics:
+        return problems
+
+    required_k_values = (1, 2, 4, 8, 16)
+    for record in records:
+        run_id = (record.template, record.train_max, record.seed)
+        expected_prompts = len(DEPTHS) * 32
+        if record.metrics.get("posthoc/prompts") != expected_prompts:
+            problems.append(
+                f"{run_id} posthoc/prompts={record.metrics.get('posthoc/prompts')}, expected {expected_prompts}"
+            )
+        if record.metrics.get("posthoc/sampled_generations_per_prompt") != 16:
+            problems.append(
+                f"{run_id} sampled_generations={record.metrics.get('posthoc/sampled_generations_per_prompt')}, expected 16"
+            )
+        sampled_metric_names = ("correct_pass", valid_metric(record.template), joint_metric(record.template))
+        greedy_valid_metric = "citation_free_valid" if record.template == "logic" else "nl_logic_citation_free_valid"
+        for depth in DEPTHS:
+            for metric_name in ("correct", greedy_valid_metric):
+                key = f"synthetic/step_{depth}/{metric_name}"
+                value = record.metrics.get(key)
+                if value is None or not 0.0 <= value <= 1.0:
+                    problems.append(f"{run_id} missing or invalid metric {key}")
+            for metric_name in sampled_metric_names:
+                previous: float | None = None
+                for k in required_k_values:
+                    key = f"synthetic_sampled/step_{depth}/{metric_name}@{k}"
+                    value = record.metrics.get(key)
+                    if value is None or not 0.0 <= value <= 1.0:
+                        problems.append(f"{run_id} missing or invalid metric {key}")
+                        continue
+                    if previous is not None and value + 1e-9 < previous:
+                        problems.append(f"{run_id} non-monotonic metric {key}={value} < {previous}")
+                    previous = value
     return problems
 
 
@@ -439,16 +478,20 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--final-dir", default=None)
     parser.add_argument("--intermediate-dir", default=None)
+    parser.add_argument("--skip-intermediate", action="store_true")
+    parser.add_argument("--strict-final-grid", action="store_true")
     parser.add_argument("--out-dir", default="analysis/hfsa_depth_scaling_2026-05-23")
     args = parser.parse_args()
 
     work = Path(__file__).resolve().parents[2]
     final_dir = Path(args.final_dir) if args.final_dir else Path("/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hfsa_depth_scaling_sparse")
-    intermediate_dir = (
-        Path(args.intermediate_dir)
-        if args.intermediate_dir
-        else Path("/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hfsa_depth_scaling_intermediate_sparse")
-    )
+    intermediate_dir = None
+    if not args.skip_intermediate:
+        intermediate_dir = (
+            Path(args.intermediate_dir)
+            if args.intermediate_dir
+            else Path("/home/atuin/c107fa/c107fa12/synthetic-RLVL/passk_eval/hfsa_depth_scaling_intermediate_sparse")
+        )
     out_dir = Path(args.out_dir)
     if not out_dir.is_absolute():
         out_dir = work / out_dir
@@ -456,11 +499,15 @@ def main() -> None:
     tables.mkdir(parents=True, exist_ok=True)
 
     final_records = load_records(final_dir, FINAL_RE, intermediate=False)
-    intermediate_records = load_records(intermediate_dir, INTERMEDIATE_RE, intermediate=True)
-    problems = final_records_complete(final_records)
+    intermediate_records = (
+        load_records(intermediate_dir, INTERMEDIATE_RE, intermediate=True)
+        if intermediate_dir is not None
+        else []
+    )
+    problems = final_records_complete(final_records, strict_metrics=args.strict_final_grid)
     manifest = {
         "final_dir": str(final_dir),
-        "intermediate_dir": str(intermediate_dir),
+        "intermediate_dir": str(intermediate_dir) if intermediate_dir is not None else None,
         "final_json_count": len(final_records),
         "intermediate_json_count": len(intermediate_records),
         "depths": DEPTHS,
@@ -469,6 +516,7 @@ def main() -> None:
             "logic_joint": "citation_free_joint_pass",
             "nl_exact_joint": "nl_logic_joint_pass",
         },
+        "strict_final_grid": args.strict_final_grid,
         "problems": problems,
     }
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
@@ -508,11 +556,12 @@ def main() -> None:
         deltas,
         list(deltas[0].keys()),
     )
-    write_csv(
-        tables / "intermediate_seed3407_metrics.csv",
-        inter,
-        list(inter[0].keys()),
-    )
+    if inter:
+        write_csv(
+            tables / "intermediate_seed3407_metrics.csv",
+            inter,
+            list(inter[0].keys()),
+        )
     make_plots(out_dir, group_summary, depth_summary, deltas, inter)
     print(f"Wrote HFSA depth-scaling analysis to {out_dir}")
 

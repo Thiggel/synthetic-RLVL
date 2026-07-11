@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 10:27 CEST.
+Last updated: 2026-07-11 10:30 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -100,6 +100,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   self-contained valid-and-correct, `24/32` completed the format, and failures
   were late derivation errors or repetitive cap hits. These are one-seed pilot
   diagnostics, not yet a logic-vs-NL result.
+- The full-grid aggregator now recognizes corrected `branchproof_unique_v2`
+  filenames and has a strict acceptance mode. Corrected analysis uses
+  `--skip-intermediate --strict-final-grid`, preventing old checkpoint mixing
+  and refusing output unless all 30 unique rows, exact prompt/generation
+  counts, greedy cells, and pass@`1/2/4/8/16` correctness/validity/joint cells
+  are complete and monotonic. Focused tests pass (`9 passed`), old-grid
+  compatibility still finds exactly 30 complete rows, and a smoke correctly
+  rejects the current one-row pilot.
 - An exhaustive OLMo-tokenizer audit now covers all 1,000 corrected validation
   records at each of the 14 depths in both modalities (28,000 rendered gold
   traces). No target exceeds the shared 7,168-token generation cap and no
