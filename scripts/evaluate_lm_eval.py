@@ -11,9 +11,9 @@ from pathlib import Path
 
 
 TASK_SUITES = {
-    "reasoning_core": ["gsm8k", "fld_default", "agieval_logiqa_en"],
-    "logic_core": ["fld_default", "fld_logical_formula_default", "agieval_logiqa_en"],
-    "math_core": ["gsm8k"],
+    "reasoning_core": ["gsm8k", "hendrycks_math500", "agieval_logiqa_en"],
+    "logic_core": ["mmlu_formal_logic", "agieval_logiqa_en"],
+    "math_core": ["gsm8k", "hendrycks_math500"],
     "synthrlvl_ood": [
         "synthrlvl_gsm8k_tagged",
         "synthrlvl_longbench_hotpotqa_tagged",

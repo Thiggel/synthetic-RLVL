@@ -17,18 +17,23 @@ granularity does not apply to production.
 ## Downstream acceptance gate
 
 The installed lm-eval task registry does not contain `folio`; the original
-default would therefore fail all downstream jobs during task resolution. The
-validated replacement suite is `gsm8k`, `arc_challenge`, `hellaswag`,
-`winogrande`, `piqa`, `agieval_logiqa_en`, `fld_default`,
-`fld_logical_formula_default`, `bbh`, `mmlu`, and `mmlu_pro`. The paired FLD
-tasks measure transfer to independent natural-language and formula-based
-deduction surfaces, while MMLU-Pro adds a harder broad-reasoning control.
+default would therefore fail all downstream jobs during task resolution.
+Legacy `logiqa` and `logiqa2` also depend on dataset scripts rejected by the
+installed `datasets`; `agieval_logiqa_en` is the maintained replacement.
+Diagnostic raw samples additionally showed that installed FLD prompts request
+a proof while exact-match scoring expects only a class label. Because that
+creates an extraction-confounded floor, both FLD surfaces are excluded from
+the production transfer claim rather than patched post hoc.
 
-Smokes `3834728/3834737` found that both `logiqa` and `logiqa2` depend on
-Python dataset scripts no longer accepted by installed `datasets`. Direct task
-construction succeeded for `agieval_logiqa_en`, which uses a maintained data
-package and replaces them. Production evals are gated on corrected smoke
-`3834738`.
+The final suite is `gsm8k`, `hendrycks_math500`, `arc_challenge`,
+`hellaswag`, `winogrande`, `piqa`, `agieval_logiqa_en`, `bbh`, `mmlu`, and
+`mmlu_pro`. MMLU formal logic and BBH's logic subtasks provide targeted logic
+readouts; the full groups and remaining tasks measure broader transfer.
+
+Smokes `3834728/3834737` found the LogiQA incompatibilities. Diagnostic smoke
+`3834738` completed direct and native-chat execution and exposed the FLD
+metric problem through retained generations. Production evals are gated on
+final ten-task smoke `3834836`.
 The eval wrapper preflights actual task/dataset construction and archives incomplete output directories;
 the previous directory-exists guard could incorrectly suppress a retry after
 lm-eval wrote only `command.json` and then failed.

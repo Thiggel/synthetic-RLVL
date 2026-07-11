@@ -4,6 +4,26 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 11:25 CEST final reviewer smoke `3834836` completed in `00:08:50`. Direct
+  and native-chat branches each wrote one aggregate result containing all ten
+  required task/group keys plus 105 nonempty sample files. The command and raw
+  prompt arguments verify no chat wrapper in direct mode and Qwen
+  system/user/assistant rendering in chat mode. The downstream suite gate is
+  accepted; production evals now wait only on their model branches.
+- 11:20 CEST replaced six untouched production eval jobs that still carried a
+  stale task environment. New NL `3834842/3834843`, control
+  `3834844/3834845`, and logic `3834846/3834847` evals wait on both final
+  smoke `3834836` and their model/instruction parent. Slurm confirms every row
+  requests partition `a100`, feature `a100_80`, one A100 GPU, and 240 GB host
+  RAM. Replaced queued watcher `3834736` with current-ID watcher `3834848` at
+  the same 15:15 CEST start.
+- 11:15 CEST diagnostic smoke `3834738` completed direct and native-chat
+  branches. Raw FLD generations exposed a scientific prompt/metric mismatch:
+  the prompt asks for a proof, while exact match scores only the class label.
+  Removed both FLD tasks rather than accepting an extraction-confounded floor.
+  `hendrycks_math500` constructed cleanly and replaces that coverage in the
+  final ten-task suite. Submitted final direct/native-chat smoke `3834836`;
+  all ten datasets constructed successfully before model loading.
 - 11:04 CEST submitted third reviewer smoke `3834738` with
   `agieval_logiqa_en`, after directly constructing its 651-example test split.
   Added `scripts/validate_lm_eval_tasks.py` so smoke and production wrappers

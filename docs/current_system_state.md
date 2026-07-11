@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 11:04 CEST.
+Last updated: 2026-07-11 11:25 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -156,17 +156,18 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3830927_3 -> 3830928_3`; NL integration smoke `3831110` completed all three
   steps after loading the intended `0.85/0.15` normal/NL mix, releasing NL
   train/recovery `3831111_8 -> 3831112_8`. Logic and NL started together near
-  04:46 CEST on full A100-80GB nodes `a0534/a0535`. At 09:49 both were near
-  step `1241/8192`, `651M/4.295B` consumed tokens, `30.9--31.3K` tokens/s,
-  and loss about `1.77`, with no fatal/OOM/quota signature. Their 24-hour
+  04:46 CEST on full A100-80GB nodes `a0534/a0535`. At 11:20 they were at
+  steps `1391/1401` of `8192`, `729M/735M` consumed tokens,
+  `30.9--31.2K` tokens/s, and loss about `1.78`, with no fatal/OOM/quota
+  signature. Their 24-hour
   allocations cannot finish all 8192 steps, so the existing `afterany`
   recovery rows will resume from the complete step-4096 checkpoint. The live
   jobs explicitly override checkpoint interval to `4096`; neither corrected
   run retains 1024-step checkpoints.
-  The corrected logic branch uses upload `3831123`, direct eval `3834733`,
-  instruction SFT `3831125`, and instruction eval `3834734`; NL uses upload
-  `3831113`, direct eval `3834729`, instruction SFT `3831115`, and instruction
-  eval `3834730`. Both use isolated `bp_unique_v2` names and HF prefixes.
+  The corrected logic branch uses upload `3831123`, direct eval `3834846`,
+  instruction SFT `3831125`, and instruction eval `3834847`; NL uses upload
+  `3831113`, direct eval `3834842`, instruction SFT `3831115`, and instruction
+  eval `3834843`. Both use isolated `bp_unique_v2` names and HF prefixes.
 - A direct audit of Nanotron's production `TokenizedBytes`/
   `BlendableDataset` path found no mixture bug. The run blends 4,096-token
   chunks; each p15 arm realizes `157,287/1,048,576` proof chunks, or
@@ -185,8 +186,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `199G` (`29G` model, `171G` optimizer), not the earlier optimizer-only
   `91.4G` estimate. Its current allocation ends before the ETA, so guarded
   recovery can safely resume. Its downstream branch uses upload `3831119`,
-  direct eval `3834731`, instruction SFT `3831121`, and instruction eval
-  `3834732`, all with `afterok` dependencies.
+  direct eval `3834844`, instruction SFT `3831121`, and instruction eval
+  `3834845`, all with `afterok` dependencies.
 - Upload jobs now have a path-guarded opt-in that removes all local Nanotron
   checkpoints only after successful HF conversion/upload. It is enabled for
   control, corrected logic, and corrected NL, preventing three-condition
@@ -205,20 +206,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   verified native system/user/assistant rendering. Instruction jobs for all
   three conditions are additionally dependency-gated on this smoke.
 - Downstream-suite preflight found that the installed lm-eval harness does not
-  provide the requested `folio` task; leaving it in the list would make every
-  eval fail before model loading. The validated reviewer suite now contains
-  `gsm8k`, `arc_challenge`, `hellaswag`, `winogrande`, `piqa`,
-  `agieval_logiqa_en`,
-  natural-language `fld_default`, matched formal
-  `fld_logical_formula_default`, `bbh`, `mmlu`, and `mmlu_pro`. First smoke
-  `3834728` exposed that legacy `logiqa` uses a dataset
-  script rejected by the installed `datasets`; `logiqa2` proved to have the
-  same hidden incompatibility. The AGIEval-packaged English LogiQA task
-  constructs successfully and is the replacement. Third smoke `3834738` gates
-  all six production evals. The wrapper now preflights actual dataset construction,
-  not only registry names, and archives command-only/incomplete output
-  directories instead of incorrectly skipping retries.
-- Persistent plan oversight is active through begin-time job `3834736` using
+  provide `folio`, and legacy `logiqa`/`logiqa2` use dataset scripts rejected
+  by the installed `datasets`. Diagnostic smoke `3834738` completed both
+  direct and native-chat branches, but retained samples exposed a second
+  scientific issue: installed FLD prompts request a proof while its metric
+  exact-matches only `UNKNOWN/PROVED/DISPROVED`, creating an extraction floor.
+  FLD is therefore excluded rather than reported as transfer. The final suite
+  is `gsm8k`, `hendrycks_math500`, `arc_challenge`, `hellaswag`, `winogrande`,
+  `piqa`, `agieval_logiqa_en`, `bbh`, `mmlu`, and `mmlu_pro`; MMLU formal
+  logic and the BBH logic subtasks provide targeted logic readouts. Final
+  direct/native-chat smoke `3834836` completed in `00:08:50` after constructing
+  every dataset successfully. Each branch wrote one aggregate result with all
+  ten required task/group keys and 105 nonempty sample files. Retained prompts
+  verify plain direct formatting versus Qwen system/user/assistant chat
+  rendering. Replacement production evals `3834842..3834847`
+  require both that smoke and their model branch, and Slurm confirms each is
+  constrained to one A100-80GB GPU with 240 GB host RAM. The wrapper preflights
+  actual dataset construction and archives command-only/incomplete outputs.
+- Persistent plan oversight is active through begin-time job `3834848` using
   `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` on one
   A100-MIG slice. Its first pass was moved to 15:15 CEST to inspect the
   estimated 14:43 control recovery start, and it self-schedules its successor
@@ -407,5 +412,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582,3834706,3834707,3834722,3834728,3834729,3834730,3834731,3834732,3834733,3834734,3834736,3834737,3834738 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834842,3834843,3834844,3834845,3834846,3834847,3834848 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

@@ -26,7 +26,7 @@ CHECKPOINT_STEP="${CHECKPOINT_STEP:-8192}"
 HF_NAMESPACE="${HF_NAMESPACE:-flaitenberger}"
 HF_REPO_PREFIX="${HF_REPO_PREFIX:-qwen25-7b-logic-cot-midtrain}"
 EVAL_BRANCH="${EVAL_BRANCH:-direct}"
-REVIEWER_TASKS_RESOLVED="${REVIEWER_TASKS_COLON:-${REVIEWER_TASKS:-gsm8k,arc_challenge,hellaswag,winogrande,piqa,agieval_logiqa_en,fld_default,fld_logical_formula_default,bbh,mmlu,mmlu_pro}}"
+REVIEWER_TASKS_RESOLVED="${REVIEWER_TASKS_COLON:-${REVIEWER_TASKS:-gsm8k,arc_challenge,hellaswag,winogrande,piqa,agieval_logiqa_en,hendrycks_math500,bbh,mmlu,mmlu_pro}}"
 REVIEWER_TASKS_RESOLVED="${REVIEWER_TASKS_RESOLVED//:/,}"
 
 MIX_KINDS=(control logic logic logic logic logic nl_exact nl_exact nl_exact nl_exact nl_exact)
