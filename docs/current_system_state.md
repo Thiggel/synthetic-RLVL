@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 21:20 CEST.
+Last updated: 2026-07-11 23:24 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -124,16 +124,16 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   adding measured greedy generation, setup, and scoring projects about nine
   hours total. This is well below the 20-hour intervention threshold, so no
   depth sharding or protocol reduction is justified.
-- At 21:20 CEST, all 30 SFT rows had started and 19 final-adapter directories
-  were present: logic rows `0..12` plus NL rows `15..20`; active rows were
-  logic `13/14` and NL `21..29`, with representative progress from
-  `6900/10000` (`13/14`) and `9390/10000` (`21/22`) down to `1270/10000`
-  (`29`). Eval rows `0/1/2` remained active on A100-80GB at about
-  `8.6/7.0/7.0` hours and had reached sampled chunks `96/59/69` of `112`.
-  The deeper chunks are slower than the early projection, but all three remain
-  comfortably below the 20-hour intervention threshold. No production metric
-  or sample file had finalized, and no failed row or fatal/OOM/quota signature
-  appeared, so no sharding, resubmission, or protocol change was made.
+- At 23:24 CEST, all 30 SFT rows had started and 22 final-adapter directories
+  were present: logic rows `0..12` plus NL rows `15..23`; active rows were
+  logic `13/14` and NL `24..29`. Eval rows `0/1/2` remained active at sampled
+  chunks `110/70/83` of `112` after about `10.7/9.1/9.1` hours. Slurm reports
+  `Features=a100_80` for the parent and every expanded row, and the allocated
+  nodes expose active feature `a100_80`; the same constraint is present on all
+  six downstream Nanotron evals. No production metric or sample file had
+  finalized, and no failed row or fatal/OOM/quota signature appeared. Row 0
+  should be treated as the first production timing/sample gate when it closes;
+  no sharding, resubmission, or protocol change is currently justified.
 - The pilot's primary self-contained metric is citation-free validity because
   training targets use rule labels (`R`, `->E`) without numbered premise
   citations. Strict `valid=0` is expected under that citation-demanding metric,
@@ -218,10 +218,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3835442_3/3835443_8`; the replacements preserve the same after-any parents,
   isolated roots, corpus overrides, and step-4096 interval while disabling W&B
   service startup and excluding nodes `a0803/a0831`.
-  At 21:20 they remained healthy and matched at steps `3521/3531`, about
-  `1.85B` consumed tokens each, `30.9/31.2K` tokens/s, and loss about
-  `1.68--1.79`, with no fatal signature. Neither corrected run has reached its
-  first expected step-4096 checkpoint yet.
+  At 23:24 they remained healthy and matched near steps `3961/3981`, about
+  `2.08B/2.09B` consumed tokens, `30.9/31.2K` tokens/s, and loss about
+  `1.66--1.82`, with no fatal signature. Neither corrected run has reached its
+  first expected step-4096 checkpoint yet. Once each checkpoint is fully
+  written and its metadata, model shards, optimizer shards, and zero-byte-file
+  checks pass, end the corresponding parent allocation so its `afterany`
+  recovery can resume from 4096 instead of spending the remaining allocation
+  on work that cannot be checkpointed before the 24-hour limit.
   The corrected logic branch uses upload `3831123`, direct eval `3834908`,
   instruction SFT `3831125`, and instruction eval `3834909`; NL uses upload
   `3831113`, direct eval `3834904`, instruction SFT `3831115`, and instruction

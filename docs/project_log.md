@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 23:24 CEST live audit found 22/30 corrected BranchProof final adapters:
+  logic rows `0..12` and NL rows `15..23`; active rows are logic `13/14` and
+  NL `24..29`. Eval rows `3834582_0/1/2` reached sampled chunks `110/70/83`
+  of `112` after about `10.7/9.1/9.1` hours without a fatal signature. Slurm
+  reports `Features=a100_80` on the full eval array and all six downstream
+  Nanotron evals, and the active eval nodes expose the same feature. Corrected
+  logic/NL Nanotron runs remain matched near steps `3961/3981` and
+  `2.08B/2.09B` tokens. Their step-4096 checkpoints are imminent; validate the
+  complete checkpoint trees before ending the parents and releasing their
+  `afterany` recoveries, avoiding roughly five hours of uncheckpointed replay.
 - 21:20 CEST plan-driven oversight found no recovery trigger but recorded
   material progress. All 30 corrected BranchProof SFT rows have started and 19
   final adapters are present; active A100-80 eval rows `3834582_0/1/2` reached
