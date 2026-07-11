@@ -44,6 +44,7 @@ python scripts/analysis/audit_branchproof_unique_v2_pilot_eval.py \
   --k-values 1,2,4,8,16 \
   --samples-per-step 32 \
   --generations-per-prompt 16 \
+  --train-max "${TRAIN_MAX}" \
   --expected-retained-samples 896 \
   --expected-total-samples 1024 \
   --sample-source-filter synthetic_sampled \

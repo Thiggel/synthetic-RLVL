@@ -292,8 +292,9 @@ class ProofAnalyzer:
         graph = ProofGraph(nodes=nodes, edges=edges)
 
         invalid_count = sum(1 for line in valid_lines if not line.valid)
+        premises_valid = all(premise.syntax_valid for premise in analyzed_premises)
         return ProofReport(
-            ok=(invalid_count == 0 and proof.is_complete()),
+            ok=(premises_valid and invalid_count == 0 and proof.is_complete()),
             rendered=str(proof),
             error=first_error,
             conclusion_supported=bool(conclusion_candidates),
@@ -427,9 +428,10 @@ class ProofAnalyzer:
         )
         nodes = tuple(sorted({p.line_number for p in analyzed_premises} | {l.line_number for l in valid_lines}))
         invalid_count = sum(1 for line in valid_lines if not line.valid)
+        premises_valid = all(premise.syntax_valid for premise in analyzed_premises)
         conclusion_supported = bool(conclusion_candidates)
         return ProofReport(
-            ok=(invalid_count == 0 and conclusion_supported),
+            ok=(premises_valid and invalid_count == 0 and conclusion_supported),
             rendered="",
             error=first_error,
             conclusion_supported=conclusion_supported,

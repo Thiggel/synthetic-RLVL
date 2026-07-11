@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 23:24 CEST.
+Last updated: 2026-07-12 00:14 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -74,30 +74,30 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   released at 10:15 CEST. Rows `0..11` started immediately on A40 nodes and
   entered optimizer training; at 10:40 they ranged from step `239` to `1333` of
   `10000` with no fatal/OOM/quota signature. Rows `12..29` wait only on the
-  array throttle. Every downstream eval row
-  `3834582` remains constrained to `a100` plus feature
+  array throttle. Every validity-fixed downstream eval row
+  `3838163` remains constrained to `a100` plus feature
   `a100_80`, throttle 6, and starts only after its corresponding SFT row
-  succeeds. It replaces canceled pending array `3829073`; the replacement
+  succeeds. It replaces pre-fix/canceled arrays `3829073/3834582`; the replacement
   retains two sampled generations for every one of the 448 prompts so the
   required qualitative audit can cover all depths without changing compute.
-  Row-level audit array `3834706_[0-29%8]` follows the eval with row-wise
+  Row-level audit array `3838164_[0-29%8]` follows the eval with row-wise
   `aftercorr` dependencies. It requires exact metrics, including translated NL
   parse/citation-free-valid/joint metrics, plus 1,024 retained rows with
   numeric formal and translated validity fields,
   all 448 prompts, sampled indices `0/1` for every prompt, complete chunk logs,
-  cap diagnostics, and fresh constants in formal prompts. Replacement
-  aggregation `3835779` releases only after all 30 row audits
-  pass. It supersedes canceled pending job `3834707` and now also runs a
+  cap diagnostics, fresh constants in formal prompts, and no contradiction
+  between a positive validity flag and retained validity diagnostics.
+  Replacement aggregation `3838165` releases only after all 30 row audits
+  pass. It supersedes canceled jobs `3834707/3835779` and also runs a
   cross-grid qualitative audit. That gate requires all 30 sample artifacts and
   exact per-depth retained coverage, then indexes representative shallow,
   train-edge, first-OOD, and depth-50 correct/incorrect/valid/invalid cases
   across both modalities, every train range, and all seeds. It also identifies
   retained examples from generation chunks that reached the `7168` cap and
   writes reviewable JSON/Markdown supplements before aggregation can succeed.
-  The modality-aware row gate passes 17 focused tests and re-accepts the real
-  corrected pilot with all 2,155 metrics and 128 retained samples. Because the
-  pending audit rows load the current Python at runtime, no resubmission was
-  needed after this strengthening.
+  The logic-engine and modality-aware gate changes pass 26 focused tests. The
+  pre-fix first production row is intentionally rejected and quarantined;
+  pending audit rows load the fixed Python at runtime.
   The pilot had occupied row 12's production filenames with a smaller
   224-prompt/8-generation artifact. Those files are preserved under the
   `_pilot_gate` suffix and the production names are now clear, so row 12 cannot
@@ -124,16 +124,18 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   adding measured greedy generation, setup, and scoring projects about nine
   hours total. This is well below the 20-hour intervention threshold, so no
   depth sharding or protocol reduction is justified.
-- At 23:24 CEST, all 30 SFT rows had started and 22 final-adapter directories
-  were present: logic rows `0..12` plus NL rows `15..23`; active rows were
-  logic `13/14` and NL `24..29`. Eval rows `0/1/2` remained active at sampled
-  chunks `110/70/83` of `112` after about `10.7/9.1/9.1` hours. Slurm reports
-  `Features=a100_80` for the parent and every expanded row, and the allocated
-  nodes expose active feature `a100_80`; the same constraint is present on all
-  six downstream Nanotron evals. No production metric or sample file had
-  finalized, and no failed row or fatal/OOM/quota signature appeared. Row 0
-  should be treated as the first production timing/sample gate when it closes;
-  no sharding, resubmission, or protocol change is currently justified.
+- At 00:14 CEST, 22/30 SFT adapters were final: logic rows `0..12` and NL rows
+  `15..23`; logic `13/14` and NL `24..29` remained active. First full eval row
+  `3834582_0` completed on A100-80GB in `11:18:40`, but raw-sample inspection
+  found 14/896 retained sampled traces marked citation-free valid despite
+  premise-parse errors. `ProofAnalyzer` did not require all premises to parse
+  when computing `ok`. The logic engine and artifact gate are fixed and 26
+  focused tests pass. Old eval/audit/aggregate `3834582/3834706/3835779` were
+  canceled; pre-fix row 0 is quarantined outside aggregate inputs. Clean
+  A100-80GB replacement eval `3838163`, audit `3838164`, and aggregate
+  `3838165` are dependency submitted with the unchanged 448-prompt,
+  16-generation, all-depth protocol. Details are in
+  `docs/branchproof_validity_evaluator_audit_2026-07-12.md`.
 - The pilot's primary self-contained metric is citation-free validity because
   training targets use rule labels (`R`, `->E`) without numbered premise
   citations. Strict `valid=0` is expected under that citation-demanding metric,
@@ -218,14 +220,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3835442_3/3835443_8`; the replacements preserve the same after-any parents,
   isolated roots, corpus overrides, and step-4096 interval while disabling W&B
   service startup and excluding nodes `a0803/a0831`.
-  At 23:24 they remained healthy and matched near steps `3961/3981`, about
-  `2.08B/2.09B` consumed tokens, `30.9/31.2K` tokens/s, and loss about
-  `1.66--1.82`, with no fatal signature. Neither corrected run has reached its
-  first expected step-4096 checkpoint yet. Once each checkpoint is fully
-  written and its metadata, model shards, optimizer shards, and zero-byte-file
-  checks pass, end the corresponding parent allocation so its `afterany`
-  recovery can resume from 4096 instead of spending the remaining allocation
-  on work that cannot be checkpointed before the 24-hour limit.
+  Both corrected runs reached step 4096 near midnight. A persistent verifier
+  accepted each 645-file tree: 625 model files, four scheduler files, eight RNG
+  files, no zero-byte files, four equal `22,848,937,060`-byte optimizer shards,
+  step/sample/token offsets `4096/524288/2147483648`, and the exact checkpoint
+  split of `1,825,357,824` normal plus `322,125,824` proof tokens. Parents
+  `3830927_3/3831111_8` were canceled only after acceptance, avoiding about
+  five hours of uncheckpointed work. Recoveries `3835442_3/3835443_8` and
+  control `3835438_0` are released but account-GRES pending.
   The corrected logic branch uses upload `3831123`, direct eval `3834908`,
   instruction SFT `3831125`, and instruction eval `3834909`; NL uses upload
   `3831113`, direct eval `3834904`, instruction SFT `3831115`, and instruction
@@ -249,9 +251,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   metadata. The full filesystem-accounted checkpoint footprint is about
   `199G` (`29G` model, `171G` optimizer), not the earlier optimizer-only
   `91.4G` estimate. The checkpoint remained unchanged and complete.
-  Replacement `3835438_0` is pending with W&B disabled and `a0831` excluded;
-  Slurm's current estimate is 2026-07-12 05:14, immediately after the two live
-  full-node proof allocations end. The scheduler
+  Replacement `3835438_0` is pending with W&B disabled and `a0831` excluded.
+  The scheduler
   currently reports `AssocGrpGRES`: the account-level GPU allocation is
   saturated while the live full-node proof runs and A100 evaluations execute.
   The estimate is provisional, but there is no dependency, feature, or
@@ -260,10 +261,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   and three A100s for corrected eval. Releasing enough account allocation for
   the eight-GPU control immediately would require displacing active corrected
   BranchProof work, contrary to the plan's priority order, so no hold,
-  cancellation, or throttle reduction was applied. At 21:20 the project tree
-  used `536G`; the control step-4096 checkpoint remains the only production
-  checkpoint, and adding the two expected approximately `199G` proof
-  checkpoints remains below the documented `1048.6G` soft quota. Upload
+  cancellation, or throttle reduction was applied. After all three accepted
+  step-4096 checkpoints were present, the project tree used about `912G`,
+  below the documented `1048.6G` soft quota. Upload
   `3831119` was rewired to it. Its downstream branch uses upload `3831119`,
   replacement direct eval `3835927`, instruction SFT `3831121`, and
   replacement instruction eval `3835928`, all with `afterok` dependencies.
@@ -528,5 +528,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443,3835779,3835927,3835928,3836159 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443,3835779,3835927,3835928,3836159,3838163,3838164,3838165 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

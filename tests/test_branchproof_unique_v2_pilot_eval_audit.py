@@ -68,6 +68,9 @@ def _write_artifacts(
                 "correct": 1.0,
                 "valid": 1.0,
                 "citation_free_valid": 1.0,
+                "citation_free_validity_error": None,
+                "citation_free_invalid_line_errors": [],
+                "citation_free_line_valid_fraction": 1.0,
                 "nl_logic_parse": 0.0,
                 "nl_logic_citation_free_valid": 0.0,
             }
@@ -121,6 +124,28 @@ def test_rejects_missing_sample_validity_metric(tmp_path: Path):
     report = _audit(tmp_path, missing_sample_metric=True)
     assert not report["accepted"]
     assert any("invalid nl_logic_citation_free_valid" in error for error in report["errors"])
+
+
+def test_rejects_sample_validity_diagnostic_contradiction(tmp_path: Path):
+    metrics_path, samples_path = _write_artifacts(tmp_path)
+    rows = [json.loads(line) for line in samples_path.read_text().splitlines()]
+    rows[-1]["valid"] = 0.0
+    rows[-1]["citation_free_validity_error"] = "premise parse failed: malformed"
+    samples_path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+
+    report = AUDIT.audit_artifacts(
+        metrics_path,
+        samples_path,
+        steps=[1, 18],
+        k_values=[1, 2],
+        samples_per_step=2,
+        generations_per_prompt=2,
+        expected_retained_samples=2,
+        train_max=18,
+    )
+
+    assert not report["accepted"]
+    assert any("citation_free_valid=1 with error" in error for error in report["errors"])
 
 
 def test_audits_complete_generation_log_and_records_cap_hits(tmp_path: Path):
@@ -213,6 +238,9 @@ def test_accepts_complete_sampled_qualitative_artifacts(tmp_path: Path):
                         "correct": 1.0,
                         "valid": 1.0,
                         "citation_free_valid": 1.0,
+                        "citation_free_validity_error": None,
+                        "citation_free_invalid_line_errors": [],
+                        "citation_free_line_valid_fraction": 1.0,
                         "nl_logic_parse": 0.0,
                         "nl_logic_citation_free_valid": 0.0,
                     }
@@ -263,6 +291,9 @@ def test_filters_combined_greedy_and_sampled_retention(tmp_path: Path):
                         "correct": 1.0,
                         "valid": 1.0,
                         "citation_free_valid": 1.0,
+                        "citation_free_validity_error": None,
+                        "citation_free_invalid_line_errors": [],
+                        "citation_free_line_valid_fraction": 1.0,
                         "nl_logic_parse": 0.0,
                         "nl_logic_citation_free_valid": 0.0,
                     }

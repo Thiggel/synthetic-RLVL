@@ -348,6 +348,29 @@ def _audit_samples(
                 errors.append(f"sample {index} has invalid {field}: {value!r}")
             elif value > 0:
                 by_step[step][field] += 1
+        if row.get("citation_free_valid") == 1.0 and row.get("valid") != 1.0:
+            validity_error = row.get("citation_free_validity_error")
+            invalid_lines = row.get("citation_free_invalid_line_errors")
+            line_fraction = row.get("citation_free_line_valid_fraction")
+            if validity_error not in (None, ""):
+                errors.append(
+                    f"sample {index} has citation_free_valid=1 with error: {validity_error}"
+                )
+            if not isinstance(invalid_lines, list) or invalid_lines:
+                errors.append(
+                    f"sample {index} has citation_free_valid=1 with invalid lines: "
+                    f"{invalid_lines!r}"
+                )
+            if (
+                isinstance(line_fraction, bool)
+                or not isinstance(line_fraction, (int, float))
+                or not math.isfinite(float(line_fraction))
+                or not math.isclose(float(line_fraction), 1.0)
+            ):
+                errors.append(
+                    f"sample {index} has citation_free_valid=1 with line fraction "
+                    f"{line_fraction!r}"
+                )
         representatives.setdefault(
             str(step),
             {

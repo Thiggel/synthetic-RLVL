@@ -2,6 +2,26 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-12
+
+- 00:14 CEST first full corrected BranchProof row `3834582_0` completed on
+  A100-80GB in `11:18:40`, then failed qualitative validity review: 14/896
+  retained sampled traces had `citation_free_valid=1` alongside premise-parse
+  errors. `ProofAnalyzer.ok` ignored malformed premises. Strict and
+  citation-free checks now require all premises to parse; the row audit rejects
+  validity/error, invalid-line, and line-fraction contradictions. Twenty-six
+  focused tests pass. Canceled old eval/audit/aggregate
+  `3834582/3834706/3835779`, quarantined pre-fix row 0, and submitted clean
+  A100-80GB replacement chain `3838163 -> 3838164 -> 3838165`. Rows 1/2 were
+  stopped near `09:57`; rows 3--29 had not started.
+- 00:01 CEST accepted both corrected Nanotron step-4096 checkpoints before
+  canceling parents `3830927_3/3831111_8`. Each has 625 model files, four equal
+  `22,848,937,060`-byte optimizer shards, four scheduler files, eight RNG
+  files, no empty files, offsets `4096/524288/2147483648`, and exact
+  `1,825,357,824 + 322,125,824` normal/proof token accounting. Recoveries
+  `3835442_3/3835443_8` and control `3835438_0` are account-GRES pending;
+  project usage is about `912G`.
+
 ## 2026-07-11
 
 - 23:24 CEST live audit found 22/30 corrected BranchProof final adapters:

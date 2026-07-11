@@ -12,6 +12,8 @@ cd "${SLURM_SUBMIT_DIR:-$PWD}"
 mkdir -p logs
 source ./scripts/env.sh
 
+EVAL_ARRAY_JOB_ID="${EVAL_ARRAY_JOB_ID:-3834582}"
+
 VENV_PATH="${VENV_PATH:-${HPCVAULT}/.venv_rlvl_posttrain}"
 export VIRTUAL_ENV="${VENV_PATH}"
 export PATH="${VENV_PATH}/bin:${PATH}"
@@ -33,6 +35,6 @@ python scripts/analysis/aggregate_hfsa_depth_scaling.py \
 python scripts/analysis/audit_branchproof_unique_v2_qualitative_grid.py \
   --final-dir "${HPCVAULT}/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710" \
   --log-dir logs \
-  --eval-array-job-id 3834582 \
+  --eval-array-job-id "${EVAL_ARRAY_JOB_ID}" \
   --output-json analysis/branchproof_unique_v2_20260711/qualitative_grid_audit.json \
   --output-markdown analysis/branchproof_unique_v2_20260711/qualitative_grid_audit.md

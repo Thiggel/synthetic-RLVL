@@ -142,3 +142,24 @@ S2(a) ; ->E,2,4
 
     assert report.ok is False
     assert report.lines[-1].valid is False
+
+
+def test_validation_rejects_malformed_premise_even_if_conclusion_is_supported():
+    engine = LogicEngine()
+    premises = "broken =, P(a)"
+
+    strict = engine.analyze_proof(
+        premises=premises,
+        conclusion="P(a)",
+        proof="P(a) ; R,2",
+    )
+    citation_free = engine.analyze_proof_citation_free(
+        premises=premises,
+        conclusion="P(a)",
+        proof="P(a) ; R",
+    )
+
+    assert strict.ok is False
+    assert citation_free.ok is False
+    assert strict.error and strict.error.startswith("premise parse failed:")
+    assert citation_free.error and citation_free.error.startswith("premise parse failed:")
