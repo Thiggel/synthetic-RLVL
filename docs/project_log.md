@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 16:05 CEST first production BranchProof timing is safely below the sharding
+  trigger. A100-80 row `3834582_0` completed all seven greedy chunks and
+  sampled `55/112` after `3:19`. Completed sampled generation totals `2.05h`;
+  charging all 57 unfinished chunks the worst observed `350.2s` gives `7.60h`
+  sampled total and roughly nine hours including greedy/setup/scoring. Keep
+  the full protocol unchanged. Logic/NL Nanotron remain healthy near steps
+  `2391/2411`. Control recovery `3835438_0` currently estimates 2026-07-12
+  12:00; every compatible 8xA100-80GB node is allocated or mixed, so no safe
+  widening is available. Successor watcher `3835433` remains pending for
+  21:15.
 - 15:30 CEST control recovery `3828946_0` failed before its first resumed
   optimizer step because W&B's local service did not publish a port file on
   node `a0831`. Logs verified the intended step-4096 checkpoint, optimizer/LR

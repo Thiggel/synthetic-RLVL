@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 15:30 CEST.
+Last updated: 2026-07-11 16:05 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -102,6 +102,15 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   A100-80 eval is now approved unchanged; treat its first completed row as the
   production timing measurement and intervene only if it approaches the
   24-hour limit. Preserve all depths, prompts, generations, and pass@16.
+  The first production row now provides a direct A100-80 measurement. At
+  `3:19` wall time it had completed all seven greedy chunks and sampled chunk
+  `55/112`. Completed sampled depths `1/2/5/10/12/15` took
+  `39/65/171/1661/1553/1739` seconds, and seven of eight depth-18 chunks took
+  `2158` seconds. Even charging every one of the 57 unfinished chunks the
+  worst observed `350.2` seconds gives `7.60` hours for sampled generation;
+  adding measured greedy generation, setup, and scoring projects about nine
+  hours total. This is well below the 20-hour intervention threshold, so no
+  depth sharding or protocol reduction is justified.
 - The pilot's primary self-contained metric is citation-free validity because
   training targets use rule labels (`R`, `->E`) without numbered premise
   citations. Strict `valid=0` is expected under that citation-demanding metric,
@@ -194,7 +203,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `199G` (`29G` model, `171G` optimizer), not the earlier optimizer-only
   `91.4G` estimate. The checkpoint remained unchanged and complete.
   Replacement `3835438_0` is pending with W&B disabled and `a0831` excluded;
-  upload `3831119` was rewired to it. Its downstream branch uses upload `3831119`,
+  Slurm's current backfill estimate is 2026-07-12 12:00 on `a0932`. All
+  compatible 8xA100-80GB nodes are currently allocated or mixed, so there is
+  no safe partition widening or resource-preserving earlier placement. Upload
+  `3831119` was rewired to it. Its downstream branch uses upload `3831119`,
   direct eval `3834906`, instruction SFT `3831121`, and instruction eval
   `3834907`, all with `afterok` dependencies.
 - Upload jobs now have a path-guarded opt-in that removes all local Nanotron
