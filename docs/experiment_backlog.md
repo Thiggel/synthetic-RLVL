@@ -1,6 +1,6 @@
 # Experiment Backlog
 
-Last updated: 2026-07-11 10:43 CEST.
+Last updated: 2026-07-11 10:46 CEST.
 
 This file is for planned work that is not yet running. Running jobs live in `docs/running_experiments.md`.
 
@@ -47,7 +47,7 @@ This file is for planned work that is not yet running. Running jobs live in `doc
 
 - 2026-06-19 10:51 official preprint draft created in `../synthetic-RLVL-report/official_preprint/` using the new report-repo template. The old generated `../synthetic-RLVL-report/main.tex` remains the informal report. The preprint currently uses `BranchProof`/`AttrCon` as concise dataset names, omits iGSM/Maze from the main narrative, centers the claim on answer correctness, and includes dedicated figures for main correctness, attribute correctness, shortcut robustness, syntax controls, trace integrity, hybrid order, conditioned dual, and architecture transfer. Static figure/citation checks pass; TeX compilation still needs a machine with `latexmk`, `pdflatex`, `tectonic`, or `xelatex`.
 - Plan-driven oversight for the current critical path is active through begin-time
-  job `3834564`. Its dedicated wrapper self-schedules a successor every six
+  job `3834722`. Its dedicated wrapper self-schedules a successor every six
   hours before invoking Codex, covers the complete attached BranchProof,
   Nanotron, downstream-transfer, conditional-expansion, and report plan, and
   stops only after end-to-end completion is verified.

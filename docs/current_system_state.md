@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 10:43 CEST.
+Last updated: 2026-07-11 10:46 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -202,7 +202,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   eval rows retained targets, with lengths `71/537/1202` min/mean/max and a
   verified native system/user/assistant rendering. Instruction jobs for all
   three conditions are additionally dependency-gated on this smoke.
-- Persistent plan oversight is active through begin-time job `3834564` using
+- Persistent plan oversight is active through begin-time job `3834722` using
   `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` on one
   A100-MIG slice. Its first pass was moved to 15:15 CEST to inspect the
   estimated 14:43 control recovery start, and it self-schedules its successor
@@ -391,5 +391,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582,3834706,3834707 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582,3834706,3834707,3834722 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

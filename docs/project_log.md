@@ -4,6 +4,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:46 CEST replaced the queued first watcher so its Slurm-spooled prompt
+  contains the current recovery graph. Canceled untouched begin-time job
+  `3834564` and submitted `3834722` for the same 15:15 CEST start. The updated
+  prompt tracks eval `3834582`, row audits `3834706`, and aggregation `3834707`;
+  it retains the six-hour self-scheduling chain and full plan scope.
 - 10:43 CEST prevented a stale pilot artifact from suppressing production row
   12. The pilot gate had written an unsuffixed 224-prompt/8-generation JSON,
   which the full wrapper would otherwise treat as complete. Preserved its
