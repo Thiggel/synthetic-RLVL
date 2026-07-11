@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 16:43 CEST.
+Last updated: 2026-07-11 16:52 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -230,8 +230,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   compatible 8xA100-80GB nodes are currently allocated or mixed, so there is
   no safe partition widening or resource-preserving earlier placement. Upload
   `3831119` was rewired to it. Its downstream branch uses upload `3831119`,
-  direct eval `3834906`, instruction SFT `3831121`, and instruction eval
-  `3834907`, all with `afterok` dependencies.
+  replacement direct eval `3835927`, instruction SFT `3831121`, and
+  replacement instruction eval `3835928`, all with `afterok` dependencies.
+  Untouched old evals `3834906/3834907` were canceled before start because
+  their environment omitted the corrected unified output root and would have
+  written to the legacy default root; the replacements preserve the same
+  model parents, suite, resources, and A100-80GB constraint.
 - Upload jobs now have a path-guarded opt-in that removes all local Nanotron
   checkpoints only after successful HF conversion/upload. It is enabled for
   control, corrected logic, and corrected NL, preventing three-condition
@@ -268,11 +272,22 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   sample files, complete unique-document coverage, finite primary metrics,
   no evaluation limit, and the correct direct-versus-Qwen-chat rendering.
   Existing results are skippable only after this audit passes. Final audited
-  production evals are NL `3834904/3834905`, control `3834906/3834907`, and
+  production evals are NL `3834904/3834905`, control `3835927/3835928`, and
   logic `3834908/3834909`; they wait on their live model branches. Slurm
   confirms each is constrained to one A100-80GB GPU with 240 GB host RAM.
   The wrapper also preflights actual dataset construction and archives
   command-only, incomplete, or audit-rejected outputs.
+- Strict downstream analysis job `3836159` waits for all six accepted evals.
+  `aggregate_nanotron_downstream_pilot.py` refuses an incomplete or
+  audit-rejected bundle and writes individual task values/stderr, deltas from
+  the matched control, instruction-minus-direct deltas, and four predeclared
+  unweighted macros: all ten primary tasks, reasoning core, general
+  multiple-choice, and a targeted logic set. The targeted set is fixed before
+  results and contains LogiQA, MMLU formal logic, BBH formal fallacies, and the
+  three BBH logical-deduction tasks. It also indexes correct/incorrect retained
+  samples from fixed representative tasks using each task's exact primary
+  filter. This pilot has one training run per condition; benchmark stderr is
+  reported, but macro values do not estimate training-seed uncertainty.
 - Persistent plan oversight is active through begin-time successor `3835433` using
   `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` on one
   A100-MIG slice. Initial pass `3834911` completed cleanly after scheduling
@@ -470,5 +485,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443,3835779 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443,3835779,3835927,3835928,3836159 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

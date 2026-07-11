@@ -49,6 +49,20 @@ and both final-smoke branches pass; the smoke has 106 JSONL rows because GSM8K
 stores separate strict and flexible-extraction filter rows for the same
 document, which the audit correctly counts once by `doc_id`.
 
+The matched comparison is also fixed before results. Control evals
+`3835927/3835928`, logic `3834908/3834909`, and NL `3834904/3834905` all write
+to the unified corrected root and feed strict aggregate `3836159`. Canceled
+pending control evals `3834906/3834907` used the legacy default root. The
+aggregate requires all six production audits and reports each primary task,
+task stderr, deltas from control, and instruction-minus-direct deltas. Its
+predeclared unweighted macros are all-primary, reasoning-core, general
+multiple-choice, and targeted logic. Targeted logic contains LogiQA, MMLU
+formal logic, BBH formal fallacies, and BBH logical deduction at three, five,
+and seven objects. Representative correct/incorrect samples are indexed with
+the exact primary filter, avoiding GSM8K strict-versus-flexible mixing. Because
+there is one training run per condition, macro results do not estimate
+training-seed variance.
+
 ## Production Configuration
 
 The production job uses:

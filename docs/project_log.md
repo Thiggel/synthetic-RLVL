@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 16:52 CEST closed the Nanotron downstream comparison gap before eval release.
+  Pending control evals `3834906/3834907` omitted the corrected unified output
+  root; canceled them untouched and submitted otherwise identical A100-80GB
+  replacements `3835927/3835928` behind upload/instruction parents
+  `3831119/3831121`. Added strict analyzer and dependency job `3836159` behind
+  all six control/logic/NL direct/instruction evals. It re-runs production
+  audits, exports per-task stderr and control/instruction deltas, computes four
+  predeclared macros, and indexes fixed-filter correct/incorrect samples.
+  Eight focused tests, `py_compile`, shell syntax, Slurm test submission, and a
+  real smoke-schema exercise pass (`96` task rows, `24` macro rows, `30`
+  qualitative selections). The pilot has one training run per condition, so
+  macro values are not presented as training-seed means.
 - 16:43 CEST live BranchProof transition: SFT rows `16/17` completed cleanly,
   rows `23/24` started, and the active/pending split is now completed
   `0..8,12,15..17`, running `9/10/11/13/14/18..24`, and throttle-pending
