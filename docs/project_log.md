@@ -4,6 +4,21 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:23 CEST installed persistent six-hour critical-path oversight. Added
+  `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm`,
+  validated it with `bash -n`, a batch-shell `cs` lookup, Slurm `--test-only`,
+  and `git diff --check`, and submitted initial begin-time job `3834564` for
+  about 16:21 CEST on one A100-MIG slice. Each pass schedules its successor
+  before Codex, executes the full BranchProof/Nanotron/downstream/conditional/
+  report plan, avoids no-op doc churn, and cancels the chain only after the
+  complete plan is verified. Maximum default coverage is 120 six-hour passes.
+- 10:21 CEST Nanotron checkpoint/quota verification: corrected logic/NL jobs
+  are healthy near steps `1181/1191`, `619M/624M` tokens, and `31K` tokens/s.
+  Their live exports override checkpoint interval to `4096`; the earlier
+  handoff wording about 1024-step checkpoints was wrong. Neither corrected run
+  has written a checkpoint yet, while the unaffected control retains one
+  complete `199G` step-4096 checkpoint. This keeps the expected first recovery
+  boundary below the vault hard quota.
 - 10:15 CEST user accepted the expected corrected eval runtime and required
   A100-80GB evaluation. Verified submitted eval array `3829073_[0-29%6]` is
   partition `a100` with feature `a100_80`, 24-hour limit, and per-row
@@ -43,9 +58,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   running on full A100-80GB nodes `a0534/a0535`. Both are near step
   `1071/8192`, `562M/4.295B` tokens, `31.0--31.3K` tokens/s, and loss about
   `1.73`, with no fatal/OOM/quota signature. Their recovery rows will resume
-  from the newest complete 1024-step checkpoint after the expected 24-hour
-  allocation boundary. Normal-control recovery `3828946_0` remains
-  priority-pending with a 17:45 CEST start estimate.
+  after the expected 24-hour allocation boundary from the complete step-4096
+  checkpoint. Normal-control recovery `3828946_0` remains priority-pending
+  with a 17:45 CEST start estimate.
 - 02:10 CEST sampled qualitative coverage repair: discovered that the gate's
   `collect_samples=128` budget fills entirely during greedy scoring, leaving no
   raw sampled pass@k generations. Added independent

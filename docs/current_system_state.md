@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 10:16 CEST.
+Last updated: 2026-07-11 10:23 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -136,7 +136,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   step `1071/8192`, `562M/4.295B` consumed tokens, `31.0--31.3K` tokens/s,
   and loss about `1.73`, with no fatal/OOM/quota signature. Their 24-hour
   allocations cannot finish all 8192 steps, so the existing `afterany`
-  recovery rows will resume from the latest complete 1024-step checkpoint.
+  recovery rows will resume from the complete step-4096 checkpoint. The live
+  jobs explicitly override checkpoint interval to `4096`; neither corrected
+  run retains 1024-step checkpoints.
   Upload/direct-eval/instruction-SFT/instruction-eval chains are logic
   `3831123..3831126` and NL `3831113..3831116`; both use isolated
   `bp_unique_v2` names and HF prefixes.
@@ -174,6 +176,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   eval rows retained targets, with lengths `71/537/1202` min/mean/max and a
   verified native system/user/assistant rendering. Instruction jobs for all
   three conditions are additionally dependency-gated on this smoke.
+- Persistent plan oversight is active through begin-time job `3834564` using
+  `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` on one
+  A100-MIG slice. It starts around 16:21 CEST and self-schedules its successor
+  every six hours before invoking Codex, for up to 120 passes. Each pass reads
+  the live plans/handoffs, monitors and recovers the BranchProof and Nanotron
+  chains, audits new generations/results, executes explicitly triggered
+  follow-ups, updates reports/docs, and preserves the successor until the full
+  plan is verified complete. No-op passes do not append handoff churn.
 - Detailed evidence, scope, remediation, and decision gates are in
   `docs/branchproof_uniqueness_audit_2026-07-10.md`.
 
@@ -354,5 +364,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```
