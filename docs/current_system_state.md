@@ -83,8 +83,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   Row-level audit array `3834706_[0-29%8]` follows the eval with row-wise
   `aftercorr` dependencies. It requires exact metrics, 1,024 retained rows,
   all 448 prompts, sampled indices `0/1` for every prompt, complete chunk logs,
-  cap diagnostics, and fresh constants in formal prompts. Strict aggregation
-  Replacement aggregation `3835779` releases only after all 30 row audits
+  cap diagnostics, and fresh constants in formal prompts. Replacement
+  aggregation `3835779` releases only after all 30 row audits
   pass. It supersedes canceled pending job `3834707` and now also runs a
   cross-grid qualitative audit. That gate requires all 30 sample artifacts and
   exact per-depth retained coverage, then indexes representative shallow,
