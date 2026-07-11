@@ -76,3 +76,8 @@ unfulfilled. At 00:41 CEST, those 22 parent rows were verified `COMPLETED 0:0`
 and their final adapters were checked before clearing only the corresponding
 eval-task dependencies. Rows `13/14/24..29` retain `aftercorr`; all eval tasks
 remain constrained to A100-80GB GPUs.
+
+Rows `13/14` completed successfully and wrote final adapters at 01:04/01:05
+CEST. After the same parent-state and artifact checks, only their corresponding
+dependencies were cleared. The eligible corrected eval set is now `24/30`;
+active NL rows `24..29` remain gated.

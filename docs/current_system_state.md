@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 00:48 CEST.
+Last updated: 2026-07-12 01:06 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -144,6 +144,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   eval tasks. They are now scheduler-eligible with `Features=a100_80`; unfinished
   rows `13/14/24..29` retain their one-to-one SFT dependency. The three
   Nanotron recovery start estimates remain approximately 05:14.
+- Logic rows `13/14` subsequently completed `0:0`, wrote their final adapters,
+  and passed the same artifact gate. Their eval dependencies were cleared at
+  01:05/01:06 CEST. Corrected SFT finals and scheduler-eligible A100-80 evals
+  are therefore `24/30`; only NL rows `24..29` remain active and dependency
+  gated. Their latest steps were `9076/7523/6701/4695/4685/4272`.
 - Slurm had captured the prior watcher script at submission, and queued watcher
   `3837467` still named canceled pre-fix BranchProof jobs despite reading fresh
   docs. It was replaced before start by `3839191` at the identical

@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 01:06 CEST logic SFT rows `3829072_13/14` completed `0:0`, each wrote the
+  expected final adapter, and corresponding eval tasks `3838163_13/14` had
+  only their stale dependencies cleared after verification. Corrected SFT
+  finals and scheduler-eligible A100-80 evals are now `24/30`. Active NL rows
+  `24..29` remain healthy around steps `9076/7523/6701/4695/4685/4272` and
+  retain their one-to-one dependencies.
 - 00:48 CEST inspected the queued Slurm batch payload for oversight job
   `3837467` and found it still named canceled pre-fix BranchProof jobs because
   Slurm had snapshotted the earlier script. Submitted replacement watcher
