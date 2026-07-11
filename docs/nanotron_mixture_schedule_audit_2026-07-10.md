@@ -135,6 +135,19 @@ with the same after-any parents, run roots, corpus overrides, and step-4096
 checkpoint interval. Upload jobs `3831119/3831123/3831113` now depend on those
 replacement recoveries.
 
+Operational update 2026-07-12 00:01 CEST: both corrected p15 runs reached
+step 4096. `verify_training_checkpoint.py` accepted each complete 645-file
+tree: 625 model files, four scheduler shards, eight RNG shards, no zero-byte
+files, four equal `22,848,937,060`-byte optimizer shards, topology TP=4/DP=2,
+and metadata offsets step `4096`, samples `524288`, tokens `2147483648`.
+Per-dataset metadata exactly matches the schedule above: `1,825,357,824`
+normal tokens and `322,125,824` corrected logic or NL tokens. Audit reports are
+stored in `analysis/nanotron_checkpoint_audits/`. Parents
+`3830927_3/3831111_8` were canceled only after acceptance so the released
+recoveries `3835442_3/3835443_8` resume at 4096 instead of spending the final
+approximately five allocation hours on work that could not be checkpointed
+before timeout.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the
@@ -166,5 +179,7 @@ proof problem.
   `../nanotron/src/nanotron/data/nemo_dataset/helpers.cpp`
 - Verified control metadata:
   `$HPCVAULT/synthetic-RLVL/nanotron_midtrain/qwen25_7b_midtrain_control_p0_4p3b/checkpoints/4096/checkpoint_metadata.json`
+- Persisted step-4096 checkpoint audits:
+  `analysis/nanotron_checkpoint_audits/`
 - Corrected corpus audit:
   `analysis/branchproof_unique_v2_corpus_audit_2026-07-10.json`
