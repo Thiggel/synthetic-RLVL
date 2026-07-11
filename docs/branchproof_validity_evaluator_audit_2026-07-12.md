@@ -48,11 +48,10 @@ evidence.
 - A regression test constructs a malformed premise plus an otherwise supported
   conclusion and requires both strict and citation-free validation to fail.
 - All 26 focused test functions across the logic engine, BranchProof artifact
-  audit, and Nanotron checkpoint verifier passed under Python 3.12; bytecode,
-  shell syntax, and `git diff --check` also passed. Standard pytest startup was
-  temporarily blocked by heavy vault metadata I/O during concurrent 199 GB
-  checkpoint writes, so the same pytest selection should be rerun after I/O
-  pressure clears.
+  audit, and Nanotron checkpoint verifier pass through the preferred project
+  environment (`26 passed in 0.34s`). Bytecode, shell syntax, and
+  `git diff --check` also passed. This closes the earlier verification gap from
+  transient vault metadata I/O during concurrent 199 GB checkpoint writes.
 
 ## Recovery
 

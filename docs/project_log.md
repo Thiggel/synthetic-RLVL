@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 00:35 CEST reran the complete focused BranchProof validity and Nanotron
+  checkpoint-verifier selection through the preferred project environment;
+  all 26 tests passed in `0.34s`, closing the earlier transient vault-I/O
+  verification gap. Active BranchProof SFT rows `13/14/24..29` were all
+  advancing with fresh logs and no fatal/OOM/quota signature; the corrected
+  eval chain remains A100-80-only and dependency pending.
 - 00:14 CEST first full corrected BranchProof row `3834582_0` completed on
   A100-80GB in `11:18:40`, then failed qualitative validity review: 14/896
   retained sampled traces had `citation_free_valid=1` alongside premise-parse

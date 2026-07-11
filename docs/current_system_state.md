@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 00:14 CEST.
+Last updated: 2026-07-12 00:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -95,7 +95,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   across both modalities, every train range, and all seeds. It also identifies
   retained examples from generation chunks that reached the `7168` cap and
   writes reviewable JSON/Markdown supplements before aggregation can succeed.
-  The logic-engine and modality-aware gate changes pass 26 focused tests. The
+  The logic-engine and modality-aware gate changes pass all 26 focused tests
+  through the preferred project environment (`26 passed in 0.34s`). The
   pre-fix first production row is intentionally rejected and quarantined;
   pending audit rows load the fixed Python at runtime.
   The pilot had occupied row 12's production filenames with a smaller
