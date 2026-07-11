@@ -149,9 +149,11 @@ row 12. Corrected retained outputs are substantially longer (depth-25 mean
 `3236` vs `1923` tokens; depth-50 `6475` vs `2678`), use cap `7168` instead of
 `4096`, batch `64` instead of `128`, and add greedy generation. The user
 approved running the unchanged full protocol on A100-80GB. Eval array
-`3829073` is hard-constrained accordingly; its first completed row is the
+`3834582` is hard-constrained accordingly; its first completed row is the
 production timing gate, and only unfinished rows should be depth-sharded if a
-row approaches the 24-hour limit.
+row approaches the 24-hour limit. It replaces canceled pending array
+`3829073` and retains two sampled generations for every prompt so qualitative
+review spans all depths and rows.
 
 ## Full-grid aggregation gate
 
@@ -200,7 +202,7 @@ instruction job starts.
 | Materialized paired dataset | `3829067` complete | Probe accepted, all subsets present, private HF push succeeds |
 | One-seed SFT pilot | `3829069_12` complete | Completed all 10,000 steps with final adapter and complete step-5000/10000 checkpoints; no truncation/data error |
 | Pilot post-hoc eval | corrected `3832945_12 -> 3831136` and sampled qualitative `3833178_12 -> 3833179` complete | Both audits accepted; manual review confirms intended prompt/extraction behavior and ordinary long-trace failures |
-| Three-seed main grid | released `3829072 -> 3829073` | SFT hold released after user runtime approval. Eval is A100-80-only with unchanged full protocol; inspect the first row's runtime/raw outputs, then pass the strict 30-row aggregation gate and report greedy/pass@1 before pass@k |
+| Three-seed main grid | released `3829072 -> 3834582` | SFT hold released after user runtime approval. Eval is A100-80-only with unchanged full protocol and two retained sampled generations per prompt; inspect the first row's runtime/raw outputs, then pass the strict 30-row aggregation gate and report greedy/pass@1 before pass@k |
 | Corrected 1.2B-token corpora | builds and packed audit `3830855` complete | Full paired-prefix scan, metadata counts, and exact source-token/decode round trips passed |
 | Midtraining mixtures | logic/NL smokes `3830924`/`3831110` complete; matched control/logic/NL p15 chains active or held | Compare direct and instruction-tuned downstream results, and launch the remaining percentages only after all three p15 conditions train, upload, and evaluate cleanly |
 

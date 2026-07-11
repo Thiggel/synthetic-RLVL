@@ -73,7 +73,7 @@ First read in full:
 Use source ./scripts/env.sh before shell commands. Do not touch unrelated puzzle_*, babylm-*, tjepa_*, seqedit_*, or grid_goal_* jobs except to identify them as unrelated.
 
 Active critical paths:
-- Corrected BranchProof full SFT 3829072_[0-29%12], followed per row by eval 3829073_[0-29%6]. Eval must remain on partition a100 with feature a100_80 and retain 32 prompts/depth, 16 generations, all 14 depths, pass@1/2/4/8/16, context 16384, and equal cap 7168.
+- Corrected BranchProof full SFT 3829072_[0-29%12], followed per row by eval 3834582_[0-29%6]. Eval must remain on partition a100 with feature a100_80 and retain 32 prompts/depth, 16 generations, all 14 depths, pass@1/2/4/8/16, context 16384, equal cap 7168, and two sampled generations per prompt for qualitative review.
 - Nanotron normal control 3823434_0 -> recovery 3828946_0 -> upload/direct-eval/instruction-SFT/instruction-eval 3831119..3831122.
 - Corrected Nanotron logic p15 3830927_3 -> recovery 3830928_3 -> 3831123..3831126.
 - Corrected Nanotron NL p15 3831111_8 -> recovery 3831112_8 -> 3831113..3831116.

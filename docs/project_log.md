@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:34 CEST repaired full-grid qualitative retention before any eval started.
+  The pending wrapper computed all 16 sampled generations but retained none.
+  It now retains two sampled generations for each of the 448 prompts (896 rows)
+  without changing generation compute or metrics. Tests and shell/Slurm checks
+  pass (`4 passed`). Canceled untouched eval array `3829073` and submitted
+  replacement `3834582_[0-29%6]` with the same row-wise dependency on
+  `3829072`, A100-80GB constraint, throttle 6, 24-hour limit, and full protocol.
 - 10:30 CEST prepared the corrected full-grid analysis gate. Extended
   `aggregate_hfsa_depth_scaling.py` to recognize `branchproof_unique_v2` run
   names, explicitly skip old intermediate checkpoints, and reject aggregation

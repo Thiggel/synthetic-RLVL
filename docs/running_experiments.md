@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-07-11 10:27 CEST.
+Last updated: 2026-07-11 10:34 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -15,7 +15,7 @@ batch-size, and proof-mixture results. See
 | Experiment | Jobs | Live state at 2026-07-11 10:27 CEST | Outputs / next gate |
 | --- | --- | --- | --- |
 | Corrected BranchProof-v2 materialization | build/push `3829067` | Completed cleanly in `00:06:54`. Production gate passed on 3,000 examples with unique-solution rate `1.0`, max one derived answer, no failures, and balanced gold positions; HF smoke loads also passed. | `$HPCVAULT/synthetic-RLVL/datasets/branchproof_unique_v2_20260710`; private HF repo `flaitenberger/BranchProof-unique-v2`. |
-| Corrected BranchProof-v2 SFT/eval | pilot SFT `3829069_[12%1]`; canceled malformed gate `3831135_12`; completed gate/audit `3832945_12 -> 3831136`; completed sampled qualitative probe/audit `3833178_12 -> 3833179`; released full SFT `3829072_[0-29%12]`; full eval `3829073_[0-29%6]` | Gate and both audits passed; raw samples show intended corrected prompts and ordinary long-trace failures. SFT rows `0..11` are training on A40s and ranged from steps `23..522/10000` at 10:25; rows `12..29` wait on throttle 12. No fatal/OOM/quota signature. | Full eval is verified as partition `a100`, feature `a100_80`, throttle 6, `aftercorr:3829072_*`, with the unchanged 32-prompt, 16-generation, pass@16 protocol. Use the first completed A100-80 row as the production runtime measurement; inspect raw generations and cap hits before accepting metrics. |
+| Corrected BranchProof-v2 SFT/eval | pilot SFT `3829069_[12%1]`; canceled malformed gate `3831135_12`; completed gate/audit `3832945_12 -> 3831136`; completed sampled qualitative probe/audit `3833178_12 -> 3833179`; released full SFT `3829072_[0-29%12]`; canceled no-sampled-retention eval `3829073`; replacement full eval `3834582_[0-29%6]` | Gate and both audits passed; raw samples show intended corrected prompts and ordinary long-trace failures. SFT rows `0..11` are training on A40s and ranged from steps `23..522/10000` at 10:25; rows `12..29` wait on throttle 12. No fatal/OOM/quota signature. | Replacement eval is verified as partition `a100`, feature `a100_80`, throttle 6, `aftercorr:3829072_*`, with the unchanged 32-prompt, 16-generation, pass@16 protocol. It additionally retains two sampled generations for each of 448 prompts. Use the first completed A100-80 row as the production runtime measurement; inspect raw generations and cap hits before accepting metrics. |
 | Corrected BranchProof-v2 Nanotron corpora and matched p15 pilot | completed builds `3829068_1` and raw row `3829071`; packed audit `3830855`; logic smoke `3830924`; NL smoke `3831110`; instruction-format smoke `3831179`; logic chain `3830927 -> 3830928 -> 3831123..3831126`; NL chain `3831111 -> 3831112 -> 3831113..3831116` | Logic and NL p15 runs started near 04:46 CEST on full A100-80GB nodes `a0534/a0535`. At 10:21 they were near steps `1181/1191` of `8192`, `619M/624M` of `4.295B` tokens, `30.9--31.2K` tokens/s, and loss `1.82/1.76`; no fatal/OOM/quota signature. Exact realized proof share is `15.000057%`, corpora do not wrap, and sampler offsets are resume-safe. Live overrides set checkpoint interval `4096`, so the 24-hour allocations hand off to recovery `3830928_3`/`3831112_8` from one complete step-4096 checkpoint rather than retaining 1024-step checkpoints. | Fresh run roots end in `{logic,nl_exact}_p15_bp_unique_v2_4p3b`. Both branches upload under `flaitenberger/qwen25-7b-branchproof-unique-v2-midtrain-*`, run direct and native-chat UltraChat-instruction reviewer evals, and clean local checkpoints only after successful HF upload. Restore the broader percentage grid only after this matched p15 comparison is inspected. |
 | Qwen2.5 normal-continuation control | timed-out first allocation `3823434_0`; automatic recovery/skip `3828946_[0%1]`; replacement upload/direct/instruction chain `3831119..3831122` | `3823434_0` reached the exact 24-hour wall limit after logged iteration `5051`, with no training failure. Recovery `3828946_0` is priority-pending with a current 14:43 CEST estimate. Step `4096` remains the latest complete checkpoint and records exactly `2,147,483,648` consumed normal tokens; direct inspection confirms complete model, optimizer, scheduler, RNG, and metadata state. | This row uses only normal continuation text and is unaffected by the BranchProof defect. Recovery resumes optimizer/scheduler from step `4096`; deterministic sampler offsets prevent first-half replay. After successful HF upload, guarded cleanup removes all local run checkpoints; direct and native-chat instruction-tuned evals use the uploaded model. |
 | Six-hour autonomous oversight | initial begin-time job `3834564`; self-scheduled successors via `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` | First pass is pending for 15:15 CEST on one `a100mig` slice, shortly after the control recovery's estimated start. Each pass schedules its successor six hours later before invoking Codex; maximum 120 passes. | Executes the full attached BranchProof/Nanotron/downstream/conditional/report plan, not just queue checks. Stops the chain only after end-to-end completion is verified; no-op passes avoid doc churn. |
@@ -71,7 +71,7 @@ visible `tjepa_*` job belongs to this repo.
   SFT, and instruction eval in each dependency chain. Instruction SFT jobs are
   additionally gated on completed chat-format smoke `3831179`.
 - Watch released BranchProof SFT `3829072` for first starts and normal training
-  progress. Eval `3829073` is already A100-80-only; inspect the first row's
+  progress. Eval `3834582` is already A100-80-only; inspect the first row's
   runtime, cap hits, metrics, and raw generations before broad scientific use.
 - Watch guarded control recovery `3828946_0`; verify that it resolves step
   `4096`, loads optimizer and scheduler state, resumes from the recorded token
@@ -84,7 +84,7 @@ visible `tjepa_*` job belongs to this repo.
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829067,3829068,3829069,3829072,3829073,3830855,3830924,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829067,3829068,3829069,3829072,3829073,3830855,3830924,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```
 
 Useful log tails:

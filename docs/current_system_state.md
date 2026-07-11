@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 10:30 CEST.
+Last updated: 2026-07-11 10:34 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -75,9 +75,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   entered optimizer training; at 10:25 they ranged from step `23` to `522` of
   `10000` with no fatal/OOM/quota signature. Rows `12..29` wait only on the
   array throttle. Every downstream eval row
-  `3829073` remains constrained to `a100` plus feature
+  `3834582` remains constrained to `a100` plus feature
   `a100_80`, throttle 6, and starts only after its corresponding SFT row
-  succeeds.
+  succeeds. It replaces canceled pending array `3829073`; the replacement
+  retains two sampled generations for every one of the 448 prompts so the
+  required qualitative audit can cover all depths without changing compute.
 - The accepted runtime audit records all four greedy and 28 sampled chunks.
   Greedy generation took `3826.3s`; sampled generation took `20677.8s` and
   produced `5,062,917` tokens. One greedy and seven sampled chunks hit the
@@ -375,5 +377,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

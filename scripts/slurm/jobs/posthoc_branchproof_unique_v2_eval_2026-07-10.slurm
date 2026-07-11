@@ -53,6 +53,8 @@ PASSK_K_VALUES_RESOLVED="${PASSK_K_VALUES_COLON:-${PASSK_K_VALUES:-1,2,4,8,16}}"
 PASSK_K_VALUES_RESOLVED="${PASSK_K_VALUES_RESOLVED//:/,}"
 PASSK_STEPS_RESOLVED="${PASSK_STEPS_COLON:-${PASSK_STEPS:-1,2,5,10,12,15,18,20,25,30,35,40,45,50}}"
 PASSK_STEPS_RESOLVED="${PASSK_STEPS_RESOLVED//:/,}"
+# Two sampled generations for each of the default 14 * 32 prompts.
+PASSK_SAMPLED_SAMPLE_BUDGET="${PASSK_COLLECT_SAMPLED_SAMPLES:-896}"
 SKIP_GREEDY_ARGS=()
 case "${PASSK_SKIP_GREEDY:-0}" in
   1|true|TRUE|yes|YES) SKIP_GREEDY_ARGS=(--skip-greedy) ;;
@@ -100,7 +102,7 @@ python scripts/evaluate_checkpoint_passk.py \
   --vllm-max-model-len "${PASSK_VLLM_MAX_MODEL_LEN:-16384}" \
   --scoring-log-interval 100 \
   --collect-samples "${PASSK_COLLECT_SAMPLES:-128}" \
-  --collect-sampled-samples "${PASSK_COLLECT_SAMPLED_SAMPLES:-0}" \
+  --collect-sampled-samples "${PASSK_SAMPLED_SAMPLE_BUDGET}" \
   "${SKIP_GREEDY_ARGS[@]}" \
   --stop-strings '</answer>' \
   --output "${OUT}" \
