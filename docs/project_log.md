@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:15 CEST user accepted the expected corrected eval runtime and required
+  A100-80GB evaluation. Verified submitted eval array `3829073_[0-29%6]` is
+  partition `a100` with feature `a100_80`, 24-hour limit, and per-row
+  `aftercorr:3829072_*` dependencies. Released manual hold on full corrected
+  SFT `3829072_[0-29%12]`; it is now eligible on `a40,a100`. Preserve the full
+  32-prompt, 16-generation, all-depth, pass@16 eval protocol and use the first
+  completed A100-80 row as the production runtime check.
 - 10:07 CEST corrected the runtime interpretation after direct node inspection:
   qualitative probe node `a0121` is also an A40, not an A100. Thus the
   above-25-hour full-row estimate is an A40 extrapolation, not a measured

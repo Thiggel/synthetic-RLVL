@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 10:08 CEST.
+Last updated: 2026-07-11 10:16 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -69,9 +69,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   fresh `c0..c_depth` constants and the expected prompt/sample-index coverage.
   Manual inspection found correct complete traces, late wrong-branch
   transitions, and depth-50 repetition/nontermination, with no evidence of
-  another ambiguous-data or extraction bug. Full SFT `3829072` remains
-  `JobHeldUser` pending a matched A100-80GB runtime probe and final eval-layout
-  decision.
+  another ambiguous-data or extraction bug. User approval accepted the
+  expected corrected runtime, so the manual hold on full SFT `3829072` was
+  released at 10:15 CEST. It is eligible on A40/A100 with throttle 12. Every
+  downstream eval row `3829073` remains constrained to `a100` plus feature
+  `a100_80`, throttle 6, and starts only after its corresponding SFT row
+  succeeds.
 - The accepted runtime audit records all four greedy and 28 sampled chunks.
   Greedy generation took `3826.3s`; sampled generation took `20677.8s` and
   produced `5,062,917` tokens. One greedy and seven sampled chunks hit the
@@ -80,10 +83,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   as an A100 comparison. Scaling the A40 gate projects more than 25 hours, but
   the old full protocol ran on A100-80GB in roughly 3.5--8 hours (the matched
   old row-12 logic eval took `03:56:41`). Corrected outputs are substantially
-  longer, the batch is `64` rather than `128`, and greedy adds work, so run a
-  matched corrected A100-80 timing probe before deciding whether full eval
-  `3829073` needs depth shards. Preserve all depths, prompts, generations, and
-  pass@16 either way.
+  longer, the batch is `64` rather than `128`, and greedy adds work. The full
+  A100-80 eval is now approved unchanged; treat its first completed row as the
+  production timing measurement and intervene only if it approaches the
+  24-hour limit. Preserve all depths, prompts, generations, and pass@16.
 - The pilot's primary self-contained metric is citation-free validity because
   training targets use rule labels (`R`, `->E`) without numbered premise
   citations. Strict `valid=0` is expected under that citation-demanding metric,
