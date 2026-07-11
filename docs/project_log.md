@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 17:03 CEST expanded the active audit beyond array summaries. The 13
+  BranchProof final adapters exactly match the 13 completed SFT rows; no
+  production eval JSON exists yet, and all three A100-80GB eval logs continue
+  advancing without fatal signatures. Logic/NL Nanotron reached steps
+  `2601/2611` at `30.9/31.2K` tokens/s with no checkpoint yet, as expected
+  before step 4096. Project vault usage is `522G`; adding both approximately
+  `199G` step-4096 checkpoints remains below the documented soft quota.
+  Control recovery `3835438` now shows `AssocGrpGRES`, not a broken dependency:
+  the account's GPU allocation is saturated. Its 17:59 scheduler estimate is
+  provisional and no safe resource edit is warranted.
 - 16:58 CEST verified every corrected BranchProof and Nanotron production eval
   job still requests `Partition=a100` and `Features=a100_80`. BranchProof rows
   `0/1/2` had completed sampled chunks `64/33/38` of `112`, respectively,

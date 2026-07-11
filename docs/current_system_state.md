@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 16:58 CEST.
+Last updated: 2026-07-11 17:03 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -124,6 +124,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   remained active on A100-80GB; row `3` was the next priority-eligible eval,
   with a scheduler estimate near 21:35. No failed SFT/eval row or fatal log
   signature appeared.
+- At 17:03 CEST, the 13 final-adapter directories still matched exactly the
+  13 completed SFT rows. Eval rows `0/1/2` continued advancing on A100-80GB;
+  no production metric or sample file had been finalized yet, so no new
+  aggregate result was accepted in this pass.
 - The pilot's primary self-contained metric is citation-free validity because
   training targets use rule labels (`R`, `->E`) without numbered premise
   citations. Strict `valid=0` is expected under that citation-demanding metric,
@@ -202,6 +206,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3835442_3/3835443_8`; the replacements preserve the same after-any parents,
   isolated roots, corpus overrides, and step-4096 interval while disabling W&B
   service startup and excluding nodes `a0803/a0831`.
+  At 17:03 they remained healthy and matched at steps `2601/2611`, about
+  `1.36B/1.37B` tokens and `30.9/31.2K` tokens/s, with no fatal signature.
+  Neither corrected run has reached its first expected checkpoint yet.
   The corrected logic branch uses upload `3831123`, direct eval `3834908`,
   instruction SFT `3831125`, and instruction eval `3834909`; NL uses upload
   `3831113`, direct eval `3834904`, instruction SFT `3831115`, and instruction
@@ -226,9 +233,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `199G` (`29G` model, `171G` optimizer), not the earlier optimizer-only
   `91.4G` estimate. The checkpoint remained unchanged and complete.
   Replacement `3835438_0` is pending with W&B disabled and `a0831` excluded;
-  Slurm's current estimate moved forward to 2026-07-11 17:59. All
-  compatible 8xA100-80GB nodes are currently allocated or mixed, so there is
-  no safe partition widening or resource-preserving earlier placement. Upload
+  Slurm's current estimate moved forward to 2026-07-11 17:59. The scheduler
+  currently reports `AssocGrpGRES`: the account-level GPU allocation is
+  saturated while the live full-node proof runs and A100 evaluations execute.
+  The estimate is provisional, but there is no dependency, feature, or
+  node-compatibility fault to repair. Upload
   `3831119` was rewired to it. Its downstream branch uses upload `3831119`,
   replacement direct eval `3835927`, instruction SFT `3831121`, and
   replacement instruction eval `3835928`, all with `afterok` dependencies.
