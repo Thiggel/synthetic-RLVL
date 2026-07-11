@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 17:07 CEST audited the `AssocGrpGRES` tradeoff rather than trusting the
+  projected control start time. This repo currently uses 31 GPUs: 12 corrected
+  BranchProof SFT A40s, 16 A100s for logic/NL Nanotron, and three A100-80GB
+  BranchProof evals. Pending corrected eval rows have slightly higher scheduler
+  priority than control recovery `3835438`. Making room for its eight GPUs now
+  would require pausing or canceling several active P0 BranchProof jobs, so the
+  plan-order-preserving action is no scheduler edit; control remains queued.
 - 17:03 CEST expanded the active audit beyond array summaries. The 13
   BranchProof final adapters exactly match the 13 completed SFT rows; no
   production eval JSON exists yet, and all three A100-80GB eval logs continue

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 17:03 CEST.
+Last updated: 2026-07-11 17:07 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -237,7 +237,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   currently reports `AssocGrpGRES`: the account-level GPU allocation is
   saturated while the live full-node proof runs and A100 evaluations execute.
   The estimate is provisional, but there is no dependency, feature, or
-  node-compatibility fault to repair. Upload
+  node-compatibility fault to repair. At 17:07 this repo occupied 31 GPUs:
+  12 A40s for corrected SFT, 16 A100s for the two live full-node proof runs,
+  and three A100s for corrected eval. Releasing enough account allocation for
+  the eight-GPU control immediately would require displacing active corrected
+  BranchProof work, contrary to the plan's priority order, so no hold,
+  cancellation, or throttle reduction was applied. Upload
   `3831119` was rewired to it. Its downstream branch uses upload `3831119`,
   replacement direct eval `3835927`, instruction SFT `3831121`, and
   replacement instruction eval `3835928`, all with `afterok` dependencies.
