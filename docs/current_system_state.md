@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 09:55 CEST.
+Last updated: 2026-07-11 10:08 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -70,17 +70,20 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   Manual inspection found correct complete traces, late wrong-branch
   transitions, and depth-50 repetition/nontermination, with no evidence of
   another ambiguous-data or extraction bug. Full SFT `3829072` remains
-  `JobHeldUser`. The full evaluator must first be made depth-sharded/resumable;
-  the measured protocol cannot safely finish one row inside the 24-hour limit.
+  `JobHeldUser` pending a matched A100-80GB runtime probe and final eval-layout
+  decision.
 - The accepted runtime audit records all four greedy and 28 sampled chunks.
   Greedy generation took `3826.3s`; sampled generation took `20677.8s` and
   produced `5,062,917` tokens. One greedy and seven sampled chunks hit the
-  `7168` cap, all at the longest depths. A matched A100 qualitative slice did
-  not provide a material speedup over A40. Scaling measured work to the final
-  32-prompt, 16-generation protocol projects more than 25 hours before scoring,
-  above the cluster's 24-hour maximum. Full eval `3829073` therefore needs
-  recoverable depth shards without reducing depths, prompts, generations, or
-  pass@16.
+  `7168` cap, all at the longest depths. Both timing probes actually ran on
+  A40s (`a1721` and `a0121`); the earlier handoff incorrectly treated `a0121`
+  as an A100 comparison. Scaling the A40 gate projects more than 25 hours, but
+  the old full protocol ran on A100-80GB in roughly 3.5--8 hours (the matched
+  old row-12 logic eval took `03:56:41`). Corrected outputs are substantially
+  longer, the batch is `64` rather than `128`, and greedy adds work, so run a
+  matched corrected A100-80 timing probe before deciding whether full eval
+  `3829073` needs depth shards. Preserve all depths, prompts, generations, and
+  pass@16 either way.
 - The pilot's primary self-contained metric is citation-free validity because
   training targets use rule labels (`R`, `->E`) without numbered premise
   citations. Strict `valid=0` is expected under that citation-demanding metric,

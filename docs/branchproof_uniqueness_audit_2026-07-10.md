@@ -140,10 +140,15 @@ All 32 depth-50 rows preserved fresh constants. These failures are model length
 extrapolation behavior, not evidence of renewed dataset ambiguity.
 
 The gate measured `3826.3s` of greedy and `20677.8s` of sampled generation on
-A40. A matched A100 qualitative slice was not materially faster. The final
-32-prompt, 16-generation protocol therefore projects above 25 hours before
-scoring, beyond the 24-hour partition limit. Full eval must be made
-depth-sharded/resumable before the held three-seed SFT grid is released.
+A40. The separate qualitative slice also ran on an A40 (`a0121`), despite an
+earlier handoff interpretation that treated it as an A100 comparison. The
+above-25-hour full-protocol projection is therefore A40-specific. Old full
+A100-80 rows took roughly 3.5--8 hours, including `03:56:41` for matched old
+row 12. Corrected retained outputs are substantially longer (depth-25 mean
+`3236` vs `1923` tokens; depth-50 `6475` vs `2678`), use cap `7168` instead of
+`4096`, batch `64` instead of `128`, and add greedy generation. A corrected
+A100-80 timing probe is required before choosing whole-row or depth-sharded
+full evaluation.
 
 At the planned 4,096-token Nanotron context, `44.3%` of formal documents and
 `47.8%` of NL documents are longer than one context; none exceeds 8,192 tokens.
@@ -166,7 +171,7 @@ instruction job starts.
 | Materialized paired dataset | `3829067` complete | Probe accepted, all subsets present, private HF push succeeds |
 | One-seed SFT pilot | `3829069_12` complete | Completed all 10,000 steps with final adapter and complete step-5000/10000 checkpoints; no truncation/data error |
 | Pilot post-hoc eval | corrected `3832945_12 -> 3831136` and sampled qualitative `3833178_12 -> 3833179` complete | Both audits accepted; manual review confirms intended prompt/extraction behavior and ordinary long-trace failures |
-| Three-seed main grid | held `3829072 -> 3829073` | Make full eval depth-sharded/resumable to fit the 24-hour limit, then release SFT; report greedy and pass@1 before pass@k |
+| Three-seed main grid | held `3829072 -> 3829073` | Run a corrected A100-80 timing probe, choose whole-row or depth-sharded eval from measured runtime, then release SFT; report greedy and pass@1 before pass@k |
 | Corrected 1.2B-token corpora | builds and packed audit `3830855` complete | Full paired-prefix scan, metadata counts, and exact source-token/decode round trips passed |
 | Midtraining mixtures | logic/NL smokes `3830924`/`3831110` complete; matched control/logic/NL p15 chains active or held | Compare direct and instruction-tuned downstream results, and launch the remaining percentages only after all three p15 conditions train, upload, and evaluate cleanly |
 

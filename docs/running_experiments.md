@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-07-11 09:55 CEST.
+Last updated: 2026-07-11 10:08 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -12,10 +12,10 @@ This includes old architecture, syntax, shortcut, hybrid, conditioned-dual,
 batch-size, and proof-mixture results. See
 `docs/branchproof_uniqueness_audit_2026-07-10.md`.
 
-| Experiment | Jobs | Live state at 2026-07-11 09:55 CEST | Outputs / next gate |
+| Experiment | Jobs | Live state at 2026-07-11 10:08 CEST | Outputs / next gate |
 | --- | --- | --- | --- |
 | Corrected BranchProof-v2 materialization | build/push `3829067` | Completed cleanly in `00:06:54`. Production gate passed on 3,000 examples with unique-solution rate `1.0`, max one derived answer, no failures, and balanced gold positions; HF smoke loads also passed. | `$HPCVAULT/synthetic-RLVL/datasets/branchproof_unique_v2_20260710`; private HF repo `flaitenberger/BranchProof-unique-v2`. |
-| Corrected BranchProof-v2 SFT/eval | pilot SFT `3829069_[12%1]`; canceled malformed gate `3831135_12`; completed gate/audit `3832945_12 -> 3831136`; completed sampled qualitative probe/audit `3833178_12 -> 3833179`; manually held full SFT `3829072_[0-29%12]`; full eval `3829073_[0-29%6]` | Pilot SFT completed all `10000` steps in `12:39:51`. Gate completed in `07:10:38`; both automated audits accepted exact depth/metric/sample coverage and fresh constants. Citation-free correct-and-valid is perfect through train depth 25; depth-30/40/50 pass@1 is `0.883/0.625/0.344` and pass@8 is `1.000/1.000/0.938`. Strict `valid=0` is expected because targets omit numbered citations; citation-free validity is the intended self-contained proof metric. The retained depth-50 slice has `15/32` correct, `11/32` citation-free joint, and `24/32` complete-format outputs. Manual samples show correct traces, late wrong transitions, and repetition/cap hits, not ambiguous prompts. Full SFT remains `JobHeldUser`. | Measured generation was `3826.3s` greedy plus `20677.8s` sampled on A40; a matched A100 slice was not materially faster. The final 32-prompt, 16-generation row projects above 25 hours before scoring, so `3829073` must become depth-sharded/resumable before releasing the SFT grid. Preserve full pass@16 protocol. Audit artifacts are `analysis/branchproof_unique_v2_{pilot_eval_audit_2026-07-10,sampled_qualitative_audit_2026-07-11}.json`. |
+| Corrected BranchProof-v2 SFT/eval | pilot SFT `3829069_[12%1]`; canceled malformed gate `3831135_12`; completed gate/audit `3832945_12 -> 3831136`; completed sampled qualitative probe/audit `3833178_12 -> 3833179`; manually held full SFT `3829072_[0-29%12]`; full eval `3829073_[0-29%6]` | Pilot SFT completed all `10000` steps in `12:39:51`. Gate completed in `07:10:38`; both automated audits accepted exact depth/metric/sample coverage and fresh constants. Citation-free correct-and-valid is perfect through train depth 25; depth-30/40/50 pass@1 is `0.883/0.625/0.344` and pass@8 is `1.000/1.000/0.938`. Strict `valid=0` is expected because targets omit numbered citations; citation-free validity is the intended self-contained proof metric. The retained depth-50 slice has `15/32` correct, `11/32` citation-free joint, and `24/32` complete-format outputs. Manual samples show correct traces, late wrong transitions, and repetition/cap hits, not ambiguous prompts. Full SFT remains `JobHeldUser`. | Both corrected probes ran on A40, not A100. The A40 full-row extrapolation exceeds 25 hours, but old full A100-80 rows took roughly 3.5--8 hours and matched old row 12 took `03:56:41`. Corrected retained outputs average `3236` vs `1923` tokens at depth 25 and `6475` vs `2678` at depth 50; cap `7168` vs `4096`, batch `64` vs `128`, and an added greedy pass explain the slowdown. Run a corrected A100-80 timing probe before deciding whether `3829073` needs depth shards; preserve full pass@16. |
 | Corrected BranchProof-v2 Nanotron corpora and matched p15 pilot | completed builds `3829068_1` and raw row `3829071`; packed audit `3830855`; logic smoke `3830924`; NL smoke `3831110`; instruction-format smoke `3831179`; logic chain `3830927 -> 3830928 -> 3831123..3831126`; NL chain `3831111 -> 3831112 -> 3831113..3831116` | Logic and NL p15 runs started near 04:46 CEST on full A100-80GB nodes `a0534/a0535`. At 09:49 both were near step `1071/8192`, `562M/4.295B` tokens, `31.0--31.3K` tokens/s, and loss about `1.73`; no fatal/OOM/quota signature. Exact realized proof share is `15.000057%`, corpora do not wrap, and sampler offsets are resume-safe. Since one run needs about 39 hours, the 24-hour allocations will intentionally hand off to recovery `3830928_3`/`3831112_8`, which resume optimizer/scheduler/data offsets from the newest complete 1024-step checkpoint. | Fresh run roots end in `{logic,nl_exact}_p15_bp_unique_v2_4p3b`. Both branches upload under `flaitenberger/qwen25-7b-branchproof-unique-v2-midtrain-*`, run direct and native-chat UltraChat-instruction reviewer evals, and clean local checkpoints only after successful HF upload. Restore the broader percentage grid only after this matched p15 comparison is inspected. |
 | Qwen2.5 normal-continuation control | timed-out first allocation `3823434_0`; automatic recovery/skip `3828946_[0%1]`; replacement upload/direct/instruction chain `3831119..3831122` | `3823434_0` reached the exact 24-hour wall limit after logged iteration `5051`, with no training failure. Recovery `3828946_0` is priority-pending with a current 17:45 CEST estimate. Step `4096` remains the latest complete checkpoint and records exactly `2,147,483,648` consumed normal tokens; direct inspection after timeout confirms complete model, optimizer, scheduler, RNG, and metadata state. Its filesystem-accounted footprint is about `199G`: `29G` model and `171G` optimizer. | This row uses only normal continuation text and is unaffected by the BranchProof defect. Recovery resumes optimizer/scheduler from step `4096`; deterministic sampler offsets prevent first-half replay. After successful HF upload, guarded cleanup removes all local run checkpoints; direct and native-chat instruction-tuned evals use the uploaded model. |
 
@@ -52,7 +52,7 @@ not managed here.
 
 ## Partition Audit
 
-Checked at 2026-07-11 09:55 CEST. Active repo jobs are the held corrected
+Checked at 2026-07-11 10:08 CEST. Active repo jobs are the held corrected
 BranchProof full grid, the running corrected Nanotron logic/NL p15 chains, and
 the unaffected Nanotron normal control recovery/downstream chain. Do not widen
 full Nanotron training to
@@ -69,9 +69,10 @@ visible `tjepa_*` job belongs to this repo.
   load, and early loss. Then verify recovery, upload, direct eval, instruction
   SFT, and instruction eval in each dependency chain. Instruction SFT jobs are
   additionally gated on completed chat-format smoke `3831179`.
-- Keep full BranchProof SFT `3829072` held until eval `3829073` is converted to
-  recoverable depth shards. Gate/audits and qualitative review passed; the
-  remaining blocker is measured walltime, not data validity.
+- Keep full BranchProof SFT `3829072` held until a corrected A100-80 timing
+  probe determines whether eval `3829073` can run whole or needs recoverable
+  depth shards. Gate/audits and qualitative review passed; the remaining
+  blocker is runtime layout, not data validity.
 - Watch guarded control recovery `3828946_0`; verify that it resolves step
   `4096`, loads optimizer and scheduler state, resumes from the recorded token
   offset, and either writes complete step `8192` or skips if it already exists.

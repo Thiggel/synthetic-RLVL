@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:07 CEST corrected the runtime interpretation after direct node inspection:
+  qualitative probe node `a0121` is also an A40, not an A100. Thus the
+  above-25-hour full-row estimate is an A40 extrapolation, not a measured
+  A100-80 result. Old full A100-80 rows took roughly 3.5--8 hours; matched old
+  row 12 took `03:56:41`. The corrected surface is nevertheless materially
+  heavier: retained depth-25 output averages `3236` vs `1923` old tokens and
+  depth-50 `6475` vs `2678`, with cap `7168` vs `4096`, batch `64` vs `128`,
+  and an additional greedy pass. Keep full SFT held pending a corrected
+  A100-80 timing probe, then choose whole-row or depth-sharded eval.
 - 09:55 CEST corrected BranchProof gate and qualitative review completed.
   Gate `3832945_12` finished in `07:10:38`; structural/runtime audit `3831136`,
   sampled probe `3833178_12`, and sampled audit `3833179` all completed and
@@ -16,11 +25,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   are late branch transitions or repetitive cap hits; all prompts retain fresh
   constants and the corrected unique-answer construction.
 - 09:55 CEST runtime gate: measured A40 generation was `3826.3s` greedy plus
-  `20677.8s` sampled, with one greedy and seven sampled cap-hit chunks. A
-  matched A100 qualitative slice was not materially faster. Scaling to 32
-  prompts and 16 generations projects above 25 hours before scoring, so full
-  eval `3829073` must be depth-sharded/resumable before held SFT `3829072` is
-  released. No scientific protocol reduction is approved.
+  `20677.8s` sampled, with one greedy and seven sampled cap-hit chunks. Scaling
+  this A40 measurement to 32 prompts and 16 generations projects above 25
+  hours before scoring. No scientific protocol reduction is approved.
 - 09:49 CEST corrected Nanotron p15 logic `3830927_3` and NL `3831111_8` are
   running on full A100-80GB nodes `a0534/a0535`. Both are near step
   `1071/8192`, `562M/4.295B` tokens, `31.0--31.3K` tokens/s, and loss about
