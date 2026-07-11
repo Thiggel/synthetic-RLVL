@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 00:46 CEST refreshed Nanotron peak-storage accounting before the three
+  resumes. The project tree is `858G` and each accepted step-4096 checkpoint is
+  `199G`. Using the larger recent Slurm-epilogue usage (`1072.3G`) plus three
+  final checkpoints projects about `1.67T`, roughly `428G` below the
+  `2097.2G` hard limit. The soft warning threshold will be crossed, but hard
+  space and file counts cover final checkpoint and HF staging needs. Preserve
+  step 4096 until step 8192 verifies; cleanup remains post-upload and guarded.
 - 00:41 CEST corrected a late-submission `aftercorr` scheduling issue without
   weakening the SFT gate. Parent rows `0..12/15..23` were `COMPLETED 0:0` and
   all 22 corresponding final adapters existed, but every replacement eval task

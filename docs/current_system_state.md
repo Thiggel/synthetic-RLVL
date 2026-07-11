@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 00:41 CEST.
+Last updated: 2026-07-12 00:46 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -270,8 +270,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   the eight-GPU control immediately would require displacing active corrected
   BranchProof work, contrary to the plan's priority order, so no hold,
   cancellation, or throttle reduction was applied. After all three accepted
-  step-4096 checkpoints were present, the project tree used about `912G`,
-  below the documented `1048.6G` soft quota. Upload
+  step-4096 checkpoints were present, a refreshed `du` measured the project
+  tree at `858G`. The largest recent scheduler epilogue accounted `1072.3G`;
+  conservatively adding three more `199G` final checkpoints projects about
+  `1.67T`, roughly `428G` below the documented `2097.2G` hard limit. This will
+  exceed the `1048.6G` soft warning threshold but leaves enough hard-space and
+  file-count headroom for all final checkpoints plus HF staging. Upload
   `3831119` was rewired to it. Its downstream branch uses upload `3831119`,
   replacement direct eval `3835927`, instruction SFT `3831121`, and
   replacement instruction eval `3835928`, all with `afterok` dependencies.

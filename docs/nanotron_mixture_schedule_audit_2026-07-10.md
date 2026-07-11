@@ -148,6 +148,16 @@ recoveries `3835442_3/3835443_8` resume at 4096 instead of spending the final
 approximately five allocation hours on work that could not be checkpointed
 before timeout.
 
+Capacity update 2026-07-12 00:46 CEST: the project tree measures `858G`, and
+each accepted step-4096 checkpoint measures `199G`. The highest recent Slurm
+epilogue usage was `1072.3G`; conservatively adding three simultaneous final
+checkpoints projects about `1.67T`, leaving roughly `428G` under the documented
+`2097.2G` hard quota. The run will cross the `1048.6G` soft warning threshold,
+but the observed hard-space and file-count margins cover all three final
+checkpoints plus HF staging. Step 4096 must remain until the corresponding
+step-8192 tree is verified; the guarded upload path is responsible for later
+cleanup.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the
