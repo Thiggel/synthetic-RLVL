@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 16:43 CEST live BranchProof transition: SFT rows `16/17` completed cleanly,
+  rows `23/24` started, and the active/pending split is now completed
+  `0..8,12,15..17`, running `9/10/11/13/14/18..24`, and throttle-pending
+  `25..29`. Eval `0/1/2` remains active on A100-80GB; row `3` is the next
+  priority-eligible eval with an estimate near 21:35. No fatal signature or
+  failed row appeared. Vault usage is `522G`, still below the soft quota.
 - 16:39 CEST aligned corrected BranchProof aggregation with the claim-decision
   protocol. The aggregator previously validated greedy and all pass@k cells
   but exported mostly pass@16 summaries. It now writes per-run, grouped

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 16:39 CEST.
+Last updated: 2026-07-11 16:43 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -118,6 +118,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   adding measured greedy generation, setup, and scoring projects about nine
   hours total. This is well below the 20-hour intervention threshold, so no
   depth sharding or protocol reduction is justified.
+- At 16:43 CEST, SFT rows `16/17` had newly completed cleanly, bringing final
+  adapters to rows `0..8`, `12`, and `15..17`. Rows `9/10/11/13/14/18..24`
+  were running and `25..29` remained array-throttle pending. Eval rows `0/1/2`
+  remained active on A100-80GB; row `3` was the next priority-eligible eval,
+  with a scheduler estimate near 21:35. No failed SFT/eval row or fatal log
+  signature appeared.
 - The pilot's primary self-contained metric is citation-free validity because
   training targets use rule labels (`R`, `->E`) without numbered premise
   citations. Strict `valid=0` is expected under that citation-demanding metric,
