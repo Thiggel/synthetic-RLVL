@@ -4,6 +4,20 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 16:18 CEST closed the full-grid qualitative-coverage gap before results are
+  available. Added `audit_branchproof_unique_v2_qualitative_grid.py`, which
+  requires the complete 30-row sample grid and exact per-depth retention, then
+  indexes shallow/train-edge/first-OOD/depth-50 correct, incorrect, valid,
+  invalid, and cap-chunk examples across modalities, train ranges, and seeds.
+  It emits JSON/Markdown review supplements after the strict metric gate.
+  The 13-test focused pytest suite passed before the final field-validation
+  tightening; all three qualitative test functions pass afterward under a
+  direct system-Python invocation. `py_compile`, Slurm syntax, and
+  `git diff --check` also pass. A repeated vault-venv pytest startup later hit
+  a 60-second filesystem-I/O timeout before collection. Canceled untouched old
+  aggregation `3834707`, whose Slurm-spooled
+  script predated this gate, and submitted replacement `3835779` with the same
+  `afterok:3834706` dependency. No training, eval, or row-audit job changed.
 - 16:05 CEST first production BranchProof timing is safely below the sharding
   trigger. A100-80 row `3834582_0` completed all seven greedy chunks and
   sampled `55/112` after `3:19`. Completed sampled generation totals `2.05h`;

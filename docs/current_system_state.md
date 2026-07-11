@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 16:05 CEST.
+Last updated: 2026-07-11 16:18 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -84,7 +84,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `aftercorr` dependencies. It requires exact metrics, 1,024 retained rows,
   all 448 prompts, sampled indices `0/1` for every prompt, complete chunk logs,
   cap diagnostics, and fresh constants in formal prompts. Strict aggregation
-  `3834707` releases only after all 30 row audits pass.
+  Replacement aggregation `3835779` releases only after all 30 row audits
+  pass. It supersedes canceled pending job `3834707` and now also runs a
+  cross-grid qualitative audit. That gate requires all 30 sample artifacts and
+  exact per-depth retained coverage, then indexes representative shallow,
+  train-edge, first-OOD, and depth-50 correct/incorrect/valid/invalid cases
+  across both modalities, every train range, and all seeds. It also identifies
+  retained examples from generation chunks that reached the `7168` cap and
+  writes reviewable JSON/Markdown supplements before aggregation can succeed.
   The pilot had occupied row 12's production filenames with a smaller
   224-prompt/8-generation artifact. Those files are preserved under the
   `_pilot_gate` suffix and the production names are now clear, so row 12 cannot
@@ -447,5 +454,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443,3835779 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```
