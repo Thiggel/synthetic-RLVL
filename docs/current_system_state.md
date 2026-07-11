@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 16:18 CEST.
+Last updated: 2026-07-11 16:39 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -138,6 +138,16 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   are complete and monotonic. Focused tests pass (`9 passed`), old-grid
   compatibility still finds exactly 30 complete rows, and a smoke correctly
   rejects the current one-row pilot.
+- The final aggregator now matches the claim-decision order instead of
+  exporting mostly pass@16 summaries. Per-run, grouped mean/std, depth-curve,
+  and paired logic-minus-NL tables include greedy correctness/validity plus
+  correctness, modality-appropriate validity, and joint performance at
+  pass@`1/2/4/8/16`. It emits separate primary greedy/pass@1 correctness
+  figures and a train-1-to-25 sampling-efficiency figure, while preserving the
+  existing pass@16 tables and plots. Focused pytest passes (`4 passed`), and a
+  full 30-row compatibility smoke writes all new CSV/Markdown/PDF/PNG outputs.
+  The corrected strict grid, unlike some historical rows, is required to have
+  complete greedy and band-level sampled metrics before aggregation succeeds.
 - An exhaustive OLMo-tokenizer audit now covers all 1,000 corrected validation
   records at each of the 14 depths in both modalities (28,000 rendered gold
   traces). No target exceeds the shared 7,168-token generation cap and no

@@ -190,6 +190,17 @@ machine-readable incomplete manifest. Focused tests and old-grid compatibility
 checks pass; the existing old directory still resolves exactly 30 rows with no
 completeness problems.
 
+The aggregation outputs now enforce the planned analysis order. They preserve
+the historical pass@16 columns while adding greedy correctness/validity and
+pass@`1/2/4/8/16` correctness, modality-appropriate validity, and joint values
+to per-run, grouped mean/std, depth, and paired-delta CSVs. A dedicated primary
+figure separates greedy from sampled pass@1 OOD correctness; a second figure
+shows train-1-to-25 correctness and joint scaling with sample budget. Focused
+pytest passes (`4 passed`), and a 30-row compatibility smoke generated every
+new table and figure. The compatibility grid predates greedy evaluation and
+therefore renders that panel empty, while corrected production is strict-gated
+on complete greedy cells.
+
 Row audit array `3834706_[0-29%8]` is dependency-linked to eval `3834582`.
 For each row it requires all greedy and sampled metric cells, exactly 1,024
 retained generations, 896 sampled rows, 64 sampled rows and 32 unique prompts

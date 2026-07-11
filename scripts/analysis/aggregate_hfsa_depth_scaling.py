@@ -22,6 +22,7 @@ INTERMEDIATE_RE = re.compile(
 )
 DEPTHS = [1, 2, 5, 10, 12, 15, 18, 20, 25, 30, 35, 40, 45, 50]
 INTERMEDIATE_DEPTHS = [1, 5, 10, 15, 20, 25, 30, 40, 50]
+K_VALUES = (1, 2, 4, 8, 16)
 K = 16
 THRESHOLDS = [0.8, 0.5, 0.25]
 TEMPLATE_LABELS = {"logic": "Logic", "nl_exact": "Natural language"}
@@ -86,6 +87,25 @@ def band_metric(record: RunRecord, band: str, metric_name: str, k: int = K) -> f
     return metric(record, f"band_{band}/{metric_name}@{k}")
 
 
+def greedy_step_metric(record: RunRecord, depth: int, metric_name: str) -> float | None:
+    return record.metrics.get(f"synthetic/step_{depth}/{metric_name}")
+
+
+def greedy_band_metric(record: RunRecord, band: str, metric_name: str) -> float | None:
+    predicates = {
+        "train": lambda depth: depth <= record.train_max,
+        "ood": lambda depth: depth > record.train_max,
+        "hard_tail": lambda depth: depth >= 15,
+    }
+    values = [
+        value
+        for depth in DEPTHS
+        if predicates[band](depth)
+        and (value := greedy_step_metric(record, depth, metric_name)) is not None
+    ]
+    return mean(values) if values else None
+
+
 def row_metric(record: RunRecord, band: str, metric_name: str, k: int = K) -> float:
     value = band_metric(record, band, metric_name, k)
     return float("nan") if value is None else value
@@ -145,29 +165,67 @@ def write_compact_markdown(path: Path, rows: list[dict[str, object]]) -> None:
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def write_primary_markdown(path: Path, rows: list[dict[str, object]]) -> None:
+    lines = [
+        "| template | train | greedy OOD c | OOD c@1 | OOD joint@1 | OOD c@4 | OOD c@8 | OOD c@16 | OOD joint@16 |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for row in sorted(rows, key=lambda r: (str(r["template"]), int(r["train_max"]))):
+        lines.append(
+            "| `{template}` | {train} | {greedy:.3f} | {c1:.3f} | {j1:.3f} | {c4:.3f} | {c8:.3f} | {c16:.3f} | {j16:.3f} |".format(
+                template=row["template"],
+                train=int(row["train_max"]),
+                greedy=float(row["greedy_ood_correct_mean"]),
+                c1=float(row["ood_correct1_mean"]),
+                j1=float(row["ood_joint1_mean"]),
+                c4=float(row["ood_correct4_mean"]),
+                c8=float(row["ood_correct8_mean"]),
+                c16=float(row["ood_correct16_mean"]),
+                j16=float(row["ood_joint16_mean"]),
+            )
+        )
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def final_run_rows(records: list[RunRecord]) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for record in sorted(records, key=lambda r: (r.template, r.train_max, r.seed)):
         joint = joint_metric(record.template)
         valid = valid_metric(record.template)
         vgc = valid_given_correct_metric(record.template)
-        row = {
+        greedy_valid = "citation_free_valid" if record.template == "logic" else "nl_logic_citation_free_valid"
+        row: dict[str, object] = {
             "template": record.template,
             "train_max": record.train_max,
             "seed": record.seed,
             "elapsed_hours": record.elapsed_seconds / 3600.0,
-            "train_correct16": row_metric(record, "train", "correct_pass"),
-            "train_joint16": row_metric(record, "train", joint),
-            "ood_correct1": row_metric(record, "ood", "correct_pass", 1),
-            "ood_correct16": row_metric(record, "ood", "correct_pass"),
-            "ood_valid16": row_metric(record, "ood", valid),
-            "ood_joint16": row_metric(record, "ood", joint),
             "ood_valid_given_correct16": row_metric(record, "ood", vgc),
-            "hard_correct16": row_metric(record, "hard_tail", "correct_pass"),
-            "hard_joint16": row_metric(record, "hard_tail", joint),
-            "depth50_correct16": step_metric(record, 50, "correct_pass"),
-            "depth50_joint16": step_metric(record, 50, joint),
+            "greedy_train_correct": greedy_band_metric(record, "train", "correct"),
+            "greedy_train_valid": greedy_band_metric(record, "train", greedy_valid),
+            "greedy_ood_correct": greedy_band_metric(record, "ood", "correct"),
+            "greedy_ood_valid": greedy_band_metric(record, "ood", greedy_valid),
+            "greedy_hard_correct": greedy_band_metric(record, "hard_tail", "correct"),
+            "greedy_hard_valid": greedy_band_metric(record, "hard_tail", greedy_valid),
+            "greedy_depth50_correct": greedy_step_metric(record, 50, "correct"),
+            "greedy_depth50_valid": greedy_step_metric(record, 50, greedy_valid),
         }
+        for k in K_VALUES:
+            row.update(
+                {
+                    f"train_correct{k}": row_metric(record, "train", "correct_pass", k),
+                    f"train_valid{k}": row_metric(record, "train", valid, k),
+                    f"train_joint{k}": row_metric(record, "train", joint, k),
+                    f"ood_correct{k}": row_metric(record, "ood", "correct_pass", k),
+                    f"ood_valid{k}": row_metric(record, "ood", valid, k),
+                    f"ood_joint{k}": row_metric(record, "ood", joint, k),
+                    f"hard_correct{k}": row_metric(record, "hard_tail", "correct_pass", k),
+                    f"hard_valid{k}": row_metric(record, "hard_tail", valid, k),
+                    f"hard_joint{k}": row_metric(record, "hard_tail", joint, k),
+                    f"depth50_correct{k}": step_metric(record, 50, "correct_pass", k),
+                    f"depth50_valid{k}": step_metric(record, 50, valid, k),
+                    f"depth50_joint{k}": step_metric(record, 50, joint, k),
+                }
+            )
         rows.append(row)
     return rows
 
@@ -178,19 +236,26 @@ def final_depth_rows(records: list[RunRecord]) -> list[dict[str, object]]:
         joint = joint_metric(record.template)
         valid = valid_metric(record.template)
         for depth in DEPTHS:
-            rows.append(
-                {
-                    "template": record.template,
-                    "train_max": record.train_max,
-                    "seed": record.seed,
-                    "depth": depth,
-                    "in_train": int(depth <= record.train_max),
-                    "correct1": step_metric(record, depth, "correct_pass", 1),
-                    "correct16": step_metric(record, depth, "correct_pass"),
-                    "valid16": step_metric(record, depth, valid),
-                    "joint16": step_metric(record, depth, joint),
-                }
-            )
+            row: dict[str, object] = {
+                "template": record.template,
+                "train_max": record.train_max,
+                "seed": record.seed,
+                "depth": depth,
+                "in_train": int(depth <= record.train_max),
+                "greedy_correct": greedy_step_metric(record, depth, "correct"),
+                "greedy_valid": greedy_step_metric(
+                    record,
+                    depth,
+                    "citation_free_valid"
+                    if record.template == "logic"
+                    else "nl_logic_citation_free_valid",
+                ),
+            }
+            for k in K_VALUES:
+                row[f"correct{k}"] = step_metric(record, depth, "correct_pass", k)
+                row[f"valid{k}"] = step_metric(record, depth, valid, k)
+                row[f"joint{k}"] = step_metric(record, depth, joint, k)
+            rows.append(row)
     return rows
 
 
@@ -201,18 +266,35 @@ def group_summary_rows(records: list[RunRecord]) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for (template, train_max), items in sorted(grouped.items()):
         joint = joint_metric(template)
-        values = {
-            "train_correct16": [row_metric(r, "train", "correct_pass") for r in items],
-            "train_joint16": [row_metric(r, "train", joint) for r in items],
-            "ood_correct1": [row_metric(r, "ood", "correct_pass", 1) for r in items],
-            "ood_correct16": [row_metric(r, "ood", "correct_pass") for r in items],
-            "ood_joint16": [row_metric(r, "ood", joint) for r in items],
-            "hard_correct16": [row_metric(r, "hard_tail", "correct_pass") for r in items],
-            "hard_joint16": [row_metric(r, "hard_tail", joint) for r in items],
-            "depth50_correct16": [step_metric(r, 50, "correct_pass") for r in items],
-            "depth50_joint16": [step_metric(r, 50, joint) for r in items],
+        greedy_valid = "citation_free_valid" if template == "logic" else "nl_logic_citation_free_valid"
+        values: dict[str, list[float | None]] = {
+            "greedy_train_correct": [greedy_band_metric(r, "train", "correct") for r in items],
+            "greedy_train_valid": [greedy_band_metric(r, "train", greedy_valid) for r in items],
+            "greedy_ood_correct": [greedy_band_metric(r, "ood", "correct") for r in items],
+            "greedy_ood_valid": [greedy_band_metric(r, "ood", greedy_valid) for r in items],
+            "greedy_hard_correct": [greedy_band_metric(r, "hard_tail", "correct") for r in items],
+            "greedy_hard_valid": [greedy_band_metric(r, "hard_tail", greedy_valid) for r in items],
+            "greedy_depth50_correct": [greedy_step_metric(r, 50, "correct") for r in items],
+            "greedy_depth50_valid": [greedy_step_metric(r, 50, greedy_valid) for r in items],
             "elapsed_hours": [r.elapsed_seconds / 3600.0 for r in items],
         }
+        for k in K_VALUES:
+            values.update(
+                {
+                    f"train_correct{k}": [row_metric(r, "train", "correct_pass", k) for r in items],
+                    f"train_valid{k}": [row_metric(r, "train", valid_metric(template), k) for r in items],
+                    f"train_joint{k}": [row_metric(r, "train", joint, k) for r in items],
+                    f"ood_correct{k}": [row_metric(r, "ood", "correct_pass", k) for r in items],
+                    f"ood_valid{k}": [row_metric(r, "ood", valid_metric(template), k) for r in items],
+                    f"ood_joint{k}": [row_metric(r, "ood", joint, k) for r in items],
+                    f"hard_correct{k}": [row_metric(r, "hard_tail", "correct_pass", k) for r in items],
+                    f"hard_valid{k}": [row_metric(r, "hard_tail", valid_metric(template), k) for r in items],
+                    f"hard_joint{k}": [row_metric(r, "hard_tail", joint, k) for r in items],
+                    f"depth50_correct{k}": [step_metric(r, 50, "correct_pass", k) for r in items],
+                    f"depth50_valid{k}": [step_metric(r, 50, valid_metric(template), k) for r in items],
+                    f"depth50_joint{k}": [step_metric(r, 50, joint, k) for r in items],
+                }
+            )
         row: dict[str, object] = {"template": template, "train_max": train_max, "n": len(items)}
         for name, vals in values.items():
             avg, std, _ = stats([float(v) for v in vals if v is not None])
@@ -245,7 +327,12 @@ def grouped_depth_summary_rows(depth_rows: list[dict[str, object]]) -> list[dict
     rows: list[dict[str, object]] = []
     for (template, train_max, depth), items in sorted(grouped.items()):
         out: dict[str, object] = {"template": template, "train_max": train_max, "depth": depth, "n": len(items)}
-        for name in ["correct1", "correct16", "valid16", "joint16"]:
+        metric_names = ["greedy_correct", "greedy_valid"] + [
+            f"{metric_name}{k}"
+            for k in K_VALUES
+            for metric_name in ("correct", "valid", "joint")
+        ]
+        for name in metric_names:
             vals = [float(item[name]) for item in items if item[name] not in (None, "")]
             avg, std, _ = stats(vals)
             out[f"{name}_mean"] = avg
@@ -265,20 +352,36 @@ def paired_delta_rows(records: list[RunRecord]) -> list[dict[str, object]]:
                 continue
             logic_joint = joint_metric("logic")
             nl_joint = joint_metric("nl_exact")
-            rows.append(
-                {
-                    "train_max": train_max,
-                    "seed": seed,
-                    "delta_ood_correct16": row_metric(logic, "ood", "correct_pass")
-                    - row_metric(nl, "ood", "correct_pass"),
-                    "delta_ood_joint16": row_metric(logic, "ood", logic_joint)
-                    - row_metric(nl, "ood", nl_joint),
-                    "delta_depth50_correct16": float(step_metric(logic, 50, "correct_pass") or 0.0)
-                    - float(step_metric(nl, 50, "correct_pass") or 0.0),
-                    "delta_depth50_joint16": float(step_metric(logic, 50, logic_joint) or 0.0)
-                    - float(step_metric(nl, 50, nl_joint) or 0.0),
-                }
-            )
+            row: dict[str, object] = {
+                "train_max": train_max,
+                "seed": seed,
+                "delta_greedy_ood_correct": float(
+                    greedy_band_metric(logic, "ood", "correct") or 0.0
+                )
+                - float(greedy_band_metric(nl, "ood", "correct") or 0.0),
+                "delta_greedy_depth50_correct": float(
+                    greedy_step_metric(logic, 50, "correct") or 0.0
+                )
+                - float(greedy_step_metric(nl, 50, "correct") or 0.0),
+            }
+            for k in K_VALUES:
+                row.update(
+                    {
+                        f"delta_ood_correct{k}": row_metric(logic, "ood", "correct_pass", k)
+                        - row_metric(nl, "ood", "correct_pass", k),
+                        f"delta_ood_joint{k}": row_metric(logic, "ood", logic_joint, k)
+                        - row_metric(nl, "ood", nl_joint, k),
+                        f"delta_depth50_correct{k}": float(
+                            step_metric(logic, 50, "correct_pass", k) or 0.0
+                        )
+                        - float(step_metric(nl, 50, "correct_pass", k) or 0.0),
+                        f"delta_depth50_joint{k}": float(
+                            step_metric(logic, 50, logic_joint, k) or 0.0
+                        )
+                        - float(step_metric(nl, 50, nl_joint, k) or 0.0),
+                    }
+                )
+            rows.append(row)
     return rows
 
 
@@ -319,7 +422,6 @@ def final_records_complete(records: list[RunRecord], *, strict_metrics: bool = F
     if not strict_metrics:
         return problems
 
-    required_k_values = (1, 2, 4, 8, 16)
     for record in records:
         run_id = (record.template, record.train_max, record.seed)
         expected_prompts = len(DEPTHS) * 32
@@ -341,8 +443,20 @@ def final_records_complete(records: list[RunRecord], *, strict_metrics: bool = F
                     problems.append(f"{run_id} missing or invalid metric {key}")
             for metric_name in sampled_metric_names:
                 previous: float | None = None
-                for k in required_k_values:
+                for k in K_VALUES:
                     key = f"synthetic_sampled/step_{depth}/{metric_name}@{k}"
+                    value = record.metrics.get(key)
+                    if value is None or not 0.0 <= value <= 1.0:
+                        problems.append(f"{run_id} missing or invalid metric {key}")
+                        continue
+                    if previous is not None and value + 1e-9 < previous:
+                        problems.append(f"{run_id} non-monotonic metric {key}={value} < {previous}")
+                    previous = value
+        for band in ("train", "ood", "hard_tail"):
+            for metric_name in sampled_metric_names:
+                previous = None
+                for k in K_VALUES:
+                    key = f"synthetic_sampled/band_{band}/{metric_name}@{k}"
                     value = record.metrics.get(key)
                     if value is None or not 0.0 <= value <= 1.0:
                         problems.append(f"{run_id} missing or invalid metric {key}")
@@ -356,6 +470,79 @@ def final_records_complete(records: list[RunRecord], *, strict_metrics: bool = F
 def make_plots(out_dir: Path, group_rows: list[dict[str, object]], depth_group_rows: list[dict[str, object]], deltas: list[dict[str, object]], intermediate: list[dict[str, object]]) -> None:
     fig_dir = out_dir / "figures"
     fig_dir.mkdir(parents=True, exist_ok=True)
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.6), sharex=True, sharey=True)
+    for template in ("logic", "nl_exact"):
+        rows = sorted(
+            (row for row in group_rows if row["template"] == template),
+            key=lambda row: int(row["train_max"]),
+        )
+        xs = [int(row["train_max"]) for row in rows]
+        for ax, metric_name, title in (
+            (axes[0], "greedy_ood_correct", "Greedy OOD correctness"),
+            (axes[1], "ood_correct1", "Sampled pass@1 OOD correctness"),
+        ):
+            ax.errorbar(
+                xs,
+                [float(row[f"{metric_name}_mean"]) for row in rows],
+                yerr=[float(row[f"{metric_name}_std"]) for row in rows],
+                marker="o",
+                linewidth=2,
+                capsize=3,
+                label=TEMPLATE_LABELS[template],
+                color=COLORS[template],
+            )
+            ax.set_title(title)
+            ax.set_xlabel("max train depth")
+            ax.set_ylim(-0.03, 1.03)
+            ax.grid(True, alpha=0.25)
+    axes[0].set_ylabel("accuracy")
+    axes[1].legend(loc="lower right")
+    fig.tight_layout()
+    for ext in ("png", "pdf"):
+        fig.savefig(
+            fig_dir / f"final_primary_ood_correctness.{ext}",
+            dpi=180,
+            bbox_inches="tight",
+        )
+    plt.close(fig)
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.6), sharex=True, sharey=True)
+    for template in ("logic", "nl_exact"):
+        row = next(
+            item
+            for item in group_rows
+            if item["template"] == template and int(item["train_max"]) == 25
+        )
+        for ax, metric_name, title in (
+            (axes[0], "ood_correct", "OOD correctness versus sample budget"),
+            (axes[1], "ood_joint", "OOD correct and valid versus sample budget"),
+        ):
+            ax.errorbar(
+                K_VALUES,
+                [float(row[f"{metric_name}{k}_mean"]) for k in K_VALUES],
+                yerr=[float(row[f"{metric_name}{k}_std"]) for k in K_VALUES],
+                marker="o",
+                linewidth=2,
+                capsize=3,
+                label=TEMPLATE_LABELS[template],
+                color=COLORS[template],
+            )
+            ax.set_title(title)
+            ax.set_xlabel("samples k")
+            ax.set_xticks(K_VALUES)
+            ax.set_ylim(-0.03, 1.03)
+            ax.grid(True, alpha=0.25)
+    axes[0].set_ylabel("pass@k")
+    axes[1].legend(loc="lower right")
+    fig.tight_layout()
+    for ext in ("png", "pdf"):
+        fig.savefig(
+            fig_dir / f"final_train25_sampling_efficiency.{ext}",
+            dpi=180,
+            bbox_inches="tight",
+        )
+    plt.close(fig)
 
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.6), sharex=True)
     for template in ("logic", "nl_exact"):
@@ -381,6 +568,9 @@ def make_plots(out_dir: Path, group_rows: list[dict[str, object]], depth_group_r
     plt.close(fig)
 
     for metric_name, title, output in [
+        ("greedy_correct", "Greedy correctness by eval depth", "final_depth_greedy_correct"),
+        ("correct1", "Sampled pass@1 correctness by eval depth", "final_depth_correct1"),
+        ("joint1", "Sampled pass@1 correct and valid by eval depth", "final_depth_joint1"),
         ("correct16", "Correct@16 by eval depth", "final_depth_correct16"),
         ("joint16", "Joint valid+correct@16 by eval depth", "final_depth_joint16"),
     ]:
@@ -541,6 +731,7 @@ def main() -> None:
         list(group_summary[0].keys()),
     )
     write_compact_markdown(tables / "final_group_summary_compact.md", group_summary)
+    write_primary_markdown(tables / "final_primary_summary.md", group_summary)
     write_csv(
         tables / "final_depth_curves.csv",
         final_depth,

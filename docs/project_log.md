@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 16:39 CEST aligned corrected BranchProof aggregation with the claim-decision
+  protocol. The aggregator previously validated greedy and all pass@k cells
+  but exported mostly pass@16 summaries. It now writes per-run, grouped
+  mean/std, depth, and paired-delta fields for greedy correctness/validity and
+  pass@`1/2/4/8/16` correctness/validity/joint, plus separate primary
+  greedy/pass@1 and train-1-to-25 sampling-efficiency figures. Existing
+  pass@16 tables/plots remain. Focused pytest passes (`4 passed`), strict
+  checks now include band-level metrics, and a full 30-row compatibility smoke
+  generated all CSV/Markdown/PDF/PNG outputs. Visual inspection passed; an
+  apparent black rectangle in one PNG was the viewer's RGBA handling and the
+  same pixels/flattened RGB and PDF are normal. No live eval job changed.
 - 16:18 CEST closed the full-grid qualitative-coverage gap before results are
   available. Added `audit_branchproof_unique_v2_qualitative_grid.py`, which
   requires the complete 30-row sample grid and exact per-depth retention, then
