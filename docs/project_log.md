@@ -4,6 +4,30 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:05 CEST corrected BranchProof gate and qualitative review completed.
+  Gate `3832945_12` finished in `07:10:38`; structural/runtime audit `3831136`,
+  sampled probe `3833178_12`, and sampled audit `3833179` all completed and
+  accepted. Citation-free joint is perfect through train depth 25 and reaches
+  depth-30/40/50 pass@1 `0.883/0.625/0.344` and pass@8
+  `1.000/1.000/0.938`. Strict `valid=0` is expected because the trained proof
+  syntax omits numbered citations; it is not the intended self-contained
+  validity metric. The retained depth-50 slice contains `15/32` correct,
+  `11/32` citation-free joint, and `24/32` complete-format outputs. Failures
+  are late branch transitions or repetitive cap hits; all prompts retain fresh
+  constants and the corrected unique-answer construction.
+- 10:05 CEST runtime gate: measured A40 generation was `3826.3s` greedy plus
+  `20677.8s` sampled, with one greedy and seven sampled cap-hit chunks. A
+  matched A100 qualitative slice was not materially faster. Scaling to 32
+  prompts and 16 generations projects above 25 hours before scoring, so full
+  eval `3829073` must be depth-sharded/resumable before held SFT `3829072` is
+  released. No scientific protocol reduction is approved.
+- 09:49 CEST corrected Nanotron p15 logic `3830927_3` and NL `3831111_8` are
+  running on full A100-80GB nodes `a0534/a0535`. Both are near step
+  `1071/8192`, `562M/4.295B` tokens, `31.0--31.3K` tokens/s, and loss about
+  `1.73`, with no fatal/OOM/quota signature. Their recovery rows will resume
+  from the newest complete 1024-step checkpoint after the expected 24-hour
+  allocation boundary. Normal-control recovery `3828946_0` remains
+  priority-pending with a 17:45 CEST start estimate.
 - 02:10 CEST sampled qualitative coverage repair: discovered that the gate's
   `collect_samples=128` budget fills entirely during greedy scoring, leaving no
   raw sampled pass@k generations. Added independent

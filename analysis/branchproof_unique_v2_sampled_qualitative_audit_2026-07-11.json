@@ -1,0 +1,425 @@
+{
+  "accepted": true,
+  "errors": [],
+  "expected_k_values": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "expected_steps": [
+    1,
+    25,
+    30,
+    50
+  ],
+  "generation_log_audit": null,
+  "metrics_audit": {
+    "greedy": {},
+    "metric_count": 843,
+    "sampled": {
+      "1": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.03125,
+          "2": 0.0625,
+          "4": 0.125,
+          "8": 0.25
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.03125,
+          "2": 0.0625,
+          "4": 0.125,
+          "8": 0.25
+        },
+        "citation_free_joint_pass": {
+          "1": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "25": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "30": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 0.875,
+          "2": 0.9732142857142857,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 0.875,
+          "2": 0.9732142857142857,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 0.875,
+          "2": 0.9732142857142857,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 0.96875,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 0.9375,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "50": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 0.34375,
+          "2": 0.5357142857142857,
+          "4": 0.7678571428571428,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 0.34375,
+          "2": 0.5357142857142857,
+          "4": 0.7678571428571428,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 0.46875,
+          "2": 0.7142857142857143,
+          "4": 0.925,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 0.75,
+          "2": 0.8660714285714286,
+          "4": 0.9464285714285714,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 0.75,
+          "2": 0.8660714285714286,
+          "4": 0.9464285714285714,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      }
+    }
+  },
+  "metrics_path": "/home/vault/c107fa/c107fa12/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/sft_branchproof_unique_v2_logic_train1to25_10k_seed3407_sampled_qualitative_passk.json",
+  "samples_audit": {
+    "by_step": {
+      "1": {
+        "correct": 32,
+        "format_ok": 32,
+        "fresh_constants": 32,
+        "nonempty_generation": 32,
+        "syntactic": 32
+      },
+      "25": {
+        "correct": 32,
+        "format_ok": 32,
+        "fresh_constants": 32,
+        "nonempty_generation": 32,
+        "syntactic": 32
+      },
+      "30": {
+        "correct": 28,
+        "format_ok": 31,
+        "fresh_constants": 32,
+        "nonempty_generation": 32,
+        "syntactic": 30
+      },
+      "50": {
+        "correct": 15,
+        "format_ok": 24,
+        "fresh_constants": 32,
+        "nonempty_generation": 32,
+        "syntactic": 24
+      }
+    },
+    "fresh_constant_failure_count": 0,
+    "nonempty_generation_count": 128,
+    "representative_samples": {
+      "1": {
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\n</constants>\n<predicates>\nAx: x is ivory\nBx: x is teal\nCx: x is violet\nDx: x is hazel\nEx: x is willow\nFx: x is north\nGx: x is south\nHx: x is east\nIx: x is west\n</predicates>\n<premises>\nB(c0)\nF(c0)\nF(c0) & B(c0) -> E(c1)\nE(c1) -> F(c1)\nI(c0) & B(c0) -> C(c1)\nC(c1) -> H(c1)\nH(c0) & B(c0) -> A(c1)\nA(c1) -> G(c1)\nG(c0) & B(c0) -> D(c1)\nD(c1) -> I(c1)\n</premises>\n<proof>\nB(c0) ; R\nF(c0) ; R\nE(c1) ; ->E\n</proof>\n<conclusion>\nE(c1)\n</conclusion>\n</formal>\n<answer>\nwillow\n</answer>",
+        "gold_answer": "willow",
+        "prompt_head": "<question>\n1. c0 is teal.\n2. c0 is north.\n3. If c0 is north and c0 is teal, then c1 is willow.\n4. If c1 is willow, then c1 is north.\n5. If c0 is west and c0 is teal, then c1 is violet.\n6. If c1 is violet, then c1 is east.\n7. If c0 is east and c0 is teal, then c1 is ivory.\n8. If c1 is ivory, then c1 is south.\n9. If c0 is south and c0 is teal, then c1 is hazel.\n10. If c1 is hazel, then c1 is west.\nWhich state applies to c1?\n</question>\n\n",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "25": {
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\nc19 = c19\nc20 = c20\nc21 = c21\nc22 = c22\nc23 = c23\nc24 = c24\nc25 = c25\n</constants>\n<predicates>\nAx: x is orchid\nBx: x is laurel\nCx: x is hazel\nDx: x is cedar\nEx: x is willow\nFx: x is granite\nGx: x is slate\nHx: x is maple\nIx: x is coral\nJx: x is ivory\nKx: x is meadow\nLx: x is elm\nMx: x is pearl\nNx: x is poppy\nOx: x is lime\nPx: x is violet\nQx: x is amber\nRx: x is birch\nSx: x is ruby\nTx: x is olive\nUx: x is teal\nVx: x is juniper\nWx: x is cobalt\nXx: x is harbor\nYx: x is north\nZx: x is south\nP0(x): x is east\nP1(x): x is west\n</predicates>\n<premises>\nF(c0)\nZ(c0)\nY(c0) & F(c0) -> O(c1)\nO(c1) -> Y(c1)\nP0(c0) &",
+        "gold_answer": "lime",
+        "prompt_head": "<question>\n1. c0 is granite.\n2. c0 is south.\n3. If c0 is north and c0 is granite, then c1 is lime.\n4. If c1 is lime, then c1 is north.\n5. If c0 is east and c0 is granite, then c1 is maple.\n6. If c1 is maple, then c1 is south.\n7. If c0 is west and c0 is granite, then c1 is harbor.\n8. If c1 is harbor, then c1 is west.\n9. If c0 is south and c0 is granite, then c1 is birch.\n10. If c1 is birch, then c1 is east.\n11. If c1 is west and c1 is harbor, then c2 is juniper.\n12. If c2 is juniper, then c2 is n",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "30": {
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\nc19 = c19\nc20 = c20\nc21 = c21\nc22 = c22\nc23 = c23\nc24 = c24\nc25 = c25\nc26 = c26\nc27 = c27\nc28 = c28\nc29 = c29\nc30 = c30\n</constants>\n<predicates>\nAx: x is harbor\nBx: x is granite\nCx: x is elm\nDx: x is pearl\nEx: x is cedar\nFx: x is lime\nGx: x is ivory\nHx: x is olive\nIx: x is hazel\nJx: x is willow\nKx: x is laurel\nLx: x is coral\nMx: x is violet\nNx: x is cobalt\nOx: x is amber\nPx: x is juniper\nQx: x is ruby\nRx: x is orchid\nSx: x is birch\nTx: x is maple\nUx: x is slate\nVx: x is meadow\nWx: x is teal\nXx: x is poppy\nYx: x is north\nZx: x is south\nP0(x): x is east\nP1(x): x is west\n</predicates>\n<premises>\nB(c0)\nZ(",
+        "gold_answer": "coral",
+        "prompt_head": "<question>\n1. c0 is granite.\n2. c0 is south.\n3. If c0 is south and c0 is granite, then c1 is birch.\n4. If c1 is birch, then c1 is east.\n5. If c0 is west and c0 is granite, then c1 is harbor.\n6. If c1 is harbor, then c1 is west.\n7. If c0 is north and c0 is granite, then c1 is lime.\n8. If c1 is lime, then c1 is north.\n9. If c0 is east and c0 is granite, then c1 is maple.\n10. If c1 is maple, then c1 is south.\n11. If c1 is south and c1 is maple, then c2 is willow.\n12. If c2 is willow, then c2 is wes",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "50": {
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\nc19 = c19\nc20 = c20\nc21 = c21\nc22 = c22\nc23 = c23\nc24 = c24\nc25 = c25\nc26 = c26\nc27 = c27\nc28 = c28\nc29 = c29\nc30 = c30\nc31 = c31\nc32 = c32\nc33 = c33\nc34 = c34\nc35 = c35\nc36 = c36\nc37 = c37\nc38 = c38\nc39 = c39\nc40 = c40\nc41 = c41\nc42 = c42\nc43 = c43\nc44 = c44\nc45 = c45\nc46 = c46\nc47 = c47\nc48 = c48\nc49 = c49\nc50 = c50\n</constants>\n<predicates>\nAx: x is laurel\nBx: x is cobalt\nCx: x is harbor\nDx: x is slate\nEx: x is orchid\nFx: x is elm\nGx: x is olive\nHx: x is maple\nIx: x is willow\nJx: x is violet\nKx: x is ruby\nLx: x is cedar\nMx: x is teal\nNx: x is amber\nOx: x is lime\nPx: x is pearl\nQx: x is hazel\nRx: x i",
+        "gold_answer": "violet",
+        "prompt_head": "<question>\n1. c0 is granite.\n2. c0 is south.\n3. If c0 is east and c0 is granite, then c1 is maple.\n4. If c1 is maple, then c1 is south.\n5. If c0 is south and c0 is granite, then c1 is birch.\n6. If c1 is birch, then c1 is east.\n7. If c0 is north and c0 is granite, then c1 is lime.\n8. If c1 is lime, then c1 is north.\n9. If c0 is west and c0 is granite, then c1 is harbor.\n10. If c1 is harbor, then c1 is west.\n11. If c1 is east and c1 is birch, then c2 is cedar.\n12. If c2 is cedar, then c2 is south.",
+        "syntactic": 1.0,
+        "valid": 0.0
+      }
+    },
+    "sample_count": 128,
+    "sample_index_counts": {
+      "1": {
+        "0": 4,
+        "1": 4,
+        "2": 4,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 4
+      },
+      "25": {
+        "0": 4,
+        "1": 4,
+        "2": 4,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 4
+      },
+      "30": {
+        "0": 4,
+        "1": 4,
+        "2": 4,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 4
+      },
+      "50": {
+        "0": 4,
+        "1": 4,
+        "2": 4,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 4
+      }
+    },
+    "source": "synthetic_sampled",
+    "step_counts": {
+      "1": 32,
+      "25": 32,
+      "30": 32,
+      "50": 32
+    },
+    "unique_prompt_counts": {
+      "1": 4,
+      "25": 4,
+      "30": 4,
+      "50": 4
+    }
+  },
+  "samples_path": "/home/vault/c107fa/c107fa12/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/sft_branchproof_unique_v2_logic_train1to25_10k_seed3407_sampled_qualitative_samples.jsonl"
+}

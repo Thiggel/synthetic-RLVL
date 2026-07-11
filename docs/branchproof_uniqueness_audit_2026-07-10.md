@@ -121,6 +121,30 @@ requires all 128 sampled outputs with exact per-depth prompt/index coverage.
 The full SFT array remains user-held until both automated audits and manual
 greedy/sampled generation review pass.
 
+## One-seed corrected pilot outcome
+
+Gate `3832945_12` completed in `07:10:38`; structural/runtime audit `3831136`
+and sampled qualitative probe/audit `3833178_12 -> 3833179` accepted the
+artifacts. The corrected prompts have fresh contiguous constants, complete
+depth coverage, and expected answer extraction. The trained logic format uses
+rule labels without numbered premise citations, so strict `valid=0` is expected;
+the relevant self-contained proof metric is citation-free validity.
+
+Citation-free correct-and-valid is perfect through train depth 25. At depths
+30, 40, and 50, sampled pass@1 is `0.883`, `0.625`, and `0.344`; pass@8 is
+`1.000`, `1.000`, and `0.938`. The separately retained depth-50 slice has
+`15/32` correct answers, `11/32` citation-free valid-and-correct proofs, and
+`24/32` complete-format generations. Manual inspection found correct complete
+traces, late wrong-branch transitions, and repetitive/nonterminating outputs.
+All 32 depth-50 rows preserved fresh constants. These failures are model length
+extrapolation behavior, not evidence of renewed dataset ambiguity.
+
+The gate measured `3826.3s` of greedy and `20677.8s` of sampled generation on
+A40. A matched A100 qualitative slice was not materially faster. The final
+32-prompt, 16-generation protocol therefore projects above 25 hours before
+scoring, beyond the 24-hour partition limit. Full eval must be made
+depth-sharded/resumable before the held three-seed SFT grid is released.
+
 At the planned 4,096-token Nanotron context, `44.3%` of formal documents and
 `47.8%` of NL documents are longer than one context; none exceeds 8,192 tokens.
 Nanotron therefore treats these as ordinary packed continuation documents, not
@@ -141,8 +165,8 @@ instruction job starts.
 | --- | --- | --- |
 | Materialized paired dataset | `3829067` complete | Probe accepted, all subsets present, private HF push succeeds |
 | One-seed SFT pilot | `3829069_12` complete | Completed all 10,000 steps with final adapter and complete step-5000/10000 checkpoints; no truncation/data error |
-| Pilot post-hoc eval | malformed `3831135_12` canceled; corrected `3832945_12 -> 3831136` running on A40; sampled qualitative `3833178_12 -> 3833179` dependency-pending | Main audit verifies schema, all depths, corrected constants, runtime chunks, and cap diagnostics. Separate sampled probe retains all eight generations for four prompts at depths `1/25/30/50`; its audit verifies exact source, prompt, sample-index, and metric coverage before manual review |
-| Three-seed main grid | held `3829072 -> 3829073` | Full SFT depends on audit `3831136` and is additionally user-held. After the audit passes, manually inspect shallow, held-out, depth-50, correct, incorrect, and cap-length generations, then release `3829072` only if the intended task/evaluator behavior is confirmed; report greedy and pass@1 before pass@k |
+| Pilot post-hoc eval | corrected `3832945_12 -> 3831136` and sampled qualitative `3833178_12 -> 3833179` complete | Both audits accepted; manual review confirms intended prompt/extraction behavior and ordinary long-trace failures |
+| Three-seed main grid | held `3829072 -> 3829073` | Make full eval depth-sharded/resumable to fit the 24-hour limit, then release SFT; report greedy and pass@1 before pass@k |
 | Corrected 1.2B-token corpora | builds and packed audit `3830855` complete | Full paired-prefix scan, metadata counts, and exact source-token/decode round trips passed |
 | Midtraining mixtures | logic/NL smokes `3830924`/`3831110` complete; matched control/logic/NL p15 chains active or held | Compare direct and instruction-tuned downstream results, and launch the remaining percentages only after all three p15 conditions train, upload, and evaluate cleanly |
 

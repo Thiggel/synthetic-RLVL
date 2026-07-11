@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 02:10 CEST.
+Last updated: 2026-07-11 10:05 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -61,45 +61,36 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   after four minutes when process inspection found Slurm had truncated the
   comma-containing export to `--k-values 1`. The wrapper now accepts a
   delimiter-safe `PASSK_K_VALUES_COLON`; corrected replacement `3832945_12`
-  uses 16 prompts per depth, 8 samples, greedy plus pass@`1/2/4/8`, the same
-  equal `7168` cap, and all 14 depths. It started immediately on A40 `a1721`
-  at 00:50 CEST. Structural audit `3831136` was dependency-edited to follow
-  `3832945_12` and checks its 128 retained greedy generations and exact
-  `c0..c_depth` prompts. The existing collector exhausts that budget during
-  greedy scoring, so it cannot support qualitative claims about sampled
-  pass@k outputs. The evaluator now supports a separate sampled budget and
-  round-robin prompt/sample-index collection. Targeted sampled probe
-  `3833178_12` follows the gate at depths `1/25/30/50`, four prompts/depth and
-  eight generations/prompt, retaining all 128 outputs; structural audit
-  `3833179` then requires 32 rows, four unique prompts, and sample indices
-  `0..7` at every depth. Full SFT `3829072` retains its
-  `afterok:3831136` dependency and is additionally `JobHeldUser`, preventing
-  automatic release before representative shallow, held-out, depth-50,
-  success, and failure generations are manually inspected. Release the same
-  array with `scontrol release 3829072` only after that review passes. The
-  eventual full eval `3829073` remains at 32 prompts, 16 samples, and
-  pass@`1/2/4/8/16` for the scientific result.
-- The post-run audit now also parses every vLLM chunk-completion line. It
-  requires all four greedy and 28 sampled chunks exactly once and records
-  elapsed time, output tokens, throughput, maximum generated length, and cap
-  hits. A cap hit is retained as a diagnostic rather than automatically
-  invalidating the experiment. All four greedy chunks are complete. Chunk 3
-  (depths 25--40) produced 264,625 tokens in 1,682.2 seconds with maximum
-  length 5,212. Chunk 4 (depths 45/50) produced 193,844 tokens in 1,463.2
-  seconds and at least one generation reached exactly 7,168 tokens. Since all
-  formal gold targets fit below 6,212, this is a model nontermination/length
-  failure to inspect, not insufficient gold budget. Relative to the corresponding
-  per-depth median gold target lengths, completed chunk totals differ by only
-  `-0.01%`, `-0.06%`, and `+0.19%`. This rules out gross truncation or runaway
-  length drift through depth 40, but is not evidence of correctness or proof
-  validity. Sampled generation is active and completed chunks `1..8/28` by
-  02:10 without a sampled cap hit or fatal/OOM/quota signature.
-- Both `a40` and `a100` enforce a 24-hour maximum, while the current evaluator
-  writes metrics and retained samples only after the full row completes. Once
-  the gate finishes, use its complete sampled throughput to project the final
-  32-prompt, 16-generation A100 runtime. If a conservative row estimate is
-  near 20 hours, make full eval `3829073` depth-sharded/resumable before it can
-  run; do not reduce prompts, generations, depths, or pass@16 to fit the limit.
+  completed in `07:10:38` on A40 with 16 prompts per depth, 8 samples, greedy
+  plus pass@`1/2/4/8`, the same equal `7168` cap, and all 14 depths. Structural
+  audit `3831136` and sampled qualitative probe/audit
+  `3833178_12 -> 3833179` completed cleanly. The latter retained all eight
+  sampled generations for four prompts at depths `1/25/30/50`; every row had
+  fresh `c0..c_depth` constants and the expected prompt/sample-index coverage.
+  Manual inspection found correct complete traces, late wrong-branch
+  transitions, and depth-50 repetition/nontermination, with no evidence of
+  another ambiguous-data or extraction bug. Full SFT `3829072` remains
+  `JobHeldUser`. The full evaluator must first be made depth-sharded/resumable;
+  the measured protocol cannot safely finish one row inside the 24-hour limit.
+- The accepted runtime audit records all four greedy and 28 sampled chunks.
+  Greedy generation took `3826.3s`; sampled generation took `20677.8s` and
+  produced `5,062,917` tokens. One greedy and seven sampled chunks hit the
+  `7168` cap, all at the longest depths. A matched A100 qualitative slice did
+  not provide a material speedup over A40. Scaling measured work to the final
+  32-prompt, 16-generation protocol projects more than 25 hours before scoring,
+  above the cluster's 24-hour maximum. Full eval `3829073` therefore needs
+  recoverable depth shards without reducing depths, prompts, generations, or
+  pass@16.
+- The pilot's primary self-contained metric is citation-free validity because
+  training targets use rule labels (`R`, `->E`) without numbered premise
+  citations. Strict `valid=0` is expected under that citation-demanding metric,
+  not evidence that the proofs are invalid. Citation-free correct-and-valid is
+  perfect through train depth 25; sampled depth-30/40/50 pass@1 is
+  `0.883/0.625/0.344` and pass@8 is `1.000/1.000/0.938`. In the separately
+  retained depth-50 slice, `15/32` outputs answered correctly, `11/32` were
+  self-contained valid-and-correct, `24/32` completed the format, and failures
+  were late derivation errors or repetitive cap hits. These are one-seed pilot
+  diagnostics, not yet a logic-vs-NL result.
 - An exhaustive OLMo-tokenizer audit now covers all 1,000 corrected validation
   records at each of the 14 depths in both modalities (28,000 rendered gold
   traces). No target exceeds the shared 7,168-token generation cap and no
@@ -133,10 +124,15 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   comparison: normal control, logic, and NL. Logic train/recovery is
   `3830927_3 -> 3830928_3`; NL integration smoke `3831110` completed all three
   steps after loading the intended `0.85/0.15` normal/NL mix, releasing NL
-  train/recovery `3831111_8 -> 3831112_8`. At 01:22 CEST, Slurm estimated
-  starts near 2026-07-11 12:27 for logic and 11:13 for NL. New upload/direct-eval/
-  instruction-SFT/instruction-eval chains are logic `3831123..3831126` and NL
-  `3831113..3831116`; both use the isolated `bp_unique_v2` names and HF prefix.
+  train/recovery `3831111_8 -> 3831112_8`. Logic and NL started together near
+  04:46 CEST on full A100-80GB nodes `a0534/a0535`. At 09:49 both were near
+  step `1071/8192`, `562M/4.295B` consumed tokens, `31.0--31.3K` tokens/s,
+  and loss about `1.73`, with no fatal/OOM/quota signature. Their 24-hour
+  allocations cannot finish all 8192 steps, so the existing `afterany`
+  recovery rows will resume from the latest complete 1024-step checkpoint.
+  Upload/direct-eval/instruction-SFT/instruction-eval chains are logic
+  `3831123..3831126` and NL `3831113..3831116`; both use isolated
+  `bp_unique_v2` names and HF prefixes.
 - A direct audit of Nanotron's production `TokenizedBytes`/
   `BlendableDataset` path found no mixture bug. The run blends 4,096-token
   chunks; each p15 arm realizes `157,287/1,048,576` proof chunks, or
@@ -148,7 +144,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   deleted because their logic/NL corpora inherited the same generator defect.
   The unaffected `0%` normal-corpus control `3823434_0` reached its exact
   24-hour wall limit after logged iteration `5051`, as expected, and recovery/skip
-  `3828946_0` is priority-pending with a 15:04 CEST start estimate.
+  `3828946_0` is priority-pending with a 17:45 CEST start estimate.
   Step `4096` was explicitly verified complete: 625 model files, four equal
   `22,848,937,060`-byte optimizer shards, no zero-byte files, and complete
   metadata. The full filesystem-accounted checkpoint footprint is about
