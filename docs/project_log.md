@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:53 CEST downstream preflight found `folio` absent from the installed
+  lm-eval registry, which would have failed all six held evals before model
+  loading. Replaced it with paired `fld_default` and
+  `fld_logical_formula_default`, added `mmlu_pro`, and validated all 11
+  task/group names. Added task preflight and incomplete-output archival to the
+  eval wrapper. Submitted direct/native-chat limit-one suite smoke `3834728`,
+  now running on A40, and made every production eval depend on it. Canceled
+  untouched old evals `3831114/3831116/3831120/3831122/3831124/3831126` and
+  submitted NL `3834729/3834730`, control `3834731/3834732`, and logic
+  `3834733/3834734`; all remain A100-80GB-only. Replaced queued watcher
+  `3834722` with current-prompt watcher `3834736` at the same 15:15 start.
 - 10:46 CEST replaced the queued first watcher so its Slurm-spooled prompt
   contains the current recovery graph. Canceled untouched begin-time job
   `3834564` and submitted `3834722` for the same 15:15 CEST start. The updated

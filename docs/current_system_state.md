@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 10:46 CEST.
+Last updated: 2026-07-11 10:53 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -163,9 +163,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   recovery rows will resume from the complete step-4096 checkpoint. The live
   jobs explicitly override checkpoint interval to `4096`; neither corrected
   run retains 1024-step checkpoints.
-  Upload/direct-eval/instruction-SFT/instruction-eval chains are logic
-  `3831123..3831126` and NL `3831113..3831116`; both use isolated
-  `bp_unique_v2` names and HF prefixes.
+  The corrected logic branch uses upload `3831123`, direct eval `3834733`,
+  instruction SFT `3831125`, and instruction eval `3834734`; NL uses upload
+  `3831113`, direct eval `3834729`, instruction SFT `3831115`, and instruction
+  eval `3834730`. Both use isolated `bp_unique_v2` names and HF prefixes.
 - A direct audit of Nanotron's production `TokenizedBytes`/
   `BlendableDataset` path found no mixture bug. The run blends 4,096-token
   chunks; each p15 arm realizes `157,287/1,048,576` proof chunks, or
@@ -183,8 +184,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   metadata. The full filesystem-accounted checkpoint footprint is about
   `199G` (`29G` model, `171G` optimizer), not the earlier optimizer-only
   `91.4G` estimate. Its current allocation ends before the ETA, so guarded
-  recovery can safely resume. Replacement downstream chain `3831119..3831122`
-  uses `afterok` dependencies and both direct and instruction-tuned evals.
+  recovery can safely resume. Its downstream branch uses upload `3831119`,
+  direct eval `3834731`, instruction SFT `3831121`, and instruction eval
+  `3834732`, all with `afterok` dependencies.
 - Upload jobs now have a path-guarded opt-in that removes all local Nanotron
   checkpoints only after successful HF conversion/upload. It is enabled for
   control, corrected logic, and corrected NL, preventing three-condition
@@ -202,7 +204,17 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   eval rows retained targets, with lengths `71/537/1202` min/mean/max and a
   verified native system/user/assistant rendering. Instruction jobs for all
   three conditions are additionally dependency-gated on this smoke.
-- Persistent plan oversight is active through begin-time job `3834722` using
+- Downstream-suite preflight found that the installed lm-eval harness does not
+  provide the requested `folio` task; leaving it in the list would make every
+  eval fail before model loading. The validated reviewer suite now contains
+  `gsm8k`, `arc_challenge`, `hellaswag`, `winogrande`, `piqa`, `logiqa`,
+  natural-language `fld_default`, matched formal
+  `fld_logical_formula_default`, `bbh`, `mmlu`, and `mmlu_pro`. Smoke `3834728`
+  is running on A40 with Qwen2.5-0.5B at limit one in both direct and native
+  chat modes; all six production evals depend on its success. The wrapper now
+  preflights task availability and archives command-only/incomplete output
+  directories instead of incorrectly skipping retries.
+- Persistent plan oversight is active through begin-time job `3834736` using
   `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` on one
   A100-MIG slice. Its first pass was moved to 15:15 CEST to inspect the
   estimated 14:43 control recovery start, and it self-schedules its successor
@@ -391,5 +403,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582,3834706,3834707,3834722 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582,3834706,3834707,3834722,3834728,3834729,3834730,3834731,3834732,3834733,3834734,3834736 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

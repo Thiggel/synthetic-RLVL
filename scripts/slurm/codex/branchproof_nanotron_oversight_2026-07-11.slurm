@@ -75,9 +75,10 @@ Use source ./scripts/env.sh before shell commands. Do not touch unrelated puzzle
 Active critical paths:
 - Corrected BranchProof full SFT 3829072_[0-29%12], followed per row by eval 3834582_[0-29%6]. Eval must remain on partition a100 with feature a100_80 and retain 32 prompts/depth, 16 generations, all 14 depths, pass@1/2/4/8/16, context 16384, equal cap 7168, and two sampled generations per prompt for qualitative review.
 - BranchProof row audits 3834706_[0-29%8] follow eval rows with aftercorr dependencies; strict aggregation 3834707 runs only after all 30 audits pass. Recover any failed eval/audit rows before aggregation rather than bypassing either gate.
-- Nanotron normal control 3823434_0 -> recovery 3828946_0 -> upload/direct-eval/instruction-SFT/instruction-eval 3831119..3831122.
-- Corrected Nanotron logic p15 3830927_3 -> recovery 3830928_3 -> 3831123..3831126.
-- Corrected Nanotron NL p15 3831111_8 -> recovery 3831112_8 -> 3831113..3831116.
+- Downstream-suite smoke 3834728 must pass before production eval. The installed harness does not provide folio; the validated suite uses gsm8k, arc_challenge, hellaswag, winogrande, piqa, logiqa, fld_default, fld_logical_formula_default, bbh, mmlu, and mmlu_pro.
+- Nanotron normal control 3823434_0 -> recovery 3828946_0 -> upload 3831119, direct eval 3834731, instruction SFT 3831121, instruction eval 3834732.
+- Corrected Nanotron logic p15 3830927_3 -> recovery 3830928_3 -> upload 3831123, direct eval 3834733, instruction SFT 3831125, instruction eval 3834734.
+- Corrected Nanotron NL p15 3831111_8 -> recovery 3831112_8 -> upload 3831113, direct eval 3834729, instruction SFT 3831115, instruction eval 3834730.
 
 Plan to execute end to end:
 1. Complete corrected BranchProof SFT/eval. Check squeue, expanded sacct rows, logs, finals, eval JSONs, sample JSONLs, and quota. Inspect the first A100-80 eval runtime. If an eval approaches or hits 20--24 hours, preserve the protocol and make only unfinished rows depth-sharded/resumable. Recover only missing/failed rows.

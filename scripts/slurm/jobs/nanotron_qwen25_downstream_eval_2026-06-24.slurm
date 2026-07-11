@@ -26,7 +26,8 @@ CHECKPOINT_STEP="${CHECKPOINT_STEP:-8192}"
 HF_NAMESPACE="${HF_NAMESPACE:-flaitenberger}"
 HF_REPO_PREFIX="${HF_REPO_PREFIX:-qwen25-7b-logic-cot-midtrain}"
 EVAL_BRANCH="${EVAL_BRANCH:-direct}"
-REVIEWER_TASKS="${REVIEWER_TASKS:-gsm8k,arc_challenge,hellaswag,winogrande,piqa,logiqa,folio,bbh,mmlu}"
+REVIEWER_TASKS_RESOLVED="${REVIEWER_TASKS_COLON:-${REVIEWER_TASKS:-gsm8k,arc_challenge,hellaswag,winogrande,piqa,logiqa,fld_default,fld_logical_formula_default,bbh,mmlu,mmlu_pro}}"
+REVIEWER_TASKS_RESOLVED="${REVIEWER_TASKS_RESOLVED//:/,}"
 
 MIX_KINDS=(control logic logic logic logic logic nl_exact nl_exact nl_exact nl_exact nl_exact)
 MIX_PCTS=(0 5 10 15 20 25 5 10 15 20 25)
@@ -65,9 +66,27 @@ else
   exit 2
 fi
 
+python - "${REVIEWER_TASKS_RESOLVED}" <<'PY'
+import sys
+from lm_eval.tasks import TaskManager
+
+tasks = [task for task in sys.argv[1].replace(",", " ").split() if task]
+manager = TaskManager()
+missing = [task for task in tasks if not manager.match_tasks([task])]
+if missing:
+    raise SystemExit(f"lm-eval tasks are unavailable: {missing}")
+print(f"Validated {len(tasks)} lm-eval task/group names: {','.join(tasks)}")
+PY
+
 if [[ -d "${OUT_DIR}" && "${FORCE_LM_EVAL:-0}" != "1" ]]; then
-  echo "lm-eval output dir exists: ${OUT_DIR}; skipping"
-  exit 0
+  if find "${OUT_DIR}" -type f -name 'results_*.json' -size +0c -print -quit | grep -q .; then
+    echo "Complete lm-eval result exists: ${OUT_DIR}; skipping"
+    exit 0
+  fi
+  INCOMPLETE_DIR="${OUT_DIR}.incomplete.${SLURM_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
+  echo "Archiving incomplete lm-eval output to ${INCOMPLETE_DIR}"
+  rm -rf "${INCOMPLETE_DIR}"
+  mv "${OUT_DIR}" "${INCOMPLETE_DIR}"
 fi
 
 LIMIT_ARGS=()
@@ -78,7 +97,7 @@ fi
 python scripts/evaluate_lm_eval.py \
   --checkpoint "${CHECKPOINT}" \
   --model "${LM_EVAL_MODEL:-vllm}" \
-  --tasks "${REVIEWER_TASKS}" \
+  --tasks "${REVIEWER_TASKS_RESOLVED}" \
   --output-path "${OUT_DIR}" \
   --batch-size "${LM_EVAL_BATCH_SIZE:-auto}" \
   "${LIMIT_ARGS[@]}" \
