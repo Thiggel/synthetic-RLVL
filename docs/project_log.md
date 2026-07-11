@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:27 CEST live continuation: all released BranchProof SFT rows `0..11`
+  entered optimizer training and ranged from steps `23..522/10000`, with
+  sampled GPUs at 100% utilization and no fatal/OOM/quota signature. The
+  control recovery estimate moved to 14:43 CEST, so oversight job `3834564`
+  was safely moved from 16:21 to 15:15 CEST to verify its actual resume path;
+  future successors remain six hours apart.
 - 10:23 CEST installed persistent six-hour critical-path oversight. Added
   `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm`,
   validated it with `bash -n`, a batch-shell `cs` lookup, Slurm `--test-only`,

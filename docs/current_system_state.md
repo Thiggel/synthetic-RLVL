@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 10:23 CEST.
+Last updated: 2026-07-11 10:27 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -72,7 +72,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   another ambiguous-data or extraction bug. User approval accepted the
   expected corrected runtime, so the manual hold on full SFT `3829072` was
   released at 10:15 CEST. Rows `0..11` started immediately on A40 nodes and
-  rows `12..29` wait only on the array throttle. Every downstream eval row
+  entered optimizer training; at 10:25 they ranged from step `23` to `522` of
+  `10000` with no fatal/OOM/quota signature. Rows `12..29` wait only on the
+  array throttle. Every downstream eval row
   `3829073` remains constrained to `a100` plus feature
   `a100_80`, throttle 6, and starts only after its corresponding SFT row
   succeeds.
@@ -153,7 +155,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   deleted because their logic/NL corpora inherited the same generator defect.
   The unaffected `0%` normal-corpus control `3823434_0` reached its exact
   24-hour wall limit after logged iteration `5051`, as expected, and recovery/skip
-  `3828946_0` is priority-pending with a 17:45 CEST start estimate.
+  `3828946_0` is priority-pending with a 14:43 CEST start estimate.
   Step `4096` was explicitly verified complete: 625 model files, four equal
   `22,848,937,060`-byte optimizer shards, no zero-byte files, and complete
   metadata. The full filesystem-accounted checkpoint footprint is about
@@ -178,7 +180,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   three conditions are additionally dependency-gated on this smoke.
 - Persistent plan oversight is active through begin-time job `3834564` using
   `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` on one
-  A100-MIG slice. It starts around 16:21 CEST and self-schedules its successor
+  A100-MIG slice. Its first pass was moved to 15:15 CEST to inspect the
+  estimated 14:43 control recovery start, and it self-schedules its successor
   every six hours before invoking Codex, for up to 120 passes. Each pass reads
   the live plans/handoffs, monitors and recovers the BranchProof and Nanotron
   chains, audits new generations/results, executes explicitly triggered
