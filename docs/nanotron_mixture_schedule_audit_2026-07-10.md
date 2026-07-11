@@ -38,6 +38,17 @@ The eval wrapper preflights actual task/dataset construction and archives incomp
 the previous directory-exists guard could incorrectly suppress a retry after
 lm-eval wrote only `command.json` and then failed.
 
+Production output acceptance is also explicit. The downstream wrapper runs
+`scripts/analysis/audit_nanotron_downstream_eval.py` before accepting either a
+new or pre-existing result. The audit requires the exact ten-task command, all
+ten top-level task/group results, all 105 expanded leaf-task sample files,
+full unique-document coverage from lm-eval's `n-samples` metadata, finite
+primary metrics, an un-limited production run, and direct versus Qwen-chat
+prompt rendering consistent with the evaluation branch. Five focused tests
+and both final-smoke branches pass; the smoke has 106 JSONL rows because GSM8K
+stores separate strict and flexible-extraction filter rows for the same
+document, which the audit correctly counts once by `doc_id`.
+
 ## Production Configuration
 
 The production job uses:

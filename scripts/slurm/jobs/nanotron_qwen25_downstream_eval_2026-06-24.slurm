@@ -70,8 +70,14 @@ python scripts/validate_lm_eval_tasks.py --tasks "${REVIEWER_TASKS_RESOLVED}"
 
 if [[ -d "${OUT_DIR}" && "${FORCE_LM_EVAL:-0}" != "1" ]]; then
   if find "${OUT_DIR}" -type f -name 'results_*.json' -size +0c -print -quit | grep -q .; then
-    echo "Complete lm-eval result exists: ${OUT_DIR}; skipping"
-    exit 0
+    if python scripts/analysis/audit_nanotron_downstream_eval.py \
+      --run-dir "${OUT_DIR}" \
+      --mode "${EVAL_BRANCH}" \
+      --tasks "${REVIEWER_TASKS_RESOLVED}"; then
+      echo "Audited complete lm-eval result exists: ${OUT_DIR}; skipping"
+      exit 0
+    fi
+    echo "Existing lm-eval result failed production audit; rerunning"
   fi
   INCOMPLETE_DIR="${OUT_DIR}.incomplete.${SLURM_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
   echo "Archiving incomplete lm-eval output to ${INCOMPLETE_DIR}"
@@ -101,6 +107,11 @@ python scripts/evaluate_lm_eval.py \
   --wandb-project "${WANDB_PROJECT:-synthetic-rlvl}" \
   --wandb-group "${WANDB_GROUP_VALUE}" \
   --wandb-run-name "${BASE_RUN_TAG}_step${CHECKPOINT_STEP}_${EVAL_BRANCH}_reviewer"
+
+python scripts/analysis/audit_nanotron_downstream_eval.py \
+  --run-dir "${OUT_DIR}" \
+  --mode "${EVAL_BRANCH}" \
+  --tasks "${REVIEWER_TASKS_RESOLVED}"
 
 if [[ "${EVAL_BRANCH}" == "instruction" ]]; then
   cleanup_merged

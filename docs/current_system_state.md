@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 11:25 CEST.
+Last updated: 2026-07-11 11:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -164,10 +164,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   recovery rows will resume from the complete step-4096 checkpoint. The live
   jobs explicitly override checkpoint interval to `4096`; neither corrected
   run retains 1024-step checkpoints.
-  The corrected logic branch uses upload `3831123`, direct eval `3834846`,
-  instruction SFT `3831125`, and instruction eval `3834847`; NL uses upload
-  `3831113`, direct eval `3834842`, instruction SFT `3831115`, and instruction
-  eval `3834843`. Both use isolated `bp_unique_v2` names and HF prefixes.
+  The corrected logic branch uses upload `3831123`, direct eval `3834908`,
+  instruction SFT `3831125`, and instruction eval `3834909`; NL uses upload
+  `3831113`, direct eval `3834904`, instruction SFT `3831115`, and instruction
+  eval `3834905`. Both use isolated `bp_unique_v2` names and HF prefixes.
 - A direct audit of Nanotron's production `TokenizedBytes`/
   `BlendableDataset` path found no mixture bug. The run blends 4,096-token
   chunks; each p15 arm realizes `157,287/1,048,576` proof chunks, or
@@ -186,8 +186,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `199G` (`29G` model, `171G` optimizer), not the earlier optimizer-only
   `91.4G` estimate. Its current allocation ends before the ETA, so guarded
   recovery can safely resume. Its downstream branch uses upload `3831119`,
-  direct eval `3834844`, instruction SFT `3831121`, and instruction eval
-  `3834845`, all with `afterok` dependencies.
+  direct eval `3834906`, instruction SFT `3831121`, and instruction eval
+  `3834907`, all with `afterok` dependencies.
 - Upload jobs now have a path-guarded opt-in that removes all local Nanotron
   checkpoints only after successful HF conversion/upload. It is enabled for
   control, corrected logic, and corrected NL, preventing three-condition
@@ -219,11 +219,17 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   every dataset successfully. Each branch wrote one aggregate result with all
   ten required task/group keys and 105 nonempty sample files. Retained prompts
   verify plain direct formatting versus Qwen system/user/assistant chat
-  rendering. Replacement production evals `3834842..3834847`
-  require both that smoke and their model branch, and Slurm confirms each is
-  constrained to one A100-80GB GPU with 240 GB host RAM. The wrapper preflights
-  actual dataset construction and archives command-only/incomplete outputs.
-- Persistent plan oversight is active through begin-time job `3834848` using
+  rendering. A new production artifact audit requires the exact task list,
+  one result bundle, all ten top-level task/group keys, all 105 leaf-task
+  sample files, complete unique-document coverage, finite primary metrics,
+  no evaluation limit, and the correct direct-versus-Qwen-chat rendering.
+  Existing results are skippable only after this audit passes. Final audited
+  production evals are NL `3834904/3834905`, control `3834906/3834907`, and
+  logic `3834908/3834909`; they wait on their live model branches. Slurm
+  confirms each is constrained to one A100-80GB GPU with 240 GB host RAM.
+  The wrapper also preflights actual dataset construction and archives
+  command-only, incomplete, or audit-rejected outputs.
+- Persistent plan oversight is active through begin-time job `3834911` using
   `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` on one
   A100-MIG slice. Its first pass was moved to 15:15 CEST to inspect the
   estimated 14:43 control recovery start, and it self-schedules its successor
@@ -412,5 +418,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834842,3834843,3834844,3834845,3834846,3834847,3834848 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

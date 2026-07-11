@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 11:35 CEST added a strict downstream production artifact gate. It verifies
+  the exact ten-task command, all required task/group results, all 105 leaf
+  sample files, full unique-document coverage, finite primary metrics, no
+  production limit, and direct versus Qwen-chat rendering. Existing results
+  are skippable only after passing the same audit. Five focused tests pass;
+  real final-smoke direct/chat bundles both pass with 105 leaf tasks/files and
+  106 filter-expanded rows. Replaced untouched evals with audited A100-80GB
+  rows: NL `3834904/3834905`, control `3834906/3834907`, and logic
+  `3834908/3834909`. Slurm rejected reattaching completed smoke `3834836` as a
+  new dependency, so the replacements wait on their live model parents while
+  embedding the already-accepted suite and audit. Replaced queued watcher
+  `3834848` with current-ID watcher `3834911` at the same 15:15 CEST start.
 - 11:25 CEST final reviewer smoke `3834836` completed in `00:08:50`. Direct
   and native-chat branches each wrote one aggregate result containing all ten
   required task/group keys plus 105 nonempty sample files. The command and raw
