@@ -250,10 +250,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   confirms each is constrained to one A100-80GB GPU with 240 GB host RAM.
   The wrapper also preflights actual dataset construction and archives
   command-only, incomplete, or audit-rejected outputs.
-- Persistent plan oversight is active through begin-time job `3834911` using
+- Persistent plan oversight is active through begin-time successor `3835433` using
   `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` on one
-  A100-MIG slice. Its first pass was moved to 15:15 CEST to inspect the
-  estimated 14:43 control recovery start, and it self-schedules its successor
+  A100-MIG slice. Initial pass `3834911` completed cleanly after scheduling
+  `3835433` for 21:15 CEST, and each pass self-schedules its successor
   every six hours before invoking Codex, for up to 120 passes. Each pass reads
   the live plans/handoffs, monitors and recovers the BranchProof and Nanotron
   chains, audits new generations/results, executes explicitly triggered
