@@ -70,6 +70,14 @@ def convert_checkpoint(checkpoint_path: Path, save_path: Path, *, tokenizer_name
     with init_on_device_and_dtype(torch.device("cuda"), torch.bfloat16):
         hf_model = Qwen2ForCausalLM._from_config(_qwen2_hf_config(model_config))
 
+    hf_parameters = dict(hf_model.named_parameters())
+    missing_mapping = sorted(set(hf_parameters) - set(hf_to_nt))
+    if missing_mapping:
+        raise RuntimeError(
+            "Nanotron-to-HF mapping leaves parameters uninitialized: "
+            + ", ".join(missing_mapping)
+        )
+
     head_dim = model_config.hidden_size // model_config.num_attention_heads
     for module_name_hf, module_hf in hf_model.named_modules():
         for param_name_hf, param_hf in module_hf.named_parameters(recurse=False):

@@ -60,6 +60,13 @@ python scripts/nanotron/convert_qwen2_nanotron_to_hf.py \
   --token-env "${HF_TOKEN_ENV:-HF_TOKEN}" \
   $(if [[ "${HF_PRIVATE}" == "1" ]]; then echo "--private"; else echo "--no-private"; fi)
 
+VERIFY_REPORT="${RUN_ROOT}/hf_verify_step${CHECKPOINT_STEP}.json"
+python scripts/nanotron/verify_qwen2_hf_checkpoint.py \
+  --checkpoint "${HF_STAGING}.tmp" \
+  --repo-id "${REPO_ID}" \
+  --token-env "${HF_TOKEN_ENV:-HF_TOKEN}" \
+  --output "${VERIFY_REPORT}"
+
 rm -rf "${HF_STAGING}"
 mv "${HF_STAGING}.tmp" "${HF_STAGING}"
 if [[ "${CLEANUP_LOCAL_HF_STAGING:-1}" == "1" ]]; then

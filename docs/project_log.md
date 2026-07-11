@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 17:22 CEST made Nanotron conversion/upload cleanup fail-closed. Previously,
+  `upload_folder` success immediately allowed deletion of the approximately
+  `199G` source checkpoint without an independent converted-model load test.
+  The converter now rejects unmapped HF parameters; the upload wrapper now
+  requires a complete safetensors shard manifest, full CUDA reload, finite
+  forward logits, and remote-file manifest parity before cleanup. Verification
+  writes `hf_verify_step8192.json` in each run root, and any failure preserves
+  both staging and Nanotron checkpoints. Ten focused conversion/downstream
+  tests, `py_compile`, shell syntax, and `git diff --check` pass. Pending uploads
+  `3831119/3831123/3831113` use current scripts, so no resubmission was needed.
 - 17:16 CEST completed the paired-statistics export required for the corrected
   claim decision. The aggregator previously wrote per-seed deltas and plotted
   mean/std only for OOD joint@16; it now writes

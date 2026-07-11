@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 17:16 CEST.
+Last updated: 2026-07-11 17:22 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -263,7 +263,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   written to the legacy default root; the replacements preserve the same
   model parents, suite, resources, and A100-80GB constraint.
 - Upload jobs now have a path-guarded opt-in that removes all local Nanotron
-  checkpoints only after successful HF conversion/upload. It is enabled for
+  checkpoints only after successful HF conversion/upload. Before cleanup, the
+  converter requires every HF parameter to have a Nanotron mapping, and a new
+  verifier checks the staged safetensors manifest/shards, reloads the entire
+  model on CUDA for a finite-logit forward pass, and confirms that every local
+  staged file exists in the remote private HF repository. Its JSON report is
+  stored in the run root. Any failure exits before staging or checkpoint
+  cleanup. Ten focused conversion/downstream tests, `py_compile`, and shell
+  syntax pass. The safeguard is enabled for
   control, corrected logic, and corrected NL, preventing three-condition
   checkpoint retention from exhausting the vault. Cluster epilogue accounting
   reports a `1048.6G` soft quota and `2097.2G` hard quota. The project tree was

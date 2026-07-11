@@ -135,6 +135,16 @@ with the same after-any parents, run roots, corpus overrides, and step-4096
 checkpoint interval. Upload jobs `3831119/3831123/3831113` now depend on those
 replacement recoveries.
 
+The upload boundary is fail-closed before local checkpoint deletion. The
+Nanotron-to-HF converter rejects any HF parameter absent from its explicit
+mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the
+local safetensors index and every referenced shard, reloads the complete 7B
+checkpoint on CUDA and requires finite logits of the configured vocabulary
+size, and compares the remote HF file list with the staged local manifest.
+Only a successful verifier allows guarded staging/checkpoint cleanup; its JSON
+report remains in the run root. Pending upload jobs invoke the current scripts
+at runtime and therefore need no resubmission.
+
 ## Scientific Interpretation
 
 This is packed continuation midtraining, not whole-example SFT. A source proof
