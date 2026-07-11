@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 10:58 CEST submitted corrected downstream-suite smoke `3834737` with
+  `logiqa2` and rewired production NL `3834729/3834730`, control
+  `3834731/3834732`, and logic `3834733/3834734` evals away from failed smoke
+  `3834728`. Every eval now waits on both its model/instruction artifact and
+  `afterok:3834737`; no production eval can release on the failed gate.
+- 10:57 CEST reviewer smoke `3834728` failed as intended before production
+  release: task registry and model initialization passed, but actual dataset
+  construction showed legacy `logiqa` depends on `logiqa.py`, rejected by the
+  installed `datasets` version. Switched the suite and named shortcuts to the
+  supported `logiqa2`; replacement smoke and dependency rewiring follow.
 - 10:53 CEST downstream preflight found `folio` absent from the installed
   lm-eval registry, which would have failed all six held evals before model
   loading. Replaced it with paired `fld_default` and

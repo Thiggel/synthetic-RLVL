@@ -19,14 +19,16 @@ granularity does not apply to production.
 The installed lm-eval task registry does not contain `folio`; the original
 default would therefore fail all downstream jobs during task resolution. The
 validated replacement suite is `gsm8k`, `arc_challenge`, `hellaswag`,
-`winogrande`, `piqa`, `logiqa`, `fld_default`,
+`winogrande`, `piqa`, `logiqa2`, `fld_default`,
 `fld_logical_formula_default`, `bbh`, `mmlu`, and `mmlu_pro`. The paired FLD
 tasks measure transfer to independent natural-language and formula-based
 deduction surfaces, while MMLU-Pro adds a harder broad-reasoning control.
 
-Smoke `3834728` runs every task at limit one using Qwen2.5-0.5B in both direct
-and native-chat modes. Production direct/instruction evals for control, logic,
-and NL all have an additional `afterok:3834728` dependency. The eval wrapper
+Smoke `3834728` additionally found that legacy `logiqa` depends on a Python
+dataset script no longer accepted by the installed `datasets` version. The
+replacement `3834737` uses the supported `logiqa2` task. Production
+direct/instruction evals for control, logic, and NL are gated on its success.
+The eval wrapper
 preflights every task/group name and archives incomplete output directories;
 the previous directory-exists guard could incorrectly suppress a retry after
 lm-eval wrote only `command.json` and then failed.

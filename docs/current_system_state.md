@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 10:53 CEST.
+Last updated: 2026-07-11 10:58 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -207,11 +207,13 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - Downstream-suite preflight found that the installed lm-eval harness does not
   provide the requested `folio` task; leaving it in the list would make every
   eval fail before model loading. The validated reviewer suite now contains
-  `gsm8k`, `arc_challenge`, `hellaswag`, `winogrande`, `piqa`, `logiqa`,
+  `gsm8k`, `arc_challenge`, `hellaswag`, `winogrande`, `piqa`, `logiqa2`,
   natural-language `fld_default`, matched formal
-  `fld_logical_formula_default`, `bbh`, `mmlu`, and `mmlu_pro`. Smoke `3834728`
-  is running on A40 with Qwen2.5-0.5B at limit one in both direct and native
-  chat modes; all six production evals depend on its success. The wrapper now
+  `fld_logical_formula_default`, `bbh`, `mmlu`, and `mmlu_pro`. First smoke
+  `3834728` exposed that legacy `logiqa` uses a dataset
+  script rejected by the installed `datasets`; the replacement uses the
+  supported `logiqa2`. Replacement smoke `3834737` is eligible on A40/A100,
+  and all six production evals now depend on its success. The wrapper now
   preflights task availability and archives command-only/incomplete output
   directories instead of incorrectly skipping retries.
 - Persistent plan oversight is active through begin-time job `3834736` using
@@ -403,5 +405,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582,3834706,3834707,3834722,3834728,3834729,3834730,3834731,3834732,3834733,3834734,3834736 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831114,3831115,3831116,3831119,3831120,3831121,3831122,3831123,3831124,3831125,3831126,3831135,3831136,3831179,3832945,3833178,3833179,3834564,3834582,3834706,3834707,3834722,3834728,3834729,3834730,3834731,3834732,3834733,3834734,3834736,3834737 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

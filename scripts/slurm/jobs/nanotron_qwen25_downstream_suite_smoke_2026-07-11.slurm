@@ -20,7 +20,7 @@ export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-${HF_HOME}/hub}"
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
 hash -r 2>/dev/null || true
 
-TASKS="gsm8k,arc_challenge,hellaswag,winogrande,piqa,logiqa,fld_default,fld_logical_formula_default,bbh,mmlu,mmlu_pro"
+TASKS="gsm8k,arc_challenge,hellaswag,winogrande,piqa,logiqa2,fld_default,fld_logical_formula_default,bbh,mmlu,mmlu_pro"
 OUT_ROOT="${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_downstream_suite_smoke_20260711"
 rm -rf "${OUT_ROOT}"
 
