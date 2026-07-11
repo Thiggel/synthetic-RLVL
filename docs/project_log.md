@@ -4,6 +4,20 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-11
 
+- 21:20 CEST plan-driven oversight found no recovery trigger but recorded
+  material progress. All 30 corrected BranchProof SFT rows have started and 19
+  final adapters are present; active A100-80 eval rows `3834582_0/1/2` reached
+  sampled chunks `96/59/69` of `112` after about `8.6/7.0/7.0` hours. Deep
+  chunks are slower and often hit the shared `7168` cap, but no row approaches
+  the 20-hour sharding trigger and no production JSON/sample has finalized, so
+  the protocol remains unchanged. Corrected logic/NL Nanotron jobs
+  `3830927_3/3831111_8` are matched near steps `3521/3531`, `1.85B` tokens,
+  and `30.9--31.2K` tokens/s with no step-4096 checkpoint yet. Control recovery
+  `3835438_0` remains account-GRES pending with a 05:14 estimate; project usage
+  is `536G`, leaving soft-quota headroom for both expected proof checkpoints.
+  Watcher `3835433` scheduled successor `3837467` before this pass. No failure,
+  scheduler/partition edit, resubmission, cancellation, report regeneration,
+  or conditional science launch was justified.
 - 17:22 CEST made Nanotron conversion/upload cleanup fail-closed. Previously,
   `upload_folder` success immediately allowed deletion of the approximately
   `199G` source checkpoint without an independent converted-model load test.

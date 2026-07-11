@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-11 17:22 CEST.
+Last updated: 2026-07-11 21:20 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -124,16 +124,16 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   adding measured greedy generation, setup, and scoring projects about nine
   hours total. This is well below the 20-hour intervention threshold, so no
   depth sharding or protocol reduction is justified.
-- At 16:43 CEST, SFT rows `16/17` had newly completed cleanly, bringing final
-  adapters to rows `0..8`, `12`, and `15..17`. Rows `9/10/11/13/14/18..24`
-  were running and `25..29` remained array-throttle pending. Eval rows `0/1/2`
-  remained active on A100-80GB; row `3` was the next priority-eligible eval,
-  with a scheduler estimate near 21:35. No failed SFT/eval row or fatal log
-  signature appeared.
-- At 17:03 CEST, the 13 final-adapter directories still matched exactly the
-  13 completed SFT rows. Eval rows `0/1/2` continued advancing on A100-80GB;
-  no production metric or sample file had been finalized yet, so no new
-  aggregate result was accepted in this pass.
+- At 21:20 CEST, all 30 SFT rows had started and 19 final-adapter directories
+  were present: logic rows `0..12` plus NL rows `15..20`; active rows were
+  logic `13/14` and NL `21..29`, with representative progress from
+  `6900/10000` (`13/14`) and `9390/10000` (`21/22`) down to `1270/10000`
+  (`29`). Eval rows `0/1/2` remained active on A100-80GB at about
+  `8.6/7.0/7.0` hours and had reached sampled chunks `96/59/69` of `112`.
+  The deeper chunks are slower than the early projection, but all three remain
+  comfortably below the 20-hour intervention threshold. No production metric
+  or sample file had finalized, and no failed row or fatal/OOM/quota signature
+  appeared, so no sharding, resubmission, or protocol change was made.
 - The pilot's primary self-contained metric is citation-free validity because
   training targets use rule labels (`R`, `->E`) without numbered premise
   citations. Strict `valid=0` is expected under that citation-demanding metric,
@@ -218,9 +218,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3835442_3/3835443_8`; the replacements preserve the same after-any parents,
   isolated roots, corpus overrides, and step-4096 interval while disabling W&B
   service startup and excluding nodes `a0803/a0831`.
-  At 17:03 they remained healthy and matched at steps `2601/2611`, about
-  `1.36B/1.37B` tokens and `30.9/31.2K` tokens/s, with no fatal signature.
-  Neither corrected run has reached its first expected checkpoint yet.
+  At 21:20 they remained healthy and matched at steps `3521/3531`, about
+  `1.85B` consumed tokens each, `30.9/31.2K` tokens/s, and loss about
+  `1.68--1.79`, with no fatal signature. Neither corrected run has reached its
+  first expected step-4096 checkpoint yet.
   The corrected logic branch uses upload `3831123`, direct eval `3834908`,
   instruction SFT `3831125`, and instruction eval `3834909`; NL uses upload
   `3831113`, direct eval `3834904`, instruction SFT `3831115`, and instruction
@@ -245,7 +246,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `199G` (`29G` model, `171G` optimizer), not the earlier optimizer-only
   `91.4G` estimate. The checkpoint remained unchanged and complete.
   Replacement `3835438_0` is pending with W&B disabled and `a0831` excluded;
-  Slurm's current estimate moved forward to 2026-07-11 17:59. The scheduler
+  Slurm's current estimate is 2026-07-12 05:14, immediately after the two live
+  full-node proof allocations end. The scheduler
   currently reports `AssocGrpGRES`: the account-level GPU allocation is
   saturated while the live full-node proof runs and A100 evaluations execute.
   The estimate is provisional, but there is no dependency, feature, or
@@ -254,7 +256,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   and three A100s for corrected eval. Releasing enough account allocation for
   the eight-GPU control immediately would require displacing active corrected
   BranchProof work, contrary to the plan's priority order, so no hold,
-  cancellation, or throttle reduction was applied. Upload
+  cancellation, or throttle reduction was applied. At 21:20 the project tree
+  used `536G`; the control step-4096 checkpoint remains the only production
+  checkpoint, and adding the two expected approximately `199G` proof
+  checkpoints remains below the documented `1048.6G` soft quota. Upload
   `3831119` was rewired to it. Its downstream branch uses upload `3831119`,
   replacement direct eval `3835927`, instruction SFT `3831121`, and
   replacement instruction eval `3835928`, all with `afterok` dependencies.
@@ -321,10 +326,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   samples from fixed representative tasks using each task's exact primary
   filter. This pilot has one training run per condition; benchmark stderr is
   reported, but macro values do not estimate training-seed uncertainty.
-- Persistent plan oversight is active through begin-time successor `3835433` using
+- Persistent plan oversight is active through watcher `3835433` using
   `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` on one
-  A100-MIG slice. Initial pass `3834911` completed cleanly after scheduling
-  `3835433` for 21:15 CEST, and each pass self-schedules its successor
+  A100-MIG slice. It started at 21:15 CEST and scheduled successor `3837467`
+  for approximately 03:15 CEST before invoking Codex. Each pass self-schedules
+  its successor
   every six hours before invoking Codex, for up to 120 passes. Each pass reads
   the live plans/handoffs, monitors and recovers the BranchProof and Nanotron
   chains, audits new generations/results, executes explicitly triggered
