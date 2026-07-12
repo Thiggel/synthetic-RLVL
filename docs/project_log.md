@@ -4,6 +4,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 10:45 CEST watcher `3840018` completed `0:0` in `00:09:18`; successor
+  `3841073` remains queued for 12:45 with the corrected payload. Retried the
+  scoped handoff from the login node and pushed `19df2c4` successfully to
+  `origin/main`, superseding the transient SSH-timeout note below. The report
+  repo remains clean.
 - 10:39 CEST watcher `3840018` confirmed control recovery `3835438_0`
   advanced cleanly to iteration `4141/8192` at `30.8K` tokens/s with finite
   loss `1.98`; logic/NL recoveries remain account-GRES pending near 12:27 and

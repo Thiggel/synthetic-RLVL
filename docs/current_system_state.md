@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 10:39 CEST.
+Last updated: 2026-07-12 10:45 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -191,15 +191,15 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `4141/8192`, `2.17B` consumed tokens, `30.8K` tokens/s, and finite loss
   `1.98`; no fatal/OOM/quota signature appeared. All corrected BranchProof
   eval tasks `3838163_[0-29%6]` remain dependency-free, pinned to `a100_80`,
-  and account-GRES pending, with no new production artifact. Current watcher
-  `3840018` scheduled successor `3841073`; its payload names the corrected
-  critical paths. The successor was advanced from 16:35 to 12:45 CEST so it
-  can verify the projected 12:27 logic/NL first-resume transition. The full
-  plan remains incomplete, so `3841073` remains queued.
-- The report repository remains unchanged and synchronized. The scoped
-  10:39 handoff commit is local only: pushes to both `github.com:22` and
-  `ssh.github.com:443` timed out, leaving this repository one commit ahead of
-  `origin/main`.
+  and account-GRES pending, with no new production artifact. Watcher `3840018`
+  completed `0:0` in `00:09:18` after scheduling successor `3841073`; its
+  payload names the corrected critical paths. The successor was advanced from
+  16:35 to 12:45 CEST so it can verify the projected 12:27 logic/NL
+  first-resume transition. The full plan remains incomplete, so `3841073`
+  remains queued.
+- The report repository remains unchanged and synchronized. Main-repo handoff
+  commit `19df2c4` was pushed successfully at 10:45 CEST after the watcher's
+  own transient SSH attempts timed out.
 - Slurm had captured the prior watcher script at submission, and queued watcher
   `3837467` still named canceled pre-fix BranchProof jobs despite reading fresh
   docs. It was replaced before start by `3839191` at the identical
