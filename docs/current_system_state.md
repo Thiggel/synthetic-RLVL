@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 03:19 CEST.
+Last updated: 2026-07-12 09:29 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -161,6 +161,30 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   sample bundle to audit yet. Project usage is `866G`. Current watcher
   `3839191` preserved the chain by scheduling successor `3839693` before this
   pass; the plan remains incomplete, so the successor remains queued.
+- NL rows `26..29` subsequently completed `0:0` at 03:59/07:40/07:43/08:16
+  CEST, completing corrected SFT `3829072` at `30/30`. All 30 exact final
+  adapter directories have nonempty `adapter_config.json` files and no
+  zero-byte files; the four newest finals are each `324M`, and their logs have
+  no fatal/OOM/quota signature. Slurm resolved the remaining row-wise
+  dependencies without manual edits, so all tasks in validity-fixed eval
+  `3838163_[0-29%6]` are dependency-free, still pinned to partition `a100`
+  with feature `a100_80`, and pending only on `AssocGrpGRES`. The corrected
+  output root still contains only four explicitly suffixed pilot/qualitative
+  files, so row audits `3838164` and aggregate `3838165` remain closed. Project
+  usage is `871G` by `du`; the latest quota epilogue reports `996.7G` used.
+  Watcher `3839693` is running and scheduled successor `3840018`; this pass
+  advanced its begin time from 15:16 to 10:35 CEST so it can inspect the
+  projected 10:23 Nanotron resume transition. The stored successor payload
+  names the corrected critical paths, and the plan remains incomplete.
+- Control, corrected-logic, and corrected-NL Nanotron recoveries
+  `3835438_0/3835442_3/3835443_8` remain dependency-free and account-GRES
+  pending, with a common projected start near 10:23 CEST. Their accepted
+  step-4096 checkpoints remain unchanged and complete. No safe partition or
+  resource widening exists for the required full-node A100-80GB resume.
+- The scoped handoff commit is local. Direct GitHub SSH produced no response
+  within 30 seconds and `ssh.github.com:443` timed out, leaving this repository
+  two commits ahead of `origin/main`. The report repository is unchanged and
+  synchronized.
 - Slurm had captured the prior watcher script at submission, and queued watcher
   `3837467` still named canceled pre-fix BranchProof jobs despite reading fresh
   docs. It was replaced before start by `3839191` at the identical

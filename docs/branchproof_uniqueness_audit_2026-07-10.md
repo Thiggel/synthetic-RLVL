@@ -173,6 +173,17 @@ A100-80 eval rows. Rows `26..29` remain running and dependency-gated near
 steps `9209/6493/6469/6046`; no corrected production JSON/sample bundle exists
 yet, so the audit and aggregation gates remain closed.
 
+Operational update 2026-07-12 09:21 CEST: corrected NL rows
+`3829072_26..29` completed `0:0`, bringing the full corrected SFT grid to
+`30/30`. Their exact train-1-to-20 seed-3409 and train-1-to-25 three-seed final
+adapters have nonempty configs, no zero-byte files, and no fatal/OOM/quota log
+signature. Slurm resolved the four remaining row-wise dependencies without a
+manual edit. All 30 tasks in validity-fixed eval `3838163` are therefore
+dependency-free, remain constrained to `a100` plus `a100_80`, and wait only on
+account GRES. The production output root still contains only the four suffixed
+pilot/qualitative files, so no corrected metric or raw-generation conclusion is
+available and both downstream audit gates remain closed.
+
 ## Full-grid aggregation gate
 
 `scripts/analysis/aggregate_hfsa_depth_scaling.py` now recognizes both the old

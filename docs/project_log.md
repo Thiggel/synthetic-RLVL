@@ -4,6 +4,28 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 09:29 CEST committed the scoped SFT/scheduler handoff locally. Direct GitHub
+  SSH produced no response within 30 seconds and the port-443 fallback timed
+  out connecting to `ssh.github.com`; this repository remains two commits
+  ahead of `origin/main`. The report repository has no changes and is already
+  synchronized.
+- 09:29 CEST advanced queued successor watcher `3840018` from 15:16 to 10:35
+  CEST, shortly after Slurm's common 10:23 estimate for Nanotron recoveries
+  `3835438_0/3835442_3/3835443_8`. This preserves the recorded successor and
+  closes the otherwise five-hour first-resume verification gap; its stored
+  payload was already verified to name the corrected critical paths.
+- 09:21 CEST corrected BranchProof SFT `3829072` completed at `30/30` after
+  NL rows `26..29` finished `0:0` at 03:59/07:40/07:43/08:16. All 30 exact
+  final adapters have nonempty configs and no zero-byte files; the four newest
+  logs have no fatal/OOM/quota signature. Slurm resolved their remaining
+  row-wise dependencies without a manual edit, leaving every validity-fixed
+  eval task `3838163_[0-29%6]` dependency-free, A100-80-only, and pending on
+  account GRES. The corrected output root still contains only four suffixed
+  pilot/qualitative files, so audits `3838164` and aggregate `3838165` remain
+  closed. Project usage is `871G` by `du`; the latest quota epilogue reports
+  `996.7G`. Watcher `3839693` scheduled successor `3840018` for 15:16; its
+  stored payload names the corrected critical paths, and the successor remains
+  queued because the end-to-end plan is incomplete.
 - 03:19 CEST NL SFT rows `3829072_24/25` completed `0:0` at 01:55/03:15.
   Their exact train-1-to-20 seed-3407/3408 final adapters were present with
   nonempty configs and no zero-byte files, so only stale child dependencies
