@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 10:39 CEST watcher `3840018` confirmed control recovery `3835438_0`
+  advanced cleanly to iteration `4141/8192` at `30.8K` tokens/s with finite
+  loss `1.98`; logic/NL recoveries remain account-GRES pending near 12:27 and
+  all corrected BranchProof eval rows remain dependency-free, A100-80-only,
+  and account-GRES pending with no production outputs. The watcher scheduled
+  successor `3841073` before starting. Advanced only that successor from
+  16:35 to 12:45 CEST so the next pass can verify the projected logic/NL
+  first-resume transition; the end-to-end plan remains incomplete. Committed
+  the scoped handoff locally; pushes to `github.com:22` and
+  `ssh.github.com:443` both timed out, so the main repository remains one
+  commit ahead of `origin/main`.
 - 10:29 CEST control Nanotron recovery `3835438_0` started on full A100-80
   node `a0531` and passed the resume gate. It loaded run checkpoint 4096 with
   optimizer/LR scheduler enabled, restored `524288` samples and

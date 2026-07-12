@@ -168,6 +168,12 @@ the control resumed without replay or a weight-only optimizer reset. Logic/NL
 recoveries `3835442_3/3835443_8` remain account-GRES pending near 12:27 CEST
 and require the same check when they start.
 
+Follow-up 2026-07-12 10:39 CEST: the control remained healthy through
+iteration `4141/8192`, with `2.17B` consumed tokens, `30.8K` tokens/s, finite
+loss `1.98`, and no fatal/OOM/quota signature. Logic/NL recoveries still have
+provisional 12:27 starts. Oversight successor `3841073` was advanced from
+16:35 to 12:45 CEST so their first resumed iterations can be checked promptly.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the
