@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 09:29 CEST.
+Last updated: 2026-07-12 09:33 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -172,10 +172,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   output root still contains only four explicitly suffixed pilot/qualitative
   files, so row audits `3838164` and aggregate `3838165` remain closed. Project
   usage is `871G` by `du`; the latest quota epilogue reports `996.7G` used.
-  Watcher `3839693` is running and scheduled successor `3840018`; this pass
-  advanced its begin time from 15:16 to 10:35 CEST so it can inspect the
-  projected 10:23 Nanotron resume transition. The stored successor payload
-  names the corrected critical paths, and the plan remains incomplete.
+  Watcher `3839693` completed `0:0` in `00:14:19` after scheduling successor
+  `3840018`; the successor begin time was advanced from 15:16 to 10:35 CEST so
+  it can inspect the projected 10:23 Nanotron resume transition. The stored
+  successor payload names the corrected critical paths, and the plan remains
+  incomplete. Commits `cb70aa6` and `18f79e5` were pushed to `origin/main` at
+  09:33 CEST after the watcher's own transient SSH attempts timed out.
 - Control, corrected-logic, and corrected-NL Nanotron recoveries
   `3835438_0/3835442_3/3835443_8` remain dependency-free and account-GRES
   pending, with a common projected start near 10:23 CEST. Their accepted

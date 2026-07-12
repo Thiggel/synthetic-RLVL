@@ -4,6 +4,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 09:33 CEST watcher `3839693` completed `0:0` in `00:14:19`; successor
+  `3840018` remains scheduled for 10:35 with a verified corrected payload.
+  Retried the two pending main-repo commits from the login node and pushed
+  `cb70aa6` plus `18f79e5` successfully to `origin/main`, superseding the
+  transient SSH-timeout note below. The report repo remains clean.
 - 09:29 CEST committed the scoped SFT/scheduler handoff locally. Direct GitHub
   SSH produced no response within 30 seconds and the port-443 fallback timed
   out connecting to `ssh.github.com`; this repository remains two commits
