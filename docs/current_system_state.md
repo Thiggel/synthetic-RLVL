@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 21:12 CEST.
+Last updated: 2026-07-13 00:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -223,6 +223,23 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   account-GRES pending with a projected 07:00 start. Only step-4096 checkpoint
   trees exist, project usage remains `871G`, and BranchProof eval remains
   account-GRES pending without production outputs.
+- At 00:55 CEST on 2026-07-13 control recovery `3835438_0` had advanced to
+  iteration `7161/8192` and corrected NL recovery `3835443_8` to `6711/8192`,
+  both at about `30.9K` tokens/s with finite losses (`2.01/1.63`) and no
+  fatal/OOM/quota signature. Their runtime ETAs were about `04:51/06:59` from
+  the latest logged iterations. Only accepted step-4096 trees exist; no final
+  checkpoint, HF verification report, downstream artifact, or guarded cleanup
+  trigger is present, and project usage remains `871G`. Logic recovery
+  `3835442_3` remains dependency-free and account-GRES pending with a
+  provisional 07:00 start. Corrected BranchProof eval `3838163_[0-29%6]`
+  remains dependency-free, A100-80-only, and account-GRES pending with no
+  production output; a temporary row-0 start estimate disappeared on the next
+  scheduler cycle and was not treated as a launch. The only idle A100 nodes
+  were `a0903/a0905`, both feature `a100_40`, so no compatible partition or
+  feature widening exists. Watcher `3843796` scheduled successor `3845763`
+  for 06:46 CEST before starting; the stored batch payload was verified to
+  retain the corrected job IDs, protocol, audit gates, and end-to-end stop
+  condition, so the incomplete plan remains continuously covered.
 - Scoped oversight commit `cf5162e` was pushed successfully from the login
   node at 21:12 CEST after the watcher's transient SSH attempts timed out; the
   report repository remains clean and synchronized.

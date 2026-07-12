@@ -191,6 +191,18 @@ tokens/s with finite losses and no fatal/OOM/quota signature. Logic has a
 provisional 07:00 CEST start. Only accepted step-4096 checkpoint trees exist;
 no partial final tree or cleanup trigger is present.
 
+Progress update 2026-07-13 00:55 CEST: control advanced to iteration
+`7161/8192` with `3.75B` consumed tokens and finite loss `2.01`; corrected NL
+advanced to `6711/8192` with `3.52B` consumed tokens and finite loss `1.63`.
+Both remain near `30.9K` tokens/s with no fatal/OOM/quota signature. Latest
+runtime ETAs were about `04:51/06:59`; only their accepted step-4096 trees
+exist, so there is no final-verification or guarded-cleanup trigger yet. Logic
+recovery `3835442_3` remains dependency-free and account-GRES pending with a
+provisional 07:00 start. Project usage remains `871G`, and the only idle A100
+nodes are incompatible A100-40 nodes. Successor oversight `3845763` is queued
+for 06:46 CEST to inspect the final-checkpoint/control-upload and logic-resume
+transition if the current estimates hold.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the

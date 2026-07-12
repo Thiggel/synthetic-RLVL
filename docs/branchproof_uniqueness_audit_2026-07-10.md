@@ -192,6 +192,16 @@ corrected production JSON or sample bundle exists, so row audits `3838164` and
 aggregate/qualitative gate `3838165` remain closed and no scientific result is
 available. No dependency, partition, throttle, or protocol edit was made.
 
+Operational update 2026-07-13 00:55 CEST: all 30 validity-fixed eval tasks
+remain dependency-free, A100-80-only, and blocked by the account GPU ceiling.
+A temporary scheduler estimate for row 0 disappeared on the next cycle, so no
+row has launched and the production root still contains only the four
+explicitly suffixed pilot/qualitative files. The only idle A100 nodes were
+`a0903/a0905`, both `a100_40`, and are incompatible with the required feature;
+no partition, feature, throttle, dependency, or protocol edit was made.
+Successor oversight `3845763` is scheduled for 06:46 CEST with the corrected
+artifact and qualitative gates preserved.
+
 ## Full-grid aggregation gate
 
 `scripts/analysis/aggregate_hfsa_depth_scaling.py` now recognizes both the old

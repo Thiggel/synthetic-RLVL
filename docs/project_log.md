@@ -2,6 +2,24 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-13
+
+- 00:59 CEST committed the scoped oversight handoff locally. Pushes through
+  both `github.com:22` and `ssh.github.com:443` timed out without transferring,
+  so the main repository remains one commit ahead of `origin/main`. The report
+  repository is clean and synchronized.
+- 00:55 CEST watcher `3843796` verified control/NL recoveries healthy at
+  iterations `7161/6711` of `8192`, about `30.9K` tokens/s, finite losses
+  `2.01/1.63`, and no fatal/OOM/quota signature. Only accepted step-4096
+  checkpoint trees exist and project usage remains `871G`; logic recovery
+  `3835442_3` and corrected BranchProof eval `3838163` remain dependency-free,
+  A100-80-only, and account-GRES pending without production outputs. A
+  temporary BranchProof row-0 start estimate disappeared on the next scheduler
+  cycle and was not treated as a launch. Idle `a0903/a0905` are A100-40 nodes,
+  so no compatible widening exists. The watcher scheduled successor `3845763`
+  for 06:46 CEST before starting and its stored payload passed the corrected
+  critical-path/protocol/stop-condition check; the plan remains incomplete.
+
 ## 2026-07-12
 
 - 21:12 CEST control/NL recoveries remained healthy at iterations
