@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 21:12 CEST control/NL recoveries remained healthy at iterations
+  `6371/5921` of `8192`, both near `30.9K` tokens/s with finite losses and no
+  fatal/OOM/quota signature. Logic remains account-GRES pending with a 07:00
+  estimate; BranchProof eval remains pending without production outputs.
+  Watcher `3842454` completed `0:0`; successor `3843796` remains queued for
+  00:45. Pushed scoped handoff commit `cf5162e` successfully from the login
+  node, superseding the transient watcher push failure.
 - 18:54 CEST committed the scoped oversight update locally. Pushes to
   both `github.com:22` and `ssh.github.com:443` timed out without transferring,
   so the main repository remains one commit ahead of `origin/main`. The report

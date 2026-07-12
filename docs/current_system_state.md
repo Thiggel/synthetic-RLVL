@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 18:50 CEST.
+Last updated: 2026-07-12 21:12 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -216,9 +216,16 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   started at 18:45 and scheduled successor `3843796` for 00:45 CEST on
   2026-07-13. The stored successor remains queued because the full plan is
   incomplete.
-- The scoped oversight update is committed locally. Both GitHub SSH port
-  22 and port 443 timed out without transferring, leaving this repository one
-  commit ahead of `origin/main`; the report repository remains clean.
+- Watcher `3842454` completed `0:0` in `00:09:29`; successor `3843796` remains
+  queued for 00:45 CEST on 2026-07-13. At 21:10 control had reached
+  `6371/8192` and NL `5921/8192`, both at about `30.9K` tokens/s with finite
+  losses (`2.05/1.78`) and no fatal/OOM/quota signature. Logic recovery remains
+  account-GRES pending with a projected 07:00 start. Only step-4096 checkpoint
+  trees exist, project usage remains `871G`, and BranchProof eval remains
+  account-GRES pending without production outputs.
+- Scoped oversight commit `cf5162e` was pushed successfully from the login
+  node at 21:12 CEST after the watcher's transient SSH attempts timed out; the
+  report repository remains clean and synchronized.
 - The report repository remains unchanged and synchronized. Main-repo handoff
   commit `19df2c4` was pushed successfully at 10:45 CEST after the watcher's
   own transient SSH attempts timed out.

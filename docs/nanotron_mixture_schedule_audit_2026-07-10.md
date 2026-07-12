@@ -185,6 +185,12 @@ loss `1.71`, then advanced to `5421/8192` at `30.9K` tokens/s with finite loss
 fatal/OOM/quota signature. Logic recovery `3835442_3` remains dependency-free
 and blocked only by the account GPU ceiling; no scheduler edit is warranted.
 
+Progress update 2026-07-12 21:12 CEST: control and NL remained healthy at
+iterations `6371/8192` and `5921/8192`, respectively, each near `30.9K`
+tokens/s with finite losses and no fatal/OOM/quota signature. Logic has a
+provisional 07:00 CEST start. Only accepted step-4096 checkpoint trees exist;
+no partial final tree or cleanup trigger is present.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the
