@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 03:19 CEST NL SFT rows `3829072_24/25` completed `0:0` at 01:55/03:15.
+  Their exact train-1-to-20 seed-3407/3408 final adapters were present with
+  nonempty configs and no zero-byte files, so only stale child dependencies
+  `3838163_24/25` were cleared. The corrected BranchProof grid is now `26/30`
+  finals and 26 scheduler-eligible A100-80 eval rows. Rows `26..29` remain
+  running and gated near steps `9209/6493/6469/6046`; the corrected output root
+  still has no production JSON/sample bundle. Project usage is `866G`.
+  Watcher `3839191` scheduled successor `3839693`, which remains queued because
+  the end-to-end plan is incomplete. A scoped handoff commit was created
+  locally; pushes to `github.com:22` and `ssh.github.com:443` both
+  timed out, so the repository remains one commit ahead of `origin/main`.
 - 01:06 CEST logic SFT rows `3829072_13/14` completed `0:0`, each wrote the
   expected final adapter, and corresponding eval tasks `3838163_13/14` had
   only their stale dependencies cleared after verification. Corrected SFT

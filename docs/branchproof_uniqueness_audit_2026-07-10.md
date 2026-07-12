@@ -164,6 +164,15 @@ deep train-1-to-5 formal chunks reach the shared `7168` cap. This is retained
 as a model-behavior diagnostic until the row audit and raw samples are
 available, not treated as a dataset or evaluator failure.
 
+Operational update 2026-07-12 03:19 CEST: corrected NL SFT rows
+`3829072_24/25` completed `0:0` and wrote the exact train-1-to-20
+seed-3407/3408 final adapters. After verifying nonempty adapter configs and no
+zero-byte files, only stale eval dependencies `3838163_24/25` were cleared.
+The corrected grid now has `26/30` final adapters and 26 scheduler-eligible
+A100-80 eval rows. Rows `26..29` remain running and dependency-gated near
+steps `9209/6493/6469/6046`; no corrected production JSON/sample bundle exists
+yet, so the audit and aggregation gates remain closed.
+
 ## Full-grid aggregation gate
 
 `scripts/analysis/aggregate_hfsa_depth_scaling.py` now recognizes both the old

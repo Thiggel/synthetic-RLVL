@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 01:06 CEST.
+Last updated: 2026-07-12 03:19 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -149,6 +149,18 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   01:05/01:06 CEST. Corrected SFT finals and scheduler-eligible A100-80 evals
   are therefore `24/30`; only NL rows `24..29` remain active and dependency
   gated. Their latest steps were `9076/7523/6701/4695/4685/4272`.
+- NL rows `24/25` subsequently completed `0:0` at 01:55/03:15 CEST. Their
+  exact train-1-to-20 seed-3407/3408 final adapters had nonempty
+  `adapter_config.json` files and no zero-byte files, so only eval tasks
+  `3838163_24/25` had their stale dependencies cleared at 03:18 CEST. The
+  corrected grid is now `26/30` final adapters and 26 scheduler-eligible
+  A100-80 eval rows. Rows `26..29` remain running and dependency-gated; latest
+  observed steps were `9209/6493/6469/6046`, with no fatal signature. The
+  corrected production output root still contains only the explicitly
+  suffixed pilot/qualitative artifacts, so there is no production metric or
+  sample bundle to audit yet. Project usage is `866G`. Current watcher
+  `3839191` preserved the chain by scheduling successor `3839693` before this
+  pass; the plan remains incomplete, so the successor remains queued.
 - Slurm had captured the prior watcher script at submission, and queued watcher
   `3837467` still named canceled pre-fix BranchProof jobs despite reading fresh
   docs. It was replaced before start by `3839191` at the identical
