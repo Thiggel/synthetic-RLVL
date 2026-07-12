@@ -174,6 +174,17 @@ loss `1.98`, and no fatal/OOM/quota signature. Logic/NL recoveries still have
 provisional 12:27 starts. Oversight successor `3841073` was advanced from
 16:35 to 12:45 CEST so their first resumed iterations can be checked promptly.
 
+NL resume update 2026-07-12 18:50 CEST: corrected recovery `3835443_8`
+started on full A100-80 node `a0532` and passed the same resume gate. Its
+config loads optimizer and LR-scheduler state from the accepted step-4096
+checkpoint; runtime metadata restored step/sample/token offsets
+`4096/524288/2147483648` and the exact `1825357824` normal plus `322125824`
+NL-token split. It logged iteration `4101/8192` at `31K` tokens/s with finite
+loss `1.71`, then advanced to `5421/8192` at `30.9K` tokens/s with finite loss
+`1.74`. Control simultaneously reached `5871/8192`. Neither log has a
+fatal/OOM/quota signature. Logic recovery `3835442_3` remains dependency-free
+and blocked only by the account GPU ceiling; no scheduler edit is warranted.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the

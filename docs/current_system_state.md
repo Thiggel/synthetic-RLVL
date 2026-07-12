@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 10:45 CEST.
+Last updated: 2026-07-12 18:50 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -195,8 +195,30 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   completed `0:0` in `00:09:18` after scheduling successor `3841073`; its
   payload names the corrected critical paths. The successor was advanced from
   16:35 to 12:45 CEST so it can verify the projected 12:27 logic/NL
-  first-resume transition. The full plan remains incomplete, so `3841073`
-  remains queued.
+  first-resume transition. The full plan was incomplete, so `3841073` was
+  left queued for that handoff.
+- At 18:50 CEST corrected NL recovery `3835443_8` had run for `06:22` on
+  full A100-80 node `a0532` and passed the resume gate: it loaded the exact
+  step-4096 checkpoint with optimizer/LR-scheduler state, restored
+  `524288` samples and `2147483648` tokens with the accepted
+  `1825357824 + 322125824` normal/NL split, and logged resumed iteration
+  `4101` before advancing to `5421/8192` at `30.9K` tokens/s with finite loss
+  `1.74`. Control `3835438_0` simultaneously reached `5871/8192`, `3.08B`
+  tokens, and finite loss `2.11`. Neither log has a fatal/OOM/quota signature.
+  Logic recovery `3835442_3` and all corrected BranchProof eval tasks
+  `3838163_[0-29%6]` remain dependency-free, A100-80-only, and blocked solely
+  by `AssocGrpGRES`; an A100-80 node is idle, confirming the constraint is the
+  account GPU ceiling rather than node availability. No scheduler or protocol
+  edit is justified. No step-8192 tree or corrected BranchProof production
+  JSON/sample artifact exists yet; project usage remains `871G` by `du`.
+- Watcher `3841073` failed after `00:00:13` because Codex reported a usage
+  limit, but its wrapper had already scheduled successor `3842454`. That pass
+  started at 18:45 and scheduled successor `3843796` for 00:45 CEST on
+  2026-07-13. The stored successor remains queued because the full plan is
+  incomplete.
+- The scoped oversight update is committed locally. Both GitHub SSH port
+  22 and port 443 timed out without transferring, leaving this repository one
+  commit ahead of `origin/main`; the report repository remains clean.
 - The report repository remains unchanged and synchronized. Main-repo handoff
   commit `19df2c4` was pushed successfully at 10:45 CEST after the watcher's
   own transient SSH attempts timed out.

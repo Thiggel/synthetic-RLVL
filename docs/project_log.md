@@ -4,6 +4,25 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 18:54 CEST committed the scoped oversight update locally. Pushes to
+  both `github.com:22` and `ssh.github.com:443` timed out without transferring,
+  so the main repository remains one commit ahead of `origin/main`. The report
+  repository is clean and synchronized.
+- 18:50 CEST corrected NL recovery `3835443_8` passed the no-replay gate on
+  A100-80 node `a0532`: optimizer/LR-scheduler loading was enabled, sampler
+  offsets restored at `4096/524288/2147483648`, and metadata retained the
+  exact `1825357824 + 322125824` normal/NL token split. It advanced to
+  `5421/8192` at `30.9K` tokens/s with finite loss `1.74`; control
+  `3835438_0` reached `5871/8192` with finite loss `2.11`. Logic recovery
+  `3835442_3` and corrected BranchProof eval `3838163` remain dependency-free,
+  A100-80-only, and blocked solely by `AssocGrpGRES`; no production eval or
+  step-8192 artifact exists, so no scheduler/protocol edit or analysis was
+  triggered. Project usage remains `871G` by `du`.
+- 18:46 CEST watcher `3841073` had failed at 12:45 after 13 seconds because
+  Codex reported a usage limit, but its wrapper had already scheduled current
+  pass `3842454`. The current pass scheduled successor `3843796` for 00:45
+  CEST on 2026-07-13. The full plan remains incomplete, so the successor stays
+  queued.
 - 10:45 CEST watcher `3840018` completed `0:0` in `00:09:18`; successor
   `3841073` remains queued for 12:45 with the corrected payload. Retried the
   scoped handoff from the login node and pushed `19df2c4` successfully to

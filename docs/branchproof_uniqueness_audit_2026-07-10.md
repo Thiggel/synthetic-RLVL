@@ -184,6 +184,14 @@ account GRES. The production output root still contains only the four suffixed
 pilot/qualitative files, so no corrected metric or raw-generation conclusion is
 available and both downstream audit gates remain closed.
 
+Operational update 2026-07-12 18:50 CEST: all 30 validity-fixed eval tasks
+`3838163_[0-29%6]` remain dependency-free and retain partition `a100`, feature
+`a100_80`, and the unchanged full protocol. They are pending only on the
+account GPU ceiling (`AssocGrpGRES`), even though an A100-80 node is idle. No
+corrected production JSON or sample bundle exists, so row audits `3838164` and
+aggregate/qualitative gate `3838165` remain closed and no scientific result is
+available. No dependency, partition, throttle, or protocol edit was made.
+
 ## Full-grid aggregation gate
 
 `scripts/analysis/aggregate_hfsa_depth_scaling.py` now recognizes both the old
