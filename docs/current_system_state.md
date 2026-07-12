@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-12 09:33 CEST.
+Last updated: 2026-07-12 10:29 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -178,15 +178,17 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   successor payload names the corrected critical paths, and the plan remains
   incomplete. Commits `cb70aa6` and `18f79e5` were pushed to `origin/main` at
   09:33 CEST after the watcher's own transient SSH attempts timed out.
-- Control, corrected-logic, and corrected-NL Nanotron recoveries
-  `3835438_0/3835442_3/3835443_8` remain dependency-free and account-GRES
-  pending, with a common projected start near 10:23 CEST. Their accepted
-  step-4096 checkpoints remain unchanged and complete. No safe partition or
-  resource widening exists for the required full-node A100-80GB resume.
-- The scoped handoff commit is local. Direct GitHub SSH produced no response
-  within 30 seconds and `ssh.github.com:443` timed out, leaving this repository
-  two commits ahead of `origin/main`. The report repository is unchanged and
-  synchronized.
+- Control recovery `3835438_0` started at 10:24 CEST on full A100-80 node
+  `a0531`. It loaded run checkpoint 4096 with optimizer and LR scheduler state,
+  restored `start_iteration_step=4096`, `consumed_samples=524288`, and
+  `consumed_tokens_total=2147483648`, then logged resumed iteration `4101` at
+  `30.9K` tokens/s with finite loss `2.07`. This proves no replay or weight-only
+  reset in the control branch. Corrected logic/NL recoveries
+  `3835442_3/3835443_8` remain dependency-free and account-GRES pending, with
+  projected starts near 12:27 CEST. No safe partition widening exists for
+  their required full-node A100-80 resumes.
+- The main and report repositories are synchronized with their remotes; the
+  report repository remains unchanged.
 - Slurm had captured the prior watcher script at submission, and queued watcher
   `3837467` still named canceled pre-fix BranchProof jobs despite reading fresh
   docs. It was replaced before start by `3839191` at the identical

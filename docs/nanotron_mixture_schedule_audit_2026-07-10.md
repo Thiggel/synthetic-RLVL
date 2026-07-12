@@ -158,6 +158,16 @@ checkpoints plus HF staging. Step 4096 must remain until the corresponding
 step-8192 tree is verified; the guarded upload path is responsible for later
 cleanup.
 
+Control resume update 2026-07-12 10:29 CEST: replacement recovery
+`3835438_0` started on full A100-80 node `a0531`. Its generated config enables
+optimizer and LR-scheduler loading from the accepted step-4096 run checkpoint.
+The runtime restored `start_iteration_step=4096`, `consumed_samples=524288`,
+and `consumed_tokens_total=2147483648`, then logged iteration `4101/8192` at
+about `30.9K` tokens/s with finite loss `2.07`. This is direct evidence that
+the control resumed without replay or a weight-only optimizer reset. Logic/NL
+recoveries `3835442_3/3835443_8` remain account-GRES pending near 12:27 CEST
+and require the same check when they start.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the

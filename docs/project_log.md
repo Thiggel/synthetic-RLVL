@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-12
 
+- 10:29 CEST control Nanotron recovery `3835438_0` started on full A100-80
+  node `a0531` and passed the resume gate. It loaded run checkpoint 4096 with
+  optimizer/LR scheduler enabled, restored `524288` samples and
+  `2147483648` consumed tokens, and logged iteration `4101/8192` at `30.9K`
+  tokens/s with finite loss `2.07`. Logic/NL recoveries remain account-GRES
+  pending near 12:27; BranchProof eval remains account-GRES pending.
 - 09:33 CEST watcher `3839693` completed `0:0` in `00:14:19`; successor
   `3840018` remains scheduled for 10:35 with a verified corrected payload.
   Retried the two pending main-repo commits from the login node and pushed
