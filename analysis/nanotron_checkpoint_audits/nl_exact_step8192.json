@@ -1,0 +1,47 @@
+{
+  "checkpoint": "/home/vault/c107fa/c107fa12/synthetic-RLVL/nanotron_midtrain/qwen25_7b_midtrain_nl_exact_p15_bp_unique_v2_4p3b/checkpoints/8192",
+  "errors": [],
+  "expected_samples": 1048576,
+  "expected_step": 8192,
+  "expected_tokens": 4294967296,
+  "file_count": 645,
+  "file_counts": {
+    "lr_scheduler": 4,
+    "model": 625,
+    "optimizer": 4,
+    "random": 8
+  },
+  "metadata": {
+    "cp": 1,
+    "custom_metas": null,
+    "dp": 2,
+    "metas": {
+      "consumed_tokens_total": 4294967296,
+      "consumed_train_samples": 1048576,
+      "data_stages": [
+        {
+          "consumed_tokens_per_dataset_folder": {
+            "/home/vault/c107fa/c107fa12/synthetic-RLVL/nanosets/qwen25/normal_continuation": 3650719744,
+            "/home/vault/c107fa/c107fa12/synthetic-RLVL/nanosets/qwen25_branchproof_unique_v2/nl_exact": 644247552
+          },
+          "consumed_train_samples": 1048576,
+          "name": "qwen25_midtrain_nl_exact_p15",
+          "sequence_length": 4096,
+          "start_training_step": 1
+        }
+      ],
+      "last_stage_idx": 0,
+      "last_train_step": 8192
+    },
+    "tp": 4,
+    "version": "1.5"
+  },
+  "optimizer_sizes": [
+    22848937060,
+    22848937060,
+    22848937060,
+    22848937060
+  ],
+  "status": "accepted",
+  "zero_byte_files": []
+}

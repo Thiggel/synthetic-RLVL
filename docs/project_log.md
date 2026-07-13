@@ -4,6 +4,20 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 10:10 CEST NL recovery `3835443_8` completed `0:0` at step 8192.
+  Independent verifier artifact
+  `analysis/nanotron_checkpoint_audits/nl_exact_step8192.json` accepts 645
+  files, no empty files, exact `8192/1048576/4294967296` offsets, exact
+  `3650719744 + 644247552` normal/NL token accounting, complete
+  optimizer/scheduler/RNG groups, and four equal 22.85 GB optimizer shards.
+  Upload `3831113` is released but account-GRES pending; no cleanup has run.
+- 10:10 CEST logic recovery `3835442_3` remained healthy at `4991/8192`,
+  `30.9K` tokens/s, finite loss `1.76`, and a projected completion near 01:12
+  CEST on July 14. Control/NL uploads and all corrected BranchProof eval rows
+  are A100-80-only and account-GRES pending; no production eval artifacts are
+  available. Watcher `3845763` completed `0:0`, and successor `3846896`
+  remains queued for 12:46 CEST. Total vault usage is `1268G` of the
+  `2097.2G` hard quota.
 - 06:58 CEST committed the checkpoint/handoff transition locally.
   Pushes through both `github.com:22` and `ssh.github.com:443` timed out
   without transferring; `gh` is not installed. The main repository remains

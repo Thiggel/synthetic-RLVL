@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 06:53 CEST.
+Last updated: 2026-07-13 10:10 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -260,6 +260,21 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   production artifacts. Watcher `3845763` scheduled successor `3846896` for
   12:46 CEST before this pass; the end-to-end plan is incomplete, so that
   successor remains queued.
+- At 10:10 CEST NL recovery `3835443_8` is also `COMPLETED 0:0` after
+  reaching step `8192`. Independent audit
+  `analysis/nanotron_checkpoint_audits/nl_exact_step8192.json` accepts 645
+  files, no zero-byte files, TP=4/DP=2, 625 model files, four scheduler
+  shards, eight RNG shards, four equal `22,848,937,060`-byte optimizer shards,
+  exact offsets `8192/1048576/4294967296`, and exact
+  `3650719744 + 644247552` normal/NL token accounting. Upload `3831113` is
+  released and account-GRES pending alongside control upload `3831119`; both
+  retain their full local trees. Logic recovery `3835442_3` reached
+  `4991/8192` at `30.9K` tokens/s with finite loss `1.76` and a projected
+  completion near 01:12 CEST on July 14, comfortably before its 05:48
+  allocation limit. Corrected BranchProof eval remains A100-80-only and
+  account-GRES pending with no production output. Total vault usage is
+  `1268G` against the `2097.2G` hard quota. Watcher `3845763` completed
+  `0:0`; successor `3846896` remains queued for 12:46 CEST.
 - Scoped oversight commit `cf5162e` was pushed successfully from the login
   node at 21:12 CEST after the watcher's transient SSH attempts timed out; the
   report repository remains clean and synchronized.

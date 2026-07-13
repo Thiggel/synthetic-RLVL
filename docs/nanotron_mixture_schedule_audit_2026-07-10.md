@@ -222,6 +222,20 @@ one hour remaining. Vault usage is `1211.8G` against the `2097.2G` hard quota;
 the three matched Nanotron roots occupy `795G`. No cleanup is authorized until
 each corresponding fail-closed upload verification succeeds.
 
+NL-final and logic-progress update 2026-07-13 10:10 CEST: corrected NL
+recovery `3835443_8` completed `0:0` at 07:55 after saving step `8192`.
+Independent verification is persisted at
+`analysis/nanotron_checkpoint_audits/nl_exact_step8192.json` and accepts the
+same complete 645-file state layout as control: no zero-byte files, TP=4/DP=2,
+625 model files, four LR-scheduler shards, eight RNG shards, four equal
+`22,848,937,060`-byte optimizer shards, exact offsets
+`8192/1048576/4294967296`, and exact per-dataset accounting of `3650719744`
+normal plus `644247552` NL tokens. Upload `3831113` is released and waits only
+on account GRES; no cleanup has run. Logic recovery `3835442_3` reached
+`4991/8192` at `30.9K` tokens/s with finite loss `1.76`; measured throughput
+projects completion near 01:12 CEST on July 14, before its 05:48 allocation
+limit. Vault usage is `1268G` against the `2097.2G` hard quota.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the
