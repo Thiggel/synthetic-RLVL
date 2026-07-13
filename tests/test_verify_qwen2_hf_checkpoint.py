@@ -49,3 +49,36 @@ def test_rejects_missing_weight_shard(tmp_path: Path) -> None:
     report = MODULE.audit_local_files(checkpoint)
     assert not report["accepted"]
     assert "missing or empty weight shard: model-00002-of-00002.safetensors" in report["errors"]
+
+
+def test_rejects_transformers_5_only_rope_config(tmp_path: Path) -> None:
+    checkpoint = _checkpoint(tmp_path)
+    (checkpoint / "config.json").write_text(
+        json.dumps(
+            {
+                "model_type": "qwen2",
+                "rope_parameters": {"rope_theta": 1_000_000.0, "rope_type": "default"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    report = MODULE.audit_model_config(checkpoint)
+    assert not report["accepted"]
+    assert "rope_theta=None, expected 1000000.0" in report["errors"]
+
+
+def test_accepts_dual_format_rope_config(tmp_path: Path) -> None:
+    checkpoint = _checkpoint(tmp_path)
+    (checkpoint / "config.json").write_text(
+        json.dumps(
+            {
+                "model_type": "qwen2",
+                "rope_theta": 1_000_000.0,
+                "rope_parameters": {"rope_theta": 1_000_000.0, "rope_type": "default"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    report = MODULE.audit_model_config(checkpoint)
+    assert report["accepted"]
+    assert report["loaded_rope_theta"] == 1_000_000.0

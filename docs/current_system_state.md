@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 16:10 CEST.
+Last updated: 2026-07-13 18:08 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,72 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-13 live correction wave
+
+- The corrected `BranchProof-unique-v2` baseline is no longer the only active
+  rerun. A report-coverage audit found that every old long-depth syntax,
+  shortcut, hybrid, conditioned-dual, architecture, batch-size, 32B, and tiny
+  result is affected by the wrapped-constant bug. Corrected three-seed
+  training/evaluation matrices are now submitted for all report families.
+  Active parent arrays are surface `3850105 -> 3850116`, hybrid
+  `3850107 -> 3850118`, conditioned 10k `3850108 -> 3850119`, conditioned
+  50k recovery `3850109..3850112 -> 3850120`, architectures
+  `3850113 -> 3850121`, batch-size `3850114 -> 3850122`, 32B
+  `3850115 -> 3850123`, and shortcut build/train/eval
+  `3850212 -> 3850213 -> 3850214`. The first tiny chain `3850072..3850078`
+  was canceled before its first epoch completed after a sample-budget audit
+  found it would recycle 50k rows for 100k optimizer steps. Its no-repeat
+  replacement build `3850394` correctly rejected six duplicate training
+  sequences among its first 100k rows. The deduplicating replacement is build
+  `3850488`, train `3850490`, and final/checkpoint eval `3850492/3850493`.
+  Build `3850488` completed CPU-only and verified 100k formal plus 100k NL
+  sequence fingerprints before reloading the 100k-row Hub subset. Training
+  `3850490` is released with a current scheduler estimate near 19:54 CEST;
+  other active rows are progressing without fatal signatures.
+- Sequence-length auditing found two additional old-result confounds. Hybrid
+  targets average about 10k OLMo tokens and were truncated by the old 8192 SFT
+  cap, so corrected hybrid SFT uses 16384. Tiny depth-10 targets exceed the old
+  2048 SFT cap; corrected tiny training uses 4096 with a 16384 positional
+  context. The replacement tiny protocol means exactly 100k unique examples:
+  effective batch 16, 6,250 optimizer steps, and checkpoints every 20k
+  examples. A trainer-side guard fails if the configured step budget would
+  require row reuse. Old hybrid/tiny results remain quarantined even
+  independently of the uniqueness bug.
+- A Nanotron-to-HF compatibility audit found that Transformers 5 serialized
+  Qwen2.5's correct RoPE base (`1000000`) only under `rope_parameters`, while
+  the Transformers 4.57 downstream environment ignored that field and silently
+  used `10000`. Nanotron training itself used `1000000` and is unaffected, but
+  all previously completed control/NL HF downstream evaluations and both
+  UltraChat adapters are invalid. This includes the previously quoted
+  MATH-500 symbolic scores. The control and corrected-NL Hub configs now carry
+  both fields and load as `1000000` in Transformers 4.57; the converter and
+  verifier now enforce this compatibility for the pending logic upload.
+- Invalid local and Hub instruction adapters were deleted after identification.
+  Corrected adapter retraining is queued as control `3850351` and NL `3850352`.
+  The first multi-hop smoke additionally truncated every tested prompt from
+  the left under an 8192 window. Complete tokenization of all 600 LongBench
+  examples gives maxima `17684/17079/17927` for HotpotQA/2Wiki/MuSiQue, so the
+  corrected evaluator requires exactly a 32768 window and tests both stock
+  LongBench short-answer and strict tagged protocols. Direct smoke `3850353`
+  and dependency-gated instruction smoke `3850354` are queued; flawed full
+  jobs `3850099/3850100` and aggregates `3850207/3850217` were canceled before
+  start. No production multi-hop result will be submitted until corrected raw
+  smoke generations are inspected.
+- The four RoPE-invalid control/NL reviewer-suite bundles were preserved under
+  `.rope10000_invalid_20260713` directory suffixes. Corrected direct reruns are
+  `3850385/3850386`; corrected instruction reruns `3850387/3850388` depend on
+  the new adapters. Stale aggregate `3849776` was canceled and replacement
+  `3850389` depends on all four corrected control/NL jobs plus the corrected
+  logic direct/instruction jobs `3847804/3847806`.
+- Full-suite verification exposed and fixed an independent legacy hard-task
+  generator defect: rules containing extended predicate symbols were rendered
+  by string concatenation (`P37b`) instead of as explicit atoms (`P37(b)`).
+  All legacy `hard_v2/hard_v3` rule paths now use the shared atom renderer;
+  compact one-letter syntax is unchanged. This does not affect the separate
+  BranchProof-v2 generator or its active jobs. The complete repository suite
+  passes after the materialized-sequence and one-pass guards
+  (`205 passed, 3 skipped`).
 
 ### P0 correction: old BranchProof long-depth evidence is quarantined
 

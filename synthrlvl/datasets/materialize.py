@@ -35,6 +35,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--entity-decoy-ratio", type=float, default=None)
     parser.add_argument("--answer-decoy-ratio", type=float, default=None)
     parser.add_argument("--chunk-size", type=int, default=10_000)
+    parser.add_argument(
+        "--require-unique-sequences",
+        action="store_true",
+        help="Skip rendered duplicates until each subset has the requested number of unique rows.",
+    )
     parser.add_argument("--push-to-hub", action="store_true")
     parser.add_argument("--hf-repo-id", default=None)
     parser.add_argument("--hf-private", action="store_true")
@@ -76,6 +81,7 @@ def main() -> None:
         entity_decoy_ratio=args.entity_decoy_ratio,
         answer_decoy_ratio=args.answer_decoy_ratio,
         chunk_size=args.chunk_size,
+        require_unique_sequences=bool(args.require_unique_sequences),
     )
 
     if args.push_to_hub:

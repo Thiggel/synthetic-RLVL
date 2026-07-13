@@ -149,3 +149,13 @@ def process_longbench_qa_tagged(doc: dict, results: list[str]) -> dict[str, floa
         "tag_found": float(bool(_ANSWER_RE.search(str(raw)))),
         "extracted_nonempty": float(bool(extracted.strip())),
     }
+
+
+def process_longbench_qa_standard(doc: dict, results: list[str]) -> dict[str, float]:
+    """Match lm-eval's stock English LongBench QA-F1 scoring."""
+    prediction = str(results[0]).strip() if results else ""
+    best_f1 = max(
+        (qa_f1_score(prediction, str(answer)) for answer in doc["answers"]),
+        default=0.0,
+    )
+    return {"score": float(best_f1), "qa_f1_score": float(best_f1)}

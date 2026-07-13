@@ -50,6 +50,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--train-samples", type=int, default=50_000)
     parser.add_argument("--eval-samples", type=int, default=512)
     parser.add_argument("--max-length", type=int, default=2048)
+    parser.add_argument("--max-position-embeddings", type=int, default=None)
     parser.add_argument("--seed", type=int, default=3407)
     parser.add_argument("--max-steps", type=int, default=20_000)
     parser.add_argument("--warmup-steps", type=int, default=200)
@@ -60,6 +61,16 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--save-steps", type=int, default=5000)
     parser.add_argument("--save-total-limit", type=int, default=3)
     parser.add_argument("--logging-steps", type=int, default=20)
+    parser.add_argument(
+        "--require-unique-train-examples",
+        action="store_true",
+        help="Fail if the optimizer-step budget would require reusing a training row.",
+    )
+    parser.add_argument(
+        "--resume-from-checkpoint",
+        default=None,
+        help="Trainer checkpoint path or 'auto' for the newest checkpoint in output-dir.",
+    )
     parser.add_argument("--bf16", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--wandb-project", default=os.environ.get("WANDB_PROJECT", "synthetic-rlvl"))
     parser.add_argument("--wandb-group", default=os.environ.get("WANDB_GROUP"))
@@ -141,6 +152,60 @@ def _collator(tokenizer):
     return collate
 
 
+def _resolve_resume_checkpoint(output_dir: Path, value: str | None) -> str | None:
+    if value is None or str(value).strip().lower() in {"", "none", "null", "false", "0"}:
+        return None
+    if str(value).strip().lower() != "auto":
+        return str(value)
+    checkpoints: list[tuple[int, Path]] = []
+    for path in output_dir.glob("checkpoint-*"):
+        if not (path / "trainer_state.json").is_file():
+            continue
+        try:
+            step = int(path.name.rsplit("-", 1)[1])
+        except (IndexError, ValueError):
+            continue
+        checkpoints.append((step, path))
+    return str(max(checkpoints, key=lambda item: item[0])[1]) if checkpoints else None
+
+
+def _required_train_examples(
+    *,
+    max_steps: int,
+    per_device_batch_size: int,
+    grad_accum: int,
+    world_size: int = 1,
+) -> int:
+    return (
+        int(max_steps)
+        * int(per_device_batch_size)
+        * int(grad_accum)
+        * int(world_size)
+    )
+
+
+def _validate_unique_train_budget(
+    *,
+    dataset_rows: int,
+    max_steps: int,
+    per_device_batch_size: int,
+    grad_accum: int,
+    world_size: int = 1,
+) -> int:
+    required = _required_train_examples(
+        max_steps=max_steps,
+        per_device_batch_size=per_device_batch_size,
+        grad_accum=grad_accum,
+        world_size=world_size,
+    )
+    if required > int(dataset_rows):
+        raise ValueError(
+            "Unique-example training requires at least "
+            f"{required} rows, but the loaded dataset has {dataset_rows}."
+        )
+    return required
+
+
 def main() -> None:
     args = _parse_args()
     set_seed(int(args.seed))
@@ -155,7 +220,11 @@ def main() -> None:
     cfg_kwargs = dict(SIZE_CONFIGS[args.size])
     model_cfg = LlamaConfig(
         vocab_size=len(tokenizer),
-        max_position_embeddings=max(8192, int(args.max_length)),
+        max_position_embeddings=max(
+            8192,
+            int(args.max_length),
+            int(args.max_position_embeddings or 0),
+        ),
         rms_norm_eps=1e-5,
         rope_theta=500000.0,
         tie_word_embeddings=True,
@@ -168,13 +237,31 @@ def main() -> None:
     if bool(args.bf16):
         model = model.to(dtype=torch.bfloat16)
     train_ds, eval_ds = _load_texts(args, tokenizer)
+    required_train_examples = _required_train_examples(
+        max_steps=args.max_steps,
+        per_device_batch_size=args.per_device_batch_size,
+        grad_accum=args.grad_accum,
+        world_size=int(os.environ.get("WORLD_SIZE", "1")),
+    )
+    if args.require_unique_train_examples:
+        _validate_unique_train_budget(
+            dataset_rows=len(train_ds),
+            max_steps=args.max_steps,
+            per_device_batch_size=args.per_device_batch_size,
+            grad_accum=args.grad_accum,
+            world_size=int(os.environ.get("WORLD_SIZE", "1")),
+        )
 
     if args.wandb_project:
         wandb.init(
             project=args.wandb_project,
             group=args.wandb_group,
             name=args.run_name,
-            config=vars(args) | {"model_config": model_cfg.to_dict()},
+            config=vars(args)
+            | {
+                "model_config": model_cfg.to_dict(),
+                "required_train_examples": required_train_examples,
+            },
         )
 
     arg_kwargs = dict(
@@ -208,7 +295,12 @@ def main() -> None:
         eval_dataset=eval_ds,
         data_collator=_collator(tokenizer),
     )
-    trainer.train()
+    trainer.train(
+        resume_from_checkpoint=_resolve_resume_checkpoint(
+            output_dir,
+            args.resume_from_checkpoint,
+        )
+    )
     final_dir = output_dir / "final"
     trainer.save_model(str(final_dir))
     tokenizer.save_pretrained(str(final_dir))

@@ -39,6 +39,8 @@ RUN_NAME="sft_instr_${BASE_RUN_TAG}_step${CHECKPOINT_STEP}_ultrachat"
 OUT_DIR="${HPCVAULT}/synthetic-RLVL/runs/${RUN_NAME}"
 ADAPTER_REPO_ID="${HF_NAMESPACE}/${HF_REPO_PREFIX}-${MIX_KIND}-p${MIX_PCT}-step${CHECKPOINT_STEP}-ultrachat-adapter"
 
+python scripts/nanotron/verify_qwen2_rope_config.py --checkpoint "${BASE_REPO_ID}"
+
 export WANDB_PROJECT="${WANDB_PROJECT:-synthetic-rlvl}"
 export WANDB_GROUP="qwen25_midtrain_instruction_sft"
 export WANDB_RUN_GROUP="${WANDB_GROUP}"

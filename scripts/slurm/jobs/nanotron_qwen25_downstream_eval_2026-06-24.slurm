@@ -67,6 +67,7 @@ else
   exit 2
 fi
 
+python scripts/nanotron/verify_qwen2_rope_config.py --checkpoint "${CHECKPOINT}"
 python scripts/validate_lm_eval_tasks.py --tasks "${REVIEWER_TASKS_RESOLVED}"
 
 if [[ -d "${OUT_DIR}" && "${FORCE_LM_EVAL:-0}" != "1" ]]; then

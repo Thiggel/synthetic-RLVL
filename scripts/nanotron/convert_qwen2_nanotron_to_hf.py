@@ -71,6 +71,25 @@ def _normalize_tokenizer_config(save_path: Path) -> None:
         )
 
 
+def _normalize_model_config(save_path: Path, *, rope_theta: float) -> None:
+    """Keep Transformers 5 checkpoints readable by the Transformers 4 eval env."""
+    config_path = save_path / "config.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    rope_parameters = config.get("rope_parameters")
+    if not isinstance(rope_parameters, dict):
+        raise RuntimeError("converted config is missing Transformers 5 rope_parameters")
+    serialized_theta = rope_parameters.get("rope_theta")
+    if serialized_theta is None or float(serialized_theta) != float(rope_theta):
+        raise RuntimeError(
+            f"converted rope_parameters.rope_theta={serialized_theta!r}, expected {rope_theta}"
+        )
+    config["rope_theta"] = float(rope_theta)
+    config_path.write_text(
+        json.dumps(config, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
 def convert_checkpoint(checkpoint_path: Path, save_path: Path, *, tokenizer_name: str) -> None:
     with (checkpoint_path / "model_config.json").open("r", encoding="utf-8") as handle:
         model_config = NanotronQwen2Config(**json.load(handle))
@@ -121,6 +140,7 @@ def convert_checkpoint(checkpoint_path: Path, save_path: Path, *, tokenizer_name
     tokenizer.save_pretrained(save_path)
     _normalize_tokenizer_config(save_path)
     hf_model.save_pretrained(save_path, safe_serialization=True, max_shard_size="5GB")
+    _normalize_model_config(save_path, rope_theta=float(model_config.rope_theta))
 
 
 def upload_folder(save_path: Path, *, repo_id: str, private: bool, token_env: str) -> None:

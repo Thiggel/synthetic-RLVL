@@ -72,16 +72,45 @@ First read in full:
 Use source ./scripts/env.sh before shell commands. Do not touch unrelated puzzle_*, babylm-*, tjepa_*, seqedit_*, or grid_goal_* jobs except to identify them as unrelated.
 
 Active critical paths:
+- A 2026-07-13 Transformers compatibility audit supersedes every older
+  downstream-acceptance statement below: Nanotron weights used the correct
+  Qwen2.5 RoPE base 1000000, but old control/NL HF evaluation and instruction
+  SFT resolved the config as 10000. Those four bundles are quarantined under
+  `.rope10000_invalid_20260713` suffixes. Corrected adapters are `3850351` and
+  `3850352`, corrected reviewer evals are `3850385..3850388`, and aggregate
+  `3850389` replaces canceled `3849776`. Never restore old MATH or transfer
+  scores as evidence.
+- Corrected three-seed report-wide BranchProof reruns are already submitted:
+  surface `3850105/3850116`, hybrid `3850107/3850118`, conditioned 10k
+  `3850108/3850119`, conditioned 50k `3850109..3850112/3850120`, architecture
+  `3850113/3850121`, batch `3850114/3850122`, 32B `3850115/3850123`, shortcuts
+  `3850212..3850214`, and no-repeat tiny `3850488/3850490/3850492/3850493`.
+  Hybrid uses 16384-token SFT; tiny uses 4096-token SFT, 16384 context, 100k
+  unique rows exactly once, and collision/no-reuse gates. Recover only failed
+  rows and do not submit duplicate families.
 - Corrected BranchProof full SFT 3829072_[0-29%12], followed by validity-fixed eval 3838163_[0-29%6]. Eval must remain on partition a100 with feature a100_80 and retain 32 prompts/depth, 16 generations, all 14 depths, pass@1/2/4/8/16, context 16384, equal cap 7168, and two sampled generations per prompt for qualitative review. Old eval 3834582 was canceled after rows 1/2 had loaded the pre-fix scorer; completed row 0 is quarantined outside the aggregate input path.
 - CPU-only BranchProof row audits 3847756_[0-29%8] follow validity-fixed eval rows with aftercorr dependencies; replacement aggregation and cross-grid qualitative audit 3847757 run only after all 30 audits pass. GPU-requesting audit/aggregate 3838164/3838165 and old pre-fix 3834706/3835779 were canceled. Recover any failed eval/audit rows before aggregation rather than bypassing either gate.
 - The validity fix requires every generated premise to parse before strict or citation-free proof validity can be true. The row audit also rejects any retained citation-free-valid sample carrying a validity error, invalid proof line, or line-valid fraction below one. Never mix the quarantined pre-fix row-0 metrics with corrected rows.
 - Corrected BranchProof SFT is complete at 30/30 and all final adapters passed the artifact gate. Eval rows 0..5 started on verified A100-80GB devices at 10:07--10:11 CEST on 2026-07-13; rows 6..29 are array-throttle pending. Monitor the six active rows and first completed artifact rather than editing their now-resolved dependencies.
 - Downstream-suite final smoke 3834836 must pass before production eval. FOLIO is unavailable, legacy LogiQA tasks use unsupported scripts, and installed FLD prompts for proofs while exact-matching labels, creating an extraction floor. The validated suite uses gsm8k, hendrycks_math500, arc_challenge, hellaswag, winogrande, piqa, agieval_logiqa_en, bbh, mmlu, and mmlu_pro.
-- Nanotron normal control 3823434_0 -> failed W&B-only recovery 3828946_0 -> completed replacement recovery 3835438_0. Upload 3831119 failed because the converter lacked torchrun; repaired upload 3847569 passed conversion, remote parity, and full CUDA forward, then guarded cleanup ran. Direct eval 3835927 failed on a transient hf_transfer shard-download 403; replacement 3847792 completed and passed the strict artifact gate. Instruction SFT 3831121 was canceled after the uploaded Transformers-5 tokenizer metadata proved incompatible with the downstream Transformers-4 stack; repaired replacement 3847661 completed. Instruction eval 3835928 produced a complete bundle but exited failed on the stale task-order/MATH gate. Corrected schema-v4 CPU gate 3849774 accepts that bundle; do not rerun its GPU evaluation. Old control evals 3834906/3834907 remain canceled.
+- Nanotron normal-control weights and repaired Hub config are valid. Old direct
+  `3847792` and instruction `3835928` bundles are RoPE-invalid diagnostics only.
+  Corrected adapter `3850351`, direct eval `3850385`, and dependency-held
+  instruction eval `3850387` must all pass the consumer RoPE preflight and
+  production audit.
 - Corrected Nanotron logic p15 3830927_3 -> replacement recovery 3835442_3 -> repaired-payload upload 3847802, direct eval 3847804, instruction SFT 3847805, instruction eval 3847806. Dependency-held jobs 3831123/3834908/3831125/3834909 were canceled before start after their stored Slurm payloads proved to predate the converter, downloader, and resume fixes. Superseded untouched recovery 3830928_3 was canceled.
-- Corrected Nanotron NL p15 3831111_8 -> completed replacement recovery 3835443_8. Upload 3831113 failed on the same missing torchrun environment; repaired upload 3847570 passed all gates and guarded cleanup. Direct eval 3834904 is accepted. Instruction SFT 3831115 failed on pre-repair tokenizer metadata; replacement 3847662 completed. Instruction eval 3834905 wrote a complete bundle but exited on the stale MATH gate; corrected CPU gate 3849775 accepts it. Superseded untouched recovery 3831112_8 remains canceled.
-- CPU-only strict downstream aggregation 3849776 waits only on logic evals 3847804/3847806; completed schema-v4 CPU gates 3849774/3849775 substitute for the artifact-complete but failed-state instruction eval parents, while NL direct 3834904 and control direct 3847792 are already accepted. Earlier aggregates 3836159/3847793/3847807/3849683/3849736 were superseded. Do not analyze an incomplete subset as the matched pilot.
-- Logic/NL first allocations checkpoint only at step 4096 and cannot reach step 8192 within 24 hours. As soon as each step-4096 tree has nonempty metadata/config/model config, no zero-byte files, and four equal optimizer shards above 20 GB, cancel only that corresponding parent allocation so its after-any recovery can resume at 4096. Do not let it spend the remaining approximately five hours on work that cannot be checkpointed before timeout, and do not cancel before the complete checkpoint is verified.
+- Corrected Nanotron NL-p15 weights and repaired Hub config are valid. Old
+  direct `3834904` and instruction `3834905` bundles are RoPE-invalid
+  diagnostics only. Corrected adapter `3850352`, direct eval `3850386`, and
+  dependency-held instruction eval `3850388` must pass the same gates.
+- Corrected CPU aggregate `3850389` depends on logic evals `3847804/3847806`
+  and corrected control/NL evals `3850385..3850388`. Do not revive canceled
+  `3849776` or analyze a mixed old/new subset.
+- The first HotpotQA/2Wiki/MuSiQue smoke is rejected for both wrong RoPE and
+  left truncation under an 8192 window. Corrected direct smoke `3850353` and
+  instruction smoke `3850354` use an audited 32768 window and both stock
+  short-answer and strict tagged protocols. Inspect raw smoke generations
+  before submitting the full six-condition multi-hop grid.
 
 Plan to execute end to end:
 1. Complete corrected BranchProof SFT/eval. Check squeue, expanded sacct rows, logs, finals, eval JSONs, sample JSONLs, and quota. Inspect the first A100-80 eval runtime. If an eval approaches or hits 20--24 hours, preserve the protocol and make only unfinished rows depth-sharded/resumable. Recover only missing/failed rows.
@@ -89,7 +118,12 @@ Plan to execute end to end:
 3. Restore or reject the BranchProof narrative from the corrected three-seed evidence. Keep all old wrapped-constant BranchProof performance and ablations quarantined. Update the official preprint only after artifact and qualitative audits pass.
 4. Finish the matched Nanotron p15 normal/logic/NL comparison. Verify every timeout/recovery checkpoint, optimizer/scheduler/RNG/data offsets, exact 15% blend, loss, throughput, and quota. Apply the verified step-4096 parent-cancel transition above so recoveries do not replay post-checkpoint work. After successful final checkpoints, verify HF conversion/upload and path-guarded local checkpoint cleanup.
 5. Run and audit both downstream branches for all three conditions: direct reviewer evaluation, then native-Qwen-chat instruction SFT and the same post-instruction evaluation. Inspect benchmark samples and separate direct from post-instruction claims.
-6. Conditional expansion: if corrected BranchProof shows a robust formal advantage at greedy/pass@1, submit only the highest-value corrected reruns first: one syntax control, one shortcut experiment, conditioned dual, and one independent architecture. If matched Nanotron p15 transfer is positive, submit corrected {logic,nl_exact} x {5,10,15,20,25} mixtures. If a result is negative, inspect generations and revise the claim before spending on the broader grid.
+6. Conditional expansion: the report-wide corrected BranchProof matrix is
+   already submitted, so monitor and recover it rather than launching
+   duplicates. Submit the broader Nanotron `{logic,nl_exact} x
+   {5,10,15,20,25}` mixture grid only if the fully corrected p15 transfer
+   aggregate is positive and sample-clean. If a result is negative, inspect
+   generations and revise the claim before spending on the broader grid.
 7. Report work: regenerate the in-repo report when justified, mirror only to ../synthetic-RLVL-report/informal_report, and update the official root preprint with corrected evidence, clear mean/std tables/figures, and concise claims. Preserve AttrCon as independent evidence; keep iGSM and Maze outside the main story.
 
 Operational rules:

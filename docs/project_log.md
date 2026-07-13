@@ -4,6 +4,93 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 18:04 CEST first no-repeat tiny build `3850394` failed its intended gate:
+  record keys were all unique, but full content hashing found only `99,994`
+  distinct sequences in 100k rows. Canceled its unsatisfied dependents
+  `3850395..3850397`. The builder now materializes a 1% surplus, deduplicates
+  independently on complete formal and NL sequence fields, preserves exactly
+  10k rows per depth, publishes atomically, and uses no GPU. Submitted build
+  `3850488`, train `3850490`, final eval `3850492`, and checkpoint eval
+  `3850493`.
+- 18:08 CEST build `3850488` completed `0:0` in `00:02:11`: exact depth
+  balance, `100,000` distinct formal fingerprints, `100,000` distinct NL
+  fingerprints, and remote subset reload at `100,000` rows all passed. It
+  released training `3850490`; Slurm currently estimates a 19:54 CEST start.
+  Remote regression loads also preserve the existing 50k train and depth-50
+  validation configs at their expected sizes. The reconciled full repository
+  suite passes `205 passed, 3 skipped`.
+- 18:06 CEST replaced still-pending oversight `3850404` with `3850497` at the
+  same 18:46 CEST begin time so the stored watcher payload references the
+  deduplicated no-repeat tiny chain rather than the canceled first attempt.
+- 17:58 CEST stopped tiny correction jobs `3850072..3850078` before their
+  first epoch boundary. A sample-budget audit found the nominal 100k run was
+  100k optimizer steps at effective batch 16 over 50k rows, which would reuse
+  the corpus about 32 times. Added a trainer-side no-reuse guard and a dedicated
+  100k-row paired subset build with exact sequence-hash uniqueness checks.
+  Submitted replacement build `3850394`, training `3850395` for exactly 6,250
+  steps/100k examples, final eval `3850396`, and five-checkpoint eval `3850397`.
+  Focused generator/tiny tests pass (`51 passed`); the full suite passed
+  `200 passed, 3 skipped` before adding the two guard tests.
+- 17:58 CEST replaced pending oversight `3848334` with `3850404` at the same
+  18:46 CEST begin time. The old frozen prompt incorrectly called the
+  RoPE-invalid bundles accepted; the replacement records the quarantine,
+  corrected report-wide arrays, corrected six-way aggregate, and 32k-context
+  multi-hop smoke gate. The watcher remains CPU-only.
+- 17:56 CEST canceled stale aggregate `3849776`, preserved all four invalid
+  control/NL reviewer bundles under `.rope10000_invalid_20260713` suffixes,
+  and submitted corrected direct jobs `3850385/3850386`, dependency-held
+  instruction jobs `3850387/3850388`, and six-way corrected aggregate
+  `3850389`. Slurm estimates both direct jobs can start around 19:53 CEST.
+- 17:53 CEST full-suite verification exposed a legacy `hard_v2/hard_v3`
+  generator bug for extended predicate names: direct concatenation produced
+  malformed atoms such as `P37b`. Replaced those rule renderings with the
+  existing predicate-atom renderer, which preserves one-letter syntax and
+  emits `P37(b)` when needed. This path is separate from BranchProof-v2 and
+  does not invalidate active jobs. Targeted tests pass `48/48`; the complete
+  suite passes `200 passed, 3 skipped`.
+- 17:53 CEST queue refresh: corrected surface, hybrid, conditioned,
+  architecture, and tiny rows are actively training without fatal signatures;
+  all seven corrected shortcut corpora completed their build gates. Corrected
+  instruction retrains `3850351/3850352` and direct 32k-context multi-hop smoke
+  `3850353` remain account-GRES pending; instruction smoke `3850354` remains
+  correctly dependency gated.
+- 17:41 CEST Nanotron downstream correction: the Transformers-5 converter
+  serialized Qwen2.5 RoPE base `1000000` only as `rope_parameters`; the
+  Transformers-4.57 downstream environment ignored it and silently resolved
+  `rope_theta=10000`. Nanotron training logs/configs remain correct. Patched
+  conversion to emit both fields and patched verification to require both plus
+  a downstream-env load resolving `1000000` (`9` focused tests pass). Repaired
+  the control and corrected-NL Hub `config.json` files in place and verified
+  them with Transformers 4.57. Prior control/NL direct/instruction results,
+  including MATH symbolic scores, are quarantined pending rerun.
+- 17:41 CEST removed only the two local/Hub UltraChat adapters trained with the
+  wrong resolved RoPE metadata (about `6.4G` local) and submitted clean
+  retraining `3850351` control and `3850352` NL. No model weights or result
+  bundles were deleted.
+- 17:41 CEST multi-hop smoke audit: jobs `3850097/3850098` completed but all
+  six raw generations per mode were degenerate. Logs prove lm-eval left-
+  truncated 11.8k--17.3k-token prompts into the 8192 window. Full Qwen
+  tokenization of all 200 examples per task found maximum prompt lengths
+  `17684` HotpotQA, `17079` 2Wiki, and `17927` MuSiQue; none exceed a 32768
+  window with generation allowance. Added stock LongBench short-answer tasks,
+  a strict 32768-window audit gate, and corrected smokes `3850353 -> 3850354`.
+  Canceled unstarted flawed production/aggregate jobs
+  `3850099/3850100/3850207/3850217`.
+- 17:43 CEST added a consumer-side RoPE preflight to instruction SFT and both
+  downstream evaluators, then canceled/replaced still-pending jobs
+  `3850339..3850342` so their stored Slurm payloads include it. Replacement
+  jobs are `3850351..3850354`.
+- 17:20 CEST submitted corrected three-seed BranchProof report coverage after
+  auditing every official/informal-report family. Active arrays cover surface,
+  shortcuts, hybrid order, conditioned dual 10k/50k, architecture, batch size,
+  32B, and tiny scratch (`3850072..3850123`, `3850212..3850214`). Hybrid
+  corrected SFT uses 16384 tokens because targets average about 10k; tiny uses
+  4096-token SFT and 16384 context because old 2048 training truncated even
+  depth-10 targets. The first submission encountered global home-filesystem
+  inode exhaustion; failed Hydra outputs were removed, Hydra output was
+  redirected to the vault, and only affected arrays were resubmitted. Active
+  rows now progress without fatal signatures.
+
 - 16:00 CEST control direct eval `3847792_0` completed `0:0` in `01:06:47`
   and passed the ten-task/105-file/50,693-row production gate. Control
   instruction eval `3835928_0` completed the full GPU workload but exited

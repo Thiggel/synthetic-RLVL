@@ -877,7 +877,10 @@ class LogicDatasetGenerator:
                         break
                     src_text = self._value_for_pred(value_to_pred, src_pred)
                     target_text = self._value_for_pred(value_to_pred, target_pred)
-                    formula = f"{src_pred}{wrong_entity} -> {target_pred}{wrong_entity}"
+                    formula = (
+                        f"{render_predicate_atom(src_pred, wrong_entity)} -> "
+                        f"{render_predicate_atom(target_pred, wrong_entity)}"
+                    )
                     nl = self._grounded_implication_nl(
                         world.constants[wrong_entity], src_text, target_text
                     )
@@ -894,7 +897,10 @@ class LogicDatasetGenerator:
             for target_pred in candidates[:branch_targets]:
                 src_text = self._value_for_pred(value_to_pred, src_pred)
                 target_text = self._value_for_pred(value_to_pred, target_pred)
-                formula = f"{src_pred}{query_const} -> {target_pred}{query_const}"
+                formula = (
+                    f"{render_predicate_atom(src_pred, query_const)} -> "
+                    f"{render_predicate_atom(target_pred, query_const)}"
+                )
                 nl = self._grounded_implication_nl(
                     world.constants[query_const], src_text, target_text
                 )
@@ -912,7 +918,10 @@ class LogicDatasetGenerator:
             target_text = self._value_for_pred(value_to_pred, target_pred)
 
             if wrong_entity != query_const:
-                formula = f"{src_pred}{wrong_entity} -> {target_pred}{wrong_entity}"
+                formula = (
+                    f"{render_predicate_atom(src_pred, wrong_entity)} -> "
+                    f"{render_predicate_atom(target_pred, wrong_entity)}"
+                )
                 nl = self._grounded_implication_nl(
                     world.constants[wrong_entity], src_text, target_text
                 )
@@ -923,7 +932,11 @@ class LogicDatasetGenerator:
                 continue
             missing_pred = rng.choice(missing_candidates)
             missing_text = self._value_for_pred(value_to_pred, missing_pred)
-            formula = f"{src_pred}{query_const} & {missing_pred}{query_const} -> {target_pred}{query_const}"
+            formula = (
+                f"{render_predicate_atom(src_pred, query_const)} & "
+                f"{render_predicate_atom(missing_pred, query_const)} -> "
+                f"{render_predicate_atom(target_pred, query_const)}"
+            )
             nl = self._grounded_conjunction_nl(
                 world.constants[query_const], src_text, missing_text, target_text
             )
@@ -946,7 +959,10 @@ class LogicDatasetGenerator:
                     break
                 src_text = self._value_for_pred(value_to_pred, src_pred)
                 target_text = self._value_for_pred(value_to_pred, target_pred)
-                formula = f"{src_pred}{wrong_entity} -> {target_pred}{wrong_entity}"
+                formula = (
+                    f"{render_predicate_atom(src_pred, wrong_entity)} -> "
+                    f"{render_predicate_atom(target_pred, wrong_entity)}"
+                )
                 nl = self._grounded_implication_nl(
                     world.constants[wrong_entity], src_text, target_text
                 )
@@ -1685,7 +1701,10 @@ class LogicDatasetGenerator:
         for step, (kind, rule_inst) in enumerate(rule_instances, start=1):
             if kind == "implication":
                 src_pred = rule_inst.source_preds[0]
-                rule_formula = f"{src_pred}{query_const} -> {rule_inst.target_pred}{query_const}"
+                rule_formula = (
+                    f"{render_predicate_atom(src_pred, query_const)} -> "
+                    f"{render_predicate_atom(rule_inst.target_pred, query_const)}"
+                )
                 premises_fol.append(f"{premise_no}. {rule_formula}")
                 premises_nl.append(f"{premise_no}. {rule_inst.nl()}")
                 rule_premise_no = premise_no
@@ -1747,7 +1766,10 @@ class LogicDatasetGenerator:
                         prev_text = side_base_value
                         for next_pred in support_preds[1:]:
                             next_text = self._value_for_pred(symbols.value_to_pred, next_pred)
-                            rule_formula = f"{prev_pred}{query_const} -> {next_pred}{query_const}"
+                            rule_formula = (
+                                f"{render_predicate_atom(prev_pred, query_const)} -> "
+                                f"{render_predicate_atom(next_pred, query_const)}"
+                            )
                             premises_fol.append(f"{premise_no}. {rule_formula}")
                             premises_nl.append(f"{premise_no}. All things that are {prev_text} are {next_text}.")
                             side_rule_premise_no = premise_no
@@ -1778,7 +1800,9 @@ class LogicDatasetGenerator:
 
                 src_left, src_right = rule_inst.source_preds
                 rule_formula = (
-                    f"{src_left}{query_const} & {src_right}{query_const} -> {rule_inst.target_pred}{query_const}"
+                    f"{render_predicate_atom(src_left, query_const)} & "
+                    f"{render_predicate_atom(src_right, query_const)} -> "
+                    f"{render_predicate_atom(rule_inst.target_pred, query_const)}"
                 )
                 premises_fol.append(f"{premise_no}. {rule_formula}")
                 premises_nl.append(f"{premise_no}. {rule_inst.nl()}")
@@ -1867,7 +1891,10 @@ class LogicDatasetGenerator:
                     source_texts=(v1,),
                     target_text=v2,
                 )
-                formula = f"{inst.source_preds[0]}{query_const} -> {inst.target_pred}{query_const}"
+                formula = (
+                    f"{render_predicate_atom(inst.source_preds[0], query_const)} -> "
+                    f"{render_predicate_atom(inst.target_pred, query_const)}"
+                )
                 if formula in existing_premise_formulas:
                     continue
                 premises_fol.append(f"{premise_no}. {formula}")
@@ -1891,8 +1918,9 @@ class LogicDatasetGenerator:
                     target_text=v3,
                 )
                 formula = (
-                    f"{inst.source_preds[0]}{query_const} & {inst.source_preds[1]}{query_const} -> "
-                    f"{inst.target_pred}{query_const}"
+                    f"{render_predicate_atom(inst.source_preds[0], query_const)} & "
+                    f"{render_predicate_atom(inst.source_preds[1], query_const)} -> "
+                    f"{render_predicate_atom(inst.target_pred, query_const)}"
                 )
                 if formula in existing_premise_formulas:
                     continue
@@ -2173,6 +2201,7 @@ class MaterializedDatasetBuilder:
         entity_decoy_ratio: float | None = None,
         answer_decoy_ratio: float | None = None,
         chunk_size: int = 10_000,
+        require_unique_sequences: bool = False,
     ) -> None:
         import pyarrow as pa
         import pyarrow.parquet as pq
@@ -2214,6 +2243,7 @@ class MaterializedDatasetBuilder:
                 answer_decoy_ratio=answer_decoy_ratio,
                 shortcut_rate=float(spec.shortcut_rate),
                 shortcut_kind=str(shortcut_kind),
+                require_unique_sequences=bool(require_unique_sequences),
             ):
                 chunk.append(row)
                 if len(chunk) >= int(chunk_size):
@@ -2317,6 +2347,7 @@ class MaterializedDatasetBuilder:
         answer_decoy_ratio: float | None = None,
         shortcut_rate: float = 0.0,
         shortcut_kind: str = "schema",
+        require_unique_sequences: bool = False,
     ) -> Iterator[dict[str, Any]]:
         depths = list(range(spec.min_depth, spec.max_depth + 1))
         gens = {
@@ -2339,11 +2370,57 @@ class MaterializedDatasetBuilder:
             for depth in depths
         }
         counters = {depth: 0 for depth in depths}
-        for i in range(spec.rows):
-            depth = depths[i % len(depths)]
+        seen_sequences: set[bytes] = set()
+        accepted = 0
+        attempts = 0
+        max_attempts = max(1_000, int(spec.rows) * 100)
+        while accepted < spec.rows:
+            attempts += 1
+            if attempts > max_attempts:
+                raise RuntimeError(
+                    f"Could not generate {spec.rows} unique rows for {spec.subset} "
+                    f"after {max_attempts} attempts."
+                )
+            depth = depths[accepted % len(depths)]
             index = counters[depth]
             counters[depth] += 1
-            yield self._core_record(gens[depth], index)
+            row = self._core_record(gens[depth], index)
+            if require_unique_sequences:
+                digests = self._training_sequence_digests(row)
+                if any(digest in seen_sequences for digest in digests):
+                    continue
+                seen_sequences.update(digests)
+            accepted += 1
+            yield row
+
+    @staticmethod
+    def _training_sequence_digests(row: dict[str, Any]) -> tuple[bytes, ...]:
+        field_groups = (
+            (
+                "formal",
+                (
+                    "constants",
+                    "predicates",
+                    "premises_fol",
+                    "proof_fol",
+                    "question_fol",
+                    "answer",
+                ),
+            ),
+            ("nl", ("premises_nl", "proof_nl", "question_nl", "answer")),
+        )
+        digests: list[bytes] = []
+        for label, fields in field_groups:
+            if not all(field in row for field in fields):
+                continue
+            payload = {field: row[field] for field in fields}
+            serialized = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+            digests.append(hashlib.sha256(f"{label}:{serialized}".encode("utf-8")).digest())
+        if digests:
+            return tuple(digests)
+        fallback = {key: value for key, value in row.items() if key != "record_index"}
+        serialized = json.dumps(fallback, sort_keys=True, separators=(",", ":"))
+        return (hashlib.sha256(f"row:{serialized}".encode("utf-8")).digest(),)
 
 
 # ============================================================

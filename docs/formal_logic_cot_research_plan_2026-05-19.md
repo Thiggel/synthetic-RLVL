@@ -188,6 +188,18 @@ Pilot jobs `3659344` and strict rerun `3659348` completed on two Qwen-1.5B train
 
 Clarification 2026-05-27: the current LongBench HotpotQA/2Wiki/MuSiQue tasks are context-provided, so there is no external retrieval component, but they are still long-context answer-only prompts over full passages and do not ask either model to produce a logic or NL reasoning chain. Sample generations are often degenerate or answer-only. These numbers should not be framed as evidence of explicit downstream multi-hop reasoning. The next OOD eval should add gold-supporting-facts/facts-only variants and format-matched CoT prompts, then run short pilots with sample inspection before broad submission.
 
+Correction 2026-07-13: the Qwen2.5 Nanotron transfer pilot now evaluates both
+the stock LongBench short-answer protocol and a strict tagged protocol. The
+first smoke is rejected because its 8192-token model window left-truncated all
+six tested prompts and its converted HF config was read with an incorrect RoPE
+base by the Transformers-4 downstream stack. Across the complete 200-example
+HotpotQA/2Wiki/MuSiQue splits, Qwen-tokenized prompt maxima are
+`17684/17079/17927`; corrected evaluation therefore fixes the model window at
+32768 and audits that value. Converted configs must expose Qwen2.5's
+`rope_theta=1000000` to both Transformers 5 and 4.57. No full transfer result
+is accepted until corrected control smokes produce coherent raw generations;
+then control, logic-p15, and NL-p15 are run in direct and native-chat modes.
+
 Format-matched OOD pilot update 2026-05-27 13:15 CEST: added `synthrlvl_ood_cot_bare` and `synthrlvl_ood_cot_prompted` suites. The bare suite removes answer-only instructions and leaves all task content inside `<question>...</question>`, relying on the model's learned output manifold; the prompted suite adds a minimal request to reason in the learned format before `<answer>`. LongBench context cleaning strips the embedded "only give me the answer" prefix. Short pilot `3667055_[0-3%2]` compares bare vs prompted on the matched OLMo-7B `logic_train1to25_seed3407` and `nl_exact_train1to25_seed3407` checkpoints with `LM_EVAL_LIMIT=8` before any broad rerun.
 
 Pilot readout 2026-05-27 13:36 CEST: all four rows completed exit `0:0`. Prompted format improves LongBench answer-tag adherence for NL and improves several tiny-sample LongBench EM cells, but LongBench samples still often look like direct entity extraction or long unclosed NL traces rather than explicit chain reasoning. Treat this as evidence that prompt format matters, not yet as a valid downstream multi-hop reasoning result; the next useful OOD step is a gold-supporting-facts/facts-only controlled suite.

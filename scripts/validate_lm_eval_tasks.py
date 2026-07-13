@@ -12,6 +12,12 @@ from lm_eval.tasks import TaskManager
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--tasks", required=True, help="Comma- or space-separated task/group names.")
+    parser.add_argument(
+        "--include-path",
+        action="append",
+        default=[],
+        help="Additional lm-eval task directory. Can be repeated.",
+    )
     return parser.parse_args()
 
 
@@ -21,7 +27,7 @@ def main() -> None:
     if not tasks:
         raise SystemExit("No lm-eval tasks were provided.")
 
-    manager = TaskManager()
+    manager = TaskManager(include_path=args.include_path or None)
     for task in tasks:
         if not manager.match_tasks([task]):
             raise SystemExit(f"lm-eval task/group is unavailable: {task}")
