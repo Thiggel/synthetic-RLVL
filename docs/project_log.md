@@ -11,8 +11,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   and generated next-document preamble incidence is `22.9%/3.7%`; the marker
   appears in none of the prompts. Added condition-blind generation diagnostics
   to the six-run aggregate and documented the provisional result in
-  `docs/nanotron_nl_direct_generation_audit_2026-07-13.md`. Focused tests pass
-  (`19 passed`).
+  `docs/nanotron_nl_direct_generation_audit_2026-07-13.md`. The qualitative
+  index now preserves raw response heads/tails and prompt tails instead of
+  filtered answers alone. Focused tests pass (`20 passed`).
 - 12:20 CEST reconciled Hugging Face storage through authenticated
   per-repository `usedStorage` after the control instruction adapter upload.
   The live account uses `63.610G`: `35.257G` across 14 model repos and

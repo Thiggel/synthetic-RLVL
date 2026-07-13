@@ -99,6 +99,15 @@ def test_qualitative_metric_uses_declared_filter() -> None:
     )
 
 
+def test_qualitative_helpers_preserve_raw_and_filtered_responses() -> None:
+    row = {
+        "resps": [["full generated reasoning\nanswer"]],
+        "filtered_resps": ["answer"],
+    }
+    assert MODULE._first_response(row) == "full generated reasoning\nanswer"
+    assert MODULE._first_filtered_response(row) == "answer"
+
+
 def test_generation_diagnostics_capture_invalid_and_next_document_marker(
     tmp_path: Path,
 ) -> None:

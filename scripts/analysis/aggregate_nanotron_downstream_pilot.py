@@ -433,7 +433,15 @@ def qualitative_rows(bundles: list[Bundle]) -> list[dict[str, Any]]:
                     if len(candidates) == 2:
                         break
             for label, (line_number, row) in sorted(candidates.items()):
-                response = json.dumps(row.get("filtered_resps"), ensure_ascii=True)
+                generated_response = _first_response(row)
+                raw_response = (
+                    generated_response
+                    if generated_response
+                    else json.dumps(row.get("resps"), ensure_ascii=True)
+                )
+                filtered_response = json.dumps(
+                    row.get("filtered_resps"), ensure_ascii=True
+                )
                 target = str(row.get("target", ""))
                 prompt = _prompt(row)
                 selected.append(
@@ -448,8 +456,14 @@ def qualitative_rows(bundles: list[Bundle]) -> list[dict[str, Any]]:
                         "metric": f"{metric_name},{filter_name}",
                         "score": _qualitative_score(row, metric_name),
                         "prompt_head": prompt[:1000],
+                        "prompt_tail": prompt[-2000:],
                         "target_head": target[:500],
-                        "response_head": response[:800],
+                        "response_kind": (
+                            "generation" if generated_response else "choice_scores"
+                        ),
+                        "filtered_response": filtered_response[:1000],
+                        "response_head": raw_response[:2000],
+                        "response_tail": raw_response[-2000:],
                     }
                 )
     return selected

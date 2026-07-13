@@ -412,8 +412,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   Correct samples contain coherent task reasoning; incorrect samples expose
   omitted constraints, false implication reversals, or repetition to the cap,
   not an extraction bug. The matched aggregate now emits these condition-blind
-  diagnostics for all six direct/instruction bundles. Focused tests pass
-  (`19 passed`). Interpretation remains provisional until control, logic, and
+  diagnostics for all six direct/instruction bundles. Its qualitative index
+  now preserves raw continuations and prompt tails rather than only filtered
+  answers. Focused tests pass (`20 passed`). Interpretation remains provisional until control, logic, and
   post-instruction results complete. See
   `docs/nanotron_nl_direct_generation_audit_2026-07-13.md`.
 - At 10:41 CEST NL direct eval `3834904_8` was running on A100-80GB. It
