@@ -18,7 +18,13 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from audit_nanotron_downstream_eval import FINAL_TASKS, PRIMARY_METRICS, audit_run
+from audit_nanotron_downstream_eval import (
+    FINAL_TASKS,
+    MATH_POSTHOC_METRIC,
+    MATH_POSTHOC_SIDECAR,
+    PRIMARY_METRICS,
+    audit_run,
+)
 
 
 CONDITIONS = ("control", "logic", "nl_exact")
@@ -76,6 +82,7 @@ class Bundle:
     branch: str
     run_dir: Path
     payload: dict[str, Any]
+    math_posthoc: dict[str, Any]
 
 
 def parse_args() -> argparse.Namespace:
@@ -121,6 +128,16 @@ def _result_payload(run_dir: Path) -> dict[str, Any]:
     return json.loads(result_files[0].read_text(encoding="utf-8"))
 
 
+def _math_posthoc_payload(run_dir: Path) -> dict[str, Any]:
+    path = run_dir / MATH_POSTHOC_SIDECAR
+    if not path.is_file():
+        raise ValueError(f"{run_dir}: missing MATH-500 post-hoc sidecar {path.name}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not payload.get("accepted") or payload.get("scorer") != MATH_POSTHOC_METRIC:
+        raise ValueError(f"{run_dir}: invalid MATH-500 post-hoc sidecar")
+    return payload
+
+
 def load_bundles(root: Path, *, checkpoint_step: int, validate: bool = True) -> list[Bundle]:
     bundles: list[Bundle] = []
     for condition in CONDITIONS:
@@ -143,6 +160,7 @@ def load_bundles(root: Path, *, checkpoint_step: int, validate: bool = True) -> 
                     branch=branch,
                     run_dir=run_dir,
                     payload=_result_payload(run_dir),
+                    math_posthoc=_math_posthoc_payload(run_dir),
                 )
             )
     return bundles
@@ -154,14 +172,46 @@ def task_rows(bundles: list[Bundle]) -> list[dict[str, Any]]:
     raw: list[dict[str, Any]] = []
     for bundle in bundles:
         for task, metric in metric_map.items():
+            if task == "hendrycks_math500":
+                value = bundle.math_posthoc.get("accuracy")
+                stderr = bundle.math_posthoc.get("stderr")
+                if (
+                    isinstance(value, bool)
+                    or not isinstance(value, (int, float))
+                    or not math.isfinite(float(value))
+                    or not 0.0 <= float(value) <= 1.0
+                ):
+                    raise ValueError(f"invalid post-hoc MATH-500 accuracy: {value!r}")
+                if (
+                    stderr is not None
+                    and (
+                        isinstance(stderr, bool)
+                        or not isinstance(stderr, (int, float))
+                        or not math.isfinite(float(stderr))
+                        or float(stderr) < 0.0
+                    )
+                ):
+                    raise ValueError(f"invalid post-hoc MATH-500 stderr: {stderr!r}")
+                stock_value = _finite_metric(bundle.payload, task, metric)
+                stock_stderr = _stderr(bundle.payload, task, metric)
+                output_metric = MATH_POSTHOC_METRIC
+            else:
+                value = _finite_metric(bundle.payload, task, metric)
+                stderr = _stderr(bundle.payload, task, metric)
+                stock_value = None
+                stock_stderr = None
+                output_metric = metric
             raw.append(
                 {
                     "condition": bundle.condition,
                     "branch": bundle.branch,
                     "task": task,
-                    "metric": metric,
-                    "value": _finite_metric(bundle.payload, task, metric),
-                    "stderr": _stderr(bundle.payload, task, metric),
+                    "metric": output_metric,
+                    "value": float(value),
+                    "stderr": None if stderr is None else float(stderr),
+                    "stock_metric": metric if task == "hendrycks_math500" else None,
+                    "stock_value": stock_value,
+                    "stock_stderr": stock_stderr,
                 }
             )
     control = {
@@ -320,7 +370,9 @@ def _write_markdown(
         "# Corrected Nanotron p15 downstream comparison",
         "",
         "Each condition is one continuation-training run. Task-level stderr values come from "
-        "lm-eval; macro rows are unweighted task means and do not estimate training-seed variance.",
+        "lm-eval, except MATH-500, which uses answer-prefix symbolic equivalence. The stock "
+        "MATH exact score remains in the CSV as a format-sensitive diagnostic. Macro rows are "
+        "unweighted task means and do not estimate training-seed variance.",
         "",
         "| condition | branch | macro | score | delta vs control | instruction - direct |",
         "| --- | --- | --- | ---: | ---: | ---: |",
@@ -380,6 +432,8 @@ def main() -> None:
         "conditions": list(CONDITIONS),
         "branches": list(BRANCHES),
         "primary_tasks": list(FINAL_TASKS),
+        "math500_primary_metric": MATH_POSTHOC_METRIC,
+        "math500_stock_metric": PRIMARY_METRICS["hendrycks_math500"],
         "targeted_tasks": list(TARGETED_METRICS),
         "macros": {name: list(tasks) for name, tasks in MACROS.items()},
         "bundle_count": len(bundles),

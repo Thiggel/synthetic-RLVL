@@ -55,6 +55,24 @@
     "superseded_autoformalization_iterations_gb": 0.0,
     "timestamp": "2026-07-13T11:57:00+02:00"
   },
+  "post_cleanup_reconciliation": {
+    "active_control_and_nl_checkpoint_gb": 30.485388,
+    "current_dataset_gb": 28.352310,
+    "current_model_gb": 35.257203,
+    "current_total_gb": 63.609513,
+    "decision": "Do not delete the latest cross-project adapters or reconstructing SFT LoRAs. The pending logic checkpoint and one additional full checkpoint fit, but two additional full checkpoints do not. Use guarded upload/evaluate/audit/delete rotation for the broader grid.",
+    "headroom_after_logic_and_one_more_full_checkpoint_gb": 5.905099,
+    "model_repositories": 14,
+    "nominal_quota_gb": 100.0,
+    "pending_logic_checkpoint_gb": 15.242694,
+    "projected_headroom_after_logic_gb": 21.147793,
+    "projected_total_after_logic_and_one_more_full_checkpoint_gb": 94.094901,
+    "projected_total_after_logic_and_two_more_full_checkpoints_gb": 109.337595,
+    "projected_total_after_logic_gb": 78.852207,
+    "repositories": 63,
+    "timestamp": "2026-07-13T12:20:00+02:00",
+    "used_storage_source": "authenticated per-repository Hugging Face API usedStorage"
+  },
   "superseded_adapter_archive_cleanup": {
     "archive_content_gb": 4.976,
     "archive_index": "/home/vault/c107fa/c107fa12/hf_model_archives/2026-07-13_autoformalization_superseded/archive_index.json",

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 11:58 CEST.
+Last updated: 2026-07-13 12:20 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -352,6 +352,18 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `21.270G` under the nominal 100 GB limit. This is enough for the matched p15
   chain, but the broader mixture grid still requires guarded
   upload/evaluate/audit/delete rotation.
+- At 12:20 CEST an authenticated per-repository `usedStorage` reconciliation,
+  after the control instruction adapter upload, measured `63.610G` across 63
+  repositories: `35.257G` in 14 model repos and `28.352G` in 49 dataset repos.
+  The pending logic checkpoint projects to `78.852G`; one further `15.243G`
+  full checkpoint would project to `94.095G`, while two would project to
+  `109.338G`. The seven retained latest autoformalization adapters plus their
+  strict MMLU variant total only `4.119G`, so deleting those irreplaceable
+  latest artifacts would not remove the need for rotation. No further model
+  was deleted. Preserve the active control/NL checkpoints, instruction
+  adapter, reconstructing SFT LoRAs, and latest cross-project adapters; rotate
+  broader-grid checkpoints only after upload parity, evaluation, and artifact
+  audits pass.
 - At 11:40 CEST the recurring `fix_mistral_regex=True` warning in corrected
   BranchProof eval logs was resolved as a false remediation suggestion for
   this protocol. The base training tokenizer and current merged-eval default
@@ -371,6 +383,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   or complete downstream result bundle exists yet, and focused fatal-log
   scans are clean. CPU-only watcher `3847808` remains scheduled for 12:46
   CEST and its stored payload schedules the next six-hour pass before Codex.
+- At 12:14 CEST the MATH-500 evaluator gap is closed without a GPU rerun.
+  `scripts/analysis/rescore_math500.py` now scores only the first nonempty line
+  after the task's `Answer:` prompt using complete-expression symbolic
+  equivalence. It rejects later prompt leakage, wrong equations/tuples, extra
+  comma-separated answers, and incomplete repetitions; the stock exact score
+  remains diagnostic. Focused scorer/audit/aggregate/Slurm tests pass
+  (`18 passed`), and the preferred venv is dependency-clean. NL direct
+  `3834904_8` now has accepted post-hoc MATH score `80/500 = 0.160` versus
+  stock exact `14/500 = 0.028`, with all stock positives preserved. Its full
+  production audit remains accepted at 50,693 unique scored documents. The
+  live audit creates this deterministic sidecar for every pending matched run,
+  so no job cancellation or GPU re-evaluation is needed. Details are in
+  `docs/nanotron_math500_scoring_audit_2026-07-13.md`.
+- At 12:14 CEST control instruction SFT `3847661_0` completed and released
+  post-instruction eval `3835928`, which is account-GRES pending. Replacement
+  control direct eval `3847792_0` started on A100-80GB. NL instruction SFT
+  `3847662_8` reached about `4176/10000`; logic midtraining reached
+  `5431/8192` at `30.8K` tokens/s with finite loss `1.73`. Corrected
+  BranchProof eval rows `0..5` reached sampled chunks
+  `39/30/33/55/53/55` of 112 with no production bundle or fatal signature.
 - At 10:41 CEST NL direct eval `3834904_8` was running on A100-80GB. It
   selected all ten reviewer tasks, loaded the repaired remote metadata,
   resolved `Qwen2ForCausalLM`, and initialized vLLM without the previous

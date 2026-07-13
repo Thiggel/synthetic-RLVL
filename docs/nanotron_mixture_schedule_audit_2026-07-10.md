@@ -302,6 +302,26 @@ remote. Retained LFS is now `63.487G`; the pending logic checkpoint projects
 to `78.730G`. The matched p15 chain is safe, but future full checkpoints still
 require guarded upload/evaluate/audit/delete rotation.
 
+HF storage reconciliation update 2026-07-13 12:20 CEST: authenticated
+per-repository `usedStorage`, after the control instruction adapter upload,
+totals `63.610G` (`35.257G` models and `28.352G` datasets). The pending logic
+checkpoint projects to `78.852G`; one further full checkpoint fits at
+`94.095G`, but two would reach `109.338G`. The retained latest
+autoformalization artifacts total only `4.119G` and have no replacement, so
+they were preserved. The broader grid must use guarded checkpoint rotation.
+
+Downstream scoring update 2026-07-13 12:14 CEST: stock
+`hendrycks_math500/exact_match,none` rejected correct answer prefixes whenever
+the continuation included explanation. Whole-response symbolic matching also
+proved unsafe because later prompt repetition and wrong structured answers can
+contain a gold scalar. The production audit now generates a deterministic
+`answer_prefix_math_verify,none` sidecar, preserves stock exact as a diagnostic,
+and requires complete row/hash coverage with no lost stock positives. Focused
+tests pass (`18 passed`). NL direct scores `0.160` post-hoc versus `0.028`
+stock exact. Pending stored Slurm jobs call the live audit code, so they inherit
+the scorer without cancellation or GPU reruns. See
+`docs/nanotron_math500_scoring_audit_2026-07-13.md`.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the

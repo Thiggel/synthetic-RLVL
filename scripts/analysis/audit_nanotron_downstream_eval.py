@@ -6,8 +6,18 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import sys
 from pathlib import Path
 from typing import Any
+
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from rescore_math500 import METRIC_NAME as MATH_POSTHOC_METRIC
+from rescore_math500 import SIDECAR_NAME as MATH_POSTHOC_SIDECAR
+from rescore_math500 import ensure_sidecar
 
 
 FINAL_TASKS = (
@@ -174,6 +184,35 @@ def audit_run(
                 f"unique sample documents for {task}: {len(document_ids)}, expected {effective}"
             )
 
+    math_posthoc: dict[str, Any] | None = None
+    math_counts = n_samples.get("hendrycks_math500")
+    math_expected = math_counts.get("effective") if isinstance(math_counts, dict) else None
+    if isinstance(math_expected, int) and math_expected > 0:
+        try:
+            math_posthoc = ensure_sidecar(run_dir, expected_count=math_expected)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            errors.append(f"could not build MATH-500 post-hoc sidecar: {exc}")
+        else:
+            if not math_posthoc.get("accepted"):
+                errors.append(
+                    f"MATH-500 post-hoc scorer rejected bundle: {math_posthoc.get('errors')}"
+                )
+            if math_posthoc.get("row_count") != math_expected:
+                errors.append(
+                    "MATH-500 post-hoc row count "
+                    f"{math_posthoc.get('row_count')} != expected {math_expected}"
+                )
+            value = math_posthoc.get("accuracy")
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(float(value))
+                or not 0.0 <= float(value) <= 1.0
+            ):
+                errors.append(f"invalid MATH-500 post-hoc accuracy: {value!r}")
+    else:
+        errors.append("missing effective sample count for MATH-500 post-hoc scoring")
+
     for task, metric in PRIMARY_METRICS.items():
         if _metric_value(payload, task, metric) is None:
             errors.append(f"missing or invalid primary metric: {task}/{metric}")
@@ -199,6 +238,28 @@ def audit_run(
         "sample_file_count": len(sample_files),
         "sample_row_count": sample_rows,
         "chat_template_applied": bool(chat_template),
+        "math500_posthoc": (
+            {
+                key: math_posthoc.get(key)
+                for key in (
+                    "accepted",
+                    "scorer",
+                    "row_count",
+                    "correct_count",
+                    "accuracy",
+                    "stderr",
+                    "stock_exact_correct_count",
+                    "stock_exact_accuracy",
+                    "rescued_count",
+                    "lost_stock_exact_count",
+                    "sample_sha256",
+                )
+            }
+            if math_posthoc is not None
+            else None
+        ),
+        "math500_posthoc_metric": MATH_POSTHOC_METRIC,
+        "math500_posthoc_sidecar": str(run_dir / MATH_POSTHOC_SIDECAR),
         "errors": errors,
     }
     return report

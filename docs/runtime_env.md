@@ -23,3 +23,7 @@ Slurm integration:
 Venv note:
 - `\$HPCVAULT/.venv_rlvl_posttrain` can run both GRPO and SFT in this repo.
 - If you want one environment, point both job submissions to that venv path.
+- The Nanotron downstream MATH-500 audit additionally uses
+  `math-verify==0.9.0` and `latex2sympy2-extended==1.11.0`. Keep
+  `antlr4-python3-runtime==4.9.3`: Hydra/OmegaConf pin that runtime, and the
+  project-owned answer-prefix scorer works without upgrading it to 4.11.

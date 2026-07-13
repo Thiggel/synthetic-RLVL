@@ -4,6 +4,29 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 12:20 CEST reconciled Hugging Face storage through authenticated
+  per-repository `usedStorage` after the control instruction adapter upload.
+  The live account uses `63.610G`: `35.257G` across 14 model repos and
+  `28.352G` across 49 dataset repos. Pending logic projects to `78.852G`; one
+  more full checkpoint fits at `94.095G`, whereas two reach `109.338G`.
+  Preserved the latest cross-project adapters because all together they free
+  only `4.119G` and deleting them would not avoid guarded checkpoint rotation.
+  No further model was deleted.
+- 12:14 CEST replaced format-confounded MATH-500 aggregation with a tested
+  answer-prefix symbolic sidecar while retaining stock exact as diagnostic.
+  Whole-response symbolic matching was rejected because it credits later
+  prompt leakage and shared scalars from wrong equations/tuples. Focused tests
+  pass (`18 passed`), the venv dependency check is clean, and the completed NL
+  direct bundle is accepted at post-hoc `80/500 = 0.160` versus stock
+  `14/500 = 0.028`, with no stock positives lost. The live audit generates the
+  sidecar for old stored Slurm payloads, so no GPU rerun/resubmission is needed.
+  Detailed audit: `docs/nanotron_math500_scoring_audit_2026-07-13.md`.
+- 12:14 CEST live refresh: control instruction SFT `3847661_0` completed and
+  released `3835928`; replacement control direct eval `3847792_0` started on
+  A100-80GB. NL instruction SFT reached about `4176/10000`, logic midtraining
+  reached `5431/8192`, and corrected BranchProof rows `0..5` reached sampled
+  chunks `39/30/33/55/53/55` of 112. No fatal signature or completed
+  BranchProof production bundle appeared.
 - 11:58 CEST live-path refresh: corrected BranchProof eval rows `0..5`
   reached sampled chunks `34/27/30/51/49/51` of 112. Logic midtraining reached
   `5381/8192` at `30.8K` tokens/s with finite loss `1.71`; control/NL native

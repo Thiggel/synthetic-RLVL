@@ -49,6 +49,16 @@ def _write_bundle(tmp_path: Path, *, mode: str = "direct", limit=None) -> Path:
     prefix = "<|im_start|>user\nquestion<|im_end|>\n<|im_start|>assistant\n" if expects_chat else "question"
     for task in leaf_tasks:
         row = {"doc_id": 0, "arguments": {"gen_args_0": {"arg_0": prefix}}}
+        if task == "hendrycks_math500":
+            row.update(
+                {
+                    "doc": {"answer": "4"},
+                    "target": "4",
+                    "filtered_resps": [" 4\nSolution: four."],
+                    "filter": "none",
+                    "exact_match": 0,
+                }
+            )
         (model_dir / f"samples_{task}_2026.jsonl").write_text(json.dumps(row) + "\n")
     return run_dir
 
@@ -62,6 +72,7 @@ def test_accepts_complete_direct_bundle(tmp_path: Path):
     )
     assert report["accepted"]
     assert report["sample_file_count"] == 10
+    assert report["math500_posthoc"]["accuracy"] == 1.0
 
 
 def test_accepts_complete_instruction_bundle(tmp_path: Path):

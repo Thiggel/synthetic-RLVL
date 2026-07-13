@@ -24,10 +24,25 @@ def _payload(value: float) -> dict:
     return {"results": results, "groups": groups}
 
 
+def _math_posthoc(value: float) -> dict:
+    return {
+        "accepted": True,
+        "scorer": MODULE.MATH_POSTHOC_METRIC,
+        "accuracy": value,
+        "stderr": 0.02,
+    }
+
+
 def test_task_and_macro_deltas() -> None:
     values = {"control": 0.4, "logic": 0.6, "nl_exact": 0.5}
     bundles = [
-        MODULE.Bundle(condition, branch, Path(f"/{condition}/{branch}"), _payload(value))
+        MODULE.Bundle(
+            condition,
+            branch,
+            Path(f"/{condition}/{branch}"),
+            _payload(value),
+            _math_posthoc(value),
+        )
         for condition, value in values.items()
         for branch in MODULE.BRANCHES
     ]
@@ -60,7 +75,13 @@ def test_task_and_macro_deltas() -> None:
 def test_rejects_missing_primary_metric() -> None:
     payload = _payload(0.5)
     del payload["results"]["gsm8k"][MODULE.PRIMARY_METRICS["gsm8k"]]
-    bundle = MODULE.Bundle("control", "direct", Path("/control/direct"), payload)
+    bundle = MODULE.Bundle(
+        "control",
+        "direct",
+        Path("/control/direct"),
+        payload,
+        _math_posthoc(0.5),
+    )
     try:
         MODULE.task_rows([bundle])
     except ValueError as exc:
