@@ -10,8 +10,10 @@ conclusion. It did not require every premise to parse. Consequently, a trace
 could receive `citation_free_valid=1` while the retained diagnostics for the
 same trace reported a citation-free validity error.
 
-This is a validity/joint-metric bug. Answer extraction and answer correctness
-are unaffected.
+This defect is a validity/joint-metric bug. Its fix did not alter answer
+extraction. A later, independent answer-matching audit on 2026-07-14 found a
+separate correctness defect, documented below; that later finding supersedes
+the original acceptance of answer correctness from this chain.
 
 ## Evidence
 
@@ -76,6 +78,35 @@ old array. No corrected BranchProof validity or joint result is accepted until
 all replacement rows pass the strengthened gate. Correctness is still the
 primary claim metric, but the rerun is necessary to keep the secondary
 correct-and-valid evidence defensible.
+
+## 2026-07-14 Answer-Match Correction
+
+An independent retained-generation scan found that the common
+`_is_answer_match` implementation accepted the gold token anywhere in the
+normalized `<answer>` body. Five complete `3838163` bundles contained one
+false-positive retained greedy row among 640 and one false-positive retained
+sampled row among 4,480. One malformed answer listed 20 labels including the
+gold; the other listed several labels including the gold while still passing
+the format check. These are scorer errors, not model successes.
+
+Only two of 16 sampled generations per prompt were retained, so the full
+pass@k cells cannot be exactly rescored. Eval `3838163`, audits `3847756`, and
+aggregate `3847757` were canceled. Five complete metric/sample pairs plus
+partial diagnostic outputs are outside the production input path under
+`$HPCVAULT/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/quarantine/pre_answer_match_fix_20260714/`.
+Previously accepted tracked audits are preserved under
+`analysis/branchproof_unique_v2_full_grid_audits_pre_answer_match_fix_20260714/`
+and must not be treated as evidence.
+
+The matcher now accepts either an exact normalized answer or a single-line
+natural assertion such as `Yara is sparse`; it rejects alternative lists and
+multi-line bodies. The row audit independently recomputes that strict
+answer-shape match from each retained generation and gold answer. Targeted and
+full verification pass (`213 passed, 3 skipped`), and `git diff --check`
+passes. The clean replacement chain is A100-80 eval
+`3853284_[0-29%6]`, CPU row audit `3853285_[0-29%8]`, and CPU strict
+aggregate/qualitative gate `3853286`. It preserves the full scientific
+protocol and repeats only evaluation, not the already accepted 30 SFT rows.
 
 Operationally, the replacement array was submitted after 22 SFT tasks had
 already completed, and Slurm left their wildcard `aftercorr` dependencies

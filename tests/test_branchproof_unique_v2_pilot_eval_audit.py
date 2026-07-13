@@ -126,6 +126,48 @@ def test_rejects_missing_sample_validity_metric(tmp_path: Path):
     assert any("invalid nl_logic_citation_free_valid" in error for error in report["errors"])
 
 
+def test_rejects_credited_multi_line_answer(tmp_path: Path):
+    metrics_path, samples_path = _write_artifacts(tmp_path)
+    rows = [json.loads(line) for line in samples_path.read_text().splitlines()]
+    rows[-1]["generation"] = "<formal>proof</formal><answer>no\nyes</answer>"
+    samples_path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+
+    report = AUDIT.audit_artifacts(
+        metrics_path,
+        samples_path,
+        steps=[1, 18],
+        k_values=[1, 2],
+        samples_per_step=2,
+        generations_per_prompt=2,
+        expected_retained_samples=2,
+        train_max=18,
+    )
+
+    assert not report["accepted"]
+    assert any("correct=1 with 2 answer lines" in error for error in report["errors"])
+
+
+def test_rejects_credited_single_line_answer_list(tmp_path: Path):
+    metrics_path, samples_path = _write_artifacts(tmp_path)
+    rows = [json.loads(line) for line in samples_path.read_text().splitlines()]
+    rows[-1]["generation"] = "<formal>proof</formal><answer>no yes</answer>"
+    samples_path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+
+    report = AUDIT.audit_artifacts(
+        metrics_path,
+        samples_path,
+        steps=[1, 18],
+        k_values=[1, 2],
+        samples_per_step=2,
+        generations_per_prompt=2,
+        expected_retained_samples=2,
+        train_max=18,
+    )
+
+    assert not report["accepted"]
+    assert any("correct=1 with a nonmatching answer line" in error for error in report["errors"])
+
+
 def test_rejects_sample_validity_diagnostic_contradiction(tmp_path: Path):
     metrics_path, samples_path = _write_artifacts(tmp_path)
     rows = [json.loads(line) for line in samples_path.read_text().splitlines()]

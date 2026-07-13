@@ -296,7 +296,7 @@ instruction job starts.
 | Materialized paired dataset | `3829067` complete | Probe accepted, all subsets present, private HF push succeeds |
 | One-seed SFT pilot | `3829069_12` complete | Completed all 10,000 steps with final adapter and complete step-5000/10000 checkpoints; no truncation/data error |
 | Pilot post-hoc eval | corrected `3832945_12 -> 3831136` and sampled qualitative `3833178_12 -> 3833179` complete | Both audits accepted; manual review confirms intended prompt/extraction behavior and ordinary long-trace failures |
-| Three-seed main grid | released `3829072 -> 3834582 -> 3834706 -> 3835779` (`3834707` canceled) | SFT hold released after user runtime approval. Eval is A100-80-only with unchanged full protocol and two retained sampled generations per prompt; row audits, cross-grid qualitative coverage, and strict aggregation are dependency-gated. Inspect the first row's runtime/raw outputs, then report greedy/pass@1 before pass@k |
+| Three-seed main grid | SFT `3829072` complete; answer-fixed replacement `3853284 -> 3853285 -> 3853286`; older eval/audit/aggregate chains canceled and quarantined | A later audit found permissive answer-token containment, so even the validity-fixed `3838163` outputs are diagnostics only. Replacement eval is A100-80-only with unchanged full protocol and two retained sampled generations per prompt; CPU row audits, cross-grid qualitative coverage, and strict aggregation are dependency-gated. Inspect the first row's runtime/raw outputs, then report greedy/pass@1 before pass@k. |
 | Corrected 1.2B-token corpora | builds and packed audit `3830855` complete | Full paired-prefix scan, metadata counts, and exact source-token/decode round trips passed |
 | Midtraining mixtures | logic/NL smokes `3830924`/`3831110` complete; matched control/logic/NL p15 chains active or held | Compare direct and instruction-tuned downstream results, and launch the remaining percentages only after all three p15 conditions train, upload, and evaluate cleanly |
 
@@ -309,3 +309,16 @@ The official preprint now enforces this quarantine structurally. Its rendered
 results contain only AttrCon, the uniqueness audit, and the corrected protocol;
 all old BranchProof performance and derived ablation sections are behind a
 disabled provenance switch. The informal report remains the historical record.
+
+## 2026-07-14 Answer-Matcher Supersession
+
+The uniqueness and premise-validity corrections remain valid, but their first
+full evaluation chain is additionally quarantined. The common answer matcher
+credited a gold token embedded among alternatives; two such retained false
+positives were found in five complete bundles, and full pass@k cannot be
+post-hoc reconstructed from the retained subset. Chain
+`3838163 -> 3847756 -> 3847757` was canceled, its artifacts were moved under
+`quarantine/pre_answer_match_fix_20260714/`, and exact-or-single-assertion
+matching plus an independent audit guard now pass the full suite. Clean
+A100-80/CPU replacement chain `3853284 -> 3853285 -> 3853286` preserves every
+scientific setting. No prior corrected correctness number is report evidence.

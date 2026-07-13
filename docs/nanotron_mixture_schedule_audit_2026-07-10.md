@@ -345,6 +345,33 @@ direct and post-instruction bundle. This is not yet evidence for a modality
 effect; comparison remains gated on the other five accepted runs. See
 `docs/nanotron_nl_direct_generation_audit_2026-07-13.md`.
 
+Logic completion update 2026-07-14 01:16 CEST: no-replay recovery
+`3835442_3` completed step 8192 in `19:26:16`. Terminal logged loss remained
+finite (`1.80`) at about `30.8K` tokens/s. Independent checkpoint verification
+accepted 645 files: 625 model, four optimizer, four scheduler, and eight RNG
+files, with no zero-byte files and exact metadata offsets
+`8192/1048576/4294967296`. Dataset-token offsets are `3650719744` normal plus
+`644247552` formal proof, exactly `4294967296` total and `15.000057%` proof.
+The persisted audit is
+`analysis/nanotron_checkpoint_audits/qwen25_7b_midtrain_logic_p15_bp_unique_v2_4p3b_step8192_20260714.json`.
+Repaired-payload upload `3847802_3` released and is capacity-pending. It must
+pass conversion, dual-field/Transformers-4 RoPE resolution, CUDA finite-logit,
+remote-parity, and guarded-cleanup gates before downstream jobs release.
+
+Corrected direct multi-hop smoke update 2026-07-14 01:36 CEST:
+`3850353_0` completed `0:0` in `00:04:10`. The generated audit accepted the
+control checkpoint's resolved RoPE `1000000`, exact 32,768-token model window,
+all six HotpotQA/2Wiki/MuSiQue stock/tagged cells, six sample files, and 12
+rows. All raw generations were inspected. Tagged extraction was nonempty in
+`6/6` and stopped cleanly before a next-question continuation. Stock output
+continued into a generated question or assistant preamble in `4/6`; both
+Hotpot rows started with the gold answer but the suffix reduced their QA F1 to
+`0.273/0.300`. Tagged exact match was `1/6`; the sampled 2Wiki and MuSiQue rows
+were wrong under both protocols. This is a prompt/extraction smoke at two rows
+per dataset, not a transfer estimate. Dependency-held instruction smoke
+`3850354_0` must pass the same raw review before any full six-condition grid is
+submitted.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the

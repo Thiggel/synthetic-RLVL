@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 20:55 CEST.
+Last updated: 2026-07-14 01:36 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -26,6 +26,32 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ### 2026-07-13 live correction wave
 
+- A retained-generation audit found a second evaluator defect after the
+  premise-validity fix: `synthrlvl.metrics._is_answer_match` credited any
+  `<answer>` body containing the gold token. Two actual corrected samples were
+  false positives, including a malformed 20-label answer and a multi-label
+  answer that still passed format. The frequency in the five complete bundles
+  was low (`1/640` retained greedy and `1/4480` retained sampled rows), but the
+  unretained generations make exact pass@k rescoring impossible. Eval
+  `3838163`, row audits `3847756`, and aggregate `3847757` were therefore
+  canceled; their five complete eval/audit rows are diagnostic only and all
+  metrics/samples were moved outside the aggregate input root under
+  `quarantine/pre_answer_match_fix_20260714/`. Answer matching now accepts an
+  exact answer or a single-line natural assertion, never a multi-line or
+  alternative list. The row audit independently recomputes the same strict
+  answer-shape condition from each retained generation and gold answer. The
+  complete suite passes (`213 passed, 3 skipped`). Clean
+  replacements are A100-80 eval `3853284_[0-29%6]`, CPU row audits
+  `3853285_[0-29%8]`, and CPU aggregate/qualitative gate `3853286`. Eval rows
+  `0/1` started at 01:28 CEST on verified A100-SXM4-80GB nodes `a0633/a0832`;
+  they loaded the intended seed-3407/3408 adapters into isolated merge roots
+  and initialized vLLM at 16,384 context without a fatal signature. Both first
+  greedy chunks completed in `7.6/7.7s` with the intended 64 prompts,
+  `max_new_tokens=7168`, and `</answer>` stop; observed maxima were 367 tokens.
+  Rows `2..29` are capacity/throttle pending and both CPU gates remain
+  dependency-held. The unchanged protocol
+  remains 32 prompts/depth, 16 samples, all 14 depths, pass@1/2/4/8/16,
+  16,384 context, 7,168 cap, and two retained samples per prompt.
 - The corrected `BranchProof-unique-v2` baseline is no longer the only active
   rerun. A report-coverage audit found that every old long-depth syntax,
   shortcut, hybrid, conditioned-dual, architecture, batch-size, 32B, and tiny
@@ -53,27 +79,23 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   artifact check. Rows `3850113_3..5` backfilled on A40s, and corrected
   shortcut SFT rows `3850213_0..2` started on A40s at 18:56--18:59 CEST.
   Other active rows are progressing without fatal signatures.
-- Validity-fixed BranchProof eval rows `3838163_3/5` completed in
-  `10:14:41/10:33:40`, and their row audits `3847756_3/5` accepted both full
-  448-prompt, 16-generation metric bundles and all 1,024 retained rows without
-  an error. Rows `6/7` backfilled on A100-80GB nodes. At 20:55, active rows
-  `0/1/2/4` had completed about `110/76/92/106` sampled chunks of `112`.
-  Manual retained-trace inspection agrees with the intended task: complete,
-  correct proofs dominate through training depth, while wrong branches,
-  repetition, format loss, and generation-cap hits emerge OOD; fresh constants
-  remain intact and no ambiguity/parser regression is visible. The two
-  completed train-1-to-10 logic seeds are provisional, but both have
-  correct@16 `1.0` through depth 20; at depth 25 correct@16 is `0.938/0.875`
-  while citation-free joint@16 is `0.031/0.219`, and at depth 50 they are
-  `0.406/0.219` and `0.000/0.031`. Wait for seed 3408 and the matched NL rows
-  before drawing a modality conclusion.
-- Logic Nanotron recovery `3835442_3` reached `7271/8192` at `30.9K` tokens/s
-  with finite loss `1.76` and an ETA near 01:12 CEST on July 14. Its loaded
-  step-4096 checkpoint still contains model, optimizer, scheduler, and all
-  eight RNG shards; metadata restores the exact `4096/524288/2147483648`
-  step/sample/token offsets and the `85/15` mixture. CPU-only watcher
-  `3850497` completed cleanly; its scheduled successor `3850618` remains
-  pending for 00:47 CEST because the end-to-end plan is incomplete.
+- Logic Nanotron recovery `3835442_3` completed step 8192 in `19:26:16` with
+  finite terminal loss (`1.80`) and about `30.8K` tokens/s. Independent audit
+  accepted all 645 files: model `625`, optimizer `4`, scheduler `4`, RNG `8`,
+  no zero-byte files, and exact offsets `8192/1048576/4294967296`. Consumed
+  proof tokens are `644247552`, or `15.000057%`; normal tokens are
+  `3650719744`. Audit artifact:
+  `analysis/nanotron_checkpoint_audits/qwen25_7b_midtrain_logic_p15_bp_unique_v2_4p3b_step8192_20260714.json`.
+  Repaired-payload upload `3847802_3` is released and capacity-pending; its
+  fail-closed conversion/consumer-RoPE/remote-parity gate remains responsible
+  for guarded local cleanup. Vault usage is `901G/1000G` soft (`2000G` hard)
+  with `150k/200k` files, so do not create a second full local checkpoint tree.
+  CPU-only watcher `3850618` is active, and its
+  already scheduled CPU-only successor `3853210` remains pending for 06:47
+  CEST because the end-to-end plan is incomplete. The handoff is committed
+  locally; normal SSH and `ssh.github.com:443` timed out, while HTTPS was
+  reachable but had no noninteractive credentials, so this repo remains ahead
+  of `origin/main` for the successor to retry.
 - Sequence-length auditing found two additional old-result confounds. Hybrid
   targets average about 10k OLMo tokens and were truncated by the old 8192 SFT
   cap, so corrected hybrid SFT uses 16384. Tiny depth-10 targets exceed the old
@@ -103,12 +125,32 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   jobs `3850099/3850100` and aggregates `3850207/3850217` were canceled before
   start. No production multi-hop result will be submitted until corrected raw
   smoke generations are inspected.
+- Corrected direct multi-hop smoke `3850353_0` completed `0:0` in `00:04:10`.
+  Its audit accepted the exact 32,768 window, resolved RoPE base `1000000`, all
+  six intended tasks, six sample files, and all 12 rows. Manual review covered
+  every generation. The tagged protocol found and extracted an answer in
+  `6/6`; its `</answer>` stop is intentionally omitted from stored raw text,
+  and none continued into a new question. The stock protocol generated a next
+  question or assistant preamble in `4/6` rows; both HotpotQA rows began with
+  the correct answer but suffix leakage reduced F1 to `0.273/0.300`. Tagged
+  exact match was `1/6`; 2Wiki and MuSiQue examples were wrong under both
+  protocols. These two-example-per-dataset scores are only smoke diagnostics.
+  Instruction smoke `3850354_0` remains held on corrected adapters, so no full
+  six-condition multi-hop grid was submitted. Audit:
+  `$HPCVAULT/synthetic-RLVL/lm_eval_results/qwen25_branchproof_unique_v2_multihop_smoke_ropefix_20260713/qwen25_7b_midtrain_control_p0_4p3b_step8192_direct/multihop_audit.json`.
 - The four RoPE-invalid control/NL reviewer-suite bundles were preserved under
   `.rope10000_invalid_20260713` directory suffixes. Corrected direct reruns are
   `3850385/3850386`; corrected instruction reruns `3850387/3850388` depend on
   the new adapters. Stale aggregate `3849776` was canceled and replacement
   `3850389` depends on all four corrected control/NL jobs plus the corrected
   logic direct/instruction jobs `3847804/3847806`.
+- Corrected control/NL adapter jobs `3850351_0/3850352_8` and direct reviewer
+  evals `3850385_0/3850386_8` started on A100-80GB GPUs at 01:16--01:20 CEST.
+  Every consumer preflight resolved the intended Qwen2.5
+  `rope_theta=1000000`; both direct evaluators validated the production task
+  suite and no startup fatal signature is present. Instruction evals remain
+  correctly dependency-held on the new adapters. These are startup checks,
+  not accepted downstream results.
 - Full-suite verification exposed and fixed an independent legacy hard-task
   generator defect: rules containing extended predicate symbols were rendered
   by string concatenation (`P37b`) instead of as explicit atoms (`P37(b)`).

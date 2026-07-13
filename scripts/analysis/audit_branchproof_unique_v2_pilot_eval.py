@@ -13,12 +13,33 @@ from typing import Any, Iterable
 
 
 QUESTION_RE = re.compile(r"<question>\s*(.*?)\s*</question>", re.DOTALL)
+ANSWER_RE = re.compile(r"<answer>\s*(.*?)\s*</answer>", re.DOTALL | re.IGNORECASE)
 CONSTANT_RE = re.compile(r"\bc(\d+)\b")
 CHUNK_DONE_RE = re.compile(
     r"^\[syntheval\] (?P<mode>greedy|sampled) vLLM chunk "
     r"(?P<index>\d+)/(?P<total>\d+) done in (?P<seconds>[0-9.]+)s "
     r"\((?P<tokens>\d+) output tokens, max=(?P<maximum>\d+)\)$"
 )
+
+
+def _normalize_answer(text: str) -> str:
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9]+", " ", text.strip().lower())).strip()
+
+
+def _answer_line_matches_gold(answer: str, gold: str) -> bool:
+    answer_norm = _normalize_answer(answer)
+    gold_norm = _normalize_answer(gold)
+    if not answer_norm or not gold_norm:
+        return False
+    if answer_norm == gold_norm:
+        return True
+    return (
+        re.fullmatch(
+            rf"(?:the answer (?:is|equals)|.+ (?:is|are|equals)) {re.escape(gold_norm)}",
+            answer_norm,
+        )
+        is not None
+    )
 GREEDY_METRICS = (
     "syntactic",
     "format",
@@ -321,6 +342,22 @@ def _audit_samples(
         if isinstance(generation, str) and generation.strip():
             nonempty_generations += 1
             by_step[step]["nonempty_generation"] += 1
+
+        if row.get("correct") == 1.0 and isinstance(generation, str):
+            answer_match = ANSWER_RE.search(generation)
+            answer_lines = (
+                []
+                if answer_match is None
+                else [line.strip() for line in answer_match.group(1).splitlines() if line.strip()]
+            )
+            if len(answer_lines) != 1:
+                errors.append(
+                    f"sample {index} has correct=1 with {len(answer_lines)} answer lines"
+                )
+            elif isinstance(gold_answer, str) and not _answer_line_matches_gold(
+                answer_lines[0], gold_answer
+            ):
+                errors.append(f"sample {index} has correct=1 with a nonmatching answer line")
 
         if require_fresh_constants:
             question = QUESTION_RE.search(prompt)

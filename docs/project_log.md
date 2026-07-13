@@ -2,6 +2,60 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-14
+
+- 01:16 CEST BranchProof answer-matcher correction: an independent scan of the
+  five complete validity-fixed bundles found that the common scorer credited a
+  gold token anywhere inside `<answer>`. Two retained false positives were
+  confirmed (`1/640` greedy and `1/4480` sampled), including multi-label
+  answers. Because unretained generations prevent exact pass@k rescoring,
+  canceled eval/audit/aggregate `3838163/3847756/3847757` and quarantined all
+  their outputs under
+  `$HPCVAULT/.../quarantine/pre_answer_match_fix_20260714/`; four tracked audit
+  JSONs moved to
+  `analysis/branchproof_unique_v2_full_grid_audits_pre_answer_match_fix_20260714/`.
+  Patched matching to accept only exact answers or single-line natural
+  assertions, added an independent retained-answer audit guard, and verified
+  `213 passed, 3 skipped`. Submitted unchanged-protocol replacement eval
+  `3853284_[0-29%6]`, CPU audits `3853285_[0-29%8]`, and CPU aggregate
+  `3853286`; they are capacity/dependency pending. Logic Nanotron recovery
+  `3835442_3` completed step 8192 in `19:26:16`; independent audit accepted all
+  645 files, exact state/offsets, zero empty files, and proof share
+  `15.000057%`. Vault quota is `901G/1000G` soft and `150k/200k` files.
+  Upload `3847802_3` is released and capacity-pending. Active
+  CPU-only watcher `3850618` preserved scheduled successor `3853210` for 06:47
+  CEST because the overall plan remains incomplete.
+- 01:22 CEST corrected control/NL consumers started on A100-80GB: native-chat
+  adapter retraining `3850351_0/3850352_8` and direct reviewer eval
+  `3850385_0/3850386_8`. All four startup preflights resolved
+  `rope_theta=1000000`, and both direct jobs validated the intended production
+  task suite without a fatal signature. Post-instruction evals remain held on
+  the new adapters; no score is accepted before artifact and raw-generation
+  audits.
+- Repository changes were committed locally. Push via normal GitHub SSH and
+  the `ssh.github.com:443` fallback timed out; HTTPS could read the public
+  remote but no noninteractive credentials were available for writing. The
+  successor should retry the push. The report repo was not changed.
+- 01:31 CEST clean answer-fixed BranchProof eval rows `3853284_0/1` started at
+  01:28 on A100-SXM4-80GB nodes `a0633/a0832`. Both selected the intended
+  seed-3407/3408 train-1-to-5 adapters, used isolated merge roots, and
+  initialized vLLM with `max_model_len=16384`; no fatal/OOM signature is
+  present. Their first 64-prompt greedy chunks completed in `7.6/7.7s` with
+  the intended 7,168-token cap and `</answer>` stop, reaching only 367 tokens.
+  The next runtime trigger is the first sampled-chunk projection against the
+  20-hour intervention threshold.
+- 01:36 CEST corrected direct multi-hop smoke `3850353_0` completed `0:0` in
+  `00:04:10`. Its audit accepted RoPE `1000000`, `max_model_len=32768`, all six
+  stock/tagged task cells, six sample files, and all 12 rows. Manual inspection
+  covered every generation. Tagged prompts found/extracted answers in `6/6`
+  without continuing into another question; stock responses emitted a next
+  question or assistant preamble in `4/6`. Both stock Hotpot rows began with
+  the correct answer but leaked suffixes; tagged exact match was `1/6`, while
+  the two 2Wiki and two MuSiQue examples were wrong under both protocols.
+  These are protocol diagnostics at `n=2`, not performance evidence.
+  Instruction smoke `3850354` remains dependency-held; no full multi-hop grid
+  was submitted.
+
 ## 2026-07-13
 
 - 20:55 CEST live audit: no new failed, OOM, timed-out, or dependency-stale

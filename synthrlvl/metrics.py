@@ -56,8 +56,18 @@ def _is_answer_match(pred_answer: str, gold_answer: str) -> bool:
         return False
     if pred_norm == gold_norm:
         return True
-    # Accept natural phrasing such as "Yara is sparse." for gold answer "sparse".
-    return re.search(rf"(?:^|\s){re.escape(gold_norm)}(?:\s|$)", pred_norm) is not None
+    # Accept a single-line natural phrasing such as "Yara is sparse." for
+    # gold answer "sparse", but never credit a list that merely contains the
+    # gold answer among several alternatives.
+    if len(split_lines(pred_answer)) != 1:
+        return False
+    return (
+        re.fullmatch(
+            rf"(?:the answer (?:is|equals)|.+ (?:is|are|equals)) {re.escape(gold_norm)}",
+            pred_norm,
+        )
+        is not None
+    )
 
 
 @dataclass(frozen=True)
