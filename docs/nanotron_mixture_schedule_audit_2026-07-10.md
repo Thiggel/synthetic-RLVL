@@ -322,6 +322,17 @@ stock exact. Pending stored Slurm jobs call the live audit code, so they inherit
 the scorer without cancellation or GPU reruns. See
 `docs/nanotron_math500_scoring_audit_2026-07-13.md`.
 
+NL-direct qualitative update 2026-07-13 12:31 CEST: the accepted production
+bundle contains coherent correct GSM8K, BBH, and MMLU-Pro reasoning, while
+incorrect rows expose omitted constraints, false implication reversals, and
+repetition to the generation cap. BBH/MMLU-Pro invalid-extraction rates are
+`9.1%/20.5%`; a literal generated next-document assistant preamble occurs in
+`22.9%/3.7%` of rows and in zero corresponding prompts. The matched aggregate
+now emits the same condition-blind diagnostics for every control/logic/NL
+direct and post-instruction bundle. This is not yet evidence for a modality
+effect; comparison remains gated on the other five accepted runs. See
+`docs/nanotron_nl_direct_generation_audit_2026-07-13.md`.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the

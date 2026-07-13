@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 12:20 CEST.
+Last updated: 2026-07-13 12:31 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -403,6 +403,19 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `5431/8192` at `30.8K` tokens/s with finite loss `1.73`. Corrected
   BranchProof eval rows `0..5` reached sampled chunks
   `39/30/33/55/53/55` of 112 with no production bundle or fatal signature.
+- At 12:31 CEST a full raw-generation audit of accepted NL-direct run
+  `3834904_8` covered all primary metrics plus correct/incorrect examples.
+  GSM8K generations are format-clean; BBH and MMLU-Pro show genuine direct-LM
+  continuation pathologies. Invalid extraction rates are `9.1%/20.5%`, and a
+  literal next-document assistant preamble appears in `22.9%/3.7%` of rows,
+  respectively. The marker occurs in none of the corresponding prompts.
+  Correct samples contain coherent task reasoning; incorrect samples expose
+  omitted constraints, false implication reversals, or repetition to the cap,
+  not an extraction bug. The matched aggregate now emits these condition-blind
+  diagnostics for all six direct/instruction bundles. Focused tests pass
+  (`19 passed`). Interpretation remains provisional until control, logic, and
+  post-instruction results complete. See
+  `docs/nanotron_nl_direct_generation_audit_2026-07-13.md`.
 - At 10:41 CEST NL direct eval `3834904_8` was running on A100-80GB. It
   selected all ten reviewer tasks, loaded the repaired remote metadata,
   resolved `Qwen2ForCausalLM`, and initialized vLLM without the previous

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 
@@ -96,3 +97,40 @@ def test_qualitative_metric_uses_declared_filter() -> None:
         "exact_match",
         "custom-extract",
     )
+
+
+def test_generation_diagnostics_capture_invalid_and_next_document_marker(
+    tmp_path: Path,
+) -> None:
+    rows = {
+        "gsm8k": ("flexible-extract", "18", "18"),
+        "hendrycks_math500": ("none", "$18$", "$18$"),
+        "bbh_cot_fewshot_boolean_expressions": (
+            "get-answer",
+            MODULE.NEXT_DOCUMENT_MARKER,
+            "[invalid]",
+        ),
+        "mmlu_pro_math": ("custom-extract", "The answer is (A).", "A"),
+    }
+    for task, (filter_name, response, extracted) in rows.items():
+        payload = {
+            "filter": filter_name,
+            "resps": [[response]],
+            "filtered_resps": [extracted],
+        }
+        (tmp_path / f"samples_{task}_2026.jsonl").write_text(
+            json.dumps(payload) + "\n", encoding="utf-8"
+        )
+    bundle = MODULE.Bundle(
+        "nl_exact",
+        "direct",
+        tmp_path,
+        _payload(0.5),
+        _math_posthoc(0.5),
+    )
+    diagnostics = MODULE.generation_diagnostic_rows([bundle])
+    assert len(diagnostics) == 4
+    bbh = next(row for row in diagnostics if row["family"] == "bbh")
+    assert bbh["invalid_extraction_rate"] == 1.0
+    assert bbh["next_document_marker_rate"] == 1.0
+    assert bbh["prompt_marker_rate"] == 0.0

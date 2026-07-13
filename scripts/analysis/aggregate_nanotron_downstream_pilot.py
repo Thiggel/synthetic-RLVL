@@ -10,7 +10,7 @@ import math
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from statistics import mean
+from statistics import mean, median
 from typing import Any
 
 
@@ -74,6 +74,13 @@ QUALITATIVE_TASKS = (
     "bbh_cot_fewshot_logical_deduction_three_objects",
     "mmlu_pro_computer_science",
 )
+GENERATION_FILTERS = {
+    "gsm8k": "flexible-extract",
+    "math500": "none",
+    "bbh": "get-answer",
+    "mmlu_pro": "custom-extract",
+}
+NEXT_DOCUMENT_MARKER = "You are an AI assistant that helps people find information."
 
 
 @dataclass(frozen=True)
@@ -290,6 +297,102 @@ def _prompt(row: dict[str, Any]) -> str:
     return ""
 
 
+def _first_response(row: dict[str, Any]) -> str:
+    responses = row.get("resps")
+    if (
+        isinstance(responses, list)
+        and responses
+        and isinstance(responses[0], list)
+        and responses[0]
+        and isinstance(responses[0][0], str)
+    ):
+        return responses[0][0]
+    return ""
+
+
+def _first_filtered_response(row: dict[str, Any]) -> str:
+    responses = row.get("filtered_resps")
+    if isinstance(responses, list) and responses and isinstance(responses[0], str):
+        return responses[0]
+    return ""
+
+
+def _generation_family(task: str) -> str | None:
+    if task == "gsm8k":
+        return "gsm8k"
+    if task == "hendrycks_math500":
+        return "math500"
+    if task.startswith("bbh_cot_fewshot_"):
+        return "bbh"
+    if task.startswith("mmlu_pro_"):
+        return "mmlu_pro"
+    return None
+
+
+def generation_diagnostic_rows(bundles: list[Bundle]) -> list[dict[str, Any]]:
+    output: list[dict[str, Any]] = []
+    for bundle in bundles:
+        grouped: dict[str, list[tuple[str, str, str]]] = {
+            family: [] for family in GENERATION_FILTERS
+        }
+        for task, path in _sample_files(bundle.run_dir).items():
+            family = _generation_family(task)
+            if family is None:
+                continue
+            expected_filter = GENERATION_FILTERS[family]
+            with path.open(encoding="utf-8") as handle:
+                for line in handle:
+                    if not line.strip():
+                        continue
+                    row = json.loads(line)
+                    if row.get("filter") != expected_filter:
+                        continue
+                    grouped[family].append(
+                        (
+                            _first_response(row),
+                            _first_filtered_response(row),
+                            _prompt(row),
+                        )
+                    )
+
+        for family, rows in grouped.items():
+            if not rows:
+                raise ValueError(
+                    f"missing generation diagnostics for {bundle.condition}/{bundle.branch}/{family}"
+                )
+            lengths = sorted(len(response) for response, _, _ in rows)
+            invalid_count = sum(
+                extracted.strip().lower() in {"", "[invalid]"}
+                for _, extracted, _ in rows
+            )
+            marker_count = sum(
+                NEXT_DOCUMENT_MARKER in response for response, _, _ in rows
+            )
+            prompt_marker_count = sum(
+                NEXT_DOCUMENT_MARKER in prompt for _, _, prompt in rows
+            )
+            count = len(rows)
+            output.append(
+                {
+                    "condition": bundle.condition,
+                    "branch": bundle.branch,
+                    "family": family,
+                    "row_count": count,
+                    "invalid_extraction_count": invalid_count,
+                    "invalid_extraction_rate": invalid_count / count,
+                    "next_document_marker_count": marker_count,
+                    "next_document_marker_rate": marker_count / count,
+                    "prompt_marker_count": prompt_marker_count,
+                    "prompt_marker_rate": prompt_marker_count / count,
+                    "response_chars_mean": mean(lengths),
+                    "response_chars_p50": median(lengths),
+                    "response_chars_p95": lengths[math.ceil(0.95 * count) - 1],
+                    "response_chars_max": lengths[-1],
+                }
+            )
+    return output
+
+
 def _qualitative_metric(task: str) -> tuple[str, str]:
     metric = PRIMARY_METRICS.get(task) or TARGETED_METRICS.get(task)
     if metric is None and task.startswith("mmlu_pro_"):
@@ -364,6 +467,7 @@ def _write_markdown(
     path: Path,
     tasks: list[dict[str, Any]],
     macros: list[dict[str, Any]],
+    diagnostics: list[dict[str, Any]],
     qualitative: list[dict[str, Any]],
 ) -> None:
     lines = [
@@ -403,6 +507,26 @@ def _write_markdown(
             f"{float(row['delta_vs_control']):+.4f} | "
             f"{float(row['instruction_minus_direct']):+.4f} |"
         )
+    lines.extend(
+        [
+            "",
+            "## Generation diagnostics",
+            "",
+            "The next-document marker is a literal continuation into the Qwen assistant "
+            "preamble after an answer. Character lengths are diagnostics, not token counts.",
+            "",
+            "| condition | branch | family | rows | invalid extraction | response marker | prompt marker | chars p50 | chars p95 |",
+            "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+        ]
+    )
+    for row in diagnostics:
+        lines.append(
+            f"| `{row['condition']}` | `{row['branch']}` | `{row['family']}` | "
+            f"{row['row_count']} | {float(row['invalid_extraction_rate']):.4f} | "
+            f"{float(row['next_document_marker_rate']):.4f} | "
+            f"{float(row['prompt_marker_rate']):.4f} | "
+            f"{float(row['response_chars_p50']):.0f} | {row['response_chars_p95']} |"
+        )
     lines.extend(["", "## Qualitative index", ""])
     for row in qualitative:
         lines.append(
@@ -417,14 +541,16 @@ def main() -> None:
     bundles = load_bundles(args.root, checkpoint_step=args.checkpoint_step)
     tasks = task_rows(bundles)
     macros = macro_rows(tasks)
+    diagnostics = generation_diagnostic_rows(bundles)
     qualitative = qualitative_rows(bundles)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     _write_csv(args.output_dir / "per_task.csv", tasks)
     _write_csv(args.output_dir / "macro_summary.csv", macros)
+    _write_csv(args.output_dir / "generation_diagnostics.csv", diagnostics)
     (args.output_dir / "qualitative_samples.json").write_text(
         json.dumps(qualitative, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
-    _write_markdown(args.output_dir / "summary.md", tasks, macros, qualitative)
+    _write_markdown(args.output_dir / "summary.md", tasks, macros, diagnostics, qualitative)
     manifest = {
         "accepted": True,
         "root": str(args.root),
@@ -438,6 +564,7 @@ def main() -> None:
         "macros": {name: list(tasks) for name, tasks in MACROS.items()},
         "bundle_count": len(bundles),
         "task_row_count": len(tasks),
+        "generation_diagnostic_row_count": len(diagnostics),
         "qualitative_row_count": len(qualitative),
     }
     (args.output_dir / "manifest.json").write_text(
