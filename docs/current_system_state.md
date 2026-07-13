@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 10:41 CEST.
+Last updated: 2026-07-13 10:46 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -318,6 +318,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   resolved `Qwen2ForCausalLM`, and initialized vLLM without the previous
   tokenizer exception. Control direct eval and both replacement instruction
   SFT parents remain priority pending.
+- At 10:46 CEST exact dry runs against both repaired remote checkpoints loaded
+  UltraChat and retained all `8/8` train plus `4/4` eval examples. Native Qwen
+  system/user/assistant rendering was intact and labels supervised assistant
+  tokens only. The focused instruction-format, downstream-audit, and aggregate
+  tests pass (`12 passed`). NL direct eval completed model/KV-cache startup and
+  began constructing the full reviewer-suite contexts. Current account use is
+  all 16 allowed A100 GPUs: 15 for this project and one unrelated job, which
+  fully explains the remaining `AssocGrpGRES` waits.
 - Scoped oversight commit `cf5162e` was pushed successfully from the login
   node at 21:12 CEST after the watcher's transient SSH attempts timed out; the
   report repository remains clean and synchronized.

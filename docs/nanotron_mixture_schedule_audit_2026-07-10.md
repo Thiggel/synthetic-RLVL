@@ -252,6 +252,14 @@ downstream environment. Both existing repos were repaired in place; fresh
 rendering. Direct evals `3835927/3834904` are released; replacement instruction
 parents `3847661/3847662` feed existing evals `3835928/3834905`.
 
+Instruction/downstream preflight update 2026-07-13 10:46 CEST: exact dry runs
+against both repaired remote checkpoints loaded UltraChat, retained all sampled
+`8/8` train and `4/4` eval rows, rendered the native Qwen chat template, and
+supervised only assistant tokens. The focused instruction-format,
+downstream-artifact, and aggregate tests pass (`12 passed`). NL direct eval
+`3834904_8` then loaded all four shards, initialized vLLM and its KV cache, and
+began full-suite context construction without the former tokenizer exception.
+
 HF storage cleanup update 2026-07-13 10:36 CEST: account inventory measured
 `83.942G` of models and `21.896G` of datasets. Only the three superseded merged
 OLMo SFT seed repos were deleted (`43.818G`); their retained LoRA repos and

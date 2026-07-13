@@ -4,6 +4,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 10:46 CEST exact UltraChat dry runs against the repaired control/NL remote
+  checkpoints retained all sampled train/eval rows, rendered native Qwen chat,
+  and supervised assistant tokens only. Focused downstream gates pass
+  (`12 passed`). NL direct eval completed full-model and KV-cache startup and
+  began full-suite context construction.
 - 10:41 CEST NL direct eval `3834904_8` started on A100-80GB and passed the
   repaired-model startup boundary: all ten tasks selected, Qwen architecture
   resolved, and vLLM initialized without the prior tokenizer exception.
