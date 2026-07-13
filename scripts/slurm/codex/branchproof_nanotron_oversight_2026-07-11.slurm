@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=bp_nano_oversight
 #SBATCH --partition=a100mig
-#SBATCH --gres=gpu:a100small:1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=5:00:00
 #SBATCH --output=logs/%x_%j.out
@@ -94,6 +93,7 @@ Plan to execute end to end:
 7. Report work: regenerate the in-repo report when justified, mirror only to ../synthetic-RLVL-report/informal_report, and update the official root preprint with corrected evidence, clear mean/std tables/figures, and concise claims. Preserve AttrCon as independent evidence; keep iGSM and Maze outside the main story.
 
 Operational rules:
+- This oversight job is intentionally CPU-only on `a100mig`; do not add a GRES request. A no-GRES probe completed while the account GPU limit was full, so CPU-only scheduling keeps the six-hour chain independent of experiment GPU occupancy.
 - Treat this as plan-driven work, not merely a queue check. Apply safe fixes, scheduler edits, targeted resubmissions, analyses, report updates, and explicitly triggered submissions in the same pass.
 - Do not append no-op watcher entries to docs. Update handoff docs only for actual state changes, failures, submissions, results, insights, or decisions.
 - Inspect raw generations before scientific conclusions. Question evaluator behavior before accepting surprising metrics.

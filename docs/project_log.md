@@ -4,6 +4,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 10:50 CEST removed unnecessary GPU allocation from the six-hour oversight
+  wrapper after CPU-only `a100mig` probe `3847702` completed `0:0` during full
+  account GPU utilization. Verified replacement watcher `3847703` is queued
+  for 12:46 CEST with four CPUs, 30 GB RAM, and no GRES; only then canceled
+  GPU-requesting predecessor `3847667`.
 - 10:46 CEST exact UltraChat dry runs against the repaired control/NL remote
   checkpoints retained all sampled train/eval rows, rendered native Qwen chat,
   and supervised assistant tokens only. Focused downstream gates pass

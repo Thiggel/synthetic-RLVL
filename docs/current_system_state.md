@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 10:46 CEST.
+Last updated: 2026-07-13 10:50 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -326,6 +326,13 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   began constructing the full reviewer-suite contexts. Current account use is
   all 16 allowed A100 GPUs: 15 for this project and one unrelated job, which
   fully explains the remaining `AssocGrpGRES` waits.
+- At 10:50 CEST watcher scheduling was made independent of that GPU ceiling.
+  CPU-only `a100mig` probe `3847702` completed `0:0` with no GRES while all 16
+  GPUs were occupied. The oversight wrapper no longer requests a MIG GPU;
+  replacement watcher `3847703` requests only four CPUs and 30 GB RAM at the
+  same 12:46 CEST start, and its stored payload was verified before stale
+  GPU-requesting watcher `3847667` was canceled. Self-scheduled successors
+  inherit this CPU-only request.
 - Scoped oversight commit `cf5162e` was pushed successfully from the login
   node at 21:12 CEST after the watcher's transient SSH attempts timed out; the
   report repository remains clean and synchronized.
