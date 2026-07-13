@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 11:22 CEST.
+Last updated: 2026-07-13 11:40 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -325,6 +325,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   under the nominal 100 GB limit before small instruction adapters. The
   broader mixture grid therefore needs checkpoint rotation or external
   archival; it cannot retain every 15.243 GB full checkpoint simultaneously.
+- At 11:34 CEST a fresh API inventory reconciled all `71` account repos and
+  confirmed retained LFS remains `69.497G`: `41.094G` models plus `28.403G`
+  datasets. Current project control/NL checkpoints account for `30.485G`; the
+  three reconstructing SFT LoRAs use `0.480G`; and `17` private,
+  remote-only `autoformalization-*` adapters from another project use
+  `10.129G`. None of those cross-project adapters was deleted: even deleting
+  all of them would not fit one additional `15.243G` full checkpoint and
+  would discard non-local trained artifacts. The pending logic upload remains
+  safe at a projected `84.740G`. Adopt upload/evaluate/audit/delete rotation
+  for later full-grid checkpoints, never deleting a model referenced by a
+  pending/running evaluation. Exact reconciliation is recorded in
+  `analysis/hf_storage_cleanup_2026-07-13.json`.
+- At 11:40 CEST the recurring `fix_mistral_regex=True` warning in corrected
+  BranchProof eval logs was resolved as a false remediation suggestion for
+  this protocol. The base training tokenizer and current merged-eval default
+  tokenizer produce identical IDs on `704/704` actual prompts/targets across
+  both modalities and depths `1..50`. Enabling the suggested fix changes
+  `640/704` texts and would introduce a train/eval mismatch. Keep the current
+  default tokenizer. Audit artifact:
+  `analysis/branchproof_tokenizer_consistency_2026-07-13.json`.
 - At 10:41 CEST NL direct eval `3834904_8` was running on A100-80GB. It
   selected all ten reviewer tasks, loaded the repaired remote metadata,
   resolved `Qwen2ForCausalLM`, and initialized vLLM without the previous

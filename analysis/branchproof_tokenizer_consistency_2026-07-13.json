@@ -1,0 +1,56 @@
+{
+  "audit_scope": {
+    "depths": [
+      1,
+      5,
+      10,
+      15,
+      20,
+      25,
+      30,
+      35,
+      40,
+      45,
+      50
+    ],
+    "modalities": [
+      "logic",
+      "nl_exact"
+    ],
+    "rows_per_depth_and_modality": 16,
+    "text_fields": [
+      "prompt",
+      "target"
+    ],
+    "texts": 704
+  },
+  "base_model": "allenai/Olmo-3-1025-7B",
+  "file_sha256": {
+    "merges.txt": "b6fe424e334903f7fb84d3a106d9730455f4744b9fe3c21ee136d97a00e72502",
+    "special_tokens_map.json": {
+      "base": "4cb2b52960bababa8ec27153831e405ef7811e3fad1226106e09c28e715cfb21",
+      "merged": "c945d73d563a80e7932b69c34758a49aca90a44b102ea08b22f5c7e1da51c1f2"
+    },
+    "tokenizer.json": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+    "tokenizer_config.json": "ffa5b2cfee6e73d5dc0a7d3b7e02eb6ed60a491dd782f2bd8ad2b4659b2aafc6",
+    "vocab.json": "9e14712c91b37c7aab74b1306baa46ac342d620637a4b44523cdc3aec7d24195"
+  },
+  "finding": "The tokenizer used by SFT and the default tokenizer loaded from the merged evaluation checkpoint produce identical token IDs on every audited BranchProof text. Enabling fix_mistral_regex on the merged tokenizer would change most audited texts and create a train/eval tokenization mismatch.",
+  "merged_default_vs_fix_mistral_regex": {
+    "different": 640,
+    "identical": 64,
+    "total": 704
+  },
+  "special_token_semantics": {
+    "base": "eos and pad are serialized as strings; unk is an AddedToken",
+    "equivalent": true,
+    "merged": "eos, pad, and unk are serialized as equivalent AddedToken dictionaries"
+  },
+  "training_default_vs_merged_default": {
+    "different": 0,
+    "identical": 704,
+    "total": 704
+  },
+  "action": "Keep the current default tokenizer for the running corrected evaluation and do not set fix_mistral_regex=True.",
+  "timestamp": "2026-07-13T11:40:00+02:00"
+}

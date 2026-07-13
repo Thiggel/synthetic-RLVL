@@ -102,3 +102,23 @@ greedy generation protocol with 64 prompts per chunk and
 now wait only on the six-task array throttle. No replacement production JSON
 or sample bundle is complete yet, so this establishes launch health only; the
 strengthened row audits and cross-grid qualitative gate remain mandatory.
+
+## Tokenizer Consistency
+
+The replacement logs emit a generic Transformers warning suggesting
+`fix_mistral_regex=True`. This warning is not evidence of a train/eval
+tokenization mismatch for the OLMo checkpoint used here. A corpus-level audit
+compared the training tokenizer loaded from `allenai/Olmo-3-1025-7B` with the
+default tokenizer copied into a current merged evaluation checkpoint on 704
+actual BranchProof texts: prompts and targets for 16 rows per modality at
+depths 1, 5, 10, 15, 20, 25, 30, 35, 40, 45, and 50. Their token IDs matched
+on all `704/704` texts. The core tokenizer files are also byte-identical.
+
+Conversely, enabling `fix_mistral_regex=True` on the merged tokenizer changes
+token IDs for `640/704` audited texts. Applying the suggested fix during this
+evaluation would therefore create a train/eval mismatch. The only serialized
+file difference is `special_tokens_map.json`: the base uses strings for eos
+and pad, while the merged checkpoint uses semantically equivalent AddedToken
+dictionaries with the same content and IDs. The running protocol correctly
+keeps the default tokenizer. Exact hashes and counts are in
+`analysis/branchproof_tokenizer_consistency_2026-07-13.json`.

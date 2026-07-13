@@ -4,6 +4,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 11:40 CEST closed the BranchProof tokenizer-warning audit. On 704 actual
+  prompt/target texts across logic/NL and depths 1--50, the base training
+  tokenizer and merged-eval default tokenizer matched exactly (`704/704`).
+  Setting `fix_mistral_regex=True` would change `640/704` texts and create a
+  train/eval mismatch, so the running corrected protocol remains unchanged.
+  Recorded hashes and counts in
+  `analysis/branchproof_tokenizer_consistency_2026-07-13.json` and the
+  evaluator audit.
+- 11:34 CEST re-audited all `71` Hugging Face repositories through the LFS
+  API. Retained usage is still `69.497G` (`41.094G` models and `28.403G`
+  datasets), projecting to `84.740G` after the pending logic checkpoint.
+  Preserved `17` private `autoformalization-*` adapters (`10.129G`) because
+  that other project intentionally removed its local checkpoints after upload;
+  deleting all of them would still not fit another `15.243G` full model.
+  Chose guarded upload/evaluate/audit/delete rotation for the broader mixture
+  grid and recorded the exact category totals in
+  `analysis/hf_storage_cleanup_2026-07-13.json`.
 - 11:22 CEST reconciled Hugging Face head sizes with retained LFS history.
   Retained storage was `86.191G`, so the pending 15.243 GB logic checkpoint
   would have exceeded 100 GB despite current heads totaling only `62.021G`.

@@ -98,7 +98,8 @@ Operational rules:
 - Do not append no-op watcher entries to docs. Update handoff docs only for actual state changes, failures, submissions, results, insights, or decisions.
 - Inspect raw generations before scientific conclusions. Question evaluator behavior before accepting surprising metrics.
 - Keep BranchProof eval A100-80-only. Do not reduce the scientific protocol to fit runtime.
+- Do not apply the generic fix_mistral_regex tokenizer suggestion to BranchProof: base-training and merged-eval default token IDs match on 704/704 audited task texts, while the suggested fix changes 640/704 and would create a train/eval mismatch.
 - Watch HPCVAULT usage because complete Nanotron checkpoints are about 199G each. Delete checkpoints only through the guarded post-upload path or when the docs prove they are stale and no recovery depends on them.
-- HF storage was reduced from 83.942 GB to 40.125 GB of models by deleting only three superseded merged OLMo SFT repos; their small LoRA repos and public base remain sufficient to reconstruct them. All datasets and unrelated models remain. Preserve the new control/NL repos and forthcoming logic repo.
+- HF retained LFS is 69.497 GB after deleting only three reconstructable merged OLMo repos and 16.694 GB of unreachable dataset history. The pending logic upload projects 84.740 GB. Preserve the active control/NL/logic repos through all six evaluations and preserve remote-only cross-project adapters. Before the broader mixture grid, implement guarded upload/evaluate/audit/delete checkpoint rotation; never delete a repo referenced by a pending/running job.
 - Commit and push this repo and ../synthetic-RLVL-report whenever changes are made and authentication permits.
 - End each pass with a concise status including exact job IDs, states, actions, artifacts, findings, and the next trigger."
