@@ -4,6 +4,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 12:55 CEST replacement NL instruction SFT `3847662_8` completed `0:0` in
+  `01:04:38`, uploaded verified adapter commit
+  `cddf739f4b4332e1d9f3d71b825e52c836476679`, and released post-instruction
+  eval `3834905_8`. Control post-instruction eval `3835928_0` started at 12:48
+  on A100-80GB and initialized the intended merged 8192-context checkpoint;
+  control direct `3847792_0` remains healthy. Logic recovery reached
+  `5571/8192` with finite loss `1.69`. Corrected BranchProof rows `0..5`
+  reached sampled chunks `49/35/39/64/61/64`; a row-local worst-chunk bound
+  keeps even the slowest projected total below 14 hours, with no production
+  artifact or fatal signature yet. Verified CPU-only successor `3848334` is
+  queued for 18:46 CEST with no GRES.
+- 12:54 CEST authenticated per-repository Hub storage, after the NL
+  instruction adapter upload, is `63.782G`: `35.430G` models and `28.352G`
+  datasets. Pending logic projects to `79.025G`; logic plus one more full
+  checkpoint projects to `94.268G`, but two project to `109.511G`. No repo was
+  deleted; guarded broader-grid rotation remains mandatory. Updated
+  `analysis/hf_storage_cleanup_2026-07-13.json`.
 - 12:31 CEST completed raw-generation audit of NL-direct downstream run
   `3834904_8`. Correct samples show coherent GSM8K/BBH/MMLU-Pro reasoning;
   failures include omitted ordering constraints, false implication reversals,

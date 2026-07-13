@@ -73,6 +73,22 @@
     "timestamp": "2026-07-13T12:20:00+02:00",
     "used_storage_source": "authenticated per-repository Hugging Face API usedStorage"
   },
+  "post_nl_instruction_adapter_reconciliation": {
+    "current_dataset_gb": 28.352310,
+    "current_model_gb": 35.430165,
+    "current_total_gb": 63.782475,
+    "model_repositories": 15,
+    "nl_instruction_adapter_commit": "cddf739f4b4332e1d9f3d71b825e52c836476679",
+    "nl_instruction_adapter_gb": 0.172962,
+    "nl_instruction_adapter_repo": "flaitenberger/qwen25-7b-branchproof-unique-v2-midtrain-nl_exact-p15-step8192-ultrachat-adapter",
+    "pending_logic_checkpoint_gb": 15.242694,
+    "projected_total_after_logic_and_one_more_full_checkpoint_gb": 94.267863,
+    "projected_total_after_logic_and_two_more_full_checkpoints_gb": 109.510557,
+    "projected_total_after_logic_gb": 79.025169,
+    "repositories": 64,
+    "timestamp": "2026-07-13T12:54:00+02:00",
+    "used_storage_source": "authenticated per-repository Hugging Face API usedStorage"
+  },
   "superseded_adapter_archive_cleanup": {
     "archive_content_gb": 4.976,
     "archive_index": "/home/vault/c107fa/c107fa12/hf_model_archives/2026-07-13_autoformalization_superseded/archive_index.json",

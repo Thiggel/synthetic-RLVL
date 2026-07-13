@@ -310,6 +310,18 @@ checkpoint projects to `78.852G`; one further full checkpoint fits at
 autoformalization artifacts total only `4.119G` and have no replacement, so
 they were preserved. The broader grid must use guarded checkpoint rotation.
 
+NL instruction completion and storage update 2026-07-13 12:55 CEST:
+replacement instruction SFT `3847662_8` completed all `10000` steps in
+`01:04:38`, wrote a nonzero local final, and uploaded adapter commit
+`cddf739f4b4332e1d9f3d71b825e52c836476679` with the intended repaired NL p15
+base and Transformers-4-compatible special-token metadata. It released
+post-instruction eval `3834905_8`, which is account-GRES pending. Control
+post-instruction eval `3835928_0` started at 12:48 CEST on A100-80GB and
+initialized the merged 8192-context checkpoint. Authenticated Hub
+`usedStorage` is now `63.782G` (`35.430G` models and `28.352G` datasets),
+projecting to `79.025G` after logic, `94.268G` after logic plus one further
+full checkpoint, and `109.511G` after logic plus two. No repo was deleted.
+
 Downstream scoring update 2026-07-13 12:14 CEST: stock
 `hendrycks_math500/exact_match,none` rejected correct answer prefixes whenever
 the continuation included explanation. Whole-response symbolic matching also

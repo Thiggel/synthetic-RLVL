@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 12:31 CEST.
+Last updated: 2026-07-13 12:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -417,6 +417,34 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   answers. Focused tests pass (`20 passed`). Interpretation remains provisional until control, logic, and
   post-instruction results complete. See
   `docs/nanotron_nl_direct_generation_audit_2026-07-13.md`.
+- At 12:48 CEST replacement NL instruction SFT `3847662_8` completed `0:0`
+  in `01:04:38` after all `10000` steps. It ended with train/eval loss
+  `0.9525/0.9435`, wrote an 11-file nonzero local final including the
+  `161,533,192`-byte adapter, and uploaded commit
+  `cddf739f4b4332e1d9f3d71b825e52c836476679` to the intended adapter repo.
+  Remote metadata retains the Transformers-4-compatible
+  `additional_special_tokens` form and names the repaired NL p15 checkpoint
+  as its base. Post-instruction eval `3834905_8` is therefore released and
+  waits only on account GRES. Control post-instruction eval `3835928_0`
+  started at 12:48 on A100-80GB node `a0535`, merged the accepted adapter, and
+  initialized the intended 8192-context reviewer run. Control direct
+  `3847792_0` remains healthy on A100-80GB and had processed `17018/20362`
+  prompts in its generative stage at 12:55. Logic recovery `3835442_3`
+  reached `5571/8192` at `30.8K` tokens/s with finite loss `1.69` and still
+  projects to finish near 01:14 CEST on July 14.
+- The same 12:54 authenticated Hub reconciliation now measures `63.782G`
+  across 64 repositories: `35.430G` in 15 model repos and `28.352G` in 49
+  dataset repos. The pending logic checkpoint projects to `79.025G`; logic
+  plus one further full checkpoint projects to `94.268G`, whereas two project
+  to `109.511G`. No repository was deleted. Guarded rotation remains required
+  before any broader mixture grid.
+- At 12:55 the six corrected BranchProof eval rows were at sampled chunks
+  `49/35/39/64/61/64` of `112`; rows `6..29` remain throttle pending. Charging
+  every unfinished chunk the worst late-chunk time observed in its own row
+  gives a slowest-row total projection below 14 hours, safely under the
+  20-hour sharding trigger. There is still no corrected production JSON/sample
+  bundle, no fatal signature, and no reason to alter the A100-80-only protocol.
+  CPU-only audits `3847756` and aggregate `3847757` remain correctly gated.
 - At 10:41 CEST NL direct eval `3834904_8` was running on A100-80GB. It
   selected all ten reviewer tasks, loaded the repaired remote metadata,
   resolved `Qwen2ForCausalLM`, and initialized vLLM without the previous
