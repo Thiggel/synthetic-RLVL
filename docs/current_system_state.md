@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 12:55 CEST.
+Last updated: 2026-07-13 16:10 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -445,6 +445,27 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   20-hour sharding trigger. There is still no corrected production JSON/sample
   bundle, no fatal signature, and no reason to alter the A100-80-only protocol.
   CPU-only audits `3847756` and aggregate `3847757` remain correctly gated.
+- Control direct eval `3847792_0` completed `0:0` in `01:06:47` and its strict
+  artifact audit accepts all ten task groups, 105 leaf sample files, and
+  50,693 rows. Control post-instruction eval `3835928_0` completed the same
+  GPU workload and wrote a complete bundle but exited `1:0` when the post-hoc
+  gate rejected positional task ordering and one correct MATH response whose
+  first line was prose. The task check is now order-insensitive and MATH
+  schema v4 falls back to an explicit answer only when the first line
+  has no answer token; generated next-`Problem:`/`Question:` records are
+  excluded. All 100 fallback rows per instruction bundle were enumerated;
+  `36` control and `35` NL fallbacks end in explicit equivalent answers.
+  Schema v4 also
+  ranks an answer-cued delimited expression above a later malformed plain-text
+  suffix, and the original NL
+  direct score remains `80/500 = 0.160`. Focused tests pass (`24 passed`).
+  Final schema-v4 CPU gate `3849774` accepted the control instruction bundle
+  at MATH `65/500 = 0.130`; control direct is `79/500 = 0.158`.
+  NL post-instruction `3834905_8` also completed all GPU work and its full
+  bundle before the stale gate exited `1:0`; CPU gate `3849775` accepts it at
+  MATH `61/500 = 0.122`. Failed-parent aggregates were canceled and final
+  CPU-only aggregate `3849776` now waits only on logic direct/instruction
+  evals `3847804/3847806`, so neither instruction GPU evaluation will rerun.
 - At 10:41 CEST NL direct eval `3834904_8` was running on A100-80GB. It
   selected all ten reviewer tasks, loaded the repaired remote metadata,
   resolved `Qwen2ForCausalLM`, and initialized vLLM without the previous
@@ -710,7 +731,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   confirms each is constrained to one A100-80GB GPU with 240 GB host RAM.
   The wrapper also preflights actual dataset construction and archives
   command-only, incomplete, or audit-rejected outputs.
-- CPU-only strict downstream analysis job `3847807` waits for all six accepted evals.
+- CPU-only strict downstream analysis job `3849776` waits for all six accepted
+  bundles, using recovery gates `3849774/3849775` for the artifact-complete
+  control/NL instruction runs.
   `aggregate_nanotron_downstream_pilot.py` refuses an incomplete or
   audit-rejected bundle and writes individual task values/stderr, deltas from
   the matched control, instruction-minus-direct deltas, and four predeclared
@@ -919,5 +942,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834911,3835433,3835438,3835442,3835443,3835779,3835927,3835928,3838163,3847756,3847757,3847792,3847802,3847804,3847805,3847806,3847807,3847808 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834911,3835433,3835438,3835442,3835443,3835779,3835927,3835928,3838163,3847756,3847757,3847792,3847802,3847804,3847805,3847806,3847808,3849774,3849775,3849776 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

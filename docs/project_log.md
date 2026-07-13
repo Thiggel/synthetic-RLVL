@@ -4,6 +4,29 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 16:00 CEST control direct eval `3847792_0` completed `0:0` in `01:06:47`
+  and passed the ten-task/105-file/50,693-row production gate. Control
+  instruction eval `3835928_0` completed the full GPU workload but exited
+  `1:0` on a post-hoc task-order comparison and one correct MATH response that
+  reasoned before stating `x = 11`. Made task validation order-insensitive and
+  added a schema-v4 final-explicit-answer fallback only when the first line has
+  no answer token, excluding generated next-`Problem:`/`Question:` records.
+  All 100 control fallback rows were enumerated; schema v4 accepts 36
+  symbolically equivalent explicit final answers. Focused tests pass
+  (`24 passed`).
+- 16:05 CEST NL post-instruction eval `3834905_8` likewise completed its full
+  GPU workload and 50,693-row bundle before the stale in-job gate exited
+  `1:0`. Its only schema-v3 rejection was a correct `$x = 11$` followed by a
+  malformed repeated decimal suffix. Schema v4 ranks answer-cued delimited
+  math above later plain text and adds next-prompt and malformed-suffix
+  regressions. All 100 NL fallback rows were enumerated and 35 end in
+  symbolically equivalent answers; no A100 rerun is warranted.
+- 16:10 CEST final schema-v4 CPU gates `3849774/3849775` completed `0:0`
+  and accepted the existing control/NL instruction bundles, so no A100 rerun
+  is needed. MATH symbolic is control direct/instruction `79/65` of 500 and
+  NL direct/instruction `80/61` of 500, with no stock positive lost. Final
+  CPU aggregate `3849776` now waits only on logic evals `3847804/3847806`;
+  dependency-dead intermediate aggregates were canceled.
 - 12:55 CEST replacement NL instruction SFT `3847662_8` completed `0:0` in
   `01:04:38`, uploaded verified adapter commit
   `cddf739f4b4332e1d9f3d71b825e52c836476679`, and released post-instruction

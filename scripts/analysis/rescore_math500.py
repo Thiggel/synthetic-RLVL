@@ -15,7 +15,7 @@ from typing import Any
 from math_verify import ExprExtractionConfig, LatexExtractionConfig, parse, verify
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 4
 SIDECAR_NAME = "math500_answer_prefix_math_verify.json"
 METRIC_NAME = "answer_prefix_math_verify,none"
 
@@ -26,6 +26,8 @@ _NUMBER_RE = re.compile(rf"(?<![A-Za-z\\]){_NUMBER}")
 _LEADING_NUMBER_RE = re.compile(rf"^{_NUMBER}")
 _NUMBER_LIST_RE = re.compile(rf"^({_NUMBER}(?:\s*,\s*{_NUMBER})+)\s*\.?\s*$")
 _TRAILING_OPERATOR_RE = re.compile(r"(?:[+\-*/=]|\\(?:cdot|div|times))\s*$")
+_NEXT_PROMPT_RE = re.compile(r"^(?:problem|question)\s*:", re.IGNORECASE)
+_ANSWER_CUE_RE = re.compile(r"\b(?:answer|solution|therefore|thus|hence)\b", re.IGNORECASE)
 
 
 def _sha256(path: Path) -> str:
@@ -83,6 +85,27 @@ def _last_explicit_token(line: str) -> str | None:
     return max(candidates, default=(0, None))[1]
 
 
+def _final_explicit_answer(target: str, response: str) -> str | None:
+    target_is_equation = bool(_EQUALITY_RE.search(target))
+    lines = [line.strip() for line in response.splitlines() if line.strip()]
+    candidates: list[tuple[int, int, str]] = []
+    for index, line in enumerate(lines[1:], start=1):
+        if _NEXT_PROMPT_RE.match(line) or line.count("$") % 2:
+            continue
+        candidate = _last_explicit_token(line)
+        if not candidate:
+            continue
+        candidate = _strip_terminal_period(candidate)
+        if not target_is_equation and _EQUALITY_RE.search(candidate):
+            candidate = _strip_terminal_period(_EQUALITY_RE.split(candidate)[-1])
+        if candidate and not _TRAILING_OPERATOR_RE.search(candidate):
+            has_cue = bool(_ANSWER_CUE_RE.search(line))
+            has_math = bool(re.search(r"\$[^$]+\$", line))
+            priority = 2 if has_cue and has_math else 1 if has_cue else 0
+            candidates.append((priority, index, candidate))
+    return max(candidates)[2] if candidates else None
+
+
 def extract_answer_prefix(target: str, response: str) -> tuple[str | None, str]:
     """Extract the answer requested immediately after the benchmark's ``Answer:`` prompt."""
 
@@ -128,6 +151,9 @@ def extract_answer_prefix(target: str, response: str) -> tuple[str | None, str]:
     token = _last_explicit_token(line)
     if token:
         return token, "last_explicit_token"
+    final_answer = _final_explicit_answer(target, response)
+    if final_answer:
+        return final_answer, "final_explicit_token"
     return None, "no_answer_token"
 
 

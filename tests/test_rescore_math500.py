@@ -49,6 +49,36 @@ def test_answer_prefix_rejects_gold_inside_wrong_leading_explanation() -> None:
     assert RESCORE.equivalent("14", candidate) == (False, None)
 
 
+def test_answer_prefix_falls_back_to_final_explicit_answer_after_prose() -> None:
+    response = (
+        "To solve the equation, cross-multiply.\n"
+        r"Therefore, the solution is $x = 11$."
+    )
+    candidate, reason = RESCORE.extract_answer_prefix("11", response)
+    assert candidate == "11"
+    assert reason == "final_explicit_token"
+    assert RESCORE.equivalent("11", candidate) == (True, None)
+
+
+def test_answer_prefix_fallback_rejects_next_prompt_gold() -> None:
+    response = "I cannot solve this.\nQuestion: a new problem whose answer is 11"
+    candidate, reason = RESCORE.extract_answer_prefix("11", response)
+    assert candidate is None
+    assert reason == "no_answer_token"
+
+
+def test_answer_prefix_prefers_explicit_math_answer_over_malformed_suffix() -> None:
+    response = (
+        "To solve the equation, cross-multiply.\n"
+        r"Therefore, the solution is $x = 11$." "\n"
+        "The answer is: 11.00000000000007.00000000000007.00"
+    )
+    candidate, reason = RESCORE.extract_answer_prefix("11", response)
+    assert candidate == "11"
+    assert reason == "final_explicit_token"
+    assert RESCORE.equivalent("11", candidate) == (True, None)
+
+
 def test_answer_prefix_rejects_extra_comma_separated_value() -> None:
     candidate, reason = RESCORE.extract_answer_prefix("1", "1, 2\nSolution: ...")
     assert candidate == "1, 2"

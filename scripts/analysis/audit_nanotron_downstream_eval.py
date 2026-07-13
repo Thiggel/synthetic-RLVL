@@ -113,7 +113,9 @@ def audit_run(
             command = {}
 
     command_tasks = command.get("tasks")
-    if command_tasks != expected_tasks:
+    if not isinstance(command_tasks, list) or sorted(command_tasks) != sorted(
+        expected_tasks
+    ):
         errors.append(f"command tasks={command_tasks!r}, expected {expected_tasks!r}")
 
     command_args = command.get("cmd") if isinstance(command.get("cmd"), list) else []

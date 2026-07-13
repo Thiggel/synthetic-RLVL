@@ -86,6 +86,20 @@ def test_accepts_complete_instruction_bundle(tmp_path: Path):
     assert report["chat_template_applied"]
 
 
+def test_accepts_equivalent_task_order(tmp_path: Path):
+    run_dir = _write_bundle(tmp_path)
+    command_path = run_dir / "command.json"
+    command = json.loads(command_path.read_text())
+    command["tasks"] = list(reversed(command["tasks"]))
+    command_path.write_text(json.dumps(command))
+    report = AUDIT.audit_run(
+        run_dir,
+        mode="direct",
+        expected_tasks=list(AUDIT.FINAL_TASKS),
+    )
+    assert report["accepted"]
+
+
 def test_rejects_limited_production_bundle(tmp_path: Path):
     run_dir = _write_bundle(tmp_path, limit=1)
     report = AUDIT.audit_run(
