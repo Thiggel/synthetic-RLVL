@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 19:02 CEST.
+Last updated: 2026-07-13 20:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -44,24 +44,35 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3850488`, train `3850490`, and final/checkpoint eval `3850492/3850493`.
   Build `3850488` completed CPU-only and verified 100k formal plus 100k NL
   sequence fingerprints before reloading the 100k-row Hub subset. No-repeat
-  tiny training rows `3850490_0..2` started at 18:59--19:01 CEST and the
-  remaining rows are throttle-pending. Architecture SFT rows
+  tiny training rows `3850490_0..2` completed one exact epoch at 20:12--20:16
+  CEST with complete step-6250 checkpoints and final weights; rows `3..5`
+  backfilled immediately and the remaining rows are throttle-pending.
+  Architecture SFT rows
   `3850113_0..2` completed `0:0` at 18:44--18:45 CEST; all three exact
   `checkpoint-10000` trainer states and nonempty final adapters passed the
   artifact check. Rows `3850113_3..5` backfilled on A40s, and corrected
   shortcut SFT rows `3850213_0..2` started on A40s at 18:56--18:59 CEST.
   Other active rows are progressing without fatal signatures.
-- At 18:53 CEST, validity-fixed BranchProof eval rows `3838163_0..5` had
-  completed sampled chunks `98/67/81/106/96/104` of `112`. All remain on
-  verified A100-80GB nodes with the unchanged protocol. A recent-ten-chunk
-  projection puts the slowest row at about `16.2` hours total, below the
-  20-hour depth-sharding trigger; no production JSON/sample bundle exists yet.
-  Logic Nanotron recovery `3835442_3` reached `6851/8192` at `30.9K` tokens/s
-  with finite loss `1.81` and an ETA near 01:12 CEST on July 14. Its loaded
+- Validity-fixed BranchProof eval rows `3838163_3/5` completed in
+  `10:14:41/10:33:40`, and their row audits `3847756_3/5` accepted both full
+  448-prompt, 16-generation metric bundles and all 1,024 retained rows without
+  an error. Rows `6/7` backfilled on A100-80GB nodes. At 20:55, active rows
+  `0/1/2/4` had completed about `110/76/92/106` sampled chunks of `112`.
+  Manual retained-trace inspection agrees with the intended task: complete,
+  correct proofs dominate through training depth, while wrong branches,
+  repetition, format loss, and generation-cap hits emerge OOD; fresh constants
+  remain intact and no ambiguity/parser regression is visible. The two
+  completed train-1-to-10 logic seeds are provisional, but both have
+  correct@16 `1.0` through depth 20; at depth 25 correct@16 is `0.938/0.875`
+  while citation-free joint@16 is `0.031/0.219`, and at depth 50 they are
+  `0.406/0.219` and `0.000/0.031`. Wait for seed 3408 and the matched NL rows
+  before drawing a modality conclusion.
+- Logic Nanotron recovery `3835442_3` reached `7271/8192` at `30.9K` tokens/s
+  with finite loss `1.76` and an ETA near 01:12 CEST on July 14. Its loaded
   step-4096 checkpoint still contains model, optimizer, scheduler, and all
   eight RNG shards; metadata restores the exact `4096/524288/2147483648`
   step/sample/token offsets and the `85/15` mixture. CPU-only watcher
-  `3850497` is running; its already scheduled successor `3850618` remains
+  `3850497` completed cleanly; its scheduled successor `3850618` remains
   pending for 00:47 CEST because the end-to-end plan is incomplete.
 - Sequence-length auditing found two additional old-result confounds. Hybrid
   targets average about 10k OLMo tokens and were truncated by the old 8192 SFT

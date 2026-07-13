@@ -4,6 +4,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 20:55 CEST live audit: no new failed, OOM, timed-out, or dependency-stale
+  rows in the corrected report matrix. No-repeat tiny rows `3850490_0..2`
+  completed exactly 6,250 steps/one epoch over 100k unique examples in
+  73--77 minutes, with complete target checkpoints and 78,266,808-byte final
+  weights; rows `3..5` backfilled. Validity-fixed baseline eval rows
+  `3838163_3/5` completed in `10:14:41/10:33:40`, and row audits
+  `3847756_3/5` accepted both 448-prompt, 16-generation, 1,024-retained-row
+  bundles without errors. Manual samples show complete in-range proofs and
+  expected OOD wrong-branch, repetition, format, and cap failures; fresh
+  constants remain intact and no ambiguity/parser regression was found.
+  Preliminary train-1-to-10 logic depth-25 correct/citation-free-joint@16 is
+  `0.938/0.031` and `0.875/0.219` across the two complete seeds; depth-50 is
+  `0.406/0.000` and `0.219/0.031`. These are not report-ready until seed 3408
+  and matched NL finish. Logic Nanotron reached step `7271/8192` at `30.9K`
+  tokens/s with finite loss. Corrected downstream jobs remain capacity-pending,
+  not failed. Added the two accepted row-audit JSONs under
+  `analysis/branchproof_unique_v2_full_grid_audits/`.
 - 18:57 CEST autonomous oversight refresh: corrected architecture SFT rows
   `3850113_0..2` completed `0:0`; each has its exact step-10000 trainer state,
   a nonempty `73,911,112`-byte final adapter, and no zero-byte/fatal artifact.
