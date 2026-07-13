@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 10:53 CEST.
+Last updated: 2026-07-13 10:59 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -338,6 +338,25 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   first-launch behavior is unchanged; the wrapper now requests automatic
   latest-checkpoint resume after a timeout or node loss. Resolver, wrapper,
   chat-format, and exact remote-checkpoint dry-run checks pass (`7 passed`).
+- At 10:59 CEST all six active BranchProof eval rows were confirmed both in
+  the stored request (`Features=a100_80`) and on A100-SXM4-80GB nodes. Rows
+  `0/2` were in greedy chunk 6 of 7, row `1` in chunk 5, and rows `3..5` in
+  chunk 7; no corrected production artifact is complete yet. The CPU-only
+  row-audit/aggregate chain is now `3847756 -> 3847757`; it preserves
+  `aftercorr:3838163` and `afterok:3847756`, requests no GRES, and supersedes
+  canceled GPU-requesting `3838164/3838165`. Aggregation now emits explicit
+  three-seed variability in the primary table and depth-curve bands; focused
+  tests pass (`8 passed`).
+- At 10:59 CEST logic midtraining `3835442_3` was healthy at `5171/8192`,
+  `2.71B` tokens, `30.9K` tokens/s, finite loss `1.77`, and ETA about 01:13
+  CEST on July 14. NL direct eval `3834904_8` had processed `3571/20362`
+  prompts (18%) on A100-80GB; control direct eval `3835927_0` had started on
+  A100-80GB and selected the same ten-task reviewer suite. No downstream
+  result bundle is complete yet.
+- Pending CPU-only watcher `3847703` was replaced at the identical 12:46 CEST
+  start by `3847769` so its stored payload follows audit/aggregate
+  `3847756/3847757`. The replacement requests only four CPUs and 30 GB RAM;
+  the obsolete watcher was canceled only after stored-script verification.
 - Scoped oversight commit `cf5162e` was pushed successfully from the login
   node at 21:12 CEST after the watcher's transient SSH attempts timed out; the
   report repository remains clean and synchronized.
@@ -746,5 +765,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443,3835779,3835927,3835928,3836159,3838163,3838164,3838165 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443,3835779,3835927,3835928,3836159,3838163,3847756,3847757,3847769 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

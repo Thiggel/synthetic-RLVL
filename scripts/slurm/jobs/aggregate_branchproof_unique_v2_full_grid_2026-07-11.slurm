@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=agg_bp_full
 #SBATCH --partition=a100mig
-#SBATCH --gres=gpu:a100small:1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=01:00:00
 #SBATCH --output=logs/%x_%j.out
@@ -12,7 +11,7 @@ cd "${SLURM_SUBMIT_DIR:-$PWD}"
 mkdir -p logs
 source ./scripts/env.sh
 
-EVAL_ARRAY_JOB_ID="${EVAL_ARRAY_JOB_ID:-3834582}"
+EVAL_ARRAY_JOB_ID="${EVAL_ARRAY_JOB_ID:-3838163}"
 
 VENV_PATH="${VENV_PATH:-${HPCVAULT}/.venv_rlvl_posttrain}"
 export VIRTUAL_ENV="${VENV_PATH}"

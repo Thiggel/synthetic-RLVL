@@ -178,16 +178,23 @@ def write_primary_markdown(path: Path, rows: list[dict[str, object]]) -> None:
     ]
     for row in sorted(rows, key=lambda r: (str(r["template"]), int(r["train_max"]))):
         lines.append(
-            "| `{template}` | {train} | {greedy:.3f} | {c1:.3f} | {j1:.3f} | {c4:.3f} | {c8:.3f} | {c16:.3f} | {j16:.3f} |".format(
+            "| `{template}` | {train} | {greedy:.3f} +/- {greedy_std:.3f} | {c1:.3f} +/- {c1_std:.3f} | {j1:.3f} +/- {j1_std:.3f} | {c4:.3f} +/- {c4_std:.3f} | {c8:.3f} +/- {c8_std:.3f} | {c16:.3f} +/- {c16_std:.3f} | {j16:.3f} +/- {j16_std:.3f} |".format(
                 template=row["template"],
                 train=int(row["train_max"]),
                 greedy=float(row["greedy_ood_correct_mean"]),
+                greedy_std=float(row["greedy_ood_correct_std"]),
                 c1=float(row["ood_correct1_mean"]),
+                c1_std=float(row["ood_correct1_std"]),
                 j1=float(row["ood_joint1_mean"]),
+                j1_std=float(row["ood_joint1_std"]),
                 c4=float(row["ood_correct4_mean"]),
+                c4_std=float(row["ood_correct4_std"]),
                 c8=float(row["ood_correct8_mean"]),
+                c8_std=float(row["ood_correct8_std"]),
                 c16=float(row["ood_correct16_mean"]),
+                c16_std=float(row["ood_correct16_std"]),
                 j16=float(row["ood_joint16_mean"]),
+                j16_std=float(row["ood_joint16_std"]),
             )
         )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -631,12 +638,23 @@ def make_plots(out_dir: Path, group_rows: list[dict[str, object]], depth_group_r
                 rows.sort(key=lambda r: int(r["depth"]))
                 if not rows:
                     continue
-                ax.plot(
-                    [int(r["depth"]) for r in rows],
-                    [float(r[f"{metric_name}_mean"]) for r in rows],
+                xs = [int(r["depth"]) for r in rows]
+                ys = [float(r[f"{metric_name}_mean"]) for r in rows]
+                stds = [float(r[f"{metric_name}_std"]) for r in rows]
+                line = ax.plot(
+                    xs,
+                    ys,
                     marker=MARKERS[train],
                     linewidth=2,
                     label=f"train 1..{train}",
+                )[0]
+                ax.fill_between(
+                    xs,
+                    [max(0.0, value - std) for value, std in zip(ys, stds, strict=True)],
+                    [min(1.0, value + std) for value, std in zip(ys, stds, strict=True)],
+                    color=line.get_color(),
+                    alpha=0.14,
+                    linewidth=0,
                 )
             ax.axvline(25, color="#666666", linestyle="--", linewidth=1, alpha=0.5)
             ax.set_title(TEMPLATE_LABELS[template])

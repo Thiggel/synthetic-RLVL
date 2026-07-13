@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 10:59 CEST confirmed corrected BranchProof eval `3838163` is explicitly
+  constrained to `a100_80` and every active row is on an 80 GB A100. Replaced
+  still-pending GPU-requesting audits `3838164 -> 3838165` with CPU-only
+  `3847756 -> 3847757`, preserving row-wise and all-row dependencies. Updated
+  aggregation to show three-seed std in the primary table and depth bands;
+  focused tests pass (`8 passed`).
+- 10:59 CEST logic midtraining was healthy at `5171/8192`, while NL direct
+  reviewer eval reached `3571/20362` prompts and control direct eval started;
+  all are on A100-80GB. Replaced queued watcher `3847703` with CPU-only
+  `3847769` at the same 12:46 start so its stored payload tracks the new audit
+  IDs.
 - 10:53 CEST made pending native-chat instruction SFT restart-safe. The live
   wrapper now auto-resumes the latest Trainer checkpoint; all three output
   roots are currently absent, so clean first launches are unchanged. Focused

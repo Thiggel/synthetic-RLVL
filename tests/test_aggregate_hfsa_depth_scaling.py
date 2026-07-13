@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import math
 from pathlib import Path
+from statistics import pstdev
 import sys
 
 
@@ -129,3 +130,42 @@ def test_exports_greedy_and_all_sampling_budgets() -> None:
 def test_missing_paired_metric_is_not_fabricated_as_zero() -> None:
     assert math.isnan(MODULE.difference(None, 0.4))
     assert math.isnan(MODULE.difference(0.4, None))
+
+
+def test_three_seed_summaries_and_primary_table_include_variability(tmp_path: Path) -> None:
+    records = [
+        RunRecord(
+            path=Path(f"logic_{seed}.json"),
+            template="logic",
+            train_max=25,
+            seed=seed,
+            checkpoint_step=None,
+            elapsed_seconds=3600.0,
+            metrics=_complete_metrics(
+                "logic",
+                greedy_ood=greedy,
+                sampled_offset=sampled,
+            ),
+        )
+        for seed, greedy, sampled in (
+            (3407, 0.3, 0.4),
+            (3408, 0.5, 0.5),
+            (3409, 0.7, 0.6),
+        )
+    ]
+
+    summary = MODULE.group_summary_rows(records)[0]
+    assert summary["n"] == 3
+    assert math.isclose(summary["greedy_ood_correct_mean"], 0.5)
+    assert math.isclose(
+        summary["greedy_ood_correct_std"],
+        pstdev([0.3, 0.5, 0.7]),
+    )
+    depth_summary = MODULE.grouped_depth_summary_rows(MODULE.final_depth_rows(records))
+    depth_one = next(row for row in depth_summary if row["depth"] == 1)
+    assert depth_one["n"] == 3
+    assert math.isclose(depth_one["correct1_std"], pstdev([0.4, 0.5, 0.6]))
+
+    output = tmp_path / "primary.md"
+    MODULE.write_primary_markdown(output, [summary])
+    assert "0.500 +/- 0.163" in output.read_text(encoding="utf-8")

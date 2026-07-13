@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=audit_bp_full
 #SBATCH --partition=a100mig
-#SBATCH --gres=gpu:a100small:1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=00:30:00
 #SBATCH --array=0-29%8
@@ -30,7 +29,7 @@ TEMPLATE="${TEMPLATES[$TEMPLATE_IDX]}"
 TRAIN_MAX="${TRAIN_MAXES[$TRAIN_IDX]}"
 RUN_NAME="sft_branchproof_unique_v2_${TEMPLATE}_train1to${TRAIN_MAX}_10k_seed${SEED}"
 OUT_DIR="${HPCVAULT}/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710"
-EVAL_ARRAY_JOB_ID="${EVAL_ARRAY_JOB_ID:-3834582}"
+EVAL_ARRAY_JOB_ID="${EVAL_ARRAY_JOB_ID:-3838163}"
 CONSTANT_ARGS=()
 if [[ "${TEMPLATE}" == "nl_exact" ]]; then
   CONSTANT_ARGS=(--skip-fresh-constant-check)

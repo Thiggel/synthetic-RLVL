@@ -61,8 +61,15 @@ Rows 1 and 2 were stopped after about `09:57` rather than spending another
 chain is:
 
 - A100-80GB eval: `3838163_[0-29%6]`
-- row audit: `3838164_[0-29%8]`
-- strict aggregate and qualitative audit: `3838165`
+- CPU-only row audit: `3847756_[0-29%8]`
+- CPU-only strict aggregate and qualitative audit: `3847757`
+
+The original replacement audit/aggregate `3838164/3838165` were canceled
+before start because they unnecessarily requested MIG GPUs. The new jobs keep
+the same `aftercorr:3838163` and all-rows `afterok` gates, request no GRES, and
+default to the corrected eval array ID. The aggregate now reports three-seed
+standard deviations in the primary Markdown table and as bands on every depth
+curve.
 
 Only eval rows 0--2 repeat generation work. Rows 3--29 had not started in the
 old array. No corrected BranchProof validity or joint result is accepted until
