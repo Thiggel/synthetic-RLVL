@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 11:12 CEST.
+Last updated: 2026-07-13 11:22 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -313,6 +313,18 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   is now `40.125G`; total model+dataset storage is about `62.021G`, projected
   to `77.264G` after the logic upload. Audit artifact:
   `analysis/hf_storage_cleanup_2026-07-13.json`.
+- At 11:22 CEST the Hub LFS inventory, which includes retained history rather
+  than only current repository heads, was `86.191G`; this explained the
+  apparent conflict with the `62.021G` head-size audit and would have reached
+  `101.434G` after the pending logic upload. Removed only 34 historical LFS
+  objects (`16.694G`) from `flaitenberger/imagenet-100-LT-balanced` that were
+  unreachable from every live branch, tag, and conversion ref. Byte-level
+  path/size/SHA snapshots verify that both live `main` and `parquet` trees are
+  unchanged. No additional model or dataset repository was deleted. Retained
+  LFS is now `69.497G`, projected `84.740G` after logic, leaving about `15.26G`
+  under the nominal 100 GB limit before small instruction adapters. The
+  broader mixture grid therefore needs checkpoint rotation or external
+  archival; it cannot retain every 15.243 GB full checkpoint simultaneously.
 - At 10:41 CEST NL direct eval `3834904_8` was running on A100-80GB. It
   selected all ten reviewer tasks, loaded the repaired remote metadata,
   resolved `Qwen2ForCausalLM`, and initialized vLLM without the previous

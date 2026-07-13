@@ -10,6 +10,22 @@
     "model_gb": 83.942,
     "total_gb": 105.838
   },
+  "lfs_history_cleanup": {
+    "after_retained_lfs_gb": 69.497,
+    "before_retained_lfs_gb": 86.191,
+    "live_refs_preserved": [
+      "refs/heads/main",
+      "refs/convert/parquet"
+    ],
+    "removed_lfs_objects": 34,
+    "repo_id": "flaitenberger/imagenet-100-LT-balanced",
+    "repo_type": "dataset",
+    "retained_repo_lfs_gb": 0.979,
+    "timestamp": "2026-07-13T11:22:00+02:00",
+    "verified_live_ref_trees_unchanged": true,
+    "reclaimed_gb": 16.694,
+    "projected_retained_lfs_after_logic_upload_gb": 84.740
+  },
   "deleted_models": [
     {
       "reconstructable_from": "flaitenberger/synthetic-rlvl-sft-lr1e4-seed3407 + allenai/Olmo-3-1025-7B",
@@ -32,6 +48,7 @@
   ],
   "preserved": {
     "all_dataset_repos": true,
+    "all_live_dataset_refs": true,
     "all_unrelated_model_repos": true,
     "new_qwen_control_and_nl_repos": true,
     "three_reconstructing_lora_repos": true

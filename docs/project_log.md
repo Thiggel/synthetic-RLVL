@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 11:22 CEST reconciled Hugging Face head sizes with retained LFS history.
+  Retained storage was `86.191G`, so the pending 15.243 GB logic checkpoint
+  would have exceeded 100 GB despite current heads totaling only `62.021G`.
+  Permanently removed 34 historical objects (`16.694G`) from
+  `imagenet-100-LT-balanced` only after proving they were unreachable from all
+  live branches, tags, and conversion refs. Verified the live `main` and
+  `parquet` trees path/size/SHA-identical afterward. No additional repo or
+  model was deleted. Retained LFS is now `69.497G`, projected `84.740G` after
+  logic; the broader mixture grid needs checkpoint rotation or external
+  archival. Updated `analysis/hf_storage_cleanup_2026-07-13.json`.
 - 11:12 CEST audited stored Slurm scripts before logic completion and found
   unstarted jobs `3831123/3834908/3831125/3834909` predated the converter,
   downloader, and resume fixes. Submitted and verified repaired chain
