@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=agg_nano_p15
 #SBATCH --partition=a100mig
-#SBATCH --gres=gpu:a100small:1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=01:00:00
 #SBATCH --output=logs/%x_%j.out

@@ -50,9 +50,9 @@ stores separate strict and flexible-extraction filter rows for the same
 document, which the audit correctly counts once by `doc_id`.
 
 The matched comparison is also fixed before results. Control evals
-`3835927/3835928`, logic `3834908/3834909`, and NL `3834904/3834905` all write
-to the unified corrected root and feed strict aggregate `3836159`. Canceled
-pending control evals `3834906/3834907` used the legacy default root. The
+`3847792/3835928`, logic `3834908/3834909`, and NL `3834904/3834905` all write
+to the unified corrected root and feed CPU-only strict aggregate `3847793`.
+Canceled pending control evals `3834906/3834907` used the legacy default root. The
 aggregate requires all six production audits and reports each primary task,
 task stderr, deltas from control, and instruction-minus-direct deltas. Its
 predeclared unweighted macros are all-primary, reasoning-core, general
@@ -249,8 +249,9 @@ Transformers 4.57.3 requires `additional_special_tokens`. The converter now
 normalizes this metadata and the final verifier explicitly runs in the
 downstream environment. Both existing repos were repaired in place; fresh
 4.57.3/5.12.1 loads preserve token IDs `151644..151656` and native-chat
-rendering. Direct evals `3835927/3834904` are released; replacement instruction
-parents `3847661/3847662` feed existing evals `3835928/3834905`.
+rendering. NL direct eval `3834904` is released; replacement control direct
+`3847792` follows a transient-download failure in `3835927`, and replacement
+instruction parents `3847661/3847662` feed existing evals `3835928/3834905`.
 
 Instruction/downstream preflight update 2026-07-13 10:46 CEST: exact dry runs
 against both repaired remote checkpoints loaded UltraChat, retained all sampled
@@ -259,6 +260,14 @@ supervised only assistant tokens. The focused instruction-format,
 downstream-artifact, and aggregate tests pass (`12 passed`). NL direct eval
 `3834904_8` then loaded all four shards, initialized vLLM and its KV cache, and
 began full-suite context construction without the former tokenizer exception.
+
+Download recovery update 2026-07-13 11:06 CEST: control direct eval
+`3835927_0` failed before weight loading because inherited `hf_transfer`
+received a transient 403 for the first shard. The direct and instruction
+wrappers now force standard resumable HTTP. A100-80 replacement `3847792` is
+pending, and CPU-only aggregate `3847793` replaces dependency-unsatisfiable
+`3836159`. Focused downstream, aggregate, and instruction tests pass
+(`17 passed`).
 
 Instruction recovery update 2026-07-13 10:53 CEST: before any replacement
 instruction parent started, all three exact output roots were verified absent

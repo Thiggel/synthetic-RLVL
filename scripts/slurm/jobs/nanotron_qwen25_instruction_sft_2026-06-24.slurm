@@ -20,6 +20,7 @@ export PATH="${VENV_PATH}/bin:${PATH}"
 hash -r 2>/dev/null || true
 export HF_HOME="${HF_HOME:-${HPCVAULT}/.cache/huggingface}"
 export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-${HF_HOME}/hub}"
+export HF_HUB_ENABLE_HF_TRANSFER=0
 
 CHECKPOINT_STEP="${CHECKPOINT_STEP:-8192}"
 HF_NAMESPACE="${HF_NAMESPACE:-flaitenberger}"

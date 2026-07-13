@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 10:59 CEST.
+Last updated: 2026-07-13 11:06 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -357,6 +357,17 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   start by `3847769` so its stored payload follows audit/aggregate
   `3847756/3847757`. The replacement requests only four CPUs and 30 GB RAM;
   the obsolete watcher was canceled only after stored-script verification.
+- At 11:06 CEST control direct eval `3835927_0` had failed during model startup
+  because inherited `hf_transfer` received a transient 403 for the first HF
+  shard. It did not generate or score benchmark data. Both remote-model
+  wrappers now force standard resumable HTTP; focused downstream tests pass
+  (`17 passed`). A100-80 replacement `3847792_[0%1]` is account-GRES pending.
+  The old strict aggregate became unsatisfiable and was replaced by CPU-only
+  `3847793`, which waits on `3834904/3834905/3847792/3835928/3834908/3834909`.
+  Queued watcher `3847795` supersedes `3847769` at the same 12:46 start and its
+  stored payload follows these recovery IDs. Control instruction SFT
+  `3847661_0` is running on A100-80GB; its live process has Xet disabled and
+  `hf_transfer` is not enabled.
 - Scoped oversight commit `cf5162e` was pushed successfully from the login
   node at 21:12 CEST after the watcher's transient SSH attempts timed out; the
   report repository remains clean and synchronized.
@@ -551,12 +562,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   sample files, complete unique-document coverage, finite primary metrics,
   no evaluation limit, and the correct direct-versus-Qwen-chat rendering.
   Existing results are skippable only after this audit passes. Final audited
-  production evals are NL `3834904/3834905`, control `3835927/3835928`, and
+  production evals are NL `3834904/3834905`, control `3847792/3835928`, and
   logic `3834908/3834909`; they wait on their live model branches. Slurm
   confirms each is constrained to one A100-80GB GPU with 240 GB host RAM.
   The wrapper also preflights actual dataset construction and archives
   command-only, incomplete, or audit-rejected outputs.
-- Strict downstream analysis job `3836159` waits for all six accepted evals.
+- CPU-only strict downstream analysis job `3847793` waits for all six accepted evals.
   `aggregate_nanotron_downstream_pilot.py` refuses an incomplete or
   audit-rejected bundle and writes individual task values/stderr, deltas from
   the matched control, instruction-minus-direct deltas, and four predeclared
@@ -765,5 +776,5 @@ The external report repo `../synthetic-RLVL-report` mirrors the generated bundle
 ```bash
 source ./scripts/env.sh
 squeue -u c107fa12 -o '%.18i %.9P %.34j %.2t %.11M %.6D %.24E %R'
-sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443,3835779,3835927,3835928,3836159,3838163,3847756,3847757,3847769 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
+sacct -j 3823434,3828946,3829069,3829072,3829073,3830927,3830928,3831110,3831111,3831112,3831113,3831115,3831119,3831121,3831123,3831125,3831135,3831136,3831179,3832945,3833178,3833179,3834582,3834706,3834707,3834728,3834737,3834738,3834836,3834904,3834905,3834906,3834907,3834908,3834909,3834911,3835433,3835438,3835442,3835443,3835779,3835927,3835928,3838163,3847756,3847757,3847792,3847793,3847795 --format=JobID,JobName%34,State,Elapsed,ExitCode -n -P
 ```

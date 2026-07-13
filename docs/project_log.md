@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 11:06 CEST control direct eval `3835927_0` failed before model load on a
+  transient `hf_transfer` 403. Forced standard resumable HTTP in both remote
+  model wrappers and submitted A100-80 replacement `3847792`. Replaced
+  dependency-unsatisfiable/GPU-requesting aggregate `3836159` with CPU-only
+  `3847793`; focused tests pass (`17 passed`). Control instruction SFT
+  `3847661_0` is running normally. Stored-payload-verified watcher `3847795`
+  replaces `3847769` at the same 12:46 start.
 - 10:59 CEST confirmed corrected BranchProof eval `3838163` is explicitly
   constrained to `a100_80` and every active row is on an 80 GB A100. Replaced
   still-pending GPU-requesting audits `3838164 -> 3838165` with CPU-only
