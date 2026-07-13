@@ -4,6 +4,24 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 18:57 CEST autonomous oversight refresh: corrected architecture SFT rows
+  `3850113_0..2` completed `0:0`; each has its exact step-10000 trainer state,
+  a nonempty `73,911,112`-byte final adapter, and no zero-byte/fatal artifact.
+  Rows `3..5` backfilled on A40s; corrected shortcut SFT `3850213_0..2`
+  started at 18:56--18:59, and no-repeat tiny training `3850490_0..2`
+  started at 18:59--19:01. Validity-fixed BranchProof eval `3838163_0..5` remained on
+  verified A100-80GB nodes at sampled chunks `98/67/81/106/96/104` of 112.
+  The slowest recent-ten-chunk projection is about `16.2` hours total, below
+  the 20-hour sharding trigger; no corrected production bundle exists yet.
+  Logic Nanotron recovery `3835442_3` reached `6851/8192` at `30.9K` tokens/s
+  with finite loss `1.81` and retained the exact step-4096 optimizer,
+  scheduler, RNG, sample/token-offset, and 85/15 blend state. No scheduler
+  edit, recovery, report regeneration, or scientific claim was triggered.
+  Current CPU-only watcher `3850497` preserved its scheduled CPU-only
+  successor `3850618` for 00:47 CEST on July 14. The handoff commit was
+  created locally; pushes through normal GitHub SSH and the port-443 fallback
+  both timed out without output, leaving this repo one commit ahead of
+  `origin/main` for the successor to retry.
 - 18:04 CEST first no-repeat tiny build `3850394` failed its intended gate:
   record keys were all unique, but full content hashing found only `99,994`
   distinct sequences in 100k rows. Canceled its unsatisfied dependents
