@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 11:12 CEST audited stored Slurm scripts before logic completion and found
+  unstarted jobs `3831123/3834908/3831125/3834909` predated the converter,
+  downloader, and resume fixes. Submitted and verified repaired chain
+  `3847802 -> 3847804/3847805 -> 3847806`, then canceled only the stale jobs.
+  CPU-only six-eval aggregate is now `3847807`. Stored-payload-verified watcher
+  `3847808` replaces `3847795` at the same 12:46 start and self-schedules every
+  six hours before invoking Codex.
 - 11:06 CEST control direct eval `3835927_0` failed before model load on a
   transient `hf_transfer` 403. Forced standard resumable HTTP in both remote
   model wrappers and submitted A100-80 replacement `3847792`. Replaced

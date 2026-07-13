@@ -50,8 +50,8 @@ stores separate strict and flexible-extraction filter rows for the same
 document, which the audit correctly counts once by `doc_id`.
 
 The matched comparison is also fixed before results. Control evals
-`3847792/3835928`, logic `3834908/3834909`, and NL `3834904/3834905` all write
-to the unified corrected root and feed CPU-only strict aggregate `3847793`.
+`3847792/3835928`, logic `3847804/3847806`, and NL `3834904/3834905` all write
+to the unified corrected root and feed CPU-only strict aggregate `3847807`.
 Canceled pending control evals `3834906/3834907` used the legacy default root. The
 aggregate requires all six production audits and reports each primary task,
 task stderr, deltas from control, and instruction-minus-direct deltas. Its
@@ -268,6 +268,15 @@ wrappers now force standard resumable HTTP. A100-80 replacement `3847792` is
 pending, and CPU-only aggregate `3847793` replaces dependency-unsatisfiable
 `3836159`. Focused downstream, aggregate, and instruction tests pass
 (`17 passed`).
+
+Stored-payload recovery update 2026-07-13 11:12 CEST: dependency-held logic
+upload/direct/instruction jobs `3831123/3834908/3831125/3834909` still
+contained the pre-repair script bodies captured by Slurm. Verified
+replacements are `3847802/3847804/3847805/3847806`; they include single-rank
+conversion, downstream checkpoint verification, standard HTTP downloads,
+automatic instruction resume, and production artifact audits. CPU-only strict
+aggregate `3847807` has the corrected six dependencies. Old jobs were canceled
+only after stored-script and dependency verification.
 
 Instruction recovery update 2026-07-13 10:53 CEST: before any replacement
 instruction parent started, all three exact output roots were verified absent
