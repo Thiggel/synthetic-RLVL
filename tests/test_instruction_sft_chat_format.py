@@ -7,6 +7,13 @@ from datasets import Dataset
 
 
 SCRIPT = Path(__file__).parents[1] / "scripts" / "train_instruction_sft.py"
+WRAPPER = (
+    Path(__file__).parents[1]
+    / "scripts"
+    / "slurm"
+    / "jobs"
+    / "nanotron_qwen25_instruction_sft_2026-06-24.slurm"
+)
 SPEC = importlib.util.spec_from_file_location("train_instruction_sft", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -90,3 +97,18 @@ def test_tagged_format_remains_available_for_legacy_runs():
         "prompt": "<question>\nQuestion\n</question>\n",
         "target": "<answer>\nAnswer\n</answer>",
     }
+
+
+def test_auto_resume_selects_latest_trainer_checkpoint(tmp_path: Path):
+    (tmp_path / "checkpoint-100").mkdir()
+    latest = tmp_path / "checkpoint-200"
+    latest.mkdir()
+    assert MODULE._resolve_resume_checkpoint(tmp_path, "auto") == str(latest)
+
+
+def test_auto_resume_is_noop_for_clean_output_root(tmp_path: Path):
+    assert MODULE._resolve_resume_checkpoint(tmp_path / "absent", "auto") is None
+
+
+def test_nanotron_instruction_wrapper_enables_auto_resume():
+    assert "--resume-from-checkpoint auto" in WRAPPER.read_text(encoding="utf-8")

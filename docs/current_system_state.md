@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 10:50 CEST.
+Last updated: 2026-07-13 10:53 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -333,6 +333,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   same 12:46 CEST start, and its stored payload was verified before stale
   GPU-requesting watcher `3847667` was canceled. Self-scheduled successors
   inherit this CPU-only request.
+- At 10:53 CEST native-chat instruction SFT became restart-safe before any
+  replacement parent started. All three exact output roots were absent, so
+  first-launch behavior is unchanged; the wrapper now requests automatic
+  latest-checkpoint resume after a timeout or node loss. Resolver, wrapper,
+  chat-format, and exact remote-checkpoint dry-run checks pass (`7 passed`).
 - Scoped oversight commit `cf5162e` was pushed successfully from the login
   node at 21:12 CEST after the watcher's transient SSH attempts timed out; the
   report repository remains clean and synchronized.

@@ -66,6 +66,7 @@ else
     --save-steps "${SAVE_STEPS:-1000}" \
     --save-total-limit "${SAVE_TOTAL_LIMIT:-3}" \
     --format-mode "${INSTRUCTION_FORMAT_MODE:-chat}" \
+    --resume-from-checkpoint auto \
     --gradient-checkpointing
 fi
 

@@ -260,6 +260,13 @@ downstream-artifact, and aggregate tests pass (`12 passed`). NL direct eval
 `3834904_8` then loaded all four shards, initialized vLLM and its KV cache, and
 began full-suite context construction without the former tokenizer exception.
 
+Instruction recovery update 2026-07-13 10:53 CEST: before any replacement
+instruction parent started, all three exact output roots were verified absent
+and the live wrapper was extended with `--resume-from-checkpoint auto`. Clean
+launches therefore remain unchanged, while timeout/node-loss replacements can
+resume the latest Trainer checkpoint. Resolver, wrapper, format, and exact
+remote-checkpoint dry-run checks pass (`7 passed`).
+
 HF storage cleanup update 2026-07-13 10:36 CEST: account inventory measured
 `83.942G` of models and `21.896G` of datasets. Only the three superseded merged
 OLMo SFT seed repos were deleted (`43.818G`); their retained LoRA repos and

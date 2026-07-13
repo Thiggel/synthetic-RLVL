@@ -14,6 +14,7 @@ import wandb
 from datasets import Dataset, load_dataset
 from peft import LoraConfig, get_peft_model
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments, set_seed
+from transformers.trainer_utils import get_last_checkpoint
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
@@ -150,6 +151,17 @@ def _load_instruction_splits(args: argparse.Namespace) -> tuple[Dataset, Dataset
     return train, eval_ds
 
 
+def _resolve_resume_checkpoint(output_dir: Path, value: str | None) -> str | None:
+    if value is None:
+        return None
+    if value == "auto":
+        return get_last_checkpoint(str(output_dir)) if output_dir.is_dir() else None
+    checkpoint = Path(value)
+    if not checkpoint.is_dir():
+        raise ValueError(f"Instruction SFT resume checkpoint does not exist: {checkpoint}")
+    return str(checkpoint)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="LoRA instruction SFT control for OLMo-style causal LMs.")
     parser.add_argument("--model", default="allenai/Olmo-3-1025-7B")
@@ -184,6 +196,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-wrap-answer-tags", dest="wrap_answer_tags", action="store_false")
     parser.set_defaults(wrap_answer_tags=True)
     parser.add_argument("--gradient-checkpointing", action="store_true")
+    parser.add_argument(
+        "--resume-from-checkpoint",
+        default=None,
+        help="Trainer checkpoint path, or 'auto' to use the latest checkpoint in output-dir.",
+    )
     parser.add_argument("--bf16", action="store_true", default=True)
     parser.add_argument("--report-to", nargs="*", default=["wandb"])
     parser.add_argument("--dry-run", action="store_true", help="Only load and tokenize data; do not load/train model.")
@@ -303,7 +320,10 @@ def main() -> None:
         tokenizer=tokenizer,
         data_collator=make_sft_data_collator(tokenizer),
     )
-    trainer.train()
+    resume_checkpoint = _resolve_resume_checkpoint(output_dir, args.resume_from_checkpoint)
+    if resume_checkpoint is not None:
+        print(f"Resuming instruction SFT from {resume_checkpoint}")
+    trainer.train(resume_from_checkpoint=resume_checkpoint)
     final_dir = output_dir / "final"
     trainer.save_model(str(final_dir))
     tokenizer.save_pretrained(str(final_dir))

@@ -4,6 +4,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 10:53 CEST made pending native-chat instruction SFT restart-safe. The live
+  wrapper now auto-resumes the latest Trainer checkpoint; all three output
+  roots are currently absent, so clean first launches are unchanged. Focused
+  tests and an exact repaired-checkpoint dry run pass (`7 passed`).
 - 10:50 CEST removed unnecessary GPU allocation from the six-hour oversight
   wrapper after CPU-only `a100mig` probe `3847702` completed `0:0` during full
   account GPU utilization. Verified replacement watcher `3847703` is queued
