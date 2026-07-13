@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 11:41 CEST active-path audit: corrected BranchProof rows `0..5` all
+  finished greedy generation and reached sampled chunks
+  `28/18/27/43/42/44` of `112`; no production bundle is complete. Logic
+  midtraining reached `5311/8192` at `30.9K` tokens/s with finite loss `1.69`.
+  Control instruction SFT reached `5227/10000`, while NL direct evaluation
+  reached `67407/109837` requests in its current task stage. Fatal-log scans
+  were clean and all dependencies remain correct. Fixed the stale dashboard
+  reference from superseded aggregate `3847793` to strict gate `3847807`.
 - 11:40 CEST closed the BranchProof tokenizer-warning audit. On 704 actual
   prompt/target texts across logic/NL and depths 1--50, the base training
   tokenizer and merged-eval default tokenizer matched exactly (`704/704`).

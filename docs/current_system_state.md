@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 11:40 CEST.
+Last updated: 2026-07-13 11:41 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -345,6 +345,17 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `640/704` texts and would introduce a train/eval mismatch. Keep the current
   default tokenizer. Audit artifact:
   `analysis/branchproof_tokenizer_consistency_2026-07-13.json`.
+- At 11:41 CEST all active paths remain healthy. Corrected BranchProof rows
+  `0..5` are through greedy generation and are sampling chunks
+  `28/18/27/43/42/44` of `112`, respectively; rows `6..29` wait only on the
+  six-row throttle. Logic midtraining reached `5311/8192` at `30.9K` tokens/s
+  with finite loss `1.69` and still projects to finish near 01:11 CEST on
+  July 14. Control instruction SFT reached `5227/10000` with finite losses;
+  NL direct evaluation is actively processing a `109837`-request task stage
+  and had reached `67407` requests. No corrected BranchProof production file
+  or complete downstream result bundle exists yet, and focused fatal-log
+  scans are clean. CPU-only watcher `3847808` remains scheduled for 12:46
+  CEST and its stored payload schedules the next six-hour pass before Codex.
 - At 10:41 CEST NL direct eval `3834904_8` was running on A100-80GB. It
   selected all ten reviewer tasks, loaded the repaired remote metadata,
   resolved `Qwen2ForCausalLM`, and initialized vLLM without the previous
