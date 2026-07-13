@@ -4,6 +4,25 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 11:58 CEST live-path refresh: corrected BranchProof eval rows `0..5`
+  reached sampled chunks `34/27/30/51/49/51` of 112. Logic midtraining reached
+  `5381/8192` at `30.8K` tokens/s with finite loss `1.71`; control/NL native
+  instruction SFTs reached about `8660/1632` of 10000 with finite losses.
+  NL direct eval `3834904_8` completed `0:0` in `01:06:23` and its structural
+  production audit accepts all ten task groups and 50,693 unique scored docs.
+  Its strict MATH-500 metric remains provisional because sample inspection
+  found mathematically equivalent answers rejected when explanation follows
+  the answer; use a tested post-hoc final-answer scorer before aggregation.
+- 11:57 CEST archived nine superseded `autoformalization-*` adapters before
+  deleting their Hub repositories. Exact commit snapshots, 117-file
+  size/SHA-256 manifests, and a restoration index are under
+  `$HPCVAULT/hf_model_archives/2026-07-13_autoformalization_superseded/`.
+  Preserved the latest adapter for each task, the strict MMLU variant, all
+  datasets, all active Qwen models, and all reconstructing LoRAs. API checks
+  verified every deletion. Retained Hub LFS fell `69.497G -> 63.487G`,
+  reclaiming `6.010G` including history; the pending logic upload now projects
+  `78.730G`, leaving `21.270G`. The broader grid still requires checkpoint
+  rotation.
 - 11:41 CEST active-path audit: corrected BranchProof rows `0..5` all
   finished greedy generation and reached sampled chunks
   `28/18/27/43/42/44` of `112`; no production bundle is complete. Logic

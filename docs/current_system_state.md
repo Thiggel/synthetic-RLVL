@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 11:41 CEST.
+Last updated: 2026-07-13 11:58 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -337,6 +337,21 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   for later full-grid checkpoints, never deleting a model referenced by a
   pending/running evaluation. Exact reconciliation is recorded in
   `analysis/hf_storage_cleanup_2026-07-13.json`.
+- At 11:57 CEST, after explicit user authorization to reduce Hub pressure,
+  nine older `autoformalization-*` iterations were archived before deletion.
+  The archive fixes each exact Hub commit and verifies all 117 files by size
+  and SHA-256 under
+  `$HPCVAULT/hf_model_archives/2026-07-13_autoformalization_superseded/`.
+  Only iter1 rows with a retained iter2 and folio/mmlu iter1--2 rows with a
+  retained iter3 were removed; the latest adapter for every task, the strict
+  MMLU variant, all datasets, the three reconstructing SFT LoRAs, and both
+  active Qwen checkpoints remain. All nine deletions were API-verified absent.
+  A complete LFS re-inventory now gives `63.487G` across 62 repos (`35.084G`
+  models and `28.403G` datasets), reclaiming `6.010G` including retained
+  history. The pending `15.243G` logic upload projects to `78.730G`, leaving
+  `21.270G` under the nominal 100 GB limit. This is enough for the matched p15
+  chain, but the broader mixture grid still requires guarded
+  upload/evaluate/audit/delete rotation.
 - At 11:40 CEST the recurring `fix_mistral_regex=True` warning in corrected
   BranchProof eval logs was resolved as a false remediation suggestion for
   this protocol. The base training tokenizer and current merged-eval default

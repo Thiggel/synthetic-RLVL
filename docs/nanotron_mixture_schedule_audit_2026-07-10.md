@@ -293,6 +293,15 @@ Qwen checkpoints remain. Verified model storage is `40.125G`, total storage is
 about `62.021G`, and the projected total after logic upload is `77.264G`.
 Details are in `analysis/hf_storage_cleanup_2026-07-13.json`.
 
+HF storage cleanup update 2026-07-13 11:57 CEST: nine older
+`autoformalization-*` iterations were downloaded at exact commits, verified
+file-for-file by size and SHA-256, and archived under
+`$HPCVAULT/hf_model_archives/2026-07-13_autoformalization_superseded/` before
+their Hub repositories were deleted. The latest adapter for every task remains
+remote. Retained LFS is now `63.487G`; the pending logic checkpoint projects
+to `78.730G`. The matched p15 chain is safe, but future full checkpoints still
+require guarded upload/evaluate/audit/delete rotation.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the
