@@ -1,0 +1,41 @@
+{
+  "after": {
+    "dataset_gb": 21.896,
+    "model_gb": 40.125,
+    "projected_total_after_logic_upload_gb": 77.264,
+    "total_gb": 62.021
+  },
+  "before": {
+    "dataset_gb": 21.896,
+    "model_gb": 83.942,
+    "total_gb": 105.838
+  },
+  "deleted_models": [
+    {
+      "reconstructable_from": "flaitenberger/synthetic-rlvl-sft-lr1e4-seed3407 + allenai/Olmo-3-1025-7B",
+      "repo_id": "flaitenberger/synthetic-rlvl-sft-lr1e4-seed3407-merged",
+      "size_gb": 14.606,
+      "verified_deleted": true
+    },
+    {
+      "reconstructable_from": "flaitenberger/synthetic-rlvl-sft-lr1e4-seed3408 + allenai/Olmo-3-1025-7B",
+      "repo_id": "flaitenberger/synthetic-rlvl-sft-lr1e4-seed3408-merged",
+      "size_gb": 14.606,
+      "verified_deleted": true
+    },
+    {
+      "reconstructable_from": "flaitenberger/synthetic-rlvl-sft-lr1e4-seed3409 + allenai/Olmo-3-1025-7B",
+      "repo_id": "flaitenberger/synthetic-rlvl-sft-lr1e4-seed3409-merged",
+      "size_gb": 14.606,
+      "verified_deleted": true
+    }
+  ],
+  "preserved": {
+    "all_dataset_repos": true,
+    "all_unrelated_model_repos": true,
+    "new_qwen_control_and_nl_repos": true,
+    "three_reconstructing_lora_repos": true
+  },
+  "timestamp": "2026-07-13T10:36:00+02:00",
+  "units": "decimal GB"
+}

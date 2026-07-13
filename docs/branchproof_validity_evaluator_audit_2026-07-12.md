@@ -81,3 +81,17 @@ Rows `13/14` completed successfully and wrote final adapters at 01:04/01:05
 CEST. After the same parent-state and artifact checks, only their corresponding
 dependencies were cleared. The eligible corrected eval set is now `24/30`;
 active NL rows `24..29` remain gated.
+
+## Replacement Launch
+
+By 2026-07-13 08:16 CEST, full corrected SFT was complete at `30/30`, all
+final adapters passed the nonempty/no-zero-byte gate, and every eval task was
+dependency-free. Replacement eval rows `3838163_0..5` started at
+10:07--10:11 CEST on six verified A100-SXM4-80GB allocations. Their startup
+logs show the intended corrected adapters, isolated merge roots, a 16,384-token
+vLLM context, and no fatal/OOM/quota signature. Row 0 entered the unchanged
+greedy generation protocol with 64 prompts per chunk and
+`max_new_tokens=7168`; its first chunk completed successfully. Rows `6..29`
+now wait only on the six-task array throttle. No replacement production JSON
+or sample bundle is complete yet, so this establishes launch health only; the
+strengthened row audits and cross-grid qualitative gate remain mandatory.

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 10:10 CEST.
+Last updated: 2026-07-13 10:41 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -258,8 +258,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   hard quota; the three matched Nanotron roots occupy `795G`. Corrected
   BranchProof eval `3838163` and all downstream jobs remain gated without new
   production artifacts. Watcher `3845763` scheduled successor `3846896` for
-  12:46 CEST before this pass; the end-to-end plan is incomplete, so that
-  successor remains queued.
+  12:46 CEST before this pass; that payload was later superseded as recorded
+  below.
 - At 10:10 CEST NL recovery `3835443_8` is also `COMPLETED 0:0` after
   reaching step `8192`. Independent audit
   `analysis/nanotron_checkpoint_audits/nl_exact_step8192.json` accepts 645
@@ -274,7 +274,50 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   allocation limit. Corrected BranchProof eval remains A100-80-only and
   account-GRES pending with no production output. Total vault usage is
   `1268G` against the `2097.2G` hard quota. Watcher `3845763` completed
-  `0:0`; successor `3846896` remains queued for 12:46 CEST.
+  `0:0`; successor `3846896` was subsequently replaced with refreshed watcher
+  `3847667` at the same 12:46 CEST start time.
+- At 10:40 CEST refreshed watcher `3847667` was submitted for 12:46 CEST and
+  its stored batch payload was verified to include the repaired upload IDs,
+  tokenizer compatibility fix, replacement instruction jobs, HF cleanup, and
+  current BranchProof rows. Stale queued watcher `3846896` was then canceled.
+- At 10:14 CEST corrected BranchProof eval rows `3838163_0..5` were running
+  on six verified A100-SXM4-80GB allocations; rows `6..29` are pending only
+  on the array throttle. All six selected the intended corrected adapters and
+  reached merge/model startup without a fatal/OOM/quota signature. Row 0
+  initialized vLLM with context `16384`, batch `64`, and entered the unchanged
+  greedy protocol at `max_new_tokens=7168`; its first 64-prompt chunk completed
+  in 7.7 seconds with maximum output length 367. This is a startup check, not
+  a runtime or scientific result. No corrected production JSON/sample bundle
+  is complete yet, so row audits and aggregation remain closed.
+- At 10:36 CEST control/NL uploads `3831119/3831113` had failed immediately
+  because their converter was launched without Nanotron's required distributed
+  environment. The wrapper now uses single-rank `torchrun`; focused shell,
+  bytecode, and verifier tests pass (`5 passed`). Replacements
+  `3847569/3847570` completed `0:0`, each producing four HF shards, finite CUDA
+  logits `[1,152064]`, and zero remote-manifest omissions before guarded local
+  cleanup. Repos are
+  `flaitenberger/qwen25-7b-logic-cot-midtrain-control-p0-step8192` and
+  `flaitenberger/qwen25-7b-branchproof-unique-v2-midtrain-nl_exact-p15-step8192`.
+  Transformers 5 had saved the 13 Qwen special tokens under
+  `extra_special_tokens`, which Transformers 4.57.3 rejected. Both remote
+  configs were normalized to `additional_special_tokens`; fresh loads under
+  Transformers 4.57.3 and 5.12.1 preserve IDs `151644..151656` and native-chat
+  rendering. Direct evals `3835927/3834904` are released. Replacement
+  instruction SFT jobs `3847661/3847662` feed existing evals
+  `3835928/3834905`; strict aggregate `3836159` remains intact.
+- HF storage audit found `83.942G` of models plus `21.896G` of datasets.
+  Deleted only three unreferenced merged OLMo SFT repos for seeds
+  `3407/3408/3409` (`43.818G` total); their retained rank-16 LoRA repos plus
+  public base `allenai/Olmo-3-1025-7B` can reconstruct them. All datasets,
+  unrelated models, and new Qwen repos were preserved. Verified model storage
+  is now `40.125G`; total model+dataset storage is about `62.021G`, projected
+  to `77.264G` after the logic upload. Audit artifact:
+  `analysis/hf_storage_cleanup_2026-07-13.json`.
+- At 10:41 CEST NL direct eval `3834904_8` was running on A100-80GB. It
+  selected all ten reviewer tasks, loaded the repaired remote metadata,
+  resolved `Qwen2ForCausalLM`, and initialized vLLM without the previous
+  tokenizer exception. Control direct eval and both replacement instruction
+  SFT parents remain priority pending.
 - Scoped oversight commit `cf5162e` was pushed successfully from the login
   node at 21:12 CEST after the watcher's transient SSH attempts timed out; the
   report repository remains clean and synchronized.

@@ -4,6 +4,39 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 10:41 CEST NL direct eval `3834904_8` started on A100-80GB and passed the
+  repaired-model startup boundary: all ten tasks selected, Qwen architecture
+  resolved, and vLLM initialized without the prior tokenizer exception.
+- 10:40 CEST replaced queued watcher `3846896` with refreshed watcher
+  `3847667` at the same 12:46 CEST start time. The stored payload was verified
+  to contain the repaired uploads, tokenizer fix, replacement instruction
+  jobs, HF cleanup, current BranchProof rows, and unchanged end-to-end gates
+  before the stale watcher was canceled.
+- 10:36 CEST repaired the Nanotron-to-HF path after uploads `3831119/3831113`
+  failed on missing `WORLD_SIZE`. The wrapper now launches conversion with
+  single-rank `torchrun` and verifies with the downstream environment;
+  focused checks pass (`5 passed`). Replacements `3847569/3847570` completed
+  with four shards, finite CUDA logits `[1,152064]`, zero remote omissions,
+  and guarded cleanup. Direct evals `3835927/3834904` are released.
+- 10:36 CEST normalized the two uploaded Qwen tokenizer configs from the
+  Transformers-5 `extra_special_tokens` field to the Transformers-4-compatible
+  `additional_special_tokens` field. Fresh 4.57.3 and 5.12.1 loads preserve
+  all 13 special-token IDs and native-chat rendering. Failed/canceled
+  instruction parents `3831115/3831121` were replaced by
+  `3847662/3847661`; existing instruction evals and aggregate were rewired.
+- 10:36 CEST HF storage cleanup deleted only three superseded merged OLMo SFT
+  seed repos (`43.818G`). The retained LoRA repos plus public base can
+  reconstruct them; all datasets and unrelated/new models remain. Model
+  storage fell `83.942G -> 40.125G`; total model+dataset storage is now about
+  `62.021G`, projected `77.264G` after logic upload. Audit:
+  `analysis/hf_storage_cleanup_2026-07-13.json`.
+- 10:14 CEST corrected BranchProof eval rows `3838163_0..5` started on six
+  verified A100-SXM4-80GB allocations; rows `6..29` are array-throttle
+  pending. All active rows selected the intended corrected adapters and
+  reached merge/model startup without a fatal/OOM/quota signature. Row 0
+  initialized the 16,384-token vLLM engine and completed its first greedy
+  64-prompt chunk at the unchanged 7,168-token cap. No production artifact is
+  complete, so runtime, row-audit, and scientific gates remain open.
 - 10:10 CEST NL recovery `3835443_8` completed `0:0` at step 8192.
   Independent verifier artifact
   `analysis/nanotron_checkpoint_audits/nl_exact_step8192.json` accepts 645

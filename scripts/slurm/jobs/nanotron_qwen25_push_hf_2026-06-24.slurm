@@ -52,7 +52,7 @@ if [[ ! -s "${NANOTRON_CKPT}/model_config.json" \
 fi
 
 rm -rf "${HF_STAGING}.tmp"
-python scripts/nanotron/convert_qwen2_nanotron_to_hf.py \
+torchrun --standalone --nproc_per_node=1 scripts/nanotron/convert_qwen2_nanotron_to_hf.py \
   --checkpoint-path "${NANOTRON_CKPT}" \
   --save-path "${HF_STAGING}.tmp" \
   --tokenizer-name "${MODEL_ID:-Qwen/Qwen2.5-7B}" \
@@ -61,7 +61,7 @@ python scripts/nanotron/convert_qwen2_nanotron_to_hf.py \
   $(if [[ "${HF_PRIVATE}" == "1" ]]; then echo "--private"; else echo "--no-private"; fi)
 
 VERIFY_REPORT="${RUN_ROOT}/hf_verify_step${CHECKPOINT_STEP}.json"
-python scripts/nanotron/verify_qwen2_hf_checkpoint.py \
+"${HPCVAULT}/.venv_rlvl_posttrain/bin/python" scripts/nanotron/verify_qwen2_hf_checkpoint.py \
   --checkpoint "${HF_STAGING}.tmp" \
   --repo-id "${REPO_ID}" \
   --token-env "${HF_TOKEN_ENV:-HF_TOKEN}" \

@@ -236,6 +236,30 @@ on account GRES; no cleanup has run. Logic recovery `3835442_3` reached
 projects completion near 01:12 CEST on July 14, before its 05:48 allocation
 limit. Vault usage is `1268G` against the `2097.2G` hard quota.
 
+Conversion/downstream repair update 2026-07-13 10:36 CEST: first control/NL
+uploads `3831119/3831113` failed before weight loading because the custom
+Nanotron-to-HF converter was launched with plain Python and lacked
+`WORLD_SIZE`. The wrapper now uses single-rank `torchrun`; replacements
+`3847569/3847570` passed mapping, four-shard integrity, complete CUDA reload,
+finite logits `[1,152064]`, and remote-manifest parity before guarded local
+checkpoint cleanup. The two HF repos are recorded in their run roots. A second
+cross-environment issue was caught before downstream eval: Transformers 5.12.1
+saved Qwen's 13 special tokens as `extra_special_tokens`, while downstream
+Transformers 4.57.3 requires `additional_special_tokens`. The converter now
+normalizes this metadata and the final verifier explicitly runs in the
+downstream environment. Both existing repos were repaired in place; fresh
+4.57.3/5.12.1 loads preserve token IDs `151644..151656` and native-chat
+rendering. Direct evals `3835927/3834904` are released; replacement instruction
+parents `3847661/3847662` feed existing evals `3835928/3834905`.
+
+HF storage cleanup update 2026-07-13 10:36 CEST: account inventory measured
+`83.942G` of models and `21.896G` of datasets. Only the three superseded merged
+OLMo SFT seed repos were deleted (`43.818G`); their retained LoRA repos and
+public base reconstruct them. All datasets, unrelated model repos, and new
+Qwen checkpoints remain. Verified model storage is `40.125G`, total storage is
+about `62.021G`, and the projected total after logic upload is `77.264G`.
+Details are in `analysis/hf_storage_cleanup_2026-07-13.json`.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the

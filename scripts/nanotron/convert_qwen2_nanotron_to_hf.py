@@ -55,6 +55,22 @@ def _split_gate_up(gate_up: torch.Tensor, *, gate: bool) -> torch.Tensor:
     return gate_up[:split] if gate else gate_up[split:]
 
 
+def _normalize_tokenizer_config(save_path: Path) -> None:
+    config_path = save_path / "tokenizer_config.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    extra = config.get("extra_special_tokens")
+    if isinstance(extra, list):
+        if "additional_special_tokens" in config:
+            raise RuntimeError(
+                "tokenizer config contains both extra_special_tokens and additional_special_tokens"
+            )
+        config["additional_special_tokens"] = config.pop("extra_special_tokens")
+        config_path.write_text(
+            json.dumps(config, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+
+
 def convert_checkpoint(checkpoint_path: Path, save_path: Path, *, tokenizer_name: str) -> None:
     with (checkpoint_path / "model_config.json").open("r", encoding="utf-8") as handle:
         model_config = NanotronQwen2Config(**json.load(handle))
@@ -103,6 +119,7 @@ def convert_checkpoint(checkpoint_path: Path, save_path: Path, *, tokenizer_name
     save_path.mkdir(parents=True, exist_ok=True)
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
     tokenizer.save_pretrained(save_path)
+    _normalize_tokenizer_config(save_path)
     hf_model.save_pretrained(save_path, safe_serialization=True, max_shard_size="5GB")
 
 
