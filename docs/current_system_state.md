@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-13 00:55 CEST.
+Last updated: 2026-07-13 06:53 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -240,6 +240,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   for 06:46 CEST before starting; the stored batch payload was verified to
   retain the corrected job IDs, protocol, audit gates, and end-to-end stop
   condition, so the incomplete plan remains continuously covered.
+- At 06:53 CEST control recovery `3835438_0` is `COMPLETED 0:0` after
+  reaching step `8192` and saving its final checkpoint. Independent audit
+  `analysis/nanotron_checkpoint_audits/control_step8192.json` accepts the tree:
+  645 files, no zero-byte files, TP=4/DP=2, 625 model files, four scheduler
+  shards, eight RNG shards, four equal `22,848,937,060`-byte optimizer shards,
+  and metadata offsets `8192/1048576/4294967296`. Upload `3831119` is released
+  and pending only on account GRES; no local checkpoint was deleted. Logic
+  recovery `3835442_3` started at 05:48 on `a0531` and passed the no-replay
+  gate: optimizer/LR-scheduler loading is enabled, step/sample/token offsets
+  restored at `4096/524288/2147483648`, the exact
+  `1825357824 + 322125824` normal/logic split was restored, and iteration
+  `4101` had finite loss `1.71`. It reached `4301/8192` at `30.9K` tokens/s
+  with finite loss `1.76`. NL recovery `3835443_8` remained healthy at
+  `7971/8192`, `30.9K` tokens/s, finite loss `1.65`, and about one hour to its
+  final save. Current total vault usage is `1211.8G` against the `2097.2G`
+  hard quota; the three matched Nanotron roots occupy `795G`. Corrected
+  BranchProof eval `3838163` and all downstream jobs remain gated without new
+  production artifacts. Watcher `3845763` scheduled successor `3846896` for
+  12:46 CEST before this pass; the end-to-end plan is incomplete, so that
+  successor remains queued.
 - Scoped oversight commit `cf5162e` was pushed successfully from the login
   node at 21:12 CEST after the watcher's transient SSH attempts timed out; the
   report repository remains clean and synchronized.

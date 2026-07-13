@@ -203,6 +203,25 @@ nodes are incompatible A100-40 nodes. Successor oversight `3845763` is queued
 for 06:46 CEST to inspect the final-checkpoint/control-upload and logic-resume
 transition if the current estimates hold.
 
+Final-control and logic-resume update 2026-07-13 06:53 CEST: control recovery
+`3835438_0` completed `0:0` at 05:48 after reaching step `8192`. Independent
+verification is persisted at
+`analysis/nanotron_checkpoint_audits/control_step8192.json` and accepts the
+complete tree: 645 files, no zero-byte files, TP=4/DP=2, 625 model files, four
+LR-scheduler shards, eight RNG shards, four equal `22,848,937,060`-byte
+optimizer shards, and exact metadata offsets step/sample/token
+`8192/1048576/4294967296`. Control upload `3831119` is released and account-GRES
+pending; local checkpoints remain intact. Logic recovery `3835442_3` started
+at 05:48 and passed the same no-replay gate: optimizer and scheduler loading
+are enabled, offsets restored at `4096/524288/2147483648`, the per-dataset
+accounting restored exactly `1825357824` normal plus `322125824` logic tokens,
+and resumed iteration `4101` had finite loss `1.71`. It advanced to
+`4301/8192` at `30.9K` tokens/s with finite loss `1.76`. NL recovery
+`3835443_8` remained healthy at `7971/8192` with finite loss `1.65` and about
+one hour remaining. Vault usage is `1211.8G` against the `2097.2G` hard quota;
+the three matched Nanotron roots occupy `795G`. No cleanup is authorized until
+each corresponding fail-closed upload verification succeeds.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the

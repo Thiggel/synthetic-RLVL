@@ -4,6 +4,30 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-13
 
+- 06:58 CEST committed the checkpoint/handoff transition locally.
+  Pushes through both `github.com:22` and `ssh.github.com:443` timed out
+  without transferring; `gh` is not installed. The main repository remains
+  two commits ahead of `origin/main`, while the report repository is clean and
+  synchronized.
+- 06:53 CEST control recovery `3835438_0` completed `0:0` after saving step
+  8192. Independent verifier artifact
+  `analysis/nanotron_checkpoint_audits/control_step8192.json` accepts 645
+  files, no empty files, exact `8192/1048576/4294967296` offsets, complete
+  optimizer/scheduler/RNG groups, and four equal 22.85 GB optimizer shards.
+  Upload `3831119` is released but account-GRES pending; no guarded cleanup
+  has run.
+- 06:53 CEST logic recovery `3835442_3` passed its first-resume audit after
+  starting at 05:48: it restored optimizer/LR-scheduler state, offsets
+  `4096/524288/2147483648`, and the exact `1825357824 + 322125824`
+  normal/logic token split, then logged finite iteration-4101 loss `1.71` and
+  advanced to `4301/8192` at `30.9K` tokens/s. NL `3835443_8` remained healthy
+  at `7971/8192` with about one hour left. Total vault use is `1211.8G` of a
+  `2097.2G` hard quota; the three matched roots occupy `795G`.
+- 06:53 CEST corrected BranchProof eval `3838163`, control upload `3831119`,
+  and their downstream gates remained pending without new production
+  artifacts; no scientific analysis or report refresh was triggered. Watcher
+  `3845763` scheduled successor `3846896` for 12:46 CEST before starting. The
+  full plan remains incomplete, so the successor was preserved.
 - 00:59 CEST committed the scoped oversight handoff locally. Pushes through
   both `github.com:22` and `ssh.github.com:443` timed out without transferring,
   so the main repository remains one commit ahead of `origin/main`. The report
