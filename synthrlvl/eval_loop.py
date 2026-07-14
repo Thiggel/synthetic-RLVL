@@ -893,7 +893,11 @@ class UnifiedEvaluator:
         finally:
             model.train()
 
-    def _resolve_checkpoint_paths(self, checkpoint_dir: str | Path) -> tuple[str, str, Path | None]:
+    def _resolve_checkpoint_paths(
+        self,
+        checkpoint_dir: str | Path,
+        tokenizer_dir: str | Path | None = None,
+    ) -> tuple[str, str, Path | None]:
         raw_checkpoint = str(checkpoint_dir)
         checkpoint_path = Path(raw_checkpoint).expanduser()
         adapter_dir: Path | None = None
@@ -916,6 +920,10 @@ class UnifiedEvaluator:
                 adapter_dir = actor_lora
             elif (checkpoint_path / "adapter_config.json").is_file() and (checkpoint_path / "adapter_model.safetensors").is_file():
                 adapter_dir = checkpoint_path
+        if tokenizer_dir is not None:
+            raw_tokenizer = str(tokenizer_dir)
+            tokenizer_path_obj = Path(raw_tokenizer).expanduser()
+            tokenizer_path = str(tokenizer_path_obj.resolve()) if tokenizer_path_obj.exists() else raw_tokenizer
         return model_path, tokenizer_path, adapter_dir
 
     def _evaluate_checkpoint_hf(
@@ -1018,11 +1026,12 @@ class UnifiedEvaluator:
         checkpoint_dir: str | Path,
         collect_samples: int = 0,
         collect_sampled_samples: int = 0,
+        tokenizer_dir: str | Path | None = None,
         **kwargs,
     ) -> tuple[Dict[str, float], List[dict]]:
         task_cfg: TaskConfig = kwargs["task_cfg"]
         eval_cfg: EvalLoopConfig = kwargs["eval_cfg"]
-        model_path, tokenizer_path, adapter_dir = self._resolve_checkpoint_paths(checkpoint_dir)
+        model_path, tokenizer_path, adapter_dir = self._resolve_checkpoint_paths(checkpoint_dir, tokenizer_dir)
         backend = str(eval_cfg.generation_backend).strip().lower()
         if backend not in {"auto", "hf", "vllm"}:
             raise ValueError(f"Unsupported eval generation backend: {eval_cfg.generation_backend}")

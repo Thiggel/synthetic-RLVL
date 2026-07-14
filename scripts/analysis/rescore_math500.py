@@ -28,6 +28,8 @@ _NUMBER_LIST_RE = re.compile(rf"^({_NUMBER}(?:\s*,\s*{_NUMBER})+)\s*\.?\s*$")
 _TRAILING_OPERATOR_RE = re.compile(r"(?:[+\-*/=]|\\(?:cdot|div|times))\s*$")
 _NEXT_PROMPT_RE = re.compile(r"^(?:problem|question)\s*:", re.IGNORECASE)
 _ANSWER_CUE_RE = re.compile(r"\b(?:answer|solution|therefore|thus|hence)\b", re.IGNORECASE)
+_MATH_SPAN_RE = re.compile(r"(?<!\\)\$((?:\\.|[^$])*)(?<!\\)\$")
+_UNESCAPED_DOLLAR_RE = re.compile(r"(?<!\\)\$")
 
 
 def _sha256(path: Path) -> str:
@@ -66,16 +68,16 @@ def _strip_terminal_period(value: str) -> str:
 def _complete_leading_math(line: str) -> tuple[str | None, bool]:
     if not line.startswith("$"):
         return None, False
-    end = line.rfind("$")
-    if end <= 0:
+    match = _MATH_SPAN_RE.match(line)
+    if match is None:
         return None, False
-    return line[1:end].strip(), True
+    return match.group(1).strip(), True
 
 
 def _last_explicit_token(line: str) -> str | None:
     candidates: list[tuple[int, str]] = []
     math_spans: list[tuple[int, int]] = []
-    for match in re.finditer(r"\$([^$]+)\$", line):
+    for match in _MATH_SPAN_RE.finditer(line):
         candidates.append((match.end(), match.group(1).strip()))
         math_spans.append((match.start(), match.end()))
     for match in _NUMBER_RE.finditer(line):
@@ -90,7 +92,7 @@ def _final_explicit_answer(target: str, response: str) -> str | None:
     lines = [line.strip() for line in response.splitlines() if line.strip()]
     candidates: list[tuple[int, int, str]] = []
     for index, line in enumerate(lines[1:], start=1):
-        if _NEXT_PROMPT_RE.match(line) or line.count("$") % 2:
+        if _NEXT_PROMPT_RE.match(line) or len(_UNESCAPED_DOLLAR_RE.findall(line)) % 2:
             continue
         candidate = _last_explicit_token(line)
         if not candidate:
@@ -100,7 +102,7 @@ def _final_explicit_answer(target: str, response: str) -> str | None:
             candidate = _strip_terminal_period(_EQUALITY_RE.split(candidate)[-1])
         if candidate and not _TRAILING_OPERATOR_RE.search(candidate):
             has_cue = bool(_ANSWER_CUE_RE.search(line))
-            has_math = bool(re.search(r"\$[^$]+\$", line))
+            has_math = bool(_MATH_SPAN_RE.search(line))
             priority = 2 if has_cue and has_math else 1 if has_cue else 0
             candidates.append((priority, index, candidate))
     return max(candidates)[2] if candidates else None
@@ -112,7 +114,7 @@ def extract_answer_prefix(target: str, response: str) -> tuple[str | None, str]:
     line = first_answer_line(response)
     if not line:
         return None, "empty_response"
-    if line.count("$") % 2:
+    if len(_UNESCAPED_DOLLAR_RE.findall(line)) % 2:
         return None, "unbalanced_math_delimiter"
 
     math_prefix, wrapped = _complete_leading_math(line)

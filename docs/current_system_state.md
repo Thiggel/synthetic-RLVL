@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-14 01:36 CEST.
+Last updated: 2026-07-14 07:14 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,65 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-14 07:14 oversight recovery and audit
+
+- Clean BranchProof baseline eval `3853284_0..5` is healthy on verified
+  A100-80GB devices after `4:58--5:46`; sampled-chunk progress projects roughly
+  `6.5--11.8` hours total, below the `20--24` hour depth-sharding trigger.
+  Rows `6..29` remain array-throttle pending, and CPU audits `3853285` plus
+  aggregate `3853286` remain correctly dependency-held. No protocol or
+  dependency edit was made.
+- All 18 no-repeat tiny final eval rows in `3850492` completed and passed the
+  structural/raw-artifact audit. Representative logic/NL samples across all
+  sizes, seeds, depths `1/10/50`, correct/incorrect cases, and cap hits show
+  shallow valid proofs, frequent depth-10 answer-correct but invalid traces,
+  and severe depth-50 degeneration/truncation. The tiny final result is a
+  mechanism smoke, not report evidence: joint@`1/4/8` is zero in every
+  size/template aggregate and the checkpoint curve is still incomplete.
+  Checkpoint eval `3850493` was canceled after 39 deterministic failures
+  exposed missing tokenizer assets in intermediate checkpoint directories;
+  the evaluator now accepts an explicit tokenizer path, all 90 checkpoints
+  and 18 final tokenizers passed the preflight, and exact replacement
+  `3854813_[0-89%3]` is account-GRES pending. Audits/tables/raw-review index:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_final_audits_20260714`.
+- Corrected 32B rows `3850115_0/1` failed on transient expired Hugging Face
+  Xet URLs while downloading the base; row 2 subsequently downloaded and is
+  training normally. Targeted recovery `3854837_[0-1%1]` preserves the exact
+  protocol. Held eval `3850123` now depends on `3854837` and original tasks
+  `3850115_2..14`, so it cannot release until every required SFT row succeeds.
+- Logic Nanotron upload `3847802_3` passed conversion, local/remote parity,
+  finite-logit, and consumer-RoPE gates, uploaded the repaired checkpoint, and
+  deleted its 199G local checkpoint only through the guarded path. Logic
+  direct eval `3847804_3` completed. Fresh quota is `781G/1000G` soft
+  (`2000G` hard) and `153k/200k` files. Instruction SFT `3847805_3` completed all
+  10,000 steps (`train/eval loss 0.942806/0.936798`) but failed only on a
+  transient Hub Xet 401 during adapter upload; the complete local adapter was
+  retried without retraining and verified at Hub commit
+  `3d1e4a751150fffbb26e23e6f759c402bf203b4d`. Stale dependent `3847806` and
+  aggregate `3850389` were canceled; replacement logic instruction eval
+  `3854824_[3%1]` and strict six-bundle aggregate `3854847` are pending.
+- The schema-v4 MATH-500 scorer incorrectly treated escaped currency `\$` as
+  a math delimiter. It now recognizes only unescaped delimiters; forced
+  rescoring and production audits accept all five completed corrected bundles
+  with no lost stock-positive rows. Raw diagnostics show direct control,
+  logic, and NL BBH/MMLU-Pro next-document marker rates of
+  `35.6/12.1%`, `60.0/45.5%`, and `58.0/49.5%`, respectively, with zero prompt
+  marker incidence. Corrected control/NL instruction SFT removes those markers
+  (`0%`) but often produces long repetitive continuations, so transfer claims
+  remain blocked on logic instruction eval and the matched aggregate.
+- Corrected instruction multi-hop smoke `3850354_0` passed the structural
+  32,768-window/RoPE audit, but raw inspection rejected the protocol as
+  production-clean: tagged Hotpot was `2/2`, tagged 2Wiki and MuSiQue were
+  `0/2`, and MuSiQue showed missing closing tags plus context copying/repetition
+  to the cap. The full six-condition grid remains on hold until both the p15
+  aggregate is positive and the tagged instruction protocol is sample-clean.
+  The report/preprint were intentionally not regenerated: the corrected
+  baseline, report matrix, tiny checkpoint curve, and p15 aggregate are still
+  incomplete. The repository suite passes `216 passed, 3 skipped`. CPU-only
+  watcher `3853210` is running on `a100mig` without GRES; its pre-scheduled
+  CPU-only successor `3854785` remains begin-time pending and must be kept
+  because the end-to-end plan is incomplete.
 
 ### 2026-07-13 live correction wave
 
@@ -978,7 +1037,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Active Work
 
-The active Slurm work is summarized in `docs/running_experiments.md`. Current high-priority active chains are:
+The current active Slurm work is the 2026-07-14 correction wave summarized at
+the top of this file and in `docs/running_experiments.md`. The older detailed
+items below are retained for artifact provenance; they are not the live queue
+snapshot.
 
 - old full paired-family suite: SFT/build are complete at `90/90` final adapters. The stale old eval root has `37/90` JSONs (`official_igsm` `30/30`, old maze `7/30`, hard `attribute_constraints` `0/30`), but the combined recovery is not being resubmitted because iGSM and maze have newer semantic/typed reruns. Hard `attribute_constraints` is being recovered separately by fresh eval `3716216`.
 - hard attribute/constraint eval: `3716216_[0-29%3]` is the fresh hard-attribute-only eval under `$HPCVAULT`. It has `8/30` JSONs/sample JSONLs; rows `9/10/11` are running and rows `12..29` are throttle-pending. Logic seed `3408` at train-1-to-5 timed out and should be recovered later with any additional failed rows.

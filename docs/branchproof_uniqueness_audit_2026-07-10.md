@@ -322,3 +322,44 @@ post-hoc reconstructed from the retained subset. Chain
 matching plus an independent audit guard now pass the full suite. Clean
 A100-80/CPU replacement chain `3853284 -> 3853285 -> 3853286` preserves every
 scientific setting. No prior corrected correctness number is report evidence.
+
+## 2026-07-14 Tiny/32B Recovery and Baseline Runtime Audit
+
+The no-repeat tiny final eval `3850492` completed all 18
+size/template/seed rows. A structural audit accepted every metrics JSON,
+sample JSONL, and log; representative raw review covered logic and NL at
+depths 1, 10, and 50, all three seeds and sizes, correct/incorrect cases, and
+generation-cap hits. Shallow logic can be citation-free valid, but many
+depth-10 answers have invalid traces and depth-50 output frequently
+degenerates or truncates. Joint correct-and-valid pass@1/4/8 is zero in every
+reported size/template aggregate. These are provisional mechanism-smoke
+findings, not report evidence, until the checkpoint curve completes. The
+machine-readable audit bundle is
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_final_audits_20260714`.
+
+Checkpoint eval `3850493` had no usable outputs: its first 39 tasks failed
+because an intermediate checkpoint contains model/config files but no
+tokenizer assets, causing tokenizer resolution to fall back to an incompatible
+class. The evaluator and wrapper now support an explicit tokenizer path, and
+the Slurm job uses the matching run's verified `final/` tokenizer while
+loading weights from each intermediate checkpoint. Preflight checks accepted
+all 90 checkpoint directories and all 18 final tokenizers. The exact
+90-task/three-concurrent replacement is `3854813_[0-89%3]`; the failed array
+was canceled before the remaining 49 tasks consumed GPUs.
+
+Corrected 32B SFT tasks 0 and 1 failed while downloading the public base due
+to transient expired Hugging Face Xet signed URLs. Task 2 downloaded the same
+base later and is training normally, so no code or protocol change is
+justified. Targeted recovery `3854837_[0-1%1]` preserves the original array
+indices and resources. Eval `3850123` was dependency-edited to require the
+recovery and original successful-required tasks `3850115_2..14`; it cannot
+release on a partial SFT grid.
+
+At 07:14 CEST clean baseline eval `3853284_0..5` had run for
+`4:58--5:46` on verified A100-80GB devices. Sampled-chunk progress projected
+roughly `6.5--11.8` hours total, below the `20--24` hour sharding threshold.
+Rows `6..29`, audits `3853285`, and aggregate `3853286` remain pending by
+throttle/dependency; the full protocol is unchanged. The complete repository
+suite after the evaluator/audit changes passes `216 passed, 3 skipped`.
+Report and preprint regeneration is deferred until the baseline, report-wide
+families, and tiny checkpoint curve pass their artifact and qualitative gates.

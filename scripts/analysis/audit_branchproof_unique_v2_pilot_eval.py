@@ -109,6 +109,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--generation-cap", type=int, default=7168)
     parser.add_argument("--greedy-optional", action="store_true")
+    parser.add_argument(
+        "--allow-all-zero-train-metrics",
+        action="store_true",
+        help="Allow structurally complete tiny-model runs with no positive train-band greedy signal.",
+    )
     parser.add_argument("--expected-sample-source", default="synthetic")
     parser.add_argument("--sample-source-filter")
     parser.add_argument("--expected-total-samples", type=int)
@@ -140,6 +145,7 @@ def _audit_metrics(
     generations_per_prompt: int,
     train_max: int,
     greedy_required: bool,
+    require_train_signal: bool,
     errors: list[str],
 ) -> dict[str, Any]:
     if payload.get("profile") != "sft":
@@ -188,7 +194,7 @@ def _audit_metrics(
                         errors.append(f"non-monotonic pass@k metric: {key}={value} < {previous}")
                     previous = value
 
-    if greedy_required:
+    if greedy_required and require_train_signal:
         train_steps = [step for step in steps if step <= train_max]
         for metric_name in ("syntactic", "format", "correct"):
             values = [primary[str(step)].get(metric_name, 0.0) for step in train_steps]
@@ -498,6 +504,7 @@ def audit_artifacts(
     batch_size: int = 64,
     generation_cap: int = 7168,
     greedy_required: bool = True,
+    require_train_signal: bool = True,
     expected_sample_source: str = "synthetic",
     sample_source_filter: str | None = None,
     expected_total_samples: int | None = None,
@@ -535,6 +542,7 @@ def audit_artifacts(
             generations_per_prompt=generations_per_prompt,
             train_max=train_max,
             greedy_required=greedy_required,
+            require_train_signal=require_train_signal,
             errors=errors,
         ),
         "samples_audit": _audit_samples(
@@ -580,6 +588,7 @@ def main() -> None:
         batch_size=args.batch_size,
         generation_cap=args.generation_cap,
         greedy_required=not args.greedy_optional,
+        require_train_signal=not args.allow_all_zero_train_metrics,
         expected_sample_source=args.expected_sample_source,
         sample_source_filter=args.sample_source_filter,
         expected_total_samples=args.expected_total_samples,

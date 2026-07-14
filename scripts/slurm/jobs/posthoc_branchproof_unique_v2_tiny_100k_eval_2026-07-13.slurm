@@ -55,6 +55,11 @@ if [[ ! -s "${CHECKPOINT}/config.json" ]]; then
   echo "Missing tiny checkpoint: ${CHECKPOINT}" >&2
   exit 2
 fi
+TOKENIZER="${RUN_ROOT}/final"
+if [[ ! -s "${TOKENIZER}/tokenizer.json" ]]; then
+  echo "Missing tiny tokenizer: ${TOKENIZER}" >&2
+  exit 2
+fi
 if [[ -s "${OUT}" && "${FORCE_PASSK_EVAL:-0}" != "1" ]]; then
   echo "Output exists: ${OUT}; skipping"
   exit 0
@@ -67,6 +72,7 @@ export WANDB_RUN_GROUP="${WANDB_GROUP}"
 
 python scripts/evaluate_checkpoint_passk.py \
   --checkpoint "${CHECKPOINT}" \
+  --tokenizer "${TOKENIZER}" \
   --config conf/sft_hard_fsa_schema_fixedtarget.yaml \
   --profile sft \
   --backend vllm \

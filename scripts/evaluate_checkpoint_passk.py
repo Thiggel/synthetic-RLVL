@@ -118,6 +118,7 @@ def _apply_eval_overrides(cfg, profile: str, args: argparse.Namespace) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run post-hoc greedy and sampled pass@k checkpoint evaluation.")
     parser.add_argument("--checkpoint", required=True, help="Checkpoint directory or HF model id.")
+    parser.add_argument("--tokenizer", default=None, help="Optional tokenizer directory or HF id when it differs from the checkpoint.")
     parser.add_argument("--config", default="conf/posttrain_grpo.yaml", help="Path to an SFT or GRPO config YAML.")
     parser.add_argument("--profile", choices=["auto", "sft", "grpo"], default="auto")
     parser.add_argument("--output", default=None, help="Metrics JSON output path.")
@@ -173,6 +174,7 @@ def main() -> None:
     start = time.perf_counter()
     metrics, samples = UnifiedEvaluator().evaluate_checkpoint(
         args.checkpoint,
+        tokenizer_dir=args.tokenizer,
         collect_samples=max(0, int(args.collect_samples)),
         collect_sampled_samples=max(0, int(args.collect_sampled_samples)),
         task_cfg=task_cfg,
@@ -183,7 +185,13 @@ def main() -> None:
     metrics["posthoc/prompts"] = float(len(eval_cfg.step_values()) * int(eval_cfg.synthetic_samples_per_step))
     metrics["posthoc/sampled_generations_per_prompt"] = float(eval_cfg.sampled_num_generations)
 
-    payload = {"checkpoint": args.checkpoint, "profile": profile, "elapsed_seconds": elapsed, "metrics": metrics}
+    payload = {
+        "checkpoint": args.checkpoint,
+        "tokenizer": args.tokenizer,
+        "profile": profile,
+        "elapsed_seconds": elapsed,
+        "metrics": metrics,
+    }
     text = json.dumps(payload, indent=2, sort_keys=True)
     if args.output:
         out = Path(args.output)
@@ -208,6 +216,7 @@ def main() -> None:
             "job_type": "posthoc_passk_eval",
             "config": {
                 "checkpoint": args.checkpoint,
+                "tokenizer": args.tokenizer,
                 "profile": profile,
                 "config_path": args.config,
                 "step_min": eval_cfg.synthetic_step_min,

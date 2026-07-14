@@ -30,6 +30,16 @@ def test_answer_prefix_accepts_equivalent_answer_before_explanation() -> None:
     assert RESCORE.equivalent("-50", candidate) == (True, None)
 
 
+def test_answer_prefix_ignores_escaped_currency_dollar_inside_math() -> None:
+    candidate, reason = RESCORE.extract_answer_prefix(
+        r"\$36",
+        r"The original price of the shirt was $\$36$.",
+    )
+    assert candidate == r"\$36"
+    assert reason == "last_explicit_token"
+    assert RESCORE.equivalent(r"\$36", candidate) == (True, None)
+
+
 def test_answer_prefix_accepts_final_rhs_of_direct_equation() -> None:
     candidate, _ = RESCORE.extract_answer_prefix("6+9i", "$6+12i-3i=6+9i$.")
     assert candidate == "6+9i"

@@ -4,6 +4,43 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-14
 
+- 07:14 CEST oversight recovered three blocked paths. Canceled checkpoint eval
+  `3850493` after 39 rows deterministically failed because intermediate tiny
+  checkpoints lack tokenizer files; added an explicit tokenizer override,
+  verified all 90 checkpoints plus 18 final tokenizers, and submitted exact
+  replacement `3854813_[0-89%3]`. All `18/18` final tiny eval rows in
+  `3850492` passed structural and representative raw review; they show
+  shallow valid proofs but depth-10 answer-correct/invalid traces and severe
+  depth-50 truncation, with zero joint@`1/4/8` in every size/template
+  aggregate. The result remains provisional until the checkpoint curve passes.
+  Corrected 32B rows `3850115_0/1` failed on expired Xet download URLs; row 2
+  is training normally, targeted recovery `3854837_[0-1%1]` was submitted,
+  and held eval `3850123` was rewired to require the recovery plus original
+  tasks 2..14.
+- 07:14 CEST logic Nanotron upload `3847802_3` passed conversion,
+  Transformers-4 RoPE `1000000`, finite-logit, and local/remote parity gates;
+  guarded cleanup removed the local full checkpoint, leaving vault quota at
+  `781G/1000G` soft and `153k/200k` files. Direct eval `3847804_3`
+  completed. Instruction SFT `3847805_3` completed 10,000 steps but failed
+  only on a transient Hub-upload 401; retried the complete local adapter
+  without training and verified commit
+  `3d1e4a751150fffbb26e23e6f759c402bf203b4d`. Canceled stale dependent
+  `3847806` and aggregate `3850389`, then submitted replacement instruction
+  eval `3854824_[3%1]` and strict six-bundle aggregate `3854847`.
+- 07:14 CEST fixed schema-v4 MATH-500 handling of escaped currency `\$`, then
+  forced rescore/production audit across the five complete corrected
+  downstream bundles; all passed with zero lost stock positives. Raw review
+  found direct control/logic/NL BBH/MMLU-Pro next-document marker rates of
+  `35.6/12.1%`, `60.0/45.5%`, and `58.0/49.5%`; instruction SFT removes those
+  markers but often leaves long repetition. Corrected instruction multi-hop
+  smoke `3850354_0` passed its structural gate but failed the sample-clean
+  gate on 2Wiki/MuSiQue, so no full grid was submitted. Baseline eval
+  `3853284_0..5` remains healthy with `6.5--11.8` hour projections. Full tests
+  pass `216 passed, 3 skipped`; report/preprint regeneration remains held for
+  complete corrected aggregates. Successor watcher `3854785` was preserved.
+  The answer-matcher and current oversight commits remain local: pushes through GitHub SSH port 22 and
+  `ssh.github.com:443` each timed out without server output. The report repo
+  was unchanged.
 - 01:16 CEST BranchProof answer-matcher correction: an independent scan of the
   five complete validity-fixed bundles found that the common scorer credited a
   gold token anywhere inside `<answer>`. Two retained false positives were

@@ -372,6 +372,57 @@ per dataset, not a transfer estimate. Dependency-held instruction smoke
 `3850354_0` must pass the same raw review before any full six-condition grid is
 submitted.
 
+## 2026-07-14 Corrected Downstream Recovery and Sample Audit
+
+Logic repaired-payload upload `3847802_3` passed the single-rank conversion,
+dual-field consumer RoPE resolution (`1000000`), CUDA finite-logit, remote file
+parity, and guarded cleanup gates. The local Nanotron checkpoint tree is gone;
+the run config, repository/verifier reports, and remote checkpoint remain.
+Logic direct reviewer eval `3847804_3` completed. Native-chat instruction SFT
+`3847805_3` also completed all 10,000 steps with terminal train/eval loss
+`0.942806/0.936798`, but its Slurm task failed only when a transient Hugging
+Face Xet 401 interrupted the final adapter upload. The complete local adapter
+was uploaded without retraining and verified at commit
+`3d1e4a751150fffbb26e23e6f759c402bf203b4d` with all expected config,
+tokenizer, and adapter files. Stale dependency-held eval `3847806` and mixed
+aggregate `3850389` were canceled; exact replacement logic instruction eval
+`3854824_[3%1]` is pending, and strict aggregate `3854847` depends on it.
+
+The schema-v4 MATH-500 sidecar had one delimiter bug: an escaped currency
+symbol such as `\$36` was mistaken for an opening math delimiter. The parser
+now recognizes only unescaped dollar delimiters. Forced rescore plus production
+audit accepted all five complete corrected bundles, with no stock-positive
+row lost. Sidecar correct counts are control direct `98/500`, control
+instruction `53/500`, logic direct `104/500`, NL direct `105/500`, and NL
+instruction `61/500`. Stock exact remains only a format diagnostic.
+
+Condition-blind raw diagnostics and manual correct/incorrect review found:
+
+| Condition | BBH invalid / marker | MMLU-Pro invalid / marker |
+| --- | --- | --- |
+| Control direct | `4.377% / 35.601%` | `4.555% / 12.068%` |
+| Logic direct | `4.239% / 59.960%` | `3.981% / 45.479%` |
+| NL direct | `4.393% / 58.010%` | `4.737% / 49.510%` |
+| Control instruction | `3.655% / 0%` | `1.222% / 0%` |
+| NL instruction | `3.701% / 0%` | `1.263% / 0%` |
+
+Prompt marker incidence is zero in every cell. Direct logic/NL frequently
+continue into proof or new-document material. Instruction tuning removes the
+literal markers but often produces extremely long repetitive continuations or
+multiple candidate answers. These rates supersede the older `9.1/20.5%`
+invalid and `22.9/3.7%` marker diagnostics, which came from the RoPE-invalid NL
+bundle. No modality-transfer claim is accepted before logic instruction eval
+and the matched aggregate.
+
+Corrected instruction multi-hop smoke `3850354_0` passed the RoPE/32,768-window
+structural gate, and all 12 generations were inspected. Tagged Hotpot was
+`2/2`; tagged 2Wiki and MuSiQue were `0/2`. MuSiQue failed the sample-clean
+gate through missing closing tags, context copying, and repetition to the
+512-token cap; stock responses also leaked or repeated prompt-like text.
+Therefore no full six-condition multi-hop grid was submitted. Its next trigger
+is both a positive/sample-clean p15 aggregate and a revised tagged instruction
+protocol that passes another raw smoke.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the
