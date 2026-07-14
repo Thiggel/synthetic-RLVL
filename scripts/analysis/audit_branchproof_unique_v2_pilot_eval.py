@@ -391,7 +391,7 @@ def _audit_samples(
                 errors.append(f"sample {index} has invalid {field}: {value!r}")
             elif value > 0:
                 by_step[step][field] += 1
-        if row.get("citation_free_valid") == 1.0 and row.get("valid") != 1.0:
+        if row.get("citation_free_valid") == 1.0:
             validity_error = row.get("citation_free_validity_error")
             invalid_lines = row.get("citation_free_invalid_line_errors")
             line_fraction = row.get("citation_free_line_valid_fraction")

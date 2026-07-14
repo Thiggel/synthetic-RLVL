@@ -205,7 +205,6 @@ def test_rejects_credited_single_line_answer_list(tmp_path: Path):
 def test_rejects_sample_validity_diagnostic_contradiction(tmp_path: Path):
     metrics_path, samples_path = _write_artifacts(tmp_path)
     rows = [json.loads(line) for line in samples_path.read_text().splitlines()]
-    rows[-1]["valid"] = 0.0
     rows[-1]["citation_free_validity_error"] = "premise parse failed: malformed"
     samples_path.write_text("".join(json.dumps(row) + "\n" for row in rows))
 

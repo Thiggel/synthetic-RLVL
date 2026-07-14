@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-14 13:22 CEST.
+Last updated: 2026-07-14 19:47 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,71 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-14 19:26 tiny-curve acceptance and corrected Nanotron p15 result
+
+- Tiny checkpoint eval/recovery `3854813 + 3856145` is terminal. All `90/90`
+  metric JSONs and `90/90` sample JSONLs passed the full audit with exact
+  depth, pass@k, retained-sample, chunk-log, cap, and fresh-constant coverage.
+  The audit now checks citation-free-valid diagnostics regardless of the
+  strict-valid flag; its regression passes, and all 90 rows still pass the
+  strengthened gate. Raw review covered both templates, all sizes and seeds,
+  20k/60k/100k exposures, depths 1/10/50, successes, failures, and cap-hit
+  degeneration. Answer-only OOD pass@1 rises at most to about `0.052` for an
+  individual three-seed size/template checkpoint mean and pass@8 to `0.221`,
+  but modality-appropriate OOD and depth-50 joint pass@1/4/8 remain `0.000`
+  throughout. This is an accepted negative tiny mechanism result, not main
+  report evidence. Audit bundle:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_checkpoint_audits_20260714`.
+- The accepted tiny gate released guarded cleanup: all 90 intermediate
+  `checkpoint-*` directories (`102G`) were deleted only after verifying 18
+  nonempty finals, 90 metrics, 90 samples, 90 accepted audits, terminal parent
+  jobs, and no live dependency. The finals and all curve outputs remain;
+  repo-owned vault use is now about `393G`.
+- Corrected logic instruction eval `3854824_3` and strict aggregate `3854847`
+  completed `0:0`. The six-bundle manifest is accepted under
+  `analysis/nanotron_branchproof_unique_v2_p15_20260711/`. Direct logic versus
+  control changes all-primary/reasoning/general/targeted macros by
+  `+0.0033/+0.0071/-0.0004/-0.0116`; direct NL changes them by
+  `-0.0011/-0.0012/-0.0011/-0.0069`. Post-instruction logic/NL changes are
+  similarly small (`+0.0018/+0.0027` all-primary). These are one-run,
+  null/mixed readouts, not evidence of positive formal transfer.
+- Raw Nanotron review found two evaluator/generation limits. Direct logic and
+  NL increase BBH/MMLU-Pro next-document continuation markers to roughly
+  `60.0/45.5%` and `58.0/49.5%` versus control `35.6/12.1%`. Instruction SFT
+  removes literal markers but often generates long repetition; BBH instruction
+  exact scores are an extraction floor (`0` in all conditions) because correct
+  leading choices are followed by suffix text. Those BBH cells and the large
+  instruction-minus-direct macro drops are not transfer evidence. The broader
+  Nanotron mixture grid is rejected: the p15 trigger is neither positive nor
+  sample-clean. Prompt-fixed multi-hop arrays `3855271/3855272` remain
+  submitted and account-GRES pending as a bounded evaluation of the existing
+  three checkpoints, not a broader training launch.
+- Clean BranchProof baseline rows `3853284_0/2/3/4/5` and corresponding CPU
+  audits are complete and accepted. Row 1 is healthy at sampled chunk 110/112
+  after about 18 hours on a verified A100-80GB, still below the `20--24` hour
+  sharding trigger; rows 6/7/8 are active and rows 9..29 remain throttle
+  pending. No protocol, dependency, or partition edit was made.
+- CPU-only watcher `3856057` preserved its recorded successor `3857212`,
+  scheduled for 00:49 CEST. The chain remains necessary because the clean
+  30-row baseline, corrected report matrix, multi-hop bundles, and report
+  replacement are incomplete. Report/preprint regeneration remains deferred;
+  the current builder still points at quarantined historical BranchProof
+  roots and corrected report-wide evidence is not complete. Verification is
+  green at `223 passed, 3 skipped`.
+- Authenticated per-repository Hugging Face reconciliation after all corrected
+  logic uploads measures `79.281G` total (`50.846G` models and `28.435G`
+  datasets across 66 repositories), leaving `20.719G` against the nominal
+  `100G` quota. Preserve the three p15 checkpoint repositories and their
+  current adapters through multi-hop jobs `3855271/3855272/3855273`. No
+  broader checkpoint is planned after the negative p15 gate; guarded rotation
+  remains mandatory if that decision is revisited. Inventory:
+  `analysis/hf_storage_cleanup_2026-07-13.json`.
+- Publishing remains externally blocked. The configured GitHub SSH push timed
+  out after 55 seconds, and the port-443 SSH fallback timed out during
+  connection. `gh` is not installed and the known HTTPS fallback has no
+  noninteractive credentials. Local `main` is two commits ahead of
+  `origin/main`; preserve both commits and retry without discarding them.
 
 ### 2026-07-14 13:22 clean-row readout and targeted recoveries
 

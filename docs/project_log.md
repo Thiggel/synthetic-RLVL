@@ -4,6 +4,51 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-14
 
+- 19:47 CEST reconciled authenticated per-repository Hugging Face storage
+  after the completed logic checkpoint and adapter uploads: `79.281G` total
+  (`50.846G` models, `28.435G` datasets, 66 repositories), leaving `20.719G`
+  against the nominal quota. No repository was deleted. Preserve all three
+  p15 checkpoints and their current adapters through pending multi-hop eval;
+  guarded rotation remains a prerequisite if the rejected broader grid is
+  ever reconsidered. Updated `analysis/hf_storage_cleanup_2026-07-13.json`.
+- 19:39 CEST committed the accepted tiny/Nanotron analysis and audit hardening.
+  Publishing is still blocked: configured GitHub SSH timed out after 55
+  seconds, and `ssh.github.com:443` timed out during connection. `gh` is absent
+  and HTTPS has no noninteractive credentials. Local `main` is two commits
+  ahead of `origin/main` for the successor to retry.
+- 19:26 CEST accepted the corrected tiny checkpoint curve. Replacement and
+  recovery parents `3854813/3856145` are terminal; all 90 metric JSONs, 90
+  sample JSONLs, and exact original/recovery chunk logs passed the structural,
+  cap, fresh-constant, and retained-validity audit. Strengthened the audit so
+  every citation-free-valid sample must have empty validity errors, no invalid
+  lines, and line-valid fraction one even when strict validity is also true;
+  the regression passes and all 90 real rows re-audited accepted. Raw review
+  covered logic/NL, 50M/100M/200M, all seeds, 20k/60k/100k exposure,
+  depths 1/10/50, correct/incorrect outputs, and cap degeneration. OOD and
+  depth-50 modality-appropriate joint pass@1/4/8 remain zero throughout, so
+  this is an accepted negative tiny mechanism result, not report evidence.
+- 19:26 CEST ran the documented post-acceptance cleanup guard: verified 18
+  nonempty finals, 90 metrics, 90 samples, 90 accepted audits, terminal parent
+  jobs, and no live dependency, then deleted only the 90 tiny intermediate
+  checkpoints (`102G`). Finals and curve artifacts remain; repo-owned
+  `$HPCVAULT/synthetic-RLVL` now measures about `393G`.
+- 19:26 CEST accepted corrected Nanotron p15 eval/aggregate
+  `3854824_3 -> 3854847`. The six-bundle manifest is under
+  `analysis/nanotron_branchproof_unique_v2_p15_20260711/`. Direct logic gives
+  only `+0.0033` all-primary and `+0.0071` reasoning versus control while
+  targeted logic falls `-0.0116`; NL and post-instruction deltas are similarly
+  small/mixed. Correct/incorrect raw review found increased direct
+  next-document continuation for both proof mixtures, long instruction
+  repetition, and a BBH instruction extraction floor despite correct leading
+  choices. The broader mixture grid was therefore rejected as neither positive
+  nor sample-clean. Prompt-fixed multi-hop arrays remain pending as evaluation
+  of the existing checkpoints.
+- 19:26 CEST clean BranchProof rows `3853284_0/2/3/4/5` and their CPU audits
+  are accepted. Row 1 reached sampled chunk 110/112 after about 18 hours,
+  still below the depth-sharding trigger; rows 6/7/8 are active. Current
+  CPU-only watcher `3856057` preserved CPU-only successor `3857212` for 00:49
+  CEST because the baseline, report matrix, multi-hop, and report gates remain
+  incomplete. Full repository verification passes `223 passed, 3 skipped`.
 - 13:22 CEST tracked oversight changes were committed locally, but pushes via
   the configured SSH remote and SSH port 443 timed out; HTTPS had no
   non-interactive credentials. The branch remains one commit ahead of

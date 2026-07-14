@@ -390,3 +390,37 @@ The tiny checkpoint replacement separately accumulated seven Slurm-startup
 cancellations without output artifacts. Exact recovery
 `3856145_[24,26,28-32%3]` preserves those indices and is safely widened to
 generic one-GPU `a40,a100`; it does not alter the clean 7B baseline policy.
+
+## 2026-07-14 Tiny Checkpoint-Curve Acceptance
+
+Replacement/recovery `3854813 + 3856145` completed the intended `90/90`
+checkpoint rows: three sizes, two templates, three seeds, and five checkpoints
+at 20k-example intervals. Each metrics bundle has all 1,899 expected metrics;
+each sample JSONL has 288 rows, including 192 sampled rows with 16 unique
+prompts at every requested depth; each exact original/recovery log has complete
+greedy and sampled chunk accounting under the 7,168-token cap. Fresh-constant
+failures are zero.
+
+The retained-sample audit was strengthened to apply the diagnostic-consistency
+gate whenever `citation_free_valid=1`, independent of strict validity. All 90
+rows re-audited accepted. Across the complete retained set, every credited
+citation-free-valid record has an empty validity error, no invalid proof lines,
+and line-valid fraction one.
+
+Three-seed checkpoint means show limited answer-only learning but no valid
+length extrapolation. The largest OOD correct pass@1 mean is about `0.052` and
+the largest OOD correct pass@8 mean is about `0.221`; modality-appropriate OOD
+and depth-50 joint pass@1/4/8 are `0.000` for every size/template/exposure
+aggregate. Raw review across all sizes/templates/seeds, early/middle/final
+checkpoints, depths 1/10/50, correct/incorrect cases, and cap hits confirms the
+mechanism: shallow outputs can be correct and valid, depth-10 outputs are often
+answer-correct with non-derivable traces, and depth-50 outputs truncate,
+repeat, or lose structure. The accepted conclusion is negative and limited to
+these 50M--200M one-pass scratch models.
+
+Audit artifacts are under
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_checkpoint_audits_20260714`.
+After acceptance, a guard verified all 18 finals, 90 metrics, 90 samples, 90
+audits, terminal eval parents, and no live dependency. It then removed only the
+90 intermediate checkpoints (`102G`); finals and all evaluation artifacts were
+preserved.

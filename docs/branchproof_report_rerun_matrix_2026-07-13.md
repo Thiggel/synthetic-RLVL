@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-14 08:14 CEST.
+Last updated: 2026-07-14 19:26 CEST.
 
 ## Scope
 
@@ -65,3 +65,14 @@ No family is reportable until all expected rows pass structural/metric gates
 and representative shallow, boundary, OOD, and depth-50 generations have been
 inspected across seeds and success/failure cases. Old and corrected numbers
 must never be pooled.
+
+Tiny scratch is the first accepted family. Final eval is `18/18`; checkpoint
+eval/recovery `3854813 + 3856145` is `90/90`. Every checkpoint passed exact
+metric/sample/chunk-log/fresh-constant coverage and the strengthened
+citation-free-valid diagnostic invariant. Representative raw review spans all
+sizes, templates, and seeds plus 20k/60k/100k exposure. Answer-only OOD signal
+is nonzero, but modality-appropriate OOD and depth-50 joint pass@1/4/8 is zero
+throughout the three-seed aggregates. This is a negative under-capacity
+mechanism diagnostic, not evidence for the main 7B narrative. After the gate,
+all 90 intermediate checkpoints were deleted under a final/output/job guard;
+18 finals and all curve artifacts remain.

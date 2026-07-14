@@ -1,0 +1,76 @@
+{
+  "accepted": true,
+  "branches": [
+    "direct",
+    "instruction"
+  ],
+  "bundle_count": 6,
+  "checkpoint_step": 8192,
+  "conditions": [
+    "control",
+    "logic",
+    "nl_exact"
+  ],
+  "generation_diagnostic_row_count": 24,
+  "macros": {
+    "all_primary": [
+      "gsm8k",
+      "hendrycks_math500",
+      "arc_challenge",
+      "hellaswag",
+      "winogrande",
+      "piqa",
+      "agieval_logiqa_en",
+      "bbh",
+      "mmlu",
+      "mmlu_pro"
+    ],
+    "general_multiple_choice": [
+      "arc_challenge",
+      "hellaswag",
+      "winogrande",
+      "piqa",
+      "mmlu"
+    ],
+    "logic_targeted": [
+      "agieval_logiqa_en",
+      "mmlu_formal_logic",
+      "bbh_cot_fewshot_formal_fallacies",
+      "bbh_cot_fewshot_logical_deduction_three_objects",
+      "bbh_cot_fewshot_logical_deduction_five_objects",
+      "bbh_cot_fewshot_logical_deduction_seven_objects"
+    ],
+    "reasoning_core": [
+      "gsm8k",
+      "hendrycks_math500",
+      "agieval_logiqa_en",
+      "bbh",
+      "mmlu_pro"
+    ]
+  },
+  "math500_primary_metric": "answer_prefix_math_verify,none",
+  "math500_stock_metric": "exact_match,none",
+  "primary_tasks": [
+    "gsm8k",
+    "hendrycks_math500",
+    "arc_challenge",
+    "hellaswag",
+    "winogrande",
+    "piqa",
+    "agieval_logiqa_en",
+    "bbh",
+    "mmlu",
+    "mmlu_pro"
+  ],
+  "qualitative_row_count": 57,
+  "root": "/home/vault/c107fa/c107fa12/synthetic-RLVL/lm_eval_results/qwen25_branchproof_unique_v2_pilot_20260710",
+  "targeted_tasks": [
+    "mmlu_formal_logic",
+    "bbh_cot_fewshot_boolean_expressions",
+    "bbh_cot_fewshot_formal_fallacies",
+    "bbh_cot_fewshot_logical_deduction_three_objects",
+    "bbh_cot_fewshot_logical_deduction_five_objects",
+    "bbh_cot_fewshot_logical_deduction_seven_objects"
+  ],
+  "task_row_count": 96
+}

@@ -8,6 +8,16 @@ Main question:
 
 > Does reasoning in a formal-logic chain-of-thought substrate improve a language model's reasoning ability and length extrapolation compared with semantically matched natural-language CoT?
 
+Correction 2026-07-14: the BranchProof/HFSA performance table and claims below
+are historical hypotheses, not current evidence. A 2026-07-10 closure audit
+found wrapped constants and multiple derivable answers above depth 17; a later
+answer-matcher audit found embedded-alternative false positives. Every old
+BranchProof performance and ablation result is quarantined. Clean exact-answer
+replacement is `3853284 -> 3853285 -> 3853286`, and the corrected report-wide
+matrix is tracked in `docs/branchproof_report_rerun_matrix_2026-07-13.md`.
+Until those gates finish, AttrCon remains independent evidence and no old
+BranchProof number below should be used in a scientific claim.
+
 The current strongest signal is from the completed 3-seed sparse-protocol HFSA depth-scaling wave:
 
 | train depths | logic OOD joint@16 | `nl_exact` OOD joint@16 | logic - NL |
@@ -219,6 +229,16 @@ CPU-only gate `3856131` pass, and `3855272` depends on that gate. All retained
 prompts have one wrapper/question and the intended caps. Raw instruction
 generations remain weak but bounded, so the full comparison must report tag
 adherence, explanations, and repetition rather than hiding those failures.
+
+Corrected p15 update 2026-07-14 19:26 CEST: replacement logic instruction eval
+`3854824` and strict six-bundle aggregate `3854847` completed and passed their
+artifact gates. The result is null/mixed: direct logic changes all-primary and
+reasoning macros by only `+0.0033/+0.0071` versus control and reduces targeted
+logic by `-0.0116`; NL and post-instruction deltas are similarly small. Raw
+review found increased direct next-document continuation for both proof
+mixtures, long post-instruction repetition, and a BBH instruction extraction
+floor. The broader Nanotron mixture grid is therefore not triggered. This is a
+one-run negative/mixed pilot with evaluator caveats, not evidence for transfer.
 
 Format-matched OOD pilot update 2026-05-27 13:15 CEST: added `synthrlvl_ood_cot_bare` and `synthrlvl_ood_cot_prompted` suites. The bare suite removes answer-only instructions and leaves all task content inside `<question>...</question>`, relying on the model's learned output manifold; the prompted suite adds a minimal request to reason in the learned format before `<answer>`. LongBench context cleaning strips the embedded "only give me the answer" prefix. Short pilot `3667055_[0-3%2]` compares bare vs prompted on the matched OLMo-7B `logic_train1to25_seed3407` and `nl_exact_train1to25_seed3407` checkpoints with `LM_EVAL_LIMIT=8` before any broad rerun.
 

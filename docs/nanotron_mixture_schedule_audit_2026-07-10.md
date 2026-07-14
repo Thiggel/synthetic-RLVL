@@ -322,6 +322,16 @@ initialized the merged 8192-context checkpoint. Authenticated Hub
 projecting to `79.025G` after logic, `94.268G` after logic plus one further
 full checkpoint, and `109.511G` after logic plus two. No repo was deleted.
 
+Final storage reconciliation 2026-07-14 19:47 CEST: after the corrected logic
+checkpoint and instruction adapter completed uploading, authenticated
+per-repository `usedStorage` is `79.281G` (`50.846G` models and `28.435G`
+datasets across 66 repositories), leaving `20.719G` against the nominal quota.
+No repository was deleted. Preserve all three p15 checkpoints and their current
+adapters through multi-hop jobs `3855271/3855272/3855273`. The broader grid is
+now rejected by the null/mixed, sample-unclean p15 gate; guarded rotation is
+still required if that decision is revisited. The inventory is recorded in
+`analysis/hf_storage_cleanup_2026-07-13.json`.
+
 Downstream scoring update 2026-07-13 12:14 CEST: stock
 `hendrycks_math500/exact_match,none` rejected correct answer prefixes whenever
 the continuation included explanation. Whole-response symbolic matching also
@@ -449,6 +459,50 @@ verified A100-80GB consumer with RoPE `1000000`. At about 37 minutes of
 generation it had processed `5,793/20,362` requests without a fatal signature;
 aggregate `3854847` remains dependency-held. The broader mixture grid remains
 blocked on its accepted six-bundle aggregate and raw sample comparison.
+
+## 2026-07-14 Final Corrected p15 Comparison
+
+Replacement logic instruction eval `3854824_3` completed `0:0` in `02:20:26`,
+and strict CPU aggregate `3854847` completed `0:0`. Its accepted manifest
+contains all six corrected control/logic/NL direct/instruction bundles, exact
+checkpoint step 8192, all production task/sample coverage, schema-v4 MATH
+sidecars, 24 generation-diagnostic rows, and 57 indexed qualitative samples.
+Artifacts are under
+`analysis/nanotron_branchproof_unique_v2_p15_20260711/`.
+
+The matched macro result is null/mixed rather than positive:
+
+| Branch | Condition | all-primary | reasoning | general MC | targeted logic |
+| --- | --- | ---: | ---: | ---: | ---: |
+| direct | control | `0.6052` | `0.4946` | `0.7158` | `0.5316` |
+| direct | logic delta | `+0.0033` | `+0.0071` | `-0.0004` | `-0.0116` |
+| direct | NL delta | `-0.0011` | `-0.0012` | `-0.0011` | `-0.0069` |
+| instruction | control | `0.4992` | `0.3051` | `0.6932` | `0.1631` |
+| instruction | logic delta | `+0.0018` | `+0.0038` | `-0.0001` | `-0.0005` |
+| instruction | NL delta | `+0.0027` | `+0.0096` | `-0.0041` | `-0.0013` |
+
+These are single training runs per condition and do not estimate seed
+variance. Task deltas are mixed: logic-direct GSM8K and MATH-500 improve by
+about `+0.030` and `+0.012`, but targeted logic tasks are mostly flat or
+negative within their reported task stderr. NL-instruction GSM8K improves by
+about `+0.041`, without a corresponding broad or targeted-logic gain.
+
+Every condition/branch had correct and incorrect generations inspected.
+Direct logic/NL BBH and MMLU-Pro next-document marker rates are
+`60.0/45.5%` and `58.0/49.5%`, compared with control `35.6/12.1%`; prompt
+marker incidence remains zero. Instruction tuning removes the literal marker,
+but responses become long and repetitive. In BBH, correct leading choices are
+often followed by extra phrases, multilingual text, or role-token junk. The
+installed `get-answer` path therefore gives every instruction condition zero
+on the targeted BBH leaves. Those cells and the large instruction-minus-direct
+macro drops are an extraction/generation floor, not modality-transfer
+evidence. A future evidentiary use would require an independently audited
+answer-prefix sidecar or explicit exclusion of instruction BBH.
+
+The broader Nanotron mixture grid is not triggered: the corrected p15 result
+is neither positive nor sample-clean. Prompt-fixed multi-hop arrays
+`3855271/3855272` remain submitted as bounded evaluation of the already-trained
+three checkpoints; they are not an expansion of the training grid.
 
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit

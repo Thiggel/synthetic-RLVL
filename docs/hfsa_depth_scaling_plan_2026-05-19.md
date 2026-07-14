@@ -1,5 +1,12 @@
 # HFSA Depth-Scaling SFT Plan - 2026-05-19
 
+> **Superseded evidence notice (2026-07-14):** the implementation plan remains
+> useful, but all performance from the original wrapped-constant BranchProof
+> generator is quarantined. Do not cite the historical result summaries below.
+> Corrected unique-answer exact-matcher runs are `3853284 -> 3853285 ->
+> 3853286` plus the report-wide matrix in
+> `docs/branchproof_report_rerun_matrix_2026-07-13.md`.
+
 ## Motivation
 
 The strongest current signal is from the pure-SFT fixed-target HFSA comparison: logic CoT appears to extrapolate better than controlled natural-language CoT when training depth is extended from `1..10` to `1..15`, especially under sampled pass@k and joint correct+valid metrics. That result is still only one seed and only evaluates to depth 25.

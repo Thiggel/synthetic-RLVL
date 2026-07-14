@@ -89,6 +89,19 @@
     "timestamp": "2026-07-13T12:54:00+02:00",
     "used_storage_source": "authenticated per-repository Hugging Face API usedStorage"
   },
+  "post_logic_completion_reconciliation": {
+    "current_dataset_gb": 28.434912,
+    "current_model_gb": 50.845820,
+    "current_total_gb": 79.280731,
+    "dataset_repositories": 49,
+    "decision": "Preserve all three p15 checkpoints and their current adapters through the pending multi-hop evaluations. The broader mixture grid is rejected by the corrected p15 result; guarded checkpoint rotation remains mandatory if that decision is revisited.",
+    "headroom_gb": 20.719269,
+    "model_repositories": 17,
+    "nominal_quota_gb": 100.0,
+    "repositories": 66,
+    "timestamp": "2026-07-14T19:47:00+02:00",
+    "used_storage_source": "authenticated per-repository Hugging Face API usedStorage"
+  },
   "superseded_adapter_archive_cleanup": {
     "archive_content_gb": 4.976,
     "archive_index": "/home/vault/c107fa/c107fa12/hf_model_archives/2026-07-13_autoformalization_superseded/archive_index.json",
