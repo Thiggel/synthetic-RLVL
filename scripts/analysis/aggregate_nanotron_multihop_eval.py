@@ -12,8 +12,8 @@ from typing import Any
 
 RUN_TAGS = {
     "control": "qwen25_7b_midtrain_control_p0_4p3b_step8192",
-    "logic_p15": "qwen25_7b_midtrain_logic_p15_bp_unique_v2_4p3b_step8192",
     "nl_p15": "qwen25_7b_midtrain_nl_exact_p15_bp_unique_v2_4p3b_step8192",
+    "logic_p15": "qwen25_7b_midtrain_logic_p15_bp_unique_v2_4p3b_step8192",
 }
 
 
@@ -82,6 +82,42 @@ def _selected_samples(run_dir: Path, task: str) -> list[dict[str, Any]]:
     return selected
 
 
+def summarize_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    summary: list[dict[str, Any]] = []
+    for condition in RUN_TAGS:
+        for mode in ("direct", "instruction"):
+            for protocol in ("standard_short_answer", "strict_tagged"):
+                selected = [
+                    row
+                    for row in rows
+                    if row["condition"] == condition
+                    and row["mode"] == mode
+                    and row["protocol"] == protocol
+                ]
+                if not selected:
+                    raise ValueError(f"missing rows for {condition}/{mode}/{protocol}")
+                summary.append(
+                    {
+                        "condition": condition,
+                        "mode": mode,
+                        "protocol": protocol,
+                        "benchmark_count": len(selected),
+                        "mean_qa_f1": sum(float(row["qa_f1"]) for row in selected) / len(selected),
+                        "mean_exact_match": (
+                            sum(float(row["qa_exact_match"]) for row in selected) / len(selected)
+                            if protocol == "strict_tagged"
+                            else None
+                        ),
+                        "mean_tag_found": (
+                            sum(float(row["tag_found"]) for row in selected) / len(selected)
+                            if protocol == "strict_tagged"
+                            else None
+                        ),
+                    }
+                )
+    return summary
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
@@ -122,6 +158,12 @@ def main() -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
+    summary_rows = summarize_rows(rows)
+    summary_csv_path = args.output_dir / "qwen25_branchproof_unique_v2_multihop_summary.csv"
+    with summary_csv_path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(summary_rows[0]))
+        writer.writeheader()
+        writer.writerows(summary_rows)
     sample_path = args.output_dir / "qwen25_branchproof_unique_v2_multihop_samples.json"
     sample_path.write_text(json.dumps(samples, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
 
@@ -136,30 +178,28 @@ def main() -> None:
         "| condition | mode | protocol | mean QA F1 | mean exact match | tag found |",
         "| --- | --- | --- | ---: | ---: | ---: |",
     ]
-    for condition in RUN_TAGS:
-        for mode in ("direct", "instruction"):
-            for protocol in ("standard_short_answer", "strict_tagged"):
-                selected = [
-                    row
-                    for row in rows
-                    if row["condition"] == condition
-                    and row["mode"] == mode
-                    and row["protocol"] == protocol
-                ]
-                mean_f1 = sum(float(row["qa_f1"]) for row in selected) / len(selected)
-                if protocol == "strict_tagged":
-                    mean_em = sum(float(row["qa_exact_match"]) for row in selected) / len(selected)
-                    mean_tag = sum(float(row["tag_found"]) for row in selected) / len(selected)
-                    em_text, tag_text = f"{mean_em:.3f}", f"{mean_tag:.3f}"
-                else:
-                    em_text = tag_text = "--"
-                lines.append(
-                    f"| {condition} | {mode} | {protocol} | {mean_f1:.3f} | "
-                    f"{em_text} | {tag_text} |"
-                )
+    for row in summary_rows:
+        em_text = "--" if row["mean_exact_match"] is None else f"{float(row['mean_exact_match']):.3f}"
+        tag_text = "--" if row["mean_tag_found"] is None else f"{float(row['mean_tag_found']):.3f}"
+        lines.append(
+            f"| {row['condition']} | {row['mode']} | {row['protocol']} | "
+            f"{float(row['mean_qa_f1']):.3f} | {em_text} | {tag_text} |"
+        )
     md_path = args.output_dir / "qwen25_branchproof_unique_v2_multihop.md"
     md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(json.dumps({"accepted": True, "rows": len(rows), "samples": len(samples), "csv": str(csv_path)}, indent=2))
+    print(
+        json.dumps(
+            {
+                "accepted": True,
+                "rows": len(rows),
+                "summary_rows": len(summary_rows),
+                "samples": len(samples),
+                "csv": str(csv_path),
+                "summary_csv": str(summary_csv_path),
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

@@ -40,7 +40,7 @@ else
   BASE_RUN_TAG="qwen25_7b_midtrain_${MIX_KIND}_p${MIX_PCT}_bp_unique_v2_4p3b"
   BASE_REPO_ID="${HF_NAMESPACE}/qwen25-7b-branchproof-unique-v2-midtrain-${MIX_KIND}-p${MIX_PCT}-step${CHECKPOINT_STEP}"
 fi
-OUT_ROOT="${OUT_ROOT_OVERRIDE:-${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_branchproof_unique_v2_multihop_20260713}"
+OUT_ROOT="${OUT_ROOT_OVERRIDE:-${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_branchproof_unique_v2_multihop_promptfix_20260714}"
 
 if [[ "${EVAL_BRANCH}" == "direct" ]]; then
   CHECKPOINT="${BASE_REPO_ID}"

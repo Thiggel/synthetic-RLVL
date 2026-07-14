@@ -7,7 +7,51 @@ from pathlib import Path
 TASK_DIR = Path(__file__).resolve().parents[1] / "lm_eval_tasks" / "synthrlvl_ood"
 sys.path.insert(0, str(TASK_DIR))
 
-from utils import process_longbench_qa_standard, process_longbench_qa_tagged  # noqa: E402
+from utils import (  # noqa: E402
+    doc_to_text_longbench_cot_bare,
+    doc_to_text_longbench_standard,
+    doc_to_text_longbench_tagged,
+    process_longbench_qa_standard,
+    process_longbench_qa_tagged,
+)
+
+
+def _wrapped_longbench_doc() -> dict:
+    return {
+        "question": "Question: Where was the scientist born?\n",
+        "context": (
+            "Answer the question based on the given passages. Only give me the answer and do not output any other words.\n\n"
+            "The following are given passages.\nPassage 1:\nThe scientist was born in Paris.\n\n"
+            "Answer the question based on the given passages. Only give me the answer and do not output any other words.\n"
+        ),
+        "answers": ["Paris"],
+    }
+
+
+def test_longbench_tagged_prompt_removes_embedded_stock_wrapper() -> None:
+    prompt = doc_to_text_longbench_tagged(_wrapped_longbench_doc())
+
+    assert prompt.count("Passage 1:") == 1
+    assert "Only give me the answer" not in prompt
+    assert "Question: Question:" not in prompt
+    assert prompt.count("Question: Where was the scientist born?") == 1
+
+
+def test_longbench_standard_prompt_reconstructs_stock_wrapper_once() -> None:
+    prompt = doc_to_text_longbench_standard(_wrapped_longbench_doc())
+
+    assert prompt.count("The following are given passages.") == 1
+    assert prompt.count("Answer the question based on the given passages.") == 2
+    assert prompt.count("Question: Where was the scientist born?") == 1
+    assert "Question: Question:" not in prompt
+
+
+def test_longbench_cot_prompt_uses_clean_passages_and_question() -> None:
+    prompt = doc_to_text_longbench_cot_bare(_wrapped_longbench_doc())
+
+    assert "Only give me the answer" not in prompt
+    assert prompt.count("Passage 1:") == 1
+    assert prompt.count("Question: Where was the scientist born?") == 1
 
 
 def test_longbench_qa_metrics_use_tagged_answer_and_report_em() -> None:

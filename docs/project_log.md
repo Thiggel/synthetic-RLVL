@@ -4,6 +4,41 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-14
 
+- 10:00 CEST repaired and submitted the Nanotron multi-hop downstream suite.
+  Raw smokes showed that `Xnhyacinth/LongBench` stores its stock instruction
+  wrapper inside `context` and stores a `Question:` prefix inside `question`;
+  the old tagged and standard YAMLs duplicated both. Added shared document
+  renderers that remove exactly the known wrapper, preserve passages, and
+  normalize the question; reduced tagged short-answer generation from 512 to
+  64 tokens; and made the audit reject nested prompts or stale caps. Verified
+  real HotpotQA/2Wiki/MuSiQue records, all six task registrations, Slurm static
+  validation, focused tests, and the full suite (`220 passed, 3 skipped`).
+  Re-auditing both old smoke bundles now rejects every tagged task for the
+  embedded wrapper, duplicated question, and 512-token cap, and every standard
+  task for wrapper/question duplication.
+  Submitted prompt-fixed smokes `3855269/3855270`, full baseline/NL/logic
+  direct/instruction arrays `3855271/3855272`, and aggregate `3855273` through
+  branch-specific `afterok` dependencies. The aggregate writes per-benchmark
+  and compact baseline/NL/logic tables under
+  `analysis/nanotron_branchproof_unique_v2_multihop_promptfix_20260714/`.
+- 10:00 CEST clarified the corrected tiny result. These jobs cover only the
+  50M/100M/200M one-pass scratch diagnostic; report-wide surface, hybrid,
+  conditioned, architecture, batch, 32B, and shortcut corrections are separate
+  arrays. Logic/NL use their intended modality-specific validity metrics. Raw
+  depth-10 samples frequently reach the right label through a non-derivable
+  branch, explaining zero joint without an evaluator mix-up. Old depth-50
+  behavior is not comparable because the old generator was ambiguous above
+  depth 17 and the old 100k-step setup recycled its corpus; corrected training
+  is exactly one pass over 100k unique sequences. `3854813` remains the
+  checkpoint-curve gate.
+- 10:00 CEST freed about `20.66 GiB` from repo-owned `$WORK`: `18.86 GiB`
+  from superseded ambiguous-generator tiny runs/evals, obsolete OLMo-2 32B
+  adapters, and invalid long-depth BranchProof materializations, plus `1.80
+  GiB` from 121 W&B local caches whose Slurm jobs are terminal. Retained all
+  active corrected artifacts, current downstream outputs, old large-model
+  report outputs, and paused paired-task datasets. Repo usage fell from about
+  `88.4 GiB` to `67.7 GiB`.
+
 - 08:14 CEST safely widened tiny checkpoint replacement `3854813_[0-89%3]`
   from A100-80-only to `a40,a100` with generic one-GPU GRES. The 50M--200M
   evaluator fits the A40 memory/runtime envelope; rows `0..2` started

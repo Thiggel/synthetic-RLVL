@@ -19,6 +19,8 @@ DEFAULT_TASKS = (
     "synthrlvl_longbench_musique_standard",
 )
 MINIMUM_MODEL_LENGTH = 32_768
+STOCK_INSTRUCTION = "Answer the question based on the given passages."
+STOCK_PASSAGE_HEADER = "The following are given passages."
 
 
 def _split_tasks(raw: str) -> list[str]:
@@ -34,6 +36,18 @@ def _metric(payload: dict[str, Any], task: str, name: str) -> float | None:
         return None
     value = float(value)
     return value if math.isfinite(value) and 0.0 <= value <= 1.0 else None
+
+
+def _generation_request(row: dict[str, Any]) -> tuple[str | None, dict[str, Any] | None]:
+    arguments = row.get("arguments")
+    if not isinstance(arguments, dict):
+        return None, None
+    request = arguments.get("gen_args_0")
+    if not isinstance(request, dict):
+        return None, None
+    prompt = request.get("arg_0")
+    kwargs = request.get("arg_1")
+    return (prompt if isinstance(prompt, str) else None, kwargs if isinstance(kwargs, dict) else None)
 
 
 def audit(run_dir: Path, *, mode: str, expected_tasks: list[str], require_full: bool) -> dict[str, Any]:
@@ -107,6 +121,34 @@ def audit(run_dir: Path, *, mode: str, expected_tasks: list[str], require_full: 
             sample_rows += len(rows)
             if len(rows) != effective or len({row.get("doc_id") for row in rows}) != effective:
                 errors.append(f"sample coverage mismatch for {task}")
+            prompt_errors: set[str] = set()
+            expected_max_tokens = 64 if protocol == "strict_tagged" else 32
+            for row in rows:
+                prompt, kwargs = _generation_request(row)
+                if prompt is None or kwargs is None:
+                    prompt_errors.add("missing retained generation request")
+                    continue
+                if kwargs.get("max_gen_toks") != expected_max_tokens:
+                    prompt_errors.add(
+                        f"max_gen_toks={kwargs.get('max_gen_toks')!r}, expected {expected_max_tokens}"
+                    )
+                if "Question: Question:" in prompt:
+                    prompt_errors.add("duplicated question prefix")
+                if protocol == "strict_tagged":
+                    passage_marker = "\nPassages:\n"
+                    passage_body = prompt.split(passage_marker, 1)[1] if passage_marker in prompt else ""
+                    if not passage_body:
+                        prompt_errors.add("missing tagged passage block")
+                    elif passage_body.lstrip().startswith(STOCK_INSTRUCTION):
+                        prompt_errors.add("embedded stock wrapper remains inside tagged prompt")
+                else:
+                    passage_marker = f"{STOCK_PASSAGE_HEADER}\n"
+                    passage_body = prompt.split(passage_marker, 1)[1] if passage_marker in prompt else ""
+                    if not prompt.startswith(STOCK_INSTRUCTION) or not passage_body:
+                        prompt_errors.add("missing stock prompt wrapper")
+                    elif passage_body.lstrip().startswith(STOCK_INSTRUCTION):
+                        prompt_errors.add("embedded stock wrapper remains inside standard prompt")
+            errors.extend(f"{task}: {error}" for error in sorted(prompt_errors))
         metrics = {
             name: _metric(payload, task, name)
             for name in ("qa_f1_score,none", "qa_exact_match,none", "tag_found,none", "extracted_nonempty,none")

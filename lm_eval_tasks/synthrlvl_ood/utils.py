@@ -14,6 +14,12 @@ _LONGBENCH_PREFIX_RE = re.compile(
     r"The following are given passages\.\s*",
     re.IGNORECASE,
 )
+_LONGBENCH_SUFFIX_RE = re.compile(
+    r"\s*Answer the question based on the given passages\.\s*"
+    r"Only give me the answer and do not output any other words\.\s*$",
+    re.IGNORECASE,
+)
+_QUESTION_PREFIX_RE = re.compile(r"^(?:\s*Question:\s*)+", re.IGNORECASE)
 
 
 def extract_answer(response: Any, *, allow_raw_fallback: bool = True) -> str:
@@ -40,7 +46,32 @@ def _question_block(body: str) -> str:
 
 def _clean_longbench_context(context: Any) -> str:
     text = "" if context is None else str(context)
-    return _LONGBENCH_PREFIX_RE.sub("", text).strip()
+    text = _LONGBENCH_PREFIX_RE.sub("", text)
+    return _LONGBENCH_SUFFIX_RE.sub("", text).strip()
+
+
+def _clean_longbench_question(question: Any) -> str:
+    text = "" if question is None else str(question)
+    return _QUESTION_PREFIX_RE.sub("", text).strip()
+
+
+def doc_to_text_longbench_tagged(doc: dict) -> str:
+    return _question_block(
+        "Answer the question using the given passages. Put only the final answer in <answer>...</answer>.\n\n"
+        f"Passages:\n{_clean_longbench_context(doc.get('context', ''))}\n\n"
+        f"Question: {_clean_longbench_question(doc.get('question', ''))}"
+    )
+
+
+def doc_to_text_longbench_standard(doc: dict) -> str:
+    passages = _clean_longbench_context(doc.get("context", ""))
+    question = _clean_longbench_question(doc.get("question", ""))
+    return (
+        "Answer the question based on the given passages. Only give me the answer and do not output any other words.\n\n"
+        f"The following are given passages.\n{passages}\n\n"
+        "Answer the question based on the given passages. Only give me the answer and do not output any other words.\n\n"
+        f"Question: {question}\nAnswer:"
+    )
 
 
 def doc_to_text_gsm8k_cot_bare(doc: dict) -> str:
@@ -55,13 +86,16 @@ def doc_to_text_gsm8k_cot_prompted(doc: dict) -> str:
 
 
 def doc_to_text_longbench_cot_bare(doc: dict) -> str:
-    return _question_block(f"Passages:\n{_clean_longbench_context(doc.get('context', ''))}\n\nQuestion: {doc['question']}")
+    return _question_block(
+        f"Passages:\n{_clean_longbench_context(doc.get('context', ''))}\n\n"
+        f"Question: {_clean_longbench_question(doc.get('question', ''))}"
+    )
 
 
 def doc_to_text_longbench_cot_prompted(doc: dict) -> str:
     return _question_block(
         f"Passages:\n{_clean_longbench_context(doc.get('context', ''))}\n\n"
-        f"Question: {doc['question']}\n"
+        f"Question: {_clean_longbench_question(doc.get('question', ''))}\n"
         "Reason through the problem in your learned format, then put the final answer in <answer>...</answer>."
     )
 

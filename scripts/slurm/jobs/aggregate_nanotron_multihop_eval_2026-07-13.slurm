@@ -16,6 +16,6 @@ export VIRTUAL_ENV="${VENV_PATH}"
 export PATH="${VENV_PATH}/bin:${PATH}"
 hash -r 2>/dev/null || true
 
-ROOT="${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_branchproof_unique_v2_multihop_20260713"
-OUT="${HPCVAULT}/synthetic-RLVL/analysis/qwen25_branchproof_unique_v2_multihop_20260713"
+ROOT="${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_branchproof_unique_v2_multihop_promptfix_20260714"
+OUT="analysis/nanotron_branchproof_unique_v2_multihop_promptfix_20260714"
 python scripts/analysis/aggregate_nanotron_multihop_eval.py --root "${ROOT}" --output-dir "${OUT}"

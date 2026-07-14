@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-14 08:14 CEST.
+Last updated: 2026-07-14 10:00 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,47 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-14 10:00 multi-hop repair, tiny interpretation, and WORK cleanup
+
+- The matched Nanotron pilot already has all three intended checkpoints:
+  normal-continuation control (`p0`), `15%` BranchProof NL, and `15%`
+  BranchProof logic. Five of six conventional downstream bundles are accepted;
+  logic instruction eval `3854824_[3%1]` is account-GRES pending and the strict
+  baseline/NL/logic table job `3854847` waits on it.
+- Raw smoke inspection found a LongBench task-construction bug. The dataset's
+  `context` already contains the stock instruction prefix and suffix, while the
+  old tagged/standard YAMLs wrapped it a second time; the `question` field also
+  already began with `Question:`. Both protocols therefore duplicated their
+  instructions and question. Document renderers now remove exactly the known
+  embedded wrapper, normalize the question once, preserve the passage body,
+  and limit tagged short answers to 64 tokens. The audit rejects old nested
+  prompts and wrong generation caps. Validation passed on real records from all
+  three datasets, all six lm-eval tasks, focused tests, and the full suite
+  (`220 passed, 3 skipped`); re-auditing both old smokes now marks them rejected
+  for all three defects. Prompt-fixed smokes are `3855269/3855270`; full
+  direct/instruction baseline-NL-logic arrays `3855271/3855272` depend on them,
+  and table aggregate `3855273` depends on both full arrays. Its compact
+  baseline/NL/logic table will be written under
+  `analysis/nanotron_branchproof_unique_v2_multihop_promptfix_20260714/`.
+- The corrected tiny jobs are only the 50M/100M/200M one-pass scratch
+  diagnostic, not all experiments in the report. The other surface, hybrid,
+  conditioned, architecture, batch-size, 32B, and shortcut reruns are separate
+  arrays. Modality-aware scoring is active: logic uses citation-free formal
+  validity and NL uses translated validity. At depth 10, sampled outputs often
+  have the correct final label but take a non-derivable branch, so zero joint is
+  genuine for these under-capacity models rather than a validator mix-up.
+  Depth-50 collapse is not comparable to the old result: the old generator was
+  ambiguous above depth 17 and its nominal 100k run recycled a small corpus for
+  100k optimizer steps. The corrected run is one pass over 100k unique examples.
+  Checkpoint curve replacement `3854813` is running and remains the acceptance
+  gate for the mechanism diagnostic.
+- Repo-only `$WORK` cleanup removed `20.66 GiB`: superseded old tiny scratch
+  runs/evals, obsolete OLMo-2 32B adapters, materialized long-depth BranchProof
+  datasets known to be invalid, and local W&B caches belonging to terminal
+  jobs. Active corrected runs, current downstream bundles, old large-model
+  report outputs, and paused paired-task datasets were retained. The repo tree
+  fell from about `88.4 GiB` to about `67.7 GiB`.
 
 ### 2026-07-14 07:14 oversight recovery and audit
 

@@ -200,6 +200,17 @@ HotpotQA/2Wiki/MuSiQue splits, Qwen-tokenized prompt maxima are
 is accepted until corrected control smokes produce coherent raw generations;
 then control, logic-p15, and NL-p15 are run in direct and native-chat modes.
 
+Correction 2026-07-14: the 32,768-window smokes exposed a second independent
+protocol defect. `Xnhyacinth/LongBench` embeds the stock instruction prefix and
+suffix in `context`, and its `question` field already starts with `Question:`;
+the local tagged and standard templates wrapped both again. The shared document
+renderers now strip exactly those known wrappers, retain the complete passage
+body, and emit one normalized question. Tagged decoding is capped at 64 tokens,
+while stock decoding remains at 32. Prompt-retaining audits reject duplicate
+wrappers, duplicate question prefixes, and stale caps. Prompt-fixed control
+smokes `3855269/3855270` gate full direct/instruction control, logic-p15, and
+NL-p15 arrays `3855271/3855272`; aggregate `3855273` produces the matched table.
+
 Format-matched OOD pilot update 2026-05-27 13:15 CEST: added `synthrlvl_ood_cot_bare` and `synthrlvl_ood_cot_prompted` suites. The bare suite removes answer-only instructions and leaves all task content inside `<question>...</question>`, relying on the model's learned output manifold; the prompted suite adds a minimal request to reason in the learned format before `<answer>`. LongBench context cleaning strips the embedded "only give me the answer" prefix. Short pilot `3667055_[0-3%2]` compares bare vs prompted on the matched OLMo-7B `logic_train1to25_seed3407` and `nl_exact_train1to25_seed3407` checkpoints with `LM_EVAL_LIMIT=8` before any broad rerun.
 
 Pilot readout 2026-05-27 13:36 CEST: all four rows completed exit `0:0`. Prompted format improves LongBench answer-tag adherence for NL and improves several tiny-sample LongBench EM cells, but LongBench samples still often look like direct entity extraction or long unclosed NL traces rather than explicit chain reasoning. Treat this as evidence that prompt format matters, not yet as a valid downstream multi-hop reasoning result; the next useful OOD step is a gold-supporting-facts/facts-only controlled suite.

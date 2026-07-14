@@ -5,11 +5,11 @@ dataset_path: Xnhyacinth/LongBench
 dataset_name: musique
 test_split: test
 output_type: generate_until
-doc_to_text: "<question>\nAnswer the question using the given passages. Put only the final answer in <answer>...</answer>.\n\nPassages:\n{{context}}\n\nQuestion: {{question}}\n</question>\n"
+doc_to_text: !function utils.doc_to_text_longbench_tagged
 doc_to_target: "{{answers}}"
 process_results: !function utils.process_longbench_qa_tagged
 generation_kwargs:
-  max_gen_toks: 512
+  max_gen_toks: 64
   until:
     - "</answer>"
     - "<|im_end|>"
@@ -37,4 +37,4 @@ metric_list:
     aggregation: mean
     higher_is_better: true
 metadata:
-  version: 1.0
+  version: 2.0
