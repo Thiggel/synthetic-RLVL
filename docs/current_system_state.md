@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-14 07:14 CEST.
+Last updated: 2026-07-14 08:12 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -26,6 +26,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ### 2026-07-14 07:14 oversight recovery and audit
 
+- A post-oversight scheduler audit found shortcut SFT tasks `3850213_3/4`
+  canceled by Slurm before Python startup, with empty stderr and no training
+  artifact. Unlike conditioned-50k task `3850109_3`, which is covered by the
+  existing `afterany` resume chain `3850110..3850112`, these cancellations
+  made shortcut eval `3850214`'s original `afterok` dependency unsatisfiable.
+  Exact recovery `3854948_[3-4%2]` was submitted and started immediately on
+  A40s. Eval `3850214` now waits on `afterany:3850213` plus
+  `afterok:3854948`, preserving all 42 rows without rerunning successful SFT.
 - Clean BranchProof baseline eval `3853284_0..5` is healthy on verified
   A100-80GB devices after `4:58--5:46`; sampled-chunk progress projects roughly
   `6.5--11.8` hours total, below the `20--24` hour depth-sharding trigger.

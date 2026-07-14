@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-14
 
+- 08:12 CEST post-oversight recovery: shortcut SFT tasks `3850213_3/4`
+  were canceled by Slurm before Python startup, leaving no stderr or artifact
+  and making eval `3850214`'s `afterok` dependency unsatisfiable. Submitted
+  only the missing rows as `3854948_[3-4%2]`; both started immediately on
+  A40s. Rewired `3850214` to `afterany:3850213,afterok:3854948`, so all
+  successful original rows are retained and evaluation cannot release early.
+  Conditioned-50k task `3850109_3` had the same launcher-level cancellation,
+  but its staged `afterany` recovery jobs `3850110..3850112` already recover
+  that row and require no extra submission.
 - 07:14 CEST oversight recovered three blocked paths. Canceled checkpoint eval
   `3850493` after 39 rows deterministically failed because intermediate tiny
   checkpoints lack tokenizer files; added an explicit tokenizer override,
