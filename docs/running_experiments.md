@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-07-14 10:00 CEST.
+Last updated: 2026-07-14 11:19 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -29,6 +29,13 @@ stale/incomplete proof checkpoints were removed. Do not resubmit them against
 the old Nanosets. The unrelated `grid_goal_struct_eval` jobs visible in the
 user-wide queue belong to `/home/hpc/c107fa/c107fa12/sequence-editing` and are
 not managed here.
+
+Vault cleanup at 11:19 CEST reclaimed `93.9 GiB` without touching active job
+inputs. The six `tmp` merge roots used by `3853284`, the converted Qwen base,
+corrected Nanosets/raw corpora, and all checkpoints needed by `3854813` or the
+corrected report-wide arrays are protected. Delete remaining intermediate
+checkpoints only after the corresponding final/eval/audit gate is accepted;
+verify the active merge roots self-delete after `3853284` becomes terminal.
 
 ## Tracked Slurm Chains
 

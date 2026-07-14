@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-14
 
+- 11:19 CEST reclaimed `93.9 GiB` from repo-owned `$HPCVAULT`, reducing
+  `$HPCVAULT/synthetic-RLVL` from `622.9 GiB` to `529.0 GiB`. Deleted 60
+  Trainer checkpoints from 30 completed corrected baseline SFT runs and nine
+  from three completed Nanotron instruction-SFT runs only after verifying all
+  33 final adapters; also removed superseded ambiguous pre-BranchProof
+  logic/NL raw corpora and Nanosets plus known-invalid/incomplete eval, smoke,
+  and quarantine outputs. Post-delete checks retained all finals, corrected
+  BranchProof and normal-continuation data, converted Qwen checkpoint, six
+  active `3853284` merge roots, and checkpoints needed by `3854813` and the
+  corrected report arrays. Added backlog cleanup gates for terminal clean eval,
+  accepted tiny curves, and accepted report-family eval/audit waves.
+
 - 10:00 CEST repaired and submitted the Nanotron multi-hop downstream suite.
   Raw smokes showed that `Xnhyacinth/LongBench` stores its stock instruction
   wrapper inside `context` and stores a `Question:` prefix inside `question`;

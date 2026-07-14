@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-14 10:00 CEST.
+Last updated: 2026-07-14 11:19 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,29 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-14 11:19 HPCVAULT cleanup
+
+- Repo-owned `$HPCVAULT/synthetic-RLVL` usage fell from `653,188,485 KiB`
+  (`622.9 GiB`) to `554,725,384 KiB` (`529.0 GiB`), reclaiming `93.9 GiB`.
+  Removed artifacts were limited to 60 intermediate checkpoints from 30
+  completed corrected baseline SFT runs, nine intermediate checkpoints from
+  three completed Nanotron instruction-SFT runs, superseded pre-BranchProof
+  logic/NL raw corpora and Nanosets, and known-invalid/incomplete eval, smoke,
+  and quarantine outputs. All 33 corresponding final adapters were verified
+  nonempty before deletion and remain present.
+- Protected artifacts were rechecked after deletion: corrected logic/NL and
+  normal-continuation Nanosets, corrected raw data, the converted Qwen2.5-7B
+  Nanotron checkpoint, six merge directories used by active clean eval
+  `3853284`, and all intermediate checkpoints used by active corrected report
+  and tiny checkpoint-curve jobs remain present. Current largest roots are
+  `runs` `216 GiB`, `tmp` `164 GiB`, corrected Nanosets `54 GiB`, corrected raw
+  Nanotron data `54 GiB`, and the converted base checkpoint `29 GiB`.
+- Deferred cleanup is trigger-based: verify the six `tmp` merge directories
+  disappear after `3853284`; after tiny curve `3854813` and each corrected
+  report family are accepted, remove their intermediate `checkpoint-*`
+  directories while retaining finals, audits, samples, and result bundles.
+  No active or pending job artifact was removed.
 
 ### 2026-07-14 10:00 multi-hop repair, tiny interpretation, and WORK cleanup
 
