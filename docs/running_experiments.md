@@ -1,8 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-07-14 19:26 CEST.
+Last updated: 2026-07-14 21:52 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 21:52 CEST
+
+- Clean baseline eval/audit is accepted at `6/30`: rows `0..5` are complete,
+  rows `6/7/8` are at chunks `104/110/93` of `112`, rows `9/10` are at
+  `27/17`, and row 11 is in post-merge startup. The complete rows are the
+  three-seed logic train-1-to-5 and train-1-to-10 blocks. OOD correct/joint
+  pass@1 increases `0.099/0.035 -> 0.313/0.245`, while depth-50 remains near
+  zero. NL rows are not yet available, so this is not a modality result.
+- The report SFT matrix is progressing with no fresh fatal signature. The
+  32B active row is about `94%`; shortcut recovery `3856142_5/6` is about
+  `67%/63%`; conditioned-50k rows `4/5/6` are about `82%/82%/58%` and retain
+  their staged resume chain. Full multi-hop arrays `3855271/3855272` and 32B
+  recovery `3854837` are ordinary account-GRES pending on A100-80GB.
+- Active outputs currently occupy about `462G` in the repo-owned vault, with
+  six live baseline merge roots and 87 Trainer checkpoints. Completed baseline
+  merge roots cleaned themselves. Defer further checkpoint deletion until the
+  corresponding final/eval/audit gates pass.
 
 ## Critical Correction and Active Chains
 

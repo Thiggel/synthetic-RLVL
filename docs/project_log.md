@@ -4,6 +4,24 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-14
 
+- 21:52 CEST live refresh found clean BranchProof baseline rows/audits `0..5`
+  accepted. These complete the three-seed logic train-1-to-5 and train-1-to-10
+  blocks: OOD correct pass@1 increases `0.099 +/- 0.057 -> 0.313 +/- 0.020`,
+  citation-free joint pass@1 increases `0.035 +/- 0.027 -> 0.245 +/- 0.012`,
+  and hard-tail correct/joint pass@1 increases `0.060/0.011 -> 0.239/0.166`;
+  depth-50 correct and joint remain near zero. This is within-logic scaling,
+  not a logic-vs-NL result. Rows `6/7/8` are near completion at chunks
+  `104/110/93`; rows `9/10` are at `27/17`, and row 11 is in startup.
+- 21:52 CEST report/multi-hop operational audit found no new unrecovered fatal
+  signature. Active corrected SFT rows are making progress; 32B row 2 is about
+  `94%`, shortcut recovery `3856142_5/6` is about `67%/63%`, and conditioned
+  50k rows `4/5/6` are about `82%/82%/58%`. The slower conditioned row is
+  checkpointed and already covered by staged resume `3850110..3850112`.
+  Multi-hop arrays `3855271/3855272` and 32B recovery `3854837` are cleanly
+  account-GRES pending on required A100-80GB resources. Vault use is about
+  `462G` as active report jobs create checkpoints; six live merge roots and 87
+  Trainer checkpoints remain protected until their acceptance gates pass.
+
 - 19:47 CEST reconciled authenticated per-repository Hugging Face storage
   after the completed logic checkpoint and adapter uploads: `79.281G` total
   (`50.846G` models, `28.435G` datasets, 66 repositories), leaving `20.719G`

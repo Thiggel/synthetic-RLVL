@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-14 19:47 CEST.
+Last updated: 2026-07-14 21:52 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,42 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-14 21:52 live progress and first clean logic blocks
+
+- Clean BranchProof baseline rows `3853284_0..5` and all six CPU audits are
+  now complete and accepted. These are the full three-seed logic blocks for
+  train depths 1..5 and 1..10, not yet a logic-vs-NL comparison. From 1..5 to
+  1..10, three-seed OOD correct pass@1 rises from `0.099 +/- 0.057` to
+  `0.313 +/- 0.020`, and citation-free joint pass@1 rises from
+  `0.035 +/- 0.027` to `0.245 +/- 0.012`. Hard-tail correct/joint pass@1 also
+  rises from `0.060/0.011` to `0.239/0.166`. Depth-50 correct pass@1 remains
+  only `0.020/0.023`, and citation-free joint pass@1 remains `0.001/0.001`.
+  This supports within-logic train-depth scaling but not the paper's modality
+  claim; matched NL rows have not started.
+- Baseline rows `6/7/8` are healthy at sampled chunks `104/110/93` of `112`;
+  rows `9/10` are at `27/17`, and row 11 has completed merge/startup. There is
+  no fatal signature. The six active merge roots exactly match these six rows;
+  all completed-row merge roots self-deleted as intended.
+- Corrected report-wide SFT continues without a new failure: surface rows
+  `6..8`, hybrid `14..16`, architecture `25..27`, batch `3..5`, 32B row 2,
+  shortcut rows `7/8/10`, and shortcut recovery `3856142_5/6` are active.
+  The 32B row is about `94%`; shortcut recovery is about `67%/63%`.
+  Conditioned-50k rows `4/5/6` are about `82%/82%/58%`; the slow row may
+  reach walltime, but its checkpointed staged resume chain `3850110..3850112`
+  already covers that case. Known shortcut failures are covered by
+  `3854948` (complete) and `3856142` (active); known 32B download failures are
+  covered by capacity-pending `3854837`.
+- Prompt-fixed direct/instruction multi-hop arrays `3855271/3855272` have
+  clean dependencies and are ordinary `AssocGrpGRES` pending. Aggregate
+  `3855273` remains correctly held. No compatible widening is available:
+  these jobs require A100-80GB, and the account GPU allocation is currently
+  consumed by the baseline and report matrix.
+- Repo-owned vault usage is about `462G`, up from the post-cleanup `393G`
+  because active report SFT has written new resumable checkpoints. There are
+  six active merge roots and 87 remaining Trainer checkpoints. None is safe to
+  delete before its current final/eval/audit gate. Full report/preprint
+  regeneration remains deferred until matched corrected evidence is complete.
 
 ### 2026-07-14 19:26 tiny-curve acceptance and corrected Nanotron p15 result
 
