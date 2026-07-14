@@ -21,6 +21,9 @@ DEFAULT_TASKS = (
 MINIMUM_MODEL_LENGTH = 32_768
 STOCK_INSTRUCTION = "Answer the question based on the given passages."
 STOCK_PASSAGE_HEADER = "The following are given passages."
+QWEN_USER_START = "<|im_start|>user\n"
+QWEN_TURN_END = "<|im_end|>"
+QWEN_ASSISTANT_START = "<|im_start|>assistant\n"
 
 
 def _split_tasks(raw: str) -> list[str]:
@@ -48,6 +51,20 @@ def _generation_request(row: dict[str, Any]) -> tuple[str | None, dict[str, Any]
     prompt = request.get("arg_0")
     kwargs = request.get("arg_1")
     return (prompt if isinstance(prompt, str) else None, kwargs if isinstance(kwargs, dict) else None)
+
+
+def _task_prompt(prompt: str, *, expects_chat: bool) -> str | None:
+    if not expects_chat:
+        return prompt
+    if prompt.count(QWEN_USER_START) != 1:
+        return None
+    user_and_rest = prompt.split(QWEN_USER_START, 1)[1]
+    if QWEN_TURN_END not in user_and_rest:
+        return None
+    user_prompt, rest = user_and_rest.split(QWEN_TURN_END, 1)
+    if not rest.lstrip().startswith(QWEN_ASSISTANT_START):
+        return None
+    return user_prompt
 
 
 def audit(run_dir: Path, *, mode: str, expected_tasks: list[str], require_full: bool) -> dict[str, Any]:
@@ -128,23 +145,35 @@ def audit(run_dir: Path, *, mode: str, expected_tasks: list[str], require_full: 
                 if prompt is None or kwargs is None:
                     prompt_errors.add("missing retained generation request")
                     continue
+                task_prompt = _task_prompt(prompt, expects_chat=expects_chat)
+                if task_prompt is None:
+                    prompt_errors.add("malformed or missing Qwen chat wrapper")
+                    continue
                 if kwargs.get("max_gen_toks") != expected_max_tokens:
                     prompt_errors.add(
                         f"max_gen_toks={kwargs.get('max_gen_toks')!r}, expected {expected_max_tokens}"
                     )
-                if "Question: Question:" in prompt:
+                if "Question: Question:" in task_prompt:
                     prompt_errors.add("duplicated question prefix")
                 if protocol == "strict_tagged":
                     passage_marker = "\nPassages:\n"
-                    passage_body = prompt.split(passage_marker, 1)[1] if passage_marker in prompt else ""
+                    passage_body = (
+                        task_prompt.split(passage_marker, 1)[1]
+                        if passage_marker in task_prompt
+                        else ""
+                    )
                     if not passage_body:
                         prompt_errors.add("missing tagged passage block")
                     elif passage_body.lstrip().startswith(STOCK_INSTRUCTION):
                         prompt_errors.add("embedded stock wrapper remains inside tagged prompt")
                 else:
                     passage_marker = f"{STOCK_PASSAGE_HEADER}\n"
-                    passage_body = prompt.split(passage_marker, 1)[1] if passage_marker in prompt else ""
-                    if not prompt.startswith(STOCK_INSTRUCTION) or not passage_body:
+                    passage_body = (
+                        task_prompt.split(passage_marker, 1)[1]
+                        if passage_marker in task_prompt
+                        else ""
+                    )
+                    if not task_prompt.startswith(STOCK_INSTRUCTION) or not passage_body:
                         prompt_errors.add("missing stock prompt wrapper")
                     elif passage_body.lstrip().startswith(STOCK_INSTRUCTION):
                         prompt_errors.add("embedded stock wrapper remains inside standard prompt")

@@ -423,6 +423,33 @@ Therefore no full six-condition multi-hop grid was submitted. Its next trigger
 is both a positive/sample-clean p15 aggregate and a revised tagged instruction
 protocol that passes another raw smoke.
 
+Prompt-fixed smoke update 2026-07-14 13:13 CEST: direct smoke `3855269_0`
+completed and passed. Instruction smoke `3855270_0` completed all 12 retained
+generations, resolved RoPE `1000000`, and used the audited 32,768-token window,
+but exited `1:0` because the structural audit required the stock prompt to
+start at byte zero even when lm-eval had applied Qwen's chat template. The
+retained instruction prompts actually contain exactly one system/user/assistant
+wrapper, one passage header, no duplicated `Question:` prefix, and the intended
+32/64-token caps. The audit now extracts the single Qwen user turn before
+checking task structure, with a regression for that mode. Focused tests and the
+full repository suite pass (`223 passed, 3 skipped`). The existing smoke
+re-audited accepted; CPU-only gate `3856131` completed `0:0`, and full
+instruction array `3855272` now depends on that gate. Direct full array
+`3855271` and instruction full array `3855272` are both account-GRES pending.
+
+All smoke generations were inspected. The prompt and cap corrections contain
+the earlier runaway behavior, but model quality remains visibly weak: some
+tagged 2Wiki/MuSiQue outputs omit a valid tag, and instruction responses often
+add explanations or repeat short phrases within the cap. These are generation
+diagnostics to preserve in the full comparison, not a reason to treat the old
+wrong-RoPE/truncated/nested-prompt bundles as evidence.
+
+Replacement logic instruction reviewer eval `3854824_3` is running on a
+verified A100-80GB consumer with RoPE `1000000`. At about 37 minutes of
+generation it had processed `5,793/20,362` requests without a fatal signature;
+aggregate `3854847` remains dependency-held. The broader mixture grid remains
+blocked on its accepted six-bundle aggregate and raw sample comparison.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the

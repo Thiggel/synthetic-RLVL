@@ -211,6 +211,15 @@ wrappers, duplicate question prefixes, and stale caps. Prompt-fixed control
 smokes `3855269/3855270` gate full direct/instruction control, logic-p15, and
 NL-p15 arrays `3855271/3855272`; aggregate `3855273` produces the matched table.
 
+Smoke-gate update 2026-07-14 13:13 CEST: direct smoke `3855269` passed.
+Instruction smoke `3855270` completed the intended run but exposed an audit
+false negative because Qwen chat tokens precede the stock user prompt. The
+audit now validates the extracted single user turn; stored artifacts and
+CPU-only gate `3856131` pass, and `3855272` depends on that gate. All retained
+prompts have one wrapper/question and the intended caps. Raw instruction
+generations remain weak but bounded, so the full comparison must report tag
+adherence, explanations, and repetition rather than hiding those failures.
+
 Format-matched OOD pilot update 2026-05-27 13:15 CEST: added `synthrlvl_ood_cot_bare` and `synthrlvl_ood_cot_prompted` suites. The bare suite removes answer-only instructions and leaves all task content inside `<question>...</question>`, relying on the model's learned output manifold; the prompted suite adds a minimal request to reason in the learned format before `<answer>`. LongBench context cleaning strips the embedded "only give me the answer" prefix. Short pilot `3667055_[0-3%2]` compares bare vs prompted on the matched OLMo-7B `logic_train1to25_seed3407` and `nl_exact_train1to25_seed3407` checkpoints with `LM_EVAL_LIMIT=8` before any broad rerun.
 
 Pilot readout 2026-05-27 13:36 CEST: all four rows completed exit `0:0`. Prompted format improves LongBench answer-tag adherence for NL and improves several tiny-sample LongBench EM cells, but LongBench samples still often look like direct entity extraction or long unclosed NL traces rather than explicit chain reasoning. Treat this as evidence that prompt format matters, not yet as a valid downstream multi-hop reasoning result; the next useful OOD step is a gold-supporting-facts/facts-only controlled suite.

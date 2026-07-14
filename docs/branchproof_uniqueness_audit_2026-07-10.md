@@ -363,3 +363,30 @@ throttle/dependency; the full protocol is unchanged. The complete repository
 suite after the evaluator/audit changes passes `216 passed, 3 skipped`.
 Report and preprint regeneration is deferred until the baseline, report-wide
 families, and tiny checkpoint curve pass their artifact and qualitative gates.
+
+## 2026-07-14 First Clean Full-Protocol Rows
+
+Clean exact-answer eval rows `3853284_0/3/5` completed in
+`11:05:17/10:09:23/10:34:35`, and row audits `3853285_0/3/5` accepted all
+three. Each metrics bundle has 448 prompts, 16 sampled generations per prompt,
+the full 2,665-metric schema, and a matching 1,024-row sample JSONL with 896
+sampled rows. Fresh-constant failure count is zero throughout.
+
+Representative logic samples across seeds 3407/3409 and train maxima 5/10
+confirm the intended corrected prompt (`c0..c_depth`) and exact answer
+extraction. Train-band outputs are typically correct and citation-free valid.
+At depth 25, answer-correct traces can already be invalid because later proof
+lines are unsupported or malformed. At depth 50, many retained generations
+repeat labels/rules until the 7,168-token cap and omit a usable answer. The
+three rows' sampled pass@1 OOD correctness is provisional and incomplete; NL
+rows have not completed, so no modality claim is permitted.
+
+Rows `3853284_1/2/4` remained healthy at sampled chunks `83/95/108` of 112,
+and rows 6/7 backfilled as slots opened. Completed runtimes and current
+progress remain below the 20--24-hour sharding trigger, so the A100-80-only
+protocol was not changed. The full suite now passes `223 passed, 3 skipped`.
+
+The tiny checkpoint replacement separately accumulated seven Slurm-startup
+cancellations without output artifacts. Exact recovery
+`3856145_[24,26,28-32%3]` preserves those indices and is safely widened to
+generic one-GPU `a40,a100`; it does not alter the clean 7B baseline policy.

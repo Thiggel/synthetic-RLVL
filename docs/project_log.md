@@ -4,6 +4,32 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-14
 
+- 13:22 CEST tracked oversight changes were committed locally, but pushes via
+  the configured SSH remote and SSH port 443 timed out; HTTPS had no
+  non-interactive credentials. The branch remains one commit ahead of
+  `origin/main` for the successor watcher to retry.
+- 13:13 CEST clean baseline and recovery pass: BranchProof eval rows
+  `3853284_0/3/5` completed in `10:09--11:05` and audits
+  `3853285_0/3/5` passed with full coverage and zero fresh-constant failures.
+  Raw samples show clean train-band proofs, correct-but-invalid depth-25
+  traces, and depth-50 cap-hit repetition; no cross-modality conclusion was
+  accepted. Rows `1/2/4` remain healthy and rows `6/7` backfilled. Shortcut rows
+  `3850213_5/6` failed only at W&B service startup, so exact recovery
+  `3856142_[5-6%2]` was submitted and added to eval `3850214`'s gate. Seven
+  tiny checkpoint rows were canceled before producing artifacts; exact
+  recovery `3856145_[24,26,28-32%3]` was submitted and safely widened to
+  generic one-GPU `a40,a100`.
+- 13:13 CEST multi-hop instruction-gate repair: prompt-fixed direct smoke
+  `3855269` passed. Instruction smoke `3855270` completed its 12 generations,
+  RoPE preflight, and 32,768-window run, but the audit assumed an untemplated
+  prompt began at byte zero. The audit now unwraps exactly one Qwen user turn;
+  a regression and the full suite pass (`223 passed, 3 skipped`). The stored
+  smoke re-audited cleanly, CPU-only gate `3856131` completed `0:0`, and full
+  instruction array `3855272` was rewired to it. Raw smoke generations remain
+  bounded but show explanations/repetition and incomplete tag adherence, which
+  must remain visible in the production analysis. Logic reviewer eval
+  `3854824_3` is running cleanly; no report regeneration trigger is satisfied.
+
 - 11:19 CEST reclaimed `93.9 GiB` from repo-owned `$HPCVAULT`, reducing
   `$HPCVAULT/synthetic-RLVL` from `622.9 GiB` to `529.0 GiB`. Deleted 60
   Trainer checkpoints from 30 completed corrected baseline SFT runs and nine

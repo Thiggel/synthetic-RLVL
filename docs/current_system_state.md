@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-14 11:19 CEST.
+Last updated: 2026-07-14 13:22 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,54 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-14 13:22 clean-row readout and targeted recoveries
+
+- Clean exact-answer BranchProof eval rows `3853284_0/3/5` completed in
+  `11:05:17`, `10:09:23`, and `10:34:35`; their CPU audits
+  `3853285_0/3/5` all passed. Each bundle contains the intended `448` prompts,
+  `16` generations per prompt, `1,024` retained rows, all `2,665` metrics, and
+  zero fresh-constant failures. Raw review confirms clean train-band formal
+  proofs, answer-correct but citation-free-invalid depth-25 traces, and
+  frequent depth-50 cap-hit repetition. These are provisional logic-only rows,
+  not a logic-vs-NL conclusion. Rows `1/2/4` remain healthy at sampled chunks
+  `83/95/108` of `112`, and rows `6/7` backfilled as slots opened. Even the slowest
+  row still projects below the `20--24` hour depth-sharding trigger; the
+  protocol and A100-80-only placement remain unchanged.
+- Prompt-fixed direct multi-hop smoke `3855269_0` passed. Instruction smoke
+  `3855270_0` completed all 12 generations and the RoPE/window checks, but its
+  audit incorrectly required the stock prompt to begin at byte zero even
+  under Qwen `--apply-chat-template`. The audit now extracts and checks the
+  single Qwen user turn; a regression covers that path. The stored instruction
+  smoke re-audited cleanly, and CPU-only replacement gate `3856131` passed in
+  two seconds. Full instruction array `3855272` was rewired to
+  `afterok:3856131`; both full arrays `3855271/3855272` are now ordinary
+  account-GRES pending. Raw smoke responses remain scientifically weak
+  (explanations/repetition and incomplete tagged extraction) but are bounded
+  by the audited 32/64-token caps rather than a prompt-construction error.
+- Shortcut SFT rows `3850213_5/6` failed before training because the W&B
+  service did not publish its port file within 30 seconds. Exact recovery
+  `3856142_[5-6%2]` is running on A40s; shortcut eval `3850214` now requires
+  original-array completion plus both recovery arrays `3854948` and `3856142`.
+  Tiny checkpoint rows `3854813_24/26/28-32` were canceled during Slurm
+  startup with no eval artifacts. Exact recovery
+  `3856145_[24,26,28-32%3]` is running and was safely widened to generic
+  one-GPU `a40,a100`, matching the already-audited tiny envelope.
+- Corrected logic instruction reviewer eval `3854824_3` is running on a
+  verified A100-80GB device with resolved RoPE `1000000`; after about 37
+  minutes of generation it had processed `5,793/20,362` requests with no fatal
+  signature. Aggregate `3854847` remains dependency-held. Current vault quota
+  is about `566 GiB/1000 GiB` soft, and no checkpoint cleanup trigger fired.
+  CPU-only watcher `3854785` is running; its recorded successor is `3856057`
+  and must remain scheduled because the end-to-end plan is incomplete.
+- Verification for the audit change passes the focused tests and the complete
+  repository suite: `223 passed, 3 skipped`. Neither LaTeX report was
+  regenerated because the clean 30-row BranchProof and six-bundle Nanotron
+  aggregates are incomplete.
+- The tracked oversight changes are committed locally. Pushes through the
+  configured SSH remote and SSH port 443 timed out; HTTPS lacks non-interactive
+  credentials. The branch is therefore one commit ahead of `origin/main`, and
+  the next watcher should retry the push without discarding the local commit.
 
 ### 2026-07-14 11:19 HPCVAULT cleanup
 
