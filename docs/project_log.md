@@ -4,6 +4,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 01:17 CEST conditioned-50k row `3850109_5` completed its active 50k chunk
+  in `19:45:22` and row 7 started. Direct multi-hop rows `3855271_0/1` are
+  actively generating at `388/1,200` and `268/1,200` requests with no fatal
+  signature; declaration-fixed baseline `3857767` remains account-GRES
+  pending behind active report/multi-hop work.
 - 01:08 CEST raw BranchProof review superseded the first eight exact-answer
   logic bundles. Generated formal wrappers can redeclare a predicate symbol
   for different state words while the old evaluator ignores declarations and
@@ -28,6 +33,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   row 2 is throttle-pending, instruction `3855272` is GRES-pending, and
   aggregate `3855273` remains held. Watcher `3857212` preserved recorded
   successor `3857722` for 06:49 CEST. No report/preprint regeneration ran.
+- 01:14 CEST committed the declaration-validity correction as `381b388`.
+  `git push origin main` timed out after 60 seconds without a remote response;
+  the correction plus this handoff update leave local `main` two commits ahead
+  of `origin/main`. The report repo was not changed.
 
 ## 2026-07-14
 

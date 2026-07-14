@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 01:08 CEST.
+Last updated: 2026-07-15 01:17 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -57,16 +57,19 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   account-GRES pending and aggregate `3855273` remains dependency-held. Raw
   production bundles must be inspected before the aggregate is interpreted.
 - Corrected report-wide SFT remains active without a fresh fatal signature.
-  Conditioned-10k SFT `3850108` is complete at `15/15`; conditioned-50k rows
-  `4/5/6` are near the end of their 50k chunk (row 4 was at step `49,439`),
-  shortcut recovery `3856142_5/6` is about `92%`, and exact 32B recovery
-  `3854837_0` has started on A100-80GB. All report evals will inherit the
-  declaration-validity correction when they start.
+  Conditioned-10k SFT `3850108` is complete at `15/15`; conditioned-50k row 5
+  completed its active 50k chunk in `19:45:22`, rows 4/6 are finishing, and
+  row 7 has started. Shortcut recovery `3856142_5/6` is about `92%`, and exact
+  32B recovery `3854837_0` has started on A100-80GB. All report evals will
+  inherit the declaration-validity correction when they start.
 - Canceling the six obsolete merge processes removed their guarded temporary
-  roots. Repo-owned vault use is now `326,520,653 KiB` with 95 Trainer
+  roots. Repo-owned vault use is now `326,852,150 KiB` with 95 Trainer
   checkpoints; no active report checkpoint is eligible for deletion. Current
   watcher `3857212` preserved recorded CPU-only successor `3857722` for
-  06:49 CEST. Report/preprint regeneration remains deferred.
+  06:49 CEST. Report/preprint regeneration remains deferred. Commit `381b388`
+  is local; `git push origin main` timed out after 60 seconds without a remote
+  response; the correction plus this handoff update leave `main` two commits
+  ahead of `origin/main`.
 
 ### 2026-07-14 19:26 tiny-curve acceptance and corrected Nanotron p15 result
 

@@ -1,10 +1,10 @@
 # Running Experiments
 
-Last updated: 2026-07-15 01:08 CEST.
+Last updated: 2026-07-15 01:17 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 01:08 CEST
+## Live Delta At 01:17 CEST
 
 - Raw review invalidated all completed `3853284_0..7` evidence: duplicate
   generated predicate declarations were not validity-gated. The eight bundles
@@ -13,13 +13,14 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   `3853284/3853285/3853286` are canceled/quarantined. Clean replacement
   `3857767 -> 3857768 -> 3857769` is A100-80-only and account-GRES pending.
 - The report SFT matrix is progressing with no fresh fatal signature.
-  Conditioned-10k `3850108` is `15/15`; conditioned-50k rows `4/5/6` are near
-  the end of the active 50k chunk, shortcut recovery `3856142_5/6` is about
-  `92%`, and 32B recovery `3854837_0` has started on A100-80GB.
+  Conditioned-10k `3850108` is `15/15`; conditioned-50k row 5 completed its
+  active 50k chunk, rows 4/6 are finishing, and row 7 has started. Shortcut
+  recovery `3856142_5/6` is about `92%`, and 32B recovery `3854837_0` has
+  started on A100-80GB.
 - Direct multi-hop rows `3855271_0/1` started on A100-80GB and passed the
   `rope_theta=1000000`/32,768-window preflight; row 2 is throttle-pending,
   instruction `3855272` is account-GRES pending, and `3855273` remains held.
-  Vault use is `326,520,653 KiB` after obsolete eval merge roots cleaned up;
+  Vault use is `326,852,150 KiB` after obsolete eval merge roots cleaned up;
   95 active report Trainer checkpoints remain protected.
 
 ## Critical Correction and Active Chains
