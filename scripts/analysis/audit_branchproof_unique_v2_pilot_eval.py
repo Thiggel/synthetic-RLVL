@@ -15,6 +15,15 @@ from typing import Any, Iterable
 QUESTION_RE = re.compile(r"<question>\s*(.*?)\s*</question>", re.DOTALL)
 ANSWER_RE = re.compile(r"<answer>\s*(.*?)\s*</answer>", re.DOTALL | re.IGNORECASE)
 CONSTANT_RE = re.compile(r"\bc(\d+)\b")
+DECLARATION_BLOCK_RE = re.compile(
+    r"<(?P<tag>constants|predicates)>\s*(?P<body>.*?)\s*</(?P=tag)>",
+    re.DOTALL | re.IGNORECASE,
+)
+CONSTANT_DECLARATION_RE = re.compile(r"^\s*([A-Za-z][A-Za-z0-9_]*)\s*=")
+PREDICATE_DECLARATION_RE = re.compile(
+    r"^\s*([A-Za-z][A-Za-z0-9_]*)\s*(?:x|\(\s*x\s*\))\s*:",
+    re.IGNORECASE,
+)
 CHUNK_DONE_RE = re.compile(
     r"^\[syntheval\] (?P<mode>greedy|sampled) vLLM chunk "
     r"(?P<index>\d+)/(?P<total>\d+) done in (?P<seconds>[0-9.]+)s "
@@ -40,6 +49,23 @@ def _answer_line_matches_gold(answer: str, gold: str) -> bool:
         )
         is not None
     )
+
+
+def _duplicate_logic_declarations(generation: str) -> list[str]:
+    duplicates: list[str] = []
+    for match in DECLARATION_BLOCK_RE.finditer(generation or ""):
+        tag = match.group("tag").lower()
+        declaration_re = (
+            CONSTANT_DECLARATION_RE if tag == "constants" else PREDICATE_DECLARATION_RE
+        )
+        names = [
+            declaration.group(1).lower()
+            for line in match.group("body").splitlines()
+            if (declaration := declaration_re.match(line)) is not None
+        ]
+        repeated = sorted(name for name, count in Counter(names).items() if count > 1)
+        duplicates.extend(f"{tag}:{name}" for name in repeated)
+    return duplicates
 GREEDY_METRICS = (
     "syntactic",
     "format",
@@ -317,6 +343,7 @@ def _audit_samples(
     counts: Counter[int] = Counter()
     nonempty_generations = 0
     constant_failures = 0
+    credited_duplicate_declaration_failures = 0
     by_step: dict[int, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     sample_indices_by_step: dict[int, Counter[int]] = defaultdict(Counter)
     prompts_by_step: dict[int, set[str]] = defaultdict(set)
@@ -414,6 +441,17 @@ def _audit_samples(
                     f"sample {index} has citation_free_valid=1 with line fraction "
                     f"{line_fraction!r}"
                 )
+            duplicate_declarations = (
+                _duplicate_logic_declarations(generation)
+                if isinstance(generation, str)
+                else []
+            )
+            if duplicate_declarations:
+                credited_duplicate_declaration_failures += 1
+                errors.append(
+                    f"sample {index} has citation_free_valid=1 with duplicate logic "
+                    f"declarations: {duplicate_declarations}"
+                )
         representatives.setdefault(
             str(step),
             {
@@ -477,6 +515,9 @@ def _audit_samples(
         "step_counts": {str(step): counts[step] for step in sorted(counts)},
         "nonempty_generation_count": nonempty_generations,
         "fresh_constant_failure_count": constant_failures,
+        "credited_duplicate_declaration_failure_count": (
+            credited_duplicate_declaration_failures
+        ),
         "source": expected_source,
         "unique_prompt_counts": {
             str(step): len(prompts_by_step[step]) for step in sorted(prompts_by_step)

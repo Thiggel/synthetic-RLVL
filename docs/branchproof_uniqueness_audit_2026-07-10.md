@@ -424,3 +424,33 @@ After acceptance, a guard verified all 18 finals, 90 metrics, 90 samples, 90
 audits, terminal eval parents, and no live dependency. It then removed only the
 90 intermediate checkpoints (`102G`); finals and all evaluation artifacts were
 preserved.
+
+## 2026-07-15 Declaration-Validity Supersession
+
+Representative review of the first eight exact-answer logic bundles exposed a
+new evaluator defect after the answer and premise-parse fixes. At longer
+depths, a model can emit two declarations for the same predicate symbol, for
+example mapping `Ix` to two different state words. The proof engine validates
+only the generated premise/proof formulas and previously ignored declaration
+blocks, so an internally derivable trace with an ambiguous formal vocabulary
+could receive `citation_free_valid=1`.
+
+The retained-sample census over `3853284_0..7` found `1,616/7,168` rows with
+duplicate declarations, including 94 credited citation-free-valid rows and 53
+credited correct-and-valid rows. Forty-six of the latter occur at depth 20.
+Because the other 14 samples per prompt were not retained, production pass@k
+cannot be corrected post hoc. The compact census is
+`analysis/branchproof_unique_v2_declaration_collision_audit_2026-07-15.json`.
+
+`OutputEvaluator` now rejects duplicate constant or predicate declaration
+names before proof validation, while preserving legitimate empty predicate
+blocks and case-distinct arithmetic symbols. The artifact audit independently
+rejects any retained citation-free-valid row with duplicate declarations.
+The full suite passes `226 passed, 3 skipped`.
+
+Old chain `3853284 -> 3853285 -> 3853286` was canceled and its 16 completed
+eval files, 8 audit JSONs, and 44 logs were moved into the repo/Vault
+`pre_declaration_fix_20260715` quarantine. Clean replacement
+`3857767 -> 3857768 -> 3857769` preserves the entire A100-80-only scientific
+protocol. No metric from any earlier BranchProof baseline chain may be restored
+as evidence.

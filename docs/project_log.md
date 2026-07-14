@@ -2,6 +2,33 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-15
+
+- 01:08 CEST raw BranchProof review superseded the first eight exact-answer
+  logic bundles. Generated formal wrappers can redeclare a predicate symbol
+  for different state words while the old evaluator ignores declarations and
+  credits internal citation-free validity. Across `7,168` retained sampled
+  rows, `1,616` contain duplicates, `94` were credited citation-free valid,
+  and `53` were credited correct-and-valid (`46` at depth 20). No prior
+  `3853284` metric remains evidence.
+- 01:08 CEST patched `OutputEvaluator` so duplicate constant/predicate
+  declarations force format, syntax, and every formal validity metric to zero;
+  strengthened the row audit to reject credited duplicates. Official iGSM
+  empty predicate blocks and case-distinct arithmetic symbols remain valid.
+  Focused checks and the complete suite pass: `226 passed, 3 skipped`.
+- 01:08 CEST canceled old `3853284/3853285/3853286`, quarantined 16 eval
+  files, 8 audit JSONs, and 44 logs under the repo/Vault
+  `pre_declaration_fix_20260715` quarantine, and submitted unchanged-protocol
+  A100-80 replacement `3857767_[0-29%6] -> 3857768_[0-29%8] -> 3857769`.
+  The replacement is account-GRES pending. Cancel cleanup removed all obsolete
+  merge roots; repo-owned vault use is `326,520,653 KiB` with 95 report
+  checkpoints.
+- 01:08 CEST direct multi-hop `3855271_0/1` started on verified A100-80GB
+  nodes and passed consumer `rope_theta=1000000` plus 32,768-window preflight;
+  row 2 is throttle-pending, instruction `3855272` is GRES-pending, and
+  aggregate `3855273` remains held. Watcher `3857212` preserved recorded
+  successor `3857722` for 06:49 CEST. No report/preprint regeneration ran.
+
 ## 2026-07-14
 
 - 21:52 CEST live refresh found clean BranchProof baseline rows/audits `0..5`

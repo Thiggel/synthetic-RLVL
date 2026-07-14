@@ -1,0 +1,36 @@
+{
+  "audit_date": "2026-07-15",
+  "old_eval_job": "3853284",
+  "sample_source": "synthetic_sampled",
+  "audited_rows": [0, 1, 2, 3, 4, 5, 6, 7],
+  "definition": "A duplicate is a repeated constant or predicate declaration name within one generated formal wrapper.",
+  "totals": {
+    "retained_samples": 7168,
+    "samples_with_duplicate_declarations": 1616,
+    "citation_free_valid_samples_with_duplicate_declarations": 94,
+    "correct_and_citation_free_valid_samples_with_duplicate_declarations": 53
+  },
+  "by_depth": {
+    "1": {"samples": 512, "duplicates": 0, "credited_valid_duplicates": 0, "credited_joint_duplicates": 0},
+    "2": {"samples": 512, "duplicates": 0, "credited_valid_duplicates": 0, "credited_joint_duplicates": 0},
+    "5": {"samples": 512, "duplicates": 0, "credited_valid_duplicates": 0, "credited_joint_duplicates": 0},
+    "10": {"samples": 512, "duplicates": 46, "credited_valid_duplicates": 1, "credited_joint_duplicates": 0},
+    "12": {"samples": 512, "duplicates": 54, "credited_valid_duplicates": 3, "credited_joint_duplicates": 1},
+    "15": {"samples": 512, "duplicates": 36, "credited_valid_duplicates": 0, "credited_joint_duplicates": 0},
+    "18": {"samples": 512, "duplicates": 42, "credited_valid_duplicates": 4, "credited_joint_duplicates": 4},
+    "20": {"samples": 512, "duplicates": 261, "credited_valid_duplicates": 57, "credited_joint_duplicates": 46},
+    "25": {"samples": 512, "duplicates": 254, "credited_valid_duplicates": 7, "credited_joint_duplicates": 2},
+    "30": {"samples": 512, "duplicates": 199, "credited_valid_duplicates": 9, "credited_joint_duplicates": 0},
+    "35": {"samples": 512, "duplicates": 195, "credited_valid_duplicates": 6, "credited_joint_duplicates": 0},
+    "40": {"samples": 512, "duplicates": 167, "credited_valid_duplicates": 3, "credited_joint_duplicates": 0},
+    "45": {"samples": 512, "duplicates": 177, "credited_valid_duplicates": 2, "credited_joint_duplicates": 0},
+    "50": {"samples": 512, "duplicates": 185, "credited_valid_duplicates": 2, "credited_joint_duplicates": 0}
+  },
+  "decision": {
+    "old_metrics_accepted": false,
+    "posthoc_passk_reconstruction_possible": false,
+    "replacement_eval_job": "3857767",
+    "replacement_audit_job": "3857768",
+    "replacement_aggregate_job": "3857769"
+  }
+}

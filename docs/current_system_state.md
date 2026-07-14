@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-14 21:52 CEST.
+Last updated: 2026-07-15 01:08 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,41 +24,49 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-14 21:52 live progress and first clean logic blocks
+### 2026-07-15 01:08 declaration-validity supersession and clean replacement
 
-- Clean BranchProof baseline rows `3853284_0..5` and all six CPU audits are
-  now complete and accepted. These are the full three-seed logic blocks for
-  train depths 1..5 and 1..10, not yet a logic-vs-NL comparison. From 1..5 to
-  1..10, three-seed OOD correct pass@1 rises from `0.099 +/- 0.057` to
-  `0.313 +/- 0.020`, and citation-free joint pass@1 rises from
-  `0.035 +/- 0.027` to `0.245 +/- 0.012`. Hard-tail correct/joint pass@1 also
-  rises from `0.060/0.011` to `0.239/0.166`. Depth-50 correct pass@1 remains
-  only `0.020/0.023`, and citation-free joint pass@1 remains `0.001/0.001`.
-  This supports within-logic train-depth scaling but not the paper's modality
-  claim; matched NL rows have not started.
-- Baseline rows `6/7/8` are healthy at sampled chunks `104/110/93` of `112`;
-  rows `9/10` are at `27/17`, and row 11 has completed merge/startup. There is
-  no fatal signature. The six active merge roots exactly match these six rows;
-  all completed-row merge roots self-deleted as intended.
-- Corrected report-wide SFT continues without a new failure: surface rows
-  `6..8`, hybrid `14..16`, architecture `25..27`, batch `3..5`, 32B row 2,
-  shortcut rows `7/8/10`, and shortcut recovery `3856142_5/6` are active.
-  The 32B row is about `94%`; shortcut recovery is about `67%/63%`.
-  Conditioned-50k rows `4/5/6` are about `82%/82%/58%`; the slow row may
-  reach walltime, but its checkpointed staged resume chain `3850110..3850112`
-  already covers that case. Known shortcut failures are covered by
-  `3854948` (complete) and `3856142` (active); known 32B download failures are
-  covered by capacity-pending `3854837`.
-- Prompt-fixed direct/instruction multi-hop arrays `3855271/3855272` have
-  clean dependencies and are ordinary `AssocGrpGRES` pending. Aggregate
-  `3855273` remains correctly held. No compatible widening is available:
-  these jobs require A100-80GB, and the account GPU allocation is currently
-  consumed by the baseline and report matrix.
-- Repo-owned vault usage is about `462G`, up from the post-cleanup `393G`
-  because active report SFT has written new resumable checkpoints. There are
-  six active merge roots and 87 remaining Trainer checkpoints. None is safe to
-  delete before its current final/eval/audit gate. Full report/preprint
-  regeneration remains deferred until matched corrected evidence is complete.
+- Raw review of the first eight exact-answer logic bundles found that generated
+  formal wrappers can redeclare the same predicate symbol for different state
+  words while still receiving internal citation-free validity. Across their
+  `7,168` retained sampled rows, `1,616` have duplicate declarations, `94`
+  were credited citation-free valid, and `53` were both answer-correct and
+  credited valid; `46/53` occur at depth 20. The strengthened row gate rejects
+  the old artifacts, so every metric previously read from `3853284_0..7` is
+  quarantined and is no longer evidence. Compact census:
+  `analysis/branchproof_unique_v2_declaration_collision_audit_2026-07-15.json`.
+- `OutputEvaluator` now treats duplicate constant or predicate declarations as
+  malformed and forces format, syntax, strict validity, citation-free validity,
+  and grounded validity to zero. The artifact audit independently rejects any
+  retained `citation_free_valid=1` row with duplicate declarations. Empty
+  predicate blocks and case-distinct arithmetic symbols used by official iGSM
+  remain supported. Focused and full verification pass at
+  `226 passed, 3 skipped`.
+- Old eval/audit/aggregate `3853284/3853285/3853286` were canceled after rows
+  `0..7` had completed. Their 16 eval files, 8 audit JSONs, and 44 logs are
+  isolated under the repo/Vault quarantine path
+  `pre_declaration_fix_20260715`. Replacement
+  `3857767_[0-29%6] -> 3857768_[0-29%8] -> 3857769` is submitted with the
+  unchanged A100-80-only, 448-prompt, 16-generation, 14-depth,
+  pass@1/2/4/8/16, 16,384-context, 7,168-cap protocol. It is currently
+  `AssocGrpGRES` pending; accept no baseline metric until all 30 replacement
+  audits and the qualitative grid pass.
+- Prompt-fixed direct multi-hop rows `3855271_0/1` started on verified
+  A100-80GB nodes with `rope_theta=1000000` and the audited 32,768 window;
+  row 2 remains array-throttle pending. Instruction array `3855272` remains
+  account-GRES pending and aggregate `3855273` remains dependency-held. Raw
+  production bundles must be inspected before the aggregate is interpreted.
+- Corrected report-wide SFT remains active without a fresh fatal signature.
+  Conditioned-10k SFT `3850108` is complete at `15/15`; conditioned-50k rows
+  `4/5/6` are near the end of their 50k chunk (row 4 was at step `49,439`),
+  shortcut recovery `3856142_5/6` is about `92%`, and exact 32B recovery
+  `3854837_0` has started on A100-80GB. All report evals will inherit the
+  declaration-validity correction when they start.
+- Canceling the six obsolete merge processes removed their guarded temporary
+  roots. Repo-owned vault use is now `326,520,653 KiB` with 95 Trainer
+  checkpoints; no active report checkpoint is eligible for deletion. Current
+  watcher `3857212` preserved recorded CPU-only successor `3857722` for
+  06:49 CEST. Report/preprint regeneration remains deferred.
 
 ### 2026-07-14 19:26 tiny-curve acceptance and corrected Nanotron p15 result
 

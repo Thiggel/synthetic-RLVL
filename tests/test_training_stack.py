@@ -285,6 +285,64 @@ target
     assert result.citation_free_grounded_valid == 0.0
 
 
+@pytest.mark.parametrize(
+    "declaration_block",
+    [
+        """<constants>
+a = entity a
+a = entity b
+</constants>
+<predicates>
+P(x): x is P
+Q(x): x is Q
+</predicates>""",
+        """<constants>
+a = entity a
+</constants>
+<predicates>
+Ax: x is P
+Ax: x is Q
+</predicates>""",
+    ],
+)
+def test_output_evaluator_rejects_duplicate_logic_declarations(declaration_block: str):
+    output = f"""
+<formal>
+{declaration_block}
+<premises>
+P(a)
+P(a) -> Q(a)
+</premises>
+<proof>
+P(a) ; R,1
+Q(a) ; ->E,2,3
+</proof>
+<conclusion>
+Q(a)
+</conclusion>
+</formal>
+<answer>
+target
+</answer>
+"""
+    result = OutputEvaluator().evaluate(
+        output,
+        template=TemplateName.LOGIC,
+        gold_answer="target",
+        gold_logic_premises="P(a)\nP(a) -> Q(a)",
+        gold_logic_conclusion="Q(a)",
+        prefill=PrefillMode.NONE,
+        gold_first_modality_lines=[],
+    )
+
+    assert result.format_ok == 0.0
+    assert result.syntactic == 0.0
+    assert result.valid == 0.0
+    assert result.citation_free_valid == 0.0
+    assert result.grounded_valid == 0.0
+    assert result.citation_free_grounded_valid == 0.0
+
+
 def test_reward_schema_indicator_all():
     cfg = make_task()
     builder = TaskBuilder(cfg)

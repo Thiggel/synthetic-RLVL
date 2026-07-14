@@ -100,6 +100,46 @@ class OutputEvaluator:
         return "formal"
 
     @staticmethod
+    def _has_unambiguous_logic_declarations(text: str, block_tag: str) -> bool:
+        logic = extract_tag(text, block_tag)
+        source = logic if logic else (text or "")
+        has_constants_block = re.search(
+            r"<constants>\s*.*?\s*</constants>", source, flags=re.DOTALL | re.IGNORECASE
+        ) is not None
+        has_predicates_block = re.search(
+            r"<predicates>\s*.*?\s*</predicates>", source, flags=re.DOTALL | re.IGNORECASE
+        ) is not None
+        if not has_constants_block and not has_predicates_block:
+            return True
+        if not has_constants_block or not has_predicates_block:
+            return False
+        constants = split_lines(extract_tag(source, "constants"))
+        predicates = split_lines(extract_tag(source, "predicates"))
+
+        constant_names: list[str] = []
+        for line in constants:
+            match = re.fullmatch(r"\s*([A-Za-z][A-Za-z0-9_]*)\s*=\s*.+?\s*", line)
+            if match is None:
+                return False
+            constant_names.append(match.group(1))
+
+        predicate_names: list[str] = []
+        for line in predicates:
+            match = re.fullmatch(
+                r"\s*([A-Za-z][A-Za-z0-9_]*)\s*(?:x|\(\s*x\s*\))\s*:\s*.+?\s*",
+                line,
+                flags=re.IGNORECASE,
+            )
+            if match is None:
+                return False
+            predicate_names.append(match.group(1))
+
+        return (
+            len(constant_names) == len(set(constant_names))
+            and len(predicate_names) == len(set(predicate_names))
+        )
+
+    @staticmethod
     def _natural_block_tag(template: TemplateName) -> str:
         if template in (
             TemplateName.NL_EXACT,
@@ -207,6 +247,11 @@ class OutputEvaluator:
         )
         logic_tag = self._logic_block_tag(template)
         natural_tag = self._natural_block_tag(template)
+        logic_declarations_ok = (
+            self._has_unambiguous_logic_declarations(output_text, logic_tag)
+            if wants_logic
+            else True
+        )
         natural_uses_premises_rules = template in (
             TemplateName.NL_EXACT,
             TemplateName.FORMAL_THINK,
@@ -226,7 +271,10 @@ class OutputEvaluator:
             TemplateName.LOGIC_WORDIFIED,
         ) and not self._has_strict_logic_layout(output_text):
             format_ok = 0.0
-        if wants_logic and not self._has_logic_structure(output_text, logic_tag):
+        if wants_logic and (
+            not self._has_logic_structure(output_text, logic_tag)
+            or not logic_declarations_ok
+        ):
             format_ok = 0.0
         if wants_natural and not self._has_natural_structure(output_text, natural_tag, natural_uses_premises_rules):
             format_ok = 0.0
@@ -238,7 +286,7 @@ class OutputEvaluator:
         citation_free_valid = 0.0
         grounded_valid = 0.0
         citation_free_grounded_valid = 0.0
-        if wants_logic:
+        if wants_logic and logic_declarations_ok:
             premises, proof, conclusion = self._extract_logic_components(output_text, logic_tag)
             if premises and proof and conclusion:
                 report = self.engine.analyze_proof(premises=premises, conclusion=conclusion, proof=proof)
