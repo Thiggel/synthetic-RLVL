@@ -4,6 +4,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-14
 
+- 08:14 CEST safely widened tiny checkpoint replacement `3854813_[0-89%3]`
+  from A100-80-only to `a40,a100` with generic one-GPU GRES. The 50M--200M
+  evaluator fits the A40 memory/runtime envelope; rows `0..2` started
+  immediately on A40s with the existing three-row throttle.
 - 08:12 CEST post-oversight recovery: shortcut SFT tasks `3850213_3/4`
   were canceled by Slurm before Python startup, leaving no stderr or artifact
   and making eval `3850214`'s `afterok` dependency unsatisfiable. Submitted

@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-14 08:12 CEST.
+Last updated: 2026-07-14 08:14 CEST.
 
 ## Scope
 
@@ -21,7 +21,7 @@ The corrected source is private Hub dataset `flaitenberger/BranchProof-unique-v2
 | Architecture | `3850113` | `3850121` | 54 |
 | Batch size | `3850114` | `3850122` | 36 train / 48 eval |
 | OLMo-3/Qwen3 32B | `3850115` | `3850123` | 15 train / 18 eval |
-| Tiny scratch, 100k unique examples | `3850488 -> 3850490` | `3850492/3850493` | 18 final / 90 checkpoints |
+| Tiny scratch, 100k unique examples | `3850488 -> 3850490` | final `3850492`; checkpoint replacement `3854813` | 18 final / 90 checkpoints |
 
 Every report comparison has three seeds. Exact duplicate compact-logic rows
 reuse the corrected baseline only when model, train range, seed, steps, and
@@ -31,6 +31,9 @@ At 08:12 CEST on July 14, shortcut tasks `3850213_3/4` were found canceled
 before Python startup. Exact recovery `3854948_[3-4%2]` started on A40s, and
 eval `3850214` was changed from the now-unsatisfiable original `afterok` gate
 to `afterany:3850213,afterok:3854948`. No successful row is being rerun.
+At 08:14, missing-tokenizer replacement `3854813` was widened from
+A100-80-only to compatible `a40,a100`; rows `0..2` started immediately on
+A40s under the unchanged three-row throttle.
 
 At 17:58 CEST, surface, hybrid, conditioned-dual, and architecture rows were
 actively training. All seven shortcut corpus builds had passed; their SFT

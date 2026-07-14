@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-14 08:12 CEST.
+Last updated: 2026-07-14 08:14 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -51,7 +51,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   exposed missing tokenizer assets in intermediate checkpoint directories;
   the evaluator now accepts an explicit tokenizer path, all 90 checkpoints
   and 18 final tokenizers passed the preflight, and exact replacement
-  `3854813_[0-89%3]` is account-GRES pending. Audits/tables/raw-review index:
+  `3854813_[0-89%3]` was safely widened from A100-80-only to compatible
+  `a40,a100` with generic one-GPU GRES; rows `0..2` started immediately on
+  A40s at 08:13 CEST. The model sizes are only 50M--200M and final eval rows
+  already established that this protocol is far below the A40 memory/time
+  envelope. Audits/tables/raw-review index:
   `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_final_audits_20260714`.
 - Corrected 32B rows `3850115_0/1` failed on transient expired Hugging Face
   Xet URLs while downloading the base; row 2 subsequently downloaded and is
