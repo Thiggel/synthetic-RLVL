@@ -43,8 +43,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   quota, or dependency signature is present, and the protocol is unchanged.
 - Corrected conditioned-10k row 0 completed both logic and NL outputs; bounded
   raw review again finds clean modality-appropriate shallow traces and
-  long-depth collapse. Row 3 finished generation and is scoring, rows 2/4
-  continue, and the family remains partial. New architecture finals are also
+  long-depth collapse. Row 3 then completed its NL bundle with the same
+  shallow-clean/deep-collapse pattern; rows 2/4 continue, and the family
+  remains partial. New architecture finals are also
   arriving without fatal signatures, but no report-family audit gate is yet
   complete.
 - Batch recovery `3859299_[3-5]` is healthy but slow on A40: after about six

@@ -22,6 +22,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   pending. CPU-only watcher `3859290` scheduled CPU-only successor `3860702`
   before starting, and the successor was preserved because the plan remains
   incomplete.
+- 19:15 CEST committed the row audit and handoff update as `07a9840`.
+  Publishing remains externally blocked: the configured SSH push made no
+  remote progress before its 90-second timeout, and the
+  `ssh.github.com:443` fallback timed out during connection. Local `main` is
+  one commit ahead of `origin/main`; the successor should retry without
+  discarding the commit. The report repository was unchanged.
 
 - 15:24 CEST designed the conditional 20B Dolmino production experiment.
   Use one continuous 38,147-step schedule with immutable weight milestones at

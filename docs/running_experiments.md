@@ -15,7 +15,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   greedy generation. Row 1 is the runtime watch at 12.1 hours, still below the
   20-hour depth-sharding trigger.
 - Conditioned-10k row 0 completed both modality outputs and bounded raw review;
-  row 3 is scoring and rows 2/4 continue. This remains partial family evidence.
+  row 3 also completed its NL bundle, and rows 2/4 continue. This remains
+  partial family evidence.
   No active/recent monitored log has a new fatal, OOM, quota, or dependency
   signature.
 - Batch recovery `3859299_[3-5]` is only at steps `815/815/821` after about
