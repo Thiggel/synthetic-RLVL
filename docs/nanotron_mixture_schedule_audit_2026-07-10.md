@@ -85,6 +85,49 @@ Each row consumes 134,217,728 tokens and saves no model/optimizer checkpoint.
 The selected shared LR must then pass 256-step formal-5% and NL-5%
 confirmations. Full 4.3B-token runs are not submitted before those checks.
 
+### Staged 20B production design (2026-07-15)
+
+The eventual production experiment should use one continuous 20B-token
+schedule with evaluation pauses rather than independently optimized endpoints:
+
+| Milestone | Optimizer step | Realized tokens |
+| --- | ---: | ---: |
+| 5B | 9,537 | 5,000,134,656 |
+| 10B | 19,073 | 9,999,745,024 |
+| 15B | 28,610 | 14,999,879,680 |
+| 20B | 38,147 | 20,000,014,336 |
+
+The scheduler must be configured for the final 38,147-step horizon from step
+1, with the selected shared peak LR, 256 linear warmup steps, and cosine decay
+to approximately `1e-6`. At 5B, pause all three conditions, export immutable
+BF16 weight snapshots, and run identical direct and post-instruction readouts.
+Instruction tuning branches from the exported weights and never modifies the
+resumable base state. Continue control, formal-5%, and NL-5% together only if
+a predeclared 5B gate finds a nontrivial, directionally coherent downstream
+difference without a material broad-capability regression. A practical pilot
+gate is at least one absolute percentage point on the preregistered reasoning
+macro, directionally supported across task groups, with no greater than one
+point all-primary regression. This is a continuation rule, not a substitute
+for training-seed uncertainty.
+
+For storage, retain only the latest full model/optimizer/scheduler state needed
+to resume each active condition. After the next milestone is verified, export
+the prior milestone as weight-only BF16 plus config/manifest and remove its
+superseded optimizer state. Preserve weight-only snapshots at 5B, 10B, 15B,
+and 20B; evaluate every milestone if continuation is triggered. Do not assume
+the current Hugging Face account can hold all 12 snapshots: retain local
+verified snapshots and upload only under an audited rotation/archive policy.
+
+The current 10B micro-anneal release cannot provide a unique 20B stream. Build
+the production stash from the official 100B Dolmino release with at least 21B
+packed Qwen tokens, plus 1.1B formal and 1.1B matched-NL tokens. Build normal
+data in roughly 5B shards and delete raw JSONL only after each packed shard,
+manifest, EOS count, and sample audit passes. Precompute one deterministic slot
+schedule over all `38,147 * 128 = 4,882,816` chunks: intervention conditions
+replace the same approximately 5% normal slots with formal or NL chunks, while
+all remaining normal chunk identities and order match control. This is stronger
+than relying on independent weighted samplers.
+
 At 12:44 CEST Dolmino task `3858584_0` failed after writing a resumable
 `4,128,298,342/4,800,000,000` tokens because Xet/CAS returned HTTP 500 for
 shuffled shard position 410. This is a transport failure, not data exhaustion,

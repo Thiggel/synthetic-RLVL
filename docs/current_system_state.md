@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 15:03 CEST.
+Last updated: 2026-07-15 15:24 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,25 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-15 15:24 staged 20B Dolmino design
+
+- If the short shared-LR gate passes, replace the one-shot 4.3B plan with a
+  single resumable 20B-token schedule for control, formal-5%, and NL-5%.
+  Pause and export weights at steps `9537/19073/28610/38147`, corresponding
+  to `5.0001/9.9997/14.9999/20.0000B` tokens. Evaluate all three at 5B; resume
+  all three to 20B only under a predeclared nontrivial downstream-signal gate.
+- Configure the final 38,147-step LR horizon from step 1. Do not train a
+  separately annealed 5B endpoint and then restart its scheduler. Preserve a
+  rotating full optimizer state for continuation, permanent BF16 weight-only
+  snapshots at each milestone, and separate instruction-tuning branches that
+  never mutate the continuing base checkpoints.
+- The current 10B Dolmino release and 4.81B packed stash cannot support 20B
+  without repetition. Build the eventual stash from the official 100B release:
+  at least 21B packed Dolmino tokens plus 1.1B tokens for each proof modality.
+  Build in roughly 5B shards and delete verified raw intermediates to control
+  peak Vault use. Precompute a shared slot schedule so formal/NL replace the
+  same 5% of normal slots and all common normal samples remain aligned.
 
 ### 2026-07-15 15:03 targeted Dolmino and batch recoveries
 

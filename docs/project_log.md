@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 15:24 CEST designed the conditional 20B Dolmino production experiment.
+  Use one continuous 38,147-step schedule with immutable weight milestones at
+  `9537/19073/28610/38147` (`5/10/15/20B` tokens), evaluate all conditions at
+  5B, and continue all three only under a predeclared downstream-signal gate.
+  The scheduler has the 20B horizon from step 1; instruction tuning branches
+  from snapshots and never alters resumable bases. Eventual data must come from
+  the 100B Dolmino release: at least 21B normal plus 1.1B formal and 1.1B NL,
+  built in bounded shards with a shared replacement-slot schedule. Rotate full
+  optimizer states while retaining verified BF16 milestone weights; current HF
+  quota cannot be assumed to hold all 12 snapshots.
+
 - 15:03 CEST Slurm assigned 2026-07-16 03:49 CEST estimates to all three
   matched 4-GPU LR rows `3859711_[0-2]`, versus 10:48 CEST for sequential
   8-GPU fallback `3859297`. All remain account-GRES pending; estimates are
