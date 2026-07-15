@@ -14,8 +14,10 @@ mkdir -p logs
 source ./scripts/env.sh
 source "${WORK}/nanotron/bin/activate"
 
-export HF_HOME="${HF_HOME:-${HPCVAULT}/.cache/huggingface}"
-export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-${HF_HOME}/hub}"
+export HF_HOME="${DOLMINO_HF_HOME:-${HPCVAULT}/.cache/huggingface}"
+export HF_DATASETS_CACHE="${HF_HOME}/datasets"
+export HUGGINGFACE_HUB_CACHE="${HF_HOME}/hub"
+export TRANSFORMERS_CACHE="${HF_HOME}/hub"
 export PYTHONPATH="${PWD}:${PYTHONPATH:-}"
 
 MODEL_ID="${MODEL_ID:-Qwen/Qwen2.5-7B}"
