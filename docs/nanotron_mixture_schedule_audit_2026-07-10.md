@@ -99,7 +99,8 @@ nonempty 19.24GB shard and `4,810,706,180` packed tokens. The exact
 capacity, and terminal-state gates pass. The unstarted LR gate `3858902` had
 become dependency-dead and was replaced by `3859297`, now normal
 account-GRES pending with a 2026-07-16 10:48 CEST estimate. The matched
-4-GPU alternatives are normal priority-pending without a firm estimate.
+4-GPU alternatives are account-GRES pending with per-row 2026-07-16 03:49
+CEST estimates.
 
 ## Downstream acceptance gate
 

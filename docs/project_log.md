@@ -4,6 +4,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 15:03 CEST Slurm assigned 2026-07-16 03:49 CEST estimates to all three
+  matched 4-GPU LR rows `3859711_[0-2]`, versus 10:48 CEST for sequential
+  8-GPU fallback `3859297`. All remain account-GRES pending; estimates are
+  projections, not guaranteed reservations.
+
 - 15:01 CEST added a matched lower-resource race for the Dolmino LR gate.
   Parameterized the training wrapper by topology with hard checks that world
   size and global batch remain exact. Submitted independent 4xA100-80GB rows

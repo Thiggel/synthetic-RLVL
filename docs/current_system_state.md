@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 15:01 CEST.
+Last updated: 2026-07-15 15:03 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,7 +24,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-15 15:01 targeted Dolmino and batch recoveries
+### 2026-07-15 15:03 targeted Dolmino and batch recoveries
 
 - Dolmino prerequisite row `3858584_0` failed at `4.128B/4.8B` tokens after a
   Hugging Face Xet/CAS HTTP 500 on shuffled shard position 410. Its resumable
@@ -40,7 +40,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   4.3B-token schedule. Dependency-dead LR gate `3858902` was canceled before
   start and replaced by sequential full-node gate `3859297`. It is normal
   `AssocGrpGRES`-pending with Slurm estimate 2026-07-16 10:48 CEST. Independent
-  matched 4xA100-80GB alternatives `3859711_[0-2%3]` are also priority-pending:
+  matched 4xA100-80GB alternatives `3859711_[0-2%3]` are also account-GRES
+  pending with per-row estimates of 2026-07-16 03:49 CEST:
   they preserve TP4, global batch 128, and 134,217,728 tokens per row by using
   DP1 and gradient accumulation 32. Keep both paths until one can cover all
   three LRs, then cancel only redundant unstarted work. Completed formal/NL
