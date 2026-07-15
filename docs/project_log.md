@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 15:01 CEST added a matched lower-resource race for the Dolmino LR gate.
+  Parameterized the training wrapper by topology with hard checks that world
+  size and global batch remain exact. Submitted independent 4xA100-80GB rows
+  `3859711_[0-2%3]` using TP4/DP1, microbatch 4, and accumulation 32, matching
+  the 8-GPU gate's global batch 128 and 134.2M tokens per LR. The existing
+  sequential 8-GPU gate `3859297` remains queued and now has a 2026-07-16
+  10:48 CEST estimate; 4-GPU rows have no firm estimate. Config-only checks
+  passed for both topologies, along with `bash -n` and `git diff --check`.
+
 - 14:37 CEST accepted the recovered Dolmino prerequisite. Nanoset processing
   completed with one nonempty 19.24GB shard and `4,810,706,180` packed tokens;
   the exact `10,705,908`-token increase over source tokens confirms one EOS per

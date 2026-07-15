@@ -1,10 +1,10 @@
 # Running Experiments
 
-Last updated: 2026-07-15 14:37 CEST.
+Last updated: 2026-07-15 15:01 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 14:37 CEST
+## Live Delta At 15:01 CEST
 
 - Dolmino row `3858584_0` stopped at `4.128B/4.8B` tokens on a transient Hub
   Xet/CAS HTTP 500. Exact recovery `3859296_0` resumed without replay and
@@ -13,8 +13,10 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   Nanoset preprocessing completed at `4,810,706,180` packed tokens in one
   nonempty 19.24GB shard; the delta confirms one EOS per source record.
   Replacement sequential LR gate `3859297` supersedes canceled dependency-dead
-  `3858902` and is `AssocGrpGRES`-pending with a 2026-07-16 12:49 CEST Slurm
-  estimate.
+  `3858902` and is `AssocGrpGRES`-pending with a 2026-07-16 10:48 CEST Slurm
+  estimate. Independent matched 4-GPU rows `3859711_[0-2%3]` are also
+  priority-pending with no firm estimate. They use TP4/DP1, microbatch 4, and
+  accumulation 32, preserving the 8-GPU gate's global batch and token budget.
 - Batch rows `3850114_3/4/5` timed out near `94--95%`. Exact recovery
   `3859299_[3-5%3]` is running with 1,000-step checkpoint retention, and eval
   `3850122` now requires the original array plus this recovery.
@@ -74,10 +76,10 @@ This includes old architecture, syntax, shortcut, hybrid, conditioned-dual,
 batch-size, and proof-mixture results. See
 `docs/branchproof_uniqueness_audit_2026-07-10.md`.
 
-| Experiment | Jobs | Live state at 2026-07-15 14:37 CEST | Outputs / next gate |
+| Experiment | Jobs | Live state at 2026-07-15 15:01 CEST | Outputs / next gate |
 | --- | --- | --- | --- |
 | Corrected report-wide BranchProof reruns | surface `3850105 -> 3850116`; hybrid `3850107 -> 3850118`; conditioned 10k `3850108 -> 3850119`; conditioned 50k `3850109..3850112 -> 3850120`; architecture `3850113 -> 3850121`; batch `3850114 -> 3850122`; 32B `3850115 + 3854837 -> 3850123`; shortcuts `3850212 -> 3850213 + 3854948 + 3856142 -> 3850214`; no-repeat tiny `3850488 -> 3850490 -> 3850492` plus checkpoint replacement/recovery `3854813 + 3856145` | Tiny final `18/18` and checkpoint curve `90/90` are terminal and accepted. Shortcut recoveries `3854948_[3-4]` and `3856142_[5-6]` are complete; original shortcut rows 10/11/12 continue. Conditioned-10k eval rows 0/1/2 are running cleanly. Conditioned-50k row 6 timed out at 43,105/50,000 and remains covered by the staged resume chain. Batch rows 3/4/5 may hit the hard 24-hour ceiling; pending batch rows now save every 1,000 steps, and only actually failed rows should be recovered. The 32B originals/recovery and other families continue under their current throttles/dependencies. | Tiny audit bundles: `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_final_audits_20260714` and `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_checkpoint_audits_20260714`. Recover only failed rows. Accept each family only after strict audit and representative raw review; never blend with old report numbers. |
-| Dolmino midtraining prerequisite and shared-LR gate | original build `3858584_[0-2]`; row-0 recovery `3859296`; replacement sequential gate `3859297`; canceled `3858902/3858587/3858588` | All data prerequisites pass. Dolmino has `4,800,000,272` source tokens and `4,810,706,180` packed tokens with one EOS per 10,705,908 records; source, raw-sample, metadata, nonempty-dataset, capacity, and terminal gates pass. `3859297` is account-GRES pending with a 2026-07-16 12:49 CEST estimate. | Select one shared LR from three sequential 256-step controls, then run formal/NL p5 confirmations before full training. |
+| Dolmino midtraining prerequisite and shared-LR gate | original build `3858584_[0-2]`; row-0 recovery `3859296`; 8-GPU sequential gate `3859297`; independent 4-GPU rows `3859711_[0-2%3]`; canceled `3858902/3858587/3858588` | All data prerequisites pass. The 8-GPU gate is account-GRES pending with a 2026-07-16 10:48 CEST estimate. Matched TP4/DP1 4-GPU rows are priority-pending with no firm estimate; global batch 128 and tokens/row are unchanged. | Keep both scheduling paths until one covers all three LRs; cancel only redundant unstarted work. Then select one shared LR and run formal/NL p5 confirmations before full training. |
 | Nanotron HF RoPE compatibility and multi-hop QA recovery | old diagnostic smokes `3850353/3850354`; prompt-fixed smokes `3855269/3855270`; CPU re-audit gate `3856131`; full direct/instruction arrays `3855271/3855272`; aggregate `3855273`; canceled flawed full jobs `3850099/3850100` and aggregates `3850207/3850217` | Complete. All six production bundles contain 1,200 rows, use corrected RoPE and a 32,768 window, and passed prompt/cap/coverage audits; aggregate `3855273` completed `0:0`. Direct stock control/logic/NL QA-F1 is `0.189/0.250/0.238`, but answer-head sensitivity is `0.349/0.361/0.367`. Direct tagged logic/NL usually launch their learned trace substrate and hit the 64-token cap; instruction stock rows are also cap-limited with QA-F1 near `0.09--0.10`. | Accepted artifacts: `analysis/nanotron_branchproof_unique_v2_multihop_promptfix_20260714/`. Treat the result as a response-format/continuation diagnostic, not clean reasoning transfer. Old RoPE/truncation/prompt-duplication bundles remain diagnostic only. |
 | Corrected BranchProof-v2 materialization | build/push `3829067` | Completed cleanly in `00:06:54`. Production gate passed on 3,000 examples with unique-solution rate `1.0`, max one derived answer, no failures, and balanced gold positions; HF smoke loads also passed. | `$HPCVAULT/synthetic-RLVL/datasets/branchproof_unique_v2_20260710`; private HF repo `flaitenberger/BranchProof-unique-v2`. |
 | Corrected BranchProof-v2 SFT/eval | full SFT `3829072_[0-29%12]`; declaration-fixed replacement eval `3857767_[0-29%6]`; CPU audits `3857768_[0-29%8]`; aggregate/qualitative gate `3857769`; newly quarantined `3853284/3853285/3853286`; older quarantined chains `3834582/3834706/3835779/3838163/3847756/3847757/3838164/3838165` | SFT is complete at `30/30`. The old chain and all its metrics remain quarantined. Replacement rows `3857767_0/1` are running on verified A100-80GB devices with max model length 16,384; the first greedy chunks are healthy despite expected cap hits, later rows are throttle/account-GRES pending, and audits remain held. | Preserve 32 prompts/depth, 16 generations, all 14 depths, pass@`1/2/4/8/16`, 16,384 context, 7,168 cap, and A100-80-only placement. Accept nothing until all 30 replacement audits and representative logic/NL review pass. |

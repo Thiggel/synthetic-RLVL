@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 14:37 CEST.
+Last updated: 2026-07-15 15:01 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,7 +24,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-15 14:37 targeted Dolmino and batch recoveries
+### 2026-07-15 15:01 targeted Dolmino and batch recoveries
 
 - Dolmino prerequisite row `3858584_0` failed at `4.128B/4.8B` tokens after a
   Hugging Face Xet/CAS HTTP 500 on shuffled shard position 410. Its resumable
@@ -39,8 +39,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   from source tokens confirms one EOS per record, and capacity exceeds the
   4.3B-token schedule. Dependency-dead LR gate `3858902` was canceled before
   start and replaced by sequential full-node gate `3859297`. It is normal
-  `AssocGrpGRES`-pending with Slurm estimate 2026-07-16 12:49 CEST. Completed
-  formal/NL prerequisite rows are retained and were not rerun.
+  `AssocGrpGRES`-pending with Slurm estimate 2026-07-16 10:48 CEST. Independent
+  matched 4xA100-80GB alternatives `3859711_[0-2%3]` are also priority-pending:
+  they preserve TP4, global batch 128, and 134,217,728 tokens per row by using
+  DP1 and gradient accumulation 32. Keep both paths until one can cover all
+  three LRs, then cancel only redundant unstarted work. Completed formal/NL
+  prerequisite rows are retained and were not rerun.
 - Batch-size SFT rows `3850114_3/4/5` genuinely hit the 24-hour ceiling at
   steps approximately `9472/9416/9472`; their pre-patch launches had no
   resumable checkpoint. Exact recovery `3859299_[3-5%3]` is running on A40s

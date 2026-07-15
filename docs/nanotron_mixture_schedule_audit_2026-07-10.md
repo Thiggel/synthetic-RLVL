@@ -73,10 +73,14 @@ shards directly, shuffles the shard order with seed 42, retains only native
 paired proof modality.
 
 Before full training, one shared LR is tuned on 100% Dolmino. Sequential gate
-`3858902` compares `6e-6`, `3e-6`, and `1e-5` for 256 steps each on identical
+`3859297` compares `6e-6`, `3e-6`, and `1e-5` for 256 steps each on identical
 chunks in one 12-hour 8xA100-80GB allocation, with 32 warmup steps and constant
-LR thereafter. The earlier separately queued jobs `3858587/3858588` were
-canceled before start to avoid repeated full-node queue waits.
+LR thereafter. Independent alternatives `3859711_[0-2%3]` run each LR on
+4xA100-80GB with TP4/DP1, microbatch 4, and accumulation 32. This preserves
+global batch 128 and 134,217,728 tokens per row relative to TP4/DP2,
+accumulation 16 on eight GPUs. Keep both scheduling paths until one can cover
+all rows, then cancel redundant unstarted work. Earlier `3858587/3858588` and
+dependency-dead `3858902` were canceled before start.
 Each row consumes 134,217,728 tokens and saves no model/optimizer checkpoint.
 The selected shared LR must then pass 256-step formal-5% and NL-5%
 confirmations. Full 4.3B-token runs are not submitted before those checks.
@@ -94,7 +98,8 @@ nonempty 19.24GB shard and `4,810,706,180` packed tokens. The exact
 `10,705,908`-token delta confirms one appended EOS per record; metadata,
 capacity, and terminal-state gates pass. The unstarted LR gate `3858902` had
 become dependency-dead and was replaced by `3859297`, now normal
-account-GRES pending with a 2026-07-16 12:49 CEST estimate.
+account-GRES pending with a 2026-07-16 10:48 CEST estimate. The matched
+4-GPU alternatives are normal priority-pending without a firm estimate.
 
 ## Downstream acceptance gate
 
