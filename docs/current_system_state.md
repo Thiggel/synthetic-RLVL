@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 10:09 CEST.
+Last updated: 2026-07-15 10:18 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,30 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-15 10:18 Dolmino midtraining corpus decision
+
+- The completed Qwen2.5/FineWeb experiment is a **continual-pretraining
+  pilot**, not a midtraining experiment. FineWeb-Edu is a broad pretraining
+  corpus; all handoff and preprint references should use the corrected term.
+- The appropriate next background is AI2's Dolma 3 **Dolmino Mix**. The
+  released `allenai/dolma3_dolmino_mix-10B-1025` is the official 10B
+  micro-anneal mixture for OLMo 3 stage 2 and is large enough for the planned
+  4.3B-token no-repeat pilot. The 100B release is the exact full OLMo-3-7B
+  second-stage mix but is unnecessary for this budget.
+- Dolmino is heterogeneous plain text, not a single chat schema. Preserve its
+  source text and EOS boundaries. Format paired BranchProof injections with
+  the same modality-neutral outer document envelope, for example
+  `problem\n\nSolution:\n{trace}\n\nFinal answer: {answer}`, with formal versus
+  NL differing only inside `{trace}`. Do not retain `<formal>`, `<think>`, or
+  modality labels.
+- Future conditions should replace, rather than append, Dolmino tokens so
+  total steps and tokens are identical: control is 100% Dolmino; each
+  intervention is `(100-x)%` of the same Dolmino stream plus `x%` paired
+  formal or NL proof tokens. Start with a bounded `{0,2,5,10}%` pilot rather
+  than the old `{5,10,15,20,25}%` grid: 15--25% from one synthetic generator
+  would dominate Dolmino's roughly 8.3% thinking category. No new job was
+  submitted.
 
 ### 2026-07-15 09:54 Nanotron mixture and scheduler diagnosis
 
@@ -47,14 +71,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   learned `<formal>`/`<think>` response surfaces while clean transfer remains
   only `+0.012/+0.018` after answer-head sensitivity. Details are in
   `docs/nanotron_mixture_schedule_audit_2026-07-10.md`.
-- Format/readout follow-up: FineWeb is currently raw text plus EOS, whereas
+- Format/readout follow-up: FineWeb was raw text plus EOS, whereas
   injected records use modality-identifying `<formal>`/`<think>` and nested QA
-  tags. Before another pilot, formal, NL, and ordinary-reasoning interventions
-  should share one neutral `Problem/Reasoning/Conclusion/Final answer`
-  envelope. The existing batch-one UltraChat LoRA is retained as a failed
-  alignment diagnostic; a new pilot should compare direct evaluation with
-  identical answer-only calibration and modality-neutral reasoning SFT across
-  all checkpoints.
+  tags. In a Dolmino pilot, paired formal and NL interventions should share
+  the neutral `problem\n\nSolution:\n{trace}\n\nFinal answer: {answer}`
+  envelope while native Dolmino records remain unchanged. The existing
+  batch-one UltraChat LoRA is retained as a failed alignment diagnostic; a new
+  pilot should compare direct evaluation with identical answer-only
+  calibration and modality-neutral reasoning SFT across all checkpoints.
 
 ### 2026-07-15 07:18 multi-hop acceptance and active runtime recovery
 

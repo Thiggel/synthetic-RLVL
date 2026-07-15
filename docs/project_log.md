@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 10:18 CEST corrected the Nanotron experiment terminology and next-corpus
+  plan. The completed Qwen2.5/FineWeb-Edu comparison is continual pretraining,
+  not midtraining. Inspected the official Dolma 3 Dolmino 10B/100B releases
+  and representative source records: Dolmino is a heterogeneous plain-text
+  stage-2 mix whose shared contract is text plus EOS, not a universal chat
+  template. Selected the 10B micro-anneal release for a future 4.3B-token
+  pilot. Dolmino records will remain native; paired formal/NL injections will
+  share `problem\n\nSolution:\n{trace}\n\nFinal answer: {answer}` with no
+  modality tags. Proposed replacement-token fractions `{0,2,5,10}%`, matched
+  source order and token budgets, and no job submission.
+
 - 10:09 CEST established the next Nanotron format/readout gate. FineWeb input
   is raw document text plus EOS, while proof interventions use `<question>`,
   modality-specific `<formal>`/`<think>`, nested proof tags, and `<answer>`.

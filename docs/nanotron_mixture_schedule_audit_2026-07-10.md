@@ -2,7 +2,7 @@
 
 ## Conclusion
 
-The corrected Qwen2.5-7B midtraining pilot implements the intended matched
+The corrected Qwen2.5-7B continual-pretraining pilot implements the intended matched
 token mixture. Nanotron blends fixed 4,096-token packed chunks. For each 15%
 proof condition, the full 8,192-step schedule contains 157,287 proof chunks
 and 891,289 normal-text chunks, corresponding to 644,247,552 proof tokens out
@@ -19,6 +19,48 @@ their relative ordering, but it must be fixed before another training wave.
 The three-step integration smokes realize one proof chunk out of three
 (`33.3%`) because they are intentionally too small to represent 15% finely;
 this smoke-only granularity does not apply to production.
+
+## Terminology and next background corpus
+
+The completed experiment uses FineWeb-Edu, a broad pretraining corpus, as its
+background. It is therefore a continual-pretraining pilot, not a midtraining
+experiment. The scientifically appropriate replacement is Dolma 3 Dolmino:
+the 100B release is the mixture used for OLMo 3 7B's second training stage,
+and the 10B release is the official micro-anneal mix. The 10B release is enough
+for a 4.3B-token no-repeat pilot and avoids downloading the 180GB full release.
+
+Representative released Dolmino records show that the mixture has no single
+chat or reasoning wrapper. Its sources preserve heterogeneous plain-text
+formats, including raw web prose, question-answer text, `User:`/`Assistant:`
+dialogue, reading-comprehension records, and long reasoning solutions. The
+common contract is a `text` document followed by EOS. Future preprocessing
+must preserve those records rather than rewriting all Dolmino sources into an
+artificial schema.
+
+Only the paired formal and NL intervention records need an identical outer
+format. Use a modality-neutral document such as:
+
+```text
+{problem}
+
+Solution:
+{formal or natural-language trace}
+
+Final answer: {answer}
+```
+
+Do not include `<formal>`, `<think>`, modality names, or modality-specific
+outer tags. Append the same Qwen EOS token used for Dolmino records, tokenize
+all sources with the Qwen2.5 tokenizer, and pack them identically at 4,096
+tokens. Formal versus NL content should differ only inside the trace field.
+
+Mixture percentages must replace Dolmino tokens, not add extra training:
+control is 100% Dolmino, while an intervention at `x%` is `(100-x)%` of the
+same Dolmino stream plus `x%` paired formal or NL tokens. Use matched Dolmino
+sample indices/order, total steps, and token counts across conditions. Since
+the official 100B mix already contains about 8.3% thinking data, the old
+15--25% single-generator injections are aggressive. The next gate should be a
+bounded `{0,2,5,10}%` pilot before considering larger fractions.
 
 ## Downstream acceptance gate
 
@@ -609,23 +651,23 @@ of that change is surface continuation rather than transferable task
 reasoning.
 
 Before any new large wave, the minimum defensible pilot is: use the corrected
-resume scheduler and a post-warmup decay span; log held-out FineWeb and
+resume scheduler and a post-warmup decay span; log held-out Dolmino and
 proof-source losses separately; compare random mixing with exact global-batch
 stratification; and compare full-document continuation against a proof-focused
 objective that masks copied question/premise tokens. Run this as a small
 LR/objective pilot with at least two checkpoints before committing another
 multi-billion-token grid.
 
-The present background and intervention formats are not aligned. FineWeb
+The completed continual-pretraining background and intervention formats are
+not aligned. FineWeb
 records are raw document text followed by Qwen's EOS token; they have no user,
 assistant, question, reasoning, or answer fields. Corrected proof records use
 `<question>`, modality-specific `<formal>` or `<think>`, nested proof-section
-tags, and `<answer>`. Future formal, matched NL, and any ordinary-reasoning
-intervention should instead use the same modality-neutral document envelope,
-for example `Problem:`, `Reasoning context:`, `Reasoning steps:`,
-`Conclusion:`, and `Final answer:`. The modality should differ only in the
-contents of those fields. FineWeb should remain raw background text rather
-than being converted into artificial QA records.
+tags, and `<answer>`. In a future Dolmino pilot, paired formal and matched NL
+records should use the same modality-neutral `problem`, `Solution:`, and
+`Final answer:` document envelope specified above. The modality should differ
+only in the solution contents. Native Dolmino source records should remain
+unchanged rather than being converted into artificial QA records.
 
 Downstream readout also requires a cleaner test. The completed generic
 UltraChat branch used the same assistant-only LoRA for every checkpoint, but
@@ -652,7 +694,7 @@ at runtime and therefore need no resubmission.
 
 ## Scientific Interpretation
 
-This is packed continuation midtraining, not whole-example SFT. A source proof
+This is packed continual pretraining, not whole-example SFT. A source proof
 can cross a 4,096-token boundary, and a packed chunk can contain the end of one
 record and the start of another. The experimental intervention is therefore
 best described as adding 15% formal-proof or matched NL-proof *tokens* to a
@@ -662,6 +704,12 @@ proof problem.
 
 ## Evidence
 
+- Official Dolma 3 dataset taxonomy:
+  `https://github.com/allenai/dolma3`
+- Official 10B Dolmino micro-anneal release:
+  `https://huggingface.co/datasets/allenai/dolma3_dolmino_mix-10B-1025`
+- Official 100B OLMo-3-7B second-stage mix and source composition:
+  `https://huggingface.co/datasets/allenai/dolma3_dolmino_mix-100B-1025`
 - Production wrapper:
   `scripts/slurm/jobs/nanotron_qwen25_midtrain_grid_2026-06-24.slurm`
 - Nanotron dataset construction:
