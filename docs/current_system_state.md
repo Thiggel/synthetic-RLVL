@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 19:10 CEST.
+Last updated: 2026-07-16 01:05 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,37 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-16 01:05 additional declaration-fixed rows and live timeout gates
+
+- Declaration-fixed baseline rows `3857767_3/4` completed in
+  `10:09:31/12:09:06`, and CPU audits `3857768_3/4` accepted both exact
+  448-prompt, 16-generation, 1,024-retained-row, 2,665-metric bundles. Their
+  generation logs contain all `7/112` greedy/sampled chunks; sampled cap-hit
+  chunk counts are `68/67`, and fresh-constant plus credited duplicate-
+  declaration failures are zero. Raw review across depths `1/5/10/12/25/50`
+  finds complete citation-free-valid train-band proofs, first unsupported or
+  wrong-branch failures just beyond the train range, and depth-25/50 answer,
+  format, repetition, and cap collapse. This remains a two-seed logic slice,
+  not a family or modality result; no report metric was accepted.
+- Baseline rows `3857767_1/2/5/6/7` are at sampled chunks
+  `109/101/109/92/38` of 112 after `18.0/12.5/9.8/6.7/1.1` hours, and row 8
+  has started on a verified A100-80GB device. Row 1 is close to completion,
+  so the 20-hour depth-sharding trigger is not approached in a way that
+  justifies intervention. No fatal, OOM, quota, or dependency signature is
+  present, and the protocol is unchanged.
+- Conditioned-50k SFT rows `3850109_7/8` are near their hard limit at steps
+  `42,816/43,078` of 50,000; row 9 is at `21,837`. The already-submitted
+  `afterany` resume chain `3850110..3850112` is the intended recovery and must
+  remain intact. Batch recovery `3859299_[3-5]` has reached about
+  `1,658/1,656/1,667` of 10,000 after 12 hours and now has latest-only
+  1,000-step checkpoints; recover again only after an actual timeout.
+- Dolmino LR gates `3859297` and `3859711_[0-2]` remain account-GRES pending;
+  their current estimates are approximately 18:03 and 03:17 CEST,
+  respectively. The CPU-only watcher scheduled successor `3862186` for 07:01
+  CEST. The plan is incomplete, so the successor is preserved. Repo-owned
+  Vault use is `739,995,190 KiB` (about `706 GiB`), with 141 protected Trainer
+  checkpoints and nine active BranchProof merge roots.
 
 ### 2026-07-15 19:10 first declaration-fixed artifact and live recovery audit
 

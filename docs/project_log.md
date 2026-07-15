@@ -2,6 +2,27 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-16
+
+- 01:05 CEST accepted declaration-fixed baseline rows `3857767_3/4` only at
+  row scope after CPU audits `3857768_3/4` passed exact shape, metric, chunk,
+  cap, fresh-constant, answer, declaration, and validity gates. Raw review at
+  depths `1/5/10/12/25/50` shows clean train-band proofs and expected
+  wrong-branch, malformed, repetitive, and cap-hit deep failures. These are
+  two logic seeds, not matched evidence, so no report metric was accepted.
+- 01:05 CEST baseline rows `1/2/5/6/7` were at sampled chunks
+  `109/101/109/92/38`, with row 8 starting on A100-80GB. Row 1 is close to
+  completion at 18 hours and does not justify sharding. Conditioned-50k rows
+  `7/8` were near the 24-hour limit at `42,816/43,078` steps and remain
+  correctly covered by staged after-any resumes `3850110..3850112`. Batch
+  recovery `3859299_[3-5]` reached about 1.66k steps with 1,000-step
+  checkpoints; no duplicate recovery was submitted.
+- 01:05 CEST Dolmino gates `3859297` and `3859711_[0-2]` remained
+  account-GRES pending. The running CPU-only watcher scheduled CPU-only
+  successor `3862186` for 07:01 CEST; it is preserved because the baseline,
+  report matrix, Dolmino gate, and report replacement remain incomplete.
+  Vault use is about 706 GiB.
+
 ## 2026-07-15
 
 - 19:10 CEST accepted the first declaration-fixed baseline artifact only at

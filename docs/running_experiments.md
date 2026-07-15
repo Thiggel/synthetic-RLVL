@@ -1,10 +1,35 @@
 # Running Experiments
 
-Last updated: 2026-07-15 19:10 CEST.
+Last updated: 2026-07-16 01:05 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 19:10 CEST
+## Live Delta At 01:05 CEST
+
+- Declaration-fixed baseline rows `3857767_3/4` and CPU audits
+  `3857768_3/4` completed `0:0`. Both audits accept 448 prompts, 16
+  generations, 1,024 retained rows, 2,665 metrics, complete `7/112` chunk
+  logs, fresh constants, strict answers, and the strengthened declaration and
+  validity invariants. Raw depths `1/5/10/12/25/50` show clean train-band
+  proofs and ordinary wrong-branch, malformed, repetitive, and cap-hit deep
+  failures. They are a partial logic-only slice and do not release a claim.
+- Active baseline rows `1/2/5/6/7` are at sampled chunks
+  `109/101/109/92/38`; row 8 is in startup on A100-80GB. Row 1 is nearly
+  complete after 18 hours, so no depth sharding or protocol change is
+  justified. No monitored baseline log has a fatal signature.
+- Conditioned-50k rows `7/8` are near the 24-hour limit at steps
+  `42,816/43,078`; row 9 is at `21,837`. Preserve staged after-any resume jobs
+  `3850110..3850112`. Batch recovery `3859299_[3-5]` is at approximately
+  `1,658/1,656/1,667` after 12 hours with new 1,000-step checkpoints present;
+  submit no duplicate recovery before a terminal timeout.
+- LR gates `3859297` and `3859711_[0-2]` remain account-GRES pending. Current
+  Slurm estimates favor the 4-GPU rows at about 03:17 CEST; the sequential
+  8-GPU fallback estimates 18:03 CEST. CPU-only successor `3862186` is
+  begin-time pending for 07:01 CEST and remains required. Vault use is about
+  `706 GiB`, with 141 protected Trainer checkpoints and nine active merge
+  roots.
+
+## Prior Live Delta At 19:10 CEST
 
 - Declaration-fixed baseline row `3857767_0` completed in `11:07:55`; CPU
   audit `3857768_0` passed the full shape, log, cap, constant, answer, duplicate
