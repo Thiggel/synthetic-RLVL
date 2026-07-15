@@ -4,6 +4,25 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 19:10 CEST accepted the first declaration-fixed baseline artifact only at
+  row scope. Eval `3857767_0` completed in `11:07:55`, audit `3857768_0`
+  passed all structural/log/cap/constant/answer/declaration/validity gates,
+  and raw depths `1/5/25/50` show shallow valid proofs plus correctly rejected
+  malformed and duplicate-declaration long traces. Sampled correct/joint
+  pass@1 is `1.000/1.000` at depths 1 and 5, `0.066/0.000` at 25, and
+  `0.037/0.000` at 50. No family or modality claim was accepted.
+- 19:10 CEST live audit found baseline rows 1..5 at chunks
+  `84/67/92/85/75`, row 6 in greedy generation, and no fatal signature. Row 1
+  remains below the 20-hour sharding trigger. Conditioned-10k row 0 completed
+  both modalities with clean shallow/degraded deep raw behavior; the family is
+  partial. Batch recovery `3859299_[3-5]` is slow at steps `815/815/821` after
+  six hours and has not yet reached its first new checkpoint; do not create a
+  second recovery until a row actually times out. Vault use is about 691 GiB.
+- 19:10 CEST shared-LR jobs `3859297` and `3859711_[0-2]` remain account-GRES
+  pending. CPU-only watcher `3859290` scheduled CPU-only successor `3860702`
+  before starting, and the successor was preserved because the plan remains
+  incomplete.
+
 - 15:24 CEST designed the conditional 20B Dolmino production experiment.
   Use one continuous 38,147-step schedule with immutable weight milestones at
   `9537/19073/28610/38147` (`5/10/15/20B` tokens), evaluate all conditions at

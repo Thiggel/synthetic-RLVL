@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 15:24 CEST.
+Last updated: 2026-07-15 19:10 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,41 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-15 19:10 first declaration-fixed artifact and live recovery audit
+
+- Declaration-fixed baseline row `3857767_0` completed in `11:07:55`, and
+  CPU audit `3857768_0` accepted its exact 448 prompts, 16 generations,
+  1,024 retained rows, all 2,665 metrics, generation logs, cap diagnostics,
+  fresh constants, strict answer shape, and strengthened declaration/validity
+  invariants. Raw review covers depths `1/5/25/50`, correct and incorrect
+  cases, and malformed/cap-hit traces. Sampled correct/citation-free-joint
+  pass@1 is `1.000/1.000` at depths 1 and 5, `0.066/0.000` at depth 25,
+  and `0.037/0.000` at depth 50. Duplicate predicate declarations and premise
+  parse failures are now rejected rather than credited. This is one logic row,
+  not a family or modality result; no report metric was accepted.
+- Baseline rows `3857767_1..5` are sampling at chunks
+  `84/67/92/85/75` of 112 after `12.1/6.5/6.4/6.3/3.9` hours, and row 6 is
+  in greedy generation on a verified A100-80GB device. Row 1 remains below
+  the 20-hour sharding trigger but is the next runtime watch. No fatal, OOM,
+  quota, or dependency signature is present, and the protocol is unchanged.
+- Corrected conditioned-10k row 0 completed both logic and NL outputs; bounded
+  raw review again finds clean modality-appropriate shallow traces and
+  long-depth collapse. Row 3 finished generation and is scoring, rows 2/4
+  continue, and the family remains partial. New architecture finals are also
+  arriving without fatal signatures, but no report-family audit gate is yet
+  complete.
+- Batch recovery `3859299_[3-5]` is healthy but slow on A40: after about six
+  hours its rows are only at steps `815/815/821` of 10,000. The original
+  launches had no checkpoint, so these are genuine restarts; the new
+  latest-only 1,000-step checkpoints have not yet been reached. Do not submit
+  another recovery before an actual timeout. Repo-owned Vault use is now
+  `724,556,915 KiB` (about `691 GiB`), including `128` protected Trainer
+  checkpoints and nine active BranchProof merge roots.
+- Shared-LR jobs `3859297` and `3859711_[0-2]` remain account-GRES pending.
+  CPU-only watcher `3859290` is running and scheduled CPU-only successor
+  `3860702` before starting. The end-to-end plan remains incomplete, so the
+  successor is preserved.
 
 ### 2026-07-15 15:24 staged 20B Dolmino design
 
