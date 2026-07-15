@@ -504,6 +504,32 @@ is neither positive nor sample-clean. Prompt-fixed multi-hop arrays
 `3855271/3855272` remain submitted as bounded evaluation of the already-trained
 three checkpoints; they are not an expansion of the training grid.
 
+## 2026-07-15 Corrected Multi-Hop Completion
+
+Prompt-fixed direct `3855271_[0-2]`, instruction `3855272_[0-2]`, and strict
+aggregate `3855273` completed `0:0`. Each bundle retained all six tasks and
+1,200 samples, resolved the consumer config with `rope_theta=1000000`, used a
+32,768-token model window, and passed the prompt, 32/64-token cap, and full-run
+audit. Accepted artifacts are under
+`analysis/nanotron_branchproof_unique_v2_multihop_promptfix_20260714/`.
+
+The stock direct QA-F1 macro is `0.189/0.250/0.238` for control/logic/NL.
+Manual correct/partial/incorrect review and a persisted answer-head sensitivity
+rescore show that this is not clean reasoning transfer: after removing only
+obvious generated continuation beyond the initial answer span, the same macro
+is `0.349/0.361/0.367`, reducing the logic and NL deltas to `+0.012/+0.018`.
+Direct tagged generations expose stronger response-manifold interference:
+logic opens `<formal>` in `98.5--99.0%` of rows and NL opens `<think>` in
+`97.0--99.0%`, normally consuming the 64-token diagnostic before a usable
+answer. Instruction SFT removes those learned-substrate openings, but the
+stock branch remains cap-limited and gives control/logic/NL QA-F1
+`0.097/0.100/0.085`.
+
+This closes the bounded multi-hop evaluation as a response-control and format
+transfer diagnostic. It does not overturn the null/mixed corrected p15
+downstream result and does not satisfy the trigger for broader mixture
+training.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the

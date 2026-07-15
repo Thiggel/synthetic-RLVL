@@ -240,6 +240,20 @@ mixtures, long post-instruction repetition, and a BBH instruction extraction
 floor. The broader Nanotron mixture grid is therefore not triggered. This is a
 one-run negative/mixed pilot with evaluator caveats, not evidence for transfer.
 
+Corrected multi-hop update 2026-07-15 07:06 CEST: prompt-fixed direct
+`3855271`, instruction `3855272`, and aggregate `3855273` completed with all
+six 1,200-row bundles accepted under `rope_theta=1000000`, a 32,768-token
+window, and retained prompt/cap coverage. Direct stock control/logic/NL QA-F1
+is `0.189/0.250/0.238`, but an answer-head sensitivity rescore is
+`0.349/0.361/0.367`, so most of the apparent mixture gain is shorter or less
+contaminating continuation. The direct tagged prompt triggers `<formal>` in
+`98.5--99.0%` of logic rows and `<think>` in `97.0--99.0%` of NL rows, usually
+reaching the 64-token cap before an answer. Instruction SFT removes those
+substrate openings, while stock QA-F1 remains near `0.09--0.10` and almost all
+32-token responses cap. This bounded result diagnoses response control; it is
+not evidence of multi-hop reasoning transfer and does not reopen the broader
+mixture grid.
+
 Format-matched OOD pilot update 2026-05-27 13:15 CEST: added `synthrlvl_ood_cot_bare` and `synthrlvl_ood_cot_prompted` suites. The bare suite removes answer-only instructions and leaves all task content inside `<question>...</question>`, relying on the model's learned output manifold; the prompted suite adds a minimal request to reason in the learned format before `<answer>`. LongBench context cleaning strips the embedded "only give me the answer" prefix. Short pilot `3667055_[0-3%2]` compares bare vs prompted on the matched OLMo-7B `logic_train1to25_seed3407` and `nl_exact_train1to25_seed3407` checkpoints with `LM_EVAL_LIMIT=8` before any broad rerun.
 
 Pilot readout 2026-05-27 13:36 CEST: all four rows completed exit `0:0`. Prompted format improves LongBench answer-tag adherence for NL and improves several tiny-sample LongBench EM cells, but LongBench samples still often look like direct entity extraction or long unclosed NL traces rather than explicit chain reasoning. Treat this as evidence that prompt format matters, not yet as a valid downstream multi-hop reasoning result; the next useful OOD step is a gold-supporting-facts/facts-only controlled suite.

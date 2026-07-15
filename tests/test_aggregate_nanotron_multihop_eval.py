@@ -56,3 +56,39 @@ def test_summary_rejects_missing_condition_branch_protocol() -> None:
         assert "missing rows" in str(exc)
     else:
         raise AssertionError("incomplete aggregate rows were accepted")
+
+
+def test_answer_head_rescore_removes_generated_document_continuation() -> None:
+    rows = [
+        {
+            "doc": {"answers": ["Miller v. California"]},
+            "resps": [["Miller v. California Passage 1: unrelated continuation"]],
+            "qa_f1_score": 0.5,
+        },
+        {
+            "doc": {"answers": ["Ozalj"]},
+            "resps": [["wrong answer"]],
+            "qa_f1_score": 0.0,
+        },
+    ]
+
+    result = MODULE.standard_answer_head_rescore(rows)
+
+    assert result["row_count"] == 2
+    assert result["stock_qa_f1"] == 0.25
+    assert result["answer_head_qa_f1"] == 0.5
+    assert result["answer_head_exact_match"] == 0.5
+
+
+def test_generation_diagnostics_detect_learned_trace_surface() -> None:
+    rows = [
+        {"resps": [["<formal> proof"]]},
+        {"resps": [["<formal> proof You are an AI assistant"]]},
+    ]
+
+    result = MODULE.generation_diagnostics(rows)
+
+    assert result["row_count"] == 2
+    assert result["formal_open_rate"] == 1.0
+    assert result["next_document_marker_rate"] == 0.5
+    assert result["think_open_rate"] == 0.0

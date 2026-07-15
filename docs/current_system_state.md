@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 01:17 CEST.
+Last updated: 2026-07-15 07:06 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,48 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-15 07:06 multi-hop acceptance and active runtime recovery
+
+- All six prompt-fixed multi-hop production bundles completed: direct
+  `3855271_[0-2]`, instruction `3855272_[0-2]`, and strict aggregate
+  `3855273` are `COMPLETED 0:0`. Every bundle passed the 1,200-row coverage,
+  prompt-shape, 32/64-token decoding, corrected `rope_theta=1000000`, and
+  32,768-window gates. The accepted compact bundle is
+  `analysis/nanotron_branchproof_unique_v2_multihop_promptfix_20260714/`.
+- Raw review covers all three conditions, both branches, all three benchmarks,
+  both protocols, and correct/partial/incorrect cases. Direct stock QA-F1 is
+  `0.189/0.250/0.238` for control/logic/NL, but an answer-head sensitivity
+  rescore gives `0.349/0.361/0.367`; most of the apparent stock gain is
+  continuation control, not a clean reasoning gain. Direct tagged prompts
+  launch `<formal>` in `98.5--99.0%` of logic rows and `<think>` in
+  `97.0--99.0%` of NL rows, normally exhausting the 64-token diagnostic before
+  a usable answer. Instruction SFT removes those substrate launches, while
+  stock QA-F1 remains `0.097/0.100/0.085` and almost every 32-token response
+  caps. This closes the bounded multi-hop item as a response-format diagnostic,
+  not positive transfer evidence.
+- Declaration-fixed baseline `3857767_0/1` started at `06:59/07:01` CEST on
+  verified A100-80GB devices with the unchanged 16,384 context; audits
+  `3857768` and aggregate `3857769` remain dependency-gated. Conditioned-10k
+  report eval `3850119_0/1/2` is healthy around sampled chunks
+  `63/85/37` of 112 after `4:50/4:44/3:11`; projected completion remains well
+  below 24 hours.
+- Conditioned-50k row `3850109_6` timed out at step `43,105/50,000`, but its
+  staged after-any resume chain `3850110..3850112` remains the correct recovery
+  and must not be bypassed. Batch-family rows `3850114_3/4/5` are only about
+  `72%` after `18.3--18.5` hours and may exceed the A100 partition's hard
+  24-hour ceiling. Pending batch rows now retain a resumable checkpoint every
+  1,000 steps; recover only rows 3/4/5 if they actually time out.
+- Repo-owned Vault use is `460,945,705 KiB` (`439.6 GiB`) with 110 active
+  Trainer checkpoints. No checkpoint is eligible for cleanup yet. Watcher
+  `3857722` is CPU-only on `a100mig`; recorded successor `3858016` remains
+  begin-time pending because the baseline, report-wide evals, audits, and final
+  report replacement are incomplete.
+- The official root preprint now includes only the corrected one-run p15
+  null/mixed table and the multi-hop response-control finding; every historical
+  BranchProof quantitative section remains disabled. The generated informal
+  report was not regenerated because its builder still targets quarantined
+  roots. No TeX engine is installed locally, so only static source checks ran.
 
 ### 2026-07-15 01:08 declaration-validity supersession and clean replacement
 

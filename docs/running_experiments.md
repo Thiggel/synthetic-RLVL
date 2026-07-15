@@ -1,27 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-07-15 01:17 CEST.
+Last updated: 2026-07-15 07:06 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 01:17 CEST
+## Live Delta At 07:06 CEST
 
-- Raw review invalidated all completed `3853284_0..7` evidence: duplicate
-  generated predicate declarations were not validity-gated. The eight bundles
-  contain `1,616/7,168` retained rows with duplicates, including 94 credited
-  citation-free-valid and 53 credited correct-and-valid rows. Old
-  `3853284/3853285/3853286` are canceled/quarantined. Clean replacement
-  `3857767 -> 3857768 -> 3857769` is A100-80-only and account-GRES pending.
-- The report SFT matrix is progressing with no fresh fatal signature.
-  Conditioned-10k `3850108` is `15/15`; conditioned-50k row 5 completed its
-  active 50k chunk, rows 4/6 are finishing, and row 7 has started. Shortcut
-  recovery `3856142_5/6` is about `92%`, and 32B recovery `3854837_0` has
-  started on A100-80GB.
-- Direct multi-hop rows `3855271_0/1` started on A100-80GB and passed the
-  `rope_theta=1000000`/32,768-window preflight; row 2 is throttle-pending,
-  instruction `3855272` is account-GRES pending, and `3855273` remains held.
-  Vault use is `326,852,150 KiB` after obsolete eval merge roots cleaned up;
-  95 active report Trainer checkpoints remain protected.
+- Declaration-fixed baseline rows `3857767_0/1` started on verified A100-80GB
+  devices at `06:59/07:01` CEST. Their 30 CPU audits and aggregate remain
+  dependency-gated; all `3853284` evidence stays quarantined.
+- Prompt-fixed multi-hop direct `3855271`, instruction `3855272`, and aggregate
+  `3855273` completed and passed full artifact gates. Raw review shows that the
+  direct stock F1 advantage largely collapses under answer-head rescoring and
+  that tagged prompts trigger the learned formal/NL substrate into the cap.
+  Treat this as response-control evidence, not positive transfer.
+- Conditioned-10k eval rows `3850119_0/1/2` are healthy at chunks
+  `63/85/37` of 112. Conditioned-50k row `3850109_6` timed out at step 43,105
+  and is covered by staged resumes `3850110..3850112`. Batch rows
+  `3850114_3/4/5` are walltime-risk at about 72%; pending batch rows now save
+  every 1,000 steps so any genuine timeout can resume. Shortcut recoveries
+  `3854948_3/4` and `3856142_5/6` completed cleanly.
+- Repo-owned Vault use is `439.6 GiB` with 110 protected Trainer checkpoints.
+  CPU-only watcher `3857722` is running and successor `3858016` remains queued.
 
 ## Critical Correction and Active Chains
 
@@ -33,15 +33,15 @@ batch-size, and proof-mixture results. See
 
 | Experiment | Jobs | Live state at 2026-07-15 01:08 CEST | Outputs / next gate |
 | --- | --- | --- | --- |
-| Corrected report-wide BranchProof reruns | surface `3850105 -> 3850116`; hybrid `3850107 -> 3850118`; conditioned 10k `3850108 -> 3850119`; conditioned 50k `3850109..3850112 -> 3850120`; architecture `3850113 -> 3850121`; batch `3850114 -> 3850122`; 32B `3850115 + 3854837 -> 3850123`; shortcuts `3850212 -> 3850213 + 3854948 + 3856142 -> 3850214`; no-repeat tiny `3850488 -> 3850490 -> 3850492` plus checkpoint replacement/recovery `3854813 + 3856145` | Tiny final `18/18` and checkpoint curve `90/90` are terminal and accepted. The strengthened audits and representative early/mid/final raw review support a negative mechanism result: some answer-only OOD signal, but zero modality-appropriate OOD/depth-50 joint pass@1/4/8 across every size/template/exposure mean. Guarded cleanup removed the 90 intermediate tiny checkpoints while preserving finals and outputs. Shortcut recoveries `3854948_[3-4]` and `3856142_[5-6]` are running; eval `3850214` requires both plus the original array. The 32B recovery `3854837` remains capacity-pending and the other report families continue under their original throttles/dependencies. | Tiny audit bundles: `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_final_audits_20260714` and `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_checkpoint_audits_20260714`. Recover only failed rows in the remaining families. Accept each family only after strict audit and representative raw review; never blend with old report numbers. |
-| Nanotron HF RoPE compatibility and multi-hop QA recovery | old diagnostic smokes `3850353/3850354`; prompt-fixed smokes `3855269/3855270`; CPU re-audit gate `3856131`; full direct/instruction arrays `3855271/3855272`; aggregate `3855273`; canceled flawed full jobs `3850099/3850100` and aggregates `3850207/3850217` | Both smoke protocols and the CPU instruction re-audit pass. Direct production rows `3855271_0/1` started on A100-80GB, resolving control/logic consumers at `rope_theta=1000000` with max model length 32,768; row 2 is array-throttle pending. Instruction `3855272` is account-GRES pending and aggregate `3855273` remains dependency-held. | Inspect every completed production bundle and keep weak generations visible as diagnostics. `3855273` writes per-benchmark and compact summary tables under `analysis/nanotron_branchproof_unique_v2_multihop_promptfix_20260714/`. Old RoPE/truncation/prompt-duplication bundles remain diagnostic only. |
+| Corrected report-wide BranchProof reruns | surface `3850105 -> 3850116`; hybrid `3850107 -> 3850118`; conditioned 10k `3850108 -> 3850119`; conditioned 50k `3850109..3850112 -> 3850120`; architecture `3850113 -> 3850121`; batch `3850114 -> 3850122`; 32B `3850115 + 3854837 -> 3850123`; shortcuts `3850212 -> 3850213 + 3854948 + 3856142 -> 3850214`; no-repeat tiny `3850488 -> 3850490 -> 3850492` plus checkpoint replacement/recovery `3854813 + 3856145` | Tiny final `18/18` and checkpoint curve `90/90` are terminal and accepted. Shortcut recoveries `3854948_[3-4]` and `3856142_[5-6]` are complete; original shortcut rows 10/11/12 continue. Conditioned-10k eval rows 0/1/2 are running cleanly. Conditioned-50k row 6 timed out at 43,105/50,000 and remains covered by the staged resume chain. Batch rows 3/4/5 may hit the hard 24-hour ceiling; pending batch rows now save every 1,000 steps, and only actually failed rows should be recovered. The 32B originals/recovery and other families continue under their current throttles/dependencies. | Tiny audit bundles: `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_final_audits_20260714` and `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_checkpoint_audits_20260714`. Recover only failed rows. Accept each family only after strict audit and representative raw review; never blend with old report numbers. |
+| Nanotron HF RoPE compatibility and multi-hop QA recovery | old diagnostic smokes `3850353/3850354`; prompt-fixed smokes `3855269/3855270`; CPU re-audit gate `3856131`; full direct/instruction arrays `3855271/3855272`; aggregate `3855273`; canceled flawed full jobs `3850099/3850100` and aggregates `3850207/3850217` | Complete. All six production bundles contain 1,200 rows, use corrected RoPE and a 32,768 window, and passed prompt/cap/coverage audits; aggregate `3855273` completed `0:0`. Direct stock control/logic/NL QA-F1 is `0.189/0.250/0.238`, but answer-head sensitivity is `0.349/0.361/0.367`. Direct tagged logic/NL usually launch their learned trace substrate and hit the 64-token cap; instruction stock rows are also cap-limited with QA-F1 near `0.09--0.10`. | Accepted artifacts: `analysis/nanotron_branchproof_unique_v2_multihop_promptfix_20260714/`. Treat the result as a response-format/continuation diagnostic, not clean reasoning transfer. Old RoPE/truncation/prompt-duplication bundles remain diagnostic only. |
 | Corrected BranchProof-v2 materialization | build/push `3829067` | Completed cleanly in `00:06:54`. Production gate passed on 3,000 examples with unique-solution rate `1.0`, max one derived answer, no failures, and balanced gold positions; HF smoke loads also passed. | `$HPCVAULT/synthetic-RLVL/datasets/branchproof_unique_v2_20260710`; private HF repo `flaitenberger/BranchProof-unique-v2`. |
-| Corrected BranchProof-v2 SFT/eval | full SFT `3829072_[0-29%12]`; declaration-fixed replacement eval `3857767_[0-29%6]`; CPU audits `3857768_[0-29%8]`; aggregate/qualitative gate `3857769`; newly quarantined `3853284/3853285/3853286`; older quarantined chains `3834582/3834706/3835779/3838163/3847756/3847757/3838164/3838165` | SFT is complete at `30/30`. Raw inspection of eight completed `3853284` logic bundles found duplicate predicate declarations among rows credited valid. The old chain was canceled, 16 eval files/8 audits/44 logs were quarantined, and every prior baseline metric was withdrawn. `3857767` is account-GRES pending. | Preserve 32 prompts/depth, 16 generations, all 14 depths, pass@`1/2/4/8/16`, 16,384 context, 7,168 cap, and A100-80-only placement. Accept nothing until all 30 replacement audits and representative logic/NL review pass. |
+| Corrected BranchProof-v2 SFT/eval | full SFT `3829072_[0-29%12]`; declaration-fixed replacement eval `3857767_[0-29%6]`; CPU audits `3857768_[0-29%8]`; aggregate/qualitative gate `3857769`; newly quarantined `3853284/3853285/3853286`; older quarantined chains `3834582/3834706/3835779/3838163/3847756/3847757/3838164/3838165` | SFT is complete at `30/30`. The old chain and all its metrics remain quarantined. Replacement rows `3857767_0/1` started on verified A100-80GB devices with max model length 16,384; later rows are throttle/account-GRES pending and audits remain held. | Preserve 32 prompts/depth, 16 generations, all 14 depths, pass@`1/2/4/8/16`, 16,384 context, 7,168 cap, and A100-80-only placement. Accept nothing until all 30 replacement audits and representative logic/NL review pass. |
 | Corrected BranchProof-v2 Nanotron corpora and matched p15 pilot | completed builds `3829068_1` and raw row `3829071`; packed audit `3830855`; logic/NL smokes `3830924/3831110`; native-chat smoke `3831179`; logic train/recovery/upload `3830927 -> 3835442 -> 3847802`; NL train/recovery/upload `3831111 -> 3835443 -> 3847570`; downstream branches below | All three p15 checkpoints, repaired HF consumers, six reviewer bundles, and strict aggregate are complete. Replacement logic instruction eval `3854824_3` and aggregate `3854847` completed `0:0`; the manifest accepts all six bundles. Direct logic is `+0.0033` all-primary and `+0.0071` reasoning versus control but `-0.0116` on targeted logic; NL and post-instruction deltas are similarly small/mixed. Raw review finds more direct next-document continuation for both proof mixtures and severe instruction repetition/BBH extraction floor. | The broader mixture grid is rejected because p15 is neither positive nor sample-clean. Preserve the accepted artifact bundle `analysis/nanotron_branchproof_unique_v2_p15_20260711/`; treat instruction BBH and instruction-minus-direct macro collapse as evaluator/generation diagnostics, not modality evidence. |
 | Qwen2.5 normal-continuation control | completed recovery/upload `3835438 -> 3847569`; corrected adapter `3850351`; corrected direct/instruction eval `3850385/3850387`; invalid old bundles `3847792/3835928` | Corrected direct and instruction bundles completed, pass consumer RoPE and production artifact audits, and were schema-v4 MATH-rescored with no lost stock-positive rows. Direct BBH/MMLU-Pro invalid extraction is `4.38/4.56%` and next-document marker incidence `35.60/12.07%`; instruction rates are `3.65/1.22%` and `0/0%`. | Retain through `3854847`; interpret only in the matched six-condition aggregate and raw comparison. |
 | Qwen2.5 matched NL p15 | completed recovery/upload `3835443 -> 3847570`; corrected adapter `3850352`; corrected direct/instruction eval `3850386/3850388`; invalid old bundles `3834904/3834905` | Corrected direct and instruction bundles completed and pass the same gates. Direct BBH/MMLU-Pro invalid extraction is `4.39/4.74%` and marker incidence `58.01/49.51%`; instruction rates are `3.70/1.26%` and `0/0%`. | Retain through `3854847`; do not reuse the older RoPE-invalid `9.1/20.5%` diagnostics as corrected evidence. |
 | Downstream reviewer-suite production and comparison | corrected control/NL `3850351/3850352/3850385..3850388`; logic upload/direct/instruction SFT `3847802/3847804/3847805`; replacement logic instruction eval `3854824`; strict aggregate `3854847`; canceled stale dependent/aggregate `3847806/3850389` | Complete at six accepted corrected bundles. Schema-v4 MATH remains the production score. Aggregate macros are null/mixed, with one run per condition and no seed variance. Correct/incorrect raw review shows direct proof/new-document continuations; instruction removes literal markers but introduces long repetition. Correct leading BBH choices followed by suffixes score zero under `get-answer`, so the instruction BBH cells are an extraction floor. | Do not launch broader mixture training. If this pilot later becomes report evidence, add an independently audited BBH answer-prefix sidecar or exclude those cells; never interpret the current zero-BBH instruction macro drop as transfer. |
-| Six-hour autonomous oversight | current watcher `3857212`; recorded successor `3857722`; self-scheduled successors via `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` | CPU-only watcher `3857212` is running on `a100mig` without GRES. Its CPU-only successor `3857722` is begin-time pending for 06:49 CEST. | Executes the full attached plan, not just queue checks. Preserve `3857722` until every baseline, report-wide, multi-hop, sample-audit, and report gate is complete. |
+| Six-hour autonomous oversight | current watcher `3857722`; recorded successor `3858016`; self-scheduled successors via `scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm` | CPU-only watcher `3857722` is running on `a100mig` without GRES. Its CPU-only successor `3858016` is begin-time pending. | Executes the full attached plan, not just queue checks. Preserve `3858016` until every baseline, report-wide, sample-audit, and report gate is complete. |
 
 All old proof-mixture training rows and dependents were canceled, and their
 stale/incomplete proof checkpoints were removed. Do not resubmit them against
@@ -53,10 +53,12 @@ Vault cleanup at 11:19 CEST reclaimed `93.9 GiB` without touching active job
 inputs. The accepted tiny checkpoint curve released a second guarded cleanup
 at 19:26: all 90 tiny intermediate checkpoints (`102G`) were removed while 18
 finals, 90 metrics, 90 samples, and 90 audits were retained. The six active
-`3853284` merge roots, converted Qwen base, corrected Nanosets/raw corpora, and
-corrected report-wide checkpoints remain protected. Delete other intermediate
-checkpoints only after their corresponding final/eval/audit gate is accepted;
-verify the active merge roots self-delete after `3853284` becomes terminal.
+`3853284` merge roots were later removed after that chain was canceled and
+quarantined. The converted Qwen base, corrected Nanosets/raw corpora, current
+`3857767` merge roots, and corrected report-wide checkpoints remain protected.
+Delete other intermediate checkpoints only after their corresponding
+final/eval/audit gate is accepted; verify replacement merge roots self-delete
+as each `3857767` row becomes terminal.
 
 ## Tracked Slurm Chains
 
@@ -85,14 +87,15 @@ verify the active merge roots self-delete after `3853284` becomes terminal.
 
 ## Partition Audit
 
-Checked at 2026-07-14 01:31 CEST. Active repo jobs are the corrected
-report-wide BranchProof training matrix; the clean baseline eval, logic upload,
-and corrected Nanotron downstream jobs are capacity/dependency pending. Do not
+Checked at 2026-07-15 07:06 CEST. Active repo jobs are the corrected
+report-wide BranchProof training/eval matrix and declaration-fixed baseline
+rows `3857767_0/1`; corrected Nanotron downstream and multi-hop jobs are
+complete. Do not
 widen full Nanotron training to
 `rtxpro6k`: current torch does not support Blackwell `sm_120`.
 
-Clean BranchProof rows `3853284_0/1` are active on A100-80GB; remaining rows
-and logic upload `3847802` require the same resources and are capacity/throttle
+Declaration-fixed BranchProof rows `3857767_0/1` are active on A100-80GB;
+remaining rows require the same resources and are capacity/throttle
 pending. No compatible partition or feature widening is available.
 
 Visible `grid_goal_struct_eval` dependency-failed jobs belong to
@@ -101,11 +104,10 @@ visible `tjepa_*` job belongs to this repo.
 
 ## Watch Rules
 
-- Watch logic upload `3847802_3` after accepted step-8192 recovery/audit, then
-  verify conversion, consumer RoPE, remote parity, guarded cleanup, direct eval, instruction
-  SFT, and instruction eval in each dependency chain. Instruction SFT jobs are
-  additionally gated on completed chat-format smoke `3831179`.
-- Watch clean answer-fixed BranchProof eval `3853284`; it is A100-80-only.
+- Preserve the accepted Nanotron checkpoint and adapter repositories through
+  any remaining report work; the upload, downstream, and multi-hop chains are
+  complete and must not be revived from older RoPE-invalid bundles.
+- Watch declaration-fixed BranchProof eval `3857767`; it is A100-80-only.
   Inspect the first row's device,
   runtime, cap hits, metrics, and raw generations before broad scientific use.
 - If a Nanotron row fails again, inspect the matching `logs/nano_q25_midtrain_<array>_<row>.{out,err}` before touching downstream dependencies.

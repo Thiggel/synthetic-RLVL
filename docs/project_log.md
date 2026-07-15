@@ -4,6 +4,30 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 07:06 CEST accepted prompt-fixed multi-hop direct `3855271`, instruction
+  `3855272`, and aggregate `3855273`. All six 1,200-row bundles pass corrected
+  RoPE, 32,768-window, prompt, cap, and coverage gates. Direct stock
+  control/logic/NL QA-F1 `0.189/0.250/0.238` becomes
+  `0.349/0.361/0.367` under answer-head sensitivity; direct tagged logic/NL
+  usually launch their learned trace substrate into the cap. The result is a
+  response-control diagnostic, not positive transfer. Persisted analysis:
+  `analysis/nanotron_branchproof_unique_v2_multihop_promptfix_20260714/`.
+- 07:06 CEST declaration-fixed baseline rows `3857767_0/1` started on verified
+  A100-80GB devices. Conditioned-10k eval `3850119_0/1/2` is healthy at chunks
+  `63/85/37` of 112. Conditioned-50k row `3850109_6` timed out at step
+  43,105/50,000 and remains covered by staged resumes `3850110..3850112`.
+- 07:06 CEST batch SFT rows `3850114_3/4/5` are walltime-risk at about 72%
+  after 18.3--18.5 hours, with a hard 24-hour partition ceiling. Patched the
+  pending batch rows to retain only the latest 1,000-step checkpoint; submit
+  targeted recovery only for rows 3/4/5 if they actually time out. Repo-owned
+  Vault use is `439.6 GiB` with 110 protected Trainer checkpoints. Watcher
+  `3857722` preserved successor `3858016`.
+- 07:06 CEST updated the official root preprint with the accepted one-run p15
+  null/mixed table and the multi-hop response-control audit. Historical
+  BranchProof quantitative sections remain disabled, and the informal report
+  was not regenerated from its quarantined roots. Static structure/diff checks
+  pass; no local TeX engine is available for compilation.
+
 - 01:17 CEST conditioned-50k row `3850109_5` completed its active 50k chunk
   in `19:45:22` and row 7 started. Direct multi-hop rows `3855271_0/1` are
   actively generating at `388/1,200` and `268/1,200` requests with no fatal

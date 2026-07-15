@@ -1,0 +1,13 @@
+condition,mode,protocol,benchmark_count,mean_qa_f1,mean_exact_match,mean_tag_found
+control,direct,standard_short_answer,3,0.18861905959681505,,
+control,direct,strict_tagged,3,0.3117656293986525,0.23500000000000001,0.9833333333333334
+control,instruction,standard_short_answer,3,0.09694871178708563,,
+control,instruction,strict_tagged,3,0.2535577067488457,0.18166666666666667,0.5499999999999999
+nl_p15,direct,standard_short_answer,3,0.23820307684938258,,
+nl_p15,direct,strict_tagged,3,0.06891091793511148,0.05666666666666667,0.29333333333333333
+nl_p15,instruction,standard_short_answer,3,0.08514221442838477,,
+nl_p15,instruction,strict_tagged,3,0.3017094586323859,0.22166666666666665,0.7466666666666667
+logic_p15,direct,standard_short_answer,3,0.2502975789109329,,
+logic_p15,direct,strict_tagged,3,0.0025,0.0016666666666666668,0.011666666666666667
+logic_p15,instruction,standard_short_answer,3,0.09986302009313112,,
+logic_p15,instruction,strict_tagged,3,0.29407254627188933,0.20833333333333334,0.7433333333333333
