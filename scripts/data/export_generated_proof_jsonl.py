@@ -13,6 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from synthrlvl.metrics import extract_tag
 from synthrlvl.task import TaskBuilder
 from synthrlvl.types import PrefillMode, StepRange, TaskConfig, TemplateName
 
@@ -24,6 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tokenizer", required=True)
     parser.add_argument("--target-tokens", type=int, required=True)
     parser.add_argument("--max-records", type=int, default=None)
+    parser.add_argument("--document-format", choices=["legacy", "neutral_solution"], default="legacy")
     parser.add_argument("--seed", type=int, default=3407)
     parser.add_argument("--start-index", type=int, default=0)
     parser.add_argument("--train-min-step", type=int, default=1)
@@ -47,6 +49,37 @@ def _load_state(path: Path) -> dict | None:
     if not path.exists():
         return None
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def format_neutral_solution_document(sample, template: TemplateName) -> str:
+    problem = extract_tag(sample.prompt, "question").strip()
+    trace_tag = "formal" if template == TemplateName.LOGIC else "think"
+    trace = extract_tag(sample.target, trace_tag)
+    if not problem or not trace:
+        raise ValueError(f"Missing problem or {trace_tag} trace wrapper")
+    trace_fields = {
+        tag: extract_tag(trace, tag).strip()
+        for tag in ("constants", "predicates", "premises", "proof", "conclusion")
+    }
+
+    if template == TemplateName.LOGIC:
+        context = (
+            f"Constants:\n{trace_fields['constants']}\n\n"
+            f"Predicates:\n{trace_fields['predicates']}\n\n"
+            f"Premises:\n{trace_fields['premises']}"
+        )
+    else:
+        context = f"Premises:\n{trace_fields['premises']}"
+
+    answer = (extract_tag(sample.target, "answer") or str(sample.answer)).strip()
+    return (
+        f"{problem}\n\n"
+        f"Solution:\n"
+        f"Context:\n{context}\n\n"
+        f"Derivation:\n{trace_fields['proof']}\n\n"
+        f"Conclusion:\n{trace_fields['conclusion']}\n\n"
+        f"Final answer: {answer}"
+    )
 
 
 def main() -> None:
@@ -94,6 +127,7 @@ def main() -> None:
         return {
             "kind": "generated_proof",
             "template": args.template,
+            "document_format": args.document_format,
             "tokenizer": args.tokenizer,
             "target_tokens": int(args.target_tokens),
             "records": int(records),
@@ -109,7 +143,10 @@ def main() -> None:
             if args.max_records is not None and records >= int(args.max_records):
                 break
             sample = builder.sample(next_index, train=True)
-            text = sample.prompt + sample.target
+            if args.document_format == "neutral_solution":
+                text = format_neutral_solution_document(sample, TemplateName(args.template))
+            else:
+                text = sample.prompt + sample.target
             n_tokens = len(tokenizer.encode(text, add_special_tokens=False))
             payload = {
                 "text": text,

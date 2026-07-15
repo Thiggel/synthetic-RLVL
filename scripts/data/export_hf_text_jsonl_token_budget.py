@@ -20,6 +20,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tokenizer", required=True)
     parser.add_argument("--target-tokens", type=int, required=True)
     parser.add_argument("--max-records", type=int, default=None)
+    parser.add_argument("--shuffle-seed", type=int, default=None)
+    parser.add_argument("--shuffle-buffer-size", type=int, default=10_000)
+    parser.add_argument("--preserve-whitespace", action="store_true")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--state-every", type=int, default=100)
     parser.add_argument("--progress-every", type=int, default=1000)
@@ -70,6 +73,8 @@ def main() -> None:
         stream = load_dataset(args.dataset, args.config, split=args.split, streaming=True)
     else:
         stream = load_dataset(args.dataset, split=args.split, streaming=True)
+    if args.shuffle_seed is not None:
+        stream = stream.shuffle(seed=int(args.shuffle_seed), buffer_size=int(args.shuffle_buffer_size))
     if next_index:
         stream = stream.skip(next_index)
     started = monotonic()
@@ -81,6 +86,9 @@ def main() -> None:
             "config": args.config,
             "split": args.split,
             "text_field": args.text_field,
+            "shuffle_seed": args.shuffle_seed,
+            "shuffle_buffer_size": int(args.shuffle_buffer_size),
+            "preserve_whitespace": bool(args.preserve_whitespace),
             "tokenizer": args.tokenizer,
             "target_tokens": int(args.target_tokens),
             "records": int(records),
@@ -97,10 +105,11 @@ def main() -> None:
                 break
             if args.max_records is not None and records >= int(args.max_records):
                 break
-            text = str(row.get(args.text_field, "")).strip()
+            raw_text = str(row.get(args.text_field, ""))
             next_index += 1
-            if not text:
+            if not raw_text.strip():
                 continue
+            text = raw_text if args.preserve_whitespace else raw_text.strip()
             n_tokens = len(tokenizer.encode(text, add_special_tokens=False))
             payload = {
                 "text": text,
