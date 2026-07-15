@@ -1,10 +1,23 @@
 # Running Experiments
 
-Last updated: 2026-07-15 09:54 CEST.
+Last updated: 2026-07-15 10:52 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 09:54 CEST
+## Live Delta At 10:52 CEST
+
+- Dolmino build `3858584_[0-2]` started immediately on RTX Pro 6000 nodes.
+  It builds 4.8B Qwen tokens of released Dolmino and matched 550M-token neutral
+  formal/NL sources. The released default HF config was rejected after a local
+  smoke exposed incompatible heterogeneous Arrow schemas; the production row
+  instead reads shuffled JSONL.zst shards directly and records source-token
+  counts for mixture auditing.
+- Shared-LR control gate `3858587_0` is held on successful completion of all
+  three build rows. Remaining control sweep `3858588_[1-2%1]` is held on
+  `3858587`: the order is `6e-6` first, then `3e-6` and `1e-5`, each for 256
+  steps/134.2M tokens with no checkpoint. Full control/formal/NL midtraining is
+  deliberately not submitted until one shared LR is selected and confirmed
+  briefly on both intervention modalities.
 
 - Nanotron postmortem found randomized rather than strict batch stratification:
   seed-42 global updates have 6--35 proof chunks out of 128, mean `19.2001`
@@ -42,9 +55,10 @@ This includes old architecture, syntax, shortcut, hybrid, conditioned-dual,
 batch-size, and proof-mixture results. See
 `docs/branchproof_uniqueness_audit_2026-07-10.md`.
 
-| Experiment | Jobs | Live state at 2026-07-15 01:08 CEST | Outputs / next gate |
+| Experiment | Jobs | Live state at 2026-07-15 10:52 CEST | Outputs / next gate |
 | --- | --- | --- | --- |
 | Corrected report-wide BranchProof reruns | surface `3850105 -> 3850116`; hybrid `3850107 -> 3850118`; conditioned 10k `3850108 -> 3850119`; conditioned 50k `3850109..3850112 -> 3850120`; architecture `3850113 -> 3850121`; batch `3850114 -> 3850122`; 32B `3850115 + 3854837 -> 3850123`; shortcuts `3850212 -> 3850213 + 3854948 + 3856142 -> 3850214`; no-repeat tiny `3850488 -> 3850490 -> 3850492` plus checkpoint replacement/recovery `3854813 + 3856145` | Tiny final `18/18` and checkpoint curve `90/90` are terminal and accepted. Shortcut recoveries `3854948_[3-4]` and `3856142_[5-6]` are complete; original shortcut rows 10/11/12 continue. Conditioned-10k eval rows 0/1/2 are running cleanly. Conditioned-50k row 6 timed out at 43,105/50,000 and remains covered by the staged resume chain. Batch rows 3/4/5 may hit the hard 24-hour ceiling; pending batch rows now save every 1,000 steps, and only actually failed rows should be recovered. The 32B originals/recovery and other families continue under their current throttles/dependencies. | Tiny audit bundles: `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_final_audits_20260714` and `$HPCVAULT/synthetic-RLVL/analysis/branchproof_unique_v2_tiny_100k_checkpoint_audits_20260714`. Recover only failed rows. Accept each family only after strict audit and representative raw review; never blend with old report numbers. |
+| Dolmino midtraining prerequisite and shared-LR gate | build `3858584_[0-2]`; first control LR `3858587_0`; remaining control LRs `3858588_[1-2%1]` | Build rows are running on RTX Pro 6000; LR rows are dependency-held. The LR order is `6e-6`, `3e-6`, `1e-5`, each 256 steps on identical 100% Dolmino chunks. | Audit source-token composition and neutral raw records after build. Select one shared LR from stability and matched late-window loss, confirm it for 256 steps on formal-5% and NL-5%, then submit full control/formal-5%/NL-5% only if all gates pass. |
 | Nanotron HF RoPE compatibility and multi-hop QA recovery | old diagnostic smokes `3850353/3850354`; prompt-fixed smokes `3855269/3855270`; CPU re-audit gate `3856131`; full direct/instruction arrays `3855271/3855272`; aggregate `3855273`; canceled flawed full jobs `3850099/3850100` and aggregates `3850207/3850217` | Complete. All six production bundles contain 1,200 rows, use corrected RoPE and a 32,768 window, and passed prompt/cap/coverage audits; aggregate `3855273` completed `0:0`. Direct stock control/logic/NL QA-F1 is `0.189/0.250/0.238`, but answer-head sensitivity is `0.349/0.361/0.367`. Direct tagged logic/NL usually launch their learned trace substrate and hit the 64-token cap; instruction stock rows are also cap-limited with QA-F1 near `0.09--0.10`. | Accepted artifacts: `analysis/nanotron_branchproof_unique_v2_multihop_promptfix_20260714/`. Treat the result as a response-format/continuation diagnostic, not clean reasoning transfer. Old RoPE/truncation/prompt-duplication bundles remain diagnostic only. |
 | Corrected BranchProof-v2 materialization | build/push `3829067` | Completed cleanly in `00:06:54`. Production gate passed on 3,000 examples with unique-solution rate `1.0`, max one derived answer, no failures, and balanced gold positions; HF smoke loads also passed. | `$HPCVAULT/synthetic-RLVL/datasets/branchproof_unique_v2_20260710`; private HF repo `flaitenberger/BranchProof-unique-v2`. |
 | Corrected BranchProof-v2 SFT/eval | full SFT `3829072_[0-29%12]`; declaration-fixed replacement eval `3857767_[0-29%6]`; CPU audits `3857768_[0-29%8]`; aggregate/qualitative gate `3857769`; newly quarantined `3853284/3853285/3853286`; older quarantined chains `3834582/3834706/3835779/3838163/3847756/3847757/3838164/3838165` | SFT is complete at `30/30`. The old chain and all its metrics remain quarantined. Replacement rows `3857767_0/1` are running on verified A100-80GB devices with max model length 16,384; the first greedy chunks are healthy despite expected cap hits, later rows are throttle/account-GRES pending, and audits remain held. | Preserve 32 prompts/depth, 16 generations, all 14 depths, pass@`1/2/4/8/16`, 16,384 context, 7,168 cap, and A100-80-only placement. Accept nothing until all 30 replacement audits and representative logic/NL review pass. |

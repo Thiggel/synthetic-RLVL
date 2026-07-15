@@ -4,6 +4,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 10:52 CEST implemented and submitted the gated Dolmino midtraining path.
+  A local `datasets` streaming smoke rejected the release's `default` config
+  because heterogeneous metadata cannot be unified into one Arrow schema; no
+  production artifact was written. Added a resumable direct JSONL.zst Hub
+  reader that shuffles the 1,113 released shards deterministically, preserves
+  native text, and records source-token counts. Added/tested neutral paired
+  export with shared `Solution/Context/Derivation/Conclusion/Final answer`
+  headings and no modality tags. Build `3858584_[0-2]` started on RTX Pro 6000.
+  Submitted shared-LR control gate `3858587_0` (`6e-6`) after the build and
+  `3858588_[1-2%1]` (`3e-6`, `1e-5`) after the first row; each is 256 steps
+  and 134.2M tokens with no large checkpoint. Full control/formal/NL runs are
+  intentionally deferred until LR selection and short p5 modality checks.
+
 - 10:18 CEST corrected the Nanotron experiment terminology and next-corpus
   plan. The completed Qwen2.5/FineWeb-Edu comparison is continual pretraining,
   not midtraining. Inspected the official Dolma 3 Dolmino 10B/100B releases

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 10:18 CEST.
+Last updated: 2026-07-15 10:52 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,27 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-15 10:52 Dolmino prerequisite build and LR gate
+
+- Production prerequisites are now running as
+  `3858584_[0-2]` on RTX Pro 6000 nodes: row 0 streams a deterministic
+  shuffled-shard sample of the released 10B Dolmino repository to 4.8B Qwen
+  tokens; rows 1/2 build 550M-token formal/NL BranchProof corpora with the
+  shared neutral `Solution/Context/Derivation/Conclusion/Final answer` format.
+  The direct JSONL.zst reader is required because the released heterogeneous
+  `default` Hugging Face config fails Arrow schema unification; a local direct
+  shard smoke passed on native PDF text.
+- A short shared-LR gate is dependency-submitted. `3858587_0` runs the first
+  256-step 100% Dolmino control at `6e-6`; only after it succeeds does
+  `3858588_[1-2%1]` compare `3e-6` and `1e-5`. Every row sees the same packed
+  chunks, uses 32 warmup steps followed by constant LR, consumes 134,217,728
+  tokens, and writes no large checkpoint. This is a stability/optimization
+  screen, not a transfer result.
+- Select one shared LR from finite loss/gradient behavior and matched
+  late-window loss, then run 256-step formal-5% and NL-5% confirmation rows.
+  Submit the full 4.3B-token control/formal-5%/NL-5% runs only after that gate.
+  No condition-specific LR tuning and no full run are currently submitted.
 
 ### 2026-07-15 10:18 Dolmino midtraining corpus decision
 

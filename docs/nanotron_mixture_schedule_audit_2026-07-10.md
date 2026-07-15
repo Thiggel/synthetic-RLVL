@@ -62,6 +62,23 @@ the official 100B mix already contains about 8.3% thinking data, the old
 15--25% single-generator injections are aggressive. The next gate should be a
 bounded `{0,2,5,10}%` pilot before considering larger fractions.
 
+### Submitted LR and data gate (2026-07-15)
+
+The released Dolmino `default` Hugging Face config cannot be streamed through
+the installed `datasets` JSON loader because source metadata schemas differ.
+The production exporter therefore reads the repository's 1,113 JSONL.zst
+shards directly, shuffles the shard order with seed 42, retains only native
+`text`, and records realized Qwen-token counts by source. Build array
+`3858584_[0-2]` creates 4.8B Dolmino tokens and 550M tokens for each neutral
+paired proof modality.
+
+Before full training, one shared LR is tuned on 100% Dolmino. Gate
+`3858587_0 -> 3858588_[1-2%1]` compares `6e-6`, `3e-6`, and `1e-5` for 256
+steps on identical chunks, with 32 warmup steps and constant LR thereafter.
+Each row consumes 134,217,728 tokens and saves no model/optimizer checkpoint.
+The selected shared LR must then pass 256-step formal-5% and NL-5%
+confirmations. Full 4.3B-token runs are not submitted before those checks.
+
 ## Downstream acceptance gate
 
 The installed lm-eval task registry does not contain `folio`; the original
