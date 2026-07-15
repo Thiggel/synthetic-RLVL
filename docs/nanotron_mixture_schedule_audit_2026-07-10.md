@@ -9,10 +9,16 @@ and 891,289 normal-text chunks, corresponding to 644,247,552 proof tokens out
 of 4,294,967,296 total tokens (`15.000057%`). Logic and NL therefore receive
 the same proof-token exposure to within the identity of the source corpus.
 
-No schedule, capacity, or checkpoint-resume bug was found. The three-step
-integration smokes realize one proof chunk out of three (`33.3%`) because they
-are intentionally too small to represent 15% finely; this smoke-only
-granularity does not apply to production.
+The source blend, capacity, and data-offset resume are correct. A later
+scheduler audit did find a separate Nanotron resume bug: after loading the
+optimizer, the scheduler builder normalized its lambda by the checkpoint's
+current LR instead of the preserved original LR. All three matched runs
+therefore jumped from about `5.94e-6` before step 4096 to `6.25e-6` after
+resume. The bug is identical across control, logic, and NL and does not explain
+their relative ordering, but it must be fixed before another training wave.
+The three-step integration smokes realize one proof chunk out of three
+(`33.3%`) because they are intentionally too small to represent 15% finely;
+this smoke-only granularity does not apply to production.
 
 ## Downstream acceptance gate
 
@@ -97,6 +103,30 @@ The final difference from an exact real-valued 15% allocation is 0.6 of one
 4,096-token chunk. Logic and NL use the same weights, seed, and total schedule,
 so their realized source counts are identical.
 
+The exact weighted index is subsequently shuffled by
+`Nanoset.build_nanoset_index` with production seed 42. Replaying that full
+path gives random, not optimizer-stratified, batches. Across 8,192 updates, a
+128-chunk global batch contains 6--35 proof chunks (mean `19.2001`, standard
+deviation `4.0848`), close to the binomial standard deviation `4.0398`; no
+global update is proof-empty. The two 64-chunk data-parallel replicas average
+`9.6088` and `9.5913` proof chunks with standard deviation about `2.866` and
+ranges 1--21 and 0--22. Four-chunk microbatches can contain 0--4 proof chunks.
+This is well randomized and globally mixed, but it is not strict per-update
+stratification.
+
+Within the generated proof source, record indices are sequential but depths
+are hash-randomized. In the first 100,000 records, all depths 1--25 have
+`3,861--4,178` examples, adjacent records share a depth at rate `0.0393`, and
+lag-one depth correlation is `-0.0046`. This rules out a hidden depth
+curriculum or meaningful local depth clustering.
+
+Pretokenization produced only one nonempty `*_unshuffled.ds` shard per source,
+so file-level shuffling alone would be ineffective. This does not leave the
+training stream sequential: `Nanoset.build_nanoset_index` applies the same
+seeded random permutation to source and sample indices, producing a random
+permutation of packed chunks before distributed sampling. All three runs also
+use the same FineWeb chunks, while logic/NL use paired proof corpora.
+
 ## Corpus Capacity
 
 Pretokenized metadata reports:
@@ -122,6 +152,31 @@ and 2,147,483,648 normal tokens.
 Consequently, the pre-submitted recovery jobs continue from the next absolute
 chunk and preserve both source proportions and per-source offsets. They do not
 restart the blend or replay the first half.
+
+### Learning-rate resume correction
+
+Production used peak LR `1e-5`, linear warmup for 256 updates, cosine decay,
+and floor `1e-6`. Losses and gradient norms remained finite, so the logs do
+not support divergence or an obviously excessive peak LR. There was no LR
+ablation, however, so the run cannot establish that `1e-5` is optimal.
+
+Two schedule implementation issues were found after completion:
+
+1. `lr_decay_steps` was explicitly set to all 8,192 updates even though decay
+   begins after warmup. The run therefore ended near `1.70e-6`, not the
+   configured `1e-6` floor. Future configs leave this field null so Nanotron
+   derives `8192 - 256 = 7936` decay updates.
+2. On resume, `lr_scheduler_builder` captured the optimizer's current
+   checkpoint LR (`~5.94e-6`) while PyTorch `LambdaLR` retained the original
+   base LR (`1e-5`). An isolated reproduction gives `6.2476e-6` after resume;
+   normalizing by `param_group["initial_lr"]` gives the correct `5.9394e-6`.
+   The local Nanotron checkout now uses the preserved base LR and includes a
+   regression test.
+
+Because control, logic, and NL all checkpointed and resumed at the same update
+with the same optimizer/scheduler settings, these defects are matched. They
+slightly change the absolute training trajectory but cannot selectively cause
+the logic/NL differences in the downstream table.
 
 Operational update 2026-07-11 15:30 CEST: normal-control recovery
 `3828946_0` resolved the complete step-4096 checkpoint and logged
@@ -529,6 +584,37 @@ This closes the bounded multi-hop evaluation as a response-control and format
 transfer diagnostic. It does not overturn the null/mixed corrected p15
 downstream result and does not satisfy the trigger for broader mixture
 training.
+
+## Failure Diagnosis
+
+The completed evidence does not support insufficient source mixing as the
+cause of the null/mixed result. The actual shuffled order matches ordinary
+random mixing: every global update contains proof chunks, the observed batch
+variance is near binomial expectation, exact exposure is 644M tokens, and both
+modalities share the same seeded source schedule. Strict 19/20 per-update
+stratification would reduce gradient-composition variance and is a reasonable
+small ablation, but the present distribution is not anomalous. The LR resume
+bug and overlong decay are real but matched across conditions.
+
+The strongest observed failure mode is objective/response-manifold mismatch.
+Continuation training applies loss to the entire packed document: question,
+premises, trace wrapper, proof, answer, and EOS. It does not isolate reasoning
+steps or supervise a downstream instruction-response contract. The injected
+models demonstrably learn the special response surfaces: direct logic starts
+`<formal>` on `98.5--99.0%` of tagged multi-hop rows and direct NL starts
+`<think>` on `97.0--99.0%`, often exhausting the answer budget. Direct BBH and
+MMLU-Pro also show substantially more next-document continuation than the
+control. Thus the intervention changes generation behavior strongly, but much
+of that change is surface continuation rather than transferable task
+reasoning.
+
+Before any new large wave, the minimum defensible pilot is: use the corrected
+resume scheduler and a post-warmup decay span; log held-out FineWeb and
+proof-source losses separately; compare random mixing with exact global-batch
+stratification; and compare full-document continuation against a proof-focused
+objective that masks copied question/premise tokens. Run this as a small
+LR/objective pilot with at least two checkpoints before committing another
+multi-billion-token grid.
 
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit

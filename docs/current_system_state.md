@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 07:18 CEST.
+Last updated: 2026-07-15 09:54 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,30 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-15 09:54 Nanotron mixture and scheduler diagnosis
+
+- Exact production-path replay rules out a missing shuffle but shows random,
+  not strict, optimizer stratification. Seed-42 global updates contain 6--35
+  proof chunks out of 128 (mean `19.2001`, standard deviation `4.0848`, near
+  binomial expectation), with no proof-empty global update. The full schedule
+  remains exactly matched at 15.000057% proof tokens for logic and NL.
+- A real Nanotron resume bug was reproduced: the rebuilt scheduler normalized
+  by checkpoint-current LR while PyTorch retained the original base LR, causing
+  the shared step-4096 jump from about `5.94e-6` to `6.25e-6`. The installed
+  checkout now uses `initial_lr`; the repo job template also lets Nanotron
+  derive the 7,936-step post-warmup cosine span so future runs reach the
+  `1e-6` floor. All completed conditions share both defects, so they affect
+  absolute trajectories but not the matched condition ordering.
+- Pretokenization made one nonempty unshuffled shard per source, but Nanoset
+  then randomly permutes packed sample indices, so the effective stream is
+  shuffled. Exact global-batch stratification is an optional variance-reduction
+  ablation, not a repair for a missing shuffle. The stronger diagnosis is
+  objective mismatch: full-document continuation teaches wrappers and
+  continuation behavior. The multi-hop audit confirms that logic/NL strongly
+  learned `<formal>`/`<think>` response surfaces while clean transfer remains
+  only `+0.012/+0.018` after answer-head sensitivity. Details are in
+  `docs/nanotron_mixture_schedule_audit_2026-07-10.md`.
 
 ### 2026-07-15 07:18 multi-hop acceptance and active runtime recovery
 

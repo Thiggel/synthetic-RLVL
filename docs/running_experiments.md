@@ -1,10 +1,19 @@
 # Running Experiments
 
-Last updated: 2026-07-15 07:18 CEST.
+Last updated: 2026-07-15 09:54 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 07:18 CEST
+## Live Delta At 09:54 CEST
+
+- Nanotron postmortem found randomized rather than strict batch stratification:
+  seed-42 global updates have 6--35 proof chunks out of 128, mean `19.2001`
+  and near-binomial standard deviation `4.0848`, with no proof-empty update.
+  Nanoset randomizes packed sample indices despite each source having one
+  nonempty pretokenized shard. It did find a matched scheduler-resume rescaling
+  bug and an overlong cosine span. Future code is patched; completed
+  control/logic/NL runs share the same defect. Full-document objective and
+  response-surface learning are the stronger scientific concerns.
 
 - Declaration-fixed baseline rows `3857767_0/1` started on verified A100-80GB
   devices at `06:59/07:01` CEST. Row 0 completed greedy chunks 1--3 and row 1

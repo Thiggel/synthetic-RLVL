@@ -21,6 +21,16 @@ export WANDB_MODE="${WANDB_MODE:-offline}"
 
 source "${WORK}/nanotron/bin/activate"
 
+python - <<'PY'
+import inspect
+
+from nanotron.helpers import lr_scheduler_builder
+
+source = inspect.getsource(lr_scheduler_builder)
+if 'param_group.get("initial_lr", param_group["lr"])' not in source:
+    raise SystemExit("Nanotron checkout lacks the LR-scheduler resume fix")
+PY
+
 MODEL_ID="${MODEL_ID:-Qwen/Qwen2.5-7B}"
 SEQ_LEN="${SEQ_LEN:-4096}"
 MICRO_BATCH_SIZE="${MICRO_BATCH_SIZE:-4}"
@@ -215,7 +225,7 @@ optimizer:
   learning_rate_scheduler:
     learning_rate: ${LR}
     lr_decay_starting_step: null
-    lr_decay_steps: ${TRAIN_STEPS}
+    lr_decay_steps: null
     lr_decay_style: cosine
     lr_warmup_steps: ${WARMUP_STEPS}
     lr_warmup_style: linear

@@ -4,6 +4,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 09:54 CEST completed the Nanotron mixture/schedule postmortem. Exact
+  production-path replay shows randomized, not strict, batches: 6--35 proof
+  chunks per 128-chunk update, mean `19.2001`, near-binomial standard deviation
+  `4.0848`, and no proof-empty global update. Nanoset randomizes packed sample
+  indices despite one nonempty pretokenized shard per source. Reproduced a
+  scheduler resume bug (`5.94e-6 -> 6.25e-6`) caused by
+  normalizing a reconstructed LambdaLR with checkpoint-current rather than
+  original LR. Patched the local Nanotron checkout to use `initial_lr`, added a
+  regression test, and changed the repo job template to derive the post-warmup
+  decay span. Also recorded exact global stratification as an optional ablation
+  and the stronger full-document/response-manifold mismatch diagnosis. No new
+  training jobs were submitted.
+
 - 07:18 CEST first declaration-fixed runtime check: `3857767_0/1` remain on
   verified A100-80GB devices. Row 0 completed greedy chunks 1--3 and row 1
   completed chunks 1--2; deeper chunks hit the intended 7,168-token cap, with
