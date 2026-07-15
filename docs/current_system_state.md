@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 09:54 CEST.
+Last updated: 2026-07-15 10:09 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -47,6 +47,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   learned `<formal>`/`<think>` response surfaces while clean transfer remains
   only `+0.012/+0.018` after answer-head sensitivity. Details are in
   `docs/nanotron_mixture_schedule_audit_2026-07-10.md`.
+- Format/readout follow-up: FineWeb is currently raw text plus EOS, whereas
+  injected records use modality-identifying `<formal>`/`<think>` and nested QA
+  tags. Before another pilot, formal, NL, and ordinary-reasoning interventions
+  should share one neutral `Problem/Reasoning/Conclusion/Final answer`
+  envelope. The existing batch-one UltraChat LoRA is retained as a failed
+  alignment diagnostic; a new pilot should compare direct evaluation with
+  identical answer-only calibration and modality-neutral reasoning SFT across
+  all checkpoints.
 
 ### 2026-07-15 07:18 multi-hop acceptance and active runtime recovery
 

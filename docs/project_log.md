@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 10:09 CEST established the next Nanotron format/readout gate. FineWeb input
+  is raw document text plus EOS, while proof interventions use `<question>`,
+  modality-specific `<formal>`/`<think>`, nested proof tags, and `<answer>`.
+  Future formal, NL, and ordinary-reasoning interventions will use the same
+  neutral `Problem/Reasoning/Conclusion/Final answer` envelope. The completed
+  UltraChat readout is generic assistant-only rank-16 LoRA at effective batch
+  one and exhibited repetition/extraction failures; future pilots must retain
+  direct eval and apply identical answer-only calibration plus identical
+  modality-neutral reasoning SFT to every checkpoint. No jobs were submitted.
+
 - 09:54 CEST completed the Nanotron mixture/schedule postmortem. Exact
   production-path replay shows randomized, not strict, batches: 6--35 proof
   chunks per 128-chunk update, mean `19.2001`, near-binomial standard deviation

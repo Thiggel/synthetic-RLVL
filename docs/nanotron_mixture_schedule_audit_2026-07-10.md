@@ -616,6 +616,30 @@ objective that masks copied question/premise tokens. Run this as a small
 LR/objective pilot with at least two checkpoints before committing another
 multi-billion-token grid.
 
+The present background and intervention formats are not aligned. FineWeb
+records are raw document text followed by Qwen's EOS token; they have no user,
+assistant, question, reasoning, or answer fields. Corrected proof records use
+`<question>`, modality-specific `<formal>` or `<think>`, nested proof-section
+tags, and `<answer>`. Future formal, matched NL, and any ordinary-reasoning
+intervention should instead use the same modality-neutral document envelope,
+for example `Problem:`, `Reasoning context:`, `Reasoning steps:`,
+`Conclusion:`, and `Final answer:`. The modality should differ only in the
+contents of those fields. FineWeb should remain raw background text rather
+than being converted into artificial QA records.
+
+Downstream readout also requires a cleaner test. The completed generic
+UltraChat branch used the same assistant-only LoRA for every checkpoint, but
+physical/effective batch size one, rank 16, 10,000 steps, and no examples that
+teach a shared reasoning response contract. Its repetition and extraction
+failures make it a weak alignment probe. A future pilot should retain direct
+evaluation and add two identical post-midtraining readouts for every condition:
+(1) a small answer-only instruction/format calibration with no formal traces,
+and (2) a high-quality modality-neutral reasoning SFT with no BranchProof or
+evaluation-task overlap. An adaptation curve over small SFT budgets can test
+whether formal midtraining lowers the amount of downstream supervision needed;
+using formal traces only in the formal checkpoint's readout would confound the
+midtraining intervention.
+
 The upload boundary is fail-closed before local checkpoint deletion. The
 Nanotron-to-HF converter rejects any HF parameter absent from its explicit
 mapping. After synchronous upload, `verify_qwen2_hf_checkpoint.py` checks the
