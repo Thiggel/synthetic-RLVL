@@ -89,9 +89,12 @@ download up to five times with bounded backoff; focused tests pass. Exact
 resume `3859296_0` continued from the recorded byte offset without replay and
 finished the raw export at `4,800,000,272` tokens in `10,705,908` records
 across 120 source groups. Manifest source-token/record sums and five
-byte-spaced raw records pass. Nanoset preprocessing is running; `.metadata`,
-nonempty `.ds`, EOS, and terminal-state checks remain. The unstarted LR gate
-`3858902` had become dependency-dead and was replaced by `3859297`.
+byte-spaced raw records pass. Nanoset preprocessing completed with one
+nonempty 19.24GB shard and `4,810,706,180` packed tokens. The exact
+`10,705,908`-token delta confirms one appended EOS per record; metadata,
+capacity, and terminal-state gates pass. The unstarted LR gate `3858902` had
+become dependency-dead and was replaced by `3859297`, now normal
+account-GRES pending with a 2026-07-16 12:49 CEST estimate.
 
 ## Downstream acceptance gate
 

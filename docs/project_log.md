@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 14:37 CEST accepted the recovered Dolmino prerequisite. Nanoset processing
+  completed with one nonempty 19.24GB shard and `4,810,706,180` packed tokens;
+  the exact `10,705,908`-token increase over source tokens confirms one EOS per
+  record. Metadata, source composition, raw samples, capacity, and terminal
+  state pass. Sequential LR gate `3859297` is normal account-GRES pending;
+  Slurm currently estimates 2026-07-16 12:49 CEST.
+
 - 13:25 CEST Dolmino recovery `3859296_0` reached `4,800,000,272` tokens in
   `10,705,908` records across 120 source groups without replay. Manifest sums
   and five byte-spaced raw records pass. Nanoset preprocessing is running;

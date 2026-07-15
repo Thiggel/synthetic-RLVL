@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 13:25 CEST.
+Last updated: 2026-07-15 14:37 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,7 +24,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-15 13:25 targeted Dolmino and batch recoveries
+### 2026-07-15 14:37 targeted Dolmino and batch recoveries
 
 - Dolmino prerequisite row `3858584_0` failed at `4.128B/4.8B` tokens after a
   Hugging Face Xet/CAS HTTP 500 on shuffled shard position 410. Its resumable
@@ -34,11 +34,13 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   row-0 recovery `3859296_[0%1]` resumed without replay and completed the raw
   export at `4,800,000,272` tokens in `10,705,908` records across 120 source
   groups. Manifest totals and first/quarter/middle/three-quarter/tail records
-  pass inspection. Nanoset tokenization is running; accept the recovery only
-  after its `.metadata` and nonempty `.ds` gate. Dependency-dead LR gate
-  `3858902` was canceled before start and replaced by sequential full-node gate
-  `3859297`, held only on the recovery. Completed formal/NL prerequisite rows
-  are retained and were not rerun.
+  pass inspection. Nanoset tokenization completed with one nonempty 19.24GB
+  shard and `4,810,706,180` packed tokens. The exact `10,705,908`-token delta
+  from source tokens confirms one EOS per record, and capacity exceeds the
+  4.3B-token schedule. Dependency-dead LR gate `3858902` was canceled before
+  start and replaced by sequential full-node gate `3859297`. It is normal
+  `AssocGrpGRES`-pending with Slurm estimate 2026-07-16 12:49 CEST. Completed
+  formal/NL prerequisite rows are retained and were not rerun.
 - Batch-size SFT rows `3850114_3/4/5` genuinely hit the 24-hour ceiling at
   steps approximately `9472/9416/9472`; their pre-patch launches had no
   resumable checkpoint. Exact recovery `3859299_[3-5%3]` is running on A40s
