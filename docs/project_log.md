@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 11:49 CEST consolidated the short Dolmino LR gate into one full-node
+  allocation. Formal/NL prerequisite rows completed cleanly; Dolmino row 0 is
+  healthy at about 2.13B/4.8B tokens. Canceled dependency-pending jobs
+  `3858587/3858588` before start and submitted `3858902` after the build. It
+  requests 12 hours on 8xA100-80GB and runs the three 256-step LRs
+  (`6e-6`, `3e-6`, `1e-5`) sequentially. Slurm's test-only estimate was the
+  same for 6-, 12-, and 24-hour requests; consolidation removes requeue gaps,
+  while a 24-hour limit itself would not accelerate scheduling.
+
 - 10:52 CEST implemented and submitted the gated Dolmino midtraining path.
   A local `datasets` streaming smoke rejected the release's `default` config
   because heterogeneous metadata cannot be unified into one Arrow schema; no

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 10:52 CEST.
+Last updated: 2026-07-15 11:49 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,7 +24,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-15 10:52 Dolmino prerequisite build and LR gate
+### 2026-07-15 11:49 Dolmino prerequisite build and LR gate
 
 - Production prerequisites are now running as
   `3858584_[0-2]` on RTX Pro 6000 nodes: row 0 streams a deterministic
@@ -34,12 +34,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   The direct JSONL.zst reader is required because the released heterogeneous
   `default` Hugging Face config fails Arrow schema unification; a local direct
   shard smoke passed on native PDF text.
-- A short shared-LR gate is dependency-submitted. `3858587_0` runs the first
-  256-step 100% Dolmino control at `6e-6`; only after it succeeds does
-  `3858588_[1-2%1]` compare `3e-6` and `1e-5`. Every row sees the same packed
-  chunks, uses 32 warmup steps followed by constant LR, consumes 134,217,728
-  tokens, and writes no large checkpoint. This is a stability/optimization
-  screen, not a transfer result.
+- Rows 1/2 completed in `00:12:32/00:11:52`; row 0 is healthy at approximately
+  2.13B/4.8B tokens after 56 minutes. The original separately queued LR jobs
+  `3858587/3858588` were canceled before start and replaced by `3858902`.
+  That job holds one 8xA100-80GB node for up to 12 hours and runs `6e-6`,
+  `3e-6`, and `1e-5` sequentially, avoiding two additional full-node queue
+  waits. Every row sees the same packed chunks, uses 32 warmup steps followed
+  by constant LR, consumes 134,217,728 tokens, and writes no large checkpoint.
+  This is a stability/optimization screen, not a transfer result.
 - Select one shared LR from finite loss/gradient behavior and matched
   late-window loss, then run 256-step formal-5% and NL-5% confirmation rows.
   Submit the full 4.3B-token control/formal-5%/NL-5% runs only after that gate.

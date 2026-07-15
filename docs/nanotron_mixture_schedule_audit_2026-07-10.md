@@ -72,9 +72,11 @@ shards directly, shuffles the shard order with seed 42, retains only native
 `3858584_[0-2]` creates 4.8B Dolmino tokens and 550M tokens for each neutral
 paired proof modality.
 
-Before full training, one shared LR is tuned on 100% Dolmino. Gate
-`3858587_0 -> 3858588_[1-2%1]` compares `6e-6`, `3e-6`, and `1e-5` for 256
-steps on identical chunks, with 32 warmup steps and constant LR thereafter.
+Before full training, one shared LR is tuned on 100% Dolmino. Sequential gate
+`3858902` compares `6e-6`, `3e-6`, and `1e-5` for 256 steps each on identical
+chunks in one 12-hour 8xA100-80GB allocation, with 32 warmup steps and constant
+LR thereafter. The earlier separately queued jobs `3858587/3858588` were
+canceled before start to avoid repeated full-node queue waits.
 Each row consumes 134,217,728 tokens and saves no model/optimizer checkpoint.
 The selected shared LR must then pass 256-step formal-5% and NL-5%
 confirmations. Full 4.3B-token runs are not submitted before those checks.
