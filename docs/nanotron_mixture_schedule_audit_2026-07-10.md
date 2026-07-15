@@ -81,6 +81,18 @@ Each row consumes 134,217,728 tokens and saves no model/optimizer checkpoint.
 The selected shared LR must then pass 256-step formal-5% and NL-5%
 confirmations. Full 4.3B-token runs are not submitted before those checks.
 
+At 12:44 CEST Dolmino task `3858584_0` failed after writing a resumable
+`4,128,298,342/4,800,000,000` tokens because Xet/CAS returned HTTP 500 for
+shuffled shard position 410. This is a transport failure, not data exhaustion,
+quota, or manifest corruption. The direct-shard exporter now retries each Hub
+download up to five times with bounded backoff; focused tests pass. Exact
+resume `3859296_0` continued from the recorded byte offset without replay and
+finished the raw export at `4,800,000,272` tokens in `10,705,908` records
+across 120 source groups. Manifest source-token/record sums and five
+byte-spaced raw records pass. Nanoset preprocessing is running; `.metadata`,
+nonempty `.ds`, EOS, and terminal-state checks remain. The unstarted LR gate
+`3858902` had become dependency-dead and was replaced by `3859297`.
+
 ## Downstream acceptance gate
 
 The installed lm-eval task registry does not contain `folio`; the original

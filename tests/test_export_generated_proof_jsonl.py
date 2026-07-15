@@ -1,6 +1,16 @@
-from scripts.data.export_generated_proof_jsonl import format_neutral_solution_document
+import importlib.util
+from pathlib import Path
+
 from synthrlvl.task import TaskBuilder
 from synthrlvl.types import PrefillMode, StepRange, TaskConfig, TemplateName
+
+
+SCRIPT = Path(__file__).parents[1] / "scripts" / "data" / "export_generated_proof_jsonl.py"
+SPEC = importlib.util.spec_from_file_location("export_generated_proof_jsonl", SCRIPT)
+assert SPEC and SPEC.loader
+EXPORTER = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(EXPORTER)
+format_neutral_solution_document = EXPORTER.format_neutral_solution_document
 
 
 def _sample(template: TemplateName):

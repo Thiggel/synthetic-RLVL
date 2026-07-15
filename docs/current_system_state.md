@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 11:49 CEST.
+Last updated: 2026-07-15 13:25 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,35 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-15 13:25 targeted Dolmino and batch recoveries
+
+- Dolmino prerequisite row `3858584_0` failed at `4.128B/4.8B` tokens after a
+  Hugging Face Xet/CAS HTTP 500 on shuffled shard position 410. Its resumable
+  state and 18.3GB JSONL are intact at an exact byte offset. The direct-shard
+  exporter now retries a transient shard download up to five times with
+  bounded backoff; the full suite passes (`232 passed, 3 skipped`). Exact
+  row-0 recovery `3859296_[0%1]` resumed without replay and completed the raw
+  export at `4,800,000,272` tokens in `10,705,908` records across 120 source
+  groups. Manifest totals and first/quarter/middle/three-quarter/tail records
+  pass inspection. Nanoset tokenization is running; accept the recovery only
+  after its `.metadata` and nonempty `.ds` gate. Dependency-dead LR gate
+  `3858902` was canceled before start and replaced by sequential full-node gate
+  `3859297`, held only on the recovery. Completed formal/NL prerequisite rows
+  are retained and were not rerun.
+- Batch-size SFT rows `3850114_3/4/5` genuinely hit the 24-hour ceiling at
+  steps approximately `9472/9416/9472`; their pre-patch launches had no
+  resumable checkpoint. Exact recovery `3859299_[3-5%3]` is running on A40s
+  with the already-added 1,000-step/latest-only checkpoint policy. Eval
+  `3850122` now requires `afterany:3850114` and `afterok:3859299`.
+- Declaration-fixed baseline rows `3857767_0/1` are healthy at sampled chunks
+  `82/55` of 112 after about six hours; rows `2/3/4` started on verified
+  A100-80GB devices and are in greedy generation. Corrected conditioned-10k
+  eval row `3850119_1` completed; raw NL review at depths `1/5/10/25/50`
+  confirms clean shallow behavior and deeper trace collapse. It remains a
+  partial row, so no family result or report regeneration was accepted.
+- CPU-only watcher `3858016` scheduled successor `3859290` before this pass.
+  It remains pending because the end-to-end plan is incomplete.
 
 ### 2026-07-15 11:49 Dolmino prerequisite build and LR gate
 

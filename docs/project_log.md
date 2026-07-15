@@ -4,6 +4,25 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 13:25 CEST Dolmino recovery `3859296_0` reached `4,800,000,272` tokens in
+  `10,705,908` records across 120 source groups without replay. Manifest sums
+  and five byte-spaced raw records pass. Nanoset preprocessing is running;
+  replacement LR gate `3859297` remains dependency-held until metadata,
+  nonempty dataset, EOS, and terminal checks pass. Full tests pass at
+  `232 passed, 3 skipped`.
+- 13:06 CEST recovered two terminal paths. Dolmino row `3858584_0` failed at
+  `4.128B/4.8B` tokens on a transient Hub HTTP 500; resume state is intact.
+  Added bounded download retries (`2 passed`), submitted recovery `3859296`,
+  canceled dependency-dead unstarted LR gate `3858902`, and submitted
+  replacement `3859297`. Batch rows `3850114_3/4/5` timed out near `94--95%`;
+  submitted exact recovery `3859299_[3-5%3]` under the new checkpoint policy
+  and rewired eval `3850122` to require it.
+- 13:06 CEST baseline `3857767_0/1` reached sampled chunks `82/55`; rows
+  `2/3/4` entered greedy generation on A100-80GB. Conditioned-10k eval row 1
+  completed; raw NL checks across depths `1/5/10/25/50` found clean shallow
+  translated reasoning and deeper failure. No family conclusion or report
+  refresh was made. Watcher `3858016` preserved successor `3859290`.
+
 - 11:49 CEST consolidated the short Dolmino LR gate into one full-node
   allocation. Formal/NL prerequisite rows completed cleanly; Dolmino row 0 is
   healthy at about 2.13B/4.8B tokens. Canceled dependency-pending jobs

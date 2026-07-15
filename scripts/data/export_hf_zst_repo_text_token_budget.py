@@ -7,7 +7,7 @@ import json
 import random
 from collections import Counter
 from pathlib import Path
-from time import monotonic
+from time import monotonic, sleep
 
 import zstandard
 from huggingface_hub import HfApi, hf_hub_download
@@ -49,6 +49,28 @@ def _iter_zst_jsonl(path: Path, skip_lines: int = 0):
                     if line_index < skip_lines or not line.strip():
                         continue
                     yield line_index, json.loads(line)
+
+
+def _download_shard(dataset: str, repo_file: str, attempts: int = 5) -> Path:
+    for attempt in range(1, attempts + 1):
+        try:
+            return Path(hf_hub_download(dataset, repo_file, repo_type="dataset"))
+        except Exception:
+            if attempt == attempts:
+                raise
+            delay = min(2**attempt, 60)
+            print(
+                json.dumps(
+                    {
+                        "event": "shard_download_retry",
+                        "repo_file": repo_file,
+                        "attempt": attempt,
+                        "delay_seconds": delay,
+                    }
+                ),
+                flush=True,
+            )
+            sleep(delay)
 
 
 def main() -> None:
@@ -131,7 +153,7 @@ def main() -> None:
     with out.open(mode, encoding="utf-8") as handle:
         while file_position < len(files) and tokens < int(args.target_tokens):
             repo_file = files[file_position]
-            local_path = Path(hf_hub_download(args.dataset, repo_file, repo_type="dataset"))
+            local_path = _download_shard(args.dataset, repo_file)
             for line_index, row in _iter_zst_jsonl(local_path, skip_lines=next_line_index):
                 if tokens >= int(args.target_tokens):
                     break
