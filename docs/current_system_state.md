@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-15 07:06 CEST.
+Last updated: 2026-07-15 07:18 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,7 +24,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-15 07:06 multi-hop acceptance and active runtime recovery
+### 2026-07-15 07:18 multi-hop acceptance and active runtime recovery
 
 - All six prompt-fixed multi-hop production bundles completed: direct
   `3855271_[0-2]`, instruction `3855272_[0-2]`, and strict aggregate
@@ -45,10 +45,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   not positive transfer evidence.
 - Declaration-fixed baseline `3857767_0/1` started at `06:59/07:01` CEST on
   verified A100-80GB devices with the unchanged 16,384 context; audits
-  `3857768` and aggregate `3857769` remain dependency-gated. Conditioned-10k
-  report eval `3850119_0/1/2` is healthy around sampled chunks
-  `63/85/37` of 112 after `4:50/4:44/3:11`; projected completion remains well
-  below 24 hours.
+  `3857768` and aggregate `3857769` remain dependency-gated. The first runtime
+  check is healthy: row 0 completed greedy chunks 1--3 and row 1 completed
+  chunks 1--2, with the expected 7,168-token cap hits in deeper chunks and no
+  fatal signature. Conditioned-10k report eval `3850119_0/1/2` is healthy at
+  sampled chunks `64/87/39` of 112 after `5:02/4:56/3:23`; projected
+  completion remains well below 24 hours.
 - Conditioned-50k row `3850109_6` timed out at step `43,105/50,000`, but its
   staged after-any resume chain `3850110..3850112` remains the correct recovery
   and must not be bypassed. Batch-family rows `3850114_3/4/5` are only about
@@ -65,6 +67,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   BranchProof quantitative section remains disabled. The generated informal
   report was not regenerated because its builder still targets quarantined
   roots. No TeX engine is installed locally, so only static source checks ran.
+- Local commits `2cf8a08` in this repo and `afb2d34` in the official report
+  repo contain the accepted audit and preprint update. Direct SSH pushes of
+  both repositories timed out after 90 seconds with no remote output; the
+  branches remain ahead of `origin/main` for the successor to retry.
 
 ### 2026-07-15 01:08 declaration-validity supersession and clean replacement
 

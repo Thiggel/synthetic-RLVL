@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-15
 
+- 07:18 CEST first declaration-fixed runtime check: `3857767_0/1` remain on
+  verified A100-80GB devices. Row 0 completed greedy chunks 1--3 and row 1
+  completed chunks 1--2; deeper chunks hit the intended 7,168-token cap, with
+  no fatal signature. Conditioned-10k eval rows reached sampled chunks
+  `64/87/39` of 112. Batch SFT rows `3850114_3/4/5` reached
+  `7282/7335/7279` of 10,000 after about 18.5 hours and remain likely to hit
+  the hard 24-hour limit; recover only an actually failed row. Successor
+  `3858016` remains begin-time pending and was preserved.
+- 07:18 CEST created local audit commit `2cf8a08` and official-report commit
+  `afb2d34`. Direct `git push origin main` attempts for both repositories timed
+  out after 90 seconds with no remote output. This repo and the report repo
+  remain ahead of `origin/main`; the successor should retry publication.
 - 07:06 CEST accepted prompt-fixed multi-hop direct `3855271`, instruction
   `3855272`, and aggregate `3855273`. All six 1,200-row bundles pass corrected
   RoPE, 32,768-window, prompt, cap, and coverage gates. Direct stock
