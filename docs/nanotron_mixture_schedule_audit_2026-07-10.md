@@ -144,9 +144,13 @@ become dependency-dead and was replaced by `3859297`, now normal
 account-GRES pending. Matched 4-GPU row `3859711_0` (`6e-6`) completed all
 256 steps and 134,217,728 tokens in `02:27:56` on 2026-07-16. It sustained
 about 15.4K tokens/s, retained finite losses and gradient norms, and wrote a
-terminal manifest. Row `3859711_1` (`3e-6`) then started at matched
-throughput; row 2 (`1e-5`) remains pending. Sequential fallback `3859297`
-must be canceled only after row 2 actually starts.
+terminal manifest. Row `3859711_1` (`3e-6`) then completed in `02:27:31` at
+matched throughput. On the 224 identical post-warmup batches, `6e-6` has lower
+loss on 210; mean paired `3e-6 - 6e-6` loss is `+0.0109`. Large-loss batches
+align by step across both runs, indicating source variation rather than
+LR-specific divergence. Defer selection until row 2 (`1e-5`), which started
+on four A100s at 14:21 CEST. Sequential fallback `3859297` was canceled once
+that independent row was confirmed running.
 
 ## Downstream acceptance gate
 

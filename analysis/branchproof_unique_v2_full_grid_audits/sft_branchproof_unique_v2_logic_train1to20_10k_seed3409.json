@@ -1,0 +1,2512 @@
+{
+  "accepted": true,
+  "errors": [],
+  "expected_k_values": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "expected_steps": [
+    1,
+    2,
+    5,
+    10,
+    12,
+    15,
+    18,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50
+  ],
+  "generation_log_audit": {
+    "exists": true,
+    "greedy": {
+      "cap_hit_chunk_count": 3,
+      "chunks": [
+        {
+          "index": 1,
+          "max_output_tokens": 367,
+          "output_tokens": 19698,
+          "seconds": 7.7,
+          "total": 7
+        },
+        {
+          "index": 2,
+          "max_output_tokens": 1323,
+          "output_tokens": 65092,
+          "seconds": 53.9,
+          "total": 7
+        },
+        {
+          "index": 3,
+          "max_output_tokens": 1927,
+          "output_tokens": 111506,
+          "seconds": 149.0,
+          "total": 7
+        },
+        {
+          "index": 4,
+          "max_output_tokens": 2533,
+          "output_tokens": 154114,
+          "seconds": 272.9,
+          "total": 7
+        },
+        {
+          "index": 5,
+          "max_output_tokens": 7168,
+          "output_tokens": 215722,
+          "seconds": 443.7,
+          "total": 7
+        },
+        {
+          "index": 6,
+          "max_output_tokens": 7168,
+          "output_tokens": 282107,
+          "seconds": 638.5,
+          "total": 7
+        },
+        {
+          "index": 7,
+          "max_output_tokens": 7168,
+          "output_tokens": 370894,
+          "seconds": 934.2,
+          "total": 7
+        }
+      ],
+      "completed_chunks": 7,
+      "elapsed_seconds": 2499.9,
+      "expected_chunks": 7,
+      "generation_cap": 7168,
+      "max_output_tokens": 7168,
+      "output_tokens": 1219133,
+      "tokens_per_second": 487.6727069082763
+    },
+    "path": "logs/eval_bp_unique_3857767_11.out",
+    "sampled": {
+      "cap_hit_chunk_count": 45,
+      "chunks": [
+        {
+          "index": 1,
+          "max_output_tokens": 252,
+          "output_tokens": 16032,
+          "seconds": 4.8,
+          "total": 112
+        },
+        {
+          "index": 2,
+          "max_output_tokens": 253,
+          "output_tokens": 16032,
+          "seconds": 4.8,
+          "total": 112
+        },
+        {
+          "index": 3,
+          "max_output_tokens": 252,
+          "output_tokens": 16048,
+          "seconds": 4.8,
+          "total": 112
+        },
+        {
+          "index": 4,
+          "max_output_tokens": 251,
+          "output_tokens": 16048,
+          "seconds": 4.8,
+          "total": 112
+        },
+        {
+          "index": 5,
+          "max_output_tokens": 252,
+          "output_tokens": 16032,
+          "seconds": 4.8,
+          "total": 112
+        },
+        {
+          "index": 6,
+          "max_output_tokens": 253,
+          "output_tokens": 16112,
+          "seconds": 4.8,
+          "total": 112
+        },
+        {
+          "index": 7,
+          "max_output_tokens": 251,
+          "output_tokens": 16048,
+          "seconds": 4.8,
+          "total": 112
+        },
+        {
+          "index": 8,
+          "max_output_tokens": 252,
+          "output_tokens": 16048,
+          "seconds": 4.8,
+          "total": 112
+        },
+        {
+          "index": 9,
+          "max_output_tokens": 367,
+          "output_tokens": 23360,
+          "seconds": 7.9,
+          "total": 112
+        },
+        {
+          "index": 10,
+          "max_output_tokens": 366,
+          "output_tokens": 23312,
+          "seconds": 7.9,
+          "total": 112
+        },
+        {
+          "index": 11,
+          "max_output_tokens": 366,
+          "output_tokens": 23328,
+          "seconds": 7.9,
+          "total": 112
+        },
+        {
+          "index": 12,
+          "max_output_tokens": 365,
+          "output_tokens": 23344,
+          "seconds": 7.9,
+          "total": 112
+        },
+        {
+          "index": 13,
+          "max_output_tokens": 366,
+          "output_tokens": 23328,
+          "seconds": 7.9,
+          "total": 112
+        },
+        {
+          "index": 14,
+          "max_output_tokens": 367,
+          "output_tokens": 23408,
+          "seconds": 7.9,
+          "total": 112
+        },
+        {
+          "index": 15,
+          "max_output_tokens": 365,
+          "output_tokens": 23344,
+          "seconds": 7.9,
+          "total": 112
+        },
+        {
+          "index": 16,
+          "max_output_tokens": 366,
+          "output_tokens": 23344,
+          "seconds": 7.9,
+          "total": 112
+        },
+        {
+          "index": 17,
+          "max_output_tokens": 715,
+          "output_tokens": 45728,
+          "seconds": 21.0,
+          "total": 112
+        },
+        {
+          "index": 18,
+          "max_output_tokens": 715,
+          "output_tokens": 45664,
+          "seconds": 21.0,
+          "total": 112
+        },
+        {
+          "index": 19,
+          "max_output_tokens": 715,
+          "output_tokens": 45696,
+          "seconds": 21.0,
+          "total": 112
+        },
+        {
+          "index": 20,
+          "max_output_tokens": 714,
+          "output_tokens": 45680,
+          "seconds": 21.0,
+          "total": 112
+        },
+        {
+          "index": 21,
+          "max_output_tokens": 715,
+          "output_tokens": 45680,
+          "seconds": 21.1,
+          "total": 112
+        },
+        {
+          "index": 22,
+          "max_output_tokens": 716,
+          "output_tokens": 45728,
+          "seconds": 21.3,
+          "total": 112
+        },
+        {
+          "index": 23,
+          "max_output_tokens": 715,
+          "output_tokens": 45712,
+          "seconds": 21.2,
+          "total": 112
+        },
+        {
+          "index": 24,
+          "max_output_tokens": 716,
+          "output_tokens": 45712,
+          "seconds": 21.2,
+          "total": 112
+        },
+        {
+          "index": 25,
+          "max_output_tokens": 1322,
+          "output_tokens": 84496,
+          "seconds": 57.1,
+          "total": 112
+        },
+        {
+          "index": 26,
+          "max_output_tokens": 1322,
+          "output_tokens": 84544,
+          "seconds": 57.4,
+          "total": 112
+        },
+        {
+          "index": 27,
+          "max_output_tokens": 1321,
+          "output_tokens": 84464,
+          "seconds": 57.3,
+          "total": 112
+        },
+        {
+          "index": 28,
+          "max_output_tokens": 1323,
+          "output_tokens": 84560,
+          "seconds": 57.5,
+          "total": 112
+        },
+        {
+          "index": 29,
+          "max_output_tokens": 1320,
+          "output_tokens": 84368,
+          "seconds": 57.1,
+          "total": 112
+        },
+        {
+          "index": 30,
+          "max_output_tokens": 1321,
+          "output_tokens": 84528,
+          "seconds": 57.1,
+          "total": 112
+        },
+        {
+          "index": 31,
+          "max_output_tokens": 1320,
+          "output_tokens": 84448,
+          "seconds": 57.0,
+          "total": 112
+        },
+        {
+          "index": 32,
+          "max_output_tokens": 1320,
+          "output_tokens": 84464,
+          "seconds": 56.8,
+          "total": 112
+        },
+        {
+          "index": 33,
+          "max_output_tokens": 1564,
+          "output_tokens": 99952,
+          "seconds": 75.9,
+          "total": 112
+        },
+        {
+          "index": 34,
+          "max_output_tokens": 1565,
+          "output_tokens": 100048,
+          "seconds": 76.4,
+          "total": 112
+        },
+        {
+          "index": 35,
+          "max_output_tokens": 1563,
+          "output_tokens": 99952,
+          "seconds": 76.1,
+          "total": 112
+        },
+        {
+          "index": 36,
+          "max_output_tokens": 1563,
+          "output_tokens": 99760,
+          "seconds": 76.0,
+          "total": 112
+        },
+        {
+          "index": 37,
+          "max_output_tokens": 1563,
+          "output_tokens": 99856,
+          "seconds": 76.0,
+          "total": 112
+        },
+        {
+          "index": 38,
+          "max_output_tokens": 1563,
+          "output_tokens": 99968,
+          "seconds": 76.2,
+          "total": 112
+        },
+        {
+          "index": 39,
+          "max_output_tokens": 1563,
+          "output_tokens": 99968,
+          "seconds": 76.1,
+          "total": 112
+        },
+        {
+          "index": 40,
+          "max_output_tokens": 1562,
+          "output_tokens": 99920,
+          "seconds": 75.8,
+          "total": 112
+        },
+        {
+          "index": 41,
+          "max_output_tokens": 1927,
+          "output_tokens": 123072,
+          "seconds": 114.6,
+          "total": 112
+        },
+        {
+          "index": 42,
+          "max_output_tokens": 1925,
+          "output_tokens": 123152,
+          "seconds": 114.8,
+          "total": 112
+        },
+        {
+          "index": 43,
+          "max_output_tokens": 1924,
+          "output_tokens": 123008,
+          "seconds": 114.0,
+          "total": 112
+        },
+        {
+          "index": 44,
+          "max_output_tokens": 1926,
+          "output_tokens": 123152,
+          "seconds": 114.7,
+          "total": 112
+        },
+        {
+          "index": 45,
+          "max_output_tokens": 1924,
+          "output_tokens": 122944,
+          "seconds": 114.2,
+          "total": 112
+        },
+        {
+          "index": 46,
+          "max_output_tokens": 1924,
+          "output_tokens": 123120,
+          "seconds": 114.1,
+          "total": 112
+        },
+        {
+          "index": 47,
+          "max_output_tokens": 1926,
+          "output_tokens": 123152,
+          "seconds": 114.5,
+          "total": 112
+        },
+        {
+          "index": 48,
+          "max_output_tokens": 1924,
+          "output_tokens": 123072,
+          "seconds": 114.1,
+          "total": 112
+        },
+        {
+          "index": 49,
+          "max_output_tokens": 2297,
+          "output_tokens": 146480,
+          "seconds": 158.4,
+          "total": 112
+        },
+        {
+          "index": 50,
+          "max_output_tokens": 2289,
+          "output_tokens": 146336,
+          "seconds": 158.1,
+          "total": 112
+        },
+        {
+          "index": 51,
+          "max_output_tokens": 2288,
+          "output_tokens": 146048,
+          "seconds": 157.8,
+          "total": 112
+        },
+        {
+          "index": 52,
+          "max_output_tokens": 2288,
+          "output_tokens": 146416,
+          "seconds": 158.9,
+          "total": 112
+        },
+        {
+          "index": 53,
+          "max_output_tokens": 2288,
+          "output_tokens": 146304,
+          "seconds": 158.4,
+          "total": 112
+        },
+        {
+          "index": 54,
+          "max_output_tokens": 2289,
+          "output_tokens": 146304,
+          "seconds": 158.4,
+          "total": 112
+        },
+        {
+          "index": 55,
+          "max_output_tokens": 2290,
+          "output_tokens": 146496,
+          "seconds": 158.8,
+          "total": 112
+        },
+        {
+          "index": 56,
+          "max_output_tokens": 2289,
+          "output_tokens": 146416,
+          "seconds": 158.4,
+          "total": 112
+        },
+        {
+          "index": 57,
+          "max_output_tokens": 2532,
+          "output_tokens": 162000,
+          "seconds": 188.3,
+          "total": 112
+        },
+        {
+          "index": 58,
+          "max_output_tokens": 2539,
+          "output_tokens": 161895,
+          "seconds": 187.4,
+          "total": 112
+        },
+        {
+          "index": 59,
+          "max_output_tokens": 2538,
+          "output_tokens": 161959,
+          "seconds": 187.0,
+          "total": 112
+        },
+        {
+          "index": 60,
+          "max_output_tokens": 2531,
+          "output_tokens": 161648,
+          "seconds": 186.8,
+          "total": 112
+        },
+        {
+          "index": 61,
+          "max_output_tokens": 2537,
+          "output_tokens": 161871,
+          "seconds": 187.1,
+          "total": 112
+        },
+        {
+          "index": 62,
+          "max_output_tokens": 2539,
+          "output_tokens": 161874,
+          "seconds": 187.4,
+          "total": 112
+        },
+        {
+          "index": 63,
+          "max_output_tokens": 2532,
+          "output_tokens": 161888,
+          "seconds": 187.0,
+          "total": 112
+        },
+        {
+          "index": 64,
+          "max_output_tokens": 2538,
+          "output_tokens": 161943,
+          "seconds": 186.7,
+          "total": 112
+        },
+        {
+          "index": 65,
+          "max_output_tokens": 7168,
+          "output_tokens": 199286,
+          "seconds": 314.8,
+          "total": 112
+        },
+        {
+          "index": 66,
+          "max_output_tokens": 7168,
+          "output_tokens": 199016,
+          "seconds": 297.5,
+          "total": 112
+        },
+        {
+          "index": 67,
+          "max_output_tokens": 3179,
+          "output_tokens": 195607,
+          "seconds": 255.7,
+          "total": 112
+        },
+        {
+          "index": 68,
+          "max_output_tokens": 7168,
+          "output_tokens": 209592,
+          "seconds": 328.3,
+          "total": 112
+        },
+        {
+          "index": 69,
+          "max_output_tokens": 7168,
+          "output_tokens": 201942,
+          "seconds": 315.1,
+          "total": 112
+        },
+        {
+          "index": 70,
+          "max_output_tokens": 3123,
+          "output_tokens": 192636,
+          "seconds": 252.1,
+          "total": 112
+        },
+        {
+          "index": 71,
+          "max_output_tokens": 7168,
+          "output_tokens": 181013,
+          "seconds": 276.9,
+          "total": 112
+        },
+        {
+          "index": 72,
+          "max_output_tokens": 7168,
+          "output_tokens": 196656,
+          "seconds": 305.3,
+          "total": 112
+        },
+        {
+          "index": 73,
+          "max_output_tokens": 7168,
+          "output_tokens": 231456,
+          "seconds": 376.1,
+          "total": 112
+        },
+        {
+          "index": 74,
+          "max_output_tokens": 7168,
+          "output_tokens": 235867,
+          "seconds": 365.1,
+          "total": 112
+        },
+        {
+          "index": 75,
+          "max_output_tokens": 7168,
+          "output_tokens": 228819,
+          "seconds": 346.5,
+          "total": 112
+        },
+        {
+          "index": 76,
+          "max_output_tokens": 7168,
+          "output_tokens": 237882,
+          "seconds": 383.1,
+          "total": 112
+        },
+        {
+          "index": 77,
+          "max_output_tokens": 7168,
+          "output_tokens": 239269,
+          "seconds": 357.8,
+          "total": 112
+        },
+        {
+          "index": 78,
+          "max_output_tokens": 7168,
+          "output_tokens": 232180,
+          "seconds": 351.4,
+          "total": 112
+        },
+        {
+          "index": 79,
+          "max_output_tokens": 4050,
+          "output_tokens": 227122,
+          "seconds": 321.4,
+          "total": 112
+        },
+        {
+          "index": 80,
+          "max_output_tokens": 7168,
+          "output_tokens": 214820,
+          "seconds": 342.2,
+          "total": 112
+        },
+        {
+          "index": 81,
+          "max_output_tokens": 7168,
+          "output_tokens": 270762,
+          "seconds": 411.7,
+          "total": 112
+        },
+        {
+          "index": 82,
+          "max_output_tokens": 7168,
+          "output_tokens": 263011,
+          "seconds": 433.0,
+          "total": 112
+        },
+        {
+          "index": 83,
+          "max_output_tokens": 7168,
+          "output_tokens": 268230,
+          "seconds": 419.1,
+          "total": 112
+        },
+        {
+          "index": 84,
+          "max_output_tokens": 7168,
+          "output_tokens": 266116,
+          "seconds": 432.6,
+          "total": 112
+        },
+        {
+          "index": 85,
+          "max_output_tokens": 7168,
+          "output_tokens": 256371,
+          "seconds": 423.6,
+          "total": 112
+        },
+        {
+          "index": 86,
+          "max_output_tokens": 7168,
+          "output_tokens": 260375,
+          "seconds": 433.8,
+          "total": 112
+        },
+        {
+          "index": 87,
+          "max_output_tokens": 7168,
+          "output_tokens": 260391,
+          "seconds": 436.2,
+          "total": 112
+        },
+        {
+          "index": 88,
+          "max_output_tokens": 7168,
+          "output_tokens": 263614,
+          "seconds": 441.7,
+          "total": 112
+        },
+        {
+          "index": 89,
+          "max_output_tokens": 7168,
+          "output_tokens": 297891,
+          "seconds": 490.7,
+          "total": 112
+        },
+        {
+          "index": 90,
+          "max_output_tokens": 7168,
+          "output_tokens": 277369,
+          "seconds": 479.8,
+          "total": 112
+        },
+        {
+          "index": 91,
+          "max_output_tokens": 7168,
+          "output_tokens": 299147,
+          "seconds": 522.1,
+          "total": 112
+        },
+        {
+          "index": 92,
+          "max_output_tokens": 7168,
+          "output_tokens": 280949,
+          "seconds": 474.0,
+          "total": 112
+        },
+        {
+          "index": 93,
+          "max_output_tokens": 7168,
+          "output_tokens": 298509,
+          "seconds": 500.3,
+          "total": 112
+        },
+        {
+          "index": 94,
+          "max_output_tokens": 7168,
+          "output_tokens": 271519,
+          "seconds": 457.0,
+          "total": 112
+        },
+        {
+          "index": 95,
+          "max_output_tokens": 7168,
+          "output_tokens": 268714,
+          "seconds": 435.1,
+          "total": 112
+        },
+        {
+          "index": 96,
+          "max_output_tokens": 7168,
+          "output_tokens": 291026,
+          "seconds": 483.6,
+          "total": 112
+        },
+        {
+          "index": 97,
+          "max_output_tokens": 7168,
+          "output_tokens": 397613,
+          "seconds": 729.1,
+          "total": 112
+        },
+        {
+          "index": 98,
+          "max_output_tokens": 7168,
+          "output_tokens": 377003,
+          "seconds": 689.0,
+          "total": 112
+        },
+        {
+          "index": 99,
+          "max_output_tokens": 7168,
+          "output_tokens": 369381,
+          "seconds": 667.9,
+          "total": 112
+        },
+        {
+          "index": 100,
+          "max_output_tokens": 7168,
+          "output_tokens": 364426,
+          "seconds": 658.1,
+          "total": 112
+        },
+        {
+          "index": 101,
+          "max_output_tokens": 7168,
+          "output_tokens": 383371,
+          "seconds": 713.5,
+          "total": 112
+        },
+        {
+          "index": 102,
+          "max_output_tokens": 7168,
+          "output_tokens": 386292,
+          "seconds": 699.5,
+          "total": 112
+        },
+        {
+          "index": 103,
+          "max_output_tokens": 7168,
+          "output_tokens": 373832,
+          "seconds": 677.4,
+          "total": 112
+        },
+        {
+          "index": 104,
+          "max_output_tokens": 7168,
+          "output_tokens": 371709,
+          "seconds": 677.6,
+          "total": 112
+        },
+        {
+          "index": 105,
+          "max_output_tokens": 7168,
+          "output_tokens": 375586,
+          "seconds": 690.3,
+          "total": 112
+        },
+        {
+          "index": 106,
+          "max_output_tokens": 7168,
+          "output_tokens": 400715,
+          "seconds": 781.5,
+          "total": 112
+        },
+        {
+          "index": 107,
+          "max_output_tokens": 7168,
+          "output_tokens": 416877,
+          "seconds": 818.9,
+          "total": 112
+        },
+        {
+          "index": 108,
+          "max_output_tokens": 7168,
+          "output_tokens": 403463,
+          "seconds": 754.5,
+          "total": 112
+        },
+        {
+          "index": 109,
+          "max_output_tokens": 7168,
+          "output_tokens": 362944,
+          "seconds": 681.1,
+          "total": 112
+        },
+        {
+          "index": 110,
+          "max_output_tokens": 7168,
+          "output_tokens": 371036,
+          "seconds": 692.5,
+          "total": 112
+        },
+        {
+          "index": 111,
+          "max_output_tokens": 7168,
+          "output_tokens": 380925,
+          "seconds": 744.0,
+          "total": 112
+        },
+        {
+          "index": 112,
+          "max_output_tokens": 7168,
+          "output_tokens": 388757,
+          "seconds": 724.9,
+          "total": 112
+        }
+      ],
+      "completed_chunks": 112,
+      "elapsed_seconds": 28879.5,
+      "expected_chunks": 112,
+      "generation_cap": 7168,
+      "max_output_tokens": 7168,
+      "output_tokens": 19547701,
+      "tokens_per_second": 676.8711715923059
+    }
+  },
+  "metrics_audit": {
+    "greedy": {
+      "1": {
+        "citation_free_grounded_valid": 0.03125,
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format": 1.0,
+        "grounded_valid": 0.0,
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "10": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format": 1.0,
+        "grounded_valid": 0.0,
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "12": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format": 1.0,
+        "grounded_valid": 0.0,
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "15": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format": 1.0,
+        "grounded_valid": 0.0,
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "18": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format": 1.0,
+        "grounded_valid": 0.0,
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "2": {
+        "citation_free_grounded_valid": 0.03125,
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format": 1.0,
+        "grounded_valid": 0.0,
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "20": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format": 1.0,
+        "grounded_valid": 0.0,
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "25": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 0.15625,
+        "correct": 0.625,
+        "format": 0.25,
+        "grounded_valid": 0.0,
+        "syntactic": 0.21875,
+        "valid": 0.0
+      },
+      "30": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 0.09375,
+        "correct": 0.5625,
+        "format": 0.1875,
+        "grounded_valid": 0.0,
+        "syntactic": 0.15625,
+        "valid": 0.0
+      },
+      "35": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 0.03125,
+        "correct": 0.40625,
+        "format": 0.28125,
+        "grounded_valid": 0.0,
+        "syntactic": 0.21875,
+        "valid": 0.0
+      },
+      "40": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 0.03125,
+        "correct": 0.375,
+        "format": 0.1875,
+        "grounded_valid": 0.0,
+        "syntactic": 0.15625,
+        "valid": 0.0
+      },
+      "45": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 0.0,
+        "correct": 0.09375,
+        "format": 0.09375,
+        "grounded_valid": 0.0,
+        "syntactic": 0.0625,
+        "valid": 0.0
+      },
+      "5": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format": 1.0,
+        "grounded_valid": 0.0,
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "50": {
+        "citation_free_grounded_valid": 0.0,
+        "citation_free_valid": 0.0,
+        "correct": 0.21875,
+        "format": 0.09375,
+        "grounded_valid": 0.0,
+        "syntactic": 0.0625,
+        "valid": 0.0
+      }
+    },
+    "metric_count": 2665,
+    "sampled": {
+      "1": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.056640625,
+          "16": 0.53125,
+          "2": 0.10911458333333333,
+          "4": 0.20245535714285715,
+          "8": 0.3489583333333333
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.056640625,
+          "16": 0.53125,
+          "2": 0.10911458333333333,
+          "4": 0.20245535714285715,
+          "8": 0.3489583333333333
+        },
+        "citation_free_joint_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "10": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "12": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 0.998046875,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 0.998046875,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 0.998046875,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "15": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "18": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "2": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.03125,
+          "16": 0.34375,
+          "2": 0.06119791666666667,
+          "4": 0.1171875,
+          "8": 0.21354166666666666
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.03125,
+          "16": 0.34375,
+          "2": 0.06119791666666667,
+          "4": 0.1171875,
+          "8": 0.21354166666666666
+        },
+        "citation_free_joint_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "20": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 0.994140625,
+          "16": 1.0,
+          "2": 0.99921875,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 0.994140625,
+          "16": 1.0,
+          "2": 0.99921875,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 0.994140625,
+          "16": 1.0,
+          "2": 0.99921875,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "25": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 0.07421875,
+          "16": 0.28125,
+          "2": 0.10755208333333333,
+          "4": 0.15511675824175825,
+          "8": 0.21207750582750584
+        },
+        "citation_free_valid_pass": {
+          "1": 0.076171875,
+          "16": 0.3125,
+          "2": 0.11145833333333333,
+          "4": 0.16292925824175825,
+          "8": 0.22770250582750584
+        },
+        "correct_pass": {
+          "1": 0.66015625,
+          "16": 1.0,
+          "2": 0.85546875,
+          "4": 0.9661744505494505,
+          "8": 0.9979215229215229
+        },
+        "format_pass": {
+          "1": 0.216796875,
+          "16": 0.65625,
+          "2": 0.3078125,
+          "4": 0.4163804945054945,
+          "8": 0.5390782828282829
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 0.1484375,
+          "16": 0.5,
+          "2": 0.2109375,
+          "4": 0.27942994505494506,
+          "8": 0.36457847707847707
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "30": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 0.05859375,
+          "16": 0.5,
+          "2": 0.1078125,
+          "4": 0.1896462912087912,
+          "8": 0.3197892385392385
+        },
+        "citation_free_valid_pass": {
+          "1": 0.068359375,
+          "16": 0.59375,
+          "2": 0.12682291666666667,
+          "4": 0.2255837912087912,
+          "8": 0.3833309052059052
+        },
+        "correct_pass": {
+          "1": 0.55859375,
+          "16": 1.0,
+          "2": 0.8075520833333333,
+          "4": 0.965573489010989,
+          "8": 0.9994803807303807
+        },
+        "format_pass": {
+          "1": 0.25390625,
+          "16": 0.78125,
+          "2": 0.3723958333333333,
+          "4": 0.5121565934065934,
+          "8": 0.6573572261072261
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 0.1953125,
+          "16": 0.71875,
+          "2": 0.30130208333333336,
+          "4": 0.44672046703296703,
+          "8": 0.6013378982128982
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "35": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 0.0390625,
+          "16": 0.375,
+          "2": 0.07526041666666666,
+          "4": 0.13973214285714286,
+          "8": 0.24166666666666667
+        },
+        "citation_free_valid_pass": {
+          "1": 0.041015625,
+          "16": 0.40625,
+          "2": 0.07916666666666666,
+          "4": 0.14754464285714286,
+          "8": 0.25729166666666664
+        },
+        "correct_pass": {
+          "1": 0.44921875,
+          "16": 1.0,
+          "2": 0.6919270833333333,
+          "4": 0.9010817307692308,
+          "8": 0.9915282634032634
+        },
+        "format_pass": {
+          "1": 0.216796875,
+          "16": 0.71875,
+          "2": 0.32708333333333334,
+          "4": 0.45,
+          "8": 0.5911324786324786
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 0.1796875,
+          "16": 0.71875,
+          "2": 0.28567708333333336,
+          "4": 0.4174107142857143,
+          "8": 0.5742205710955711
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "40": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 0.025390625,
+          "16": 0.34375,
+          "2": 0.05026041666666667,
+          "4": 0.0984375,
+          "8": 0.18854166666666666
+        },
+        "citation_free_valid_pass": {
+          "1": 0.037109375,
+          "16": 0.4375,
+          "2": 0.07291666666666667,
+          "4": 0.140625,
+          "8": 0.26041666666666663
+        },
+        "correct_pass": {
+          "1": 0.33984375,
+          "16": 1.0,
+          "2": 0.55078125,
+          "4": 0.7805975274725275,
+          "8": 0.9457920551670552
+        },
+        "format_pass": {
+          "1": 0.171875,
+          "16": 0.65625,
+          "2": 0.2703125,
+          "4": 0.38731112637362636,
+          "8": 0.5173586829836829
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 0.162109375,
+          "16": 0.625,
+          "2": 0.25286458333333334,
+          "4": 0.3700377747252747,
+          "8": 0.5050189393939394
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "45": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 0.0078125,
+          "16": 0.09375,
+          "2": 0.015364583333333334,
+          "4": 0.0296875,
+          "8": 0.05520833333333333
+        },
+        "citation_free_valid_pass": {
+          "1": 0.009765625,
+          "16": 0.125,
+          "2": 0.019270833333333334,
+          "4": 0.0375,
+          "8": 0.07083333333333333
+        },
+        "correct_pass": {
+          "1": 0.1953125,
+          "16": 0.875,
+          "2": 0.34270833333333334,
+          "4": 0.5452953296703297,
+          "8": 0.7530448717948718
+        },
+        "format_pass": {
+          "1": 0.0625,
+          "16": 0.46875,
+          "2": 0.1171875,
+          "4": 0.20703983516483518,
+          "8": 0.33068910256410255
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 0.048828125,
+          "16": 0.34375,
+          "2": 0.09114583333333334,
+          "4": 0.15971840659340658,
+          "8": 0.2515224358974359
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "5": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.001953125,
+          "16": 0.03125,
+          "2": 0.00390625,
+          "4": 0.0078125,
+          "8": 0.015625
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.001953125,
+          "16": 0.03125,
+          "2": 0.00390625,
+          "4": 0.0078125,
+          "8": 0.015625
+        },
+        "citation_free_joint_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "citation_free_valid_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "correct_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "format_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 1.0,
+          "16": 1.0,
+          "2": 1.0,
+          "4": 1.0,
+          "8": 1.0
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      },
+      "50": {
+        "citation_free_grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "citation_free_joint_pass": {
+          "1": 0.001953125,
+          "16": 0.03125,
+          "2": 0.00390625,
+          "4": 0.0078125,
+          "8": 0.015625
+        },
+        "citation_free_valid_pass": {
+          "1": 0.0078125,
+          "16": 0.125,
+          "2": 0.015625,
+          "4": 0.03125,
+          "8": 0.0625
+        },
+        "correct_pass": {
+          "1": 0.150390625,
+          "16": 0.96875,
+          "2": 0.2765625,
+          "4": 0.4732486263736264,
+          "8": 0.7233755827505828
+        },
+        "format_pass": {
+          "1": 0.06640625,
+          "16": 0.4375,
+          "2": 0.1171875,
+          "4": 0.1914835164835165,
+          "8": 0.2935654623154623
+        },
+        "grounded_joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "grounded_valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "joint_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        },
+        "syntactic_pass": {
+          "1": 0.048828125,
+          "16": 0.375,
+          "2": 0.08932291666666667,
+          "4": 0.15362293956043957,
+          "8": 0.24669289044289044
+        },
+        "valid_pass": {
+          "1": 0.0,
+          "16": 0.0,
+          "2": 0.0,
+          "4": 0.0,
+          "8": 0.0
+        }
+      }
+    }
+  },
+  "metrics_path": "/home/vault/c107fa/c107fa12/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/sft_branchproof_unique_v2_logic_train1to20_10k_seed3409_passk.json",
+  "sample_source_filter": "synthetic_sampled",
+  "samples_audit": {
+    "by_step": {
+      "1": {
+        "citation_free_valid": 64,
+        "correct": 64,
+        "format_ok": 64,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 64
+      },
+      "10": {
+        "citation_free_valid": 64,
+        "correct": 64,
+        "format_ok": 64,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 64
+      },
+      "12": {
+        "citation_free_valid": 64,
+        "correct": 64,
+        "format_ok": 64,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 64
+      },
+      "15": {
+        "citation_free_valid": 64,
+        "correct": 64,
+        "format_ok": 64,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 64
+      },
+      "18": {
+        "citation_free_valid": 64,
+        "correct": 64,
+        "format_ok": 64,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 64
+      },
+      "2": {
+        "citation_free_valid": 64,
+        "correct": 64,
+        "format_ok": 64,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 64
+      },
+      "20": {
+        "citation_free_valid": 64,
+        "correct": 64,
+        "format_ok": 64,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 64
+      },
+      "25": {
+        "citation_free_valid": 5,
+        "correct": 45,
+        "format_ok": 16,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 10
+      },
+      "30": {
+        "citation_free_valid": 2,
+        "correct": 37,
+        "format_ok": 16,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 12
+      },
+      "35": {
+        "citation_free_valid": 5,
+        "correct": 32,
+        "format_ok": 14,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 10
+      },
+      "40": {
+        "citation_free_valid": 1,
+        "correct": 19,
+        "format_ok": 8,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 7
+      },
+      "45": {
+        "citation_free_valid": 1,
+        "correct": 15,
+        "format_ok": 2,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 3
+      },
+      "5": {
+        "citation_free_valid": 64,
+        "correct": 64,
+        "format_ok": 64,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 64
+      },
+      "50": {
+        "citation_free_valid": 1,
+        "correct": 8,
+        "format_ok": 2,
+        "fresh_constants": 64,
+        "nonempty_generation": 64,
+        "syntactic": 1
+      }
+    },
+    "credited_duplicate_declaration_failure_count": 0,
+    "fresh_constant_failure_count": 0,
+    "nonempty_generation_count": 896,
+    "representative_samples": {
+      "1": {
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\n</constants>\n<predicates>\nAx: x is teal\nBx: x is ivory\nCx: x is hazel\nDx: x is violet\nEx: x is willow\nFx: x is north\nGx: x is south\nHx: x is east\nIx: x is west\n</predicates>\n<premises>\nA(c0)\nF(c0)\nF(c0) & A(c0) -> E(c1)\nE(c1) -> F(c1)\nI(c0) & A(c0) -> D(c1)\nD(c1) -> H(c1)\nH(c0) & A(c0) -> B(c1)\nB(c1) -> G(c1)\nG(c0) & A(c0) -> C(c1)\nC(c1) -> I(c1)\n</premises>\n<proof>\nA(c0) ; R\nF(c0) ; R\nE(c1) ; ->E\n</proof>\n<conclusion>\nE(c1)\n</conclusion>\n</formal>\n<answer>\nwillow\n</answer>",
+        "gold_answer": "willow",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is teal.\n2. c0 is north.\n3. If c0 is north and c0 is teal, then c1 is willow.\n4. If c1 is willow, then c1 is north.\n5. If c0 is west and c0 is teal, then c1 is violet.\n6. If c1 is violet, then c1 is east.\n7. If c0 is east and c0 is teal, then c1 is ivory.\n8. If c1 is ivory, then c1 is south.\n9. If c0 is south and c0 is teal, then c1 is hazel.\n10. If c1 is hazel, then c1 is west.\nWhich state applies to c1?\n</question>\n\n",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "10": {
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\n</constants>\n<predicates>\nAx: x is olive\nBx: x is ruby\nCx: x is ivory\nDx: x is cedar\nEx: x is maple\nFx: x is hazel\nGx: x is amber\nHx: x is willow\nIx: x is laurel\nJx: x is teal\nKx: x is violet\nLx: x is north\nMx: x is south\nNx: x is east\nOx: x is west\n</predicates>\n<premises>\nF(c0)\nM(c0)\nN(c0) & F(c0) -> D(c1)\nD(c1) -> O(c1)\nO(c0) & F(c0) -> C(c1)\nC(c1) -> N(c1)\nM(c0) & F(c0) -> A(c1)\nA(c1) -> L(c1)\nL(c0) & F(c0) -> K(c1)\nK(c1) -> M(c1)\nL(c1) & A(c1) -> I(c2)\nI(c2) -> N(c2)\nO(c1) & D(c1) -> B(c2)\nB(c2) -> L(c2)\nN(c1) & C(c1) -> E(c2)\nE(c2) -> M(c2)\nM(c1) & K(c1) -> H(c2)\nH(c2) -> O(c2)\nM(c2) & E(c2) -> C(c3)\nC(c3) -> L(c3)\nN(c2) & I(c2) -> J(c3)\nJ(c3) -> N(c3)\nL(c2) & B(c2) -> B(c3)",
+        "gold_answer": "violet",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is hazel.\n2. c0 is south.\n3. If c0 is east and c0 is hazel, then c1 is cedar.\n4. If c1 is cedar, then c1 is west.\n5. If c0 is west and c0 is hazel, then c1 is ivory.\n6. If c1 is ivory, then c1 is east.\n7. If c0 is south and c0 is hazel, then c1 is olive.\n8. If c1 is olive, then c1 is north.\n9. If c0 is north and c0 is hazel, then c1 is violet.\n10. If c1 is violet, then c1 is south.\n11. If c1 is north and c1 is olive, then c2 is laurel.\n12. If c2 is laurel, then c2 is east.\n13. I",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "12": {
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\n</constants>\n<predicates>\nAx: x is olive\nBx: x is amber\nCx: x is ruby\nDx: x is slate\nEx: x is hazel\nFx: x is cedar\nGx: x is teal\nHx: x is willow\nIx: x is ivory\nJx: x is maple\nKx: x is violet\nLx: x is juniper\nMx: x is laurel\nNx: x is north\nOx: x is south\nPx: x is east\nQx: x is west\n</predicates>\n<premises>\nC(c0)\nN(c0)\nP(c0) & C(c0) -> B(c1)\nB(c1) -> O(c1)\nO(c0) & C(c0) -> K(c1)\nK(c1) -> Q(c1)\nN(c0) & C(c0) -> M(c1)\nM(c1) -> N(c1)\nQ(c0) & C(c0) -> I(c1)\nI(c1) -> P(c1)\nO(c1) & B(c1) -> B(c2)\nB(c2) -> N(c2)\nP(c1) & I(c1) -> J(c2)\nJ(c2) -> Q(c2)\nN(c1) & M(c1) -> E(c2)\nE(c2) -> P(c2)\nQ(c1) & K(c1) -> F(c2)\nF(c2) -> O(c2)\nO(c2) & F(c2) -> G(c3)\nG(c3) -> P(c3)\nQ(c2) & ",
+        "gold_answer": "juniper",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is ruby.\n2. c0 is north.\n3. If c0 is east and c0 is ruby, then c1 is amber.\n4. If c1 is amber, then c1 is south.\n5. If c0 is south and c0 is ruby, then c1 is violet.\n6. If c1 is violet, then c1 is west.\n7. If c0 is north and c0 is ruby, then c1 is laurel.\n8. If c1 is laurel, then c1 is north.\n9. If c0 is west and c0 is ruby, then c1 is ivory.\n10. If c1 is ivory, then c1 is east.\n11. If c1 is south and c1 is amber, then c2 is amber.\n12. If c2 is amber, then c2 is north.\n13. If c1",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "15": {
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\n</constants>\n<predicates>\nAx: x is lime\nBx: x is granite\nCx: x is ruby\nDx: x is violet\nEx: x is laurel\nFx: x is olive\nGx: x is willow\nHx: x is teal\nIx: x is meadow\nJx: x is ivory\nKx: x is cedar\nLx: x is maple\nMx: x is juniper\nNx: x is hazel\nOx: x is amber\nPx: x is slate\nQx: x is north\nRx: x is south\nSx: x is east\nTx: x is west\n</predicates>\n<premises>\nA(c0)\nR(c0)\nR(c0) & A(c0) -> P(c1)\nP(c1) -> R(c1)\nQ(c0) & A(c0) -> L(c1)\nL(c1) -> Q(c1)\nT(c0) & A(c0) -> M(c1)\nM(c1) -> S(c1)\nS(c0) & A(c0) -> D(c1)\nD(c1) -> T(c1)\nR(c1) & P(c1) -> L(c2)\nL(c2) -> S(c2)\nT(c1) & D(c1) -> F(c2)\nF(c2) -> Q(c2)\nQ(c1) & L(c1) -> O(c2)\nO(c2) -> T(c2)\nS(c1) &",
+        "gold_answer": "hazel",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is lime.\n2. c0 is south.\n3. If c0 is south and c0 is lime, then c1 is slate.\n4. If c1 is slate, then c1 is south.\n5. If c0 is north and c0 is lime, then c1 is maple.\n6. If c1 is maple, then c1 is north.\n7. If c0 is west and c0 is lime, then c1 is juniper.\n8. If c1 is juniper, then c1 is east.\n9. If c0 is east and c0 is lime, then c1 is violet.\n10. If c1 is violet, then c1 is west.\n11. If c1 is south and c1 is slate, then c2 is maple.\n12. If c2 is maple, then c2 is east.\n13. If c",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "18": {
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\n</constants>\n<predicates>\nAx: x is cedar\nBx: x is orchid\nCx: x is juniper\nDx: x is ivory\nEx: x is teal\nFx: x is cobalt\nGx: x is lime\nHx: x is olive\nIx: x is willow\nJx: x is meadow\nKx: x is ruby\nLx: x is slate\nMx: x is pearl\nNx: x is hazel\nOx: x is violet\nPx: x is laurel\nQx: x is maple\nRx: x is granite\nSx: x is amber\nTx: x is north\nUx: x is south\nVx: x is east\nWx: x is west\n</predicates>\n<premises>\nH(c0)\nW(c0)\nT(c0) & H(c0) -> M(c1)\nM(c1) -> U(c1)\nV(c0) & H(c0) -> P(c1)\nP(c1) -> T(c1)\nW(c0) & H(c0) -> F(c1)\nF(c1) -> V(c1)\nU(c0) & H(c0) -> C(c1)\nC(c1) -> W(c1)\nW(c1) & C(c1) -> K(c2)\nK(c2) -> W(c2)\nV(c1) ",
+        "gold_answer": "granite",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is olive.\n2. c0 is west.\n3. If c0 is north and c0 is olive, then c1 is pearl.\n4. If c1 is pearl, then c1 is south.\n5. If c0 is east and c0 is olive, then c1 is laurel.\n6. If c1 is laurel, then c1 is north.\n7. If c0 is west and c0 is olive, then c1 is cobalt.\n8. If c1 is cobalt, then c1 is east.\n9. If c0 is south and c0 is olive, then c1 is juniper.\n10. If c1 is juniper, then c1 is west.\n11. If c1 is west and c1 is juniper, then c2 is ruby.\n12. If c2 is ruby, then c2 is west.\n13.",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "2": {
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\n</constants>\n<predicates>\nAx: x is willow\nBx: x is hazel\nCx: x is teal\nDx: x is ivory\nEx: x is violet\nFx: x is north\nGx: x is south\nHx: x is east\nIx: x is west\n</predicates>\n<premises>\nC(c0)\nF(c0)\nG(c0) & C(c0) -> B(c1)\nB(c1) -> I(c1)\nH(c0) & C(c0) -> D(c1)\nD(c1) -> G(c1)\nF(c0) & C(c0) -> A(c1)\nA(c1) -> F(c1)\nI(c0) & C(c0) -> E(c1)\nE(c1) -> H(c1)\nG(c1) & D(c1) -> E(c2)\nE(c2) -> F(c2)\nH(c1) & E(c1) -> D(c2)\nD(c2) -> H(c2)\nI(c1) & B(c1) -> B(c2)\nB(c2) -> I(c2)\nF(c1) & A(c1) -> A(c2)\nA(c2) -> G(c2)\n</premises>\n<proof>\nC(c0) ; R\nF(c0) ; R\nA(c1) ; ->E\nF(c1) ; ->E\nA(c2) ; ->E\n</proof>\n<conclusion>\nA(c2)\n</conclusion>\n</formal>\n<answer>\nwillow\n</answer>",
+        "gold_answer": "willow",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is teal.\n2. c0 is north.\n3. If c0 is south and c0 is teal, then c1 is hazel.\n4. If c1 is hazel, then c1 is west.\n5. If c0 is east and c0 is teal, then c1 is ivory.\n6. If c1 is ivory, then c1 is south.\n7. If c0 is north and c0 is teal, then c1 is willow.\n8. If c1 is willow, then c1 is north.\n9. If c0 is west and c0 is teal, then c1 is violet.\n10. If c1 is violet, then c1 is east.\n11. If c1 is south and c1 is ivory, then c2 is violet.\n12. If c2 is violet, then c2 is north.\n13. If ",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "20": {
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\nc19 = c19\nc20 = c20\n</constants>\n<predicates>\nAx: x is ruby\nBx: x is poppy\nCx: x is maple\nDx: x is olive\nEx: x is willow\nFx: x is juniper\nGx: x is cedar\nHx: x is orchid\nIx: x is ivory\nJx: x is granite\nKx: x is violet\nLx: x is amber\nMx: x is meadow\nNx: x is slate\nOx: x is cobalt\nPx: x is laurel\nQx: x is teal\nRx: x is lime\nSx: x is coral\nTx: x is pearl\nUx: x is hazel\nVx: x is north\nWx: x is south\nXx: x is east\nYx: x is west\n</predicates>\n<premises>\nF(c0)\nV(c0)\nV(c0) & F(c0) -> A(c1)\nA(c1) -> Y(c1)\nY(c0) & F(c0) -> I(c1)\nI(c1) -> X(c1)\nW(c0) & F(c0) -> Q(c1)\nQ(c1) -> W(c1)\nX(c0) & F(c0) -> G(c1)\nG(c1) -> ",
+        "gold_answer": "willow",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is juniper.\n2. c0 is north.\n3. If c0 is north and c0 is juniper, then c1 is ruby.\n4. If c1 is ruby, then c1 is west.\n5. If c0 is west and c0 is juniper, then c1 is ivory.\n6. If c1 is ivory, then c1 is east.\n7. If c0 is south and c0 is juniper, then c1 is teal.\n8. If c1 is teal, then c1 is south.\n9. If c0 is east and c0 is juniper, then c1 is cedar.\n10. If c1 is cedar, then c1 is north.\n11. If c1 is east and c1 is ivory, then c2 is hazel.\n12. If c2 is hazel, then c2 is east.\n13. ",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "25": {
+        "citation_free_valid": 0.0,
+        "correct": 0.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\nc19 = c19\nc20 = c20\nc21 = c21\nc22 = c22\nc23 = c23\nc24 = c24\nc25 = c25\n</constants>\n<predicates>\nAx: x is lime\nBx: x is pearl\nCx: x is teal\nDx: x is willow\nEx: x is cedar\nFx: x is amber\nGx: x is meadow\nHx: x is ivory\nIx: x is violet\nJx: x is coral\nKx: x is orchid\nLx: x is olive\nMx: x is maple\nNx: x is birch\nOx: x is elm\nPx: x is slate\nQx: x is juniper\nRx: x is harbor\nSx: x is granite\nTx: x is hazel\nUx: x is cobalt\nVx: x is poppy\nWx: x is ruby\nXx: x is laurel\nYx: x is north\nZx: x is south\n</predicates>\n<premises>\nS(c0)\nZ(c0)\nY(c0) & S(c0) -> A(c1)\nA(c1) -> Y(c1)\nE(c0) & S(c0) -> M(c1)\nM(c1) -> Z(c1)\nW(c0",
+        "gold_answer": "lime",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is granite.\n2. c0 is south.\n3. If c0 is north and c0 is granite, then c1 is lime.\n4. If c1 is lime, then c1 is north.\n5. If c0 is east and c0 is granite, then c1 is maple.\n6. If c1 is maple, then c1 is south.\n7. If c0 is west and c0 is granite, then c1 is harbor.\n8. If c1 is harbor, then c1 is west.\n9. If c0 is south and c0 is granite, then c1 is birch.\n10. If c1 is birch, then c1 is east.\n11. If c1 is west and c1 is harbor, then c2 is juniper.\n12. If c2 is juniper, then c2 is n",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "30": {
+        "citation_free_valid": 0.0,
+        "correct": 0.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\nc19 = c19\nc20 = c20\nc21 = c21\nc22 = c22\nc23 = c23\nc24 = c24\nc25 = c25\nc26 = c26\nc27 = c27\nc28 = c28\nc29 = c29\nc30 = c30\n</constants>\n<predicates>\nAx: x is laurel\nBx: x is pearl\nCx: x is lime\nDx: x is amber\nEx: x is teal\nFx: x is slate\nGx: x is maple\nHx: x is coral\nIx: x is poppy\nJx: x is olive\nKx: x is ivory\nLx: x is hazel\nMx: x is willow\nNx: x is birch\nOx: x is granite\nPx: x is ruby\nQx: x is cedar\nRx: x is juniper\nSx: x is meadow\nTx: x is cobalt\nUx: x is violet\nVx: x is harbor\nWx: x is orchid\nXx: x is elm\nYx: x is north\nZx: x is south\n</predicates>\n<premises>\nO(c0)\nZ(c0)\nZ(c0) & O(c0) -> N(c1)\nN(c1) -",
+        "gold_answer": "coral",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is granite.\n2. c0 is south.\n3. If c0 is south and c0 is granite, then c1 is birch.\n4. If c1 is birch, then c1 is east.\n5. If c0 is west and c0 is granite, then c1 is harbor.\n6. If c1 is harbor, then c1 is west.\n7. If c0 is north and c0 is granite, then c1 is lime.\n8. If c1 is lime, then c1 is north.\n9. If c0 is east and c0 is granite, then c1 is maple.\n10. If c1 is maple, then c1 is south.\n11. If c1 is south and c1 is maple, then c2 is willow.\n12. If c2 is willow, then c2 is wes",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "35": {
+        "citation_free_valid": 0.0,
+        "correct": 0.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\nc19 = c19\nc20 = c20\nc21 = c21\nc22 = c22\nc23 = c23\nc24 = c24\nc25 = c25\nc26 = c26\nc27 = c27\nc28 = c28\nc29 = c29\nc30 = c30\nc31 = c31\nc32 = c32\nc33 = c33\nc34 = c34\nc35 = c35\n</constants>\n<predicates>\nAx: x is olive\nBx: x is meadow\nCx: x is cedar\nDx: x is laurel\nEx: x is harbor\nFx: x is orchid\nGx: x is ivory\nHx: x is slate\nIx: x is violet\nJx: x is hazel\nKx: x is poppy\nLx: x is lime\nMx: x is amber\nNx: x is juniper\nOx: x is cobalt\nPx: x is birch\nQx: x is maple\nRx: x is elm\nSx: x is ruby\nTx: x is willow\nUx: x is pearl\nVx: x is granite\nWx: x is teal\nXx: x is coral\nYx: x is north\nZx: x is south\n</predicates>\n<pr",
+        "gold_answer": "birch",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is granite.\n2. c0 is south.\n3. If c0 is south and c0 is granite, then c1 is birch.\n4. If c1 is birch, then c1 is east.\n5. If c0 is north and c0 is granite, then c1 is lime.\n6. If c1 is lime, then c1 is north.\n7. If c0 is west and c0 is granite, then c1 is harbor.\n8. If c1 is harbor, then c1 is west.\n9. If c0 is east and c0 is granite, then c1 is maple.\n10. If c1 is maple, then c1 is south.\n11. If c1 is west and c1 is harbor, then c2 is juniper.\n12. If c2 is juniper, then c2 is n",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "40": {
+        "citation_free_valid": 0.0,
+        "correct": 1.0,
+        "format_ok": 0.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\nc19 = c19\nc20 = c20\nc21 = c21\nc22 = c22\nc23 = c23\nc24 = c24\nc25 = c25\nc26 = c26\nc27 = c27\nc28 = c28\nc29 = c29\nc30 = c30\nc31 = c31\nc32 = c32\nc33 = c33\nc34 = c34\nc35 = c35\nc36 = c36\nc37 = c37\nc38 = c38\nc39 = c39\nc40 = c40\n</constants>\n<predicates>\nAx: x is poppy\nBx: x is ruby\nCx: x is juniper\nDx: x is amber\nEx: x is orchid\nFx: x is olive\nGx: x is birch\nHx: x is maple\nIx: x is teal\nJx: x is lime\nKx: x is slate\nLx: x is willow\nMx: x is elm\nNx: x is coral\nOx: x is violet\nPx: x is hazel\nQx: x is granite\nRx: x is cobalt\nSx: x is harbor\nTx: x is meadow\nUx: x is cedar\nVx: x is laurel\nWx: x is pearl\nXx: x is ivo",
+        "gold_answer": "elm",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is granite.\n2. c0 is south.\n3. If c0 is east and c0 is granite, then c1 is maple.\n4. If c1 is maple, then c1 is south.\n5. If c0 is west and c0 is granite, then c1 is harbor.\n6. If c1 is harbor, then c1 is west.\n7. If c0 is south and c0 is granite, then c1 is birch.\n8. If c1 is birch, then c1 is east.\n9. If c0 is north and c0 is granite, then c1 is lime.\n10. If c1 is lime, then c1 is north.\n11. If c1 is north and c1 is lime, then c2 is maple.\n12. If c2 is maple, then c2 is east.\n",
+        "syntactic": 0.0,
+        "valid": 0.0
+      },
+      "45": {
+        "citation_free_valid": 0.0,
+        "correct": 0.0,
+        "format_ok": 0.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\nc19 = c19\nc20 = c20\nc21 = c21\nc22 = c22\nc23 = c23\nc24 = c24\nc25 = c25\nc26 = c26\nc27 = c27\nc28 = c28\nc29 = c29\nc30 = c30\nc31 = c31\nc32 = c32\nc33 = c33\nc34 = c34\nc35 = c35\nc36 = c36\nc37 = c37\nc38 = c38\nc39 = c39\nc40 = c40\nc41 = c41\nc42 = c42\nc43 = c43\nc44 = c44\nc45 = c45\n</constants>\n<predicates>\nAx: x is teal\nBx: x is maple\nCx: x is coral\nDx: x is cobalt\nEx: x is slate\nFx: x is amber\nGx: x is harbor\nHx: x is granite\nIx: x is willow\nJx: x is elm\nKx: x is ivory\nLx: x is poppy\nMx: x is lime\nNx: x is birch\nOx: x is pearl\nPx: x is violet\nQx: x is meadow\nRx: x is cedar\nSx: x is hazel\nTx: x is orchid\nUx: x is ",
+        "gold_answer": "meadow",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is granite.\n2. c0 is south.\n3. If c0 is west and c0 is granite, then c1 is harbor.\n4. If c1 is harbor, then c1 is west.\n5. If c0 is north and c0 is granite, then c1 is lime.\n6. If c1 is lime, then c1 is north.\n7. If c0 is east and c0 is granite, then c1 is maple.\n8. If c1 is maple, then c1 is south.\n9. If c0 is south and c0 is granite, then c1 is birch.\n10. If c1 is birch, then c1 is east.\n11. If c1 is west and c1 is harbor, then c2 is juniper.\n12. If c2 is juniper, then c2 is n",
+        "syntactic": 0.0,
+        "valid": 0.0
+      },
+      "5": {
+        "citation_free_valid": 1.0,
+        "correct": 1.0,
+        "format_ok": 1.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\n</constants>\n<predicates>\nAx: x is teal\nBx: x is hazel\nCx: x is violet\nDx: x is cedar\nEx: x is willow\nFx: x is ivory\nGx: x is north\nHx: x is south\nIx: x is east\nJx: x is west\n</predicates>\n<premises>\nD(c0)\nH(c0)\nG(c0) & D(c0) -> C(c1)\nC(c1) -> G(c1)\nH(c0) & D(c0) -> F(c1)\nF(c1) -> H(c1)\nJ(c0) & D(c0) -> A(c1)\nA(c1) -> J(c1)\nI(c0) & D(c0) -> E(c1)\nE(c1) -> I(c1)\nH(c1) & F(c1) -> B(c2)\nB(c2) -> G(c2)\nG(c1) & C(c1) -> F(c2)\nF(c2) -> H(c2)\nI(c1) & E(c1) -> C(c2)\nC(c2) -> J(c2)\nJ(c1) & A(c1) -> E(c2)\nE(c2) -> I(c2)\nI(c2) & E(c2) -> E(c3)\nE(c3) -> J(c3)\nG(c2) & B(c2) -> A(c3)\nA(c3) -> G(c3)\nH(c2) & F(c2) -> B(c3)\nB(c3) -> H(c3)\nJ(c2) & C(c2) -> C(c3)\nC(c3) -> I(c3)\nH(c3) & B(c3) -> E(c4)\nE(c4) -> G(c4)\nJ(c3) & E(c3) -> B(c4)\nB(",
+        "gold_answer": "teal",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is cedar.\n2. c0 is south.\n3. If c0 is north and c0 is cedar, then c1 is violet.\n4. If c1 is violet, then c1 is north.\n5. If c0 is south and c0 is cedar, then c1 is ivory.\n6. If c1 is ivory, then c1 is south.\n7. If c0 is west and c0 is cedar, then c1 is teal.\n8. If c1 is teal, then c1 is west.\n9. If c0 is east and c0 is cedar, then c1 is willow.\n10. If c1 is willow, then c1 is east.\n11. If c1 is south and c1 is ivory, then c2 is hazel.\n12. If c2 is hazel, then c2 is north.\n13. If",
+        "syntactic": 1.0,
+        "valid": 0.0
+      },
+      "50": {
+        "citation_free_valid": 0.0,
+        "correct": 0.0,
+        "format_ok": 0.0,
+        "generation_head": "<formal>\n<constants>\nc0 = c0\nc1 = c1\nc2 = c2\nc3 = c3\nc4 = c4\nc5 = c5\nc6 = c6\nc7 = c7\nc8 = c8\nc9 = c9\nc10 = c10\nc11 = c11\nc12 = c12\nc13 = c13\nc14 = c14\nc15 = c15\nc16 = c16\nc17 = c17\nc18 = c18\nc19 = c19\nc20 = c20\nc21 = c21\nc22 = c22\nc23 = c23\nc24 = c24\nc25 = c25\nc26 = c26\nc27 = c27\nc28 = c28\nc29 = c29\nc30 = c30\nc31 = c31\nc32 = c32\nc33 = c33\nc34 = c34\nc35 = c35\nc36 = c36\nc37 = c37\nc38 = c38\nc39 = c39\nc40 = c40\nc41 = c41\nc42 = c42\nc43 = c43\nc44 = c44\nc45 = c45\nc46 = c46\nc47 = c47\nc48 = c48\nc49 = c49\nc50 = c50\n</constants>\n<predicates>\nAx: x is meadow\nBx: x is violet\nCx: x is maple\nDx: x is willow\nEx: x is pearl\nFx: x is birch\nGx: x is olive\nHx: x is hazel\nIx: x is lime\nJx: x is juniper\nKx: x is cedar\nLx: x is cobalt\nMx: x is coral\nNx: x is laurel\nOx: x is poppy\nPx: x is granite\nQx: x is slate\n",
+        "gold_answer": "violet",
+        "nl_logic_citation_free_valid": 0.0,
+        "nl_logic_parse": 0.0,
+        "prompt_head": "<question>\n1. c0 is granite.\n2. c0 is south.\n3. If c0 is east and c0 is granite, then c1 is maple.\n4. If c1 is maple, then c1 is south.\n5. If c0 is south and c0 is granite, then c1 is birch.\n6. If c1 is birch, then c1 is east.\n7. If c0 is north and c0 is granite, then c1 is lime.\n8. If c1 is lime, then c1 is north.\n9. If c0 is west and c0 is granite, then c1 is harbor.\n10. If c1 is harbor, then c1 is west.\n11. If c1 is east and c1 is birch, then c2 is cedar.\n12. If c2 is cedar, then c2 is south.",
+        "syntactic": 0.0,
+        "valid": 0.0
+      }
+    },
+    "sample_count": 896,
+    "sample_index_counts": {
+      "1": {
+        "0": 32,
+        "1": 32
+      },
+      "10": {
+        "0": 32,
+        "1": 32
+      },
+      "12": {
+        "0": 32,
+        "1": 32
+      },
+      "15": {
+        "0": 32,
+        "1": 32
+      },
+      "18": {
+        "0": 32,
+        "1": 32
+      },
+      "2": {
+        "0": 32,
+        "1": 32
+      },
+      "20": {
+        "0": 32,
+        "1": 32
+      },
+      "25": {
+        "0": 32,
+        "1": 32
+      },
+      "30": {
+        "0": 32,
+        "1": 32
+      },
+      "35": {
+        "0": 32,
+        "1": 32
+      },
+      "40": {
+        "0": 32,
+        "1": 32
+      },
+      "45": {
+        "0": 32,
+        "1": 32
+      },
+      "5": {
+        "0": 32,
+        "1": 32
+      },
+      "50": {
+        "0": 32,
+        "1": 32
+      }
+    },
+    "source": "synthetic_sampled",
+    "step_counts": {
+      "1": 64,
+      "10": 64,
+      "12": 64,
+      "15": 64,
+      "18": 64,
+      "2": 64,
+      "20": 64,
+      "25": 64,
+      "30": 64,
+      "35": 64,
+      "40": 64,
+      "45": 64,
+      "5": 64,
+      "50": 64
+    },
+    "unique_prompt_counts": {
+      "1": 32,
+      "10": 32,
+      "12": 32,
+      "15": 32,
+      "18": 32,
+      "2": 32,
+      "20": 32,
+      "25": 32,
+      "30": 32,
+      "35": 32,
+      "40": 32,
+      "45": 32,
+      "5": 32,
+      "50": 32
+    }
+  },
+  "samples_path": "/home/vault/c107fa/c107fa12/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/sft_branchproof_unique_v2_logic_train1to20_10k_seed3409_samples.jsonl",
+  "total_sample_count": 1024
+}

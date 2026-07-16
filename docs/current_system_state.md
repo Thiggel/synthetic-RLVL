@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-16 13:13 CEST.
+Last updated: 2026-07-16 14:29 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-16 14:25 two Dolmino LRs complete
+
+- Matched 4-GPU Dolmino rows `3859711_0/1` (`6e-6/3e-6`) completed cleanly
+  in `02:27:56/02:27:31`, each covering 256 steps and 134,217,728 identical
+  tokens. Over all 224 matched post-warmup steps, `6e-6` has lower loss on
+  210 steps; mean paired `3e-6 - 6e-6` loss is `+0.0109`. Shared large-loss
+  batches occur at the same steps, confirming source-batch variation rather
+  than LR instability. The effect is small and provisional until `1e-5` row
+  `3859711_2` finishes; that row started at 14:21 CEST and is running on four
+  A100s. The redundant sequential 8-GPU fallback `3859297` was canceled
+  immediately after the independent row started.
+- Declaration-fixed baseline row/audit 11 completed and passed, bringing the
+  accepted row-scoped gate to `12/30`. This finishes all three logic seeds for
+  train maxima `5/10/15/20`; train-25 logic and NL rows remain active or
+  pending. No matched modality claim is available yet. Targeted local-snapshot
+  recoveries for transient-Hub failures rows 13/14 remain account-GRES pending,
+  and checkpointed batch resumes `3863546_[3-5]` are running normally.
 
 ### 2026-07-16 13:13 targeted recoveries and first completed LR gate
 

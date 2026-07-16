@@ -4,6 +4,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-16
 
+- 14:29 CEST Dolmino `1e-5` row `3859711_2` had started at 14:21 on four
+  A100s. Canceled redundant sequential 8-GPU fallback `3859297`; LR selection
+  remains gated on row 2 completing cleanly.
+
+- 14:25 CEST Dolmino `3e-6` row `3859711_1` completed 256 steps cleanly in
+  `02:27:31`. Together with completed `6e-6`, all 224 paired post-warmup
+  batches show a small consistent advantage for `6e-6`: lower loss on 210
+  batches and mean paired delta `0.0109`. Shared loss spikes align by step;
+  defer selection until `1e-5`, estimated 17:00 CEST. Baseline audit row 11
+  also passed, bringing accepted declaration-fixed rows to `12/30` and
+  completing all logic seeds through train maximum 20. Batch checkpoint
+  resumes `3863546_[3-5]` are healthy; row-13/14 eval recoveries remain queued.
+
 - 13:13 CEST baseline eval rows 13/14 failed before evaluation on repeated Hub
   `504`/timeouts during OLMo-3 merge. Added a local base-model override,
   submitted exact A100-80 recovery `3863525_[13-14%2]` and CPU audits
