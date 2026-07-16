@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-16 07:20 CEST.
+Last updated: 2026-07-16 09:32 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,22 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-16 09:32 first Dolmino LR row running
+
+- Matched 4-GPU LR row `3859711_0` (`6e-6`) started at 09:25 CEST on A100-80GB
+  node `a0832`. It passed model/data initialization and reached step 8/256 at
+  about 15.4K tokens/s, finite loss near `0.52`, finite gradient norm, and peak
+  allocation about 62.4GB/GPU. Its ETA is approximately 11:53 CEST.
+  Rows `3859711_1/2` (`3e-6/1e-5`) remain account-GRES pending with 10:48
+  estimates. Sequential 8-GPU fallback `3859297` has slipped to a 2026-07-17
+  02:30 estimate; keep it only until the remaining 4-GPU rows actually start.
+- Declaration-fixed baseline eval/audit row 7 also completed and passed its
+  exact artifact gates, bringing accepted row-scoped audits to `8/30`. This is
+  logic train-1-to-15 seed 3408; representative depths `1/15/18/25/50` show
+  correct citation-free-valid shallow/train-edge proofs and properly rejected
+  duplicate-declaration/format collapse at long depths. It remains partial
+  logic-only evidence, not a report-level modality comparison.
 
 ### 2026-07-16 07:20 seven accepted declaration-fixed rows
 

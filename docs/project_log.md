@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-16
 
+- 09:32 CEST the 4-GPU Dolmino `6e-6` LR row `3859711_0` started on A100-80GB
+  node `a0832` and reached step 8/256 at 15.4K tokens/s, loss about `0.52`,
+  finite gradients, and 62.4GB peak allocation. Rows 1/2 estimate 10:48 CEST;
+  the 8-GPU fallback now estimates 2026-07-17 02:30 and remains only until the
+  remaining lower-resource rows start. Declaration-fixed baseline row/audit 7
+  completed and passed, bringing accepted row-scoped audits to `8/30`; bounded
+  depths `1/15/18/25/50` show intended shallow validity and rejected deep
+  declaration/format collapse, without releasing a modality claim.
+
 - 07:20 CEST accepted declaration-fixed baseline rows `3857767_0..6` at row
   scope after audits `3857768_0..6` passed the complete artifact and
   strengthened declaration/validity gates. This completes three logic seeds
