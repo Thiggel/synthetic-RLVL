@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-16 19:35 CEST.
+Last updated: 2026-07-17 01:08 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,32 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-17 01:08 baseline node-failure recovery staged under the pause
+
+- Declaration-fixed baseline eval/audit rows 19/20 completed and passed,
+  advancing the accepted row-scoped gate to `18/30`. Raw NL review for the
+  two train-1-to-10 seeds covers depths `1/10/12/25/50`: train-band prompts,
+  answer tags, and translated validity are clean, while depth-50 failures
+  truncate or lose the answer as expected. Formal-parser errors on NL prose
+  remain diagnostic-only and are not translated-validity failures.
+- Eval row `3857767_18` suffered `NODE_FAIL` on `a0632` after completing
+  sampled chunk `107/112`; it wrote no final metric/sample artifact. Exact
+  A100-80 recovery `3865321_[18%1]` uses the audited local base snapshot and
+  is user-held with the rest of the July-20 capacity pause. CPU audit
+  `3865322_18` follows it. Impossible original audit task `3857768_18` was
+  canceled, and aggregate `3857769` now requires `3863527` and `3865322` in
+  addition to terminal original audits. No row or scientific setting was
+  bypassed.
+- The node failure left a `28G` transient merged-model root. After confirming
+  job `3863485` was terminal with no final output or live consumer, only that
+  root was removed; repo-owned Vault use fell from `521G` to `494G`.
+  Successor watcher `3865320` remains CPU-only and scheduled for 07:03 CEST.
+  All pending BranchProof GPU work remains held until the documented
+  post-16:30 CEST July-20 capacity decision.
+- The scoped handoff commit is local. `git push origin main` produced no remote
+  output and timed out after 90 seconds; local `main` is four commits
+  ahead of `origin/main`. The report repository is unchanged and synchronized.
 
 ### 2026-07-16 19:35 NL audit recovery and completed Dolmino LR gate
 

@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-16 16:40 CEST.
+Last updated: 2026-07-17 01:08 CEST.
 
 ## Scope
 
@@ -53,6 +53,13 @@ from backfilling before the urgent project could start. This includes
 rows `3850118_0/1/2` raced into the released A100 slots and were canceled after
 five minutes. Established rows already running in other BranchProof families
 continue; only pending work is paused.
+
+Baseline row 18 subsequently ended `NODE_FAIL` after sampled chunk `107/112`
+without a final artifact. Held exact replacement `3865321_[18%1]` and CPU
+audit `3865322_18` join the existing held row-13/14 recovery chain. Aggregate
+`3857769` requires both replacement audits. Release `3865321` with the other
+baseline eval work only after the July-20 capacity check; do not rerun rows
+19/20, which completed and passed their audits.
 
 Restart after 16:30 CEST on July 20, if capacity is available:
 

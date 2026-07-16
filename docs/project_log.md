@@ -2,6 +2,29 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-17
+
+- 01:08 CEST baseline eval/audit rows 19/20 completed and passed, advancing
+  the declaration-fixed row gate to `18/30`. Raw NL train-1-to-10 review at
+  depths `1/10/12/25/50` found clean train-band answer extraction and
+  translated validity plus expected depth-50 truncation/answer collapse; no
+  matched-modality claim was released.
+- 01:08 CEST eval row `3857767_18` ended `NODE_FAIL` on `a0632` after sampled
+  chunk `107/112` without a final metric/sample bundle. Submitted exact held
+  A100-80 local-snapshot recovery `3865321_[18%1]` and dependent CPU audit
+  `3865322_18`, canceled only impossible original audit task `3857768_18`,
+  and extended aggregate `3857769` to require the new audit. The July-20
+  capacity pause remains intact.
+- 01:08 CEST removed the failed job's orphaned `28G` transient merge root
+  after terminal/no-consumer checks, reducing repo-owned Vault use from
+  `521G` to `494G`. CPU-only successor `3865320` remains scheduled for 07:03
+  CEST because the baseline, report matrix, Dolmino confirmations, and report
+  replacement remain incomplete.
+- 01:13 CEST committed the recovery, two accepted audit artifacts, and
+  handoff updates locally. An SSH push produced no remote output and
+  timed out after 90 seconds; local `main` remains four commits ahead of
+  `origin/main`. The report repository was unchanged.
+
 ## 2026-07-16
 
 - 19:35 CEST corrected an NL-specific baseline audit bug: natural-language

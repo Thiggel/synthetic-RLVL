@@ -1,10 +1,29 @@
 # Running Experiments
 
-Last updated: 2026-07-16 19:35 CEST.
+Last updated: 2026-07-17 01:08 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 19:35 CEST
+## Live Delta At 01:08 CEST
+
+- Baseline eval/audit rows 19/20 completed and passed, bringing the accepted
+  declaration-fixed gate to `18/30`. Raw NL train-1-to-10 review at depths
+  `1/10/12/25/50` found clean train-band extraction/translation and ordinary
+  depth-50 truncation/answer failures; no family claim is released.
+- Baseline eval row `3857767_18` ended `NODE_FAIL` on `a0632` after sampled
+  chunk `107/112` and produced no final artifact. Exact local-snapshot
+  recovery `3865321_[18%1]` is submitted A100-80-only and user-held under the
+  July-20 pause; CPU audit `3865322_18` follows it. Original impossible audit
+  task `3857768_18` was canceled, and aggregate `3857769` now requires both
+  replacement audit families `3863527` and `3865322` after the original audit
+  array terminates.
+- Removed only the orphaned `28G` merge root from failed internal job
+  `3863485`; current repo-owned Vault use is about `494G`. Conditioned-50k
+  rows 10/11/12 remain running, while all pending BranchProof work and
+  recoveries 13/14/18 remain held. CPU-only successor `3865320` is scheduled
+  for 07:03 CEST.
+
+## Prior Live Delta At 19:35 CEST
 
 - Baseline NL eval rows 15--17 completed, while original audits
   `3857768_15/16/17` failed only because the audit incorrectly demanded a

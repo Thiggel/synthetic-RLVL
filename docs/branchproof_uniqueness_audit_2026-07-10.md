@@ -490,3 +490,20 @@ malformed structure, and truncation near the 7,168-token cap. Formal proof
 errors on NL prose remain diagnostic-only and do not contradict clean
 translated validity. Aggregate `3857769` requires `3864893` as well as the
 row-13/14 replacement audits. No matched-modality metric is accepted yet.
+
+## 2026-07-17 Row-18 Node-Failure Recovery
+
+Declaration-fixed NL train-1-to-10 row `3857767_18` reached sampled chunk
+`107/112` on A100-80GB node `a0632`, then ended `NODE_FAIL`. It wrote no final
+metrics or sample JSONL, so none of its partial generations can satisfy the
+row gate. Exact recovery `3865321_[18%1]` uses the audited local OLMo-3 base
+snapshot and preserves every production setting; it is user-held with the
+July-20 capacity pause. CPU audit `3865322_18` follows the recovery.
+
+Original audit task `3857768_18` was canceled from permanent
+`DependencyNeverSatisfied` state. Aggregate `3857769` now waits for terminal
+original audits and successful replacement audits `3863527` and `3865322`.
+Rows 19/20 completed and passed their original audits, bringing accepted
+row-scoped coverage to `18/30`. Their raw NL generations are clean in the
+train band and fail through ordinary truncation or wrong/missing answers at
+depth 50; no matched-grid result is accepted yet.
