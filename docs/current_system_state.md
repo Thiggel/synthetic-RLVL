@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-16 16:37 CEST.
+Last updated: 2026-07-16 16:40 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -43,6 +43,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `docs/branchproof_report_rerun_matrix_2026-07-13.md`.
 - Baseline logic train-25 seed 3407 also passed its 1,024-sample/2,665-metric
   audit, advancing the declaration-fixed baseline gate to `13/30`.
+- To prevent released slots from immediately backfilling with another
+  BranchProof row, all remaining pending BranchProof training/eval arrays were
+  user-held. Hybrid eval rows `3850118_0/1/2`, which started in the scheduler
+  race, were canceled after five minutes. The three A100 slots immediately
+  started non-BranchProof `3863071_0/1/2`, confirming the capacity transfer.
+  Established BranchProof rows that were already running were not stopped.
 
 ### 2026-07-16 14:25 two Dolmino LRs complete
 

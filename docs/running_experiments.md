@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-07-16 16:37 CEST.
+Last updated: 2026-07-16 16:40 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -20,6 +20,11 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   is around 16:50 CEST, releasing four additional A100s.
 - Baseline logic train-25 seed 3407 passed its strict audit, bringing accepted
   baseline rows to `13/30`.
+- All other pending BranchProof arrays are also user-held to prevent
+  backfilling. Hybrid eval rows `3850118_0/1/2` briefly backfilled the released
+  A100 slots and were canceled after five minutes; non-BranchProof
+  `3863071_0/1/2` then started in those slots. Already-running BranchProof
+  rows continue to completion.
 
 ## Prior Live Delta At 14:25 CEST
 

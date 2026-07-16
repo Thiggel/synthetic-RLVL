@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-16
 
+- 16:40 CEST held all remaining pending BranchProof arrays to prevent
+  scheduler backfill. Hybrid eval `3850118_0/1/2` had raced into the released
+  A100 slots and was canceled after five minutes; non-BranchProof
+  `3863071_0/1/2` then started immediately. Established running BranchProof
+  rows were left untouched.
+
 - 16:37 CEST paused surface, shortcut, and batch BranchProof families for four
   days. Held pending training arrays `3850105/3850114/3850213`; canceled
   surface 15--17, shortcut 19--21, batch 6--8, and checkpointed bsz4 recovery

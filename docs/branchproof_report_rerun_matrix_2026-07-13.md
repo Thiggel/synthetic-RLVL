@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-16 16:37 CEST.
+Last updated: 2026-07-16 16:40 CEST.
 
 ## Scope
 
@@ -45,11 +45,22 @@ paused to make room for an urgent project. Remaining tasks in training arrays
 eval arrays `3850116`, `3850122`, and `3850214` were canceled rather than
 left with unsatisfiable dependencies.
 
+All other pending BranchProof arrays were user-held to prevent released GPUs
+from backfilling before the urgent project could start. This includes
+`3850115`, `3854837`, `3857767`, `3850119`, `3850118`, `3863525`,
+`3850123`, `3850121`, `3850120`, `3850113`, `3850109`, and
+`3850110..3850112`, in addition to the three family arrays above. Hybrid eval
+rows `3850118_0/1/2` raced into the released A100 slots and were canceled after
+five minutes. Established rows already running in other BranchProof families
+continue; only pending work is paused.
+
 Restart after 16:30 CEST on July 20, if capacity is available:
 
 1. Confirm no replacement project still needs the GPUs and re-audit final and
    checkpoint roots before submitting anything.
 2. Release the held pending tasks in `3850105`, `3850114`, and `3850213`.
+   Release the additional pending BranchProof arrays listed above only after
+   checking the urgent project's remaining demand.
 3. Resubmit surface rows 15--17 and shortcut rows 19--21 from scratch; neither
    family had an intermediate checkpoint.
 4. Resubmit batch rows 3--5 with automatic resume from their complete
