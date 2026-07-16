@@ -21,6 +21,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   `02:27:56` at 15.4K tokens/s with finite diagnostics and terminal manifest;
   `3e-6` row 1 is running. Successor `3863505` is preserved. Vault is 827G
   and 187k files.
+- 13:17 CEST committed the recovery, audit, code, and handoff changes as
+  `49d168f`. A bounded 90-second SSH push produced no output and timed out;
+  after this publication-state record, local `main` is two commits ahead of
+  `origin/main`. The report repo was
+  unchanged because the matched BranchProof gate is incomplete.
 
 - 09:32 CEST the 4-GPU Dolmino `6e-6` LR row `3859711_0` started on A100-80GB
   node `a0832` and reached step 8/256 at 15.4K tokens/s, loss about `0.52`,
