@@ -56,6 +56,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3864892` is preserved because the corrected baseline, report matrix,
   Dolmino confirmations, and report replacement remain incomplete. Current
   repo-owned Vault use is about `627G`; no quota intervention is needed.
+- Canceled only impossible original audit tasks `3857768_13/14`, which were
+  permanently pending with `DependencyNeverSatisfied` behind failed original
+  eval rows. Their full eval/audit gates remain represented by held exact
+  recovery `3863525 -> 3863527`; this lets aggregate `3857769` eventually
+  satisfy its original-array `afterany` gate without bypassing either row.
 
 ### 2026-07-16 16:37 four-day BranchProof capacity pause
 

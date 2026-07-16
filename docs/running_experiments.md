@@ -27,6 +27,10 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   All existing holds remain intentional. Watcher successor `3864892` remains
   BeginTime pending and must not be canceled. Repo-owned Vault use is about
   `627G`; no cleanup trigger is active.
+- Original audit tasks `3857768_13/14` were canceled from permanent
+  `DependencyNeverSatisfied` state. Exact held replacements
+  `3863525_[13-14] -> 3863527_[13-14]` preserve their required eval/audit
+  gates; remaining original audit rows 18--29 still follow their evals.
 
 ## Prior Live Delta At 16:37 CEST
 

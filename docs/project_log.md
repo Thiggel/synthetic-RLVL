@@ -25,6 +25,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   `b911964`. A bounded 90-second SSH push produced no output and timed out;
   local `main` remains one commit ahead of `origin/main`. The report repo was
   unchanged because corrected BranchProof evidence is only `16/30`.
+- 19:43 CEST canceled permanently blocked original audit tasks
+  `3857768_13/14` after confirming they were `DependencyNeverSatisfied` behind
+  the failed original eval rows. Their exact held replacements remain
+  `3863525 -> 3863527`; aggregate `3857769` still requires the original array
+  to terminate plus successful replacements, so no audit gate was bypassed.
 
 - 16:40 CEST held all remaining pending BranchProof arrays to prevent
   scheduler backfill. Hybrid eval `3850118_0/1/2` had raced into the released
