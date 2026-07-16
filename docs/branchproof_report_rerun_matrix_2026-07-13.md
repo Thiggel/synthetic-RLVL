@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-16 13:13 CEST.
+Last updated: 2026-07-16 16:37 CEST.
 
 ## Scope
 
@@ -32,9 +32,37 @@ Batch-size rows `3850114_3/4/5` reached approximately
 launches predated the 1,000-step checkpoint change and retained no resumable
 state. Exact recovery `3859299_[3-5%3]` reached roughly step 3.4k and timed
 out after writing complete optimizer/scheduler/RNG `checkpoint-3000` states.
-Second exact resume `3863546_[3-5%3]` is running under the same checkpoint
-policy. Eval `3850122` waits for terminal arrays `3850114` and `3859299` plus
-successful `3863546`; no successful row is rerun.
+Second exact resume `3863546_[3-5%3]` ran from checkpoint 3000 until the
+capacity pause described below. No successful row is rerun.
+
+## Four-day capacity pause and restart plan
+
+At 16:30 CEST on July 16, the surface, shortcut, and batch families were
+paused to make room for an urgent project. Remaining tasks in training arrays
+`3850105`, `3850114`, and `3850213` are user-held. Active surface rows
+15--17, shortcut rows 19--21, batch-size-8 rows 6--8, and bsz4 recovery rows
+`3863546_[3-5]` were canceled. This released three A100s and nine A40s. Stale
+eval arrays `3850116`, `3850122`, and `3850214` were canceled rather than
+left with unsatisfiable dependencies.
+
+Restart after 16:30 CEST on July 20, if capacity is available:
+
+1. Confirm no replacement project still needs the GPUs and re-audit final and
+   checkpoint roots before submitting anything.
+2. Release the held pending tasks in `3850105`, `3850114`, and `3850213`.
+3. Resubmit surface rows 15--17 and shortcut rows 19--21 from scratch; neither
+   family had an intermediate checkpoint.
+4. Resubmit batch rows 3--5 with automatic resume from their complete
+   checkpoint-3000 states. Restart rows 6--8 from scratch because their old
+   launches predated resumable checkpointing and wrote no state.
+5. For every batch row, save every 250 steps and retain two checkpoints. The
+   10k-update protocol is unchanged; rows that exceed 24 hours are resumed in
+   another allocation, with at most 249 optimizer steps replayed.
+6. Recreate eval arrays for surface, batch, and shortcut with dependencies on
+   all original and replacement training jobs. Existing complete output files
+   remain skip-gated, so only missing rows evaluate.
+7. Update all three live handoff documents with new job IDs and accept no
+   result until structural audits and representative generation review pass.
 
 At 08:12 CEST on July 14, shortcut tasks `3850213_3/4` were found canceled
 before Python startup. Exact recovery `3854948_[3-4%2]` started on A40s, and

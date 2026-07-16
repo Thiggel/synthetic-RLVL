@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-16 14:29 CEST.
+Last updated: 2026-07-16 16:37 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,6 +24,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
+### 2026-07-16 16:37 four-day BranchProof capacity pause
+
+- Held remaining surface `3850105`, batch `3850114`, and shortcut `3850213`
+  training rows, then canceled active surface rows 15--17, batch rows 6--8,
+  shortcut rows 19--21, and checkpointed batch recovery `3863546_[3-5]`.
+  This released `3` A100s and `9` A40s immediately. Their stale dependent
+  eval arrays `3850116/3850122/3850214` were canceled and must be recreated
+  against replacement training jobs after the pause.
+- Surface and shortcut rows had no intermediate checkpoint and restart from
+  scratch. Batch-size-8 rows 6--8 also restart: their pre-policy launches
+  reached roughly 4k/10k without writing checkpoints and could not finish
+  within 24 hours. Batch-size-4 rows 3--5 retain complete checkpoint-3000
+  states. Future batch launches save every 250 steps and retain two states,
+  so 10k-update rows can resume exactly across 24-hour allocations.
+- Resume target is 2026-07-20 after 16:30 CEST, subject to the other project's
+  capacity needs. Exact release/resubmission order is recorded in
+  `docs/branchproof_report_rerun_matrix_2026-07-13.md`.
+- Baseline logic train-25 seed 3407 also passed its 1,024-sample/2,665-metric
+  audit, advancing the declaration-fixed baseline gate to `13/30`.
+
 ### 2026-07-16 14:25 two Dolmino LRs complete
 
 - Matched 4-GPU Dolmino rows `3859711_0/1` (`6e-6/3e-6`) completed cleanly
@@ -39,8 +59,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   accepted row-scoped gate to `12/30`. This finishes all three logic seeds for
   train maxima `5/10/15/20`; train-25 logic and NL rows remain active or
   pending. No matched modality claim is available yet. Targeted local-snapshot
-  recoveries for transient-Hub failures rows 13/14 remain account-GRES pending,
-  and checkpointed batch resumes `3863546_[3-5]` are running normally.
+  recoveries for transient-Hub failures rows 13/14 remain account-GRES pending.
 
 ### 2026-07-16 13:13 targeted recoveries and first completed LR gate
 

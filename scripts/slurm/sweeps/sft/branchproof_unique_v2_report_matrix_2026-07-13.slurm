@@ -46,9 +46,10 @@ if [[ "${MATRIX_GROUP}" == "conditioned50k" ]]; then
   SAVE_STEPS_VALUE="${SAVE_STEPS:-5000}"
   SAVE_TOTAL_LIMIT_VALUE="${SAVE_TOTAL_LIMIT:-3}"
 elif [[ "${MATRIX_GROUP}" == "batch" ]]; then
-  # The batch-size-4 rows run slightly longer than the a100 partition's
-  # 24-hour ceiling, so retain a recent resumable checkpoint.
-  SAVE_STEPS_VALUE="${SAVE_STEPS:-1000}"
+  # Larger effective batches require multiple 24-hour allocations. Bound
+  # replay after timeout and retain a previous checkpoint if a write is cut.
+  SAVE_STEPS_VALUE="${SAVE_STEPS:-250}"
+  SAVE_TOTAL_LIMIT_VALUE="${SAVE_TOTAL_LIMIT:-2}"
 fi
 
 TARGET_CHECKPOINT="${OUTPUT_DIR}/checkpoint-${TARGET_STEP}/trainer_state.json"

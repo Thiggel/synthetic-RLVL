@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-16
 
+- 16:37 CEST paused surface, shortcut, and batch BranchProof families for four
+  days. Held pending training arrays `3850105/3850114/3850213`; canceled
+  surface 15--17, shortcut 19--21, batch 6--8, and checkpointed bsz4 recovery
+  `3863546_[3-5]`, releasing three A100s and nine A40s. Canceled stale eval
+  arrays `3850116/3850122/3850214`. Batch relaunches now save every 250 steps
+  and retain two checkpoints; exact July-20 restart order is in the corrected
+  report-rerun matrix doc. Baseline logic train-25 seed 3407 also passed its
+  1,024-sample/2,665-metric audit, advancing that gate to `13/30`.
+
 - 14:29 CEST Dolmino `1e-5` row `3859711_2` had started at 14:21 on four
   A100s. Canceled redundant sequential 8-GPU fallback `3859297`; LR selection
   remains gated on row 2 completing cleanly.

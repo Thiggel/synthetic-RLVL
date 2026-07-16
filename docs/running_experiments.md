@@ -1,10 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-07-16 14:29 CEST.
+Last updated: 2026-07-16 16:37 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 14:25 CEST
+## Live Delta At 16:37 CEST
+
+- Four-day capacity pause: held pending surface `3850105`, batch `3850114`,
+  and shortcut `3850213` rows. Canceled active surface 15--17, batch 6--8,
+  shortcut 19--21, and batch recovery `3863546_[3-5]`, releasing `3` A100s
+  and `9` A40s. Canceled stale dependent eval arrays
+  `3850116/3850122/3850214`; replacements must depend on the resumed training
+  jobs. Planned restart is after 16:30 CEST on July 20.
+- Batch rows now checkpoint every 250 steps and retain two checkpoints.
+  Bsz4 rows 3--5 resume from checkpoint 3000; bsz8 rows 6--8 restart because
+  their old launches wrote no checkpoint. Surface/shortcut canceled rows also
+  restart from scratch.
+- Dolmino `1e-5` is at step 234/256 and remains healthy; expected completion
+  is around 16:50 CEST, releasing four additional A100s.
+- Baseline logic train-25 seed 3407 passed its strict audit, bringing accepted
+  baseline rows to `13/30`.
+
+## Prior Live Delta At 14:25 CEST
 
 - Dolmino LR rows `3859711_0/1` (`6e-6/3e-6`) completed cleanly in about
   2h28m each. Across 224 identical post-warmup batches, `6e-6` has lower loss
@@ -14,7 +31,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - Baseline eval/audit rows `0..11` are accepted (`12/30`), completing all
   logic seeds for train maxima `5/10/15/20`. Logic train-25 row 12 runs;
   transient-Hub rows 13/14 await local-snapshot recovery, and NL rows 15..19
-  are running. Batch checkpoint resumes `3863546_[3-5]` are healthy.
+  are running. Batch checkpoint resumes `3863546_[3-5]` were healthy before
+  the capacity pause.
 
 ## Prior Live Delta At 13:13 CEST
 
