@@ -4,6 +4,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-16
 
+- 19:35 CEST corrected an NL-specific baseline audit bug: natural-language
+  rows were incorrectly required to have positive formal `syntactic` scores.
+  The gate now uses translated `nl_logic_parse`, with regression coverage
+  (`16 passed`). CPU replacement `3864893_[15-17%3]` completed `3/3`, accepted
+  all three rows, and advanced the declaration-fixed baseline to `16/30`.
+  Aggregate `3857769` now also requires this replacement audit. Three-seed NL
+  raw review at depths `1/5/10/18/25/50` found clean train-band translations
+  and expected malformed/truncated long-depth failures; no modality claim was
+  released.
+- 19:35 CEST Dolmino `1e-5` row `3859711_2` completed 256 steps in
+  `02:27:54`. Its matched post-warmup mean loss `0.95675` is below `6e-6`
+  (`0.96040`) and `3e-6` (`0.97130`), so `1e-5` is nominated for formal/NL p5
+  confirmation after the July-20 capacity pause. The configured benchmark
+  CSVs are absent despite terminal manifests naming them; the complete
+  stepwise Slurm logs were retained. Successor watcher `3864892` remains
+  queued because the plan is incomplete.
+
 - 16:40 CEST held all remaining pending BranchProof arrays to prevent
   scheduler backfill. Hybrid eval `3850118_0/1/2` had raced into the released
   A100 slots and was canceled after five minutes; non-BranchProof

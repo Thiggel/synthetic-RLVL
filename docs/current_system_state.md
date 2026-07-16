@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-16 16:40 CEST.
+Last updated: 2026-07-16 19:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,39 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-16 19:35 NL audit recovery and completed Dolmino LR gate
+
+- Declaration-fixed baseline eval rows 15--17 completed successfully, but
+  original CPU audits `3857768_15/16/17` incorrectly required positive formal
+  `syntactic` scores from `nl_exact` outputs. The audit now uses translated
+  `nl_logic_parse` as the NL train-band structural signal, with a regression
+  test. CPU-only replacement `3864893_[15-17%3]` completed `3/3` and accepted
+  all artifacts, advancing the baseline row gate to `16/30`. Aggregate
+  `3857769` retains the original-array `afterany` gate and now also requires
+  successful `3863527` and `3864893` replacement audits.
+- Raw NL review spans all three seeds and depths `1/5/10/18/25/50` across
+  correct/translated-valid, incorrect, parse-invalid, malformed, and long-cap
+  cases. Train-band prompt, answer tags, and translated validity are clean.
+  Formal validity errors on natural-language proof lines are expected and are
+  not translated-validity errors. Depth-50 failures commonly truncate near
+  the 7,168-token cap or emit a wrong answer. This accepts the three row
+  artifacts only; no matched family claim is released before `30/30`.
+- Dolmino LR row `3859711_2` (`1e-5`) completed 256/256 steps and exactly
+  134,217,728 scheduled tokens in `02:27:54`, with finite loss/gradients and
+  about 15.3K tokens/s. Across the same 224 post-warmup batches, mean loss is
+  `0.95675/0.96040/0.97130` for `1e-5/6e-6/3e-6`; `1e-5` is lower than
+  `6e-6` on 125 batches (73 ties) with paired mean `-0.00365`, and lower than
+  `3e-6` on 161 batches (40 ties) with paired mean `-0.01455`. Nominate
+  `1e-5` as the shared LR for formal/NL p5 confirmation. GPU confirmation is
+  deferred until the documented capacity pause ends after 16:30 CEST on
+  July 20; the pilot logs are authoritative because Nanotron did not emit the
+  configured benchmark CSV despite the terminal manifests naming it.
+- Baseline rows 18/19/20 remain healthy at sampled chunks `102/101/78` of
+  112. The capacity pause remains in force. CPU-only successor watcher
+  `3864892` is preserved because the corrected baseline, report matrix,
+  Dolmino confirmations, and report replacement remain incomplete. Current
+  repo-owned Vault use is about `627G`; no quota intervention is needed.
 
 ### 2026-07-16 16:37 four-day BranchProof capacity pause
 

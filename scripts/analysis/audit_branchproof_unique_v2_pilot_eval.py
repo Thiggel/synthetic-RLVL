@@ -222,7 +222,12 @@ def _audit_metrics(
 
     if greedy_required and require_train_signal:
         train_steps = [step for step in steps if step <= train_max]
-        for metric_name in ("syntactic", "format", "correct"):
+        train_signal_metrics = (
+            ("nl_logic_parse", "format", "correct")
+            if is_nl
+            else ("syntactic", "format", "correct")
+        )
+        for metric_name in train_signal_metrics:
             values = [primary[str(step)].get(metric_name, 0.0) for step in train_steps]
             if not any(value > 0.0 for value in values):
                 errors.append(f"all train-band greedy {metric_name} metrics are zero")

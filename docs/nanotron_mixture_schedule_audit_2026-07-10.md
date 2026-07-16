@@ -813,3 +813,22 @@ proof problem.
   `analysis/nanotron_checkpoint_audits/`
 - Corrected corpus audit:
   `analysis/branchproof_unique_v2_corpus_audit_2026-07-10.json`
+
+## 2026-07-16 Dolmino Shared-LR Gate
+
+Matched TP4/DP1 four-A100 rows `3859711_[0-2]` completed 256 steps and exactly
+134,217,728 scheduled tokens each. All logged losses, gradient norms, and
+throughput values are finite. Over identical post-warmup steps 33--256, mean
+loss is `0.956750` at `1e-5`, `0.960402` at `6e-6`, and `0.971304` at `3e-6`.
+The `1e-5` loss is lower than `6e-6` on 125 steps with 73 ties (mean paired
+delta `1e-5 - 6e-6 = -0.003652`) and lower than `3e-6` on 161 steps with 40
+ties (mean paired delta `-0.014554`). Throughput is matched at roughly
+15.3--15.4K tokens/s. No divergence signature appears; nominate `1e-5` as the
+shared LR for the short formal/NL p5 confirmations.
+
+Artifact caveat: Nanotron did not materialize the configured `benchmark.csv`
+for any row even though each `complete.json` names that path. The complete
+per-step Slurm logs are therefore the authoritative LR-gate record and must be
+retained. Formal/NL p5 confirmation is deferred until the BranchProof capacity
+pause ends after 16:30 CEST on July 20; no broader staged run is triggered by
+training loss alone.

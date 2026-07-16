@@ -148,6 +148,28 @@ def test_can_allow_all_zero_train_metrics_for_tiny_models(tmp_path: Path):
     assert tiny_report["accepted"]
 
 
+def test_nl_train_signal_uses_translation_parse_not_formal_syntax(tmp_path: Path):
+    metrics_path, samples_path = _write_artifacts(tmp_path)
+    payload = json.loads(metrics_path.read_text())
+    payload["checkpoint"] = "/tmp/branchproof_unique_v2_nl_exact_checkpoint"
+    for step in (1, 18):
+        payload["metrics"][f"synthetic/step_{step}/syntactic"] = 0.0
+    metrics_path.write_text(json.dumps(payload))
+
+    report = AUDIT.audit_artifacts(
+        metrics_path,
+        samples_path,
+        steps=[1, 18],
+        k_values=[1, 2],
+        samples_per_step=2,
+        generations_per_prompt=2,
+        expected_retained_samples=2,
+        train_max=18,
+    )
+
+    assert report["accepted"]
+
+
 def test_rejects_missing_translated_nl_metric(tmp_path: Path):
     report = _audit(tmp_path, missing_nl_metric=True)
     assert not report["accepted"]

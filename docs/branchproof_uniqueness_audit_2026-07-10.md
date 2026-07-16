@@ -470,3 +470,23 @@ path and requires a complete sampled-chunk log, preventing failed network logs
 or older quarantined evaluations from satisfying provenance. Seven focused
 qualitative/token-budget tests pass. Original rows/audits 0..10 are accepted at row scope (`11/30`),
 but remain partial logic-only evidence.
+
+## 2026-07-16 NL Train-Signal Audit Correction
+
+Declaration-fixed NL eval rows 15--17 completed successfully, but their
+original CPU audits failed because the generic train-signal check required a
+positive formal `syntactic` score. That score is intentionally zero for
+`nl_exact`; the relevant structural signal is translated `nl_logic_parse`.
+The audit now branches on modality and retains the existing completeness,
+answer, translated-validity, cap, and retained-sample gates. A regression test
+covers zero formal syntax with positive NL translation parse.
+
+CPU-only replacement `3864893_[15-17%3]` completed `3/3` and accepted all
+three rows. Together with rows 0--12, the declaration-fixed gate is now
+`16/30`. Representative raw generations across seeds 3407--3409 and depths
+`1/5/10/18/25/50` show correct tagged answers and translated-valid traces in
+the train band; long-depth failures include missing answers, wrong labels,
+malformed structure, and truncation near the 7,168-token cap. Formal proof
+errors on NL prose remain diagnostic-only and do not contradict clean
+translated validity. Aggregate `3857769` requires `3864893` as well as the
+row-13/14 replacement audits. No matched-modality metric is accepted yet.

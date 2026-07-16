@@ -1,10 +1,34 @@
 # Running Experiments
 
-Last updated: 2026-07-16 16:40 CEST.
+Last updated: 2026-07-16 19:35 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 16:37 CEST
+## Live Delta At 19:35 CEST
+
+- Baseline NL eval rows 15--17 completed, while original audits
+  `3857768_15/16/17` failed only because the audit incorrectly demanded a
+  positive formal-syntax score from natural-language outputs. The fixed audit
+  uses `nl_logic_parse` for NL train-band structure; replacement CPU array
+  `3864893_[15-17%3]` completed `3/3` and accepted all rows. Baseline is now
+  `16/30` accepted. Aggregate `3857769` waits for the original audit array to
+  terminate and for both replacement audit arrays `3863527` and `3864893` to
+  pass. Raw review across three NL seeds and depths `1/5/10/18/25/50` found
+  clean train-band extraction/translation and ordinary wrong, malformed, and
+  capped long-depth failures; no family claim is released.
+- Dolmino LR array `3859711_[0-2]` is complete. The `1e-5` row finished in
+  `02:27:54` at 15.3K tokens/s with 256 finite steps and 134,217,728 scheduled
+  tokens. Matched post-warmup mean loss favors `1e-5` (`0.95675`) over `6e-6`
+  (`0.96040`) and `3e-6` (`0.97130`), so `1e-5` is nominated for the formal/NL
+  p5 confirmation. Do not submit those GPU jobs during the four-day capacity
+  pause; reassess after 16:30 CEST on July 20. The terminal manifests point to
+  benchmark CSVs that were not written; retain the complete stepwise logs.
+- Baseline rows 18/19/20 are healthy at sampled chunks `102/101/78` of 112.
+  All existing holds remain intentional. Watcher successor `3864892` remains
+  BeginTime pending and must not be canceled. Repo-owned Vault use is about
+  `627G`; no cleanup trigger is active.
+
+## Prior Live Delta At 16:37 CEST
 
 - Four-day capacity pause: held pending surface `3850105`, batch `3850114`,
   and shortcut `3850213` rows. Canceled active surface 15--17, batch 6--8,
