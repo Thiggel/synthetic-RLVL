@@ -23,6 +23,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   about 13:01 CEST; it was preserved because the corrected baseline, report
   matrix, Dolmino path, and report replacement remain incomplete. Vault use
   was about 717 GiB with 151 protected Trainer checkpoints.
+- 07:23 CEST committed the seven accepted row audits and handoff update as
+  `e1dc824`. Publishing remains externally blocked: the configured SSH push
+  made no progress before its 90-second timeout. Local `main` is four commits
+  ahead of `origin/main`; the queued successor should retry without discarding
+  them. The report repository was unchanged because no matched result gate is
+  complete.
 
 - 01:05 CEST accepted declaration-fixed baseline rows `3857767_3/4` only at
   row scope after CPU audits `3857768_3/4` passed exact shape, metric, chunk,
