@@ -4,6 +4,26 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-16
 
+- 07:20 CEST accepted declaration-fixed baseline rows `3857767_0..6` at row
+  scope after audits `3857768_0..6` passed the complete artifact and
+  strengthened declaration/validity gates. This completes three logic seeds
+  at train maxima 5 and 10 plus one train-15 seed. New row-6 raw inspection at
+  depths `1/15/18/20/25/50` found clean shallow/train-band proofs and correctly
+  rejected unsupported, wrong-answer, repetitive, capped, and duplicate-
+  declaration deep traces. No matched modality or report claim was accepted.
+- 07:20 CEST baseline rows `7..12` were running on verified A100-80GB nodes at
+  sampled chunks `102/88/89/88/71/52` of 112, with rows `13..29` throttle-
+  pending and no fatal signature. Batch recoveries `3859299_[3-5]` reached
+  about `2.51k/10k` after 18 hours; preserve their checkpoints and recover
+  only after actual timeout. Conditioned-50k original rows `10/11/12` were at
+  approximately `6,293/6,233/972` of 50,000 under the existing staged chain.
+- 07:20 CEST Dolmino gates `3859297` and `3859711_[0-2]` remained
+  account-GRES pending with projections near 21:15 and 08:45 CEST. Running
+  CPU-only watcher `3862186` had already scheduled successor `3862431` for
+  about 13:01 CEST; it was preserved because the corrected baseline, report
+  matrix, Dolmino path, and report replacement remain incomplete. Vault use
+  was about 717 GiB with 151 protected Trainer checkpoints.
+
 - 01:05 CEST accepted declaration-fixed baseline rows `3857767_3/4` only at
   row scope after CPU audits `3857768_3/4` passed exact shape, metric, chunk,
   cap, fresh-constant, answer, declaration, and validity gates. Raw review at

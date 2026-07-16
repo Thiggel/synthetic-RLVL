@@ -1,10 +1,36 @@
 # Running Experiments
 
-Last updated: 2026-07-16 01:05 CEST.
+Last updated: 2026-07-16 07:20 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 01:05 CEST
+## Live Delta At 07:20 CEST
+
+- Baseline eval/audit rows `3857767_0..6 -> 3857768_0..6` are complete and
+  accepted at row scope. The seven audits each pass the exact prompt,
+  generation, retained-row, metric, chunk-log, cap, fresh-constant,
+  declaration, answer, and validity gates. This completes three logic seeds
+  for train maxima 5 and 10, plus one train-15 seed, but still does not provide
+  a matched modality result.
+- New row-6 raw review covers sampled depths `1/15/18/20/25/50`, successes,
+  failures, and cap hits plus a greedy duplicate-declaration failure. Intended
+  shallow proofs and extraction are clean; unsupported lines, wrong answers,
+  repetition, and duplicate declarations are rejected by the corrected
+  validity path. Active baseline rows `7..12` have completed sampled chunks
+  `102/88/89/88/71/52` of 112 on verified A100-80GB nodes. Rows `13..29` are
+  throttle-pending; no fatal signature or runtime intervention trigger exists.
+- Batch recovery `3859299_[3-5]` is at approximately
+  `2,512/2,509/2,527` of 10,000 after 18 hours. Its periodic checkpoints are
+  present; wait for an actual timeout before submitting a targeted resume.
+  Conditioned-50k originals `3850109_10/11/12` are at approximately
+  `6,293/6,233/972` of 50,000 and remain covered by their staged resume chain.
+- Dolmino LR gates `3859297` and `3859711_[0-2]` remain account-GRES pending;
+  current scheduler projections are about 21:15 and 08:45 CEST. CPU-only
+  watcher `3862186` is running and successor `3862431` is begin-time pending
+  for about 13:01 CEST. Vault use is about 717 GiB, with 151 protected Trainer
+  checkpoints and nine active merge roots.
+
+## Prior Live Delta At 01:05 CEST
 
 - Declaration-fixed baseline rows `3857767_3/4` and CPU audits
   `3857768_3/4` completed `0:0`. Both audits accept 448 prompts, 16
