@@ -20,6 +20,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   CSVs are absent despite terminal manifests naming them; the complete
   stepwise Slurm logs were retained. Successor watcher `3864892` remains
   queued because the plan is incomplete.
+- 19:40 CEST full verification passed (`235 passed, 3 skipped`) and the audit,
+  accepted NL artifacts, LR decision, and handoff changes were committed as
+  `b911964`. A bounded 90-second SSH push produced no output and timed out;
+  local `main` remains one commit ahead of `origin/main`. The report repo was
+  unchanged because corrected BranchProof evidence is only `16/30`.
 
 - 16:40 CEST held all remaining pending BranchProof arrays to prevent
   scheduler backfill. Hybrid eval `3850118_0/1/2` had raced into the released
