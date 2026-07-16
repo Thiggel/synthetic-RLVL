@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-16 09:32 CEST.
+Last updated: 2026-07-16 13:13 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,38 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-16 13:13 targeted recoveries and first completed LR gate
+
+- Declaration-fixed eval rows 13/14 failed during merge after repeated Hub
+  `504`/timeout responses while resolving the unchanged OLMo-3 base tokenizer;
+  neither wrote an eval artifact. The merge helper now accepts an explicit
+  local base-model override, and exact A100-80 recovery `3863525_[13-14%2]`
+  uses the audited immutable local snapshot. CPU audits
+  `3863527_[13-14%2]` follow it. Aggregate `3857769` now waits for the
+  original audit array to terminate and both replacement audits to pass.
+  Its qualitative gate now uses each accepted row audit's exact log provenance
+  and rejects incomplete chunk logs; seven focused tests pass.
+- Original eval/audit rows 0..10 are complete and accepted (`11/30`). Raw
+  review of train-15 seed 3409 and train-20 seed 3408 spans depths
+  `1/15/20/25/50`, correct-valid, correct-invalid, incorrect, malformed, and
+  long/capped cases. Train-band proofs and answer extraction are clean;
+  unsupported lines, premise/conclusion parse failures, wrong answers, and
+  format collapse lose validity as intended. This is still logic-only partial
+  evidence. Rows 11/12 and 15..18 are active; row 11 reached 112/112 sampled
+  chunks and is finalizing. No completed runtime justifies sharding.
+- Batch recovery `3859299_[3-5]` timed out at 24 hours after reaching roughly
+  step 3.4k, with complete optimizer/scheduler/RNG `checkpoint-3000` states
+  for all three seeds. Exact resume `3863546_[3-5%3]` is running on A40s;
+  eval `3850122` now requires terminal originals/recovery plus successful
+  `3863546`. No successful batch row was rerun.
+- Dolmino LR row `3859711_0` (`6e-6`) completed all 256 steps and
+  134,217,728 tokens in `02:27:56`, sustaining about 15.4K tokens/s with
+  finite loss/gradients and a terminal `complete.json`. Row 1 (`3e-6`) is
+  running at the same throughput; row 2 (`1e-5`) and sequential fallback
+  `3859297` remain pending. Keep the fallback until row 2 actually starts.
+  Vault is 827G with 187k files (200k soft/400k hard file quota), so no
+  unguarded cleanup is authorized. Successor watcher `3863505` remains queued.
 
 ### 2026-07-16 09:32 first Dolmino LR row running
 

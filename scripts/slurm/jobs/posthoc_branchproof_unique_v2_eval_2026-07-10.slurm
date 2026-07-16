@@ -95,9 +95,14 @@ PY
 fi
 
 mkdir -p "${MERGED_ROOT}" "${OUT_DIR}"
+MERGE_BASE_ARGS=()
+if [[ -n "${MERGE_BASE_MODEL:-}" ]]; then
+  MERGE_BASE_ARGS=(--base-model "${MERGE_BASE_MODEL}")
+fi
 python scripts/merge_lora_checkpoint.py \
   --checkpoint "${SFT_FINAL}" \
   --output "${MERGED}.tmp" \
+  "${MERGE_BASE_ARGS[@]}" \
   --dtype bf16 \
   --overwrite
 mv "${MERGED}.tmp" "${MERGED}"

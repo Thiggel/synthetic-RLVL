@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-15 13:06 CEST.
+Last updated: 2026-07-16 13:13 CEST.
 
 ## Scope
 
@@ -30,9 +30,11 @@ data surface match exactly.
 Batch-size rows `3850114_3/4/5` reached approximately
 `9472/9416/9472` of 10,000 steps and then hit the 24-hour ceiling. Their
 launches predated the 1,000-step checkpoint change and retained no resumable
-state. Exact recovery `3859299_[3-5%3]` is running with the current checkpoint
-policy. Eval `3850122` now waits on terminal original array `3850114` plus
-successful recovery `3859299`; no successful row is rerun.
+state. Exact recovery `3859299_[3-5%3]` reached roughly step 3.4k and timed
+out after writing complete optimizer/scheduler/RNG `checkpoint-3000` states.
+Second exact resume `3863546_[3-5%3]` is running under the same checkpoint
+policy. Eval `3850122` waits for terminal arrays `3850114` and `3859299` plus
+successful `3863546`; no successful row is rerun.
 
 At 08:12 CEST on July 14, shortcut tasks `3850213_3/4` were found canceled
 before Python startup. Exact recovery `3854948_[3-4%2]` started on A40s, and

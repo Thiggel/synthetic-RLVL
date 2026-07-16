@@ -141,12 +141,12 @@ nonempty 19.24GB shard and `4,810,706,180` packed tokens. The exact
 `10,705,908`-token delta confirms one appended EOS per record; metadata,
 capacity, and terminal-state gates pass. The unstarted LR gate `3858902` had
 become dependency-dead and was replaced by `3859297`, now normal
-account-GRES pending. Matched 4-GPU row `3859711_0` (`6e-6`) started at
-09:25 CEST on 2026-07-16. By step 8/256 it sustained about 15.4K tokens/s
-with loss near `0.52`, finite gradient norm, and 62.4GB peak allocation per
-GPU. Rows `1/2` retain 10:48 CEST estimates; sequential 8-GPU fallback
-`3859297` has moved to 2026-07-17 02:30 and should be canceled only after the
-remaining 4-GPU rows actually start.
+account-GRES pending. Matched 4-GPU row `3859711_0` (`6e-6`) completed all
+256 steps and 134,217,728 tokens in `02:27:56` on 2026-07-16. It sustained
+about 15.4K tokens/s, retained finite losses and gradient norms, and wrote a
+terminal manifest. Row `3859711_1` (`3e-6`) then started at matched
+throughput; row 2 (`1e-5`) remains pending. Sequential fallback `3859297`
+must be canceled only after row 2 actually starts.
 
 ## Downstream acceptance gate
 

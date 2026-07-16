@@ -53,6 +53,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Merge a PEFT LoRA checkpoint into a standalone HF model directory.")
     parser.add_argument("--checkpoint", required=True, help="Actor checkpoint or adapter directory.")
     parser.add_argument("--output", required=True, help="Output directory for merged HF model.")
+    parser.add_argument("--base-model", help="Optional local or remote base-model override.")
     parser.add_argument("--dtype", choices=["bf16", "fp16", "fp32"], default="bf16")
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
@@ -61,7 +62,7 @@ def main() -> None:
     output = Path(args.output).expanduser().resolve()
     adapter_dir = _resolve_adapter_dir(checkpoint)
     adapter_cfg = json.loads((adapter_dir / "adapter_config.json").read_text(encoding="utf-8"))
-    base_model = adapter_cfg.get("base_model_name_or_path")
+    base_model = args.base_model or adapter_cfg.get("base_model_name_or_path")
     if not isinstance(base_model, str) or not base_model.strip():
         raise ValueError(f"{adapter_dir}/adapter_config.json is missing base_model_name_or_path")
     base_model = base_model.strip()

@@ -4,6 +4,24 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-16
 
+- 13:13 CEST baseline eval rows 13/14 failed before evaluation on repeated Hub
+  `504`/timeouts during OLMo-3 merge. Added a local base-model override,
+  submitted exact A100-80 recovery `3863525_[13-14%2]` and CPU audits
+  `3863527_[13-14%2]`, and rewired aggregate `3857769` to require both. The
+  qualitative gate now follows each accepted row audit's exact log provenance
+  and rejects incomplete sampled logs; focused tests pass (`7 passed`). Rows/audits 0..10
+  are accepted at row scope. Raw logic review across train-15/train-20 seeds
+  and depths `1/15/20/25/50` confirms clean train-band behavior and correctly
+  rejected parse, proof, answer, format, and cap failures; no modality result
+  was accepted.
+- 13:13 CEST batch recovery `3859299_[3-5]` timed out at 24 hours with valid
+  optimizer/scheduler/RNG `checkpoint-3000` states. Submitted exact resume
+  `3863546_[3-5%3]` and changed eval `3850122` to require it after both old
+  arrays terminate. Dolmino `6e-6` row `3859711_0` completed 256 steps in
+  `02:27:56` at 15.4K tokens/s with finite diagnostics and terminal manifest;
+  `3e-6` row 1 is running. Successor `3863505` is preserved. Vault is 827G
+  and 187k files.
+
 - 09:32 CEST the 4-GPU Dolmino `6e-6` LR row `3859711_0` started on A100-80GB
   node `a0832` and reached step 8/256 at 15.4K tokens/s, loss about `0.52`,
   finite gradients, and 62.4GB peak allocation. Rows 1/2 estimate 10:48 CEST;

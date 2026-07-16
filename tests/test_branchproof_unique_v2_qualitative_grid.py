@@ -53,7 +53,13 @@ def _write_grid(root: Path, logs: Path, *, omit_last: bool = False) -> None:
         index = MODULE._array_index(template, train_max, seed)
         (logs / f"eval_bp_unique_123_{index}.out").write_text(
             "[syntheval] sampled vLLM chunk 1/4 done in 1.0s "
-            "(10 output tokens, max=7168)\n",
+            "(10 output tokens, max=7168)\n"
+            "[syntheval] sampled vLLM chunk 2/4 done in 1.0s "
+            "(10 output tokens, max=32)\n"
+            "[syntheval] sampled vLLM chunk 3/4 done in 1.0s "
+            "(10 output tokens, max=32)\n"
+            "[syntheval] sampled vLLM chunk 4/4 done in 1.0s "
+            "(10 output tokens, max=32)\n",
             encoding="utf-8",
         )
 
@@ -125,3 +131,84 @@ def test_rejects_missing_modality_validity_metric(tmp_path: Path) -> None:
 
     assert report["accepted"] is False
     assert any("invalid nl_logic_citation_free_valid" in error for error in report["errors"])
+
+
+def test_uses_newest_complete_recovery_log(tmp_path: Path) -> None:
+    final_dir = tmp_path / "final"
+    log_dir = tmp_path / "logs"
+    final_dir.mkdir()
+    log_dir.mkdir()
+    _write_grid(final_dir, log_dir)
+    index = MODULE._array_index("logic", 5, 3407)
+    original = log_dir / f"eval_bp_unique_123_{index}.out"
+    original.write_text(
+        "[syntheval] sampled vLLM chunk 1/4 done in 1.0s "
+        "(10 output tokens, max=7168)\n",
+        encoding="utf-8",
+    )
+    recovery = log_dir / f"eval_bp_unique_456_{index}.out"
+    recovery.write_text(
+        "".join(
+            f"[syntheval] sampled vLLM chunk {chunk}/4 done in 1.0s "
+            "(10 output tokens, max=32)\n"
+            for chunk in range(1, 5)
+        ),
+        encoding="utf-8",
+    )
+
+    report = MODULE.audit_grid(
+        final_dir,
+        log_dir,
+        eval_array_job_id="123",
+        expected_sampled_rows=len(MODULE.DEPTHS) * 2,
+        expected_rows_per_depth=2,
+        generation_cap=7168,
+    )
+
+    assert report["accepted"] is True
+    run = next(
+        run
+        for run in report["runs"]
+        if run["template"] == "logic" and run["train_max"] == 5 and run["seed"] == 3407
+    )
+    assert run["eval_log"] == str(recovery)
+
+
+def test_uses_accepted_row_audit_log_provenance(tmp_path: Path) -> None:
+    final_dir = tmp_path / "final"
+    log_dir = tmp_path / "logs"
+    audit_dir = tmp_path / "audits"
+    final_dir.mkdir()
+    log_dir.mkdir()
+    audit_dir.mkdir()
+    _write_grid(final_dir, log_dir)
+    for sample_path in final_dir.glob("*_samples.jsonl"):
+        match = MODULE.SAMPLE_RE.match(sample_path.name)
+        assert match is not None
+        index = MODULE._array_index(
+            match.group("template"), int(match.group("train")), int(match.group("seed"))
+        )
+        log_path = log_dir / f"eval_bp_unique_123_{index}.out"
+        audit_path = audit_dir / f"{sample_path.name.removesuffix('_samples.jsonl')}.json"
+        audit_path.write_text(
+            json.dumps(
+                {
+                    "accepted": True,
+                    "generation_log_audit": {"path": str(log_path)},
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    report = MODULE.audit_grid(
+        final_dir,
+        log_dir,
+        eval_array_job_id="wrong-array",
+        expected_sampled_rows=len(MODULE.DEPTHS) * 2,
+        expected_rows_per_depth=2,
+        generation_cap=7168,
+        audit_dir=audit_dir,
+    )
+
+    assert report["accepted"] is True
+    assert all("eval_bp_unique_123_" in run["eval_log"] for run in report["runs"])

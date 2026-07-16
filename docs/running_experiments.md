@@ -1,10 +1,37 @@
 # Running Experiments
 
-Last updated: 2026-07-16 09:32 CEST.
+Last updated: 2026-07-16 13:13 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 09:32 CEST
+## Live Delta At 13:13 CEST
+
+- Baseline eval rows 13/14 failed before evaluation on transient Hub
+  `504`/timeouts while merging the unchanged OLMo-3 base. Exact local-snapshot
+  recovery `3863525_[13-14%2]` is A100-80-only; replacement CPU audits
+  `3863527_[13-14%2]` follow it. Aggregate `3857769` waits original audit
+  termination plus successful replacement audits. The qualitative gate now
+  uses each accepted row audit's exact log provenance and requires complete
+  sampled-chunk logs (`7 passed`).
+- Baseline eval/audit rows 0..10 are accepted (`11/30`). Rows 11/12 and
+  15..18 run on A100-80GB; row 11 has generated all 112/112 sampled chunks
+  and is finalizing, row 12 is at 105/112, and NL rows 15/16/17 are at
+  68/53/46. Representative logic raw review across seeds/train ranges and
+  depths `1/15/20/25/50` confirms clean train-band extraction/validity and
+  correct rejection of parse, unsupported-line, answer, format, and long-cap
+  failures. No matched modality claim is released.
+- Batch jobs `3859299_[3-5]` timed out at 24 hours with complete
+  `checkpoint-3000` state. Exact resumes `3863546_[3-5%3]` are running on
+  A40s, and eval `3850122` now requires successful `3863546` after both old
+  arrays terminate.
+- Dolmino `6e-6` row `3859711_0` completed 256/256 steps in `02:27:56` at
+  about 15.4K tokens/s with finite diagnostics and `complete.json`.
+  `3859711_1` (`3e-6`) is running at matched throughput; row 2 and sequential
+  fallback `3859297` remain pending. Preserve the fallback until row 2 starts.
+  Successor watcher `3863505` remains begin-time pending because the plan is
+  incomplete. Vault usage is 827G and 187k files.
+
+## Prior Live Delta At 09:32 CEST
 
 - Four-GPU Dolmino LR row `3859711_0` (`6e-6`) started at 09:25 CEST on
   A100-80GB node `a0832`. At step 8/256 it sustains about 15.4K tokens/s with

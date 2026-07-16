@@ -454,3 +454,19 @@ eval files, 8 audit JSONs, and 44 logs were moved into the repo/Vault
 `3857767 -> 3857768 -> 3857769` preserves the entire A100-80-only scientific
 protocol. No metric from any earlier BranchProof baseline chain may be restored
 as evidence.
+
+## 2026-07-16 Declaration-Fixed Recovery
+
+Rows 13/14 of `3857767` failed before evaluation when repeated Hub
+`504`/timeouts prevented the merge helper from resolving the unchanged
+OLMo-3 tokenizer. No metrics or sample artifacts were written. The merge
+helper now accepts an explicit base-model override, and exact A100-80 recovery
+`3863525_[13-14%2]` uses the audited immutable local OLMo-3 snapshot. CPU
+audits `3863527_[13-14%2]` follow it; aggregate `3857769` requires original
+audit-array termination plus successful replacement audits.
+
+The cross-grid qualitative gate now reads each accepted row audit's exact log
+path and requires a complete sampled-chunk log, preventing failed network logs
+or older quarantined evaluations from satisfying provenance. Seven focused
+qualitative/token-budget tests pass. Original rows/audits 0..10 are accepted at row scope (`11/30`),
+but remain partial logic-only evidence.

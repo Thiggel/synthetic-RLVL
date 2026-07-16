@@ -34,6 +34,7 @@ python scripts/analysis/aggregate_hfsa_depth_scaling.py \
 python scripts/analysis/audit_branchproof_unique_v2_qualitative_grid.py \
   --final-dir "${HPCVAULT}/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710" \
   --log-dir logs \
+  --audit-dir "${AUDIT_DIR}" \
   --eval-array-job-id "${EVAL_ARRAY_JOB_ID}" \
   --output-json analysis/branchproof_unique_v2_20260711/qualitative_grid_audit.json \
   --output-markdown analysis/branchproof_unique_v2_20260711/qualitative_grid_audit.md

@@ -29,6 +29,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--final-dir", type=Path, required=True)
     parser.add_argument("--log-dir", type=Path, default=Path("logs"))
+    parser.add_argument("--audit-dir", type=Path)
     parser.add_argument("--eval-array-job-id", default="3834582")
     parser.add_argument("--output-json", type=Path, required=True)
     parser.add_argument("--output-markdown", type=Path, required=True)
@@ -74,6 +75,54 @@ def _cap_chunks(path: Path, generation_cap: int, errors: list[str]) -> list[int]
         if match and int(match.group("maximum")) == generation_cap:
             chunks.append(int(match.group("index")))
     return chunks
+
+
+def _log_is_complete(path: Path) -> bool:
+    if not path.is_file():
+        return False
+    chunks: list[tuple[int, int]] = []
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        match = CHUNK_RE.match(line.strip())
+        if match:
+            chunks.append((int(match.group("index")), int(match.group("total"))))
+    if not chunks or len({total for _, total in chunks}) != 1:
+        return False
+    total = chunks[0][1]
+    return {index for index, _ in chunks} == set(range(1, total + 1))
+
+
+def _resolve_log_path(log_dir: Path, eval_array_job_id: str, array_index: int) -> Path:
+    expected = log_dir / f"eval_bp_unique_{eval_array_job_id}_{array_index}.out"
+    if _log_is_complete(expected):
+        return expected
+    candidates = sorted(
+        (
+            path
+            for path in log_dir.glob(f"eval_bp_unique_*_{array_index}.out")
+            if path != expected and _log_is_complete(path)
+        ),
+        key=lambda path: path.stat().st_mtime_ns,
+        reverse=True,
+    )
+    return candidates[0] if candidates else expected
+
+
+def _audited_log_path(audit_dir: Path, sample_path: Path, errors: list[str]) -> Path | None:
+    stem = sample_path.name.removesuffix("_samples.jsonl")
+    audit_path = audit_dir / f"{stem}.json"
+    if not audit_path.is_file():
+        errors.append(f"missing row audit: {audit_path}")
+        return None
+    try:
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"invalid row audit {audit_path}: {exc}")
+        return None
+    log_path = audit.get("generation_log_audit", {}).get("path")
+    if audit.get("accepted") is not True or not isinstance(log_path, str):
+        errors.append(f"row audit is not accepted or lacks log provenance: {audit_path}")
+        return None
+    return Path(log_path)
 
 
 def _is_positive(value: Any) -> bool:
@@ -135,6 +184,7 @@ def audit_grid(
     expected_sampled_rows: int,
     expected_rows_per_depth: int,
     generation_cap: int,
+    audit_dir: Path | None = None,
 ) -> dict[str, Any]:
     errors: list[str] = []
     expected_grid = {
@@ -209,7 +259,15 @@ def audit_grid(
             selections[name] = _select_slice(by_depth[depth], path)
 
         array_index = _array_index(template, train_max, seed)
-        log_path = log_dir / f"eval_bp_unique_{eval_array_job_id}_{array_index}.out"
+        log_path = (
+            _audited_log_path(audit_dir, path, errors)
+            if audit_dir is not None
+            else _resolve_log_path(log_dir, eval_array_job_id, array_index)
+        )
+        if log_path is None:
+            continue
+        if not _log_is_complete(log_path):
+            errors.append(f"incomplete eval log: {log_path}")
         cap_chunks = _cap_chunks(log_path, generation_cap, errors)
         cap_examples: list[dict[str, Any]] = []
         for chunk in cap_chunks[:3]:
@@ -316,6 +374,7 @@ def main() -> None:
         expected_sampled_rows=args.expected_sampled_rows,
         expected_rows_per_depth=args.expected_rows_per_depth,
         generation_cap=args.generation_cap,
+        audit_dir=args.audit_dir,
     )
     args.output_json.parent.mkdir(parents=True, exist_ok=True)
     args.output_json.write_text(
