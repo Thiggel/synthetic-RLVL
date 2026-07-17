@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-17 01:08 CEST.
+Last updated: 2026-07-17 07:06 CEST.
 
 ## Scope
 
@@ -60,6 +60,15 @@ audit `3865322_18` join the existing held row-13/14 recovery chain. Aggregate
 `3857769` requires both replacement audits. Release `3865321` with the other
 baseline eval work only after the July-20 capacity check; do not rerun rows
 19/20, which completed and passed their audits.
+
+Conditioned-50k rows `3850109_10/11/12`, which were already running when the
+pause began, subsequently reached the 24-hour limit at steps
+`26924/26751/18891`. Their complete latest restart states are
+`checkpoint-25000`, `checkpoint-25000`, and `checkpoint-15000`, each with
+nonempty optimizer, scheduler, RNG, trainer, and adapter files and zero empty
+files. No final exists and no fatal signature preceded timeout. Do not submit a
+new recovery: the already-held staged `afterany` chain `3850110..3850112` is
+the intended exact continuation after the July-20 capacity decision.
 
 Restart after 16:30 CEST on July 20, if capacity is available:
 

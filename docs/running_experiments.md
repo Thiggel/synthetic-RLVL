@@ -1,10 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-07-17 01:08 CEST.
+Last updated: 2026-07-17 07:06 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 01:08 CEST
+## Live Delta At 07:06 CEST
+
+- Conditioned-50k SFT rows `3850109_10/11/12` timed out at the expected
+  24-hour limit after steps `26924/26751/18891`. Complete restart states exist
+  at `checkpoint-25000`, `checkpoint-25000`, and `checkpoint-15000`; all have
+  nonempty optimizer/scheduler/RNG/trainer/adapter files and zero empty files.
+  Finals are absent, as expected. Preserve the held staged resume chain
+  `3850110..3850112`; no duplicate recovery or dependency edit is needed.
+- The corrected baseline remains `18/30` accepted. Original eval rows
+  `3857767_[21-29]`, local-snapshot recoveries `3863525_[13-14]`, and
+  node-failure recovery `3865321_18` remain user-held under the July-20 pause;
+  their CPU audits and aggregate remain dependency-gated.
+- CPU-only watcher `3865320` is running on `a100mig`; recorded CPU-only
+  successor `3865444` is BeginTime-pending for 13:03 CEST. Repo-owned Vault
+  use is about `493 GiB`; no cleanup, resubmission, report, or scheduler trigger
+  is active before the capacity decision.
+
+## Prior Live Delta At 01:08 CEST
 
 - Baseline eval/audit rows 19/20 completed and passed, bringing the accepted
   declaration-fixed gate to `18/30`. Raw NL train-1-to-10 review at depths

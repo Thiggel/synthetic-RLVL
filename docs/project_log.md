@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-17
 
+- 07:06 CEST conditioned-50k rows `3850109_10/11/12` reached the expected
+  24-hour limit at steps `26924/26751/18891`. Verified complete nonempty
+  restart states at checkpoints `25000/25000/15000`, including optimizer,
+  scheduler, RNG, and trainer state, with no fatal/OOM/quota signature. Left
+  the exact staged resume chain `3850110..3850112` user-held under the July-20
+  capacity pause; no duplicate recovery or dependency edit was made.
+- 07:06 CEST baseline remains `18/30` accepted with all pending/recovery GPU
+  work held. CPU-only watcher `3865320` is running and recorded CPU-only
+  successor `3865444` is scheduled for 13:03 CEST. Repo-owned Vault use is
+  about `493 GiB`; no cleanup or report trigger fired.
+
 - 01:08 CEST baseline eval/audit rows 19/20 completed and passed, advancing
   the declaration-fixed row gate to `18/30`. Raw NL train-1-to-10 review at
   depths `1/10/12/25/50` found clean train-band answer extraction and

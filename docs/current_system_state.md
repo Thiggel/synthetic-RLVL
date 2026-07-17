@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-17 01:08 CEST.
+Last updated: 2026-07-17 07:06 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,25 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-17 07:06 conditioned-50k timeouts preserved under the pause
+
+- Corrected conditioned-50k SFT rows `3850109_10/11/12` reached the expected
+  24-hour walltime at optimizer steps `26924/26751/18891`. Their latest
+  complete restart states are respectively `checkpoint-25000`,
+  `checkpoint-25000`, and `checkpoint-15000`; each contains nonempty adapter,
+  optimizer, scheduler, RNG, and trainer state with zero empty files. No final
+  adapter was written, and no fatal/OOM/quota signature preceded the timeouts.
+- The existing staged `afterany` resume chain `3850110..3850112` remains the
+  exact recovery path and is intentionally user-held with the July-20 capacity
+  pause. No duplicate recovery or dependency edit was made. Baseline remains
+  `18/30` accepted; held A100-80 recoveries `3863525_[13-14]` and
+  `3865321_18` plus original rows `21..29` remain unchanged.
+- Current watcher `3865320` is CPU-only on `a100mig`. Its recorded successor
+  `3865444` is also CPU-only and scheduled for 13:03 CEST; the chain remains
+  necessary. Repo-owned Vault use is `517,225,409 KiB` (about `493 GiB`),
+  while the full user Vault quota reports `689G` and `189k/200k` files. No
+  cleanup or report-regeneration gate fired.
 
 ### 2026-07-17 01:08 baseline node-failure recovery staged under the pause
 
