@@ -1,10 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-07-17 07:06 CEST.
+Last updated: 2026-07-17 19:12 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 07:06 CEST
+## Live Delta At 19:12 CEST
+
+- The corrected baseline remains `18/30` accepted. Held A100-80 eval work
+  `3857767_[21-29]`, `3863525_[13-14]`, and `3865321_18`, its CPU audits, and
+  aggregate `3857769` are unchanged under the July-20 capacity pause. No new
+  in-scope eval JSON, sample JSONL, or log appeared after the 07:06 handoff.
+- Fixed the oversight Slurm wrapper's prompt quoting: Markdown backticks are
+  now protected by a quoted heredoc instead of being executed as command
+  substitutions. Bash syntax and rendered-prompt checks pass; shellcheck is
+  unavailable in the current environment.
+- CPU-only watcher `3865931` is running on `a100mig`; recorded successor
+  `3866771` is CPU-only with no GRES and is BeginTime-pending for 01:03 CEST on
+  July 18. Repo-owned Vault use is unchanged at about `493 GiB`. No experiment
+  release, resubmission, dependency edit, partition edit, cleanup, analysis,
+  or report trigger fired.
+
+## Prior Live Delta At 07:06 CEST
 
 - Conditioned-50k SFT rows `3850109_10/11/12` timed out at the expected
   24-hour limit after steps `26924/26751/18891`. Complete restart states exist

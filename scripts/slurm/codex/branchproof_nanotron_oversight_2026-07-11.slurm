@@ -52,9 +52,10 @@ type cs >/dev/null 2>&1 || {
   exit 127
 }
 
-cs exec "You are running scheduled autonomous Codex oversight for the active corrected BranchProof and Nanotron plan in /home/hpc/c107fa/c107fa12/synthetic-RLVL.
+PROMPT=$(cat <<'EOF'
+You are running scheduled autonomous Codex oversight for the active corrected BranchProof and Nanotron plan in /home/hpc/c107fa/c107fa12/synthetic-RLVL.
 
-This watcher scheduled its successor before starting. The successor job ID is recorded in ${NEXT_JOB_FILE}. Keep the chain alive while any part of the plan remains incomplete. Cancel the recorded successor only after the entire plan below is complete and verified, not merely because current jobs are healthy or pending.
+This watcher scheduled its successor before starting. The successor job ID is recorded in __NEXT_JOB_FILE__. Keep the chain alive while any part of the plan remains incomplete. Cancel the recorded successor only after the entire plan below is complete and verified, not merely because current jobs are healthy or pending.
 
 First read in full:
 - AGENTS.md
@@ -138,4 +139,8 @@ Operational rules:
 - Watch HPCVAULT usage because complete Nanotron checkpoints are about 199G each. Delete checkpoints only through the guarded post-upload path or when the docs prove they are stale and no recovery depends on them.
 - Authenticated HF usedStorage is 63.610 GB after the control instruction-adapter upload and the verified cleanup. The pending logic upload projects 78.852 GB; one further full checkpoint fits at 94.095 GB, but two would reach 109.338 GB. Preserve the active control/NL/logic repos through all six evaluations and preserve the latest autoformalization adapter for each task. Before the broader mixture grid, implement guarded upload/evaluate/audit/delete checkpoint rotation; never delete a repo referenced by a pending/running job, and archive cross-project artifacts before removal.
 - Commit and push this repo and ../synthetic-RLVL-report whenever changes are made and authentication permits.
-- End each pass with a concise status including exact job IDs, states, actions, artifacts, findings, and the next trigger."
+- End each pass with a concise status including exact job IDs, states, actions, artifacts, findings, and the next trigger.
+EOF
+)
+PROMPT="${PROMPT/__NEXT_JOB_FILE__/${NEXT_JOB_FILE}}"
+cs exec "${PROMPT}"

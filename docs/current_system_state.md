@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-17 07:06 CEST.
+Last updated: 2026-07-17 19:12 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,27 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-17 19:12 watcher prompt quoting fix under the capacity pause
+
+- The corrected baseline remains `18/30` accepted. All unfinished BranchProof
+  GPU rows, including `3857767_[21-29]`, `3863525_[13-14]`, and
+  `3865321_18`, remain user-held for the documented post-16:30 CEST July-20
+  capacity decision. Their CPU audits and aggregate `3857769` remain
+  dependency-gated; no new metric/sample artifact appeared after the 07:06
+  handoff.
+- Fixed the CPU-only watcher wrapper so its Markdown prompt is built with a
+  quoted heredoc. The previous double-quoted argument executed prompt
+  backticks as shell command substitutions, producing dozens of harmless but
+  noisy `command not found` errors before Codex started. `bash -n` and a
+  rendered-prompt check preserve the successor-file interpolation and literal
+  backticks; shellcheck is unavailable in the current environment.
+- Current watcher `3865931` is CPU-only on `a100mig`. Its recorded successor
+  `3866771` is also CPU-only, requests only `cpu=4,mem=30000M`, and is scheduled
+  for 01:03 CEST on July 18. The plan is incomplete, so the successor remains
+  queued. Repo-owned Vault use remains `517,225,409 KiB` (about `493 GiB`);
+  the higher user-wide quota use is attributable to out-of-scope work and was
+  not touched.
 
 ### 2026-07-17 07:06 conditioned-50k timeouts preserved under the pause
 

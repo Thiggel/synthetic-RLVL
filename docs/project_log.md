@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-17
 
+- 19:12 CEST fixed the CPU-only oversight wrapper's double-quoted prompt,
+  which had executed Markdown backticks as shell substitutions and emitted
+  dozens of `command not found` messages before otherwise successful watcher
+  passes. The prompt now uses a quoted heredoc plus explicit successor-path
+  substitution; `bash -n` and rendered-prompt checks pass, while shellcheck is
+  unavailable in the current environment.
+- 19:12 CEST baseline remains `18/30` accepted and all unfinished BranchProof
+  GPU rows remain held for the July-20 capacity decision. No new in-scope
+  metric/sample artifact appeared. Current watcher `3865931` and CPU-only
+  successor `3866771` preserve the chain; successor starts at 01:03 CEST on
+  July 18. Repo-owned Vault use remains about `493 GiB`.
+
 - 07:06 CEST conditioned-50k rows `3850109_10/11/12` reached the expected
   24-hour limit at steps `26924/26751/18891`. Verified complete nonempty
   restart states at checkpoints `25000/25000/15000`, including optimizer,
