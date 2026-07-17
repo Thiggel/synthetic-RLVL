@@ -15,6 +15,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   metric/sample artifact appeared. Current watcher `3865931` and CPU-only
   successor `3866771` preserve the chain; successor starts at 01:03 CEST on
   July 18. Repo-owned Vault use remains about `493 GiB`.
+- 19:15 CEST committed the watcher fix and handoff as `0d6468d`. A bounded
+  `git push origin main` produced no remote output and timed out after 90
+  seconds; the SSH/network path remains the exact blocker. The report
+  repository is unchanged and synchronized.
 
 - 07:06 CEST conditioned-50k rows `3850109_10/11/12` reached the expected
   24-hour limit at steps `26924/26751/18891`. Verified complete nonempty

@@ -44,6 +44,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   queued. Repo-owned Vault use remains `517,225,409 KiB` (about `493 GiB`);
   the higher user-wide quota use is attributable to out-of-scope work and was
   not touched.
+- Wrapper and handoff commit `0d6468d` is local. `git push origin main` again
+  produced no remote output and timed out after 90 seconds; the SSH/network
+  path remains the exact blocker. The report repository is unchanged and
+  synchronized.
 
 ### 2026-07-17 07:06 conditioned-50k timeouts preserved under the pause
 
