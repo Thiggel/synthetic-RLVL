@@ -45,8 +45,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   on July 19. The end-to-end plan is incomplete, so the successor remains
   queued.
 - Quota/handoff commit `879acb3` is local. `git push origin main` produced no
-  remote output and timed out after 90 seconds; local `main` is nine commits
-  ahead of `origin/main`. The report repository is unchanged and synchronized.
+  remote output and timed out after 90 seconds; local `main` remains at least
+  nine commits ahead of `origin/main`. The report repository is unchanged and
+  synchronized.
 
 ### 2026-07-17 19:12 watcher prompt quoting fix under the capacity pause
 
