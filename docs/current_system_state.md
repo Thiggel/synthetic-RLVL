@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-17 19:12 CEST.
+Last updated: 2026-07-18 19:15 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,27 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-18 19:15 user-wide Vault file-quota warning during the capacity pause
+
+- The corrected baseline remains `18/30` accepted. Held baseline evals
+  `3857767_[21-29]`, exact recoveries `3863525_[13-14]` and `3865321_18`,
+  their CPU audits, and aggregate `3857769` are unchanged. No in-scope
+  BranchProof or Nanotron metric, sample, or log artifact appeared after the
+  2026-07-17 07:06 handoff. The urgent out-of-scope GPU work is still active,
+  so the documented post-16:30 CEST July-20 capacity check remains the next
+  release trigger.
+- User-wide Vault quota has risen to `960G/1000G` soft and `198k/200k` files,
+  while the repo-owned tree remains `517,225,409 KiB` (about `493 GiB`) and
+  contains only `8,711` files. Read-only inode checks attribute at least
+  `84,593` files to the shared project virtualenv, `15,284` to the shared
+  cache, and `22,403` to out-of-scope BabyLM roots. No unrelated artifact was
+  touched. Treat the two-thousand-file soft-quota margin as a prerequisite
+  check before releasing BranchProof work on July 20.
+- CPU-only watcher `3867919` is running on `a100mig`; recorded successor
+  `3869120` is CPU-only with no GRES and is BeginTime-pending for 01:06 CEST
+  on July 19. The end-to-end plan is incomplete, so the successor remains
+  queued.
 
 ### 2026-07-17 19:12 watcher prompt quoting fix under the capacity pause
 

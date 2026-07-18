@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-07-17 19:12 CEST.
+Last updated: 2026-07-18 19:15 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:15 CEST On July 18
+
+- The corrected baseline remains `18/30` accepted. Held A100-80 eval rows
+  `3857767_[21-29]`, local-snapshot recoveries `3863525_[13-14]` and
+  `3865321_18`, their audits, and aggregate `3857769` are unchanged. No new
+  in-scope BranchProof or Nanotron metric/sample/log artifact exists after the
+  July-17 07:06 handoff. The urgent out-of-scope GPU wave remains active, so
+  the July-20 capacity pause is still in force.
+- User-wide Vault use is now `960G/1000G` soft with `198k/200k` files. The
+  repo-owned tree is unchanged at about `493 GiB` and only `8,711` files; the
+  file-count pressure is dominated by shared environment/cache and unrelated
+  roots, which were inspected read-only and left untouched. Recheck this
+  two-thousand-file margin before releasing the held BranchProof arrays.
+- CPU-only watcher `3867919` is running on `a100mig`. Recorded successor
+  `3869120` requests only `cpu=4,mem=30000M`, has no GRES, and is scheduled
+  for 01:06 CEST on July 19. It remains queued because the plan is incomplete.
 
 ## Live Delta At 19:12 CEST
 

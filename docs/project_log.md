@@ -2,6 +2,20 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-18
+
+- 19:15 CEST user-wide Vault usage reached `960G/1000G` soft and
+  `198k/200k` files. The repo-owned tree remains about `493 GiB` with only
+  `8,711` files; read-only inspection found the file-count pressure dominated
+  by the shared virtualenv/cache and out-of-scope BabyLM roots. Nothing
+  unrelated was touched. Recheck the two-thousand-file soft-quota margin
+  before releasing BranchProof work after the July-20 capacity pause.
+- 19:15 CEST the corrected baseline remains `18/30` accepted, all unfinished
+  BranchProof GPU work remains intentionally held, and no new in-scope metric,
+  sample, or log artifact appeared. CPU-only watcher `3867919` is running;
+  its CPU-only successor `3869120` remains scheduled for 01:06 CEST on July
+  19 because the end-to-end plan is incomplete.
+
 ## 2026-07-17
 
 - 19:12 CEST fixed the CPU-only oversight wrapper's double-quoted prompt,
