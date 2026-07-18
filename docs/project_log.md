@@ -2,6 +2,20 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-19
+
+- 01:15 CEST user-wide Vault reached `1001G/1000G` soft and exactly
+  `200k/200k` files. The repo-owned Vault tree remains about `493 GiB` with
+  `8,711` files, and all `170` Trainer checkpoint directories are intact,
+  including the conditioned-50k and batch restart states. No held BranchProof
+  work may be released until both soft quotas have margin and the July-20
+  capacity check passes.
+- 01:15 CEST the corrected baseline remains `18/30` accepted, all unfinished
+  BranchProof GPU work remains held, and no new in-scope metric, sample, log,
+  or eval artifact appeared after the prior handoff. Watcher `3869120` is
+  CPU-only on `a100mig`; CPU-only successor `3869995` is scheduled for 07:06
+  CEST and remains required because the plan is incomplete.
+
 ## 2026-07-18
 
 - 19:15 CEST user-wide Vault usage reached `960G/1000G` soft and

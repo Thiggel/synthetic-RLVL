@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-17 07:06 CEST.
+Last updated: 2026-07-19 01:15 CEST.
 
 ## Scope
 
@@ -70,10 +70,14 @@ files. No final exists and no fatal signature preceded timeout. Do not submit a
 new recovery: the already-held staged `afterany` chain `3850110..3850112` is
 the intended exact continuation after the July-20 capacity decision.
 
-Restart after 16:30 CEST on July 20, if capacity is available:
+Restart after 16:30 CEST on July 20, only if capacity is available and the
+user-wide Vault is below both soft quotas with margin. At the July-19 audit it
+was `1001G/1000G` soft and `200k/200k` files, while all repo-owned restart
+states remained intact.
 
-1. Confirm no replacement project still needs the GPUs and re-audit final and
-   checkpoint roots before submitting anything.
+1. Confirm no replacement project still needs the GPUs, confirm Vault space
+   and file-count margin, and re-audit final and checkpoint roots before
+   submitting anything.
 2. Release the held pending tasks in `3850105`, `3850114`, and `3850213`.
    Release the additional pending BranchProof arrays listed above only after
    checking the urgent project's remaining demand.

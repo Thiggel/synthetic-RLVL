@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-18 19:15 CEST.
+Last updated: 2026-07-19 01:15 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-19 01:15 Vault soft quotas reached during the capacity pause
+
+- The corrected baseline remains `18/30` accepted. Held eval rows
+  `3857767_[21-29]`, exact recoveries `3863525_[13-14]` and `3865321_18`,
+  their CPU audits, and aggregate `3857769` are unchanged. No in-scope
+  BranchProof or Nanotron metric, sample, log, or eval artifact appeared after
+  the 2026-07-18 19:15 handoff, so no raw-generation or report trigger fired.
+- User-wide Vault usage is now `1001G/1000G` soft and exactly
+  `200k/200k` files. The repo-owned Vault tree is unchanged at
+  `517,225,409 KiB` (about `493 GiB`) and `8,711` files; its `170` Trainer
+  checkpoint directories remain present, including conditioned-50k
+  `checkpoint-25000/25000/15000` and the batch-size-4 `checkpoint-3000`
+  restart states. Do not release any held BranchProof job until quota is back
+  below both soft limits and the post-16:30 CEST July-20 capacity check passes.
+- CPU-only watcher `3869120` is running on `a100mig`. It scheduled CPU-only
+  successor `3869995` for 07:06 CEST with `cpu=4,mem=30000M` and no GRES.
+  The end-to-end plan is incomplete, so the successor remains queued.
 
 ### 2026-07-18 19:15 user-wide Vault file-quota warning during the capacity pause
 
