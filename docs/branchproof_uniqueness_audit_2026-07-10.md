@@ -518,3 +518,11 @@ appeared by 13:09 CEST. User-wide Vault usage is over both soft limits at
 `1068G/1000G` and `201k/200k` files, while the repo-owned Vault tree and all
 restart checkpoints are unchanged. Release nothing until both quotas have
 margin and the post-16:30 CEST July-20 capacity check passes.
+
+At 19:09 CEST the row gate and all held/dependency-gated jobs remained
+unchanged, with no new production artifact or log. User-wide Vault usage had
+risen further to `1070G/1000G` soft and `202k/200k` files, while the repo-owned
+tree remained exactly `517,225,409 KiB`, `8,711` files, and `170` intact
+Trainer checkpoint directories. CPU-only watcher `3870759` preserved
+successor `3871736` for 01:07 CEST on July 20. The release prerequisites are
+therefore still unsatisfied.

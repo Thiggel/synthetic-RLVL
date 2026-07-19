@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-19
 
+- 19:09 CEST user-wide Vault reached `1070G/1000G` soft and
+  `202k/200k` files. The repo-owned tree remains exactly `517,225,409 KiB`
+  with `8,711` files and all `170` Trainer checkpoint directories intact.
+  Kept every BranchProof and Dolmino hold in place; no unrelated job or
+  artifact was touched.
+- 19:09 CEST the corrected baseline remains `18/30` accepted, with held
+  baseline rows/recoveries and aggregate unchanged and no new in-scope metric,
+  sample, log, or eval artifact after 13:09. CPU-only watcher `3870759` is
+  running on `a100mig`; CPU-only successor `3871736` is scheduled for 01:07
+  CEST on July 20 and remains required because the plan is incomplete.
+
 - 13:09 CEST user-wide Vault reached `1068G/1000G` soft and
   `201k/200k` files. The repo-owned Vault tree remains exactly
   `517,225,409 KiB` with `8,711` files and all `170` Trainer checkpoint

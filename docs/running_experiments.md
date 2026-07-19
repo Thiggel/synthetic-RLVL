@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-07-19 13:09 CEST.
+Last updated: 2026-07-19 19:09 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:09 CEST On July 19
+
+- The corrected baseline remains `18/30` accepted. Held A100-80 eval rows
+  `3857767_[21-29]`, local-snapshot recoveries `3863525_[13-14]` and
+  `3865321_18`, their audits, and aggregate `3857769` are unchanged. No new
+  in-scope metric, sample, log, or eval artifact exists after 13:09, so no
+  analysis or report gate opened.
+- User-wide Vault usage is now `1070G/1000G` soft and `202k/200k` files. The
+  repo-owned tree remains `517,225,409 KiB` with `8,711` files and `170`
+  intact Trainer checkpoint directories. Release no held BranchProof or
+  Dolmino work until both soft quotas have margin and the July-20 capacity
+  pause has ended. No unrelated job or artifact was touched.
+- CPU-only watcher `3870759` is running on `a100mig`. Recorded successor
+  `3871736` requests only `cpu=4,mem=30000M`, has no GRES, and is
+  BeginTime-pending for 01:07 CEST on July 20. It remains queued because the
+  plan is incomplete.
 
 ## Live Delta At 13:09 CEST On July 19
 

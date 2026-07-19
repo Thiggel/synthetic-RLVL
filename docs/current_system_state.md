@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-19 13:09 CEST.
+Last updated: 2026-07-19 19:09 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,23 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-19 19:09 quota hold and CPU-only successor preserved
+
+- The corrected baseline remains `18/30` accepted. Held eval rows
+  `3857767_[21-29]`, exact recoveries `3863525_[13-14]` and `3865321_18`,
+  their CPU audits, and aggregate `3857769` are unchanged. No in-scope metric,
+  sample, log, or eval artifact appeared after 13:09, so no analysis or report
+  gate opened.
+- User-wide Vault usage is now `1070G/1000G` soft and `202k/200k` files. The
+  repo-owned tree remains exactly `517,225,409 KiB` with `8,711` files and all
+  `170` Trainer checkpoint directories intact. Keep all BranchProof and
+  Dolmino holds until both quotas have margin and the post-16:30 CEST July-20
+  capacity check passes; no unrelated job or artifact was touched.
+- CPU-only watcher `3870759` is running on `a100mig`. Its recorded CPU-only
+  successor is `3871736`, scheduled for 01:07 CEST on July 20 with
+  `cpu=4,mem=30000M` and no GRES. The plan is incomplete, so the successor
+  remains queued.
 
 ### 2026-07-19 13:09 both Vault soft quotas exceeded
 
