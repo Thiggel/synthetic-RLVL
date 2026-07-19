@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-19 01:15 CEST.
+Last updated: 2026-07-19 07:15 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,7 +24,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-19 01:15 Vault soft quotas reached during the capacity pause
+### 2026-07-19 07:15 capacity and quota hold unchanged
 
 - The corrected baseline remains `18/30` accepted. Held eval rows
   `3857767_[21-29]`, exact recoveries `3863525_[13-14]` and `3865321_18`,
@@ -38,12 +38,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `checkpoint-25000/25000/15000` and the batch-size-4 `checkpoint-3000`
   restart states. Do not release any held BranchProof job until quota is back
   below both soft limits and the post-16:30 CEST July-20 capacity check passes.
-- CPU-only watcher `3869120` is running on `a100mig`. It scheduled CPU-only
-  successor `3869995` for 07:06 CEST with `cpu=4,mem=30000M` and no GRES.
+- CPU-only watcher `3869995` is running on `a100mig`. It scheduled CPU-only
+  successor `3870293` for 13:06 CEST with `cpu=4,mem=30000M` and no GRES.
   The end-to-end plan is incomplete, so the successor remains queued.
-- Quota/handoff commit `c3eccc0` is local. `git push origin main` produced no
-  remote output and timed out after 90 seconds; local `main` is 12 commits
-  ahead of `origin/main`. The report repository is unchanged and synchronized.
 
 ### 2026-07-18 19:15 user-wide Vault file-quota warning during the capacity pause
 

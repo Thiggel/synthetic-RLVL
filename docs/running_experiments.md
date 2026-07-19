@@ -1,10 +1,10 @@
 # Running Experiments
 
-Last updated: 2026-07-19 01:15 CEST.
+Last updated: 2026-07-19 07:15 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 01:15 CEST On July 19
+## Live Delta At 07:15 CEST On July 19
 
 - The corrected baseline remains `18/30` accepted. Held A100-80 eval rows
   `3857767_[21-29]`, local-snapshot recoveries `3863525_[13-14]` and
@@ -17,9 +17,9 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   conditioned-50k and batch restart states. This is now a hard prerequisite
   check: release no held BranchProof work until both soft quotas have margin
   and the July-20 capacity pause has ended.
-- CPU-only watcher `3869120` is running on `a100mig`. Successor `3869995`
+- CPU-only watcher `3869995` is running on `a100mig`. Successor `3870293`
   requests only `cpu=4,mem=30000M`, has no GRES, and is BeginTime-pending for
-  07:06 CEST. It remains queued because the plan is incomplete.
+  13:06 CEST. It remains queued because the plan is incomplete.
 
 ## Live Delta At 19:15 CEST On July 18
 
