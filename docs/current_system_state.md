@@ -41,6 +41,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - CPU-only watcher `3869995` is running on `a100mig`. It scheduled CPU-only
   successor `3870293` for 13:06 CEST with `cpu=4,mem=30000M` and no GRES.
   The end-to-end plan is incomplete, so the successor remains queued.
+- Live-handoff commit `88ba7ea` is local. A bounded `git push origin main`
+  produced no remote output and timed out after 90 seconds; the SSH/network
+  publication path remains blocked. The report repository is unchanged and
+  synchronized.
 
 ### 2026-07-18 19:15 user-wide Vault file-quota warning during the capacity pause
 

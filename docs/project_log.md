@@ -4,6 +4,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-19
 
+- 07:18 CEST refreshed the live watcher handoff in commit `88ba7ea`: watcher
+  `3869995` is CPU-only and running, and CPU-only successor `3870293` is
+  scheduled for 13:06 CEST. A bounded push produced no remote output and timed
+  out after 90 seconds; the SSH/network publication path remains blocked.
 - 01:15 CEST user-wide Vault reached `1001G/1000G` soft and exactly
   `200k/200k` files. The repo-owned Vault tree remains about `493 GiB` with
   `8,711` files, and all `170` Trainer checkpoint directories are intact,
