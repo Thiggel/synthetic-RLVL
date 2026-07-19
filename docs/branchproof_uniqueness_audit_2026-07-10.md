@@ -507,3 +507,14 @@ Rows 19/20 completed and passed their original audits, bringing accepted
 row-scoped coverage to `18/30`. Their raw NL generations are clean in the
 train band and fail through ordinary truncation or wrong/missing answers at
 depth 50; no matched-grid result is accepted yet.
+
+## 2026-07-19 Capacity and Quota Hold
+
+The declaration-fixed gate remains `18/30`. Original rows
+`3857767_[21-29]`, exact local-snapshot recoveries `3863525_[13-14]` and
+`3865321_18`, their CPU audits, and aggregate `3857769` remain held or
+dependency-gated. No new production metric, sample, log, or eval artifact
+appeared by 13:09 CEST. User-wide Vault usage is over both soft limits at
+`1068G/1000G` and `201k/200k` files, while the repo-owned Vault tree and all
+restart checkpoints are unchanged. Release nothing until both quotas have
+margin and the post-16:30 CEST July-20 capacity check passes.
