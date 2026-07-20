@@ -4,6 +4,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-20
 
+- 19:15 CEST architecture row `3850113_48` completed as raw job `3872671`
+  (`07:49:57`, exit `0:0`) and passed the final-adapter gate at step 10,000;
+  the final adapter is 131,252,288 bytes. Row `3850113_51` backfilled at
+  16:41, leaving 17 corrected BranchProof A40 rows active. Current rows show
+  normal progress and no fatal/OOM/quota/no-space signature; no corrected
+  eval or sample artifact appeared.
+- 19:15 CEST A100 work remains account-GRES/dependency pending. Current Slurm
+  estimates are 21:59 CEST for baseline `3857767_21` and 01:49 CEST July 21
+  for Dolmino p5 `3872664_[0-1]`. Vault is `810G/1000G` user-wide and the repo
+  is about 234 GiB/6,797 files; the shared file count remains `201k/200k`.
+  Preserved CPU-only successor `3874799` for 01:08 CEST because the plan is
+  incomplete.
+- The scoped documentation commit remains local and one commit ahead of
+  `origin/main`: the bounded push produced no remote response, and a direct
+  SSH probe failed with `connect to host github.com port 22: Connection timed
+  out`. The report repository is unchanged and synchronized.
+
 - 15:06 CEST project-only storage cleanup reclaimed `55.59 GiB` from
   `$HPCVAULT` by deleting the reproducible raw JSONL staging trees for the
   packed BranchProof-unique-v2 and Dolmino-neutral-v1 Nanosets. Before

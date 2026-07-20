@@ -1,8 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-07-20 15:06 CEST.
+Last updated: 2026-07-20 19:15 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:15 CEST On July 20
+
+- Architecture row `3850113_48` completed cleanly as raw job `3872671` at
+  16:41 CEST (`07:49:57`, exit `0:0`). The Gemma-3-4B NL seed-3407 run has a
+  step-10,000 trainer state and a nonempty `131,252,288`-byte final adapter.
+  Row `3850113_51` backfilled immediately; architecture rows 49/50/51 are
+  active around `85/85/22%`.
+- Seventeen corrected BranchProof A40 rows remain active. Surface and shortcut
+  10k rows are around `81--85%`; conditioned-50k rows 13/14 are around `16%`.
+  Current log tails have no fatal, OOM, quota, or no-space signature. No new
+  corrected eval JSON/sample JSONL exists, so no evidence gate opened.
+- Baseline eval/recovery, batch recovery, hybrid eval, and Dolmino p5 remain
+  A100 account-GRES pending or dependency-gated. Slurm estimates
+  `3857767_21` at 21:59 CEST and `3872664_[0-1]` at 01:49 CEST on July 21.
+  No job was duplicated or dependency-edited.
+- Vault is `810G/1000G` user-wide with `201k/200k` files; the repo uses about
+  `234 GiB` and 6,797 files. CPU-only watcher `3873713` is running and its
+  no-GRES successor `3874799` remains scheduled for 01:08 CEST on July 21.
 
 ## Live Delta At 15:06 CEST On July 20
 

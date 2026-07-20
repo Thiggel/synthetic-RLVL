@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-20 15:06 CEST.
+Last updated: 2026-07-20 19:15 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,35 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-20 19:15 first resumed architecture final passed; gates unchanged
+
+- Architecture row `3850113_48` completed as raw job `3872671` at 16:41 CEST
+  in `07:49:57` with exit `0:0`. Its Gemma-3-4B NL seed-3407 run reached
+  step 10,000 and passed the artifact gate: the final adapter is nonempty
+  (`131,252,288` bytes), its config is present, and the terminal trainer state
+  records `global_step=10000`. Architecture row `3850113_51` backfilled at
+  16:41; rows 49/50/51 are now active.
+- Seventeen corrected BranchProof SFT rows remain active on A40s. The
+  surface/shortcut 10k rows are around `81--85%`, conditioned-50k rows 13/14
+  are around `16%`, and architecture rows 49/50/51 are around `85/85/22%`.
+  Their current log tails contain no fatal, OOM, quota, or no-space signature.
+  No new corrected eval JSON or sample JSONL exists, so no metric,
+  raw-generation, aggregation, or report gate opened.
+- A100-80 work remains account-GRES pending with dependencies intact. Slurm
+  estimates baseline row `3857767_21` for 21:59 CEST and matched Dolmino p5
+  `3872664_[0-1]` for 01:49 CEST on July 21. The declaration-fixed baseline
+  remains `18/30` accepted; no recovery or duplicate family was submitted.
+- User-wide Vault is `810G/1000G` with `201k/200k` files; this repo is about
+  `234 GiB` and `6,797` Vault files. The increase from the cleanup snapshot is
+  expected active-checkpoint writing and is below the space soft quota, but
+  the user-wide file count remains above soft quota and must be watched.
+- Watcher `3873713` is running CPU-only on `a100mig`. Its recorded successor
+  `3874799` is CPU-only (`cpu=4,mem=30000M`, no GRES) and BeginTime-pending for
+  01:08 CEST on July 21. The plan is incomplete, so it remains scheduled.
+- The scoped handoff commit is local and one commit ahead of `origin/main`.
+  A bounded push and direct SSH probe failed because `github.com:22` timed
+  out; the report repository is unchanged, clean, and synchronized.
 
 ### 2026-07-20 15:06 project-only storage cleanup; active jobs unchanged
 
