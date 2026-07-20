@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-20 08:52 CEST.
+Last updated: 2026-07-20 13:15 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,34 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-20 13:15 resumed A40 training healthy; A100 gates capacity-pending
+
+- Seventeen corrected BranchProof SFT rows are running on A40s. The six
+  replacement surface/shortcut rows `3872657_[15-17]` and
+  `3872658_[19-21]`, resumed surface rows `3850105_[18-20]`, and shortcut
+  rows `3850213_[22-24]` are at roughly `32--34%` after 4h20m. Architecture
+  row `3850113_48` is at `55%`; rows 49/50 backfilled at 12:31/12:35 CEST and
+  are at `7/6%`. Conditioned-50k rows `3850109_13/14` are at about `6%` and
+  retain the staged resume chain `3850110..3850112`. No monitored log has a
+  fatal, OOM, quota, or no-space signature.
+- The declaration-fixed baseline remains `18/30` accepted. Original eval
+  rows `3857767_[21-29]`, local-snapshot recoveries
+  `3863525_[13-14]`/`3865321_18`, their CPU audits, report evals, batch
+  recovery `3872659`, hybrid replacement eval `3872660`, and Dolmino p5
+  confirmation `3872664` are all pending on account GRES or dependencies.
+  No new in-scope eval JSON, sample JSONL, or Nanotron artifact exists after
+  the 08:52 release, so no raw-generation, aggregation, or report gate opened.
+- Vault space remains safe at `863G/1000G` user-wide and `300,344,897 KiB`
+  repo-owned, with only `26` repo Trainer checkpoint directories. The shared
+  user file count is again just over its soft threshold at `201k/200k`
+  (`400k` hard); this is not currently a repo write failure, but the next pass
+  must recheck it before additional data or checkpoint expansion. Dolmino p5
+  currently estimates 17:34 CEST rather than the earlier 10:24 estimate.
+- Current CPU-only watcher `3872507` is running on `a100mig`. Its recorded
+  CPU-only successor is `3873713`, scheduled for 19:07 CEST with
+  `cpu=4,mem=30000M` and no GRES. The plan is incomplete, so the successor
+  remains queued.
 
 ### 2026-07-20 08:52 capacity restored and all gated work resumed
 

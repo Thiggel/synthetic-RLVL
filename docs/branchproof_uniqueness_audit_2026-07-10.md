@@ -526,3 +526,18 @@ tree remained exactly `517,225,409 KiB`, `8,711` files, and `170` intact
 Trainer checkpoint directories. CPU-only watcher `3870759` preserved
 successor `3871736` for 01:07 CEST on July 20. The release prerequisites are
 therefore still unsatisfied.
+
+## 2026-07-20 Capacity Release and Resumed Matrix
+
+After the user confirmed competing work had ended, a final-backed guarded
+cleanup restored Vault space and all BranchProof holds were released. Targeted
+replacements are surface `3872657`, shortcut `3872658`, resumable batch
+`3872659`, and hybrid eval `3872660`; rebuilt skip-gated evals are
+`3872661/3872662/3872663`. At 13:15 CEST seventeen A40 SFT rows were actively
+progressing with no fatal/OOM/quota/no-space signature. The baseline remains
+`18/30` accepted because A100-80 rows `3857767_[21-29]` and exact recoveries
+`3863525_[13-14]`/`3865321_18` are still account-GRES pending. No new eval
+JSON/sample artifact exists, so the corrected aggregate and qualitative gates
+remain closed. Shared Vault file count is marginally over soft quota again at
+`201k/200k`, while repo-owned storage is about 286.4 GiB with only 26 active
+Trainer checkpoint directories; recheck this before further storage expansion.

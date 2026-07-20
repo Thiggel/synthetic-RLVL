@@ -4,6 +4,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-20
 
+- 13:15 CEST verified all 17 active corrected BranchProof A40 SFT rows are
+  making training progress: surface/shortcut rows are about `32--34%`,
+  architecture rows `48/49/50` are about `55/7/6%`, and conditioned-50k rows
+  `13/14` are about `6%` with the staged resume chain intact. No fatal, OOM,
+  quota, or no-space signature is present. A100 baseline recoveries/evals,
+  report work, and Dolmino p5 remain account-GRES/dependency pending; no new
+  metric/sample artifact opened an analysis or report gate.
+- 13:15 CEST Vault is `863G/1000G` user-wide and `300,344,897 KiB`
+  repo-owned with `26` repo Trainer checkpoints. The shared file count is
+  marginally over soft quota again at `201k/200k` (`400k` hard), so the next
+  pass must recheck it before further storage expansion. Preserved CPU-only
+  successor `3873713` for 19:07 CEST because the end-to-end plan is incomplete.
+
 - 08:52 CEST cleared the capacity/quota gate and resumed all repo work.
   Guarded cleanup removed 146 intermediate checkpoints only from 136 runs
   with verified finals and no live checkpoint references (`130.04 GiB`, 1,970

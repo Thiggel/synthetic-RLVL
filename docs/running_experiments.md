@@ -1,8 +1,28 @@
 # Running Experiments
 
-Last updated: 2026-07-20 08:52 CEST.
+Last updated: 2026-07-20 13:15 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:15 CEST On July 20
+
+- Seventeen corrected BranchProof SFT rows are active on A40s. Replacement
+  surface/shortcut `3872657_[15-17]` and `3872658_[19-21]`, resumed surface
+  `3850105_[18-20]`, and shortcut `3850213_[22-24]` are around `32--34%`;
+  architecture `3850113_48/49/50` are around `55/7/6%`; conditioned-50k
+  `3850109_13/14` are around `6%`. Their logs show normal training with no
+  fatal, OOM, quota, or no-space signature.
+- A100-80 work remains account-GRES pending: baseline
+  `3857767_[21-29]`, recoveries `3863525_[13-14]` and `3865321_18`, hybrid
+  eval `3872660`, batch recovery `3872659`, and Dolmino p5 `3872664`.
+  Dolmino's current projection is 17:34 CEST. Dependent CPU audits/evals and
+  aggregate remain correctly gated; no new eval or Nanotron result artifact
+  appeared after 08:52.
+- Vault is `863G/1000G` user-wide and `300,344,897 KiB` repo-owned with `26`
+  repo Trainer checkpoints. The shared file count is again marginally over
+  soft quota at `201k/200k` (`400k` hard), so recheck before any additional
+  storage-producing launch. Current watcher `3872507` is CPU-only; CPU-only
+  successor `3873713` is BeginTime-pending for 19:07 CEST and remains needed.
 
 ## Live Delta At 08:52 CEST On July 20
 
