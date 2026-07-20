@@ -4,6 +4,22 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-20
 
+- 15:06 CEST project-only storage cleanup reclaimed `55.59 GiB` from
+  `$HPCVAULT` by deleting the reproducible raw JSONL staging trees for the
+  packed BranchProof-unique-v2 and Dolmino-neutral-v1 Nanosets. Before
+  deletion, verified all five packed corpora have 16 nonempty shards,
+  metadata, token statistics, and no live-job raw-path references; packed
+  data, checkpoints, finals, and results remain intact.
+- 15:06 CEST removed 242 completed online W&B run caches older than July 20
+  from this project's `$WORK` tree (`1.27 GiB`). Preserved all 20 offline runs
+  and all 19 current-day caches. Repo-owned use is now about `231 GiB` on
+  Vault and `68 GiB` on Work; user-wide quota is `808G/1000G` and
+  `80,679M/100G`, respectively. Vault's user-wide file count remains
+  `201k/200k`, while this repo accounts for only 6,745 Vault files.
+- 15:06 CEST live state is otherwise unchanged: 17 BranchProof A40 SFT rows
+  are running with no new project failure; A100 work is account-GRES or
+  dependency pending, with Dolmino p5 currently estimated for 17:34 CEST.
+
 - 13:15 CEST verified all 17 active corrected BranchProof A40 SFT rows are
   making training progress: surface/shortcut rows are about `32--34%`,
   architecture rows `48/49/50` are about `55/7/6%`, and conditioned-50k rows

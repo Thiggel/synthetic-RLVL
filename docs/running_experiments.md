@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-07-20 13:15 CEST.
+Last updated: 2026-07-20 15:06 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 15:06 CEST On July 20
+
+- Seventeen corrected BranchProof SFT rows remain active on A40s and no new
+  project failure is recorded. Baseline/recovery/report evaluation and batch
+  training remain account-GRES pending on A100; dependent jobs remain gated.
+  Slurm currently estimates 17:34 CEST for Dolmino p5 `3872664` and selected
+  A100 work.
+- Project-only cleanup removed `55.59 GiB` of reproducible raw Nanotron JSONL
+  staging data from Vault after validating all packed replacements, and
+  `1.27 GiB` from 242 completed online W&B caches on Work. All packed Nanosets,
+  offline W&B runs, current run caches, checkpoints, finals, and result
+  evidence are retained.
+- Repo-owned usage is about `231 GiB` on Vault and `68 GiB` on Work. User-wide
+  Vault usage is `808G/1000G`; its file display remains `201k/200k`, but only
+  `6,745` Vault files belong to this repo. No unrelated path was inspected for
+  deletion or modified.
 
 ## Live Delta At 13:15 CEST On July 20
 

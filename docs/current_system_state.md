@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-20 13:15 CEST.
+Last updated: 2026-07-20 15:06 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,29 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-20 15:06 project-only storage cleanup; active jobs unchanged
+
+- Removed only reproducible staging artifacts owned by this project. From
+  `$HPCVAULT`, deleted the raw JSONL trees
+  `nanotron_data/qwen25_branchproof_unique_v2` and
+  `nanotron_data/qwen25_dolmino_neutral_v1` after verifying that every
+  corresponding packed Nanoset has 16 nonempty shards, metadata, token
+  statistics, and no live-job raw-data reference. The packed BranchProof and
+  Dolmino/formal/NL Nanosets remain intact. This reclaimed `55.59 GiB`.
+- From `$WORK`, deleted `242` completed online W&B run caches dated before
+  July 20, reclaiming `1.27 GiB`. Preserved all `20` offline/unsynced runs and
+  all `19` current-day run caches used by active jobs. No final adapter,
+  checkpoint, dataset result, evaluation sample, environment, or unrelated
+  project path was removed.
+- Repo-owned storage is now about `231 GiB` on `$HPCVAULT` and `68 GiB` on
+  `$WORK`; user-wide quota reports `808G/1000G` on Vault and `80,679M/100G`
+  on Work/home. Vault still displays `201k/200k` files because that count is
+  user-wide; this repo has only `6,745` Vault files.
+- Seventeen BranchProof SFT rows remain running on A40s with no newly recorded
+  failure. A100 work remains account-GRES/dependency pending. Slurm currently
+  projects 17:34 CEST for Dolmino p5 `3872664` and selected A100 work; the
+  scientific result gates are unchanged.
 
 ### 2026-07-20 13:15 resumed A40 training healthy; A100 gates capacity-pending
 
