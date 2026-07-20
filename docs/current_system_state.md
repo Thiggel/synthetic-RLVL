@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-20 19:15 CEST.
+Last updated: 2026-07-21 01:20 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,36 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-21 01:20 fourteen more report-matrix SFT rows accepted
+
+- Fourteen corrected report-matrix SFT rows completed after the prior handoff:
+  surface rows 15--20, shortcut rows 19--24, and architecture rows 49/50.
+  This includes both targeted replacements `3872657_[15-17]` and
+  `3872658_[19-21]`. Every final passed the artifact gate: nonempty adapter
+  and config, terminal `global_step=10000`, and no empty file in `final/`.
+  Surface is now `21/27`, shortcut `25/42`, and architecture `51/54` final
+  adapters. Rebuilt evals `3872661/3872662` remain dependency-gated and no
+  corrected eval JSON or sample JSONL was written.
+- Eleven corrected A40 rows are active: surface `3850105_21..23`, shortcut
+  `3850213_25..27`, architecture `3850113_51..53`, and conditioned-50k
+  `3850109_13/14`. They are around `26--30%`, `26--30%`, `80/45/45%`, and
+  `26%`, respectively. Scoped log tails contain no fatal, OOM, quota, or
+  no-space signature.
+- Declaration-fixed baseline eval/recoveries, batch recovery, hybrid eval,
+  and Dolmino p5 remain A100-80 account-GRES pending. Dolmino
+  `3872664_[0-1]` currently has a provisional 01:49 CEST start estimate; no
+  dependency, feature, or compatible-partition repair is available. The
+  baseline acceptance gate remains `18/30`, and no duplicate was submitted.
+- User-wide Vault is `829G/1000G` with `201k/200k` files; this repo is about
+  `253 GiB` and 7,163 Vault files. The space quota remains safe, while the
+  user-wide file count is still above soft quota and must be watched.
+- Current watcher `3874799` is CPU-only on `a100mig`. It scheduled CPU-only,
+  no-GRES successor `3875468` for 07:08 CEST. The plan remains incomplete, so
+  the successor is preserved. The report repository is unchanged because no
+  evidence gate opened. The scoped handoff commit is local; a bounded push
+  timed out with exit `124`, leaving this repo two commits ahead of
+  `origin/main`.
 
 ### 2026-07-20 19:15 first resumed architecture final passed; gates unchanged
 

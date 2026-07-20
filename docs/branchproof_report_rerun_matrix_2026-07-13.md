@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-20 19:15 CEST.
+Last updated: 2026-07-21 01:20 CEST.
 
 ## Scope
 
@@ -27,12 +27,15 @@ Every report comparison has three seeds. Exact duplicate compact-logic rows
 reuse the corrected baseline only when model, train range, seed, steps, and
 data surface match exactly.
 
-At 16:41 CEST on July 20, architecture task `3850113_48` completed as raw job
-`3872671` in `07:49:57` with exit `0:0`. The Gemma-3-4B NL seed-3407 run
-reached step 10,000 and produced a nonempty 131,252,288-byte final adapter;
-task 51 backfilled immediately. No corrected architecture eval artifact exists
-yet, so this is an SFT artifact acceptance only and does not open a scientific
-result gate.
+By 01:20 CEST on July 21, the resumed wave had added 14 artifact-clean finals:
+surface rows 15--20, shortcut rows 19--24, and architecture rows 49/50. Both
+targeted replacement arrays `3872657_[15-17]` and `3872658_[19-21]` completed
+successfully. Every new final has a nonempty adapter/config, a terminal
+step-10,000 trainer state, and no empty file. Family completion is now surface
+`21/27`, shortcut `25/42`, and architecture `51/54`. Eleven A40 rows remain
+active, while all rebuilt evals are A100 account-GRES or dependency pending.
+No corrected eval artifact exists yet, so this remains SFT artifact acceptance
+only and does not open a scientific result gate.
 
 Batch-size rows `3850114_3/4/5` reached approximately
 `9472/9416/9472` of 10,000 steps and then hit the 24-hour ceiling. Their

@@ -2,6 +2,26 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-21
+
+- 01:20 CEST accepted 14 newly completed report-matrix SFT artifacts:
+  surface rows 15--20, shortcut rows 19--24, and architecture rows 49/50.
+  Both targeted replacements `3872657` and `3872658` are complete. Every
+  final has a nonempty adapter/config, terminal step 10,000, and zero empty
+  files. Current final counts are surface `21/27`, shortcut `25/42`, and
+  architecture `51/54`.
+- Eleven A40 rows continue without scoped fatal/OOM/quota/no-space signatures.
+  A100-80 baseline/recovery, batch, hybrid-eval, and Dolmino p5 work remains
+  account-GRES pending; no new eval JSON/sample artifact exists, so no metric,
+  generation-review, aggregation, or report gate opened.
+- Vault is `829G/1000G` user-wide and the repo is about `253 GiB`/7,163 files;
+  the shared file count remains `201k/200k`. Current CPU-only watcher
+  `3874799` scheduled no-GRES successor `3875468` for 07:08 CEST, which is
+  preserved because the end-to-end plan is incomplete.
+- Committed the scoped handoff locally. A bounded push timed out with exit
+  `124`; local `main` remains two commits ahead of `origin/main`. The report
+  repository is unchanged and synchronized.
+
 ## 2026-07-20
 
 - 19:15 CEST architecture row `3850113_48` completed as raw job `3872671`

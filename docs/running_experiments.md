@@ -1,8 +1,29 @@
 # Running Experiments
 
-Last updated: 2026-07-20 19:15 CEST.
+Last updated: 2026-07-21 01:20 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:20 CEST On July 21
+
+- Fourteen report-matrix SFT tasks completed after 19:15: surface rows 15--20,
+  shortcut rows 19--24, and architecture rows 49/50. Both targeted replacement
+  arrays `3872657_[15-17]` and `3872658_[19-21]` are cleanly complete. All 14
+  finals have nonempty adapter/config files, terminal step-10,000 trainer
+  states, and zero empty final files. Current completion is surface `21/27`,
+  shortcut `25/42`, and architecture `51/54`.
+- Eleven A40 rows remain active: surface 21--23 and shortcut 25--27 are around
+  `26--30%`, architecture 51/52/53 is around `80/45/45%`, and conditioned-50k
+  13/14 is around `26%`. Scoped tails have no fatal, OOM, quota, or no-space
+  signature. No new corrected eval JSON/sample JSONL exists.
+- A100-80 baseline `3857767_[21-29]`, recoveries `3863525_[13-14]` and
+  `3865321_18`, batch recovery `3872659`, hybrid eval `3872660`, and Dolmino
+  p5 `3872664` remain account-GRES pending. Dolmino currently projects 01:49
+  CEST. Dependent eval/audit/aggregate jobs remain correctly gated; no
+  duplicate, dependency edit, or partition edit was made.
+- Vault is `829G/1000G` user-wide and `253 GiB`/7,163 files repo-owned; the
+  shared file count remains `201k/200k`. Watcher `3874799` is running CPU-only
+  and its no-GRES successor `3875468` remains scheduled for 07:08 CEST.
 
 ## Live Delta At 19:15 CEST On July 20
 
