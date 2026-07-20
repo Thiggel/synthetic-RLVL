@@ -51,6 +51,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   CPU-only successor is `3873713`, scheduled for 19:07 CEST with
   `cpu=4,mem=30000M` and no GRES. The plan is incomplete, so the successor
   remains queued.
+- Handoff commit `4837cbb` is local. Two bounded `git push origin main`
+  attempts produced no remote output and the explicit 60-second retry exited
+  `124`; local `main` is one commit ahead of `origin/main`. The report repo is
+  unchanged and synchronized.
 
 ### 2026-07-20 08:52 capacity restored and all gated work resumed
 
