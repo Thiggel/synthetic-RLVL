@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-19 01:15 CEST.
+Last updated: 2026-07-20 08:52 CEST.
 
 ## Scope
 
@@ -94,6 +94,32 @@ states remained intact.
    remain skip-gated, so only missing rows evaluate.
 7. Update all three live handoff documents with new job IDs and accept no
    result until structural audits and representative generation review pass.
+
+## July 20 resumption
+
+The quota gate was restored before release: final-backed checkpoint cleanup
+and removal of superseded FineWeb data reduced user-wide Vault usage from
+`1070G` to `861G`, while preserving all incomplete-run restart states. Every
+held original array was released; no `JobHeldUser` task remains.
+
+Canceled work was reconstructed as follows:
+
+| Family | Replacement SFT/eval | Dependency policy |
+| --- | --- | --- |
+| Surface | SFT `3872657_[15-17]`; eval `3872661_[0-26]` | eval waits `afterany:3850105` and `afterok:3872657` |
+| Shortcut | SFT `3872658_[19-21]`; eval `3872662_[0-41]` | eval waits `afterany:3850213` and `afterok:3872658`; prior row-3--6 replacement finals were reverified |
+| Batch | SFT `3872659_[3-8]`; eval `3872663_[0-47]` | eval waits `afterany:3850114` and `afterok:3872659`; rows 3--5 resume checkpoint 3000 and 6--8 restart |
+| Hybrid | eval `3872660_[0-2]` | training finals reverified; original eval rows 3--29 released |
+
+All eval wrappers retain their complete-output skip gate, so rebuilding full
+arrays cannot overwrite or recompute already accepted outputs.
+
+The cleanup removed terminal Trainer checkpoints from completed
+conditioned-50k rows. Before staged successor `3850110` could start, the SFT
+wrapper's stale special case was removed: any verified nonempty final adapter
+now skips. Completed conditioned rows 0--2 and 4--5 will not retrain;
+unfinished rows still have no final and resume from the preserved checkpoint
+states listed above.
 
 At 08:12 CEST on July 14, shortcut tasks `3850213_3/4` were found canceled
 before Python startup. Exact recovery `3854948_[3-4%2]` started on A40s, and

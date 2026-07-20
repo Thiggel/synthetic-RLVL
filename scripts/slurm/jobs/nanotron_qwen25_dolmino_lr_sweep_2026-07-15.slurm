@@ -22,6 +22,8 @@ export WANDB_MODE="${WANDB_MODE:-offline}"
 
 MODEL_ID="${MODEL_ID:-Qwen/Qwen2.5-7B}"
 NORMAL_DATASET_FOLDER="${NORMAL_DATASET_FOLDER:-${HPCVAULT}/synthetic-RLVL/nanosets/qwen25_dolmino_neutral_v1/dolmino}"
+MIX_MODE="${MIX_MODE:-control}"
+INTERVENTION_DATASET_FOLDER="${INTERVENTION_DATASET_FOLDER:-${HPCVAULT}/synthetic-RLVL/nanosets/qwen25_dolmino_neutral_v1/${MIX_MODE}}"
 PRETRAINED_NANOTRON_CKPT="${PRETRAINED_NANOTRON_CKPT:-${HPCVAULT}/synthetic-RLVL/nanotron_checkpoints/qwen25_7b_tp1}"
 TRAIN_STEPS="${TRAIN_STEPS:-256}"
 WARMUP_STEPS="${WARMUP_STEPS:-32}"
@@ -42,10 +44,23 @@ if (( GLOBAL_BATCH_SIZE != 128 )); then
   exit 1
 fi
 LRS=(6.0e-6 3.0e-6 1.0e-5)
-LR="${LRS[$SLURM_ARRAY_TASK_ID]}"
+LR="${LR_OVERRIDE:-${LRS[$SLURM_ARRAY_TASK_ID]}}"
 LR_TAG="$(printf '%s' "${LR}" | tr '.-' 'pm')"
 TOPOLOGY_SUFFIX="${TOPOLOGY_TAG:+_${TOPOLOGY_TAG}}"
-RUN_TAG="qwen25_7b_dolmino_lr${LR_TAG}_${TRAIN_STEPS}step${TOPOLOGY_SUFFIX}"
+if [[ "${MIX_MODE}" == "control" ]]; then
+  RUN_TAG="qwen25_7b_dolmino_lr${LR_TAG}_${TRAIN_STEPS}step${TOPOLOGY_SUFFIX}"
+  DATASET_FOLDERS_YAML="      - ${NORMAL_DATASET_FOLDER}"
+  DATASET_WEIGHTS_YAML="      - 1.0"
+elif [[ "${MIX_MODE}" == "logic" || "${MIX_MODE}" == "nl_exact" ]]; then
+  RUN_TAG="qwen25_7b_dolmino_${MIX_MODE}_p5_lr${LR_TAG}_${TRAIN_STEPS}step${TOPOLOGY_SUFFIX}"
+  DATASET_FOLDERS_YAML="      - ${NORMAL_DATASET_FOLDER}
+      - ${INTERVENTION_DATASET_FOLDER}"
+  DATASET_WEIGHTS_YAML="      - 0.95
+      - 0.05"
+else
+  echo "Unsupported MIX_MODE=${MIX_MODE}; expected control, logic, or nl_exact" >&2
+  exit 2
+fi
 RUN_BASE_ROOT="${RUN_BASE_ROOT:-${HPCVAULT}/synthetic-RLVL/nanotron_lr_sweep}"
 RUN_ROOT="${RUN_BASE_ROOT}/${RUN_TAG}"
 CONFIG="${RUN_ROOT}/config.yaml"
@@ -53,6 +68,10 @@ CONFIG="${RUN_ROOT}/config.yaml"
 test -f "${PRETRAINED_NANOTRON_CKPT}/model_config.json"
 compgen -G "${NORMAL_DATASET_FOLDER}/*.metadata" >/dev/null
 find "${NORMAL_DATASET_FOLDER}" -maxdepth 1 -type f -name '*.ds' -size +0 -print -quit | grep -q .
+if [[ "${MIX_MODE}" != "control" ]]; then
+  compgen -G "${INTERVENTION_DATASET_FOLDER}/*.metadata" >/dev/null
+  find "${INTERVENTION_DATASET_FOLDER}" -maxdepth 1 -type f -name '*.ds' -size +0 -print -quit | grep -q .
+fi
 if [[ -f "${RUN_ROOT}/complete.json" && "${FORCE_NANOTRON_TRAIN:-0}" != "1" ]]; then
   echo "Sweep row already complete: ${RUN_ROOT}"
   exit 0
@@ -74,16 +93,16 @@ data_stages:
 - data:
     dataset:
       dataset_folder:
-      - ${NORMAL_DATASET_FOLDER}
+${DATASET_FOLDERS_YAML}
       dataset_weights:
-      - 1.0
+${DATASET_WEIGHTS_YAML}
       token_size_in_bytes: 4
       tokenizer_name: ${MODEL_ID}
       vocab_size: 152064
       shuffle_files: true
     num_loading_workers: 4
     seed: 42
-  name: qwen25_dolmino_lr${LR_TAG}
+  name: qwen25_dolmino_${MIX_MODE}_lr${LR_TAG}
   start_training_step: 1
 general:
   benchmark_csv_path: ${RUN_ROOT}/benchmark.csv
@@ -186,7 +205,7 @@ cd ../nanotron
 torchrun --nproc_per_node="${NPROC_PER_NODE}" run_train.py --config-file "${CONFIG}"
 cd "${SLURM_SUBMIT_DIR}"
 
-LR="${LR}" TRAIN_STEPS="${TRAIN_STEPS}" RUN_ROOT="${RUN_ROOT}" \
+LR="${LR}" TRAIN_STEPS="${TRAIN_STEPS}" RUN_ROOT="${RUN_ROOT}" MIX_MODE="${MIX_MODE}" \
 GLOBAL_BATCH_SIZE="${GLOBAL_BATCH_SIZE}" TP="${TP}" DP="${DP}" PP="${PP}" \
 NPROC_PER_NODE="${NPROC_PER_NODE}" python - <<'PY'
 import json
@@ -196,6 +215,9 @@ from pathlib import Path
 root = Path(os.environ["RUN_ROOT"])
 payload = {
     "learning_rate": float(os.environ["LR"]),
+    "mix_mode": os.environ["MIX_MODE"],
+    "dolmino_weight": 1.0 if os.environ["MIX_MODE"] == "control" else 0.95,
+    "intervention_weight": 0.0 if os.environ["MIX_MODE"] == "control" else 0.05,
     "train_steps": int(os.environ["TRAIN_STEPS"]),
     "nproc_per_node": int(os.environ["NPROC_PER_NODE"]),
     "tp": int(os.environ["TP"]),

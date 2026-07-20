@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-19 19:09 CEST.
+Last updated: 2026-07-20 08:52 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,38 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-20 08:52 capacity restored and all gated work resumed
+
+- The user confirmed the competing experiments are complete. A guarded
+  repo-only cleanup first verified `136` run parents with nonempty final
+  adapters and no live checkpoint references, then removed their `146`
+  intermediate Trainer checkpoint directories (`130.04 GiB`, `1,970` files).
+  It preserved all `24` checkpoints for incomplete conditioned-50k and batch
+  runs. The superseded, reproducible FineWeb continual-pretraining JSONL and
+  Nanoset were also removed (`78.96 GiB`); current science uses Dolmino.
+  User-wide Vault use fell from `1070G` to `861G`, and repo-owned use from
+  `517,225,409 KiB` to `298,078,072 KiB`. The file quota is no longer marked
+  over-limit, although its rounded display remains `200k/200k`.
+- Released every held BranchProof array. Existing baseline recoveries,
+  report-matrix SFT/evals, conditioned-50k staged resumes, architecture, and
+  32B work are now normal running, dependency-pending, or account-GRES
+  pending. No `JobHeldUser` row remains.
+- Submitted targeted replacements: surface SFT `3872657_[15-17]`, shortcut
+  SFT `3872658_[19-21]`, resumable batch SFT `3872659_[3-8]`, and hybrid eval
+  `3872660_[0-2]`. Rebuilt complete skip-gated eval arrays as surface
+  `3872661`, shortcut `3872662`, and batch `3872663` with dependencies on both
+  original and replacement training. The A40 SFT rows started immediately.
+- Added and submitted matched Dolmino p5 confirmations `3872664_[0-1%2]`:
+  both run 256 steps at shared LR `1e-5`, global batch 128, and TP4/DP1 on
+  four A100-80GB GPUs; row 0 is 95% Dolmino + 5% formal and row 1 is 95%
+  Dolmino + 5% matched NL. Slurm currently estimates 10:24 CEST. Full staged
+  production remains gated on stable, sample-clean confirmation results.
+- Final-backed cleanup exposed a stale conditioned-50k skip condition that
+  also required the now-removed terminal Trainer checkpoint. Before any
+  dependent resume stage started, the wrapper was corrected to treat a
+  nonempty final adapter as terminal. Completed rows 0--2 and 4--5 therefore
+  skip, while unfinished rows retain and resume their audited checkpoints.
 
 ### 2026-07-19 19:09 quota hold and CPU-only successor preserved
 

@@ -1,8 +1,30 @@
 # Running Experiments
 
-Last updated: 2026-07-19 19:09 CEST.
+Last updated: 2026-07-20 08:52 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 08:52 CEST On July 20
+
+- All BranchProof user holds are released. Sixteen A40 SFT rows started
+  immediately across the resumed and replacement surface, shortcut,
+  conditioned-50k, and architecture families. A100 work is normal
+  account-GRES/dependency pending.
+- New targeted jobs: surface SFT `3872657_[15-17]`, shortcut SFT
+  `3872658_[19-21]`, batch SFT `3872659_[3-8]`, hybrid eval
+  `3872660_[0-2]`, and rebuilt dependent evals surface `3872661`, shortcut
+  `3872662`, batch `3872663`. Bsz4 rows resume checkpoint 3000; bsz8 restarts
+  with 250-step checkpoints and two-state retention.
+- Dolmino formal/NL p5 confirmation `3872664_[0-1%2]` is submitted at shared
+  LR `1e-5`; Slurm estimates 10:24 CEST. Each row uses four A100-80GB GPUs,
+  256 steps, global batch 128, and a 95/5 Dolmino/intervention blend.
+- Guarded cleanup removed `130.04 GiB` of final-backed Trainer intermediates
+  and `78.96 GiB` of superseded FineWeb data while preserving all 24 active
+  restart checkpoints. Vault is now `861G/1000G`; its file count is no longer
+  marked over quota. No fresh startup error is present.
+- Corrected the conditioned-50k skip gate before staged successors start:
+  verified final adapters now skip independently of deleted terminal Trainer
+  checkpoints; unfinished rows continue from the 24 preserved restart states.
 
 ## Live Delta At 19:09 CEST On July 19
 

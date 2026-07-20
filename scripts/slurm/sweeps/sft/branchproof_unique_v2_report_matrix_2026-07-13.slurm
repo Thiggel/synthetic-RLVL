@@ -53,7 +53,7 @@ elif [[ "${MATRIX_GROUP}" == "batch" ]]; then
 fi
 
 TARGET_CHECKPOINT="${OUTPUT_DIR}/checkpoint-${TARGET_STEP}/trainer_state.json"
-if [[ -f "${OUTPUT_DIR}/final/adapter_config.json" && "${MATRIX_GROUP}" != "conditioned50k" && "${FORCE_SFT:-0}" != "1" ]]; then
+if [[ -s "${OUTPUT_DIR}/final/adapter_config.json" && "${FORCE_SFT:-0}" != "1" ]]; then
   echo "Final checkpoint exists for ${RUN_NAME}; skipping"
   exit 0
 fi

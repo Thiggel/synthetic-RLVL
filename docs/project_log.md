@@ -2,6 +2,30 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-20
+
+- 08:52 CEST cleared the capacity/quota gate and resumed all repo work.
+  Guarded cleanup removed 146 intermediate checkpoints only from 136 runs
+  with verified finals and no live checkpoint references (`130.04 GiB`, 1,970
+  files), plus the superseded FineWeb JSONL/Nanoset (`78.96 GiB`). Preserved
+  all 24 incomplete-run checkpoints. Vault fell from `1070G` to `861G` and is
+  no longer marked over either soft quota.
+- Released every held BranchProof array. Submitted surface SFT/eval
+  `3872657 -> 3872661`, shortcut `3872658 -> 3872662`, batch
+  `3872659 -> 3872663`, and hybrid replacement eval `3872660`; dependencies
+  combine original terminal arrays with successful replacements and retain
+  complete-output skip gates. Sixteen A40 rows started immediately.
+- Added and submitted Dolmino p5 confirmations `3872664_[0-1%2]`: matched
+  95/5 Dolmino+formal and Dolmino+NL, 256 steps, LR `1e-5`, global batch 128,
+  TP4/DP1 on four A100-80GB GPUs per row. Config-only checks and Slurm
+  validation passed; current estimated start is 10:24 CEST.
+- Before conditioned-50k staged successor `3850110` started, fixed its stale
+  skip condition so a verified final adapter remains terminal after guarded
+  Trainer-checkpoint cleanup. Completed rows 0--2 and 4--5 now skip; all
+  unfinished checkpointed rows retain exact resume behavior. Matrix tests
+  pass (`5 passed`), and fresh replacement logs show normal preprocessing
+  with no fatal, OOM, or quota signature.
+
 ## 2026-07-19
 
 - 19:09 CEST user-wide Vault reached `1070G/1000G` soft and

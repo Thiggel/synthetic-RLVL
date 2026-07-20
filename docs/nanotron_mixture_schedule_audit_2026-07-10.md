@@ -829,6 +829,16 @@ shared LR for the short formal/NL p5 confirmations.
 Artifact caveat: Nanotron did not materialize the configured `benchmark.csv`
 for any row even though each `complete.json` names that path. The complete
 per-step Slurm logs are therefore the authoritative LR-gate record and must be
-retained. Formal/NL p5 confirmation is deferred until the BranchProof capacity
-pause ends after 16:30 CEST on July 20; no broader staged run is triggered by
-training loss alone.
+retained. No broader staged run is triggered by training loss alone.
+
+## 2026-07-20 Dolmino p5 confirmation launch
+
+The capacity and quota gates were cleared at 08:52 CEST. Submitted
+`3872664_[0-1%2]` with the validated TP4/DP1 four-A100 topology, global batch
+128, 256 steps, 32 warmup steps, and shared peak LR `1e-5`. Row 0 mixes
+Dolmino/formal at `0.95/0.05`; row 1 mixes Dolmino/matched-NL at `0.95/0.05`.
+Both resume the same immutable pretrained Qwen2.5-7B Nanotron checkpoint and
+use the neutral-tag proof Nanosets built by the accepted prerequisite. Config
+generation was checked for both rows, including paths, weights, topology,
+step count, and LR. Full staged production remains blocked until both rows
+complete with finite optimization traces and sample-clean mixture behavior.
