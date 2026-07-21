@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-21 01:20 CEST.
+Last updated: 2026-07-21 07:15 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,38 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-21 07:15 architecture SFT complete; Dolmino NL startup recovered
+
+- Corrected architecture rows `3850113_51/52/53` completed cleanly, so the
+  report-matrix architecture SFT family is now `54/54`. Each new Gemma-3-4B
+  NL final has a nonempty 131,252,288-byte adapter and config, no empty final
+  file, and a terminal checkpoint trainer state at `global_step=10000`.
+  Surface rows `3850105_21..23` and shortcut rows `3850213_25..27` remain
+  healthy at about `75--79%`. Conditioned-50k rows `3850109_13/14` are at
+  about `17.6k/50k` with complete 5k/10k/15k restart states and the existing
+  staged `afterany` resume chain intact.
+- A100 capacity opened for report work: batch rows `3850114_9..11`, hybrid
+  eval row `3850118_3`, 32B original row `3850115_4`, and 32B recovery row
+  `3854837_1` are running. Hybrid row 3 had reached sampled chunk `32/112`
+  with the audited 16,384-token context and no fatal signature. Baseline
+  `3857767_[21-29]` and exact recoveries `3863525_[13-14]`/`3865321_18`
+  remain A100-80 account-GRES pending; the accepted baseline gate stays
+  `18/30` and no corrected aggregate or report evidence exists yet.
+- Dolmino p5 logic row `3872664_0` is healthy at step `189/256`, about 15.5K
+  tokens/s, with finite loss/gradients and realized blend
+  `0.949982/0.0500183`. Co-located NL row `3872664_1` failed before training
+  because both four-GPU `torchrun` processes tried port 29500. The shared LR
+  wrapper now supplies a deterministic per-allocation master port; exact NL
+  replacement `3875623_1` is submitted with every scientific setting
+  unchanged. A malformed, never-started single-task submission `3875622` was
+  canceled immediately.
+- User-wide Vault is `861G/1000G` and `202k/200k` files; this repo is about
+  `285 GiB` and 7,288 Vault files. Space remains safe, while the shared file
+  count is above soft quota. Current CPU-only watcher `3875468` scheduled
+  CPU-only, no-GRES successor `3875621` for 13:08 CEST. The plan remains
+  incomplete, so the successor is preserved. The report repository remains
+  unchanged because no evidence gate opened.
 
 ### 2026-07-21 01:20 fourteen more report-matrix SFT rows accepted
 

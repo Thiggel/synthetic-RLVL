@@ -842,3 +842,22 @@ use the neutral-tag proof Nanosets built by the accepted prerequisite. Config
 generation was checked for both rows, including paths, weights, topology,
 step count, and LR. Full staged production remains blocked until both rows
 complete with finite optimization traces and sample-clean mixture behavior.
+
+## 2026-07-21 Dolmino p5 rendezvous recovery
+
+Both four-GPU confirmation rows were scheduled concurrently on the two halves
+of A100-80GB node `a0536`. Logic row `3872664_0` initialized first and used
+torchrun's default port 29500. NL row `3872664_1` then failed before model or
+data initialization with `EADDRINUSE` on the same port. It consumed only
+`00:01:19` and wrote no training result, so no scientific state needs replay.
+
+The shared LR wrapper now passes a deterministic per-allocation port,
+`20000 + SLURM_JOB_ID % 40000`, to torchrun while preserving an explicit
+`MASTER_PORT` override. Shell syntax checks pass. Exact NL-only replacement
+`3875623_1` preserves the original model, seed, data, 95/5 weights, LR,
+warmup, 256 steps, global batch 128, and TP4/DP1 topology. A malformed
+single-task submission `3875622` was canceled before start. Logic row 0
+continued unaffected: at step 189 it sustained about 15.5K tokens/s with
+finite loss and gradients; Nanotron's realized blend was
+`0.949982/0.0500183`. Production remains gated on both completed confirmation
+rows and the planned mixture/sample audit.

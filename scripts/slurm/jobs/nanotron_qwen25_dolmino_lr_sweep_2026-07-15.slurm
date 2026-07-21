@@ -202,7 +202,10 @@ if 'param_group.get("initial_lr", param_group["lr"])' not in source:
 PY
 
 cd ../nanotron
-torchrun --nproc_per_node="${NPROC_PER_NODE}" run_train.py --config-file "${CONFIG}"
+# Separate concurrent allocations that Slurm may place on the same host.
+MASTER_PORT_VALUE="${MASTER_PORT:-$((20000 + SLURM_JOB_ID % 40000))}"
+torchrun --master_port="${MASTER_PORT_VALUE}" --nproc_per_node="${NPROC_PER_NODE}" \
+  run_train.py --config-file "${CONFIG}"
 cd "${SLURM_SUBMIT_DIR}"
 
 LR="${LR}" TRAIN_STEPS="${TRAIN_STEPS}" RUN_ROOT="${RUN_ROOT}" MIX_MODE="${MIX_MODE}" \

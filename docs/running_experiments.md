@@ -1,8 +1,31 @@
 # Running Experiments
 
-Last updated: 2026-07-21 01:20 CEST.
+Last updated: 2026-07-21 07:15 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:15 CEST On July 21
+
+- Architecture rows `3850113_51/52/53` completed and passed the final artifact
+  gate, bringing architecture SFT to `54/54`. Surface `3850105_21..23` and
+  shortcut `3850213_25..27` are around `75--79%`; conditioned-50k
+  `3850109_13/14` is around `17.6k/50k` with complete checkpoints through
+  step 15,000 and the staged resume chain intact.
+- A100 work now running is batch SFT `3850114_[9-11]`, hybrid eval
+  `3850118_3`, 32B original SFT `3850115_4`, and 32B recovery `3854837_1`.
+  Hybrid row 3 reached sampled chunk `32/112` without a fatal signature.
+  Declaration-fixed baseline rows/recoveries remain account-GRES pending and
+  the acceptance gate remains `18/30`.
+- Dolmino logic confirmation `3872664_0` is healthy at step `189/256`, about
+  15.5K tokens/s, finite loss/gradients, and realized `0.949982/0.0500183`
+  mixing. Original NL row `3872664_1` failed before training with port-29500
+  `EADDRINUSE` after co-location on the same node. The wrapper now derives a
+  per-allocation torchrun port, and exact NL-only replacement `3875623_1` is
+  submitted. Malformed pending submission `3875622` never started and was
+  canceled.
+- Vault is `861G/1000G` user-wide and about `285 GiB`/7,288 files repo-owned;
+  the shared file count is `202k/200k`. Watcher `3875468` is CPU-only and its
+  no-GRES successor `3875621` remains scheduled for 13:08 CEST.
 
 ## Live Delta At 01:20 CEST On July 21
 

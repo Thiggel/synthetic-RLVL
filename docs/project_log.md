@@ -4,6 +4,24 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-21
 
+- 07:15 CEST accepted architecture SFT rows `3850113_51/52/53`, bringing the
+  corrected architecture family to `54/54`. All three Gemma-3-4B NL finals
+  have nonempty 131,252,288-byte adapters/configs, zero empty final files, and
+  terminal step-10,000 trainer states. Surface/shortcut rows are at about
+  `75--79%`; conditioned rows 13/14 have complete restart states through 15k.
+- 07:15 CEST diagnosed original Dolmino NL confirmation `3872664_1`: two
+  four-GPU tasks co-located on `a0536` and both used torchrun port 29500, so
+  NL failed before training with `EADDRINUSE`. Added a deterministic
+  per-allocation master port to the shared LR wrapper; `bash -n` passes and
+  exact replacement `3875623_1` is submitted. Canceled malformed pending
+  attempt `3875622` before start. Logic row `3872664_0` remains healthy at
+  step 189/256 with finite diagnostics and exact 5% realized mixing.
+- A100 capacity also started batch `3850114_[9-11]`, hybrid eval
+  `3850118_3`, and 32B rows `3850115_4`/`3854837_1`. Vault is
+  `861G/1000G`, shared files are `202k/200k`, and this repo uses about
+  285 GiB/7,288 Vault files. Preserved CPU-only successor `3875621` for 13:08
+  CEST because the plan is incomplete.
+
 - 01:20 CEST accepted 14 newly completed report-matrix SFT artifacts:
   surface rows 15--20, shortcut rows 19--24, and architecture rows 49/50.
   Both targeted replacements `3872657` and `3872658` are complete. Every
