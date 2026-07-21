@@ -4,6 +4,24 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-21
 
+- 13:15 CEST accepted normal-data prerequisite `3875824`: it completed `0:0`
+  in `02:32:53`, exported `5,100,006,129` source tokens in `11,195,395`
+  records, and packed `5,111,201,524` Qwen tokens. Decoded tail text is an
+  ordinary Dolmino document. The post-gate raw staging tree is absent and the
+  packed Nanoset/stats remain. First-stage control/formal/NL jobs
+  `3875825_0/3875828_1/3875831_2` are released and account-GRES pending, with
+  current start estimates of 02:55 CEST July 22.
+- Accepted surface SFT `3850105_21..23` and shortcut SFT `3850213_25..27`.
+  Each has a nonempty 159,967,880-byte final adapter/config, no empty final
+  file, and terminal `global_step=10000`; counts advance to surface `24/27`
+  and shortcut `28/42`. Active eval rows are at chunks `70--98/112`, with no
+  new terminal JSON/sample artifact or fatal signature.
+- The packed-data build raised user-wide Vault usage to
+  `1067.5G/1048.6G` and `202k/200k` files. Six newly terminal Trainer
+  checkpoints are eligible for the documented final/output/live-reference
+  cleanup, while every incomplete restart state remains protected. Preserved
+  CPU-only successor `3876636`; the BranchProof and 5B paths are incomplete.
+
 - 09:50 CEST canceled never-started NL confirmation `3875623_1` at user
   request. Added a 5.1B normal-data prerequisite and resumable 5B production
   wrapper. Validation: shell syntax, `git diff --check`, packed-stats parser,

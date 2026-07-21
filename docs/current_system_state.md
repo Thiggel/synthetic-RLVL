@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-21 09:50 CEST.
+Last updated: 2026-07-21 13:15 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,39 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-21 13:15 Dolmino prerequisite accepted; six more SFT finals
+
+- Normal-data prerequisite `3875824` completed `0:0` in `02:32:53`. Its
+  manifest records `5,100,006,129` source tokens in `11,195,395` documents,
+  and the packed Qwen Nanoset records `5,111,201,524` tokens, clearing the
+  `5,000,134,656`-token production requirement. The terminal log and decoded
+  tail sample show ordinary heterogeneous Dolmino text. The wrapper removed
+  only the reproducible raw JSONL staging tree after the packed-token gate;
+  the accepted packed root remains at
+  `$HPCVAULT/synthetic-RLVL/nanosets/qwen25_dolmino_neutral_v1_5p1b/dolmino`.
+- First-stage 5B jobs control `3875825_0`, formal `3875828_1`, and NL
+  `3875831_2` are released from their dependency and are `AssocGrpGRES`
+  pending on full A100-80GB nodes. Slurm currently estimates 02:55 CEST on
+  July 22 for all three. Their staged successors remain dependency-held; no
+  partition widening is compatible with the eight-A100, 1.875-TB request.
+- Surface rows `3850105_21..23` and shortcut rows `3850213_25..27` completed
+  cleanly. All six finals have nonempty 159,967,880-byte adapters/configs,
+  no empty final file, and terminal `global_step=10000` trainer states.
+  Surface SFT is now `24/27`, shortcut SFT `28/42`, and architecture remains
+  `54/54`. New rows 24--26 and 28--30 backfilled and are progressing.
+- Hybrid/conditioned eval rows are healthy at sampled chunks `70--98/112`;
+  batch rows 9--11 are near step `680/10000`, 32B rows near `55%`, and
+  conditioned-50k stage-two rows near `16.8--17.4k/50k`. Focused logs contain
+  no fatal, OOM, quota, or no-space signature. No new terminal eval JSON and
+  sample bundle exists yet, so no metric or report gate opened.
+- The completed data build raised user-wide Vault usage to `1067.5G/1048.6G`
+  soft with `202k/200k` files. The six newly terminal Trainer checkpoints are
+  final-backed and no longer needed for restart, but this oversight runtime
+  did not remove them; preserve every incomplete restart state and re-run the
+  documented final/output/live-reference cleanup before production checkpoint
+  writes materially expand storage. CPU-only successor `3876636` is scheduled
+  and must remain queued because both critical paths are incomplete.
 
 ### 2026-07-21 09:50 three-condition Dolmino 5B production submitted
 

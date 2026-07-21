@@ -1,8 +1,32 @@
 # Running Experiments
 
-Last updated: 2026-07-21 09:50 CEST.
+Last updated: 2026-07-21 13:15 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:15 CEST On July 21
+
+- Prerequisite `3875824` completed `0:0` in `02:32:53` and accepted a packed
+  Dolmino stream with `5,111,201,524` tokens from `11,195,395` documents.
+  The reproducible raw staging tree is absent after the gate; the packed
+  Nanoset and stats remain. Production stage-one jobs `3875825_0`,
+  `3875828_1`, and `3875831_2` are now dependency-free and `AssocGrpGRES`
+  pending, with a current shared estimate of 02:55 CEST on July 22. Their
+  full-node A100-80GB resource shape has no safe partition-widening option.
+- Surface rows `3850105_21..23` and shortcut rows `3850213_25..27` completed
+  and passed final adapter/config, zero-empty-file, and step-10,000 gates.
+  Counts are now surface `24/27`, shortcut `28/42`, architecture `54/54`.
+  Their next six training rows are active at roughly `22--34%`.
+- Active hybrid/conditioned eval rows `3850118_3/4/5` and
+  `3850119_12/13` reached sampled chunks `70--98/112`; batch SFT rows 9--11
+  are around step 680, 32B rows around 55%, and conditioned-50k resumes around
+  16.8--17.4k. Focused logs have no fatal/OOM/quota/no-space signature and no
+  new final eval JSON/sample bundle is available.
+- Vault is above both user soft quotas after the packed-data build at
+  `1067.5G/1048.6G` and `202k/200k` files. Six terminal Trainer checkpoints
+  are final-backed cleanup candidates; all incomplete restart states remain
+  protected. Watcher `3875621` is CPU-only; CPU-only successor `3876636`
+  remains BeginTime-pending because the plan is incomplete.
 
 ## Live Delta At 09:50 CEST On July 21
 
