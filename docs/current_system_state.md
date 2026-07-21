@@ -61,6 +61,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   files; preserve every incomplete restart state and clean only final-backed,
   live-reference-free intermediates. Recorded CPU-only successor `3879087`
   remains BeginTime-pending because both critical paths are incomplete.
+- Scoped scheduler/handoff commit `27b56d3` is local. A bounded
+  `git push origin main` produced no remote output and timed out after 90
+  seconds with exit `124`; this publication note leaves `main` six commits
+  ahead of `origin/main`.
+  The report repository is unchanged.
 
 ### 2026-07-21 19:30 surface SFT complete; first corrected report artifacts audited
 
