@@ -20,6 +20,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   states remain. No scheduler edit, resubmission, or report regeneration was
   justified. Preserved successor `3878297` because baseline, report matrix,
   and Dolmino production are incomplete.
+- Committed the scoped audit and handoff update as `77b5eee`. A bounded push
+  produced no remote output; this publication note leaves local `main` four commits ahead of
+  `origin/main`; the report repository was not changed.
 
 - 13:15 CEST accepted normal-data prerequisite `3875824`: it completed `0:0`
   in `02:32:53`, exported `5,100,006,129` source tokens in `11,195,395`

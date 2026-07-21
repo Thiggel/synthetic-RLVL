@@ -62,6 +62,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   Dolmino stages `3875825_0`, `3875828_1`, and `3875831_2` remain
   `AssocGrpGRES` pending, now estimated for 07:43 CEST July 22. Successor
   `3878297` remains scheduled because both critical paths are incomplete.
+  Scoped oversight commit `77b5eee` is local; a bounded publication attempt
+  again produced no remote output; this publication note leaves `main` four commits ahead of
+  `origin/main`. The report repository is unchanged.
 
 ### 2026-07-21 13:15 Dolmino prerequisite accepted; six more SFT finals
 
