@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-21 19:30 CEST.
+Last updated: 2026-07-22 01:16 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,44 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-22 01:16 duplicate conditioned stages stopped; five more SFT finals
+
+- Corrected 32B SFT `3854837_1` and `3850115_4` completed and passed the
+  final artifact gate: each has a nonempty 536,991,984-byte adapter/config and
+  a terminal step-10,000 trainer state. The large-model family is now `5/15`;
+  original row `3850115_5` is running. Shortcut rows `3850213_28..30` also
+  passed the 159,967,880-byte final plus step-10,000 gate, advancing shortcut
+  SFT to `31/42`; rows 31--33 backfilled and are healthy.
+- The immutable payload of conditioned-50k staged array `3850110` predates the
+  final-only skip repair recorded on July 20. It replayed already accepted
+  rows 0--2 to clean step-50,000 finals, then began replaying accepted rows
+  4/5 even though their July-15 finals were intact. Canceled only duplicate
+  tasks `3850110_4/5` and their future staged copies `3850111_4/5` and
+  `3850112_4/5`; genuine unfinished task `3850110_3` continues from its
+  audited checkpoints. The canceled duplicates left new 5k/10k/15k
+  checkpoints as guarded cleanup candidates; the accepted original finals
+  remain unchanged. Preserve the new row-0--2 `checkpoint-50000` directories
+  until `3850111/3850112` terminate because their stored skip condition still
+  requires the target checkpoint as well as the final.
+- Batch rows `3850114_9..11` are near optimizer step 1,740 after about 20
+  hours. Their stored Hydra configs confirm `save_steps=20000` and
+  `save_total_limit=1`, so they have no restart checkpoint despite the live
+  wrapper's later 250-step policy. Do not preempt them. After the actual
+  24-hour timeout, submit only these three exact rows with the current
+  resumable payload; no completed row should be replayed.
+- Hybrid `3850118_6` is scoring after all `112/112` sampled chunks;
+  conditioned-10k `3850119_14` is on chunk 112, and the other active report
+  evals continue without a fatal signature. Declaration-fixed baseline rows
+  `3857767_21..23` are on verified A100-80GB jobs at chunks 93--94/112. No
+  new terminal metrics/sample bundle exists yet, so the accepted baseline
+  remains `18/30` and no report gate opened.
+- Dolmino stage-one jobs `3875825_0`, `3875828_1`, and `3875831_2` remain
+  dependency-free and `AssocGrpGRES` pending on their only compatible
+  eight-A100 shape. User-wide Vault is `1145G/1000G` soft with `203k/200k`
+  files; preserve every incomplete restart state and clean only final-backed,
+  live-reference-free intermediates. Recorded CPU-only successor `3879087`
+  remains BeginTime-pending because both critical paths are incomplete.
 
 ### 2026-07-21 19:30 surface SFT complete; first corrected report artifacts audited
 

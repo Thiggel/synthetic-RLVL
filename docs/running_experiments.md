@@ -1,8 +1,35 @@
 # Running Experiments
 
-Last updated: 2026-07-21 19:30 CEST.
+Last updated: 2026-07-22 01:16 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:16 CEST On July 22
+
+- Accepted new 32B finals `3854837_1` and `3850115_4` and shortcut finals
+  `3850213_28..30`. All have nonempty adapters/configs and terminal
+  step-10,000 trainer states. Large-model SFT is `5/15`, shortcut is `31/42`;
+  `3850115_5` and shortcut rows 31--33 are active without fatal signatures.
+- Conditioned stage `3850110` used an immutable pre-repair payload and replayed
+  final-backed rows. Rows 0--2 reached fresh clean step-50,000 finals. Stopped
+  duplicate active tasks `3850110_4/5` after confirming their accepted
+  July-15 finals were intact, and canceled their future duplicates
+  `3850111_4/5` and `3850112_4/5`. Genuine unfinished row 3 remains active;
+  six new partial duplicate checkpoints are cleanup candidates only. Retain
+  row-0--2 `checkpoint-50000` until both later staged arrays terminate because
+  their immutable payload still needs it to skip completed finals.
+- Batch rows `3850114_9..11` are around step 1,740 at 20 hours. Their stored
+  configs use `save_steps=20000`, so there is no checkpoint to preserve before
+  timeout. Let them reach a terminal timeout, then recover only rows 9--11
+  under the current 250-step checkpoint policy.
+- Hybrid `3850118_6` completed sampled generation and is scoring;
+  conditioned-10k `3850119_14` reached chunk 112. Baseline rows
+  `3857767_21..23` are at chunks 93--94/112 on A100-80GB. No new terminal
+  eval bundle is available, so artifact/raw-review/aggregate gates are
+  unchanged at hybrid `3/30`, conditioned-10k `14/30`, and baseline `18/30`.
+- Dolmino `3875825_0/3875828_1/3875831_2` remain dependency-free
+  `AssocGrpGRES` pending. Vault is `1145G/1000G` and `203k/200k` files.
+  CPU-only successor `3879087` is BeginTime-pending and remains required.
 
 ## Live Delta At 19:30 CEST On July 21
 

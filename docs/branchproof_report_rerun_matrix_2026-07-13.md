@@ -1,6 +1,19 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-21 19:30 CEST.
+Last updated: 2026-07-22 01:16 CEST.
+
+By 01:16 CEST on July 22, 32B rows `3854837_1` and `3850115_4` and shortcut
+rows `3850213_28..30` passed their final artifact gates, bringing those SFT
+families to `5/15` and `31/42`. The immutable staged-conditioned payload
+predates the July-20 final-only skip repair: stage `3850110` replayed accepted
+rows 0--2, then began replaying accepted rows 4/5. The latter two active tasks
+and their copies in stages `3850111/3850112` were canceled while their original
+finals remained intact; genuine unfinished row 3 continues. Preserve the new
+row-0--2 target checkpoints until both later stages terminate because their
+stored skip condition still requires them. Original batch
+rows 9--11 likewise carry the old 20,000-step save interval and have no
+checkpoint near step 1,740 at 20 hours. Preserve them until terminal timeout,
+then recover only those rows with the current 250-step checkpoint payload.
 
 ## Scope
 

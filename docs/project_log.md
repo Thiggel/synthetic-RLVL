@@ -2,6 +2,27 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-22
+
+- 01:16 CEST accepted 32B SFT `3854837_1`/`3850115_4` and shortcut SFT
+  `3850213_28..30`; all five have nonempty final adapters/configs and terminal
+  step-10,000 states. Counts are large-model `5/15` and shortcut `31/42`.
+- Diagnosed an immutable Slurm-snapshot mismatch in conditioned stage
+  `3850110`: its payload predates the final-only skip fix and replayed accepted
+  rows. Rows 0--2 reached clean replacement finals; canceled duplicate tasks
+  `3850110_4/5` plus future copies `3850111_4/5` and `3850112_4/5` while
+  preserving their original July-15 finals and genuine unfinished row 3.
+  Row-0--2 target checkpoints must remain until both later stages terminate,
+  because their stored payload still needs them to skip the completed finals.
+- Confirmed batch `3850114_9..11` use stored `save_steps=20000`, have no
+  checkpoint near step 1,740 at 20 hours, and should not be preempted. Their
+  next trigger is terminal timeout followed by exact recovery with the current
+  250-step checkpoint payload.
+- Baseline rows `3857767_21..23` and report evals continue without fatal
+  signatures; no new terminal eval artifact exists. Dolmino stage-one jobs
+  remain account-GRES pending. Vault is `1145G/1000G` and `203k/200k` files;
+  successor `3879087` remains scheduled because the plan is incomplete.
+
 ## 2026-07-21
 
 - 19:30 CEST accepted surface SFT `3850105_24..26`, bringing the family to
