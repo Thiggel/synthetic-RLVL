@@ -54,7 +54,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   count is above soft quota. Current CPU-only watcher `3875468` scheduled
   CPU-only, no-GRES successor `3875621` for 13:08 CEST. The plan remains
   incomplete, so the successor is preserved. The report repository remains
-  unchanged because no evidence gate opened.
+  unchanged because no evidence gate opened. Scoped fix/handoff commit
+  `f659445` is local; a bounded push timed out with exit `124`, leaving this
+  repo three commits ahead of `origin/main`.
 
 ### 2026-07-21 01:20 fourteen more report-matrix SFT rows accepted
 

@@ -21,6 +21,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   `861G/1000G`, shared files are `202k/200k`, and this repo uses about
   285 GiB/7,288 Vault files. Preserved CPU-only successor `3875621` for 13:08
   CEST because the plan is incomplete.
+- Committed the scoped port fix and handoff as `f659445`. A bounded
+  `git push origin main` produced no remote output and timed out with exit
+  `124`; this repo remains three commits ahead of `origin/main`. The report
+  repository is unchanged and synchronized.
 
 - 01:20 CEST accepted 14 newly completed report-matrix SFT artifacts:
   surface rows 15--20, shortcut rows 19--24, and architecture rows 49/50.
