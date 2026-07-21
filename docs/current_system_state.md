@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-21 09:35 CEST.
+Last updated: 2026-07-21 09:50 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,32 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-21 09:50 three-condition Dolmino 5B production submitted
+
+- At user request, canceled the never-started NL 256-step confirmation
+  `3875623_1`. Control and formal short gates remain accepted; decoded NL
+  corpus structure was already clean, and the only observed NL launch failure
+  was the repaired pre-training port collision.
+- Submitted prerequisite `3875824`, which started immediately on RTX Pro node
+  `a2041`. It deterministically exports and packs a 5.1B-token normal Dolmino
+  stream so the 5,000,134,656-token control does not repeat the current
+  4.811B-token corpus. It requires at least 5,000,134,656 packed tokens and
+  deletes only its reproducible raw staging tree after that gate passes.
+- Submitted three full-node A100-80GB resumable 5B chains, all dependent on
+  `3875824`: control `3875825 -> 3875826 -> 3875827`, formal-5%
+  `3875828 -> 3875829 -> 3875830`, and matched-NL-5%
+  `3875831 -> 3875832 -> 3875833`. Each condition targets step 9,537
+  (`5,000,134,656` tokens), global batch 128, TP4/DP2, peak LR `1e-5`, 256
+  warmup steps, and cosine decay to `1e-6` over the preregistered 38,147-step
+  20B horizon. Checkpoints are every 500 steps; up to three 24-hour stages are
+  queued per condition and later stages skip once the complete 5B state exists.
+- The 5B gate shares the exact normal Nanoset and seed across conditions and
+  uses Nanotron's deterministic `1.0` or `0.95/0.05` weighted sampler. It does
+  not precompute identical per-slot normal identities across conditions; that
+  stronger pairing remains a methodological caveat and must not be claimed.
+  Downstream direct and instruction readouts remain to be submitted against
+  the terminal 5B checkpoints.
 
 ### 2026-07-21 09:20 Dolmino formal gate recovered; report work active
 

@@ -4,6 +4,21 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-21
 
+- 09:50 CEST canceled never-started NL confirmation `3875623_1` at user
+  request. Added a 5.1B normal-data prerequisite and resumable 5B production
+  wrapper. Validation: shell syntax, `git diff --check`, packed-stats parser,
+  and Slurm test submissions for build plus all three conditions passed.
+- Submitted/running normal-data build `3875824` on RTX Pro. Submitted 5B
+  full-node A100 chains: control `3875825/26/27`, formal `3875828/29/30`, and
+  NL `3875831/32/33`, with stage one after successful data build and later
+  stages after-any for timeout recovery. Target is step 9,537, global batch
+  128, TP4/DP2, LR `1e-5`, 256-step warmup, 20B-horizon cosine decay, and
+  500-step checkpoints.
+- The three conditions share one normal Nanoset and seed, but deterministic
+  weighted blending does not guarantee identical normal chunk identities at
+  each cross-condition slot. Recorded this explicitly as a 5B methodological
+  caveat; no exact-slot claim is permitted.
+
 - 09:35 CEST audited completed Dolmino control/formal gates. Normalized config
   hashes match; both have 256 finite steps, identical 32-step warmup to
   `1e-5`, global batch 128, TP4/DP1, and similar throughput. Post-warmup mean

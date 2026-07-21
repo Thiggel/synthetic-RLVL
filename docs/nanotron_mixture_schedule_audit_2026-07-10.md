@@ -861,3 +861,27 @@ continued unaffected: at step 189 it sustained about 15.5K tokens/s with
 finite loss and gradients; Nanotron's realized blend was
 `0.949982/0.0500183`. Production remains gated on both completed confirmation
 rows and the planned mixture/sample audit.
+
+## 2026-07-21 5B production launch
+
+At user request, canceled the never-started repaired NL confirmation
+`3875623_1` and advanced to the three-condition 5B gate. Control and formal
+short gates pass; the NL corpus layout and decoded neutral-format samples pass,
+and its only observed runtime failure was the pre-optimizer port collision.
+
+The existing normal Nanoset has 4,810,706,180 packed tokens, which is too short
+for a unique 5,000,134,656-token control. Build `3875824` therefore creates a
+new deterministic 5.1B-token normal Nanoset and removes its raw JSONL only
+after the packed-token threshold passes. Production chains are control
+`3875825/26/27`, formal-5% `3875828/29/30`, and NL-5% `3875831/32/33`.
+Each uses eight A100-80GB GPUs, TP4/DP2, global batch 128, step target 9,537,
+peak LR `1e-5`, 256-step warmup, cosine decay to `1e-6` over 37,891 decay
+steps (the preregistered 20B horizon), and restart states every 500 steps.
+Three 24-hour allocations are queued per condition; complete 5B states skip
+remaining stages.
+
+This launch shares the normal Nanoset and seed but uses Nanotron's deterministic
+weighted sampler for `1.0` control and `0.95/0.05` interventions. It does not
+implement the stronger precomputed schedule with identical normal chunk IDs at
+every cross-condition slot. Results are distribution-matched, not exactly
+sample-paired, and must be described that way.

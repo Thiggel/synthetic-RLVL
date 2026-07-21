@@ -1,8 +1,24 @@
 # Running Experiments
 
-Last updated: 2026-07-21 09:35 CEST.
+Last updated: 2026-07-21 09:50 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 09:50 CEST On July 21
+
+- Canceled unstarted NL smoke `3875623_1` and submitted the three 5B Dolmino
+  production conditions. Normal-data extension/audit `3875824` is running on
+  RTX Pro node `a2041`. It builds 5.1B packed normal tokens and deletes raw
+  staging only after the packed-token gate.
+- Full-node A100-80GB chains are control `3875825 -> 3875826 -> 3875827`,
+  formal `3875828 -> 3875829 -> 3875830`, and NL
+  `3875831 -> 3875832 -> 3875833`. Each targets 9,537 steps/5,000,134,656
+  tokens with global batch 128, TP4/DP2, shared LR/schedule, 500-step restart
+  states, and up to three 24-hour stages.
+- All conditions use the same deterministic normal Nanoset/seed, but the 5B
+  gate uses Nanotron weighted blending rather than a precomputed exactly
+  slot-aligned stream. Do not claim exact per-normal-chunk pairing. Direct and
+  instruction-tuned downstream dependency chains are not yet submitted.
 
 ## Live Delta At 09:20 CEST On July 21
 

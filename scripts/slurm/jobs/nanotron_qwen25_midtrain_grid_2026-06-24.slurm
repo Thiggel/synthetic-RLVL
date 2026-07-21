@@ -21,6 +21,7 @@ export WANDB_MODE="${WANDB_MODE:-offline}"
 
 source "${WORK}/nanotron/bin/activate"
 
+if [[ "${NANOTRON_CONFIG_ONLY:-0}" != "1" ]]; then
 python - <<'PY'
 import inspect
 
@@ -30,6 +31,7 @@ source = inspect.getsource(lr_scheduler_builder)
 if 'param_group.get("initial_lr", param_group["lr"])' not in source:
     raise SystemExit("Nanotron checkout lacks the LR-scheduler resume fix")
 PY
+fi
 
 MODEL_ID="${MODEL_ID:-Qwen/Qwen2.5-7B}"
 SEQ_LEN="${SEQ_LEN:-4096}"
@@ -40,6 +42,8 @@ CHECKPOINT_INTERVAL="${CHECKPOINT_INTERVAL:-1024}"
 LR="${LR:-1.0e-5}"
 MIN_LR="${MIN_LR:-1.0e-6}"
 WARMUP_STEPS="${WARMUP_STEPS:-256}"
+LR_DECAY_STARTING_STEP="${LR_DECAY_STARTING_STEP:-null}"
+LR_DECAY_STEPS="${LR_DECAY_STEPS:-null}"
 
 NORMAL_DATASET_FOLDER="${NORMAL_DATASET_FOLDER:-${HPCVAULT}/synthetic-RLVL/nanosets/qwen25/normal_continuation}"
 LOGIC_DATASET_FOLDER="${LOGIC_DATASET_FOLDER:-${HPCVAULT}/synthetic-RLVL/nanosets/qwen25/logical_deduction_logic}"
@@ -224,8 +228,8 @@ optimizer:
   clip_grad: 1.0
   learning_rate_scheduler:
     learning_rate: ${LR}
-    lr_decay_starting_step: null
-    lr_decay_steps: null
+    lr_decay_starting_step: ${LR_DECAY_STARTING_STEP}
+    lr_decay_steps: ${LR_DECAY_STEPS}
     lr_decay_style: cosine
     lr_warmup_steps: ${WARMUP_STEPS}
     lr_warmup_style: linear
@@ -261,8 +265,15 @@ tokens:
   val_check_interval: -1
 YAML
 
+if [[ "${NANOTRON_CONFIG_ONLY:-0}" == "1" ]]; then
+  echo "Generated config only: ${CONFIG}"
+  exit 0
+fi
+
 cd ../nanotron
-torchrun --nproc_per_node=8 run_train.py --config-file "${CONFIG}"
+MASTER_PORT_VALUE="${MASTER_PORT:-$((20000 + SLURM_JOB_ID % 40000))}"
+torchrun --master_port="${MASTER_PORT_VALUE}" --nproc_per_node=8 \
+  run_train.py --config-file "${CONFIG}"
 
 if ! checkpoint_is_complete "${RUN_ROOT}/checkpoints/${TRAIN_STEPS}"; then
   echo "Training exited without a complete final checkpoint: ${RUN_ROOT}/checkpoints/${TRAIN_STEPS}" >&2
