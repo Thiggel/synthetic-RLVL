@@ -170,6 +170,36 @@ def test_nl_train_signal_uses_translation_parse_not_formal_syntax(tmp_path: Path
     assert report["accepted"]
 
 
+def test_conditioned_nl_filename_uses_translation_metrics(tmp_path: Path):
+    metrics_path, samples_path = _write_artifacts(tmp_path)
+    conditioned_path = tmp_path / "run_conditioned_nl_passk.json"
+    payload = json.loads(metrics_path.read_text())
+    for step in (1, 18):
+        payload["metrics"][f"synthetic/step_{step}/syntactic"] = 0.0
+    conditioned_path.write_text(json.dumps(payload))
+
+    report = AUDIT.audit_artifacts(
+        conditioned_path,
+        samples_path,
+        steps=[1, 18],
+        k_values=[1, 2],
+        samples_per_step=2,
+        generations_per_prompt=2,
+        expected_retained_samples=2,
+        train_max=18,
+    )
+
+    assert report["accepted"]
+    assert report["nl_only_surface"]
+
+
+def test_hybrid_surface_remains_formal_audited(tmp_path: Path):
+    assert not AUDIT._is_nl_only_surface(
+        "/tmp/branchproof_unique_v2_think_formal_checkpoint",
+        tmp_path / "run_think_formal_passk.json",
+    )
+
+
 def test_rejects_missing_translated_nl_metric(tmp_path: Path):
     report = _audit(tmp_path, missing_nl_metric=True)
     assert not report["accepted"]

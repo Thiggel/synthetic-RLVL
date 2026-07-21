@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-21 13:15 CEST.
+Last updated: 2026-07-21 19:30 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,45 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-21 19:30 surface SFT complete; first corrected report artifacts audited
+
+- Surface rows `3850105_24..26` completed and passed the nonempty-final and
+  terminal-step-7,140 gates. Surface SFT is now `27/27`. Guarded cleanup then
+  removed nine final-backed terminal Trainer checkpoints, including these
+  three rows, after verifying that no live process referenced them; all final
+  adapters and evaluation evidence remain. Vault usage fell from about
+  `1024G` to `1017G` against the `1000G` soft quota, with `203k/200k` files.
+- The first corrected report-eval bundles are terminal and structurally clean:
+  hybrid `3850118_3/4/5` (three seeds, train 1--10) and conditioned-10k
+  `3850119_12/13` (seed 3407 logic/NL, train 1--15). Each has 448 prompts,
+  16 generations per prompt, all 14 depths, complete `7/112` greedy/sampled
+  chunks, 576 retained records, fresh constants, and no validity-diagnostic
+  contradiction. Hybrid completion is `3/30`; conditioned-10k is `14/30`.
+- Raw review covered shallow, train-boundary, OOD, depth-50, correct, wrong,
+  invalid, malformed, and cap-hit cases. Wrappers, prompts, answer extraction,
+  and unique constants match intent. Hybrid degrades beyond train depth 10:
+  formal proofs often become invalid before translated NL traces, and depth 50
+  usually truncates or collapses. Conditioned seed 3407 is clean through depth
+  25 in both modalities but also truncates/collapses at depth 50; it remains a
+  single-seed partial, not family evidence. Three-seed hybrid greedy OOD
+  answer accuracy is `0.3458 +/- 0.0331`; pass@1 OOD answer/formal-joint/
+  translated-joint is `0.2173 +/- 0.0250`, `0.1294 +/- 0.0422`, and
+  `0.1926 +/- 0.0079`. No report gate is open.
+- The structural audit previously recognized NL only when the checkpoint name
+  contained `_nl_exact_`, which falsely treated `conditioned_nl` as formal and
+  rejected its intentionally zero syntactic metric. The audit now identifies
+  all NL-only report surfaces from checkpoint/artifact names, while hybrid
+  remains formal-audited. All 18 focused tests pass, and the real
+  `3850119_13` artifact passes without the all-zero escape hatch.
+- Active report work remains healthy: `3850118_6..8`, `3850119_14/15`,
+  conditioned-50k `3850110_0..2`, 32B `3850115_4`/`3854837_1`, batch
+  `3850114_9..11`, and shortcut `3850213_28..30`. Batch rows 9--11 are slow
+  and likely to need exact checkpoint resume after an actual timeout; do not
+  preempt them. Declaration-fixed baseline acceptance remains `18/30`.
+  Dolmino stages `3875825_0`, `3875828_1`, and `3875831_2` remain
+  `AssocGrpGRES` pending, now estimated for 07:43 CEST July 22. Successor
+  `3878297` remains scheduled because both critical paths are incomplete.
 
 ### 2026-07-21 13:15 Dolmino prerequisite accepted; six more SFT finals
 

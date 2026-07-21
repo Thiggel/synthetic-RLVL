@@ -1,8 +1,34 @@
 # Running Experiments
 
-Last updated: 2026-07-21 13:15 CEST.
+Last updated: 2026-07-21 19:30 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:30 CEST On July 21
+
+- Surface rows `3850105_24..26` completed and passed final/terminal-step
+  gates, bringing surface SFT to `27/27`. Nine guarded final-backed Trainer
+  checkpoints were removed with no live references; finals and evidence
+  remain. Vault is now about `1017G/1000G` soft and `203k/200k` files.
+- Hybrid eval `3850118_3/4/5` and conditioned-10k eval `3850119_12/13`
+  completed. All five bundles pass the 448-prompt, 16-generation, 14-depth,
+  `7/112`-chunk, 576-retained-row, fresh-constant, and validity-diagnostic
+  structural gates. Completion counts are hybrid `3/30` and conditioned-10k
+  `14/30`. Representative raw review found correct wrappers/extraction and no
+  constant reuse; hybrid validity degrades OOD and both conditioned modalities
+  collapse at depth 50. These partials do not open report acceptance.
+- Active eval rows are hybrid `3850118_6..8` and conditioned-10k
+  `3850119_14/15`. Conditioned-50k resumes `3850110_0..2` are around
+  41.5k--43k/50k; 32B `3850115_4` and recovery `3854837_1` are around
+  93%/95%; shortcut rows `3850213_28..30` are around 72--74%. Batch rows
+  `3850114_9..11` are only around step 1,214 after 13.7 hours and may require
+  exact post-timeout resume; no early cancellation or duplicate recovery was
+  made. Focused logs show no fatal/OOM/quota/no-space signature.
+- Dolmino first stages `3875825_0`, `3875828_1`, and `3875831_2` remain
+  `AssocGrpGRES` pending on their only compatible full-node shape. The current
+  shared start estimate is 07:43 CEST July 22. Baseline eval/recovery rows also
+  remain account-GRES pending and acceptance is still `18/30`. CPU-only
+  successor `3878297` is BeginTime-pending and must remain queued.
 
 ## Live Delta At 13:15 CEST On July 21
 

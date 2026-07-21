@@ -107,6 +107,19 @@ SAMPLE_METRICS = (
     "nl_logic_parse",
     "nl_logic_citation_free_valid",
 )
+NL_ONLY_SURFACE_MARKERS = (
+    "_nl_exact_",
+    "_conditioned_nl_",
+    "_terse_nl_",
+    "_rule_annotated_nl_",
+    "_pseudocode_",
+    "_shuffled_nl_",
+)
+
+
+def _is_nl_only_surface(checkpoint: Any, metrics_path: Path) -> bool:
+    hints = f"{checkpoint or ''} {metrics_path.name}"
+    return any(marker in hints for marker in NL_ONLY_SURFACE_MARKERS)
 
 
 def _csv_ints(raw: str) -> list[int]:
@@ -165,6 +178,7 @@ def _check_unit_metric(metrics: dict[str, Any], key: str, errors: list[str]) -> 
 def _audit_metrics(
     payload: dict[str, Any],
     *,
+    is_nl: bool,
     steps: Iterable[int],
     k_values: Iterable[int],
     samples_per_step: int,
@@ -179,7 +193,6 @@ def _audit_metrics(
     checkpoint = payload.get("checkpoint")
     if not isinstance(checkpoint, str) or "branchproof_unique_v2" not in checkpoint:
         errors.append(f"unexpected checkpoint path: {checkpoint!r}")
-    is_nl = isinstance(checkpoint, str) and "_nl_exact_" in checkpoint
     greedy_metrics = GREEDY_METRICS + (NL_GREEDY_METRICS if is_nl else ())
     sampled_metrics = SAMPLED_METRICS + (NL_SAMPLED_METRICS if is_nl else ())
 
@@ -561,6 +574,7 @@ def audit_artifacts(
 ) -> dict[str, Any]:
     errors: list[str] = []
     payload = json.loads(metrics_path.read_text(encoding="utf-8"))
+    is_nl = _is_nl_only_surface(payload.get("checkpoint"), metrics_path)
     all_rows = _read_samples(samples_path, errors)
     if expected_total_samples is not None and len(all_rows) != expected_total_samples:
         errors.append(
@@ -580,8 +594,10 @@ def audit_artifacts(
         "sample_source_filter": sample_source_filter,
         "expected_steps": steps,
         "expected_k_values": k_values,
+        "nl_only_surface": is_nl,
         "metrics_audit": _audit_metrics(
             payload,
+            is_nl=is_nl,
             steps=steps,
             k_values=k_values,
             samples_per_step=samples_per_step,

@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-21 01:20 CEST.
+Last updated: 2026-07-21 19:30 CEST.
 
 ## Scope
 
@@ -26,6 +26,33 @@ The corrected source is private Hub dataset `flaitenberger/BranchProof-unique-v2
 Every report comparison has three seeds. Exact duplicate compact-logic rows
 reuse the corrected baseline only when model, train range, seed, steps, and
 data surface match exactly.
+
+By 19:30 CEST on July 21, surface rows `3850105_24..26` also completed and
+passed the final adapter plus terminal-step-7,140 gate, bringing surface SFT
+to `27/27`. The first corrected report artifacts are structurally accepted:
+hybrid train-1-to-10 rows `3850118_3/4/5` across all three seeds and
+conditioned-10k train-1-to-15 seed-3407 rows `3850119_12/13` for logic/NL.
+Each bundle has 448 prompts, 16 generations per prompt, all 14 depths,
+complete `7/112` greedy/sampled chunks, 576 retained records, fresh constants,
+and no citation-free-valid diagnostic contradiction. Family completion is
+hybrid `3/30` and conditioned-10k `14/30`; neither family is reportable yet.
+
+Representative review covers shallow, train-boundary, OOD, depth-50,
+success/failure, malformed, and cap-hit cases. Prompts, wrappers, extraction,
+and fresh constants match the corrected protocol. Hybrid train-1-to-10
+degrades OOD: formal proofs often fail before translated NL traces, while
+depth-50 outputs truncate or collapse. Its three-seed greedy OOD answer mean
+is `0.3458 +/- 0.0331`; pass@1 OOD answer/formal-joint/translated-joint is
+`0.2173 +/- 0.0250`, `0.1294 +/- 0.0422`, and `0.1926 +/- 0.0079`.
+Conditioned seed 3407 is clean through depth 25 in both modalities but also
+collapses at depth 50; this single-seed partial cannot support a comparison.
+
+The artifact audit had inferred NL-only evaluation solely from `_nl_exact_`
+in the checkpoint path, so `conditioned_nl` was falsely required to have
+positive formal syntax. It now recognizes every NL-only report surface from
+checkpoint and artifact names and continues to formal-audit hybrid surfaces.
+All 18 focused tests pass; real row `3850119_13` passes the full structural and
+translated-metric gate without `--allow-all-zero-train-metrics`.
 
 By 01:20 CEST on July 21, the resumed wave had added 14 artifact-clean finals:
 surface rows 15--20, shortcut rows 19--24, and architecture rows 49/50. Both

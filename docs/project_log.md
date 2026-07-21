@@ -4,6 +4,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-21
 
+- 19:30 CEST accepted surface SFT `3850105_24..26`, bringing the family to
+  `27/27`, and accepted the first five corrected report-eval artifacts:
+  hybrid `3850118_3/4/5` and conditioned-10k `3850119_12/13`. Structural
+  coverage is complete in each bundle; raw review confirms intended prompts,
+  wrappers, extraction, and unique constants, with OOD validity/truncation
+  failures that keep these partial results provisional.
+- Fixed the audit's NL-only surface detection so conditioned, terse,
+  rule-annotated, pseudocode, and shuffled NL artifacts require translated-NL
+  metrics. Hybrid remains formal-audited. The 18-test focused suite passes and
+  real conditioned-NL row `3850119_13` now passes without weakening the
+  train-signal gate.
+- Removed nine terminal Trainer checkpoints only after final/output/live-job
+  guards. Vault fell from about `1024G` to `1017G`; all incomplete restart
+  states remain. No scheduler edit, resubmission, or report regeneration was
+  justified. Preserved successor `3878297` because baseline, report matrix,
+  and Dolmino production are incomplete.
+
 - 13:15 CEST accepted normal-data prerequisite `3875824`: it completed `0:0`
   in `02:32:53`, exported `5,100,006,129` source tokens in `11,195,395`
   records, and packed `5,111,201,524` Qwen tokens. Decoded tail text is an
