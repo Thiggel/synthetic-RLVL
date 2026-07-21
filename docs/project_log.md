@@ -21,6 +21,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   checkpoints are eligible for the documented final/output/live-reference
   cleanup, while every incomplete restart state remains protected. Preserved
   CPU-only successor `3876636`; the BranchProof and 5B paths are incomplete.
+- Committed the scoped handoff as `b292bf9`. The bounded 90-second push
+  produced no remote output and exited `124`; the follow-up publication note
+  leaves local `main` two commits ahead of `origin/main`. The report repo
+  remains unchanged and synchronized.
 
 - 09:50 CEST canceled never-started NL confirmation `3875623_1` at user
   request. Added a 5.1B normal-data prerequisite and resumable 5B production
