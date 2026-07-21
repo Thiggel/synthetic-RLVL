@@ -4,6 +4,24 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-21
 
+- 09:20 CEST Dolmino formal p5 `3872664_0` completed all 256 optimizer steps
+  in `02:26:10`, with finite diagnostics, about 15.6K tokens/s, and realized
+  Dolmino/formal mixture `0.949982/0.0500183`. The job failed only after
+  training because its running shell re-read a wrapper patched in place while
+  `torchrun` was active and missed the newly inserted port variable. Rebuilt
+  `complete.json` from the terminal log/config; do not rerun formal p5.
+- Exact Dolmino NL replacement `3875623_1` remains account-GRES pending with
+  the allocation-specific-port fix and a current 09:26 CEST estimate.
+  Control/formal/NL comparison remains gated on NL and loss/sample review.
+- Nineteen BranchProof jobs are active without fatal signatures:
+  surface/shortcut are `91--95%`, batch about `3%`, 32B about `30%`, five
+  eval rows are at chunks `27--59/112`, and conditioned-50k stage-two rows
+  started after the original 24-hour timeout. No new eval bundle is terminal.
+- Guarded cleanup found 20 newly terminal Trainer checkpoints backed by
+  verified finals and referenced by no live job. Removed only those
+  intermediates (`17.06 GiB`), reducing user-wide Vault use from `970G` to
+  `954G`; all incomplete checkpoints and evidence remain intact.
+
 - 07:15 CEST accepted architecture SFT rows `3850113_51/52/53`, bringing the
   corrected architecture family to `54/54`. All three Gemma-3-4B NL finals
   have nonempty 131,252,288-byte adapters/configs, zero empty final files, and

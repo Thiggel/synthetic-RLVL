@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-21 07:15 CEST.
+Last updated: 2026-07-21 09:20 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,32 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-21 09:20 Dolmino formal gate recovered; report work active
+
+- Dolmino formal p5 row `3872664_0` reached all `256/256` steps in `02:26:10`
+  at about 15.6K tokens/s. Gradients/losses remained finite and the realized
+  Dolmino/formal blend was `0.949982/0.0500183`. Its Slurm failure is
+  post-training only: the active wrapper was patched while the old shell was
+  blocked in `torchrun`, and after training it re-read shifted lines and
+  exited before writing `complete.json`. Reconstructed that static marker
+  from the terminal log/config; no formal rerun is needed.
+- The original NL row failed before optimizer progress because both concurrent
+  `torchrun` processes used port 29500. Exact replacement `3875623_1` has the
+  allocation-specific-port fix and is account-GRES pending with a current
+  09:26 CEST estimate. Scientific control/formal/NL comparison remains gated
+  on its completion and subsequent loss/sample inspection.
+- Nineteen BranchProof rows are active with no fatal/OOM/quota signature:
+  surface/shortcut rows are about `91--95%`, batch rows about `3%`, 32B rows
+  about `30%`, hybrid/conditioned eval rows are at chunks `27--59/112`, and
+  conditioned-50k stage-two rows `3850110_0..2` started after the original
+  24-hour timeout. No new terminal eval JSON/sample bundle exists yet.
+- Active checkpoint writing raised user-wide Vault use to `970G/1000G`.
+  A repeated final/output/live-reference guard found 20 new terminal Trainer
+  checkpoints with verified finals and zero live references; deleting only
+  those intermediates reclaimed `17.06 GiB`. Vault is now `954G/1000G`, while
+  this repo is `394,804,989 KiB`; all incomplete restart states and evidence
+  remain. The user-wide file count is `201k/200k`.
 
 ### 2026-07-21 07:15 architecture SFT complete; Dolmino NL startup recovered
 

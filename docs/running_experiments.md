@@ -1,8 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-07-21 07:15 CEST.
+Last updated: 2026-07-21 09:20 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 09:20 CEST On July 21
+
+- Dolmino formal p5 completed `256/256` finite steps with realized mixture
+  `0.949982/0.0500183` and about 15.6K tokens/s. Its nonzero Slurm exit was a
+  post-training manifest failure caused by patching the wrapper while the old
+  shell was active; the completion marker was reconstructed from the terminal
+  log/config. Exact NL replacement `3875623_1` contains the port fix and
+  currently estimates 09:26 CEST.
+- Nineteen BranchProof jobs are active without a fatal signature. Six
+  surface/shortcut rows are at `91--95%`; batch rows 9--11 are near `3%`;
+  32B rows are near `30%`; five hybrid/conditioned eval rows have reached
+  chunks `27--59/112`; and conditioned-50k stage-two rows 0--2 are running
+  after the original timeout. Corrected baseline acceptance remains `18/30`.
+- A final-backed/live-reference cleanup removed 20 newly terminal Trainer
+  checkpoints (`17.06 GiB`) and preserved every incomplete restart state.
+  User-wide Vault use fell from `970G` to `954G`; repo-owned use is now
+  `394,804,989 KiB`. The user-wide file count remains `201k/200k`.
 
 ## Live Delta At 07:15 CEST On July 21
 
