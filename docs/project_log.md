@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-21
 
+- 09:35 CEST audited completed Dolmino control/formal gates. Normalized config
+  hashes match; both have 256 finite steps, identical 32-step warmup to
+  `1e-5`, global batch 128, TP4/DP1, and similar throughput. Post-warmup mean
+  loss is `0.956750` control and `0.852558` formal. Loss blocks are present in
+  both at shifted steps, not specific to formal mixing. Decoded packed samples
+  show ordinary Dolmino documents and intended tag-free neutral formal
+  documents. Both conditions pass individually; production remains gated only
+  on NL to preserve one locked three-condition protocol. NL currently has no
+  Slurm start estimate.
 - 09:20 CEST Dolmino formal p5 `3872664_0` completed all 256 optimizer steps
   in `02:26:10`, with finite diagnostics, about 15.6K tokens/s, and realized
   Dolmino/formal mixture `0.949982/0.0500183`. The job failed only after

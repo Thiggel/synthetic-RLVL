@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-21 09:20 CEST.
+Last updated: 2026-07-21 09:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -26,6 +26,23 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ### 2026-07-21 09:20 Dolmino formal gate recovered; report work active
 
+- A matched control/formal audit now passes both available conditions. After
+  normalizing only run paths/names and dataset lists/weights, the configs have
+  identical SHA-256 `223fb77c...c37`; both have exactly 256 finite iterations,
+  the same 32-step warmup to `1e-5`, global batch 128, TP4/DP1, and comparable
+  throughput. Post-warmup mean loss is `0.956750` control versus `0.852558`
+  formal, but this cross-corpus difference is diagnostic rather than a quality
+  claim. Large loss blocks occur in both control and formal at shifted steps,
+  so they are not evidence of unstratified formal mixing.
+- Decoded packed samples confirm ordinary heterogeneous Dolmino documents and
+  formal records in the intended tag-free neutral
+  `Solution/Context/Derivation/Conclusion/Final answer` document format.
+  Formal Nanoset metadata records 550,144,949 tokens/144,136 documents; the
+  Dolmino Nanoset records 4,810,706,180 tokens/10,705,908 documents. Control
+  and formal can be marked individually clean now. Keep production launch
+  gated on NL only to avoid locking an unmatched protocol if NL exposes a
+  common configuration issue; `3875623_1` remains account-GRES pending and
+  currently has no scheduler start estimate.
 - Dolmino formal p5 row `3872664_0` reached all `256/256` steps in `02:26:10`
   at about 15.6K tokens/s. Gradients/losses remained finite and the realized
   Dolmino/formal blend was `0.949982/0.0500183`. Its Slurm failure is

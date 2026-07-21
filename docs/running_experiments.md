@@ -1,11 +1,18 @@
 # Running Experiments
 
-Last updated: 2026-07-21 09:20 CEST.
+Last updated: 2026-07-21 09:35 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
 ## Live Delta At 09:20 CEST On July 21
 
+- Matched control/formal audit passes: normalized configs are identical;
+  both runs have 256 finite steps, the same warmup/LR/batch/topology, and
+  comparable throughput. Post-warmup mean loss is `0.956750/0.852558`
+  (control/formal). Decoded Nanoset documents match ordinary Dolmino and the
+  intended tag-free neutral formal format. Shared but shifted loss blocks
+  rule out a formal-mixture-specific batching failure. NL replacement remains
+  account-GRES pending and no longer has a scheduler start estimate.
 - Dolmino formal p5 completed `256/256` finite steps with realized mixture
   `0.949982/0.0500183` and about 15.6K tokens/s. Its nonzero Slurm exit was a
   post-training manifest failure caused by patching the wrapper while the old
