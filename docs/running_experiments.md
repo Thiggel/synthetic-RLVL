@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-07-22 16:35 CEST.
+Last updated: 2026-07-22 17:10 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 17:10 CEST On July 22
+
+- Canceled the exhaustive nonbaseline BranchProof arrays and preserved the
+  three active corrected-baseline evals plus their audits/aggregate.
+- Selected follow-ups are dependency-held on baseline aggregate `3857769`:
+  surface `3881774` (9 eval), shortcut `3881775` (6), hybrid `3881776` (6),
+  conditioned-7B `3881777` (6), Qwen2.5-7B `3881778` (6), OLMo-3-32B
+  conditioned SFT `3881779` (3), single-modal 32B eval `3881780` (6), and
+  conditioned 32B eval `3881781` (6). The last also waits for all three new
+  32B SFT rows.
+- Exact matrix assertions and existing-final gates passed. Remaining
+  substantive BranchProof GPU work is 51 rows including the baseline three,
+  rather than approximately 310. No canceled merge staging tree remains.
+- Guarded cleanup removed about 22.5 GiB of incomplete checkpoint payloads
+  from canceled conditioned-50k/batch roots with no final and no live
+  reference. Completed and selected artifacts were preserved.
 
 ## Live Delta At 16:35 CEST On July 22
 

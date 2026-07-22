@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-22 16:55 CEST.
+Last updated: 2026-07-22 17:10 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-22 17:10 exhaustive BranchProof wave pruned and replaced
+
+- Canceled the nonbaseline exhaustive parent arrays after resolving every row
+  against the official preprint claims. The corrected baseline jobs/audits/
+  aggregate were not touched. Cancellation left no active report merge tree.
+- Submitted 48 exact selected follow-up rows behind baseline aggregate
+  `3857769`: 45 evals and three required OLMo-3-32B conditioned-dual SFT rows.
+  Jobs are surface `3881774` (9), shortcut `3881775` (6), hybrid `3881776`
+  (6), conditioned-7B `3881777` (6), Qwen2.5-7B architecture `3881778` (6),
+  OLMo-3-32B conditioned SFT `3881779` (3), OLMo-3-32B single eval `3881780`
+  (6), and conditioned eval `3881781` (6).
+- Programmatic row assertions passed for exact templates, rates, models,
+  train depth 25, evaluation modes, and total count. Final-adapter gates pass
+  for every selected checkpoint except the intentional three new 32B
+  conditioned rows. The substantive BranchProof remainder is now 51 GPU rows
+  including the three active baseline evals, down from approximately 310.
+  Exact scope and rationale: `docs/branchproof_selected_followups_2026-07-22.md`.
+- Removed about 22.5 GiB of orphaned incomplete checkpoint payloads from six
+  canceled conditioned-50k and three canceled batch-size roots. Every root
+  was gated on missing `final/adapter_config.json` and absence from the live
+  selected dependency graph; metadata and all completed/selected finals remain.
 
 ### 2026-07-22 16:55 BranchProof scope audit: exhaustive queue is not required
 

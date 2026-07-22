@@ -4,6 +4,22 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-22
 
+- 17:10 CEST canceled the exhaustive nonbaseline BranchProof parents while
+  preserving baseline eval/audit/aggregate. Submitted exact selected jobs
+  `3881774..3881781`: 48 rows total, comprising 45 evals and three required
+  OLMo-3-32B conditioned-dual SFT rows, all gated on baseline aggregate
+  `3857769`; conditioned 32B eval also gates on its three SFT rows.
+- Programmatic assertions against the canonical matrix verified all selected
+  templates, rate `0.8` schema shortcut, train depth 25, modalities, models,
+  seeds, and the corrected total of 48. Every selected existing checkpoint
+  passes the final-adapter gate; only the intentional three new 32B
+  conditioned rows are missing. Substantive BranchProof remainder is 51 GPU
+  rows including the three active baseline evals, down from about 310.
+- Guarded post-cancellation cleanup reclaimed about 22.5 GiB by removing only
+  incomplete checkpoint payloads from six conditioned-50k and three batch
+  roots with no final adapter and no live/dependent reference. Preserved run
+  metadata, every completed final, and all selected evidence.
+
 - 16:55 CEST scope audit found that the approximately 310-row BranchProof
   remainder is an exhaustive rebuild of all historical informal-report cells,
   not the official preprint's minimum evidence set. Those old sections are

@@ -1,6 +1,24 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-22 07:15 CEST.
+Last updated: 2026-07-22 17:10 CEST.
+
+## 2026-07-22 scope reduction
+
+The exhaustive matrix below is retained as operational history, but it is no
+longer the active completion target. After mapping the official preprint's
+claims to exact canonical rows, all nonbaseline exhaustive parents were
+canceled and replaced by selected jobs `3881774..3881781`: 45 eval rows plus
+three OLMo-3-32B conditioned-dual SFT rows. The corrected baseline remains
+unchanged and gates every selected follow-up through aggregate `3857769`.
+
+The active row-level protocol is
+`docs/branchproof_selected_followups_2026-07-22.md`. It retains train-depth-25
+symbol-padded logic, terse NL, target-token-matched NL, schema shortcut rate
+0.8, both same-datapoint hybrid orders, conditioned dual at 7B, Qwen2.5-7B as
+one independent architecture, and the OLMo-3-32B single/conditioned capacity
+comparison. Batch-size, conditioned-50k, full depth sweeps, additional
+shortcut/surface variants, Gemma/Qwen-1.5B breadth, and Qwen3-32B were dropped
+from the active gate.
 
 By 07:15 CEST, batch rows `3850114_9..11` had timed out at 24 hours with no
 checkpoint. Exact recovery `3879713_[9-11%3]` uses the repaired 250-step,
