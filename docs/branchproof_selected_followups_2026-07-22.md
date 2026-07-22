@@ -17,6 +17,10 @@ conditioned-dual SFT rows. A programmatic audit against
 index and verified that every selected checkpoint except the intentional three
 32B conditioned rows already has a nonempty final adapter.
 
+Update 20:15 CEST: baseline aggregate `3857769` passed and released the wave.
+Surface row `3881774_0` started on verified A100-80GB hardware with clean
+merge/vLLM startup; other selected rows remain scheduler/dependency pending.
+
 | Claim/control | Exact rows | Job | Rows |
 | --- | --- | --- | ---: |
 | Length/syntax | surface eval `0..2` symbol-padded logic, `6..8` terse NL, `24..26` target-token-matched NL; all train-1-to-25, three seeds | `3881774` | 9 eval |

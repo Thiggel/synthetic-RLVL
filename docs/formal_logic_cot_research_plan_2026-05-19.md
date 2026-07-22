@@ -18,6 +18,17 @@ matrix is tracked in `docs/branchproof_report_rerun_matrix_2026-07-13.md`.
 Until those gates finish, AttrCon remains independent evidence and no old
 BranchProof number below should be used in a scientific claim.
 
+Update 2026-07-22: the corrected exact-answer baseline is complete and
+accepted at `30/30`; aggregate/qualitative gate `3857769` passed. NL is
+stronger at greedy/pass@1 for train maxima 5--20, while train-25 logic has a
+large three-seed advantage: OOD logic-minus-NL greedy `+0.3333 +/- 0.2680`,
+answer pass@1 `+0.5712 +/- 0.1399`, joint pass@1 `+0.5100 +/- 0.1443`, and
+joint pass@16 `+0.5792 +/- 0.0457`. This replaces the historical table below
+with a depth-dependent formal-advantage claim, not uniform superiority. The
+accepted bundle is `analysis/branchproof_unique_v2_20260711/`; selected
+corrected controls are `3881774..3881781`. The old table and interpretations
+below remain historical only.
+
 The current strongest signal is from the completed 3-seed sparse-protocol HFSA depth-scaling wave:
 
 | train depths | logic OOD joint@16 | `nl_exact` OOD joint@16 | logic - NL |

@@ -7,6 +7,14 @@
 > 3853286` plus the report-wide matrix in
 > `docs/branchproof_report_rerun_matrix_2026-07-13.md`.
 
+> **Accepted replacement (2026-07-22):** the declaration-fixed 30-run
+> baseline and all row audits passed, followed by strict aggregate/qualitative
+> gate `3857769`. NL leads greedy/pass@1 for train maxima 5--20; logic reverses
+> the comparison at train max 25 with OOD answer pass@1 delta
+> `+0.5712 +/- 0.1399` and joint pass@1 delta `+0.5100 +/- 0.1443`.
+> Artifacts: `analysis/branchproof_unique_v2_20260711/`. Historical summaries
+> below remain quarantined; selected corrected controls are `3881774..3881781`.
+
 ## Motivation
 
 The strongest current signal is from the pure-SFT fixed-target HFSA comparison: logic CoT appears to extrapolate better than controlled natural-language CoT when training depth is extended from `1..10` to `1..15`, especially under sampled pass@k and joint correct+valid metrics. That result is still only one seed and only evaluates to depth 25.

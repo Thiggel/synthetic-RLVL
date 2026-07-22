@@ -4,6 +4,7 @@ import csv
 import json
 import os
 import re
+import shutil
 import sys
 import textwrap
 from collections import defaultdict
@@ -30,6 +31,7 @@ LM_EVAL_ROOT = WORK_ROOT / "synthetic-RLVL" / "lm_eval_results"
 OUT_ROOT = ROOT / "analysis" / "logic_cot_report_2026-05-25"
 FIG_DIR = OUT_ROOT / "figures"
 TABLE_DIR = OUT_ROOT / "tables"
+CORRECTED_BRANCHPROOF_ROOT = ROOT / "analysis" / "branchproof_unique_v2_20260711"
 TOKENIZER_NAME = "allenai/Olmo-3-1025-7B"
 
 MAIN_RE = re.compile(r"sft_hfsa_depth_scaling_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$")
@@ -3700,6 +3702,144 @@ def main_checkpoint_note(records: list[Record]) -> str:
     return " ".join(parts)
 
 
+def build_corrected_branchproof_report_block() -> tuple[str, str, bool]:
+    manifest_path = CORRECTED_BRANCHPROOF_ROOT / "manifest.json"
+    qualitative_path = CORRECTED_BRANCHPROOF_ROOT / "qualitative_grid_audit.json"
+    summary_path = CORRECTED_BRANCHPROOF_ROOT / "tables" / "final_group_summary.csv"
+    required = (manifest_path, qualitative_path, summary_path)
+    if not all(path.is_file() for path in required):
+        return (
+            "Corrected three-seed BranchProof aggregation is still pending its complete "
+            "artifact and qualitative gate.",
+            "Corrected BranchProof is still gated; no replacement quantitative claim is included.",
+            False,
+        )
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    qualitative = json.loads(qualitative_path.read_text(encoding="utf-8"))
+    summary = pd.read_csv(summary_path)
+    ready = (
+        manifest.get("final_json_count") == 30
+        and not manifest.get("problems")
+        and qualitative.get("accepted") is True
+        and qualitative.get("observed_grid_size") == 30
+        and len(summary) == 10
+        and set(summary["n"].astype(int)) == {3}
+    )
+    if not ready:
+        return (
+            "Corrected BranchProof artifacts exist, but the complete 30-run structural and "
+            "qualitative acceptance gate has not passed.",
+            "Corrected BranchProof is still gated; no replacement quantitative claim is included.",
+            False,
+        )
+
+    copy_pairs = (
+        (
+            CORRECTED_BRANCHPROOF_ROOT / "figures" / "final_primary_ood_correctness.pdf",
+            FIG_DIR / "corrected_branchproof_primary_ood_correctness.pdf",
+        ),
+        (
+            CORRECTED_BRANCHPROOF_ROOT / "figures" / "final_train25_sampling_efficiency.pdf",
+            FIG_DIR / "corrected_branchproof_train25_sampling_efficiency.pdf",
+        ),
+        (summary_path, TABLE_DIR / "corrected_branchproof_final_group_summary.csv"),
+        (
+            CORRECTED_BRANCHPROOF_ROOT / "tables" / "paired_delta_summary.csv",
+            TABLE_DIR / "corrected_branchproof_paired_delta_summary.csv",
+        ),
+    )
+    for source, destination in copy_pairs:
+        if source.is_file():
+            shutil.copy2(source, destination)
+
+    summary = summary.sort_values(["train_max", "template"])
+
+    def percent_stat(row: pd.Series, metric: str) -> str:
+        return (
+            f"{100.0 * float(row[f'{metric}_mean']):.1f} $\\pm$ "
+            f"{100.0 * float(row[f'{metric}_std']):.1f}"
+        )
+
+    table_lines = [
+        r"\begin{tabular}{llrrrrr}",
+        r"\toprule",
+        r"Train & Trace & Greedy OOD & OOD c@1 & OOD joint@1 & OOD c@16 & OOD joint@16 \\",
+        r"\midrule",
+    ]
+    for _, row in summary.iterrows():
+        trace = "Logic" if row["template"] == "logic" else "Natural"
+        table_lines.append(
+            f"1--{int(row['train_max'])} & {trace} & "
+            f"{percent_stat(row, 'greedy_ood_correct')} & "
+            f"{percent_stat(row, 'ood_correct1')} & "
+            f"{percent_stat(row, 'ood_joint1')} & "
+            f"{percent_stat(row, 'ood_correct16')} & "
+            f"{percent_stat(row, 'ood_joint16')} \\\\"
+        )
+    table_lines.extend([r"\bottomrule", r"\end{tabular}"])
+
+    train25 = summary[summary["train_max"] == 25].set_index("template")
+    logic = train25.loc["logic"]
+    natural = train25.loc["nl_exact"]
+    executive = (
+        "The corrected 30-run BranchProof grid passed all row and cross-grid gates. At "
+        "train-1-to-25, logic leads natural-language supervision on OOD greedy correctness "
+        f"({100 * logic['greedy_ood_correct_mean']:.1f} versus "
+        f"{100 * natural['greedy_ood_correct_mean']:.1f}) and sampled pass@1 correctness "
+        f"({100 * logic['ood_correct1_mean']:.1f} versus "
+        f"{100 * natural['ood_correct1_mean']:.1f}), with a similarly large joint-validity gap. "
+        "The reversal is specific to the deepest training range: natural language is stronger "
+        "at greedy/pass@1 for train maxima 5--20, so the result supports a depth-dependent "
+        "formal advantage rather than uniform superiority."
+    )
+    table = "\n".join(table_lines)
+    block = rf"""
+\section{{Corrected BranchProof result}}
+The replacement grid contains 30 three-seed runs and passed every row-level artifact gate plus
+the cross-grid qualitative audit. Every retained prompt uses fresh constants through its requested
+depth, and no citation-free-valid retained sample carries a validation error or a line-valid
+fraction below one. The table reports percentage mean $\pm$ population standard deviation across
+three seeds. OOD means evaluation depths above the run's maximum training depth.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{table}
+\caption{{Corrected unique-answer BranchProof primary results. Joint validity is citation-free
+formal validity for Logic and translated citation-free validity for Natural.}}
+\end{{table}}
+
+\begin{{figure}}[H]
+\centering
+\includegraphics[width=0.96\linewidth]{{figures/corrected_branchproof_primary_ood_correctness.pdf}}
+\caption{{Greedy and sampled pass@1 OOD correctness. Natural-language supervision is stronger
+for train maxima 5--20, but logic reverses the comparison at train-1-to-25.}}
+\end{{figure}}
+
+\begin{{figure}}[H]
+\centering
+\includegraphics[width=0.96\linewidth]{{figures/corrected_branchproof_train25_sampling_efficiency.pdf}}
+\caption{{Train-1-to-25 OOD correctness and modality-appropriate correct-and-valid pass@k.
+The formal advantage is already present at pass@1 and is not only a large-sample-budget effect.}}
+\end{{figure}}
+
+At train-1-to-25, formal supervision reaches greedy OOD correctness
+{100 * logic['greedy_ood_correct_mean']:.1f}$\pm${100 * logic['greedy_ood_correct_std']:.1f}
+versus {100 * natural['greedy_ood_correct_mean']:.1f}$\pm${100 * natural['greedy_ood_correct_std']:.1f}
+for natural supervision. Sampled OOD pass@1 correctness is
+{100 * logic['ood_correct1_mean']:.1f}$\pm${100 * logic['ood_correct1_std']:.1f} versus
+{100 * natural['ood_correct1_mean']:.1f}$\pm${100 * natural['ood_correct1_std']:.1f}; the corresponding
+correct-and-valid values are {100 * logic['ood_joint1_mean']:.1f}$\pm${100 * logic['ood_joint1_std']:.1f}
+and {100 * natural['ood_joint1_mean']:.1f}$\pm${100 * natural['ood_joint1_std']:.1f}.
+Representative failures explain why correctness and validity remain separate: long formal
+generations can reach the right answer through an invalid branch, while many natural-language
+failures copy premises until the shared cap and never emit an answer. Selected length, shortcut,
+hybrid, conditioned-dual, and architecture controls remain in progress and are not used here.
+"""
+    return block, executive, True
+
+
 def write_report(
     main_summary: pd.DataFrame,
     tiny_summary: pd.DataFrame,
@@ -3722,6 +3862,9 @@ def write_report(
     tiny_ckpt_count: int,
     tiny_100k_ckpt_count: int,
 ) -> None:
+    corrected_branchproof_block, corrected_branchproof_executive, corrected_branchproof_ready = (
+        build_corrected_branchproof_report_block()
+    )
     main_rows = main_summary[(main_summary["size"] == "") & (main_summary["n"] >= 1)].copy()
     main_rows = main_rows.sort_values(["template", "train_max"])
     main_ood_rows = main_ood_summary.sort_values(["template", "train_max"]) if not main_ood_summary.empty else pd.DataFrame()
@@ -4037,6 +4180,12 @@ def write_report(
     )
 
     delta_label = "$\\Delta$ vs logic"
+    corrected_status_sentence = (
+        "The corrected 30-run grid has passed its artifact and qualitative gates; "
+        "replacement evidence is reported in the next section."
+        if corrected_branchproof_ready
+        else "The corrected grid remains gated and is not yet used as evidence."
+    )
     tex = rf"""\documentclass[10pt]{{article}}
 \usepackage[margin=0.7in]{{geometry}}
 \usepackage{{booktabs}}
@@ -4044,7 +4193,7 @@ def write_report(
 \usepackage{{float}}
 \usepackage{{hyperref}}
 \title{{Formal Logic CoT Synthetic Results Update}}
-\date{{2026-07-10}}
+\date{{2026-07-22}}
 \begin{{document}}
 \maketitle
 
@@ -4057,22 +4206,20 @@ depth-40/45/50 examples. The defect affects the main depth-scaling result and
 every architecture, syntax, shortcut, hybrid, conditioned-dual, batch-size,
 tiny-pretraining, downstream-transfer, and midtraining artifact trained from
 that construction. Do not cite these numbers. The corrected generator uses
-fresh constants at every layer, passes a unique-answer closure gate, and is
-being rerun with equal logic/NL generation caps plus greedy and pass@1 metrics.
-The independent AttrCon results are not affected. Full evidence and recovery
-jobs are recorded in
+fresh constants at every layer, passes a unique-answer closure gate, and uses
+equal logic/NL generation caps plus greedy and pass@1 metrics.
+{corrected_status_sentence} The independent AttrCon results are not affected.
+Full evidence and recovery jobs are recorded in
 \texttt{{docs/branchproof\_uniqueness\_audit\_2026-07-10.md}}.
+
+{corrected_branchproof_block}
 
 \section{{Executive insights}}
 \begin{{itemize}}
-\item The main OLMo-7B HFSA grid is complete over three seeds. Logic is more sample- and depth-efficient at intermediate train ranges; NL exact catches up at train-1-to-25 on strict joint validity. At train-1-to-25, depth-50 joint@16 is logic 0.417 versus NL 0.427.
-\item The downstream OOD picture is split. NL transfers much better to GSM8K numeric EM, while logic transfers much better to context-provided HotpotQA, 2WikiMultiHopQA, and MuSiQue EM/F1. Treat the QA result as context-QA robustness, not proof-chain evidence.
-\item Token length is a real confound: NL targets are longer than logic targets at every train range. Both equal-length logic controls underperform compact logic; symbol padding disrupts atom tokenization, and the cleaner wordified logic control is also weaker than compact logic and NL at train-1-to-25.
-\item Tiny random-init Llama pretraining is a mechanism smoke test. Logic is stronger than matched NL on answer-only synthetic OOD pass@8, but strict depth-50 joint validity is essentially absent.
-\item Architecture ablations show that the phenomenon is not OLMo-only: Qwen and Gemma runs also show strong formal-trace transfer, with model-specific variation in joint validity.
-\item Shortcut-rich training hurts NL more clearly than logic in the completed 0.3/0.5/0.8 shortcut-rate runs, supporting the hypothesis that NL relies more on brittle shortcut associations. {shortcut_kind_exec_sentence}
-\item Conditioned dual-modality at 10k underperforms the best single-modality baselines, especially for conditioned logic at larger train ranges. The implementation trains separate mode-conditioned examples, not both modalities inside one datapoint; likely confounds are per-modality underexposure at fixed optimizer steps, mode-conditioning overhead, and cross-modality interference. The 50k continuation is running to test whether this is undertraining.
-\item {trace_control_exec_sentence} The repaired \texttt{{rule\_annotated\_nl}} rows now show nonzero translated validity, \texttt{{invalid\_logic}} keeps high answer accuracy but zero grounded validity, and shuffled NL parses while losing translated joint validity. The token audit shows current \texttt{{terse\_nl}} is not actually shorter than \texttt{{nl\_exact}} on HFSA because the default NL proof text is already terse.
+\item {corrected_branchproof_executive}
+\item AttrCon remains independent positive-but-mixed evidence: formal traces improve mean answer correctness, while natural traces have the higher joint-validity mean.
+\item The corrected Qwen2.5 continual-pretraining pilot remains null or mixed after raw-generation and truncation audits, so the broader mixture grid is rejected.
+\item All later sections based on the wrapped-constant BranchProof construction are retained only as quarantined provenance. Selected corrected surface, shortcut, hybrid, conditioned-dual, and architecture controls are pending and are not evidence yet.
 \end{{itemize}}
 
 \section{{Metric note for OOD benchmarks}}

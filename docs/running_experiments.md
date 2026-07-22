@@ -1,8 +1,29 @@
 # Running Experiments
 
-Last updated: 2026-07-22 17:01 CEST.
+Last updated: 2026-07-22 20:15 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 20:15 CEST On July 22
+
+- Corrected baseline recovery/audit `3865321_18 -> 3865322_18` and aggregate
+  `3857769` completed `0:0`. All `30/30` row audits and the cross-grid
+  qualitative audit are accepted. The final recovery took `08:08:43` and did
+  not require sharding.
+- Accepted artifacts are `analysis/branchproof_unique_v2_20260711/` plus 30
+  row JSONs in `analysis/branchproof_unique_v2_full_grid_audits/`. The primary
+  train-25 OOD logic-minus-NL deltas are greedy `+0.3333`, answer pass@1
+  `+0.5712`, joint pass@1 `+0.5100`, answer pass@16 `+0.5708`, and joint
+  pass@16 `+0.5792`; NL is stronger at greedy/pass@1 for train maxima 5--20.
+- Dependency release started selected surface eval `3881774_0` on A100-80GB;
+  merge, 16,384-token vLLM startup, and early greedy chunks are clean. Other
+  selected rows `3881774..3881780` are scheduler-pending, while conditioned
+  32B eval `3881781` additionally waits for SFT `3881779_12..14`.
+- Dolmino `3875825_0/3875828_1/3875831_2` remain pending. The displayed
+  unavailable node `a0631` is not a requested-node binding; each job has an
+  alternate scheduler candidate, so no partition or node-list edit was made.
+- Successor oversight `3882407` is dependency-free and scheduled at 01:11 CEST
+  on CPU-only `a100mig`. It remains required.
 
 ## Live Delta At 17:01 CEST On July 22
 

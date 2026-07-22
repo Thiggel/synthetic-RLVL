@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-22 17:01 CEST.
+Last updated: 2026-07-22 20:15 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,35 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-22 20:15 corrected BranchProof baseline accepted and reported
+
+- Final recovery `3865321_18` completed on verified A100-80GB hardware in
+  `08:08:43`; its row audit `3865322_18` passed. Strict aggregate and
+  cross-grid qualitative gate `3857769` then completed `0:0`, establishing
+  `30/30` accepted rows and a 30-file clean manifest.
+- The corrected result is a depth-dependent reversal. NL leads greedy and
+  pass@1 for train maxima `5..20`. At train max 25, logic-minus-NL OOD deltas
+  are greedy `+0.3333 +/- 0.2680`, answer pass@1 `+0.5712 +/- 0.1399`, joint
+  pass@1 `+0.5100 +/- 0.1443`, answer pass@16 `+0.5708 +/- 0.0609`, and joint
+  pass@16 `+0.5792 +/- 0.0457`. All three paired train-25 seeds have positive
+  pass@1 answer deltas; seed 3407 ties at greedy.
+- The accepted cross-grid raw audit covers all templates, seeds, train ranges,
+  shallow/train/OOD/depth-50 cases, correct/incorrect and valid/invalid cases,
+  plus cap diagnostics. A 30-file invariant scan found no fresh-constant or
+  credited validity-diagnostic violation. Long failures commonly copy
+  premises or repeat until the shared cap; answer-correct invalid traces also
+  occur, so correctness and validity remain separate.
+- Generated evidence is under `analysis/branchproof_unique_v2_20260711/`.
+  The in-repo informal report was regenerated with fail-closed ingestion, and
+  the official preprint now reports only this corrected baseline while keeping
+  old wrapped-constant results quarantined. Selected controls `3881774..3881781`
+  were released; surface row `3881774_0` started cleanly on A100-80GB.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain valid and pending;
+  their `UnavailableNodes:a0631` display is not a hard node binding, and Slurm
+  has alternate forecast nodes. Vault is about `925.8G/1000G` and `202k/200k`
+  files. Successor oversight `3882407` remains scheduled because selected
+  controls and all three Dolmino chains are incomplete.
 
 ### 2026-07-22 17:01 exhaustive BranchProof wave pruned and replaced
 

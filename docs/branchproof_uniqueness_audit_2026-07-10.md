@@ -556,3 +556,42 @@ Exact local-snapshot recoveries `3863525_13/14`, node-failure recovery
 and aggregate `3857769` remain dependency-gated. No corrected baseline claim
 is accepted until all four rows, all 30 audits, and the cross-grid qualitative
 gate pass.
+
+## 2026-07-22 Final Corrected Baseline Acceptance
+
+The remaining recovery `3865321_18` completed on A100-80GB in `08:08:43`.
+Its audit `3865322_18` passed, followed by strict aggregate and qualitative
+gate `3857769`; all jobs exited `0:0`. The accepted manifest contains exactly
+30 final JSONs, all 30 row audits are accepted, and the cross-grid audit covers
+every template, train range, and seed with shallow, train-edge, first-OOD, and
+depth-50 selections plus correct/incorrect, valid/invalid, format, and cap-hit
+categories.
+
+The corrected aggregate is
+`analysis/branchproof_unique_v2_20260711/`. The main result is a
+depth-dependent reversal:
+
+| train max | logic greedy OOD | NL greedy OOD | logic OOD c@1 | NL OOD c@1 | logic OOD joint@1 | NL OOD joint@1 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 5 | 0.108 +/- 0.059 | 0.563 +/- 0.080 | 0.098 +/- 0.048 | 0.524 +/- 0.067 | 0.033 +/- 0.020 | 0.510 +/- 0.065 |
+| 10 | 0.331 +/- 0.022 | 0.600 +/- 0.084 | 0.308 +/- 0.017 | 0.580 +/- 0.081 | 0.237 +/- 0.005 | 0.549 +/- 0.094 |
+| 15 | 0.281 +/- 0.035 | 0.574 +/- 0.050 | 0.261 +/- 0.029 | 0.495 +/- 0.010 | 0.128 +/- 0.006 | 0.491 +/- 0.007 |
+| 20 | 0.220 +/- 0.113 | 0.684 +/- 0.198 | 0.232 +/- 0.113 | 0.312 +/- 0.054 | 0.025 +/- 0.014 | 0.312 +/- 0.054 |
+| 25 | 0.821 +/- 0.070 | 0.487 +/- 0.217 | 0.750 +/- 0.095 | 0.178 +/- 0.047 | 0.685 +/- 0.102 | 0.175 +/- 0.045 |
+
+At train max 25, paired logic-minus-NL OOD deltas are greedy
+`+0.3333 +/- 0.2680`, answer pass@1 `+0.5712 +/- 0.1399`, joint pass@1
+`+0.5100 +/- 0.1443`, answer pass@16 `+0.5708 +/- 0.0609`, and joint pass@16
+`+0.5792 +/- 0.0457`. The answer pass@1 delta is positive in every seed;
+greedy seed 3407 is tied. At depth 50, logic/NL answer pass@1 is
+`0.5716/0.0189`, joint pass@1 is `0.4798/0.0169`, and answer pass@16 is
+`0.9896/0.2188`.
+
+Manual and automated sample review found no fresh-constant failure and no
+credited modality-valid row with a validation error or line-valid fraction
+below one. Failures remain meaningful: both modalities can copy premises until
+the shared cap, shallow formal training can enter repetition, and answer-correct
+proof-invalid generations occur. These observations support separate answer
+and validity reporting. The accepted result does not restore any old ablation;
+selected corrected controls are tracked in
+`docs/branchproof_selected_followups_2026-07-22.md`.

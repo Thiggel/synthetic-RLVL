@@ -4,6 +4,29 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-22
 
+- 20:15 CEST accepted the corrected BranchProof baseline. Final A100-80GB
+  recovery `3865321_18` completed `0:0` in `08:08:43`; row audit
+  `3865322_18` and strict aggregate/qualitative gate `3857769` also completed
+  `0:0`. All 30 row audits, the 30-file manifest, and cross-grid qualitative
+  coverage pass.
+- Corrected main finding: NL is stronger at greedy/pass@1 for train maxima
+  5--20, while train-25 logic leads OOD greedy by `+0.3333 +/- 0.2680`, answer
+  pass@1 by `+0.5712 +/- 0.1399`, joint pass@1 by `+0.5100 +/- 0.1443`, and
+  joint pass@16 by `+0.5792 +/- 0.0457`. All train-25 paired seeds favor logic
+  on answer pass@1. Raw review confirms intended wrappers/constants and clean
+  credited validity; long failures are commonly cap-limited premise copying or
+  repetition, with some answer-correct invalid traces.
+- Added fail-closed corrected-result ingestion to the informal report builder,
+  regenerated the in-repo report, mirrored it to the report repo, and updated
+  the official preprint with only corrected evidence. Old wrapped-constant
+  results remain quarantined. TeX compilation was unavailable; include-path,
+  environment-count, `py_compile`, and diff checks pass.
+- Baseline release started selected surface eval `3881774_0` cleanly on
+  A100-80GB; remaining selected jobs `3881774..3881781` are scheduler/dependency
+  pending. Dolmino first stages remain valid pending jobs. No partition,
+  dependency, cancellation, recovery, or duplicate submission was needed.
+  Successor oversight `3882407` remains scheduled.
+
 - 17:01 CEST canceled the exhaustive nonbaseline BranchProof parents while
   preserving baseline eval/audit/aggregate. Submitted exact selected jobs
   `3881774..3881781`: 48 rows total, comprising 45 evals and three required
