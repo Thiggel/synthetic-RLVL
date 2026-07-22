@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-22 16:35 CEST.
+Last updated: 2026-07-22 16:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,25 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-22 16:55 BranchProof scope audit: exhaustive queue is not required
+
+- The approximately 310-row substantive remainder is the exhaustive rebuild
+  of every historical informal-report cell, not the minimum experiment set
+  needed by the official preprint. The old architecture, shortcut, syntax,
+  hybrid, conditioned, batch, and 32B sections are retained inside
+  `\iffalse`; they are not currently rendered as evidence.
+- The official preprint's stated gate is narrower: complete the corrected
+  three-seed baseline, then, only if it supports a formal advantage, rerun one
+  syntax control, one shortcut intervention, one conditioned-dual comparison,
+  and one independent architecture. The paper's expanded mixed-substrate
+  claim also justifies one train-1-to-25 same-datapoint hybrid comparison.
+- Therefore the full batch-size matrix, conditioned-50k convergence grid,
+  every shortcut kind/rate, every surface, every architecture/train depth, and
+  the full 32B matrix are optional appendix diagnostics rather than required
+  evidence. No jobs were canceled during this audit; an exact keep/cancel list
+  should be applied after user confirmation, preserving the nearly complete
+  core baseline and any already-near-terminal rows worth harvesting.
 
 ### 2026-07-22 16:35 BranchProof remaining-work audit
 

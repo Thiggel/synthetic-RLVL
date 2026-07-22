@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-22
 
+- 16:55 CEST scope audit found that the approximately 310-row BranchProof
+  remainder is an exhaustive rebuild of all historical informal-report cells,
+  not the official preprint's minimum evidence set. Those old sections are
+  currently inside `\iffalse`; the draft itself prescribes baseline-first,
+  then one syntax, shortcut, conditioned, and architecture check if positive.
+  A single train-1-to-25 hybrid comparison also fits the mixed-substrate claim.
+  Recorded a pruning decision in the backlog; made no cancellation without
+  user confirmation.
+
 - 16:35 CEST expanded the BranchProof queue: 22 rows running and 319 pending.
   Approximately 310 are substantive GPU tasks (56 SFT and 254 eval); the raw
   count also includes 26 staged recovery rows plus CPU oversight/audit/
