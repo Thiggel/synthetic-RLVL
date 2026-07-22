@@ -1,8 +1,22 @@
 # Running Experiments
 
-Last updated: 2026-07-22 16:20 CEST.
+Last updated: 2026-07-22 16:35 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 16:35 CEST On July 22
+
+- Expanded BranchProof queue count is 22 running plus 319 pending Slurm rows.
+  After separating CPU oversight/audits/aggregate and 26 staged recovery rows,
+  approximately 310 substantive GPU rows remain: 56 SFT and 254 eval.
+- Remaining SFT by family is conditioned-50k 6, shortcut 8, batch 33, and
+  32B 9. Remaining eval by family is baseline 3, hybrid/replacements 24,
+  conditioned-10k 10, conditioned-50k 30, architecture 52, 32B 18, shortcut
+  42, batch 48, and surface 27.
+- Baseline rows 13/14 are scoring and row 18 is at chunk 87/112, making the
+  corrected baseline gate likely July 23--24 absent recovery. The full
+  ablation wave is provisionally August 5--12 under current capacity and
+  observed runtimes; dependencies and Dolmino contention make this uncertain.
 
 ## Live Delta At 16:20 CEST On July 22
 

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-22 16:20 CEST.
+Last updated: 2026-07-22 16:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-22 16:35 BranchProof remaining-work audit
+
+- Expanded `squeue -r` shows 341 BranchProof-related Slurm rows: 22 running
+  and 319 pending. This scheduler count includes one oversight, three CPU
+  audits, one CPU aggregate, and 26 staged conditioned-50k recovery rows; most
+  recovery rows should become quick skip checks after accepted earlier-stage
+  finals exist.
+- The substantive remaining GPU workload is about 310 task rows: 56 SFT rows
+  and 254 eval rows. SFT consists of conditioned-50k 6, shortcut 8, batch 33,
+  and 32B 9. Eval consists of corrected baseline 3, hybrid/replacements 24,
+  conditioned-10k 10, conditioned-50k 30, architecture 52, 32B 18, shortcut
+  42, batch 48, and surface 27.
+- The corrected core baseline is close: rows 13/14 are already scoring and
+  row 18 is at sampled chunk 87/112; only their three CPU audits and aggregate
+  follow. Barring recovery, expect this gate around July 23--24. Completing
+  every report ablation is a longer critical path: with the 16-A100 account
+  ceiling, 8--18-hour observed eval rows, training dependencies, and Dolmino
+  full-node contention, the current planning window is roughly August 5--12,
+  not a scheduler guarantee.
 
 ### 2026-07-22 16:20 Dolmino remains healthy; full-node estimate moves
 

@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-22
 
+- 16:35 CEST expanded the BranchProof queue: 22 rows running and 319 pending.
+  Approximately 310 are substantive GPU tasks (56 SFT and 254 eval); the raw
+  count also includes 26 staged recovery rows plus CPU oversight/audit/
+  aggregation. Core baseline rows 13/14 are scoring and row 18 reached chunk
+  87/112, supporting a July 23--24 baseline gate absent recovery. Under the
+  current 16-A100 ceiling and Dolmino contention, all report ablations have a
+  rough August 5--12 completion window rather than a firm scheduler ETA.
+
 - 16:20 CEST Dolmino control/formal/NL first stages remain dependency-free
   and pending only on `AssocGrpGRES`; none has started or emitted a run log.
   Slurm moved each individual start projection to 09:00 CEST July 23. Sixteen
