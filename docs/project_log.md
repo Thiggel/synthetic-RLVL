@@ -4,6 +4,27 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-22
 
+- 07:15 CEST exact batch recovery trigger fired: `3850114_9..11` timed out at
+  the hard 24-hour limit with no final/checkpoint. Submitted only those rows as
+  `3879713_[9-11%3]` under the current 250-step/two-state policy and added
+  `afterok:3879713` to rebuilt eval `3872663` alongside its original
+  dependencies.
+- Accepted baseline `3857767_21..23 -> 3857768_21..23`, bringing corrected
+  row audits to `21/30`. Three-seed NL train-1-to-15 raw review is clean
+  through depth 25 and collapses at depth 50. OOD NL greedy answer/joint is
+  `0.6488 +/- 0.0712` / `0.6280 +/- 0.0866`; pass@1 is
+  `0.5648 +/- 0.0129` / `0.5614 +/- 0.0094`. Matched formal is lower at
+  greedy/pass@1, overtakes answer coverage only at pass@8/16, and remains
+  lower in joint validity. This partial is not preprint evidence.
+- Structurally and qualitatively accepted hybrid `3850118_6..8` and
+  conditioned-10k `3850119_14/15`, advancing those eval families to `6/30`
+  and `16/30`. Accepted conditioned-50k finals `3850110_3/6/7`, advancing
+  SFT to `8/15`. No fatal signature appeared in active report/baseline jobs.
+- Dolmino first stages remain account-GRES pending. Vault is
+  `1228G/1000G` and `203k/200k`; twelve active BranchProof merge trees use
+  about 327 GiB and were preserved. Successor `3879709` remains scheduled;
+  no report/preprint update was justified.
+
 - 01:16 CEST accepted 32B SFT `3854837_1`/`3850115_4` and shortcut SFT
   `3850213_28..30`; all five have nonempty final adapters/configs and terminal
   step-10,000 states. Counts are large-model `5/15` and shortcut `31/42`.

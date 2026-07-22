@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-22 01:16 CEST.
+Last updated: 2026-07-22 07:15 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,47 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-22 07:15 batch recovery submitted; baseline reaches 21/30
+
+- Batch rows `3850114_9..11` reached the hard 24-hour limit at 05:25 CEST
+  with no final or restart checkpoint, exactly matching their immutable
+  `save_steps=20000` payload. Submitted only those three missing rows as
+  `3879713_[9-11%3]` with the live batch wrapper's 250-step/two-state policy.
+  Rebuilt batch eval `3872663` now requires `afterany:3850114`,
+  `afterok:3872659`, and `afterok:3879713`; no completed or future row was
+  duplicated.
+- Declaration-fixed baseline eval rows `3857767_21..23` and their CPU audits
+  `3857768_21..23` completed and passed all structural/validity gates, raising
+  acceptance to `21/30`. Raw review across all three new NL train-1-to-15
+  seeds covered shallow/train/OOD/depth-50, correct, wrong, malformed, and cap
+  cases. Prompts, extraction, and translated validity are clean through depth
+  25; depth 50 mostly truncates without an answer. On OOD depths 18--45, NL
+  greedy answer/joint is `0.6488 +/- 0.0712` / `0.6280 +/- 0.0866`, and
+  pass@1 answer/joint is `0.5648 +/- 0.0129` / `0.5614 +/- 0.0094`. Matched
+  formal train-1-to-15 is lower at greedy and pass@1; its answer coverage
+  overtakes only at pass@8/16 while joint remains lower. This is an
+  incomplete-grid diagnostic, not report evidence.
+- Report-matrix hybrid rows `3850118_6..8` and conditioned-10k rows
+  `3850119_14/15` completed. All five pass the 448-prompt, 16-generation,
+  14-depth, `7/112`-chunk, 576-retained-row, fresh-constant, and
+  validity-diagnostic gates plus representative raw review. Hybrid is `6/30`
+  and conditioned-10k is `16/30`. Hybrid train-1-to-15 OOD greedy accuracy is
+  `0.2679 +/- 0.0818`; pass@1 answer/formal-joint/translated-joint is
+  `0.1602 +/- 0.0151`, `0.0290 +/- 0.0293`, and `0.0504 +/- 0.0519`.
+  Seed-3408 conditioned logic/NL remains a partial; both collapse at depth 50.
+- Conditioned-50k rows `3850110_3/6/7` completed with nonempty
+  159,967,880-byte finals and step-50,000 states, raising that family to
+  `8/15`; rows 8--10 are active. Shortcut remains `31/42` with rows 31--33
+  active, and 32B remains `5/15` with row 5 active. Focused active logs have
+  no fatal, OOM, quota, or no-space signature.
+- Dolmino stage-one `3875825_0/3875828_1/3875831_2` remains dependency-free
+  and `AssocGrpGRES` pending on the only compatible full-node shape. Vault is
+  `1228G/1000G` and `203k/200k` files; about 327 GiB is twelve active
+  BranchProof merge trees, so it is not cleanup-eligible. Preserve incomplete
+  restart states and conditioned target checkpoints needed by immutable skip
+  gates. CPU-only successor `3879709` remains BeginTime-pending because both
+  critical paths are incomplete. No report or preprint gate opened.
 
 ### 2026-07-22 01:16 duplicate conditioned stages stopped; five more SFT finals
 

@@ -1,6 +1,20 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-22 01:16 CEST.
+Last updated: 2026-07-22 07:15 CEST.
+
+By 07:15 CEST, batch rows `3850114_9..11` had timed out at 24 hours with no
+checkpoint. Exact recovery `3879713_[9-11%3]` uses the repaired 250-step,
+two-state policy; batch eval `3872663` was extended to require it as well as
+the original array and recovery `3872659`. Conditioned-50k rows
+`3850110_3/6/7` passed final/step-50,000 gates, raising that family to `8/15`.
+
+Hybrid train-1-to-15 `3850118_6..8` and conditioned-10k seed-3408
+`3850119_14/15` passed structural and representative raw review, advancing
+those eval families to `6/30` and `16/30`. The hybrid slice has three-seed OOD
+greedy accuracy `0.2679 +/- 0.0818`; pass@1 answer/formal-joint/translated-
+joint is `0.1602 +/- 0.0151`, `0.0290 +/- 0.0293`, and
+`0.0504 +/- 0.0519`. Depth-50 generations usually truncate or collapse.
+These are partial diagnostics; no report family gate is open.
 
 By 01:16 CEST on July 22, 32B rows `3854837_1` and `3850115_4` and shortcut
 rows `3850213_28..30` passed their final artifact gates, bringing those SFT

@@ -1,8 +1,30 @@
 # Running Experiments
 
-Last updated: 2026-07-22 01:16 CEST.
+Last updated: 2026-07-22 07:15 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:15 CEST On July 22
+
+- Batch `3850114_9..11` timed out at 05:25 CEST with no final/checkpoint.
+  Exact recovery `3879713_[9-11%3]` is account-GRES pending under the repaired
+  250-step checkpoint policy. Eval `3872663` now depends on original batch,
+  prior recovery `3872659`, and `3879713`.
+- Baseline `3857767_21..23 -> 3857768_21..23` completed and audited cleanly,
+  raising accepted coverage to `21/30`. The new NL train-1-to-15 three-seed
+  raw review is clean through depth 25 and collapses at depth 50. Its OOD
+  greedy answer/joint is `0.6488/0.6280`; pass@1 is `0.5648/0.5614`.
+  Matched formal is lower at greedy/pass@1 and only overtakes answer coverage
+  at pass@8/16; the full 30-row gate remains closed.
+- Hybrid `3850118_6..8` and conditioned-10k `3850119_14/15` passed structural
+  and raw-generation review. Counts are hybrid `6/30` and conditioned-10k
+  `16/30`; later rows are active. Conditioned-50k finals are `8/15` after
+  `3850110_3/6/7`; rows 8--10 are active. Shortcut remains `31/42`, 32B
+  remains `5/15`, and focused live logs have no fatal signature.
+- Dolmino stage-one `3875825_0/3875828_1/3875831_2` remains `AssocGrpGRES`
+  pending. Vault is `1228G/1000G` and `203k/200k`; twelve active merge trees
+  account for about 327 GiB and cannot be removed. CPU-only successor
+  `3879709` remains scheduled; no report regeneration is justified.
 
 ## Live Delta At 01:16 CEST On July 22
 
