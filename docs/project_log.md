@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-22
 
+- 16:20 CEST Dolmino control/formal/NL first stages remain dependency-free
+  and pending only on `AssocGrpGRES`; none has started or emitted a run log.
+  Slurm moved each individual start projection to 09:00 CEST July 23. Sixteen
+  A100 GPUs are occupied by this project's BranchProof jobs, so concurrent
+  full-node starts are not guaranteed. No corrective submission was needed.
+
 - 13:16 CEST accepted baseline eval/audit rows `24..28`, raising the strict
   declaration-fixed gate to `26/30`. Raw NL train-1-to-20/25 review across the
   newly completed seeds found intended prompts/extraction, clean translated

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-22 13:16 CEST.
+Last updated: 2026-07-22 16:20 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,19 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-22 16:20 Dolmino remains healthy; full-node estimate moves
+
+- Control `3875825_0`, formal `3875828_1`, and NL `3875831_2` remain valid,
+  dependency-free, and pending solely on `AssocGrpGRES`; none has started or
+  created a log/run checkpoint. At 16:16 CEST, Slurm's individual projection
+  moved to 09:00 CEST July 23 for all three.
+- Sixteen A100 GPUs are currently occupied by this project's active
+  BranchProof jobs, matching the observed account allocation pressure. Each
+  Dolmino stage requests eight GPUs, so identical per-job estimates are not a
+  promise that all three will start together. No partition widening is
+  justified without separately validating the production stack on another
+  eight-GPU node type.
 
 ### 2026-07-22 13:16 baseline reaches 26/30; report matrix advances
 

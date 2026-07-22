@@ -1,8 +1,17 @@
 # Running Experiments
 
-Last updated: 2026-07-22 13:16 CEST.
+Last updated: 2026-07-22 16:20 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 16:20 CEST On July 22
+
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain dependency-free
+  `AssocGrpGRES` pending, with no logs or checkpoints because they have never
+  started. Slurm now projects 09:00 CEST July 23 for each job individually.
+- This project's running BranchProof jobs currently occupy sixteen A100 GPUs.
+  Each Dolmino stage needs eight, so the equal projections do not guarantee
+  three simultaneous starts. No job, data, OOM, or storage failure occurred.
 
 ## Live Delta At 13:16 CEST On July 22
 
