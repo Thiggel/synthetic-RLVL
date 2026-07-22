@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-22 17:10 CEST.
+Last updated: 2026-07-22 17:01 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,7 +24,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-22 17:10 exhaustive BranchProof wave pruned and replaced
+### 2026-07-22 17:01 exhaustive BranchProof wave pruned and replaced
 
 - Canceled the nonbaseline exhaustive parent arrays after resolving every row
   against the official preprint claims. The corrected baseline jobs/audits/

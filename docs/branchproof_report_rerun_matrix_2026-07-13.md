@@ -1,6 +1,6 @@
 # Corrected BranchProof Report Rerun Matrix
 
-Last updated: 2026-07-22 17:10 CEST.
+Last updated: 2026-07-22 17:01 CEST.
 
 ## 2026-07-22 scope reduction
 

@@ -1,10 +1,10 @@
 # Running Experiments
 
-Last updated: 2026-07-22 17:10 CEST.
+Last updated: 2026-07-22 17:01 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 17:10 CEST On July 22
+## Live Delta At 17:01 CEST On July 22
 
 - Canceled the exhaustive nonbaseline BranchProof arrays and preserved the
   three active corrected-baseline evals plus their audits/aggregate.
