@@ -24,6 +24,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   `1228G/1000G` and `203k/200k`; twelve active BranchProof merge trees use
   about 327 GiB and were preserved. Successor `3879709` remains scheduled;
   no report/preprint update was justified.
+- Committed the scoped recovery, audits, and handoff as `636e4ca`. A bounded
+  90-second `git push origin main` produced no remote output and exited `124`,
+  leaving local `main` seven commits ahead of `origin/main` before this
+  publication note. The report repository is unchanged.
 
 - 01:16 CEST accepted 32B SFT `3854837_1`/`3850115_4` and shortcut SFT
   `3850213_28..30`; all five have nonempty final adapters/configs and terminal

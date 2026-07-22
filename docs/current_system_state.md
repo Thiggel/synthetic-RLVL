@@ -63,7 +63,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   BranchProof merge trees, so it is not cleanup-eligible. Preserve incomplete
   restart states and conditioned target checkpoints needed by immutable skip
   gates. CPU-only successor `3879709` remains BeginTime-pending because both
-  critical paths are incomplete. No report or preprint gate opened.
+  critical paths are incomplete. No report or preprint gate opened. Scoped
+  recovery/audit commit `636e4ca` is local; a bounded `git push origin main`
+  produced no remote output and timed out after 90 seconds with exit `124`,
+  leaving `main` seven commits ahead of `origin/main` before this publication
+  note. The report repository is unchanged.
 
 ### 2026-07-22 01:16 duplicate conditioned stages stopped; five more SFT finals
 
