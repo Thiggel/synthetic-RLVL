@@ -23,6 +23,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - Dolmino first stages remain account-GRES pending with 22:19 CEST individual
   projections. Recorded successor `3880822` remains scheduled because the
   BranchProof and 5B critical paths are incomplete.
+- Committed the scoped row audits and handoff as `b797282`. A bounded
+  90-second `git push origin main` produced no output and left the remote
+  unchanged; local `main` is one commit ahead. The report repository is
+  unchanged and synchronized.
 
 - 09:05 CEST verified Dolmino prerequisite `3875824` completed cleanly in
   `02:32:53` and accepted `5,111,201,524` packed tokens. Raw staging was
