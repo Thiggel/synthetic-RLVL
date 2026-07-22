@@ -43,6 +43,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   CEST July 23. Vault is `1183G/1000G` soft and `203k/200k` files. CPU-only
   successor `3883531` remains scheduled because both critical paths are
   incomplete.
+- Recovery/handoff commit `7cb2ca0` is local. A bounded 90-second
+  `git push origin main` produced no remote response and exited `124`; local
+  `main` remains two commits ahead of `origin/main`.
 
 ### 2026-07-22 20:15 corrected BranchProof baseline accepted and reported
 

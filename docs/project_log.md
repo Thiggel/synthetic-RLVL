@@ -18,6 +18,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - Preserved CPU-only successor `3883531`; both selected BranchProof controls
   and all three Dolmino 5B chains remain incomplete. Vault is `1183G/1000G`
   soft and `203k/200k` files.
+- Committed the scoped recovery and handoff as `7cb2ca0`. A bounded 90-second
+  push produced no remote response and timed out with exit `124`; `main`
+  remains two commits ahead of `origin/main`.
 
 ## 2026-07-22
 
