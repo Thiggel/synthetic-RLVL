@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-22 20:15 CEST.
+Last updated: 2026-07-23 01:17 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-23 01:17 selected follow-ups active; 32B restart defect recovered
+
+- Eleven selected BranchProof eval rows are running on verified A100-80GB
+  devices: surface `3881774_0..2`, shortcut `3881775_12..14`, hybrid
+  `3881776_12..14`, and conditioned-7B `3881777_24/25`. They have reached
+  sampled chunks `55..89/112` without a fatal/OOM/quota signature; no final
+  selected-family metrics or sample bundle exists yet.
+- Conditioned OLMo-3-32B SFT `3881779_12` reached only step `1368/10000` in
+  about `4:17`, projecting roughly 31 hours, while its stored payload saved
+  every 20,000 steps and therefore could not leave a restart state before the
+  24-hour limit. The wrapper now gives the `large` group 250-step checkpoints
+  with two states retained. Original `3881779` was canceled before wasting a
+  full allocation, exact replacement `3883534_[12-14%1]` was submitted, and
+  conditioned eval `3881781` now depends on successful replacement rows.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain valid and
+  account-GRES pending; current individual scheduler projections are 22:02
+  CEST July 23. Vault is `1183G/1000G` soft and `203k/200k` files. CPU-only
+  successor `3883531` remains scheduled because both critical paths are
+  incomplete.
 
 ### 2026-07-22 20:15 corrected BranchProof baseline accepted and reported
 

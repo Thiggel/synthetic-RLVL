@@ -1,8 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-07-22 20:15 CEST.
+Last updated: 2026-07-23 01:17 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:17 CEST On July 23
+
+- Selected evals currently running are `3881774_0..2`, `3881775_12..14`,
+  `3881776_12..14`, and `3881777_24/25`. Their sampled-generation progress is
+  `55..89/112` chunks, all on A100-80GB, with no fatal/OOM/quota signature.
+  No selected-family final JSON/sample artifact has appeared yet.
+- OLMo-3-32B conditioned SFT `3881779_12` reached step `1368/10000` after
+  about `4:17`; the measured rate projected beyond 24 hours. Its immutable
+  payload used `save_steps=20000`, so it could neither finish nor provide a
+  restart checkpoint. Added a `large`-group policy of `save_steps=250` and
+  `save_total_limit=2`, canceled original `3881779`, and submitted exact
+  replacement `3883534_[12-14%1]`. Rewired only conditioned eval `3881781`
+  to `afterok:3883534_12:3883534_13:3883534_14`.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain account-GRES
+  pending with current individual projections of 22:02 CEST July 23. Vault is
+  `1183G/1000G` and `203k/200k` files. Successor oversight `3883531` remains
+  BeginTime-pending on CPU-only `a100mig`.
 
 ## Live Delta At 20:15 CEST On July 22
 

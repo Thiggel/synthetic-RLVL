@@ -2,6 +2,23 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-23
+
+- 01:17 CEST audited the released selected wave. Eleven A100-80GB eval rows
+  across `3881774..3881777` are healthy at sampled chunks `55..89/112`, with
+  no final selected-family bundle yet. Dolmino first stages remain account-GRES
+  pending and currently project 22:02 CEST individually.
+- Detected that conditioned OLMo-3-32B SFT `3881779_12` was on a roughly
+  31-hour trajectory (`1368/10000` after about `4:17`) but its stored payload
+  used `save_steps=20000`, so the 24-hour allocation could not produce a
+  restart state. Added a 250-step/two-state checkpoint policy only for the
+  `large` matrix group, canceled original `3881779`, submitted exact
+  replacement `3883534_[12-14%1]`, and rewired `3881781` to its three rows.
+  Stored replacement payload verification shows the repaired policy.
+- Preserved CPU-only successor `3883531`; both selected BranchProof controls
+  and all three Dolmino 5B chains remain incomplete. Vault is `1183G/1000G`
+  soft and `203k/200k` files.
+
 ## 2026-07-22
 
 - 20:15 CEST accepted the corrected BranchProof baseline. Final A100-80GB

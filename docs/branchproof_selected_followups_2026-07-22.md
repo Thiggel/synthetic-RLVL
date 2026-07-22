@@ -21,6 +21,14 @@ Update 20:15 CEST: baseline aggregate `3857769` passed and released the wave.
 Surface row `3881774_0` started on verified A100-80GB hardware with clean
 merge/vLLM startup; other selected rows remain scheduler/dependency pending.
 
+Update 2026-07-23 01:17 CEST: eleven selected eval rows are running cleanly at
+sampled chunks `55..89/112`. Conditioned OLMo-3-32B SFT `3881779_12` exposed
+an operational defect: its measured roughly 31-hour runtime exceeded the
+24-hour allocation, while the stored 20,000-step checkpoint interval could
+not save during a 10,000-step run. The `large` wrapper now retains two states
+at 250-step intervals. Original `3881779` was canceled and replaced exactly by
+`3883534_[12-14%1]`; conditioned eval `3881781` depends on the replacement.
+
 | Claim/control | Exact rows | Job | Rows |
 | --- | --- | --- | ---: |
 | Length/syntax | surface eval `0..2` symbol-padded logic, `6..8` terse NL, `24..26` target-token-matched NL; all train-1-to-25, three seeds | `3881774` | 9 eval |

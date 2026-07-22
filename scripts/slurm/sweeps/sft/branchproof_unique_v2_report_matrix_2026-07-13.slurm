@@ -50,6 +50,11 @@ elif [[ "${MATRIX_GROUP}" == "batch" ]]; then
   # replay after timeout and retain a previous checkpoint if a write is cut.
   SAVE_STEPS_VALUE="${SAVE_STEPS:-250}"
   SAVE_TOTAL_LIMIT_VALUE="${SAVE_TOTAL_LIMIT:-2}"
+elif [[ "${MATRIX_GROUP}" == "large" ]]; then
+  # Conditioned OLMo-3-32B rows exceed one 24-hour allocation. Keep two
+  # frequent restart states so an interrupted checkpoint cannot strand them.
+  SAVE_STEPS_VALUE="${SAVE_STEPS:-250}"
+  SAVE_TOTAL_LIMIT_VALUE="${SAVE_TOTAL_LIMIT:-2}"
 fi
 
 TARGET_CHECKPOINT="${OUTPUT_DIR}/checkpoint-${TARGET_STEP}/trainer_state.json"
