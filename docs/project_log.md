@@ -4,6 +4,26 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-22
 
+- 13:16 CEST accepted baseline eval/audit rows `24..28`, raising the strict
+  declaration-fixed gate to `26/30`. Raw NL train-1-to-20/25 review across the
+  newly completed seeds found intended prompts/extraction, clean translated
+  validity where credited, and ordinary depth-50 truncation/malformed
+  failures. Rows 13/14/18/29 and aggregate `3857769` remain active/gated.
+- Accepted conditioned-10k eval rows `3850119_16/17`, advancing that family to
+  `18/30`. The complete train-1-to-15 provisional slice has conditioned NL
+  ahead at OOD pass@1 answer/joint (`0.4093/0.4080`); conditioned logic gains
+  more answer coverage by pass@16 (`0.7331`) but joint remains `0.2708`.
+  This partial does not open a report gate.
+- Accepted final-backed SFT `3850110_8`, `3850213_31..33`, and `3850115_5`,
+  bringing conditioned-50k/shortcut/32B to `9/15`, `34/42`, and `6/15`.
+  Guarded cleanup removed six terminal, live-reference-free checkpoints
+  (about 7.7 GiB) while retaining finals, evidence, incomplete restart states,
+  and the conditioned step-50,000 skip checkpoint. Vault is now
+  `1187G/1000G` with `203k/200k` files.
+- Dolmino first stages remain account-GRES pending with 22:19 CEST individual
+  projections. Recorded successor `3880822` remains scheduled because the
+  BranchProof and 5B critical paths are incomplete.
+
 - 09:05 CEST verified Dolmino prerequisite `3875824` completed cleanly in
   `02:32:53` and accepted `5,111,201,524` packed tokens. Raw staging was
   removed after the gate; the retained Nanoset is about 39 GiB. Control,

@@ -1,8 +1,34 @@
 # Running Experiments
 
-Last updated: 2026-07-22 09:05 CEST.
+Last updated: 2026-07-22 13:16 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:16 CEST On July 22
+
+- Baseline eval/audit rows `24..28` completed and passed, bringing strict
+  declaration-fixed acceptance to `26/30`. Raw NL train-1-to-20/25 review is
+  clean where credited and shows ordinary truncation/malformed failures at
+  depth 50. Rows 13/14/18/29 and their dependent audits remain active; full
+  aggregate `3857769` is still gated.
+- Conditioned-10k `3850119_16/17` passed structural and raw-generation review,
+  bringing that family to `18/30`. Its complete train-1-to-15 provisional
+  slice has OOD pass@1 answer/joint `0.4093/0.4080` for conditioned NL and
+  `0.3214/0.1919` for conditioned logic; logic pass@16 answer rises to
+  `0.7331` but joint remains `0.2708`. This partial is not report evidence.
+- Accepted conditioned-50k `3850110_8`, shortcut `3850213_31..33`, and 32B
+  `3850115_5` finals. Counts are now `9/15`, `34/42`, and `6/15`. Guarded
+  cleanup removed six final-backed, live-reference-free checkpoints (about
+  7.7 GiB) while retaining all finals, incomplete restart states, and the
+  conditioned step-50,000 skip checkpoint.
+- Hybrid row 9, conditioned rows 18--20, architecture eval rows 0/1,
+  conditioned-50k rows 9--11, shortcut rows 34--36, baseline/recovery rows,
+  and batch recovery rows `3872659_3..5` are active without a fatal signature.
+  Exact batch recovery `3879713_9..11` remains account-GRES pending.
+- Dolmino `3875825_0/3875828_1/3875831_2` remain full-node account-GRES
+  pending with current individual projections of 22:19 CEST. Vault is
+  `1187G/1000G` and `203k/200k` files. Successor `3880822` remains scheduled;
+  no report regeneration is justified.
 
 ## Live Delta At 09:05 CEST On July 22
 

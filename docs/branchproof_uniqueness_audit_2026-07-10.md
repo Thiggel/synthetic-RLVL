@@ -541,3 +541,18 @@ JSON/sample artifact exists, so the corrected aggregate and qualitative gates
 remain closed. Shared Vault file count is marginally over soft quota again at
 `201k/200k`, while repo-owned storage is about 286.4 GiB with only 26 active
 Trainer checkpoint directories; recheck this before further storage expansion.
+
+## 2026-07-22 Declaration-Fixed Progress
+
+Original eval/audit rows `3857767_21..28 -> 3857768_21..28` completed and
+passed after the capacity release, advancing strict row-scoped coverage from
+`18/30` to `26/30`. Representative NL raw review across train maxima 15, 20,
+and 25 and seeds 3407--3409 confirms intended prompts and answer extraction,
+translated-valid credited traces through the usable depth bands, and ordinary
+wrong, malformed, missing-answer, or cap-limited failures at long depth.
+
+Exact local-snapshot recoveries `3863525_13/14`, node-failure recovery
+`3865321_18`, and original row `3857767_29` remain active; their CPU audits
+and aggregate `3857769` remain dependency-gated. No corrected baseline claim
+is accepted until all four rows, all 30 audits, and the cross-grid qualitative
+gate pass.

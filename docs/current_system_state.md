@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-22 09:05 CEST.
+Last updated: 2026-07-22 13:16 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,38 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-22 13:16 baseline reaches 26/30; report matrix advances
+
+- Declaration-fixed baseline eval/audit rows `3857767_24..28 ->
+  3857768_24..28` completed and passed all row gates, raising accepted
+  coverage from `21/30` to `26/30`. Representative NL train-1-to-20/25 raw
+  review across all newly available seeds covered shallow, train, OOD, and
+  depth-50 correct/failure cases. Prompts, `<think>/<answer>` extraction, and
+  translated validity are clean where credited; long failures are ordinary
+  missing-answer truncations or malformed continuations. Rows 13/14/18/29
+  remain active under `3863525`, `3865321`, and `3857767`; aggregate
+  `3857769` remains correctly gated.
+- Conditioned-10k eval rows `3850119_16/17` passed the 448-prompt,
+  16-generation, 14-depth, 576-retained-row, metric, chunk-log, constant, and
+  validity-diagnostic gates plus raw review, bringing that family to `18/30`.
+  The complete train-1-to-15 slice remains provisional: conditioned NL is
+  ahead at OOD pass@1 answer/joint (`0.4093 +/- 0.0290` /
+  `0.4080 +/- 0.0270`), while conditioned logic rises more with sample budget
+  but has much lower joint validity at pass@16 (`0.7331 +/- 0.1654` answer,
+  `0.2708 +/- 0.0193` joint). Do not use this partial as report evidence.
+- Accepted final-backed SFT artifacts `3850110_8`, `3850213_31..33`, and
+  `3850115_5`, advancing conditioned-50k to `9/15`, shortcut to `34/42`, and
+  32B to `6/15`. Six terminal, live-reference-free checkpoints were removed
+  after artifact gates, reclaiming about 7.7 GiB; all finals/evidence,
+  incomplete restart states, and conditioned `checkpoint-50000` remain.
+- Active report/baseline logs show no fatal signature. Batch recovery
+  `3872659_3..5` resumed exact step-3000 states; exact rows `3879713_9..11`
+  remain account-GRES pending. Dolmino first stages
+  `3875825_0/3875828_1/3875831_2` have not started and now project 22:19 CEST
+  individually. Vault is `1187G/1000G` and `203k/200k` files. CPU-only
+  successor `3880822` remains BeginTime-pending because both critical paths
+  are incomplete; no report or preprint gate opened.
 
 ### 2026-07-22 09:05 Dolmino data gate passed; 5B stages scheduler-eligible
 
