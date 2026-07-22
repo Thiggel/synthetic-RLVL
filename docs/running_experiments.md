@@ -1,8 +1,20 @@
 # Running Experiments
 
-Last updated: 2026-07-22 07:15 CEST.
+Last updated: 2026-07-22 09:05 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 09:05 CEST On July 22
+
+- Dolmino prerequisite `3875824` completed cleanly in `02:32:53`. Its packed
+  gate accepted `5,111,201,524` tokens; retained packed data is about 39 GiB,
+  and raw staging was deleted only after acceptance.
+- First stages control `3875825_0`, formal `3875828_1`, and NL `3875831_2`
+  are dependency-free `AssocGrpGRES` pending. Slurm's current per-job start
+  projection is 19:57 CEST July 22. Because each requests a full eight-GPU
+  node, identical projections do not guarantee simultaneous starts.
+- No training checkpoint exists yet. Once allocated, each condition should
+  require about 45--48 hours of compute and normally two 24-hour stages.
 
 ## Live Delta At 07:15 CEST On July 22
 

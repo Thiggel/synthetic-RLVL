@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-22
 
+- 09:05 CEST verified Dolmino prerequisite `3875824` completed cleanly in
+  `02:32:53` and accepted `5,111,201,524` packed tokens. Raw staging was
+  removed after the gate; the retained Nanoset is about 39 GiB. Control,
+  formal, and NL first stages are dependency-free and pending only on the
+  account GPU limit. Slurm projects 19:57 CEST July 22 for each job considered
+  individually, but full-node contention may stagger starts. No 5B checkpoint
+  exists yet.
+
 - 07:15 CEST exact batch recovery trigger fired: `3850114_9..11` timed out at
   the hard 24-hour limit with no final/checkpoint. Submitted only those rows as
   `3879713_[9-11%3]` under the current 250-step/two-state policy and added

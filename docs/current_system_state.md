@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-22 07:15 CEST.
+Last updated: 2026-07-22 09:05 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,23 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-22 09:05 Dolmino data gate passed; 5B stages scheduler-eligible
+
+- Prerequisite `3875824` completed cleanly on July 21 at 12:19 CEST in
+  `02:32:53`. The packed Dolmino Nanoset contains `5,111,201,524` tokens,
+  exceeds the exact `5,000,134,656`-token training requirement, and its
+  reproducible raw staging tree was removed after acceptance. The retained
+  packed root is about 39 GiB; no error, no-space, or quota failure occurred.
+- Control `3875825_0`, formal `3875828_1`, and NL `3875831_2` are all
+  dependency-free and pending only on `AssocGrpGRES`. At 08:58 CEST Slurm
+  estimated 19:57 CEST July 22 for each first stage considered individually.
+  This is not a simultaneous-launch guarantee: each requests eight A100-80GB
+  GPUs, and the account is currently at its aggregate GPU allocation limit.
+- No 5B run directory or checkpoint exists yet because training has not
+  started. Expected compute after allocation is about 45--48 hours per
+  condition at the audited approximately 30.9K tokens/s, normally spanning
+  two 24-hour stages; calendar completion remains scheduler-dependent.
 
 ### 2026-07-22 07:15 batch recovery submitted; baseline reaches 21/30
 
