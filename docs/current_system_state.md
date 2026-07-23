@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-23 07:16 CEST.
+Last updated: 2026-07-23 08:27 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,27 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-23 08:27 selected rows advance; hybrid sampling near completion
+
+- Eight selected eval rows now have clean Slurm completion: surface
+  `3881774_0..2`, shortcut `3881775_12..14`, and conditioned-7B
+  `3881777_24/25`. The previously accepted subset remains surface rows
+  `0/2` and conditioned row `25`; the other five completed rows are
+  provisional until the same structural, invariant, and representative raw
+  review is recorded. No failed selected row appeared.
+- Hybrid rows `3881776_12..14` remain healthy on A100-80GB and have reached
+  sampled chunks about `99/99/98` of `112`. Their recent logs contain no
+  fatal, OOM, quota, or no-space signature, and the remaining runtime fits
+  inside the 24-hour allocation at the observed rate.
+- The other selected eval rows are scheduler, dependency, or array-throttle
+  pending. Resumable conditioned-32B SFT `3883534_[12-14%1]` is still pending
+  without a scheduler estimate; its six eval rows remain correctly dependent
+  on those three SFT rows.
+- Dolmino control/formal/NL first stages remain dependency-free and pending on
+  `AssocGrpGRES`; Slurm currently projects 22:02 CEST for each when considered
+  individually. They have not started or produced checkpoints. The retained
+  project tree in `$HPCVAULT` is about 375 GiB.
 
 ### 2026-07-23 07:16 first three selected-control rows accepted
 

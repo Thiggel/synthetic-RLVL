@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-23
 
+- 08:27 CEST selected BranchProof follow-up eval completion reached `8/45`
+  after surface `3881774_1`, shortcut `3881775_12..14`, and conditioned-7B
+  `3881777_24` joined the three previously accepted rows with clean `0:0`
+  exits. The five new completions remain provisional pending artifact,
+  invariant, and representative raw-generation review. Hybrid
+  `3881776_12..14` is healthy near sampled chunks `99/99/98` of `112`; no
+  selected failure or fatal/OOM/quota/no-space signature was found. Dolmino
+  first stages remain dependency-free `AssocGrpGRES` pending with individual
+  22:02 CEST projections, and conditioned-32B replacement SFT remains pending
+  without an estimate. No report refresh or new submission was justified.
 - 07:16 CEST accepted the first three selected-control rows at row scope:
   surface symbol-padded formal `3881774_0/2` and conditioned-7B NL
   `3881777_25`. All completed `0:0` on A100-80GB and pass the full

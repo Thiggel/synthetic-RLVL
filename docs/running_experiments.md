@@ -1,8 +1,24 @@
 # Running Experiments
 
-Last updated: 2026-07-23 07:16 CEST.
+Last updated: 2026-07-23 08:27 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 08:27 CEST On July 23
+
+- Selected eval completion is now `8/45`: surface `3881774_0..2`, shortcut
+  `3881775_12..14`, and conditioned-7B `3881777_24/25` all exited `0:0`.
+  Three rows were already fully accepted; the five newer completions remain
+  provisional pending artifact, invariant, and representative raw-generation
+  review. No selected eval failed.
+- Hybrid rows `3881776_12..14` are running on A100-80GB at approximately
+  `99/99/98` of `112` sampled chunks. They are progressing at the expected
+  rate with no fatal/OOM/quota/no-space signature. The rest of the selected
+  eval matrix is scheduler, array-throttle, or valid SFT-dependency pending.
+- Replacement conditioned-32B SFT `3883534_[12-14%1]` remains pending without
+  a start estimate. Dolmino control/formal/NL first stages remain
+  dependency-free `AssocGrpGRES` pending; the current individual Slurm
+  projection is 22:02 CEST July 23. No Dolmino checkpoint exists yet.
 
 ## Live Delta At 07:16 CEST On July 23
 

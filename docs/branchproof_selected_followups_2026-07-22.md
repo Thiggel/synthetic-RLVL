@@ -40,6 +40,14 @@ retained depth-50 format failures after long copying. These partials are not
 family evidence. Eight rows remain active, and replacement `3883534` remains
 A100-80 pending with no stale checkpoint/final in its first run root.
 
+Update 2026-07-23 08:27 CEST: surface `3881774_1`, shortcut
+`3881775_12..14`, and conditioned-7B `3881777_24` also completed `0:0`,
+bringing selected eval completion to `8/45`. These five newer rows remain
+provisional until production artifact/invariant gates and representative raw
+review are recorded. Hybrid `3881776_12..14` is healthy at approximately
+`99/99/98` of `112` sampled chunks. No selected row has failed, and no
+partial-family result is eligible for the report.
+
 | Claim/control | Exact rows | Job | Rows |
 | --- | --- | --- | ---: |
 | Length/syntax | surface eval `0..2` symbol-padded logic, `6..8` terse NL, `24..26` target-token-matched NL; all train-1-to-25, three seeds | `3881774` | 9 eval |
