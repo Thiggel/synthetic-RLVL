@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-23 19:17 CEST.
+Last updated: 2026-07-24 01:18 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,36 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-24 01:18 three more selected rows accepted
+
+- Conditioned-7B NL row `3881777_27` (raw job `3884546`), Qwen2.5-7B logic
+  row `3881778_24` (raw job `3889573`), and OLMo-3-32B logic row
+  `3881780_1` (raw job `3884864`) completed `0:0` and passed the fail-closed
+  448-prompt, 16-generation, 14-depth, retained-sample, chunk-log, constant,
+  and validity-diagnostic gates. Audits are under
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/`.
+- Representative raw review covers shallow/train/depth-30/depth-40/depth-50,
+  correct-valid, wrong, invalid, missing-answer, and long/capped cases.
+  Conditioned NL is clean through depth 30 and then has zero complete answers
+  at depths 35--50 after premise/proof truncation. Its OOD
+  answer/translated-joint pass@1 is `0.1891/0.1891`. Qwen2.5 logic has OOD
+  answer/citation-free-joint pass@1 `0.7816/0.7777`, but depth-50 retained
+  samples have only `1/32` usable correct answers while many internally valid
+  proof blocks omit a complete answer. OLMo-3-32B seed 3408 has OOD
+  answer/joint pass@1 `0.7004/0.5359` and pass@16 `0.9938/0.9375`; long
+  failures include wrong derivations, unsupported lines, repetition, and
+  missing answers.
+- Selected acceptance is now `15/45`. Conditioned rows `3881777_26/28` have
+  completed all 112 sampled chunks and are scoring; row 29 is at chunk 71,
+  Qwen architecture row `3881778_25` is at chunk 81, and large row
+  `3881780_2` is at chunk 55. No active selected log has a fatal signature.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
+  `AssocGrpGRES` pending with individual 05:07 CEST projections.
+  Conditioned-32B replacement `3883534_12` projects 04:54 CEST and has not
+  produced a checkpoint. Vault is `572G/1000G` with 179k files; this project
+  is `477,666,501 KiB` with 7,114 regular files. CPU-only successor
+  `3890293` is verified BeginTime-pending for 07:13 CEST and remains required.
 
 ### 2026-07-23 19:17 first selected 32B row accepted
 

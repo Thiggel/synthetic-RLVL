@@ -70,6 +70,17 @@ only the first of six matched single-modal 32B rows, so it does not open a
 family claim or report refresh. Selected acceptance is now `12/45`;
 `3881780_1` and three conditioned-7B rows continue without fatal signatures.
 
+Update 2026-07-24 01:18 CEST: conditioned-7B NL `3881777_27`, Qwen2.5-7B
+logic `3881778_24`, and OLMo-3-32B logic `3881780_1` completed and passed
+the production/invariant/raw-generation gates, raising acceptance to `15/45`.
+Conditioned NL remains clean through depth 30 and then truncates without
+answers at depths 35--50. Qwen logic has OOD answer/joint pass@1
+`0.7816/0.7777`, but most retained depth-50 rows lack a usable correct answer
+despite many internally valid proof blocks. The second 32B logic seed has OOD
+answer/joint pass@1 `0.7004/0.5359` and pass@16 `0.9938/0.9375`, with
+ordinary wrong, invalid, repetitive, and incomplete long traces. These are
+row acceptances only; no additional matched family is complete.
+
 | Claim/control | Exact rows | Job | Rows |
 | --- | --- | --- | ---: |
 | Length/syntax | surface eval `0..2` symbol-padded logic, `6..8` terse NL, `24..26` target-token-matched NL; all train-1-to-25, three seeds | `3881774` | 9 eval |

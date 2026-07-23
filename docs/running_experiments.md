@@ -1,8 +1,33 @@
 # Running Experiments
 
-Last updated: 2026-07-23 19:17 CEST.
+Last updated: 2026-07-24 01:18 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:18 CEST On July 24
+
+- Selected acceptance is `15/45`. Newly accepted rows are conditioned-7B NL
+  `3881777_27` (raw `3884546`), Qwen2.5-7B logic `3881778_24` (raw
+  `3889573`), and OLMo-3-32B logic `3881780_1` (raw `3884864`). All three
+  passed the full production artifact, log, retained-sample, fresh-constant,
+  and credited-validity consistency gates plus representative raw review.
+- Conditioned NL seed 3408 is clean through depth 30 but truncates without an
+  answer in every retained depth-35--50 sample; OOD answer/translated-joint
+  pass@1 is `0.1891/0.1891`. Qwen2.5 logic seed 3407 has OOD answer/joint
+  pass@1 `0.7816/0.7777`, with depth-50 answer completion the dominant
+  retained-sample failure. OLMo-3-32B logic seed 3408 has OOD answer/joint
+  pass@1 `0.7004/0.5359` and pass@16 `0.9938/0.9375`. No newly complete row
+  closes a three-seed matched family.
+- Active selected rows are conditioned `3881777_26/28` in scoring after
+  `112/112` sampled chunks, conditioned row 29 at chunk 71, Qwen architecture
+  row `3881778_25` at chunk 81, and large row `3881780_2` at chunk 55. No
+  focused log has a fatal/OOM/quota/no-space signature.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
+  account-GRES pending with individual 05:07 CEST projections.
+  Conditioned-32B replacement `3883534_12` projects 04:54 CEST. Vault is
+  `572G/1000G` and 179k files; the project tree is `477,666,501 KiB` with
+  7,114 regular files. CPU-only successor `3890293` is scheduled for 07:13
+  CEST and remains required.
 
 ## Live Delta At 19:17 CEST On July 23
 

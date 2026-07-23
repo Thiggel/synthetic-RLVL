@@ -2,6 +2,28 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-24
+
+- 01:18 CEST accepted conditioned-7B NL `3881777_27` (raw `3884546`),
+  Qwen2.5-7B logic `3881778_24` (raw `3889573`), and OLMo-3-32B logic
+  `3881780_1` (raw `3884864`). Each passes the 448-prompt, 16-generation,
+  14-depth, retained-sample, complete-chunk-log, constant, and credited
+  validity-diagnostic gates. Representative raw review covers shallow/train,
+  OOD, depth 50, correct-valid, wrong/invalid, missing-answer, and capped
+  cases.
+- Conditioned NL is translated-valid through depth 30 and truncates without
+  answers at depths 35--50. Qwen logic has OOD answer/joint pass@1
+  `0.7816/0.7777` but only `1/32` retained usable correct depth-50 answers.
+  OLMo-3-32B seed 3408 has OOD answer/joint pass@1 `0.7004/0.5359` and
+  pass@16 `0.9938/0.9375`; its long failures are ordinary wrong, invalid,
+  repetitive, or incomplete traces. Selected acceptance is `15/45`; no new
+  matched family or report gate opened.
+- Active selected rows are conditioned `3881777_26/28` scoring after all
+  chunks, row 29 at chunk 71, Qwen row `3881778_25` at chunk 81, and 32B row
+  `3881780_2` at chunk 55. Dolmino first stages remain unstarted account-GRES
+  pending. Vault is `572G/1000G`; CPU-only successor `3890293` remains
+  scheduled for 07:13 CEST.
+
 ## 2026-07-23
 
 - 19:17 CEST accepted OLMo-3-32B logic row `3881780_0`, raw job
