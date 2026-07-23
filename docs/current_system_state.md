@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-23 08:27 CEST.
+Last updated: 2026-07-23 08:41 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-23 08:41 guarded project cleanup restores Vault space margin
+
+- Removed 30 final-backed Trainer `checkpoint-*` directories under this
+  project's Vault run tree after verifying that every parent has a nonempty
+  final model and that no live selected job depends on a restart state. This
+  reclaimed `33,953,981,440` bytes.
+- Removed only the superseded `38,657,020,416`-byte Dolmino normal-data
+  Nanoset at `nanosets/qwen25_dolmino_neutral_v1/dolmino`. The queued 5B
+  wrapper uses the retained 5.1B normal Nanoset and the retained
+  `qwen25_dolmino_neutral_v1/{logic,nl_exact}` intervention Nanosets; all
+  three production inputs passed post-delete stats/shard gates.
+- Total Vault reclamation is `72,611,001,856` bytes (`72.61 GB`, `67.62
+  GiB`). This project's Vault tree is now `329.53 GB` with 7,052 regular
+  files and 9,321 quota-counted entries. The user-wide Vault is about `898
+  GiB/1000 GiB` with 201,900 entries, still about 1,900 over the 200k soft
+  inode quota but well below the 400k hard limit.
+- `$WORK/synthetic-RLVL` remains `73.23 GB` with 6,975 regular files. No
+  additional Work artifact met the strict deletion gate: raw eval evidence,
+  final adapters, datasets, 21 offline W&B runs, and current/recent online
+  W&B logs were retained. The three active hybrid merge trees in Vault were
+  also retained and may be reclaimed only after their eval outputs pass.
 
 ### 2026-07-23 08:27 selected rows advance; hybrid sampling near completion
 

@@ -1,8 +1,23 @@
 # Running Experiments
 
-Last updated: 2026-07-23 08:27 CEST.
+Last updated: 2026-07-23 08:41 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 08:41 CEST On July 23
+
+- Guarded cleanup reclaimed `72.61 GB` from this project's Vault tree: 30
+  final-backed Trainer restart checkpoints and the superseded first Dolmino
+  normal-data Nanoset. Final models, eval evidence, active merge trees,
+  current Nanotron base/restart state, the 5.1B normal Nanoset, and the
+  formal/NL intervention Nanosets were retained and verified.
+- User-wide Vault is now about `898 GiB/1000 GiB` and 201,900 entries versus
+  the 200k soft/400k hard inode limits. This project uses `329.53 GB`, 7,052
+  regular files, and 9,321 quota-counted entries in Vault; its Work tree uses
+  `73.23 GB` and 6,975 files.
+- Active job state is unchanged by cleanup. Hybrid `3881776_12..14` is at
+  `99/99/98` of `112` sampled chunks, and all queued Dolmino inputs referenced
+  by the immutable jobs remain present.
 
 ## Live Delta At 08:27 CEST On July 23
 

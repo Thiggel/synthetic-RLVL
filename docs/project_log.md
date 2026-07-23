@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-23
 
+- 08:41 CEST guarded project-only cleanup reclaimed `72,611,001,856` bytes
+  (`72.61 GB`, `67.62 GiB`) from Vault. Deleted 30 Trainer restart
+  checkpoints only after verifying nonempty parent finals, and deleted only
+  the superseded first Dolmino normal Nanoset after verifying that queued
+  production uses the retained 5.1B normal Nanoset plus retained formal/NL
+  intervention Nanosets. Project Vault usage is now `329.53 GB`, 7,052
+  regular files, and 9,321 entries; Work is `73.23 GB` and 6,975 files.
+  User-wide Vault quota reads about `898 GiB/1000 GiB` and 201,900 entries
+  against 200k soft/400k hard. Kept finals, raw evidence, active merges,
+  current Nanotron state/data, offline W&B runs, and recent online W&B logs.
 - 08:27 CEST selected BranchProof follow-up eval completion reached `8/45`
   after surface `3881774_1`, shortcut `3881775_12..14`, and conditioned-7B
   `3881777_24` joined the three previously accepted rows with clean `0:0`
