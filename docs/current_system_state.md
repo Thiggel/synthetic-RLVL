@@ -56,6 +56,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   active selected merge roots and remains below quota. CPU-only/no-GRES
   successor `3889637` is verified BeginTime-pending for 01:13 CEST July 24.
   Both critical paths remain incomplete, so it is preserved.
+- Scoped handoff commit `578a3fb` is local. Main-repo and report-repo SSH
+  pushes produced no remote response and timed out after 90 and 60 seconds,
+  respectively. The local commits and accepted audit artifact remain intact;
+  publication is still blocked on the GitHub SSH/network path.
 
 ### 2026-07-23 13:24 two selected controls accepted and reported
 

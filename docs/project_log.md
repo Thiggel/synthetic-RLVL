@@ -21,6 +21,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   `477,610,021 KiB` with 7,105 regular files. Preserved verified CPU-only,
   no-GRES successor `3889637` for 01:13 CEST July 24. No family-level 32B
   claim, report refresh, recovery, scheduler edit, or cleanup was justified.
+- Committed the scoped acceptance/handoff as `578a3fb`. Main-repo and
+  report-repo SSH pushes produced no remote response and timed out after
+  90/60 seconds. Both local commit histories remain intact for a later retry.
 
 - 13:24 CEST accepted all eight newly completed selected-control rows:
   surface `3881774_1`, shortcut `3881775_12..14`, hybrid
