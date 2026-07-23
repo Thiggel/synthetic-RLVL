@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-23 01:17 CEST.
+Last updated: 2026-07-23 07:16 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,33 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-23 07:16 first three selected-control rows accepted
+
+- Selected eval rows surface `3881774_0/2` and conditioned-7B
+  `3881777_25` completed `0:0` on A100-80GB in
+  `10:50:04/10:37:16/07:12:23`. Each has the full 448-prompt,
+  16-generation, 14-depth metric bundle, 576 retained rows including 448
+  sampled rows, complete `7/112` chunk logs, and no fresh-constant or credited
+  validity-diagnostic violation. Row audits are under
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/`.
+- Raw review covers both symbol-padded formal seeds at depths 1, 25, 40, and
+  50 plus the conditioned-NL row at depths 1, 25, 30, and 50. Prompts,
+  wrappers, exact answers, and modality-appropriate validity are clean where
+  credited. The sampled rows retain real failure modes: symbol-padded formal
+  has answer-correct invalid traces and depth-50 repetition/truncation, while
+  conditioned NL copies long premise/proof prefixes and has `32/32`
+  depth-50 format failures. These are row acceptances only; no selected-family
+  claim or report refresh is permitted before the matched rows finish.
+- Eight selected eval rows remain active: surface `3881774_1`, shortcut
+  `3881775_12..14`, hybrid `3881776_12..14`, and conditioned-7B
+  `3881777_24`. Their logs are in sampled generation or scoring with no fatal
+  signature. Replacement conditioned-32B SFT `3883534_[12-14%1]` remains
+  A100-80 pending; its seed-3407 run root has no stale checkpoint or final.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain valid
+  account-GRES pending with individual 22:02 CEST projections. Vault is
+  `1101G/1000G` and `203k/200k` files. CPU-only successor `3883709` remains
+  scheduled because both critical paths are incomplete.
 
 ### 2026-07-23 01:17 selected follow-ups active; 32B restart defect recovered
 

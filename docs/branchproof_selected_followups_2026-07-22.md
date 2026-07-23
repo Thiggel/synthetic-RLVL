@@ -29,6 +29,17 @@ not save during a 10,000-step run. The `large` wrapper now retains two states
 at 250-step intervals. Original `3881779` was canceled and replaced exactly by
 `3883534_[12-14%1]`; conditioned eval `3881781` depends on the replacement.
 
+Update 2026-07-23 07:16 CEST: surface `3881774_0/2` and conditioned-7B
+`3881777_25` completed `0:0` and pass row-level production audits plus
+representative raw review. Each has 448 prompts, 16 generations, all 14
+depths, 576 retained rows with 448 sampled rows, complete chunk logs, and no
+credited validity-diagnostic contradiction. Symbol-padded formal retains
+answer-correct invalid long traces and depth-50 repetition/truncation;
+conditioned NL has clean translated-valid shallow/OOD examples but `32/32`
+retained depth-50 format failures after long copying. These partials are not
+family evidence. Eight rows remain active, and replacement `3883534` remains
+A100-80 pending with no stale checkpoint/final in its first run root.
+
 | Claim/control | Exact rows | Job | Rows |
 | --- | --- | --- | ---: |
 | Length/syntax | surface eval `0..2` symbol-padded logic, `6..8` terse NL, `24..26` target-token-matched NL; all train-1-to-25, three seeds | `3881774` | 9 eval |

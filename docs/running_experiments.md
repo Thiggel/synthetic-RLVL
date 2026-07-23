@@ -1,8 +1,32 @@
 # Running Experiments
 
-Last updated: 2026-07-23 01:17 CEST.
+Last updated: 2026-07-23 07:16 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:16 CEST On July 23
+
+- Selected rows surface `3881774_0/2` and conditioned-7B `3881777_25`
+  completed `0:0` in `10:50:04/10:37:16/07:12:23`. All three pass the
+  production structural/log/retained-sample/constant/validity audit and
+  representative raw review. Audits are in
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/`.
+- Symbol-padded formal rows show clean correct-and-valid train-edge examples,
+  answer-correct invalid long traces, and depth-50 repetition/truncation.
+  Conditioned NL has clean translated-valid examples through depth 30 but all
+  32 retained depth-50 samples fail format after long premise/proof copying.
+  No family aggregate is accepted from these partial rows.
+- Active selected evals are surface `3881774_1`, shortcut
+  `3881775_12..14`, hybrid `3881776_12..14`, and conditioned-7B
+  `3881777_24`; they are generating or scoring without a fatal signature.
+  Remaining selected evals are array-throttle or scheduler/dependency pending.
+  Conditioned-32B replacement `3883534_[12-14%1]` remains A100-80 pending,
+  and its first run root contains no stale checkpoint/final.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain account-GRES
+  pending with individual 22:02 CEST projections. No partition widening is
+  compatible with the validated full-node A100-80 stack. Vault is
+  `1101G/1000G` and `203k/200k` files. CPU-only successor `3883709` remains
+  BeginTime-pending and required.
 
 ## Live Delta At 01:17 CEST On July 23
 

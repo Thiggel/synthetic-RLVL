@@ -4,6 +4,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-23
 
+- 07:16 CEST accepted the first three selected-control rows at row scope:
+  surface symbol-padded formal `3881774_0/2` and conditioned-7B NL
+  `3881777_25`. All completed `0:0` on A100-80GB and pass the full
+  448-prompt/16-generation/14-depth structural, log, retained-sample,
+  constant, and validity-consistency gates. Stored audits are under
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/`.
+- Raw review found intended wrappers and exact extraction, clean
+  modality-appropriate credited validity, answer-correct invalid formal traces,
+  and ordinary depth-50 repetition/truncation. Conditioned NL has `32/32`
+  retained depth-50 format failures after long premise/proof copying. These are
+  partial row acceptances, so no report or preprint regeneration was made.
+- Eight selected eval rows remain active in `3881774..3881777` without fatal
+  signatures. Conditioned-32B replacement `3883534` and Dolmino first stages
+  remain A100-80/account-GRES pending; no compatible partition widening is
+  available. Preserved CPU-only successor `3883709`. Vault is
+  `1101G/1000G` and `203k/200k` files.
+
 - 01:17 CEST audited the released selected wave. Eleven A100-80GB eval rows
   across `3881774..3881777` are healthy at sampled chunks `55..89/112`, with
   no final selected-family bundle yet. Dolmino first stages remain account-GRES
