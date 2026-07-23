@@ -4,6 +4,24 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-23
 
+- 19:17 CEST accepted OLMo-3-32B logic row `3881780_0`, raw job
+  `3883993`, after its `06:34:03` four-A100-80GB run. The audit passes all
+  448 prompts, 16 generations, 14 depths, 2,665 metrics, 576 retained rows,
+  complete `7/112` chunk logs, fresh constants, and credited
+  validity-diagnostic consistency. Representative raw review covers
+  depths 1/25/30/40/45/50 and correct-valid, wrong, malformed, and capped
+  cases. One-seed OOD greedy/pass@1/pass@16 answer is
+  `0.738/0.641/0.994`; citation-free joint is `0.491/0.504/0.919`.
+- Selected acceptance is `12/45`. Active rows are large `3881780_1` at chunk
+  70, conditioned-7B `3881777_26/27/28` at chunks 82/83/79, and
+  Qwen2.5-7B architecture `3881778_24` in clean startup. Dolmino first stages
+  remain unstarted account-GRES pending with 22:02 CEST projections, while
+  conditioned-32B replacement `3883534_12` projects 02:15 CEST July 24.
+- Vault is `572G/1000G` and 179k files; the project tree is
+  `477,610,021 KiB` with 7,105 regular files. Preserved verified CPU-only,
+  no-GRES successor `3889637` for 01:13 CEST July 24. No family-level 32B
+  claim, report refresh, recovery, scheduler edit, or cleanup was justified.
+
 - 13:24 CEST accepted all eight newly completed selected-control rows:
   surface `3881774_1`, shortcut `3881775_12..14`, hybrid
   `3881776_12..14`, and conditioned-7B `3881777_24`. Together with the

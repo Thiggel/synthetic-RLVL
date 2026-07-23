@@ -1,8 +1,34 @@
 # Running Experiments
 
-Last updated: 2026-07-23 13:24 CEST.
+Last updated: 2026-07-23 19:17 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:17 CEST On July 23
+
+- Selected eval completion and acceptance are now `12/45`. OLMo-3-32B logic
+  row `3881780_0`, raw job `3883993`, completed on four A100-80GB GPUs in
+  `06:34:03` and passed the full 448-prompt, 16-generation, 14-depth,
+  576-retained-row, metric, chunk-log, fresh-constant, and
+  validity-consistency audit.
+- Raw review at depths 1/25/30/40/45/50 covers correct-valid, wrong,
+  malformed, and cap-hit cases. Retained samples are perfect through depth 25
+  and degrade through ordinary wrong branches and malformed/long traces OOD.
+  One-seed OOD greedy answer/joint is `0.738/0.491`, pass@1 is
+  `0.641/0.504`, and pass@16 is `0.994/0.919`. Keep this row provisional at
+  family level until all matched 32B logic/NL seeds complete.
+- Active selected rows are large `3881780_1` at sampled chunk `70/112`,
+  conditioned-7B `3881777_26/27/28` at `82/83/79`, and Qwen2.5-7B
+  architecture `3881778_24` in clean startup. Remaining rows are
+  array-throttle, account-GRES, or valid conditioned-SFT dependency pending.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
+  `AssocGrpGRES` pending with current 22:02 CEST projections.
+  Conditioned-32B replacement `3883534_12` currently projects 02:15 CEST July
+  24. No checkpoint exists for either startup gate.
+- Vault is `572G/1000G` and 179k/200k files; this project is
+  `477,610,021 KiB` with 7,105 regular files. Verified CPU-only successor
+  `3889637` is scheduled for 01:13 CEST July 24 and remains required. No
+  recovery, scheduler edit, cleanup, or report regeneration was justified.
 
 ## Live Delta At 13:24 CEST On July 23
 

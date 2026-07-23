@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-23 13:24 CEST.
+Last updated: 2026-07-23 19:17 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,39 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-23 19:17 first selected 32B row accepted
+
+- OLMo-3-32B single-modal logic eval `3881780_0` completed as raw job
+  `3883993` on four verified A100-80GB GPUs in `06:34:03`. Its fail-closed
+  audit accepts all 448 prompts, 16 generations, 14 depths, 2,665 metrics,
+  576 retained rows including 448 sampled rows, and complete `7/112` chunk
+  logs. There are no fresh-constant or credited validity-diagnostic
+  contradictions. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_0.json`.
+- Representative raw review covers depths 1, 25, 30, 40, 45, and 50,
+  correct/citation-free-valid, wrong, malformed, and cap-hit cases. The model
+  is perfect in the retained sample through train depth 25, then shows
+  ordinary wrong-branch, malformed-premise/proof-line, and long-generation
+  failures. Across OOD depths 30--50, this one seed has greedy answer/joint
+  `0.738/0.491`, pass@1 answer/joint `0.641/0.504`, and pass@16 answer/joint
+  `0.994/0.919`. This is a row acceptance only; no 32B family claim or report
+  refresh is permitted before the matched logic/NL seeds finish.
+- Selected acceptance is now `12/45`. Large row `3881780_1` is running on
+  four A100-80GB GPUs at sampled chunk `70/112`. Conditioned-7B rows
+  `3881777_26/27/28` are at chunks `82/83/79`; Qwen2.5-7B architecture row
+  `3881778_24` has clean A100-80GB merge/vLLM startup. No active selected log
+  has a fatal, OOM, quota, or no-space signature.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain
+  dependency-free `AssocGrpGRES` pending, with current individual projections
+  of 22:02 CEST. Conditioned-32B replacement SFT `3883534_12` currently
+  projects 02:15 CEST July 24. No Dolmino or conditioned-32B checkpoint exists
+  yet, so neither startup gate is open.
+- User-wide Vault is `572G/1000G` with 179k files; this project's tree is
+  `477,610,021 KiB` with 7,105 regular files. The increase is consistent with
+  active selected merge roots and remains below quota. CPU-only/no-GRES
+  successor `3889637` is verified BeginTime-pending for 01:13 CEST July 24.
+  Both critical paths remain incomplete, so it is preserved.
 
 ### 2026-07-23 13:24 two selected controls accepted and reported
 

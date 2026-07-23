@@ -60,6 +60,16 @@ answer OOD. These two controls are now report evidence. Shortcut formal
 on four A100-80GB GPUs, while conditioned-32B replacement SFT `3883534`
 remains pending.
 
+Update 2026-07-23 19:17 CEST: OLMo-3-32B logic row `3881780_0`, raw job
+`3883993`, completed in `06:34:03` on four A100-80GB GPUs and passed the same
+production/invariant/raw-generation gate. It is perfect in the retained
+sample through depth 25 and then shows ordinary wrong-branch, malformed, and
+long-generation failures. One-seed OOD greedy/pass@1/pass@16 answer is
+`0.738/0.641/0.994`, with citation-free joint `0.491/0.504/0.919`. This is
+only the first of six matched single-modal 32B rows, so it does not open a
+family claim or report refresh. Selected acceptance is now `12/45`;
+`3881780_1` and three conditioned-7B rows continue without fatal signatures.
+
 | Claim/control | Exact rows | Job | Rows |
 | --- | --- | --- | ---: |
 | Length/syntax | surface eval `0..2` symbol-padded logic, `6..8` terse NL, `24..26` target-token-matched NL; all train-1-to-25, three seeds | `3881774` | 9 eval |
