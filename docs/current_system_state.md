@@ -62,6 +62,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   and 179k files; this project uses about `346G`, 7,055 regular files, and
   9,322 entries in Vault. CPU-only successor `3884297` remains scheduled for
   19:12 CEST because both critical paths remain incomplete.
+- Research/report commits are `15d5846` and `d0f4bd2`. Bounded SSH pushes of
+  both repositories produced no remote response and timed out, so publication
+  remains blocked while the local commits and artifacts are intact.
 
 ### 2026-07-23 08:41 guarded project cleanup restores Vault space margin
 
