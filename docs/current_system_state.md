@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-23 08:41 CEST.
+Last updated: 2026-07-23 13:24 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,45 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-23 13:24 two selected controls accepted and reported
+
+- All eleven completed selected eval rows now pass the fail-closed production
+  audit and representative raw review: surface `3881774_0..2`, shortcut
+  `3881775_12..14`, hybrid `3881776_12..14`, and conditioned-7B
+  `3881777_24/25`. Each has 448 prompts, 16 generations, all 14 depths,
+  576 retained rows including 448 sampled rows, complete `7/112` chunk logs,
+  and no fresh-constant or credited validity-diagnostic contradiction. Audits
+  are under
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/`.
+- Surface symbol-padded formal and the NL-then-formal hybrid are the first
+  complete selected three-seed families. Symbol padding preserves most of the
+  formal direction: OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.781 +/- 0.174`, `0.673 +/- 0.175`, `0.626 +/- 0.176`,
+  `0.927 +/- 0.094`, and `0.890 +/- 0.130`. The hybrid collapses OOD at
+  `0.000`, `0.002 +/- 0.001`, `0.000`, `0.023 +/- 0.016`, and `0.000`.
+  Raw generations show the hybrid fits depth 25 but copies both long surfaces
+  and normally reaches the shared cap before an OOD answer. Shortcut has only
+  its three formal rows, and conditioned-7B has only the seed-3407 pair, so
+  neither supports a family comparison yet.
+- The in-repo report was regenerated with fail-closed selected-control
+  ingestion, mirrored to `../synthetic-RLVL-report/informal_report`, and the
+  official root preprint was updated with only the two complete corrected
+  controls. Generated summary:
+  `analysis/logic_cot_report_2026-05-25/tables/corrected_branchproof_selected_controls.csv`.
+  Python compilation and report generation pass; local TeX tooling remains
+  unavailable.
+- OLMo-3-32B single-modal eval `3881780_0` is running as raw job `3883993`
+  on four verified A100-80GB GPUs. At 13:24 CEST it had reached sampled chunk
+  `83/112` in about 2h46m with the audited 16,384-token context and no fatal
+  signature. Replacement conditioned-32B SFT `3883534_[12-14%1]` and the
+  remaining selected eval rows are priority/dependency pending.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain
+  dependency-free `AssocGrpGRES` pending, now projected individually for
+  05:09 CEST July 24. No checkpoint exists. User-wide Vault reports `462G`
+  and 179k files; this project uses about `346G`, 7,055 regular files, and
+  9,322 entries in Vault. CPU-only successor `3884297` remains scheduled for
+  19:12 CEST because both critical paths remain incomplete.
 
 ### 2026-07-23 08:41 guarded project cleanup restores Vault space margin
 

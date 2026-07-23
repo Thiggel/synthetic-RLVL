@@ -4,6 +4,29 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-23
 
+- 13:24 CEST accepted all eight newly completed selected-control rows:
+  surface `3881774_1`, shortcut `3881775_12..14`, hybrid
+  `3881776_12..14`, and conditioned-7B `3881777_24`. Together with the
+  earlier three, selected acceptance is `11/45`. Each passed 448-prompt,
+  16-generation, 14-depth, 576-retained-row, chunk-log, fresh-constant, and
+  validity-consistency gates. Representative raw review covered train-edge,
+  OOD, depth-50, correct, incorrect, invalid, and capped cases.
+- Surface symbol-padded formal and NL-then-formal hybrid are complete
+  three-seed controls. Surface OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.781/0.673/0.626/0.927/0.890`; hybrid is
+  `0.000/0.002/0.000/0.023/0.000`. The hybrid fits the train edge but copies
+  both long traces and truncates without answers OOD. Shortcut formal and the
+  conditioned seed-3407 pair remain partial.
+- Regenerated the in-repo report with fail-closed selected-control ingestion,
+  mirrored the bundle to the report repo's `informal_report`, and updated the
+  official root preprint with only the complete accepted controls. Python
+  compilation/report generation pass; local TeX tools remain unavailable.
+- Raw job `3883993` (`3881780_0`) is healthy on four A100-80GB GPUs at
+  sampled chunk `83/112`. Dolmino first stages remain account-GRES pending
+  with 05:09 CEST July-24 projections. Preserved CPU-only successor `3884297`
+  for 19:12 CEST. Vault reports `462G` and 179k files; no cleanup, partition
+  edit, recovery, or new launch was needed.
+
 - 08:41 CEST guarded project-only cleanup reclaimed `72,611,001,856` bytes
   (`72.61 GB`, `67.62 GiB`) from Vault. Deleted 30 Trainer restart
   checkpoints only after verifying nonempty parent finals, and deleted only

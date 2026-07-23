@@ -48,6 +48,18 @@ review are recorded. Hybrid `3881776_12..14` is healthy at approximately
 `99/99/98` of `112` sampled chunks. No selected row has failed, and no
 partial-family result is eligible for the report.
 
+Update 2026-07-23 13:24 CEST: all eleven completed selected rows pass their
+production and representative raw-generation gates. Surface symbol-padded
+formal `3881774_0..2` and NL-then-formal hybrid `3881776_12..14` are complete
+three-seed families. Surface OOD answer/joint pass@1 is `0.673 +/- 0.175` /
+`0.626 +/- 0.176`; hybrid is `0.002 +/- 0.001` / `0.000`. The hybrid fits
+depth 25 but copies both trace surfaces and reaches the shared cap without an
+answer OOD. These two controls are now report evidence. Shortcut formal
+`3881775_12..14` and the conditioned-7B seed-3407 pair
+`3881777_24/25` remain partial. OLMo-3-32B logic eval `3881780_0` is healthy
+on four A100-80GB GPUs, while conditioned-32B replacement SFT `3883534`
+remains pending.
+
 | Claim/control | Exact rows | Job | Rows |
 | --- | --- | --- | ---: |
 | Length/syntax | surface eval `0..2` symbol-padded logic, `6..8` terse NL, `24..26` target-token-matched NL; all train-1-to-25, three seeds | `3881774` | 9 eval |

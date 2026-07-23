@@ -1,8 +1,32 @@
 # Running Experiments
 
-Last updated: 2026-07-23 08:41 CEST.
+Last updated: 2026-07-23 13:24 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:24 CEST On July 23
+
+- Selected eval completion and row acceptance are `11/45`: surface
+  `3881774_0..2`, shortcut `3881775_12..14`, hybrid `3881776_12..14`, and
+  conditioned-7B `3881777_24/25`. All pass the full structural, log,
+  retained-sample, constant, and validity-consistency gates plus
+  representative raw review.
+- Surface symbol-padded formal and NL-then-formal hybrid are complete
+  three-seed families and are now report evidence. Their OOD answer/joint
+  pass@1 is respectively `0.673/0.626` and `0.002/0.000`; hybrid generations
+  fit depth 25 but copy both trace surfaces and truncate without answers OOD.
+  Shortcut formal-only and the conditioned seed-3407 pair remain partial.
+- OLMo-3-32B logic eval `3881780_0` is running as raw job `3883993` on four
+  A100-80GB GPUs at sampled chunk `83/112` after about 2h46m. The remaining
+  selected rows are array-throttle, priority, or valid conditioned-SFT
+  dependency pending. Replacement SFT `3883534_[12-14%1]` has not started.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain
+  `AssocGrpGRES` pending with individual 05:09 CEST July-24 projections and no
+  checkpoint. Successor oversight `3884297` is CPU-only/no-GRES and scheduled
+  for 19:12 CEST; it remains required.
+- User-wide Vault is `462G/1000G` with 179k/200k files. This project's Vault
+  tree is about 346G with 7,055 regular files and 9,322 total entries. No
+  cleanup, partition edit, resubmission, or new experiment launch was needed.
 
 ## Live Delta At 08:41 CEST On July 23
 

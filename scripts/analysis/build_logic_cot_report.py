@@ -32,6 +32,18 @@ OUT_ROOT = ROOT / "analysis" / "logic_cot_report_2026-05-25"
 FIG_DIR = OUT_ROOT / "figures"
 TABLE_DIR = OUT_ROOT / "tables"
 CORRECTED_BRANCHPROOF_ROOT = ROOT / "analysis" / "branchproof_unique_v2_20260711"
+SELECTED_BRANCHPROOF_PASSK_ROOT = (
+    Path(os.environ.get("HPCVAULT", WORK_ROOT))
+    / "synthetic-RLVL"
+    / "passk_eval"
+    / "branchproof_unique_v2_report_20260713"
+)
+SELECTED_BRANCHPROOF_AUDIT_ROOT = (
+    Path(os.environ.get("HPCVAULT", WORK_ROOT))
+    / "synthetic-RLVL"
+    / "analysis"
+    / "branchproof_selected_followups_audits_20260723"
+)
 TOKENIZER_NAME = "allenai/Olmo-3-1025-7B"
 
 MAIN_RE = re.compile(r"sft_hfsa_depth_scaling_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$")
@@ -3840,6 +3852,135 @@ hybrid, conditioned-dual, and architecture controls remain in progress and are n
     return block, executive, True
 
 
+def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
+    families = {
+        "Symbol-padded formal": {
+            "subdir": "surface",
+            "stem": "sft_branchproof_unique_v2_surface_logic_symbol_padded_train1to25_10k_seed{seed}",
+            "audits": ("surface_0.json", "surface_1.json", "surface_2.json"),
+        },
+        "NL-then-formal hybrid": {
+            "subdir": "hybrid",
+            "stem": "sft_branchproof_unique_v2_hybrid_think_formal_train1to25_10k_seed{seed}",
+            "audits": ("hybrid_12.json", "hybrid_13.json", "hybrid_14.json"),
+        },
+    }
+    for spec in families.values():
+        audit_paths = [SELECTED_BRANCHPROOF_AUDIT_ROOT / name for name in spec["audits"]]
+        if not all(path.is_file() for path in audit_paths):
+            return "", "", False
+        if not all(json.loads(path.read_text(encoding="utf-8")).get("accepted") is True for path in audit_paths):
+            return "", "", False
+
+    def summarize_family(label: str, spec: dict[str, object]) -> dict[str, object]:
+        seed_rows: list[dict[str, float]] = []
+        for seed in (3407, 3408, 3409):
+            path = (
+                SELECTED_BRANCHPROOF_PASSK_ROOT
+                / str(spec["subdir"])
+                / f"{str(spec['stem']).format(seed=seed)}_passk.json"
+            )
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            metrics = payload["metrics"]
+            depths = (30, 35, 40, 45, 50)
+            seed_rows.append(
+                {
+                    "greedy_ood_correct": mean(
+                        float(metrics[f"synthetic/step_{depth}/correct"]) for depth in depths
+                    ),
+                    "ood_correct1": mean(
+                        float(metrics[f"synthetic_sampled/step_{depth}/correct_pass@1"])
+                        for depth in depths
+                    ),
+                    "ood_joint1": mean(
+                        float(metrics[f"synthetic_sampled/step_{depth}/citation_free_joint_pass@1"])
+                        for depth in depths
+                    ),
+                    "ood_correct16": mean(
+                        float(metrics[f"synthetic_sampled/step_{depth}/correct_pass@16"])
+                        for depth in depths
+                    ),
+                    "ood_joint16": mean(
+                        float(metrics[f"synthetic_sampled/step_{depth}/citation_free_joint_pass@16"])
+                        for depth in depths
+                    ),
+                    "depth50_correct1": float(
+                        metrics["synthetic_sampled/step_50/correct_pass@1"]
+                    ),
+                    "depth50_joint1": float(
+                        metrics["synthetic_sampled/step_50/citation_free_joint_pass@1"]
+                    ),
+                }
+            )
+        row: dict[str, object] = {"condition": label, "n": len(seed_rows)}
+        for metric in seed_rows[0]:
+            values = [seed_row[metric] for seed_row in seed_rows]
+            row[f"{metric}_mean"] = mean(values)
+            row[f"{metric}_std"] = pstdev(values)
+        return row
+
+    rows = [summarize_family(label, spec) for label, spec in families.items()]
+    write_csv(TABLE_DIR / "corrected_branchproof_selected_controls.csv", rows)
+
+    def percent_stat(row: dict[str, object], metric: str) -> str:
+        return (
+            f"{100.0 * float(row[f'{metric}_mean']):.1f} $\\pm$ "
+            f"{100.0 * float(row[f'{metric}_std']):.1f}"
+        )
+
+    table_lines = [
+        r"\begin{tabular}{lrrrrr}",
+        r"\toprule",
+        r"Condition & Greedy OOD & OOD c@1 & OOD joint@1 & OOD c@16 & OOD joint@16 \\",
+        r"\midrule",
+    ]
+    for row in rows:
+        table_lines.append(
+            f"{row['condition']} & "
+            f"{percent_stat(row, 'greedy_ood_correct')} & "
+            f"{percent_stat(row, 'ood_correct1')} & "
+            f"{percent_stat(row, 'ood_joint1')} & "
+            f"{percent_stat(row, 'ood_correct16')} & "
+            f"{percent_stat(row, 'ood_joint16')} \\\\"
+        )
+    table_lines.extend([r"\bottomrule", r"\end{tabular}"])
+
+    surface, hybrid = rows
+    executive = (
+        "Two corrected train-1-to-25 controls now pass complete three-seed row and raw-generation "
+        "gates. Symbol padding preserves most of the formal OOD advantage "
+        f"({100 * float(surface['ood_correct1_mean']):.1f}% answer pass@1), while the "
+        "NL-then-formal same-example hybrid collapses under extrapolation "
+        f"({100 * float(hybrid['ood_correct1_mean']):.1f}% answer pass@1) because the combined "
+        "trace copies both long surfaces and usually reaches the shared cap before an answer."
+    )
+    block = rf"""
+\subsection{{Accepted corrected BranchProof controls}}
+The symbol-padded formal and NL-then-formal same-example hybrid controls are each complete across
+three seeds and pass the same 448-prompt, 16-generation, 14-depth artifact and qualitative gates
+as the corrected main grid. OOD contains depths 30--50. Joint uses citation-free formal validity;
+the hybrid's translated-NL joint is also zero in this OOD aggregate.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{chr(10).join(table_lines)}
+\caption{{Accepted corrected train-1-to-25 controls, percentage mean $\pm$ population standard
+deviation over three seeds.}}
+\end{{table}}
+
+Symbol padding leaves the formal result direction intact, although its OOD pass@1 correctness
+({100 * float(surface['ood_correct1_mean']):.1f}$\pm${100 * float(surface['ood_correct1_std']):.1f})
+is below compact formal supervision. The NL-then-formal hybrid is perfect at the training edge in
+the inspected samples but collapses beyond it: long generations copy the NL premises and proof
+before starting or completing the formal trace, then truncate without an answer. Its OOD answer
+pass@16 is only {100 * float(hybrid['ood_correct16_mean']):.1f}$\pm$
+{100 * float(hybrid['ood_correct16_std']):.1f}. Shortcut, conditioned-dual, and architecture
+comparisons remain incomplete and are not used as family-level evidence.
+"""
+    return block, executive, True
+
+
 def write_report(
     main_summary: pd.DataFrame,
     tiny_summary: pd.DataFrame,
@@ -3864,6 +4005,9 @@ def write_report(
 ) -> None:
     corrected_branchproof_block, corrected_branchproof_executive, corrected_branchproof_ready = (
         build_corrected_branchproof_report_block()
+    )
+    selected_branchproof_block, selected_branchproof_executive, selected_branchproof_ready = (
+        build_selected_branchproof_report_block()
     )
     main_rows = main_summary[(main_summary["size"] == "") & (main_summary["n"] >= 1)].copy()
     main_rows = main_rows.sort_values(["template", "train_max"])
@@ -4193,7 +4337,7 @@ def write_report(
 \usepackage{{float}}
 \usepackage{{hyperref}}
 \title{{Formal Logic CoT Synthetic Results Update}}
-\date{{2026-07-22}}
+\date{{2026-07-23}}
 \begin{{document}}
 \maketitle
 
@@ -4213,13 +4357,15 @@ Full evidence and recovery jobs are recorded in
 \texttt{{docs/branchproof\_uniqueness\_audit\_2026-07-10.md}}.
 
 {corrected_branchproof_block}
+{selected_branchproof_block}
 
 \section{{Executive insights}}
 \begin{{itemize}}
 \item {corrected_branchproof_executive}
+\item {selected_branchproof_executive if selected_branchproof_ready else "Selected corrected BranchProof controls remain gated."}
 \item AttrCon remains independent positive-but-mixed evidence: formal traces improve mean answer correctness, while natural traces have the higher joint-validity mean.
 \item The corrected Qwen2.5 continual-pretraining pilot remains null or mixed after raw-generation and truncation audits, so the broader mixture grid is rejected.
-\item All later sections based on the wrapped-constant BranchProof construction are retained only as quarantined provenance. Selected corrected surface, shortcut, hybrid, conditioned-dual, and architecture controls are pending and are not evidence yet.
+\item All later sections based on the wrapped-constant BranchProof construction are retained only as quarantined provenance. Corrected shortcut, conditioned-dual, and architecture controls are still pending and are not evidence yet.
 \end{{itemize}}
 
 \section{{Metric note for OOD benchmarks}}
