@@ -53,6 +53,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   produced a checkpoint. Vault is `572G/1000G` with 179k files; this project
   is `477,666,501 KiB` with 7,114 regular files. CPU-only successor
   `3890293` is verified BeginTime-pending for 07:13 CEST and remains required.
+- Handoff commit `1b5942d` is local. Main-repo and report-repo SSH pushes
+  produced no remote response and timed out after 90 and 60 seconds,
+  respectively; local `main` remains five commits ahead in this repo and one
+  commit ahead in the report repo.
 
 ### 2026-07-23 19:17 first selected 32B row accepted
 
