@@ -50,6 +50,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   account-GRES pending with individual 22:02 CEST projections. Vault is
   `1101G/1000G` and `203k/200k` files. CPU-only successor `3883709` remains
   scheduled because both critical paths are incomplete.
+- Scoped audit/handoff commit `ef8c4fb` is local. A bounded 90-second
+  `git push origin main` produced no remote response and exited `124`; the
+  SSH/network publication path remains blocked. The report repository was not
+  changed.
 
 ### 2026-07-23 01:17 selected follow-ups active; 32B restart defect recovered
 

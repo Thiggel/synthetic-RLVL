@@ -20,6 +20,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   remain A100-80/account-GRES pending; no compatible partition widening is
   available. Preserved CPU-only successor `3883709`. Vault is
   `1101G/1000G` and `203k/200k` files.
+- Committed the scoped row audits and handoff as `ef8c4fb`. A bounded
+  90-second push produced no remote response and exited `124`; the
+  SSH/network publication path remains blocked. The report repository is
+  unchanged.
 
 - 01:17 CEST audited the released selected wave. Eleven A100-80GB eval rows
   across `3881774..3881777` are healthy at sampled chunks `55..89/112`, with
