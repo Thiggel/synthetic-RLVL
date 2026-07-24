@@ -595,3 +595,20 @@ proof-invalid generations occur. These observations support separate answer
 and validity reporting. The accepted result does not restore any old ablation;
 selected corrected controls are tracked in
 `docs/branchproof_selected_followups_2026-07-22.md`.
+
+## 2026-07-24 Conditioned-Dual Selected-Control Acceptance
+
+Selected conditioned-7B rows `3881777_24..29` are complete and pass the same
+448-prompt, 16-generation, 14-depth artifact, chunk-log, fresh-constant, and
+credited-validity consistency gates as the corrected baseline. Representative
+raw review covers shallow, train-edge, OOD, and depth-50 correct-valid,
+answer-correct-invalid, wrong, malformed, missing-answer, and capped outputs.
+
+Across three seeds, conditioned formal versus conditioned NL OOD answer pass@1
+is `0.5029 +/- 0.0644` versus `0.1814 +/- 0.0197`; modality-appropriate joint
+pass@1 is `0.4488 +/- 0.0600` versus `0.1780 +/- 0.0232`. Conditioned NL is
+clean through roughly depth 30 and then commonly copies premise/proof prefixes
+without completing an answer. This is evidence about two requested output
+modes of the same checkpoint, not an additive-data or independent-checkpoint
+comparison. The accepted audits are under
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/`.

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-24 01:18 CEST.
+Last updated: 2026-07-24 07:22 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,43 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-24 07:22 conditioned-7B family accepted and reported
+
+- Seven newly terminal selected rows passed the fail-closed 448-prompt,
+  16-generation, 14-depth, retained-sample, complete-chunk-log,
+  fresh-constant, and credited-validity gates: conditioned-7B
+  `3881777_26/28/29`, Qwen2.5-7B `3881778_25/26/33`, and OLMo-3-32B
+  `3881780_2`. Audits are under
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/`.
+- Representative review covers depths 1/25/30/40/50, correct-valid,
+  answer-correct-invalid, wrong, malformed, missing-answer, and long/capped
+  outputs. The complete conditioned-7B family has formal versus NL OOD
+  answer/joint pass@1 `0.5029 +/- 0.0644` / `0.4488 +/- 0.0600` versus
+  `0.1814 +/- 0.0197` / `0.1780 +/- 0.0232`. Conditioned NL is clean through
+  roughly depth 30, then copies long premise/proof prefixes and usually omits
+  an answer. This is a shared-checkpoint output-mode result, not an
+  additive-data claim.
+- Selected acceptance is now `22/45`. Qwen formal is complete at three seeds
+  but Qwen NL has only seed 3407; OLMo-3-32B formal is complete but its three
+  NL rows remain pending. Active selected evals are surface
+  `3881774_6/7/8` at sampled chunks `74/65/47` and shortcut `3881775_15` at
+  chunk `27`; no active log has a fatal signature.
+- Conditioned-32B replacement `3883534_12` started as raw job `3890581` on
+  four A100-80GB GPUs and reached about step `192/10000` after 52 minutes.
+  Its current rate projects beyond one 24-hour allocation, but the repaired
+  250-step/two-state checkpoint policy is active; inspect the first
+  checkpoint and recover only after an actual timeout. Rows 13/14 remain
+  array-throttle pending.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
+  `AssocGrpGRES` pending with provisional 08:00 CEST projections. Vault is
+  `451G/1000G` and 179k files; this project is `350,611,842 KiB` with 7,107
+  regular files. CPU-only successor `3890623` is verified BeginTime-pending
+  for 13:13 CEST and remains required.
+- The in-repo report was regenerated with fail-closed conditioned-family
+  ingestion, mirrored to `../synthetic-RLVL-report/informal_report`, and the
+  official preprint was updated. Python compilation and report generation
+  pass; local TeX tooling remains unavailable.
 
 ### 2026-07-24 01:18 three more selected rows accepted
 

@@ -3864,6 +3864,23 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
             "stem": "sft_branchproof_unique_v2_hybrid_think_formal_train1to25_10k_seed{seed}",
             "audits": ("hybrid_12.json", "hybrid_13.json", "hybrid_14.json"),
         },
+        "Conditioned-dual formal": {
+            "subdir": "conditioned10k",
+            "stem": (
+                "sft_branchproof_unique_v2_conditioned10k_train1to25_10k_"
+                "seed{seed}_conditioned_logic"
+            ),
+            "audits": ("conditioned10k_24.json", "conditioned10k_26.json", "conditioned10k_28.json"),
+        },
+        "Conditioned-dual NL": {
+            "subdir": "conditioned10k",
+            "stem": (
+                "sft_branchproof_unique_v2_conditioned10k_train1to25_10k_"
+                "seed{seed}_conditioned_nl"
+            ),
+            "audits": ("conditioned10k_25.json", "conditioned10k_27.json", "conditioned10k_29.json"),
+            "joint_metric": "nl_logic_joint_pass",
+        },
     }
     for spec in families.values():
         audit_paths = [SELECTED_BRANCHPROOF_AUDIT_ROOT / name for name in spec["audits"]]
@@ -3883,6 +3900,7 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
             payload = json.loads(path.read_text(encoding="utf-8"))
             metrics = payload["metrics"]
             depths = (30, 35, 40, 45, 50)
+            joint_metric = str(spec.get("joint_metric", "citation_free_joint_pass"))
             seed_rows.append(
                 {
                     "greedy_ood_correct": mean(
@@ -3893,7 +3911,7 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
                         for depth in depths
                     ),
                     "ood_joint1": mean(
-                        float(metrics[f"synthetic_sampled/step_{depth}/citation_free_joint_pass@1"])
+                        float(metrics[f"synthetic_sampled/step_{depth}/{joint_metric}@1"])
                         for depth in depths
                     ),
                     "ood_correct16": mean(
@@ -3901,14 +3919,14 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
                         for depth in depths
                     ),
                     "ood_joint16": mean(
-                        float(metrics[f"synthetic_sampled/step_{depth}/citation_free_joint_pass@16"])
+                        float(metrics[f"synthetic_sampled/step_{depth}/{joint_metric}@16"])
                         for depth in depths
                     ),
                     "depth50_correct1": float(
                         metrics["synthetic_sampled/step_50/correct_pass@1"]
                     ),
                     "depth50_joint1": float(
-                        metrics["synthetic_sampled/step_50/citation_free_joint_pass@1"]
+                        metrics[f"synthetic_sampled/step_50/{joint_metric}@1"]
                     ),
                 }
             )
@@ -3945,21 +3963,24 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
         )
     table_lines.extend([r"\bottomrule", r"\end{tabular}"])
 
-    surface, hybrid = rows
+    surface, hybrid, conditioned_logic, conditioned_nl = rows
     executive = (
-        "Two corrected train-1-to-25 controls now pass complete three-seed row and raw-generation "
+        "Four corrected train-1-to-25 control surfaces now pass complete three-seed row and "
+        "raw-generation "
         "gates. Symbol padding preserves most of the formal OOD advantage "
         f"({100 * float(surface['ood_correct1_mean']):.1f}% answer pass@1), while the "
         "NL-then-formal same-example hybrid collapses under extrapolation "
-        f"({100 * float(hybrid['ood_correct1_mean']):.1f}% answer pass@1) because the combined "
-        "trace copies both long surfaces and usually reaches the shared cap before an answer."
+        f"({100 * float(hybrid['ood_correct1_mean']):.1f}% answer pass@1). In the conditioned-dual "
+        f"checkpoint, formal prompting retains {100 * float(conditioned_logic['ood_correct1_mean']):.1f}% "
+        f"OOD answer pass@1 versus {100 * float(conditioned_nl['ood_correct1_mean']):.1f}% for NL."
     )
     block = rf"""
 \subsection{{Accepted corrected BranchProof controls}}
-The symbol-padded formal and NL-then-formal same-example hybrid controls are each complete across
-three seeds and pass the same 448-prompt, 16-generation, 14-depth artifact and qualitative gates
-as the corrected main grid. OOD contains depths 30--50. Joint uses citation-free formal validity;
-the hybrid's translated-NL joint is also zero in this OOD aggregate.
+The symbol-padded formal, NL-then-formal same-example hybrid, and both prompting modes of the
+conditioned-dual checkpoint are complete across three seeds. All pass the same 448-prompt,
+16-generation, 14-depth artifact and qualitative gates as the corrected main grid. OOD contains
+depths 30--50. Joint uses citation-free formal validity for formal outputs and translated
+citation-free validity for conditioned NL.
 
 \begin{{table}}[H]
 \centering
@@ -3975,8 +3996,18 @@ is below compact formal supervision. The NL-then-formal hybrid is perfect at the
 the inspected samples but collapses beyond it: long generations copy the NL premises and proof
 before starting or completing the formal trace, then truncate without an answer. Its OOD answer
 pass@16 is only {100 * float(hybrid['ood_correct16_mean']):.1f}$\pm$
-{100 * float(hybrid['ood_correct16_std']):.1f}. Shortcut, conditioned-dual, and architecture
-comparisons remain incomplete and are not used as family-level evidence.
+{100 * float(hybrid['ood_correct16_std']):.1f}. The conditioned-dual checkpoint also favors formal
+prompting: OOD answer/joint pass@1 is
+{100 * float(conditioned_logic['ood_correct1_mean']):.1f}$\pm$
+{100 * float(conditioned_logic['ood_correct1_std']):.1f} /
+{100 * float(conditioned_logic['ood_joint1_mean']):.1f}$\pm$
+{100 * float(conditioned_logic['ood_joint1_std']):.1f}, versus
+{100 * float(conditioned_nl['ood_correct1_mean']):.1f}$\pm$
+{100 * float(conditioned_nl['ood_correct1_std']):.1f} /
+{100 * float(conditioned_nl['ood_joint1_mean']):.1f}$\pm$
+{100 * float(conditioned_nl['ood_joint1_std']):.1f} for NL. Retained conditioned-NL samples are
+clean through roughly depth 30, then copy long premise/proof prefixes and usually omit the answer.
+Shortcut and architecture comparisons remain incomplete and are not used as family-level evidence.
 """
     return block, executive, True
 

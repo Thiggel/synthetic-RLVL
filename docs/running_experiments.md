@@ -1,8 +1,35 @@
 # Running Experiments
 
-Last updated: 2026-07-24 01:18 CEST.
+Last updated: 2026-07-24 07:22 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:22 CEST On July 24
+
+- Selected acceptance is `22/45`. Newly accepted rows are conditioned-7B
+  `3881777_26/28/29`, Qwen2.5-7B `3881778_25/26/33`, and OLMo-3-32B
+  `3881780_2`. All seven pass the complete metrics/sample/log, fresh-constant,
+  and credited-validity consistency gates plus representative raw review.
+- Conditioned-7B is now a complete matched three-seed family. Formal versus NL
+  OOD answer/joint pass@1 is `0.5029 +/- 0.0644` /
+  `0.4488 +/- 0.0600` versus `0.1814 +/- 0.0197` /
+  `0.1780 +/- 0.0232`. Raw NL outputs are clean through roughly depth 30 and
+  then copy long premise/proof prefixes or omit answers. The report and
+  official preprint now include this accepted shared-checkpoint mode
+  comparison.
+- Qwen formal and OLMo-3-32B formal each have all three seeds accepted, but
+  their matched NL rows remain partial or pending. Active evals are surface
+  `3881774_6/7/8` at chunks `74/65/47` and shortcut `3881775_15` at chunk
+  `27`; all have clean focused logs.
+- Conditioned-32B replacement `3883534_12` is running as raw job `3890581`
+  and reached about step `192/10000` after 52 minutes. Its projected runtime
+  exceeds 24 hours, but it has the repaired 250-step checkpoint policy; wait
+  for the first state and an actual timeout before exact recovery.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
+  account-GRES pending with provisional 08:00 CEST projections. Vault is
+  `451G/1000G` and 179k files; this project is `350,611,842 KiB` with 7,107
+  regular files. CPU-only successor `3890623` is verified BeginTime-pending
+  for 13:13 CEST and remains required.
 
 ## Live Delta At 01:18 CEST On July 24
 

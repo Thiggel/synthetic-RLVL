@@ -4,6 +4,33 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-24
 
+- 07:22 CEST accepted seven selected rows after full structural and raw review:
+  conditioned-7B `3881777_26/28/29`, Qwen2.5-7B
+  `3881778_25/26/33`, and OLMo-3-32B `3881780_2`. Every row passes
+  the 448-prompt, 16-generation, 14-depth, complete-log, retained-sample,
+  fresh-constant, and credited-validity consistency gates. Representative
+  review covers shallow/train/OOD/depth-50, correct-valid,
+  answer-correct-invalid, wrong, malformed, missing-answer, and capped cases.
+- Conditioned-7B is now complete across both modes and three seeds. Formal
+  versus NL OOD answer/joint pass@1 is `0.5029 +/- 0.0644` /
+  `0.4488 +/- 0.0600` versus `0.1814 +/- 0.0197` /
+  `0.1780 +/- 0.0232`. NL generations are clean through roughly depth 30 and
+  then copy long prefixes or omit answers. Regenerated the fail-closed
+  in-repo report, mirrored the informal bundle, and updated the official
+  preprint with this mode-specific shared-checkpoint result. `py_compile` and
+  report generation pass; TeX tooling remains unavailable.
+- Selected acceptance is `22/45`. Surface evals `3881774_6/7/8` and shortcut
+  `3881775_15` are healthy at sampled chunks `74/65/47/27`.
+  Conditioned-32B replacement `3883534_12` started as raw `3890581` and is
+  slow enough to require checkpoint resume after a likely 24-hour timeout;
+  its repaired 250-step/two-state policy is active, so no premature recovery
+  was submitted.
+- Dolmino first stages remain unstarted account-GRES pending with provisional
+  08:00 CEST projections. Vault is `451G/1000G` and 179k files; the project is
+  `350,611,842 KiB` with 7,107 files. Verified CPU-only successor `3890623`
+  for 13:13 CEST and preserved it because both critical paths remain
+  incomplete.
+
 - 01:18 CEST accepted conditioned-7B NL `3881777_27` (raw `3884546`),
   Qwen2.5-7B logic `3881778_24` (raw `3889573`), and OLMo-3-32B logic
   `3881780_1` (raw `3884864`). Each passes the 448-prompt, 16-generation,
