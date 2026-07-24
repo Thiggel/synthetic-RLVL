@@ -22,14 +22,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - Selected acceptance is `22/45`. Surface evals `3881774_6/7/8` and shortcut
   `3881775_15` are healthy at sampled chunks `74/65/47/27`.
   Conditioned-32B replacement `3883534_12` started as raw `3890581` and is
-  slow enough to require checkpoint resume after a likely 24-hour timeout;
-  its repaired 250-step/two-state policy is active, so no premature recovery
-  was submitted.
+  slow enough to require checkpoint resume after a likely 24-hour timeout.
+  Verified its first `checkpoint-250`: the 536,991,984-byte adapter,
+  optimizer, scheduler, RNG, tokenizer, and step-250 trainer state are all
+  nonempty with no zero-byte file; training continued to step 251. No
+  premature recovery was submitted.
 - Dolmino first stages remain unstarted account-GRES pending with provisional
   08:00 CEST projections. Vault is `451G/1000G` and 179k files; the project is
   `350,611,842 KiB` with 7,107 files. Verified CPU-only successor `3890623`
   for 13:13 CEST and preserved it because both critical paths remain
   incomplete.
+- Committed the scoped experiment/report changes as `e9fcb08` and `873e26f`.
+  Bounded main/report SSH pushes produced no remote response and timed out
+  after 90/60 seconds; both commits remain local.
 
 - 01:18 CEST accepted conditioned-7B NL `3881777_27` (raw `3884546`),
   Qwen2.5-7B logic `3881778_24` (raw `3889573`), and OLMo-3-32B logic

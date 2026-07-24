@@ -22,9 +22,10 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   `3881774_6/7/8` at chunks `74/65/47` and shortcut `3881775_15` at chunk
   `27`; all have clean focused logs.
 - Conditioned-32B replacement `3883534_12` is running as raw job `3890581`
-  and reached about step `192/10000` after 52 minutes. Its projected runtime
-  exceeds 24 hours, but it has the repaired 250-step checkpoint policy; wait
-  for the first state and an actual timeout before exact recovery.
+  and wrote a complete first restart state at `checkpoint-250`: nonempty
+  adapter, optimizer, scheduler, RNG, tokenizer, and step-250 trainer state,
+  with no zero-byte file. Training continued to step 251. Its projected
+  runtime exceeds 24 hours; wait for an actual timeout before exact recovery.
 - Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
   account-GRES pending with provisional 08:00 CEST projections. Vault is
   `451G/1000G` and 179k files; this project is `350,611,842 KiB` with 7,107

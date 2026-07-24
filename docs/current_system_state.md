@@ -46,11 +46,12 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3881774_6/7/8` at sampled chunks `74/65/47` and shortcut `3881775_15` at
   chunk `27`; no active log has a fatal signature.
 - Conditioned-32B replacement `3883534_12` started as raw job `3890581` on
-  four A100-80GB GPUs and reached about step `192/10000` after 52 minutes.
-  Its current rate projects beyond one 24-hour allocation, but the repaired
-  250-step/two-state checkpoint policy is active; inspect the first
-  checkpoint and recover only after an actual timeout. Rows 13/14 remain
-  array-throttle pending.
+  four A100-80GB GPUs. Its first restart state is verified at
+  `checkpoint-250`: the 536,991,984-byte adapter, optimizer, scheduler, RNG,
+  tokenizer, and step-250 trainer state are nonempty, with no zero-byte file;
+  training continued to step 251. The current rate projects beyond one
+  24-hour allocation, so recover exactly this row after an actual timeout.
+  Rows 13/14 remain array-throttle pending.
 - Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
   `AssocGrpGRES` pending with provisional 08:00 CEST projections. Vault is
   `451G/1000G` and 179k files; this project is `350,611,842 KiB` with 7,107
@@ -59,7 +60,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - The in-repo report was regenerated with fail-closed conditioned-family
   ingestion, mirrored to `../synthetic-RLVL-report/informal_report`, and the
   official preprint was updated. Python compilation and report generation
-  pass; local TeX tooling remains unavailable.
+  pass; local TeX tooling remains unavailable. Commits `e9fcb08` and
+  `873e26f` are local. Main/report SSH pushes timed out after 90/60 seconds
+  without a remote response.
 
 ### 2026-07-24 01:18 three more selected rows accepted
 
