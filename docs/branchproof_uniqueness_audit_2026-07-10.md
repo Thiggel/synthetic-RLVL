@@ -612,3 +612,21 @@ without completing an answer. This is evidence about two requested output
 modes of the same checkpoint, not an additive-data or independent-checkpoint
 comparison. The accepted audits are under
 `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/`.
+
+## 2026-07-24 First Terse-NL Surface Row
+
+Selected terse-NL row `3881774_6` completed as raw job `3890505` on
+A100-80GB in `07:45:07`. Its fail-closed audit accepts all 448 prompts, 16
+generations, 14 depths, 2,665 metrics, 576 retained rows including 448 sampled
+rows, and complete `7/112` generation logs. Every retained
+translated-citation-free-valid row is diagnostic-clean.
+
+Representative review at depths 1, 25, 30, 35, 40, 45, and 50 confirms the
+intended terse-NL `<think>/<answer>` surface and exact answer extraction.
+Generations are clean through depth 30; deeper failures usually copy an
+incomplete premise prefix and never emit an answer, while a small number of
+depth-40/50 generations remain complete and translated-valid. This seed's OOD
+greedy/pass@1/pass@16 answer rates are `0.775/0.291/0.806`, with translated
+joint `0.744/0.284/0.788`. This is row-scoped evidence only. Rows
+`3881774_7/8` must pass before a three-seed terse-NL family comparison is
+reported.

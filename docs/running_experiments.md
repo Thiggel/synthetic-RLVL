@@ -1,8 +1,31 @@
 # Running Experiments
 
-Last updated: 2026-07-24 07:34 CEST.
+Last updated: 2026-07-24 13:22 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:22 CEST On July 24
+
+- Selected acceptance is `23/45`. Newly accepted terse-NL surface row
+  `3881774_6`, raw job `3890505`, completed `0:0` in `07:45:07` and passed
+  the complete metric, retained-sample, generation-log, and
+  validity-consistency gates. Raw review spans depths 1/25/30/35/40/45/50,
+  correct translated-valid cases, wrong/missing-answer cases, and long
+  premise-copy truncations.
+- The one accepted terse-NL seed has OOD greedy/pass@1/pass@16 answer
+  `0.775/0.291/0.806` and translated joint `0.744/0.284/0.788`. Rows 7/8
+  remain active, so this is not yet a three-seed surface-family result and
+  does not trigger report regeneration.
+- Active selected evals are surface `3881774_7/8/24`, shortcut
+  `3881775_15..17`, hybrid `3881776_27..29`, and Qwen `3881778_34`.
+  Focused logs have no fatal/OOM/quota/no-space signature. Conditioned-32B
+  SFT `3883534_12` has passed step 2,000 with complete nonempty checkpoints
+  1,750 and 2,000; wait for an actual timeout before exact recovery.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
+  account-GRES pending with provisional 22:02 CEST projections. Vault is
+  `621G/1000G` and 179k files; this project is `529,381,827 KiB` with 7,211
+  regular files. CPU-only successor `3891580` remains scheduled because both
+  critical paths are incomplete.
 
 ## Live Delta At 07:22 CEST On July 24
 

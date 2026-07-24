@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-24 07:34 CEST.
+Last updated: 2026-07-24 13:22 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,35 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-24 13:22 first terse-NL surface row accepted
+
+- Surface row `3881774_6` completed as raw job `3890505` on A100-80GB in
+  `07:45:07`. Its fail-closed audit accepts 448 prompts, 16 generations, all
+  14 depths, 2,665 metrics, 576 retained rows including 448 sampled rows, and
+  complete `7/112` chunk logs. There is no credited validity-diagnostic
+  contradiction. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/surface_6.json`.
+- Representative terse-NL review covers depths 1/25/30/35/40/45/50,
+  correct translated-valid outputs, wrong/missing-answer outputs, and long
+  premise-copy truncations. The intended `<think>/<answer>` surface and exact
+  extraction remain clean. This seed's OOD greedy/pass@1/pass@16 answer rates
+  are `0.775/0.291/0.806`; translated-joint rates are
+  `0.744/0.284/0.788`. This is a row acceptance only; rows 7/8 must finish
+  before a three-seed terse-NL family claim or report update.
+- Selected acceptance is `23/45`. Surface rows `3881774_7/8`, shortcut rows
+  `3881775_15..17`, hybrid rows `3881776_27..29`, surface row
+  `3881774_24`, and Qwen row `3881778_34` are actively generating or scoring
+  without a fatal signature. Conditioned-32B SFT `3883534_12` has advanced
+  beyond step 2,000; complete nonempty restart states at checkpoints 1,750
+  and 2,000 passed the zero-byte gate. Recover exactly this row only after an
+  actual timeout.
+- Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
+  `AssocGrpGRES` pending with provisional 22:02 CEST projections. Vault is
+  `621G/1000G` and 179k files; this project is `529,381,827 KiB` with 7,211
+  regular files. CPU-only successor `3891580` is BeginTime-pending and remains
+  required because both selected BranchProof and Dolmino 5B paths are
+  incomplete.
 
 ### 2026-07-24 07:22 conditioned-7B family accepted and reported
 

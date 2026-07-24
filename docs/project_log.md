@@ -4,6 +4,24 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-24
 
+- 13:22 CEST accepted terse-NL surface row `3881774_6`, raw `3890505`,
+  after its `07:45:07` A100-80GB run. The fail-closed audit passes 448
+  prompts, 16 generations, all 14 depths, 2,665 metrics, 576 retained rows,
+  complete `7/112` chunk logs, and every credited validity diagnostic.
+  Representative raw review covers depths 1/25/30/35/40/45/50, correct
+  translated-valid outputs, wrong/missing-answer outputs, and long
+  premise-copy truncations.
+- This one terse-NL seed has OOD greedy/pass@1/pass@16 answer
+  `0.775/0.291/0.806` and translated joint `0.744/0.284/0.788`. Selected
+  acceptance is `23/45`; rows 7/8 remain active, so no family-level claim or
+  report update was made.
+- Active selected logs contain no fatal signature. Conditioned-32B
+  `3883534_12` passed step 2,000 and has complete nonempty checkpoints 1,750
+  and 2,000; no premature recovery was submitted. Dolmino first stages remain
+  unstarted account-GRES pending with 22:02 CEST projections. Vault is
+  `621G/1000G`, the project is `529,381,827 KiB`, and CPU-only successor
+  `3891580` remains required.
+
 - 07:22 CEST accepted seven selected rows after full structural and raw review:
   conditioned-7B `3881777_26/28/29`, Qwen2.5-7B
   `3881778_25/26/33`, and OLMo-3-32B `3881780_2`. Every row passes
