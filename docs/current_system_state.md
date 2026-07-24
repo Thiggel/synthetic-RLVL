@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-24 07:22 CEST.
+Last updated: 2026-07-24 07:34 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -53,7 +53,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   24-hour allocation, so recover exactly this row after an actual timeout.
   Rows 13/14 remain array-throttle pending.
 - Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
-  `AssocGrpGRES` pending with provisional 08:00 CEST projections. Vault is
+  `AssocGrpGRES` pending with provisional 22:02 CEST projections. Vault is
   `451G/1000G` and 179k files; this project is `350,611,842 KiB` with 7,107
   regular files. CPU-only successor `3890623` is verified BeginTime-pending
   for 13:13 CEST and remains required.

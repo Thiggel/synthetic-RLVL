@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-07-24 07:22 CEST.
+Last updated: 2026-07-24 07:34 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -27,7 +27,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   with no zero-byte file. Training continued to step 251. Its projected
   runtime exceeds 24 hours; wait for an actual timeout before exact recovery.
 - Dolmino first stages `3875825_0/3875828_1/3875831_2` remain unstarted
-  account-GRES pending with provisional 08:00 CEST projections. Vault is
+  account-GRES pending with provisional 22:02 CEST projections. Vault is
   `451G/1000G` and 179k files; this project is `350,611,842 KiB` with 7,107
   regular files. CPU-only successor `3890623` is verified BeginTime-pending
   for 13:13 CEST and remains required.

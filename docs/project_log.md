@@ -27,8 +27,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   optimizer, scheduler, RNG, tokenizer, and step-250 trainer state are all
   nonempty with no zero-byte file; training continued to step 251. No
   premature recovery was submitted.
-- Dolmino first stages remain unstarted account-GRES pending with provisional
-  08:00 CEST projections. Vault is `451G/1000G` and 179k files; the project is
+- Dolmino first stages remain unstarted account-GRES pending; their provisional
+  projections moved from 08:00 to 22:02 CEST. Vault is `451G/1000G` and 179k files; the project is
   `350,611,842 KiB` with 7,107 files. Verified CPU-only successor `3890623`
   for 13:13 CEST and preserved it because both critical paths remain
   incomplete.
