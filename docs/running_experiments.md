@@ -1,8 +1,29 @@
 # Running Experiments
 
-Last updated: 2026-07-25 19:19 CEST.
+Last updated: 2026-07-26 01:20 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:20 CEST On July 26
+
+- No in-scope GPU task started or completed after the prior handoff.
+  BranchProof `3881780_4/5`, `3883534_13/14`, and `3897965_12`
+  remain A100-80GB `AssocGrpGRES` pending; `3881781_12..17` retains its
+  repaired dependencies. Dolmino `3875825_0/3875828_1/3875831_2`
+  remains dependency-free `AssocGrpGRES` pending, with current individual
+  Slurm projections of 05:15 CEST. No partition or dependency edit is
+  justified.
+- Revalidated the complete conditioned-32B step-7500 restart state, including
+  nonempty adapter, optimizer, scheduler, RNG, tokenizer, and trainer state
+  with no zero-byte file. Exact resume `3897965_12` remains correct.
+- Watcher `3898756` is running CPU-only on `a100mig`; recorded successor
+  `3899486` is verified CPU-only/no-GRES and BeginTime-pending for 07:17
+  CEST. It remains required.
+- Vault quota is `348G/1000G` and `179k/200k` files. The project uses
+  `243,171,225 KiB` in Vault and `71,547,808 KiB` in Work, so no guarded
+  cleanup is currently needed.
+- Handoff commit `4d34ce3` is local; a bounded 60-second SSH push produced no
+  remote response and exited `124`.
 
 ## Live Delta At 19:19 CEST On July 25
 

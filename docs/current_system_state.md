@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-25 19:19 CEST.
+Last updated: 2026-07-26 01:20 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,32 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-26 01:20 scheduler reconciliation; restart and successor verified
+
+- No in-scope GPU task started or completed after the July-25 handoff.
+  Selected BranchProof `3881780_4/5`, `3883534_13/14`, and exact resume
+  `3897965_12` remain A100-80GB `AssocGrpGRES` pending; conditioned eval
+  `3881781_12..17` retains the repaired dependencies. Dolmino first stages
+  `3875825_0/3875828_1/3875831_2` remain dependency-free and
+  `AssocGrpGRES` pending, with current individual Slurm projections of
+  05:15 CEST. The idle A100-80GB node does not remove the association-level
+  GPU cap, so no partition, feature, throttle, or dependency edit is useful.
+- Revalidated the conditioned-32B seed-3407 `checkpoint-7500`: its
+  536,991,984-byte adapter, 1,074,512,995-byte optimizer, scheduler, RNG,
+  tokenizer, and step-7500 trainer state are nonempty, with no zero-byte
+  file. Exact resume `3897965_12` remains the correct recovery.
+- Current watcher `3898756` is running CPU-only on `a100mig`. Its recorded
+  successor `3899486` is verified dependency-free, requests
+  `cpu=4,mem=30000M` with no GRES, and is BeginTime-pending for 07:17 CEST.
+  Both BranchProof and Dolmino paths remain incomplete, so the successor is
+  preserved.
+- User Vault quota is `348G/1000G` with `179k/200k` files. This project's
+  Vault and Work trees are `243,171,225 KiB` and `71,547,808 KiB`,
+  respectively; no storage cleanup trigger is open.
+- Handoff commit `4d34ce3` is local. A bounded 60-second
+  `git push origin main` produced no remote response and exited `124`; the
+  existing GitHub SSH/network publication blocker remains.
 
 ### 2026-07-25 19:19 report consistency fix; queues unchanged
 

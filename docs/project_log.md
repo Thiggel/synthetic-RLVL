@@ -2,6 +2,25 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-26
+
+- 01:20 CEST found no new in-scope GPU start or completion. BranchProof
+  `3881780_4/5`, `3883534_13/14`, and `3897965_12` remain A100-80GB
+  account-GRES pending; conditioned eval `3881781_12..17` retains repaired
+  dependencies. Dolmino first stages `3875825_0/3875828_1/3875831_2`
+  remain dependency-free account-GRES pending with current individual 05:15
+  CEST projections. No scheduler edit is useful.
+- Revalidated the conditioned-32B step-7500 restart state: adapter, optimizer,
+  scheduler, RNG, tokenizer, and trainer state are nonempty with no zero-byte
+  file. Vault is `348G/1000G` and `179k/200k` files; project Vault/Work use is
+  `243,171,225/71,547,808 KiB`.
+- Watcher `3898756` is running CPU-only on `a100mig`. Its recorded successor
+  `3899486` is verified CPU-only/no-GRES and scheduled for 07:17 CEST. The
+  plan remains incomplete, so the successor is preserved.
+- Committed the scoped handoff as `4d34ce3`. A bounded 60-second
+  `git push origin main` produced no remote response and exited `124`; the
+  GitHub SSH/network publication path remains blocked.
+
 ## 2026-07-25
 
 - 19:19 CEST found no new in-scope start or completion. Remaining selected
