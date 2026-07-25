@@ -17,7 +17,7 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - Watcher `3898756` is running CPU-only on `a100mig`. Its recorded successor
   `3899486` is verified CPU-only/no-GRES and scheduled for 07:17 CEST. The
   plan remains incomplete, so the successor is preserved.
-- Committed the scoped handoff as `4d34ce3`. A bounded 60-second
+- Committed the scoped handoff as `643a541`. A bounded 60-second
   `git push origin main` produced no remote response and exited `124`; the
   GitHub SSH/network publication path remains blocked.
 

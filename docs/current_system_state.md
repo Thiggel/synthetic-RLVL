@@ -46,7 +46,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - User Vault quota is `348G/1000G` with `179k/200k` files. This project's
   Vault and Work trees are `243,171,225 KiB` and `71,547,808 KiB`,
   respectively; no storage cleanup trigger is open.
-- Handoff commit `4d34ce3` is local. A bounded 60-second
+- Handoff commit `643a541` is local. A bounded 60-second
   `git push origin main` produced no remote response and exited `124`; the
   existing GitHub SSH/network publication blocker remains.
 
