@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-25 13:29 CEST.
+Last updated: 2026-07-25 19:19 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,22 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-25 19:19 report consistency fix; queues unchanged
+
+- No in-scope job started or completed after the 13:29 handoff. Remaining
+  selected BranchProof jobs `3881780_4/5`, `3883534_13/14`,
+  `3897965_12`, and `3881781_12..17` retain their audited A100-80GB
+  constraints and dependencies. Dolmino first stages
+  `3875825_0/3875828_1/3875831_2` remain unstarted account-GRES pending;
+  successor `3898756` remains CPU-only BeginTime-pending and required.
+- Corrected one stale informal-report executive bullet that still called
+  shortcut, conditioned-dual, and architecture controls pending despite the
+  accepted eleven-condition table above it. The replacement states that only
+  audited corrected controls are evidence and that OLMo-3-32B remains
+  incomplete. The report builder passed and the corrected source was mirrored
+  to `../synthetic-RLVL-report/informal_report`; no metric, claim, or official
+  root-preprint result changed.
 
 ### 2026-07-25 13:29 selected controls accepted; exact 32B recovery submitted
 

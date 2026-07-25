@@ -1,8 +1,22 @@
 # Running Experiments
 
-Last updated: 2026-07-25 13:29 CEST.
+Last updated: 2026-07-25 19:19 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:19 CEST On July 25
+
+- No in-scope task started or completed after 13:29. Selected BranchProof
+  `3881780_4/5`, `3883534_13/14`, and exact resume `3897965_12` remain
+  A100-80GB account-GRES pending; conditioned eval `3881781_12..17` retains
+  its repaired dependencies. Dolmino first stages
+  `3875825_0/3875828_1/3875831_2` remain unstarted account-GRES pending.
+- Successor `3898756` is verified CPU-only on `a100mig`, dependency-free, and
+  BeginTime-pending for 01:16 CEST July 26. It remains required.
+- Fixed a stale informal-report executive bullet that contradicted the
+  accepted eleven-control table. Report generation and informal mirroring
+  passed. This is a consistency correction only; no metric, scheduler state,
+  or scientific acceptance changed.
 
 ## Live Delta At 13:29 CEST On July 25
 

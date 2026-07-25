@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-25
 
+- 19:19 CEST found no new in-scope start or completion. Remaining selected
+  BranchProof and Dolmino jobs preserve their audited A100-80GB constraints
+  and dependencies; CPU-only successor `3898756` remains required.
+- Corrected an informal-report executive bullet that still called already
+  accepted shortcut, conditioned-dual, and architecture controls pending. The
+  replacement limits evidence to audited corrected controls and keeps
+  OLMo-3-32B explicitly incomplete. The builder and informal-report mirror
+  passed; no metric or official root-preprint claim changed.
+
 - 13:29 CEST accepted fourteen selected rows after full structural and raw
   review: surface `3881774_7/8/24/25/26`, shortcut
   `3881775_15..17`, reverse-hybrid `3881776_27..29`, Qwen2.5-7B

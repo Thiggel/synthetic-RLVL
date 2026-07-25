@@ -4482,7 +4482,7 @@ Full evidence and recovery jobs are recorded in
 \item {selected_branchproof_executive if selected_branchproof_ready else "Selected corrected BranchProof controls remain gated."}
 \item AttrCon remains independent positive-but-mixed evidence: formal traces improve mean answer correctness, while natural traces have the higher joint-validity mean.
 \item The corrected Qwen2.5 continual-pretraining pilot remains null or mixed after raw-generation and truncation audits, so the broader mixture grid is rejected.
-\item All later sections based on the wrapped-constant BranchProof construction are retained only as quarantined provenance. Corrected shortcut, conditioned-dual, and architecture controls are still pending and are not evidence yet.
+\item All later sections based on the wrapped-constant BranchProof construction are retained only as quarantined provenance. Only the audited corrected controls summarized above are evidence; the OLMo-3-32B comparison remains incomplete.
 \end{{itemize}}
 
 \section{{Metric note for OOD benchmarks}}
