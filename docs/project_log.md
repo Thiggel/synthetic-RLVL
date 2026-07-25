@@ -2,6 +2,27 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-25
+
+- 13:29 CEST accepted fourteen selected rows after full structural and raw
+  review: surface `3881774_7/8/24/25/26`, shortcut
+  `3881775_15..17`, reverse-hybrid `3881776_27..29`, Qwen2.5-7B
+  `3881778_34/35`, and OLMo-3-32B NL `3881780_3`. Selected acceptance is
+  `37/45`. New complete-family OOD answer/joint pass@1 is terse NL
+  `0.6414/0.6358`, target-token-matched NL `0.4104/0.4013`, shortcut formal
+  versus NL `0.4310/0.3849` versus `0.7854/0.7807`, reverse-hybrid
+  `0.0053/0.0001`, and Qwen formal versus NL `0.6986/0.6919` versus
+  `0.7491/0.7449`.
+- Conditioned-32B SFT `3883534_12` timed out after `24:00:18`; checkpoints
+  7,250/7,500 pass adapter/optimizer/scheduler/RNG/tokenizer/trainer-state and
+  zero-byte gates. Submitted only exact recovery `3897965_12` and rewired
+  `3881781_[12-17]` to `afterok:3897965:3883534_13:3883534_14`.
+- Extended fail-closed report ingestion to all eleven complete selected
+  control conditions, regenerated and mirrored the informal report, and
+  updated the official preprint. Both hybrid orders collapse OOD,
+  shortcut-trained NL is stronger than its matched formal control, and
+  Qwen2.5-7B is near-tied at pass@1. OLMo-3-32B remains partial.
+
 ## 2026-07-24
 
 - 13:22 CEST accepted terse-NL surface row `3881774_6`, raw `3890505`,

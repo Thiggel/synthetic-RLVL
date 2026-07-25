@@ -81,6 +81,15 @@ answer/joint pass@1 `0.7004/0.5359` and pass@16 `0.9938/0.9375`, with
 ordinary wrong, invalid, repetitive, and incomplete long traces. These are
 row acceptances only; no additional matched family is complete.
 
+Update 2026-07-25 13:29 CEST: fourteen additional eval rows passed the full
+production and representative raw-generation gates, bringing selected
+acceptance to `37/45`. Terse NL, target-token-matched NL, shortcut formal/NL,
+both hybrid orders, conditioned-7B modes, and Qwen2.5-7B formal/NL are now
+complete three-seed controls. Conditioned-32B row `3883534_12` timed out with
+verified checkpoints through step 7,500; exact resume `3897965_12` was
+submitted, and conditioned eval `3881781` now depends on that recovery plus
+untouched rows `3883534_13/14`.
+
 | Claim/control | Exact rows | Job | Rows |
 | --- | --- | --- | ---: |
 | Length/syntax | surface eval `0..2` symbol-padded logic, `6..8` terse NL, `24..26` target-token-matched NL; all train-1-to-25, three seeds | `3881774` | 9 eval |

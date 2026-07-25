@@ -1,8 +1,31 @@
 # Running Experiments
 
-Last updated: 2026-07-24 13:22 CEST.
+Last updated: 2026-07-25 13:29 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:29 CEST On July 25
+
+- Selected acceptance is `37/45`. Newly accepted rows are surface
+  `3881774_7/8/24/25/26`, shortcut `3881775_15..17`, hybrid
+  `3881776_27..29`, architecture `3881778_34/35`, and large
+  `3881780_3`. Every row passes the full artifact/log/retained-sample,
+  fresh-constant, and credited-validity audit plus representative raw review.
+- Complete new family OOD answer/joint pass@1 is terse NL
+  `0.6414/0.6358`, target-token-matched NL `0.4104/0.4013`,
+  shortcut formal versus NL `0.4310/0.3849` versus `0.7854/0.7807`,
+  reverse-hybrid `0.0053/0.0001`, and Qwen2.5-7B formal versus NL
+  `0.6986/0.6919` versus `0.7491/0.7449`.
+- Conditioned-32B row `3883534_12` timed out after 24 hours with complete
+  restart states through step 7,500. Exact resume `3897965_12` is pending on
+  four A100-80GB GPUs with a 12-hour limit. Conditioned eval
+  `3881781_[12-17]` now depends on
+  `3897965:3883534_13:3883534_14`; the stale failed dependency was removed.
+- Remaining selected work is single-modal 32B eval `3881780_4/5`, conditioned
+  SFT `3883534_13/14` plus recovery `3897965_12`, and conditioned eval
+  `3881781_12..17`. Dolmino first stages
+  `3875825_0/3875828_1/3875831_2` remain dependency-free account-GRES
+  pending. Successor `3897962` remains scheduled on CPU-only `a100mig`.
 
 ## Live Delta At 13:22 CEST On July 24
 

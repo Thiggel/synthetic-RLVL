@@ -3859,10 +3859,47 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
             "stem": "sft_branchproof_unique_v2_surface_logic_symbol_padded_train1to25_10k_seed{seed}",
             "audits": ("surface_0.json", "surface_1.json", "surface_2.json"),
         },
+        "Terse natural": {
+            "subdir": "surface",
+            "stem": "sft_branchproof_unique_v2_surface_terse_nl_train1to25_10k_seed{seed}",
+            "audits": ("surface_6.json", "surface_7.json", "surface_8.json"),
+            "joint_metric": "nl_logic_joint_pass",
+        },
+        "Target-token-matched natural": {
+            "subdir": "surface",
+            "stem": (
+                "sft_branchproof_unique_v2_same_target_tokens_nl_exact_"
+                "train1to25_7140steps_seed{seed}"
+            ),
+            "audits": ("surface_24.json", "surface_25.json", "surface_26.json"),
+            "joint_metric": "nl_logic_joint_pass",
+        },
+        "Shortcut-trained formal": {
+            "subdir": "shortcut",
+            "stem": (
+                "sft_branchproof_unique_v2_shortcut_schema_0p8_logic_"
+                "train1to25_10k_seed{seed}"
+            ),
+            "audits": ("shortcut_12.json", "shortcut_13.json", "shortcut_14.json"),
+        },
+        "Shortcut-trained natural": {
+            "subdir": "shortcut",
+            "stem": (
+                "sft_branchproof_unique_v2_shortcut_schema_0p8_nl_exact_"
+                "train1to25_10k_seed{seed}"
+            ),
+            "audits": ("shortcut_15.json", "shortcut_16.json", "shortcut_17.json"),
+            "joint_metric": "nl_logic_joint_pass",
+        },
         "NL-then-formal hybrid": {
             "subdir": "hybrid",
             "stem": "sft_branchproof_unique_v2_hybrid_think_formal_train1to25_10k_seed{seed}",
             "audits": ("hybrid_12.json", "hybrid_13.json", "hybrid_14.json"),
+        },
+        "Formal-then-NL hybrid": {
+            "subdir": "hybrid",
+            "stem": "sft_branchproof_unique_v2_hybrid_formal_think_train1to25_10k_seed{seed}",
+            "audits": ("hybrid_27.json", "hybrid_28.json", "hybrid_29.json"),
         },
         "Conditioned-dual formal": {
             "subdir": "conditioned10k",
@@ -3879,6 +3916,23 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
                 "seed{seed}_conditioned_nl"
             ),
             "audits": ("conditioned10k_25.json", "conditioned10k_27.json", "conditioned10k_29.json"),
+            "joint_metric": "nl_logic_joint_pass",
+        },
+        "Qwen2.5-7B formal": {
+            "subdir": "architecture",
+            "stem": (
+                "sft_branchproof_unique_v2_arch_qwen2p5_7b_logic_"
+                "train1to25_10k_seed{seed}"
+            ),
+            "audits": ("architecture_24.json", "architecture_25.json", "architecture_26.json"),
+        },
+        "Qwen2.5-7B natural": {
+            "subdir": "architecture",
+            "stem": (
+                "sft_branchproof_unique_v2_arch_qwen2p5_7b_nl_exact_"
+                "train1to25_10k_seed{seed}"
+            ),
+            "audits": ("architecture_33.json", "architecture_34.json", "architecture_35.json"),
             "joint_metric": "nl_logic_joint_pass",
         },
     }
@@ -3963,24 +4017,40 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
         )
     table_lines.extend([r"\bottomrule", r"\end{tabular}"])
 
-    surface, hybrid, conditioned_logic, conditioned_nl = rows
+    by_condition = {str(row["condition"]): row for row in rows}
+    surface = by_condition["Symbol-padded formal"]
+    terse_nl = by_condition["Terse natural"]
+    target_nl = by_condition["Target-token-matched natural"]
+    shortcut_logic = by_condition["Shortcut-trained formal"]
+    shortcut_nl = by_condition["Shortcut-trained natural"]
+    hybrid = by_condition["NL-then-formal hybrid"]
+    reverse_hybrid = by_condition["Formal-then-NL hybrid"]
+    conditioned_logic = by_condition["Conditioned-dual formal"]
+    conditioned_nl = by_condition["Conditioned-dual NL"]
+    qwen_logic = by_condition["Qwen2.5-7B formal"]
+    qwen_nl = by_condition["Qwen2.5-7B natural"]
     executive = (
-        "Four corrected train-1-to-25 control surfaces now pass complete three-seed row and "
-        "raw-generation "
-        "gates. Symbol padding preserves most of the formal OOD advantage "
+        "Eleven corrected train-1-to-25 control conditions now pass complete three-seed row "
+        "and raw-generation gates. Symbol padding preserves most of the formal OOD advantage "
         f"({100 * float(surface['ood_correct1_mean']):.1f}% answer pass@1), while the "
-        "NL-then-formal same-example hybrid collapses under extrapolation "
-        f"({100 * float(hybrid['ood_correct1_mean']):.1f}% answer pass@1). In the conditioned-dual "
+        "two same-example hybrid orders collapse under extrapolation "
+        f"({100 * float(hybrid['ood_correct1_mean']):.1f}% and "
+        f"{100 * float(reverse_hybrid['ood_correct1_mean']):.1f}% answer pass@1). "
+        f"Shortcut-trained formal versus natural reaches "
+        f"{100 * float(shortcut_logic['ood_correct1_mean']):.1f}% versus "
+        f"{100 * float(shortcut_nl['ood_correct1_mean']):.1f}%, and Qwen2.5-7B reaches "
+        f"{100 * float(qwen_logic['ood_correct1_mean']):.1f}% versus "
+        f"{100 * float(qwen_nl['ood_correct1_mean']):.1f}%. In the conditioned-dual "
         f"checkpoint, formal prompting retains {100 * float(conditioned_logic['ood_correct1_mean']):.1f}% "
         f"OOD answer pass@1 versus {100 * float(conditioned_nl['ood_correct1_mean']):.1f}% for NL."
     )
     block = rf"""
 \subsection{{Accepted corrected BranchProof controls}}
-The symbol-padded formal, NL-then-formal same-example hybrid, and both prompting modes of the
-conditioned-dual checkpoint are complete across three seeds. All pass the same 448-prompt,
-16-generation, 14-depth artifact and qualitative gates as the corrected main grid. OOD contains
-depths 30--50. Joint uses citation-free formal validity for formal outputs and translated
-citation-free validity for conditioned NL.
+The selected syntax/length, shortcut, hybrid-order, conditioned-dual, and Qwen2.5-7B controls
+are complete across three seeds; the OLMo-3-32B comparison remains partial. All accepted rows
+pass the same 448-prompt, 16-generation, 14-depth artifact and qualitative gates as the corrected
+main grid. OOD contains depths 30--50. Joint uses citation-free formal validity for formal
+outputs and translated citation-free validity for natural-language outputs.
 
 \begin{{table}}[H]
 \centering
@@ -3996,7 +4066,22 @@ is below compact formal supervision. The NL-then-formal hybrid is perfect at the
 the inspected samples but collapses beyond it: long generations copy the NL premises and proof
 before starting or completing the formal trace, then truncate without an answer. Its OOD answer
 pass@16 is only {100 * float(hybrid['ood_correct16_mean']):.1f}$\pm$
-{100 * float(hybrid['ood_correct16_std']):.1f}. The conditioned-dual checkpoint also favors formal
+{100 * float(hybrid['ood_correct16_std']):.1f}; reversing the order also collapses, with OOD
+answer pass@1 {100 * float(reverse_hybrid['ood_correct1_mean']):.1f}$\pm$
+{100 * float(reverse_hybrid['ood_correct1_std']):.1f}. Terse natural supervision reaches
+{100 * float(terse_nl['ood_correct1_mean']):.1f}$\pm$
+{100 * float(terse_nl['ood_correct1_std']):.1f} OOD answer pass@1, while matching the natural
+target-token exposure reaches {100 * float(target_nl['ood_correct1_mean']):.1f}$\pm$
+{100 * float(target_nl['ood_correct1_std']):.1f} and has substantial seed variance.
+Shortcut-trained formal versus natural reaches
+{100 * float(shortcut_logic['ood_correct1_mean']):.1f}$\pm$
+{100 * float(shortcut_logic['ood_correct1_std']):.1f} versus
+{100 * float(shortcut_nl['ood_correct1_mean']):.1f}$\pm$
+{100 * float(shortcut_nl['ood_correct1_std']):.1f}; Qwen2.5-7B reaches
+{100 * float(qwen_logic['ood_correct1_mean']):.1f}$\pm$
+{100 * float(qwen_logic['ood_correct1_std']):.1f} versus
+{100 * float(qwen_nl['ood_correct1_mean']):.1f}$\pm$
+{100 * float(qwen_nl['ood_correct1_std']):.1f}. The conditioned-dual checkpoint also favors formal
 prompting: OOD answer/joint pass@1 is
 {100 * float(conditioned_logic['ood_correct1_mean']):.1f}$\pm$
 {100 * float(conditioned_logic['ood_correct1_std']):.1f} /
@@ -4007,7 +4092,8 @@ prompting: OOD answer/joint pass@1 is
 {100 * float(conditioned_nl['ood_joint1_mean']):.1f}$\pm$
 {100 * float(conditioned_nl['ood_joint1_std']):.1f} for NL. Retained conditioned-NL samples are
 clean through roughly depth 30, then copy long premise/proof prefixes and usually omit the answer.
-Shortcut and architecture comparisons remain incomplete and are not used as family-level evidence.
+The remaining single-modal and conditioned OLMo-3-32B rows are still incomplete and are not used
+as family-level evidence.
 """
     return block, executive, True
 

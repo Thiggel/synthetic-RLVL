@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-24 13:22 CEST.
+Last updated: 2026-07-25 13:29 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,36 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-25 13:29 selected controls accepted; exact 32B recovery submitted
+
+- Fourteen selected eval rows completed and pass the fail-closed 448-prompt,
+  16-generation, 14-depth, retained-sample, complete-log, fresh-constant, and
+  credited-validity gates: surface `3881774_7/8/24/25/26`, shortcut
+  `3881775_15..17`, hybrid `3881776_27..29`, Qwen2.5-7B
+  `3881778_34/35`, and OLMo-3-32B NL `3881780_3`. Representative review
+  covers shallow/train/OOD/depth-50, correct-valid, wrong, invalid,
+  missing-answer, and capped outputs across every newly complete family.
+- Selected acceptance is `37/45`. Complete new three-seed controls have OOD
+  answer/joint pass@1: terse NL `0.6414/0.6358`, target-token-matched NL
+  `0.4104/0.4013`, shortcut formal versus NL `0.4310/0.3849` versus
+  `0.7854/0.7807`, reverse-hybrid `0.0053/0.0001`, and Qwen2.5-7B formal
+  versus NL `0.6986/0.6919` versus `0.7491/0.7449`. Both hybrid orders
+  collapse OOD; shortcut-trained NL is stronger; Qwen is near-tied at pass@1.
+- Conditioned-32B SFT `3883534_12` timed out after `24:00:18`. Complete,
+  nonempty restart states at steps 7,250 and 7,500 include adapter, optimizer,
+  scheduler, RNG, tokenizer, and matching trainer state. Submitted only exact
+  row-12 resume `3897965_12` with 12 hours on four A100-80GB GPUs. Rewired
+  conditioned eval `3881781_[12-17]` to
+  `afterok:3897965:3883534_13:3883534_14`.
+- Single-modal 32B eval `3881780_4/5`, conditioned SFT
+  `3883534_13/14`, exact recovery `3897965_12`, and Dolmino first stages
+  `3875825_0/3875828_1/3875831_2` are A100/account-GRES pending. CPU-only
+  successor `3897962` remains BeginTime-pending and required.
+- The in-repo report now ingests all eleven complete selected control
+  conditions fail-closed. The generated bundle was mirrored to the report
+  repo and the official preprint was updated; OLMo-3-32B remains explicitly
+  partial. Local TeX tooling remains unavailable.
 
 ### 2026-07-24 13:22 first terse-NL surface row accepted
 
