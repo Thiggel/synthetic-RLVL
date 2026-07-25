@@ -22,6 +22,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   updated the official preprint. Both hybrid orders collapse OOD,
   shortcut-trained NL is stronger than its matched formal control, and
   Qwen2.5-7B is near-tied at pass@1. OLMo-3-32B remains partial.
+- Committed the scoped main/report changes as `3807883` and `b3431c0`.
+  Bounded 60-second pushes of both repositories produced no remote response
+  and exited `124`; publication remains blocked on the GitHub SSH/network path.
 
 ## 2026-07-24
 

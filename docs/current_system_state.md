@@ -52,7 +52,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - The in-repo report now ingests all eleven complete selected control
   conditions fail-closed. The generated bundle was mirrored to the report
   repo and the official preprint was updated; OLMo-3-32B remains explicitly
-  partial. Local TeX tooling remains unavailable.
+  partial. Local TeX tooling remains unavailable. Scoped commits are
+  `3807883` in this repo and `b3431c0` in the report repo. Both bounded
+  60-second SSH pushes produced no remote response and exited `124`.
 
 ### 2026-07-24 13:22 first terse-NL surface row accepted
 
