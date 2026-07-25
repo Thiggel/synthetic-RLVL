@@ -39,6 +39,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   incomplete. The report builder passed and the corrected source was mirrored
   to `../synthetic-RLVL-report/informal_report`; no metric, claim, or official
   root-preprint result changed.
+- Report corrections are committed as `ce21a88` in this repo and `df7de8b` in
+  the report repo. Bounded 45-second SSH pushes of both repositories produced
+  no remote response and exited `124`; the local commits remain intact.
 
 ### 2026-07-25 13:29 selected controls accepted; exact 32B recovery submitted
 

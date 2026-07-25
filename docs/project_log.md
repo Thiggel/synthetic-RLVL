@@ -12,6 +12,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   replacement limits evidence to audited corrected controls and keeps
   OLMo-3-32B explicitly incomplete. The builder and informal-report mirror
   passed; no metric or official root-preprint claim changed.
+- Committed the correction as `ce21a88` in this repo and `df7de8b` in the
+  report repo. Bounded 45-second SSH pushes of both repositories timed out
+  with no remote response and exit `124`.
 
 - 13:29 CEST accepted fourteen selected rows after full structural and raw
   review: surface `3881774_7/8/24/25/26`, shortcut

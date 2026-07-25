@@ -17,6 +17,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   accepted eleven-control table. Report generation and informal mirroring
   passed. This is a consistency correction only; no metric, scheduler state,
   or scientific acceptance changed.
+- Commits are `ce21a88` and report-repo `df7de8b`. Both bounded SSH pushes
+  timed out after 45 seconds without a remote response.
 
 ## Live Delta At 13:29 CEST On July 25
 
