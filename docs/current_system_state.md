@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-26 01:20 CEST.
+Last updated: 2026-07-26 07:20 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-26 07:20 scheduler and watcher-chain reconciliation
+
+- No in-scope GPU job started or completed after 01:20 CEST. BranchProof
+  `3881780_4/5`, `3883534_13/14`, and exact resume `3897965_12`
+  remain A100-80GB `AssocGrpGRES` pending; conditioned eval
+  `3881781_12..17` retains the repaired
+  `afterok:3897965:3883534_13:3883534_14` gate. Dolmino first stages
+  `3875825_0/3875828_1/3875831_2` remain dependency-free
+  `AssocGrpGRES` pending. Slurm currently gives none of these rows a start
+  estimate.
+- Two A100-80GB nodes are idle, but the association-level GPU cap still
+  blocks every in-scope GPU request. The stored jobs retain their audited
+  A100-80GB resources and valid dependencies, so no partition, feature,
+  throttle, or dependency edit is useful.
+- Watcher `3899486` is running CPU-only on `a100mig`. Its recorded successor
+  is now `3899917`, verified dependency-free and BeginTime-pending for
+  13:17 CEST with `cpu=4,mem=30000M` and no GRES. Both critical paths remain
+  incomplete, so the successor is preserved.
+- Vault quota remains `348G/1000G` with `179k/200k` files. This project's
+  Vault and Work trees remain `243,171,225 KiB` and `71,547,812 KiB`;
+  no cleanup or new artifact-audit trigger opened.
 
 ### 2026-07-26 01:20 scheduler reconciliation; restart and successor verified
 

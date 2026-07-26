@@ -1,8 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-07-26 01:20 CEST.
+Last updated: 2026-07-26 07:20 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:20 CEST On July 26
+
+- No in-scope GPU task started or completed after 01:20 CEST. BranchProof
+  `3881780_4/5`, `3883534_13/14`, and `3897965_12` remain
+  A100-80GB `AssocGrpGRES` pending; conditioned eval `3881781_12..17`
+  retains its repaired dependencies. Dolmino
+  `3875825_0/3875828_1/3875831_2` remains dependency-free
+  `AssocGrpGRES` pending. Slurm currently provides no start estimate.
+- Two A100-80GB nodes are idle, but all in-scope GPU requests remain blocked
+  at the association GRES limit. Their resources and dependencies are valid,
+  so no partition, feature, throttle, or dependency edit is justified.
+- Watcher `3899486` is running CPU-only on `a100mig`; recorded successor
+  `3899917` is verified CPU-only/no-GRES, dependency-free, and
+  BeginTime-pending for 13:17 CEST. It remains required.
+- Vault quota is unchanged at `348G/1000G` and `179k/200k` files. Project
+  Vault/Work usage is `243,171,225/71,547,812 KiB`; no cleanup or artifact
+  audit was triggered.
 
 ## Live Delta At 01:20 CEST On July 26
 

@@ -4,6 +4,20 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-26
 
+- 07:20 CEST found no new in-scope GPU start or completion. BranchProof
+  `3881780_4/5`, `3883534_13/14`, and `3897965_12` remain
+  A100-80GB account-GRES pending; conditioned eval `3881781_12..17`
+  retains repaired dependencies. Dolmino first stages
+  `3875825_0/3875828_1/3875831_2` remain dependency-free account-GRES
+  pending, now without a Slurm start estimate. Two A100-80GB nodes are idle,
+  confirming that the association cap rather than node availability is the
+  blocker; no scheduler edit is useful.
+- Watcher `3899486` is running CPU-only on `a100mig`. Recorded successor
+  `3899917` is verified CPU-only/no-GRES and scheduled for 13:17 CEST. The
+  plan remains incomplete, so the successor is preserved. Vault remains
+  `348G/1000G` and `179k/200k` files; project Vault/Work use is
+  `243,171,225/71,547,812 KiB`.
+
 - 01:20 CEST found no new in-scope GPU start or completion. BranchProof
   `3881780_4/5`, `3883534_13/14`, and `3897965_12` remain A100-80GB
   account-GRES pending; conditioned eval `3881781_12..17` retains repaired
