@@ -31,6 +31,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   Vault/Work use is `577,374,352/71,571,384 KiB`. Current watcher `3899917`
   is CPU-only on `a100mig`; recorded successor `3900807` is verified
   CPU-only/no-GRES and BeginTime-pending for 19:17 CEST. It remains required.
+  Commit `b4a1789` is local; a bounded 60-second push returned no output and
+  exited `124`.
 
 ## Live Delta At 07:20 CEST On July 26
 

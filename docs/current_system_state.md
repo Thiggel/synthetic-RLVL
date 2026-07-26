@@ -57,7 +57,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   This project's Vault/Work trees are `577,374,352/71,571,384 KiB`.
   Successor watcher `3900807` is dependency-free, CPU-only/no-GRES, and
   BeginTime-pending for 19:17 CEST; the plan remains incomplete, so it is
-  preserved.
+  preserved. Scoped commit `b4a1789` is local; a bounded 60-second
+  `git push origin main` produced no remote response and exited `124`, so the
+  existing GitHub SSH/network publication blocker remains.
 
 ### 2026-07-26 07:20 scheduler and watcher-chain reconciliation
 
