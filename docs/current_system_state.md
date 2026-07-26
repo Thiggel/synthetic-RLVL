@@ -56,6 +56,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   eval `3881781_12..17` retains its repaired dependency gate. Successor
   `3901977` is dependency-free, CPU-only/no-GRES, and BeginTime-pending for
   07:18 CEST; both critical paths remain incomplete, so it is preserved.
+  Scoped commits are main repo `9ca84fa` and report repo `0265eae`; bounded
+  60-second pushes for both produced no remote response and exited `124`, so
+  the existing GitHub SSH/network blocker remains.
 
 ### 2026-07-26 19:23 second Dolmino rotation and second 32B NL row accepted
 

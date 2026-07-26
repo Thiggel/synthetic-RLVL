@@ -24,6 +24,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - Successor `3901977` is verified dependency-free, CPU-only/no-GRES, and
   scheduled for 07:18 CEST. Conditioned BranchProof and Dolmino formal/NL
   remain incomplete, so the successor is preserved.
+- Scoped commits are main repo `9ca84fa` and report repo `0265eae`. Both
+  bounded 60-second `git push origin main` attempts produced no remote response
+  and exited `124`; the existing GitHub SSH/network publication path remains
+  blocked.
 
 ## 2026-07-26
 
