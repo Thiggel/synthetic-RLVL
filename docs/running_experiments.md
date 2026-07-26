@@ -21,6 +21,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - Vault quota is unchanged at `348G/1000G` and `179k/200k` files. Project
   Vault/Work usage is `243,171,225/71,547,812 KiB`; no cleanup or artifact
   audit was triggered.
+- Handoff commit `c50cba6` is local; a bounded 60-second SSH push produced no
+  remote response and exited `124`.
 
 ## Live Delta At 01:20 CEST On July 26
 

@@ -45,6 +45,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - Vault quota remains `348G/1000G` with `179k/200k` files. This project's
   Vault and Work trees remain `243,171,225 KiB` and `71,547,812 KiB`;
   no cleanup or new artifact-audit trigger opened.
+- Scoped handoff commit `c50cba6` is local. A bounded 60-second
+  `git push origin main` produced no remote response and exited `124`; the
+  existing GitHub SSH/network publication blocker remains.
 
 ### 2026-07-26 01:20 scheduler reconciliation; restart and successor verified
 

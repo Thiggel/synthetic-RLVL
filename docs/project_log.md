@@ -17,6 +17,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   plan remains incomplete, so the successor is preserved. Vault remains
   `348G/1000G` and `179k/200k` files; project Vault/Work use is
   `243,171,225/71,547,812 KiB`.
+- Committed the scoped handoff as `c50cba6`. A bounded 60-second
+  `git push origin main` produced no remote response and exited `124`; the
+  GitHub SSH/network publication path remains blocked.
 
 - 01:20 CEST found no new in-scope GPU start or completion. BranchProof
   `3881780_4/5`, `3883534_13/14`, and `3897965_12` remain A100-80GB
