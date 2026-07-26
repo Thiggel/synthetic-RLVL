@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-26 19:23 CEST.
+Last updated: 2026-07-27 01:31 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,39 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-27 01:31 final single-modal 32B acceptance and Dolmino rotation
+
+- OLMo-3-32B NL row `3881780_5` completed in `06:11:47` on four verified
+  A100-80GB GPUs and passed the full 448-prompt, 16-generation, 14-depth,
+  576-retained-row, complete-log, fresh-constant, and translated-validity
+  gate. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_5.json`.
+  Retained raw review is perfect through depth 35, with one complete wrong
+  chain at depth 40 and four depth-50 failures: two cap/format failures and
+  two complete wrong chains. No prompt, extraction, or validator artifact was
+  found.
+- The accepted three-seed OLMo-3-32B single-modal comparison strongly favors
+  natural supervision at OOD answer/joint pass@1:
+  `0.9888 +/- 0.0080` / `0.9879 +/- 0.0088` versus formal
+  `0.6388 +/- 0.0512` / `0.5109 +/- 0.0182`. At pass@16 formal nearly
+  catches up in answer correctness (`0.9875 +/- 0.0088`) but remains below NL
+  in joint validity (`0.9396 +/- 0.0179` versus `0.9979 +/- 0.0029`).
+  The in-repo report, informal mirror, and official preprint now report this
+  accepted architecture-dependent result.
+- Dolmino control `3875825_0` is healthy at step `3631/9537`, about `30.7K`
+  tokens/s, with finite loss and gradient norm. Step 3500 passed the complete
+  645-file TP4/DP2 model/optimizer/scheduler/RNG and exact-offset gate at
+  `3500/448000/1835008000`; audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step3500_20260727.json`.
+  Only after acceptance, superseded complete steps 2000/2500/3000 were
+  removed, reclaiming `319,885,160,841` bytes. Step 3500 is the sole numeric
+  restart state; Vault is `547G/1000G`, `180k/200k` files.
+- Conditioned-32B `3883534_13/14`, exact resume `3897965_12`, and Dolmino
+  formal/NL `3875828_1/3875831_2` remain account-GRES pending. Conditioned
+  eval `3881781_12..17` retains its repaired dependency gate. Successor
+  `3901977` is dependency-free, CPU-only/no-GRES, and BeginTime-pending for
+  07:18 CEST; both critical paths remain incomplete, so it is preserved.
 
 ### 2026-07-26 19:23 second Dolmino rotation and second 32B NL row accepted
 

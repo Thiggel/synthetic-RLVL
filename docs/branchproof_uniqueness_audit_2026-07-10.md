@@ -655,3 +655,24 @@ failure to inspect. Audit:
 Final NL seed row `3881780_5` started immediately and was healthy at sampled
 chunk `89/112` at 19:23. The three-seed 32B family and report remain gated on
 that final row.
+
+## 2026-07-27 Single-Modal 32B Acceptance
+
+Final NL seed row `3881780_5` completed in `06:11:47` and passed the full
+448-prompt, 16-generation, 14-depth, 576-retained-row, complete-log,
+fresh-constant, and translated-validity gate. Representative retained review
+is perfect through depth 35, with one complete wrong chain at depth 40 and
+four depth-50 failures: two cap/format failures and two complete wrong chains.
+Successful depth-50 traces remain translated-citation-free-valid. No prompt,
+answer-extraction, or validator artifact was found. Audit:
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_5.json`.
+
+The accepted matched three-seed OLMo-3-32B comparison strongly favors natural
+supervision at OOD answer/joint pass@1:
+`0.9888 +/- 0.0080` / `0.9879 +/- 0.0088` versus formal
+`0.6388 +/- 0.0512` / `0.5109 +/- 0.0182`. Formal answer pass@16 recovers to
+`0.9875 +/- 0.0088`, but its joint pass@16 remains
+`0.9396 +/- 0.0179` versus NL `0.9979 +/- 0.0029`. This rejects a uniform
+cross-architecture formal advantage. The report builder, generated informal
+report, and official preprint now include the accepted family; conditioned
+OLMo-3-32B remains gated.

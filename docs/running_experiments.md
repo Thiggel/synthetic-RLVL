@@ -1,8 +1,31 @@
 # Running Experiments
 
-Last updated: 2026-07-26 19:23 CEST.
+Last updated: 2026-07-27 01:31 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:31 CEST On July 27
+
+- BranchProof single-modal OLMo-3-32B is complete and accepted at `6/6`.
+  Final NL row `3881780_5` completed in `06:11:47` and passed its complete
+  artifact/log/fresh-constant/translated-validity audit plus representative
+  raw review. The matched three-seed OOD answer/joint pass@1 result is formal
+  `0.6388 +/- 0.0512` / `0.5109 +/- 0.0182` versus natural
+  `0.9888 +/- 0.0080` / `0.9879 +/- 0.0088`. Formal answer pass@16 recovers
+  to `0.9875 +/- 0.0088`, but joint remains `0.9396 +/- 0.0179`.
+- Dolmino control `3875825_0` is healthy through step `3631/9537` at about
+  `30.7K` tokens/s. Step 3500 passed the 645-file, zero-byte, TP4/DP2,
+  model/optimizer/scheduler/RNG, and exact
+  `3500/448000/1835008000` offset gate. After that acceptance, removed only
+  superseded complete steps 2000/2500/3000, reclaiming
+  `319,885,160,841` bytes. Step 3500 is the sole numeric restart state.
+- User-wide Vault is back to `547G/1000G` with `180k/200k` files; project
+  Vault/Work use is `451,487,404/71,621,608 KiB`.
+- Conditioned-32B `3883534_13/14`, exact resume `3897965_12`, and Dolmino
+  formal/NL `3875828_1/3875831_2` remain account-GRES pending.
+  `3881781_12..17` retains its valid dependency gate. Recorded successor
+  `3901977` is CPU-only/no-GRES, dependency-free, and scheduled for 07:18
+  CEST; it remains required.
 
 ## Live Delta At 19:23 CEST On July 26
 

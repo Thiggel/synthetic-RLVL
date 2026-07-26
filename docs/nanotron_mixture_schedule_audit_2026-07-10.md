@@ -917,3 +917,13 @@ Nanoset; audit:
 Only then were superseded complete steps 1000 and 1500 removed, reclaiming
 `213,256,773,890` bytes. Step 2000 remains the sole numeric restart state and
 Vault returned to `667G/1000G`.
+
+At 01:31 CEST July 27 the control was healthy beyond step 3631 at about
+`30.7K` tokens/s. Step 3500 passed the same 645-file, zero-byte, TP4/DP2,
+model/optimizer/scheduler/RNG gate with exact step/sample/token offsets
+`3500/448000/1835008000`, all charged to the normal Nanoset. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_control_step3500_20260727.json`.
+Only after acceptance were superseded complete steps 2000, 2500, and 3000
+removed, reclaiming `319,885,160,841` bytes. Step 3500 remains the sole
+numeric restart state; user-wide Vault returned to `547G/1000G` with
+`180k/200k` files.

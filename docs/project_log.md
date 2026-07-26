@@ -2,6 +2,29 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-27
+
+- 01:31 CEST accepted final OLMo-3-32B NL row `3881780_5` after its complete
+  artifact/log/fresh-constant/translated-validity audit and raw review. The
+  complete matched single-modal family favors natural over formal at OOD
+  answer/joint pass@1 (`0.9888/0.9879` versus `0.6388/0.5109`); formal answer
+  pass@16 nearly catches up at `0.9875`, but joint remains lower at `0.9396`.
+  Extended the report builder's accepted registry, regenerated/mirrored the
+  informal report, and updated the official preprint with this result.
+  Relevant BranchProof/report/oversight tests pass at `32/32`; `py_compile`
+  and diff checks pass. Local TeX binaries are unavailable, so PDF compilation
+  was not run.
+- 01:31 CEST accepted Dolmino control step 3500 with 645 files, no empty
+  files, TP4/DP2, equal optimizer shards, and exact offsets
+  `3500/448000/1835008000`; audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step3500_20260727.json`.
+  Removed only superseded complete steps 2000/2500/3000, reclaiming
+  `319,885,160,841` bytes. Step 3500 remains the sole numeric restart state;
+  Vault is `547G/1000G`, `180k/200k` files.
+- Successor `3901977` is verified dependency-free, CPU-only/no-GRES, and
+  scheduled for 07:18 CEST. Conditioned BranchProof and Dolmino formal/NL
+  remain incomplete, so the successor is preserved.
+
 ## 2026-07-26
 
 - 19:23 CEST accepted Dolmino control step 2000 with 645 files, no empty
