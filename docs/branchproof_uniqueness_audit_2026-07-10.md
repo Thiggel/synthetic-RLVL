@@ -641,3 +641,17 @@ a fatal/OOM/quota signature. Row `3881780_5` remains correctly held by the
 one-row array throttle. No row metric or family claim is accepted before the
 final artifacts pass the existing production and representative raw-generation
 gates.
+
+Row `3881780_4` subsequently completed as raw job `3900120` in `06:06:34`
+and passed the full production gate. Its 576 retained rows include 448 sampled
+rows with exact all-depth coverage; every retained sampled generation is
+answer-correct, format-complete, translated-parseable, and
+translated-citation-free-valid with line-valid fraction one. Complete sampled
+metrics are perfect except for depth-40 answer/joint pass@1
+`0.9941/0.9922`. Representative review covers depths 1, 25, 30, 40, and 50;
+all retained examples are complete successes, so this row contains no retained
+failure to inspect. Audit:
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_4.json`.
+Final NL seed row `3881780_5` started immediately and was healthy at sampled
+chunk `89/112` at 19:23. The three-seed 32B family and report remain gated on
+that final row.

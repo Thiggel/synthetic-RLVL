@@ -4,6 +4,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-26
 
+- 19:23 CEST accepted Dolmino control step 2000 with 645 files, no empty
+  files, TP4/DP2, equal optimizer shards, and exact offsets
+  `2000/256000/1048576000`; audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step2000_20260726.json`.
+  After the live writer had raised Vault to `1064G`, removed only superseded
+  complete steps 1000 and 1500 (`213,256,773,890` bytes). Step 2000 remains
+  the sole numeric restart state and Vault is back to `667G/1000G`.
+- BranchProof 32B NL row `3881780_4` completed as raw job `3900120` in
+  `06:06:34` and passed its 448-prompt, 16-generation, 14-depth artifact/log
+  and translated-validity gate. All 448 retained sampled rows are
+  answer-correct, format-complete, translated-parseable, and
+  translated-citation-free-valid. Final seed `3881780_5` is healthy at
+  sampled chunk `89/112`; no family aggregate or report gate is open yet.
+- Successor `3901437` is verified dependency-free and CPU-only/no-GRES for
+  01:18 CEST July 27. Conditioned 32B and Dolmino formal/NL paths remain
+  incomplete, so the successor is preserved.
+
 - 13:22 CEST recorded the first Dolmino 5B production start:
   control `3875825_0` is healthy on full A100-80GB node `a0536` through
   step `1081/9537` at about `30.7K` tokens/s with finite loss/gradients.

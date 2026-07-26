@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-26 13:22 CEST.
+Last updated: 2026-07-26 19:23 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,40 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-26 19:23 second Dolmino rotation and second 32B NL row accepted
+
+- Dolmino control `3875825_0` is healthy beyond step `2341/9537` at about
+  `30.7K` tokens/s with finite loss and gradient norm. Its step-2000 state
+  passed the same complete 645-file, zero-byte, TP4/DP2,
+  model/optimizer/scheduler/RNG, and exact-offset gate as step 1000:
+  `2000/256000/1048576000`, all from the normal Nanoset. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step2000_20260726.json`.
+- The live writer had retained steps 1000, 1500, and 2000 and pushed Vault to
+  `1064G/1000G`. Only after step 2000 passed the restart gate, the exact
+  superseded step-1000 and step-1500 trees were removed, reclaiming
+  `213,256,773,890` bytes. Step 2000 remains the sole numeric restart state;
+  Vault is back to `667G/1000G`, `180k/200k` files, and the project Vault tree
+  is `577,396,560 KiB`.
+- OLMo-3-32B NL eval row `3881780_4` completed as raw job `3900120` in
+  `06:06:34` on four A100-80GB GPUs and passed the full 448-prompt,
+  16-generation, 14-depth, 576-retained-row, complete-log, and
+  translated-validity gate. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_4.json`.
+  Its retained shallow, train-edge, OOD, and depth-50 outputs are all
+  answer-correct, format-complete, translated-parseable, and
+  translated-citation-free-valid; the complete metrics contain only a small
+  sampled dip at depth 40 (`correct@1=0.9941`,
+  `translated-joint@1=0.9922`). No failed generation is present in the
+  retained subset, so failure review remains covered by the earlier accepted
+  seed and the final seed.
+- Final single-modal NL row `3881780_5` is healthy on `a0632` at sampled
+  chunk `89/112`. Conditioned-32B `3883534_13/14`, exact resume
+  `3897965_12`, and Dolmino formal/NL `3875828_1/3875831_2` remain
+  account-GRES pending with their audited resources and dependencies.
+  Successor watcher `3901437` is dependency-free, CPU-only/no-GRES, and
+  BeginTime-pending for 01:18 CEST July 27. Both critical paths remain
+  incomplete, so it is preserved.
 
 ### 2026-07-26 13:22 first Dolmino production start and 32B eval progress
 

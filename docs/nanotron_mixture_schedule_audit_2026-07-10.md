@@ -907,3 +907,13 @@ older states that independently pass `checkpoint_is_complete`; the Dolmino
 5B wrapper enables it. Both scripts pass `bash -n`. During an active stage,
 oversight must continue rotating only strictly older complete states after a
 newer state passes the same gate.
+
+At 19:23 CEST the control had advanced beyond step 2341 and the writer had
+retained steps 1000, 1500, and 2000, temporarily raising Vault to
+`1064G/1000G`. Step 2000 passed the same complete restart gate with exact
+step/sample/token offsets `2000/256000/1048576000`, all charged to the normal
+Nanoset; audit:
+`analysis/nanotron_checkpoint_audits/dolmino_control_step2000_20260726.json`.
+Only then were superseded complete steps 1000 and 1500 removed, reclaiming
+`213,256,773,890` bytes. Step 2000 remains the sole numeric restart state and
+Vault returned to `667G/1000G`.

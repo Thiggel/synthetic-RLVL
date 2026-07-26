@@ -1,8 +1,36 @@
 # Running Experiments
 
-Last updated: 2026-07-26 13:22 CEST.
+Last updated: 2026-07-26 19:23 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:23 CEST On July 26
+
+- Dolmino control `3875825_0` remains healthy beyond step `2341/9537` at
+  about `30.7K` tokens/s. Step 2000 independently passed the 645-file,
+  zero-byte, TP4/DP2, model/optimizer/scheduler/RNG, and exact
+  step/sample/token-offset gate at `2000/256000/1048576000`; audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step2000_20260726.json`.
+- The writer retained steps 1000, 1500, and 2000, temporarily raising Vault
+  to `1064G/1000G`. After accepting step 2000, only superseded complete steps
+  1000 and 1500 were removed (`213,256,773,890` bytes). Step 2000 is the sole
+  numeric restart state. Vault is back to `667G/1000G`, `180k/200k` files;
+  project Vault use is `577,396,560 KiB`.
+- BranchProof 32B NL row `3881780_4` completed as raw job `3900120` in
+  `06:06:34` and passed the full production audit. Its 448 retained sampled
+  rows span all 14 depths and are all answer-correct, format-complete,
+  translated-parseable, and translated-citation-free-valid. Complete sampled
+  metrics are perfect except for depth-40 answer/joint pass@1
+  `0.9941/0.9922`; the row audit is
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_4.json`.
+  Final seed row `3881780_5` is running on four A100-80GB GPUs at sampled
+  chunk `89/112` with no fatal signature.
+- Conditioned-32B `3883534_13/14` and exact resume `3897965_12` remain
+  account-GRES pending; `3881781_12..17` retains
+  `afterok:3897965:3883534_13:3883534_14`. Dolmino formal/NL first stages
+  `3875828_1/3875831_2` remain account-GRES pending. Recorded successor
+  `3901437` is dependency-free, CPU-only/no-GRES, and scheduled for 01:18
+  CEST July 27; it remains required.
 
 ## Live Delta At 13:22 CEST On July 26
 
