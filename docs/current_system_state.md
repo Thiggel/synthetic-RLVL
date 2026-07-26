@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-26 07:20 CEST.
+Last updated: 2026-07-26 13:22 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,41 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-26 13:22 first Dolmino production start and 32B eval progress
+
+- Dolmino control stage `3875825_0` started at 08:09 CEST on full
+  A100-80GB node `a0536`. It is healthy through step `1081/9537` at about
+  `30.7K` tokens/s with finite loss and gradient norm. The independently
+  accepted step-1000 state has 645 files, no zero-byte file, TP4/DP2, 625
+  model files, four equal `22,848,937,060`-byte optimizer shards, four
+  scheduler shards, eight RNG shards, and exact
+  step/sample/token offsets `1000/128000/524288000`, all from the normal
+  Nanoset. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step1000_20260726.json`.
+- The live Nanotron writer retains every 500-step checkpoint. After the
+  step-1000 state passed the complete restart gate, the exact superseded
+  step-500 tree was removed, reclaiming `106,628,386,940` bytes. Step 1000
+  remains the sole numeric restart state. The live base wrapper now optionally
+  prunes only strictly older complete run states at restart, and the Dolmino
+  5B wrapper enables that guard; both scripts pass `bash -n`. Continue the
+  same rotation during the active allocation; never remove the newest accepted
+  state.
+- OLMo-3-32B NL eval row `3881780_4` started at 10:02 CEST on four verified
+  A100-80GB GPUs on `a0932`. It uses the audited 16,384-token context and has
+  completed greedy scoring plus sampled chunks `1..89/112`; chunk 90 is
+  active with no fatal/OOM/quota signature. Row `3881780_5` remains
+  array-throttle pending.
+- Conditioned-32B `3883534_13/14` and exact resume `3897965_12` remain
+  account-GRES pending; conditioned eval `3881781_12..17` retains the repaired
+  dependency gate. Dolmino formal/NL first stages `3875828_1/3875831_2`
+  remain account-GRES pending, while the later stages retain their valid
+  dependencies.
+- Vault quota after guarded rotation is `667G/1000G` and `180k/200k` files.
+  This project's Vault/Work trees are `577,374,352/71,571,384 KiB`.
+  Successor watcher `3900807` is dependency-free, CPU-only/no-GRES, and
+  BeginTime-pending for 19:17 CEST; the plan remains incomplete, so it is
+  preserved.
 
 ### 2026-07-26 07:20 scheduler and watcher-chain reconciliation
 

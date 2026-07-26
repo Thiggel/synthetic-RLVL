@@ -885,3 +885,25 @@ weighted sampler for `1.0` control and `0.95/0.05` interventions. It does not
 implement the stronger precomputed schedule with identical normal chunk IDs at
 every cross-condition slot. Results are distribution-matched, not exactly
 sample-paired, and must be described that way.
+
+## 2026-07-26 First 5B state and guarded rotation
+
+Control stage `3875825_0` started on eight A100-80GB GPUs at 08:09 CEST. At
+13:22 it had reached step `1081/9537` at about `30.7K` tokens/s with finite
+loss and gradient norm. The step-1000 checkpoint independently passes the
+complete restart gate: 645 files, no zero-byte file, TP4/DP2, 625 model files,
+four equal `22,848,937,060`-byte optimizer shards, four scheduler shards,
+eight RNG shards, and exact step/sample/token offsets
+`1000/128000/524288000`. Its sole dataset offset is exactly 524,288,000
+normal tokens. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_control_step1000_20260726.json`.
+
+The current Nanotron writer retains every 500-step state. Once step 1000
+passed the gate, the exact superseded step-500 tree was removed, reclaiming
+`106,628,386,940` bytes; step 1000 remains intact as the sole numeric restart
+state. The shared live wrapper now has an opt-in restart-time guard that
+resolves the newest complete run checkpoint first, then removes only strictly
+older states that independently pass `checkpoint_is_complete`; the Dolmino
+5B wrapper enables it. Both scripts pass `bash -n`. During an active stage,
+oversight must continue rotating only strictly older complete states after a
+newer state passes the same gate.

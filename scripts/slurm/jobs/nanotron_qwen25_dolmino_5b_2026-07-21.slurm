@@ -37,5 +37,6 @@ export NL_DATASET_FOLDER="${NL_DATASET_FOLDER:-${HPCVAULT}/synthetic-RLVL/nanose
 export RUN_TAG_OVERRIDE="${RUN_TAG_OVERRIDE:-qwen25_7b_dolmino_${CONDITION}_p${MIX_PCT_TAG}_5b}"
 export RUN_ROOT_OVERRIDE="${RUN_ROOT_OVERRIDE:-${HPCVAULT}/synthetic-RLVL/nanotron_dolmino_5b/${RUN_TAG_OVERRIDE}}"
 export FINAL_CHECKPOINT_ALIAS=5b
+export PRUNE_SUPERSEDED_RUN_CHECKPOINTS=1
 
 bash scripts/slurm/jobs/nanotron_qwen25_midtrain_grid_2026-06-24.slurm

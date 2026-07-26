@@ -1,8 +1,36 @@
 # Running Experiments
 
-Last updated: 2026-07-26 07:20 CEST.
+Last updated: 2026-07-26 13:22 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:22 CEST On July 26
+
+- Dolmino control `3875825_0` started at 08:09 CEST on eight A100-80GB GPUs
+  on `a0536`. It is healthy through step `1081/9537` at about `30.7K`
+  tokens/s with finite optimization diagnostics. Its step-1000 checkpoint
+  passed the 645-file model/optimizer/scheduler/RNG, zero-byte, topology, and
+  exact-offset gate; persisted audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step1000_20260726.json`.
+- After that newer state was accepted, removed only the superseded complete
+  step-500 tree, reclaiming `106,628,386,940` bytes. The live writer does not
+  prune older 500-step states itself. The later restart stages now enable a
+  live-wrapper guard that removes only strictly older complete states after
+  resolving the newest accepted resume checkpoint; both edited wrappers pass
+  `bash -n`. During a running stage, each pass must still retain the latest
+  accepted state and rotate only strictly older complete states.
+- BranchProof 32B NL eval `3881780_4` started at 10:02 CEST on four
+  A100-80GB GPUs on `a0932`. Greedy scoring is complete and sampled chunks
+  `1..89/112` finished; chunk 90 is active without a fatal signature.
+  Row `3881780_5` is correctly held by the one-row array throttle.
+- Conditioned-32B `3883534_13/14` and exact resume `3897965_12` remain
+  account-GRES pending; `3881781_12..17` retains the repaired dependencies.
+  Dolmino formal/NL first stages `3875828_1/3875831_2` remain account-GRES
+  pending and all downstream stages remain dependency-held.
+- Vault quota is `667G/1000G` and `180k/200k` files after rotation; project
+  Vault/Work use is `577,374,352/71,571,384 KiB`. Current watcher `3899917`
+  is CPU-only on `a100mig`; recorded successor `3900807` is verified
+  CPU-only/no-GRES and BeginTime-pending for 19:17 CEST. It remains required.
 
 ## Live Delta At 07:20 CEST On July 26
 

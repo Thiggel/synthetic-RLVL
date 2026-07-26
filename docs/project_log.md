@@ -4,6 +4,25 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-26
 
+- 13:22 CEST recorded the first Dolmino 5B production start:
+  control `3875825_0` is healthy on full A100-80GB node `a0536` through
+  step `1081/9537` at about `30.7K` tokens/s with finite loss/gradients.
+  Its step-1000 checkpoint passed the full 645-file restart gate with exact
+  offsets `1000/128000/524288000`; audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step1000_20260726.json`.
+- The Nanotron writer retained both step 500 and 1000. After accepting step
+  1000, removed only the exact superseded step-500 tree and reclaimed
+  `106,628,386,940` bytes. Vault now reports `667G/1000G` and `180k/200k`
+  files; project Vault/Work use is `577,374,352/71,571,384 KiB`. Added an
+  opt-in base-wrapper restart guard, enabled by the Dolmino 5B wrapper, that
+  prunes only strictly older complete run checkpoints after choosing the
+  newest complete resume state; both scripts pass `bash -n`.
+- BranchProof 32B NL eval `3881780_4` started on four A100-80GB GPUs at
+  10:02 CEST and reached sampled chunk `90/112` after complete greedy
+  scoring, with no fatal signature. Successor `3900807` remains CPU-only,
+  dependency-free, and scheduled for 19:17 CEST because both critical paths
+  remain incomplete.
+
 - 07:20 CEST found no new in-scope GPU start or completion. BranchProof
   `3881780_4/5`, `3883534_13/14`, and `3897965_12` remain
   A100-80GB account-GRES pending; conditioned eval `3881781_12..17`

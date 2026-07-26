@@ -630,3 +630,14 @@ greedy/pass@1/pass@16 answer rates are `0.775/0.291/0.806`, with translated
 joint `0.744/0.284/0.788`. This is row-scoped evidence only. Rows
 `3881774_7/8` must pass before a three-seed terse-NL family comparison is
 reported.
+
+## 2026-07-26 Remaining 32B evaluation resumes
+
+OLMo-3-32B NL row `3881780_4` started at 10:02 CEST on four verified
+A100-80GB GPUs on `a0932`. It retains the audited 16,384-token context and
+full 448-prompt, 16-generation, 14-depth protocol. Greedy scoring completed,
+sampled chunks `1..89/112` finished, and chunk 90 was active at 13:22 without
+a fatal/OOM/quota signature. Row `3881780_5` remains correctly held by the
+one-row array throttle. No row metric or family claim is accepted before the
+final artifacts pass the existing production and representative raw-generation
+gates.

@@ -109,6 +109,18 @@ if compgen -G "${RUN_ROOT}/checkpoints/[0-9]*" >/dev/null; then
     RESUME_CKPT="${RUN_ROOT}/checkpoints/${LATEST_STEP}"
     LOAD_OPTIMIZER="${LOAD_OPTIMIZER_FOR_RUN_CKPT:-true}"
     LOAD_LR_SCHEDULER="${LOAD_LR_SCHEDULER_FOR_RUN_CKPT:-true}"
+    if [[ "${PRUNE_SUPERSEDED_RUN_CHECKPOINTS:-0}" == "1" ]]; then
+      while IFS= read -r CANDIDATE_STEP; do
+        if [[ "${CANDIDATE_STEP}" -lt "${LATEST_STEP}" ]] &&
+          checkpoint_is_complete "${RUN_ROOT}/checkpoints/${CANDIDATE_STEP}"; then
+          echo "Removing superseded complete run checkpoint: ${RUN_ROOT}/checkpoints/${CANDIDATE_STEP}"
+          find "${RUN_ROOT}/checkpoints/${CANDIDATE_STEP}" -depth -delete
+        fi
+      done < <(
+        find "${RUN_ROOT}/checkpoints" -maxdepth 1 -mindepth 1 -type d \
+          -printf '%f\n' | rg '^[0-9]+$' | sort -n
+      )
+    fi
   fi
 fi
 
