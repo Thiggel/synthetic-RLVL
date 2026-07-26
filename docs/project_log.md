@@ -20,6 +20,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - Successor `3901437` is verified dependency-free and CPU-only/no-GRES for
   01:18 CEST July 27. Conditioned 32B and Dolmino formal/NL paths remain
   incomplete, so the successor is preserved.
+- Committed the scoped checkpoint rotation, row audit, and handoff as
+  `ef5a3ca`. A bounded 60-second `git push origin main` produced no remote
+  response and exited `124`; the GitHub SSH/network blocker remains.
 
 - 13:22 CEST recorded the first Dolmino 5B production start:
   control `3875825_0` is healthy on full A100-80GB node `a0536` through

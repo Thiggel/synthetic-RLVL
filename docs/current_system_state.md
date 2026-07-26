@@ -56,7 +56,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   account-GRES pending with their audited resources and dependencies.
   Successor watcher `3901437` is dependency-free, CPU-only/no-GRES, and
   BeginTime-pending for 01:18 CEST July 27. Both critical paths remain
-  incomplete, so it is preserved.
+  incomplete, so it is preserved. Scoped commit `ef5a3ca` is local; a bounded
+  60-second `git push origin main` produced no remote response and exited
+  `124`, so the existing GitHub SSH/network blocker remains.
 
 ### 2026-07-26 13:22 first Dolmino production start and 32B eval progress
 
