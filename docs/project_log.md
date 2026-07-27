@@ -2,6 +2,23 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-28
+
+- 01:27 CEST accepted Dolmino formal step 3500 under the complete 645-file,
+  zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
+  `3500/448000/1835008000` offset gates. Realized consumption is exactly
+  `1743257600` normal plus `91750400` formal tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step3500_20260728.json`.
+- The formal writer retained steps 2000/2500/3000/3500 and raised Vault to
+  `1347G`. Removed only the three audited-superseded trees, reclaiming
+  `319,885,161,449` bytes; step 3500 is the sole formal restart state and
+  Vault is `751G/1000G`, `181k/200k` files.
+- Formal `3875828_1` remains healthy through iteration 3591.
+  Conditioned-32B `3883534_13` is healthy through step 7403 with complete
+  checkpoints 7000/7250 and is expected to time out before step 10000.
+  Successor `3910926` is dependency-free, CPU-only/no-GRES, and scheduled for
+  07:20 CEST, so it is preserved.
+
 ## 2026-07-27
 
 - 19:23 CEST accepted Dolmino formal step 2000 under the complete 645-file,

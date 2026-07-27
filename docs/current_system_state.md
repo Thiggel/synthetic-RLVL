@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-27 19:23 CEST.
+Last updated: 2026-07-28 01:27 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,32 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-28 01:27 formal step-3500 rotation
+
+- Dolmino formal first stage `3875828_1` is healthy through iteration 3591
+  at about `30.7K` tokens/s with finite loss and gradient norm. Step 3500
+  passed the complete 645-file, zero-byte, TP4/DP2
+  model/optimizer/scheduler/RNG gate, Qwen2.5 RoPE `1000000`, and exact
+  offsets `3500/448000/1835008000`. Realized consumption is exactly
+  `1743257600` Dolmino plus `91750400` formal tokens (`95:5`). Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step3500_20260728.json`.
+- The live writer had retained formal steps 2000, 2500, 3000, and 3500,
+  raising user Vault use to `1347G/1000G`. Only after step 3500 passed the
+  complete restart gate, the exact superseded step-2000/2500/3000 trees were
+  removed, reclaiming `319,885,161,449` bytes. Step 3500 is now the sole
+  numeric formal restart state; Vault is `751G/1000G`, `181k/200k` files, and
+  the project Vault tree is `666,092,489 KiB`.
+- Conditioned-32B SFT `3883534_13` is healthy through step 7403 but is
+  projected to hit its 24-hour limit before step 10000. Complete nonempty
+  checkpoints 7000 and 7250 are retained. Submit only its exact row-13
+  recovery after the actual timeout; row `3883534_14`, row-12 recovery
+  `3897965_12`, and eval `3881781_12..17` remain correctly pending.
+- Control continuation `3875826_0` and NL first stage `3875831_2` remain
+  account-GRES pending; all later Dolmino stages retain their dependencies.
+  Recorded successor `3910926` is dependency-free, CPU-only/no-GRES, and
+  BeginTime-pending for 07:20 CEST July 28. Both active paths remain
+  incomplete, so it is preserved.
 
 ### 2026-07-27 19:23 formal step-2000 rotation and live progress
 
