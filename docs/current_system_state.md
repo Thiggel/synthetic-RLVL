@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-28 01:27 CEST.
+Last updated: 2026-07-28 01:52 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,7 +24,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-28 01:27 formal step-3500 rotation
+### 2026-07-28 01:52 formal rotation and conditioned-32B recovery
 
 - Dolmino formal first stage `3875828_1` is healthy through iteration 3591
   at about `30.7K` tokens/s with finite loss and gradient norm. Step 3500
@@ -39,11 +39,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   removed, reclaiming `319,885,161,449` bytes. Step 3500 is now the sole
   numeric formal restart state; Vault is `751G/1000G`, `181k/200k` files, and
   the project Vault tree is `666,092,489 KiB`.
-- Conditioned-32B SFT `3883534_13` is healthy through step 7403 but is
-  projected to hit its 24-hour limit before step 10000. Complete nonempty
-  checkpoints 7000 and 7250 are retained. Submit only its exact row-13
-  recovery after the actual timeout; row `3883534_14`, row-12 recovery
-  `3897965_12`, and eval `3881781_12..17` remain correctly pending.
+- Conditioned-32B SFT `3883534_13` reached step 7538 and ended in the expected
+  `TIMEOUT` after `1-00:00:15`, without OOM, quota, or unexpected fatal
+  signatures. Step 7500 passed the complete 13-file, zero-byte
+  adapter/optimizer/scheduler/RNG gate. Exact row-13 resume `3910990_13` was
+  submitted for 12 hours on four A100-80GB GPUs. Row-12 recovery
+  `3897965_12` started on verified A100-80GB node `a0831`; original row
+  `3883534_14` remains pending. Eval `3881781_12..17` was rewired to
+  `afterok:3897965:3910990:3883534_14` and retains its A100-80GB protocol.
 - Control continuation `3875826_0` and NL first stage `3875831_2` remain
   account-GRES pending; all later Dolmino stages retain their dependencies.
   Recorded successor `3910926` is dependency-free, CPU-only/no-GRES, and

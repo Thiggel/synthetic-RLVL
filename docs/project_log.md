@@ -4,7 +4,7 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-28
 
-- 01:27 CEST accepted Dolmino formal step 3500 under the complete 645-file,
+- 01:52 CEST accepted Dolmino formal step 3500 under the complete 645-file,
   zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
   `3500/448000/1835008000` offset gates. Realized consumption is exactly
   `1743257600` normal plus `91750400` formal tokens. Audit:
@@ -14,9 +14,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   `319,885,161,449` bytes; step 3500 is the sole formal restart state and
   Vault is `751G/1000G`, `181k/200k` files.
 - Formal `3875828_1` remains healthy through iteration 3591.
-  Conditioned-32B `3883534_13` is healthy through step 7403 with complete
-  checkpoints 7000/7250 and is expected to time out before step 10000.
-  Successor `3910926` is dependency-free, CPU-only/no-GRES, and scheduled for
+  Conditioned-32B `3883534_13` reached step 7538 and ended in the expected
+  `TIMEOUT` after `1-00:00:15`; step 7500 passed its complete 13-file,
+  zero-byte adapter/optimizer/scheduler/RNG gate. Submitted exact row-13
+  recovery `3910990_13` for 12 hours on four A100-80GB GPUs. Row-12 recovery
+  `3897965_12` started on verified A100-80GB node `a0831`, and
+  `3881781_[12-17]` was rewired to
+  `afterok:3897965:3910990:3883534_14`.
+- Successor `3910926` is dependency-free, CPU-only/no-GRES, and scheduled for
   07:20 CEST, so it is preserved.
 
 ## 2026-07-27
