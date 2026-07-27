@@ -1,8 +1,33 @@
 # Running Experiments
 
-Last updated: 2026-07-27 13:24 CEST.
+Last updated: 2026-07-27 19:23 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:23 CEST On July 27
+
+- Formal Dolmino `3875828_1` is healthy through iteration `2331/9537` at
+  about `30.7K` tokens/s. Step 2000 passed the complete 645-file, zero-byte,
+  TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
+  `2000/256000/1048576000` offset gate. Its realized stream is exactly
+  `996147200` normal plus `52428800` formal tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step2000_20260727.json`.
+- The writer retained steps 1000/1500/2000 and raised Vault to
+  `1149G/1000G`. After step 2000 passed, removed only superseded steps
+  1000/1500, reclaiming `213,256,774,296` bytes. Step 2000 is the sole
+  numeric restart state; Vault is `751G/1000G`, `181k/200k` files, and
+  project Vault/Work use is `666,092,361/71,701,364 KiB`.
+- Conditioned-32B `3883534_13` is healthy through step `5483/10000`;
+  checkpoints 5000/5250 each have 13 nonempty files and no zero-byte file.
+  Row `3883534_14` is array-throttle pending, exact row-12 resume
+  `3897965_12` and Dolmino control/NL `3875826_0/3875831_2` are
+  account-GRES pending, and conditioned eval `3881781_12..17` plus later
+  Dolmino stages remain dependency-held. The next watcher should recover row
+  13 from its newest complete state only after its projected timeout occurs.
+- Watcher `3904173` is CPU-only on `a100mig`. Its recorded successor
+  `3908135` is verified dependency-free, CPU-only/no-GRES, and scheduled for
+  01:20 CEST July 28. Both critical paths remain incomplete, so it is
+  preserved.
 
 ## Live Delta At 13:24 CEST On July 27
 

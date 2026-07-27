@@ -964,3 +964,20 @@ The freed eight-A100-80GB allocation immediately started formal stage
 4096, TP4/DP2, global batch 128, target 9537, peak LR `1e-5`, 256-step warmup,
 and the preregistered decay horizon. Nanotron realized normal/formal weights
 as `0.95/0.0500002`; iteration 1 reported finite loss and gradient norm.
+
+## 2026-07-27 Formal step-2000 restart state
+
+Formal first stage `3875828_1` reached iteration 2331 with finite loss and
+gradient diagnostics at about 30.7K tokens/s. Step 2000 independently passes
+the complete 645-file, zero-byte, TP4/DP2 model/optimizer/scheduler/RNG gate,
+Qwen2.5 RoPE `1000000`, and exact offsets
+`2000/256000/1048576000`. Checkpoint metadata records exactly `996147200`
+normal Dolmino tokens and `52428800` formal tokens, preserving the exact 95:5
+realized split. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_logic_step2000_20260727.json`.
+
+The writer had retained steps 1000, 1500, and 2000 and raised user Vault use
+to `1149G/1000G`. Only after step 2000 passed every restart gate, the exact
+superseded step-1000 and step-1500 trees were removed, reclaiming
+`213,256,774,296` bytes. Step 2000 remains the sole numeric formal restart
+state and Vault returned to `751G/1000G`, `181k/200k` files.

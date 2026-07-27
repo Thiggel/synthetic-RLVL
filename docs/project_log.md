@@ -4,6 +4,21 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-27
 
+- 19:23 CEST accepted Dolmino formal step 2000 under the complete 645-file,
+  zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
+  `2000/256000/1048576000` offset gates. Realized consumption is exactly
+  `996147200` normal plus `52428800` formal tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step2000_20260727.json`.
+- The formal writer retained steps 1000/1500/2000 and raised Vault to
+  `1149G`. Removed only the two audited-superseded trees, reclaiming
+  `213,256,774,296` bytes; step 2000 is the sole formal restart state and
+  Vault is `751G/1000G`, `181k/200k` files.
+- Formal `3875828_1` remains healthy through iteration 2331.
+  Conditioned-32B `3883534_13` is healthy through step 5483 with complete
+  checkpoints 5000/5250; its projected timeout is a recovery trigger, not a
+  reason to edit the active job. Successor `3908135` is dependency-free,
+  CPU-only/no-GRES, and scheduled for 01:20 CEST July 28, so it is preserved.
+
 - 13:24 CEST accepted Dolmino formal step 1000 under the complete 645-file,
   zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
   `1000/128000/524288000` offset gates. Realized consumption is exactly

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-27 13:24 CEST.
+Last updated: 2026-07-27 19:23 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,34 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-27 19:23 formal step-2000 rotation and live progress
+
+- Dolmino formal first stage `3875828_1` is healthy on eight A100-80GB GPUs
+  through iteration `2331/9537` at about `30.7K` tokens/s, with finite loss
+  and gradient norm. Step 2000 passed the complete 645-file, zero-byte,
+  TP4/DP2 model/optimizer/scheduler/RNG gate, Qwen2.5 RoPE `1000000`, and
+  exact offsets `2000/256000/1048576000`. Realized consumption is exactly
+  `996147200` Dolmino plus `52428800` formal tokens (`95:5`). Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step2000_20260727.json`.
+- The live writer had retained formal steps 1000, 1500, and 2000, raising
+  user Vault use to `1149G/1000G`. Only after step 2000 passed the restart
+  gate, the exact superseded step-1000 and step-1500 trees were removed,
+  reclaiming `213,256,774,296` bytes. Step 2000 is now the sole numeric
+  formal restart state; Vault is `751G/1000G`, `181k/200k` files, and the
+  project Vault tree is `666,092,361 KiB`.
+- Conditioned-32B SFT `3883534_13` is healthy through step `5483/10000`;
+  checkpoints 5000 and 5250 each contain 13 nonempty files with no zero-byte
+  file. Row `3883534_14` remains array-throttle pending, exact row-12 resume
+  `3897965_12` remains account-GRES pending, and eval `3881781_12..17`
+  remains correctly dependency-held. Its current pace projects a timeout
+  before step 10000, so recover only this row from its newest complete state
+  after an actual timeout.
+- Control continuation `3875826_0` and NL first stage `3875831_2` remain
+  account-GRES pending; all later Dolmino stages retain their dependencies.
+  Recorded successor `3908135` is dependency-free, CPU-only/no-GRES, and
+  BeginTime-pending for 01:20 CEST July 28. Both active paths remain
+  incomplete, so it is preserved.
 
 ### 2026-07-27 13:24 formal step-1000 rotation and live progress
 
