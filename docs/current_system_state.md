@@ -49,7 +49,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   account-GRES pending; all later Dolmino stages retain their dependencies.
   Recorded successor `3904173` is dependency-free, CPU-only/no-GRES, and
   BeginTime-pending for 19:19 CEST. Both active paths remain incomplete, so
-  it is preserved.
+  it is preserved. Scoped commit is `d0da6b4`; a bounded 60-second
+  `git push origin main` produced no remote response and exited `124`, so the
+  existing GitHub SSH/network blocker remains.
 
 ### 2026-07-27 08:17 Dolmino control boundary, formal start, and conditioned-32B progress
 

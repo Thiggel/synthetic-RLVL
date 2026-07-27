@@ -17,6 +17,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - Conditioned-32B `3883534_13` is healthy through step 3586 with complete
   checkpoints 3250/3500. Successor `3904173` is verified dependency-free,
   CPU-only/no-GRES, and scheduled for 19:19 CEST; it remains required.
+- Scoped commit is `d0da6b4`. A bounded 60-second `git push origin main`
+  produced no remote response and exited `124`; the existing GitHub
+  SSH/network publication path remains blocked.
 
 - 08:17 CEST accepted Dolmino control steps 4500 and 5000 under the complete
   645-file, zero-byte, TP4/DP2 model/optimizer/scheduler/RNG and exact-offset
