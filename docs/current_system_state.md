@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-27 08:17 CEST.
+Last updated: 2026-07-27 13:24 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,33 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-27 13:24 formal step-1000 rotation and live progress
+
+- Dolmino formal first stage `3875828_1` is healthy on eight A100-80GB GPUs
+  through iteration `1071/9537` at about `30.7K` tokens/s, with finite loss
+  and gradient norm. Its step-1000 state passed the complete 645-file,
+  zero-byte, TP4/DP2 model/optimizer/scheduler/RNG gate, Qwen2.5 RoPE
+  `1000000`, and exact offsets `1000/128000/524288000`. Realized token
+  consumption is exactly `498073600` normal plus `26214400` formal tokens
+  (`95:5`). Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step1000_20260727.json`.
+- The live writer retained both steps 500 and 1000, temporarily raising Vault
+  to `950G/1000G`. Only after step 1000 passed the restart gate, the exact
+  superseded step-500 tree was removed, reclaiming `106,628,387,143` bytes.
+  Step 1000 is now the sole numeric formal restart state; Vault is
+  `751G/1000G`, `181k/200k` files, and the project Vault tree is
+  `666,092,233 KiB`.
+- Conditioned-32B SFT `3883534_13` is healthy through step `3586/10000` with
+  complete nonempty checkpoints 3250 and 3500. Row `3883534_14` remains
+  array-throttle pending, exact row-12 resume `3897965_12` remains
+  account-GRES pending, and eval `3881781_12..17` remains correctly
+  dependency-held. No new evaluation artifact or report gate opened.
+- Control continuation `3875826_0` and NL first stage `3875831_2` remain
+  account-GRES pending; all later Dolmino stages retain their dependencies.
+  Recorded successor `3904173` is dependency-free, CPU-only/no-GRES, and
+  BeginTime-pending for 19:19 CEST. Both active paths remain incomplete, so
+  it is preserved.
 
 ### 2026-07-27 08:17 Dolmino control boundary, formal start, and conditioned-32B progress
 

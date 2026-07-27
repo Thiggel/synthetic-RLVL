@@ -939,6 +939,23 @@ Only after acceptance were superseded steps 3500/4000/4500 removed, reclaiming
 `319,885,160,841` bytes. Step 5000 is the sole restart state and Vault is
 `553G/1000G`, `180k/200k` files.
 
+## 2026-07-27 First formal 5B restart state
+
+Formal first stage `3875828_1` reached iteration 1071 with finite loss and
+gradient diagnostics at about 30.7K tokens/s. Step 1000 independently passes
+the complete 645-file, zero-byte, TP4/DP2 model/optimizer/scheduler/RNG gate,
+Qwen2.5 RoPE `1000000`, and exact offsets
+`1000/128000/524288000`. Its checkpoint metadata records exactly
+`498073600` normal Dolmino tokens and `26214400` formal tokens, an exact 95:5
+realized split. The accepted audit is
+`analysis/nanotron_checkpoint_audits/dolmino_logic_step1000_20260727.json`.
+
+The active writer retained both steps 500 and 1000 and temporarily raised
+Vault usage to `950G/1000G`. After the newer state passed every restart gate,
+only superseded step 500 was removed, reclaiming `106,628,387,143` bytes.
+Step 1000 remains the sole numeric formal restart state. Continue the same
+latest-complete-state rotation; never remove the newest accepted checkpoint.
+
 Control first stage `3875825_0` then reached iteration 5021 and ended in the
 expected `TIMEOUT` after `1-00:00:10`; no OOM, quota, or unexpected fatal
 signature was present. Continuation `3875826_0` released account-GRES pending.

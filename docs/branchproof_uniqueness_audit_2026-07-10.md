@@ -676,3 +676,12 @@ supervision at OOD answer/joint pass@1:
 cross-architecture formal advantage. The report builder, generated informal
 report, and official preprint now include the accepted family; conditioned
 OLMo-3-32B remains gated.
+
+## 2026-07-27 Conditioned-32B training progress
+
+Conditioned row `3883534_13` is healthy through step `3586/10000` on four
+A100-80GB GPUs. Its latest two retained states, checkpoints 3250 and 3500,
+each contain 13 nonempty files with no zero-byte file. Row `3883534_14`
+remains array-throttle pending and exact row-12 resume `3897965_12` remains
+account-GRES pending. Evaluation `3881781_12..17` correctly waits for all
+three SFT rows, so no conditioned-32B result or report update is accepted yet.
