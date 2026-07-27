@@ -4,6 +4,24 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-27
 
+- 08:17 CEST accepted Dolmino control steps 4500 and 5000 under the complete
+  645-file, zero-byte, TP4/DP2 model/optimizer/scheduler/RNG and exact-offset
+  gates. Step 5000 records `5000/640000/2621440000`, solely normal data.
+  Removed only superseded steps 3500/4000/4500, reclaiming
+  `319,885,160,841` bytes; step 5000 is the sole restart state and Vault is
+  `553G/1000G`, `180k/200k` files. Control `3875825_0` then ended in its
+  expected 24-hour `TIMEOUT` after iteration 5021, releasing continuation
+  `3875826_0`.
+- 08:17 CEST formal first stage `3875828_1` started on eight A100-80GB GPUs.
+  Config and first-iteration audit confirms RoPE `1000000`, TP4/DP2, the
+  preregistered schedule, realized normal/formal weights
+  `0.95/0.0500002`, and finite loss/gradient diagnostics. Conditioned-32B
+  `3883534_13` is healthy through step 1968; its remaining SFT/eval rows and
+  Dolmino NL remain pending, so no report gate opened.
+- Successor `3902223` is verified dependency-free, CPU-only/no-GRES, and
+  scheduled for 13:19 CEST. The two critical paths remain incomplete, so it
+  is preserved.
+
 - 01:31 CEST accepted final OLMo-3-32B NL row `3881780_5` after its complete
   artifact/log/fresh-constant/translated-validity audit and raw review. The
   complete matched single-modal family favors natural over formal at OOD

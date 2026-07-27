@@ -1,8 +1,34 @@
 # Running Experiments
 
-Last updated: 2026-07-27 01:31 CEST.
+Last updated: 2026-07-27 08:17 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 08:17 CEST On July 27
+
+- Dolmino control first stage `3875825_0` ended in the expected `TIMEOUT`
+  after `1-00:00:10`, last logging iteration 5021. Step 5000 passed the full
+  645-file, zero-byte, TP4/DP2 model/optimizer/scheduler/RNG and exact
+  `5000/640000/2621440000` offset gate, solely normal data. After accepting
+  audited steps 4500 and 5000, removed only superseded complete steps
+  3500/4000/4500, reclaiming `319,885,160,841` bytes; step 5000 is the sole
+  restart state. `3875826_0` is released and account-GRES pending, while
+  `3875827_0` retains its dependency.
+- Formal first stage `3875828_1` started at 08:09 CEST on eight A100-80GB
+  GPUs. Config and first-iteration review confirms RoPE `1000000`, TP4/DP2,
+  4096 context, target 9537, the preregistered LR schedule, realized
+  normal/formal weights `0.95/0.0500002`, and finite loss/gradient values.
+  Formal continuations `3875829_1/3875830_1` remain dependency-held. NL first
+  stage `3875831_2` is account-GRES pending, with `3875832_2/3875833_2`
+  dependency-held.
+- Conditioned-32B SFT `3883534_13` is running on `a0532` through step
+  `1968/10000`, with complete steps 1500/1750 retained and no severe
+  signature. `3883534_14` is array-throttle pending, `3897965_12` is
+  account-GRES pending, and `3881781_12..17` remains dependency-held.
+- User-wide quotas are home `80835M/100G`, `158k/500k` files and Vault
+  `553G/1000G`, `180k/200k` files. Watcher `3901977` is CPU-only on
+  `a100mig`; successor `3902223` is dependency-free, no-GRES, and scheduled
+  for 13:19 CEST. It remains required.
 
 ## Live Delta At 01:31 CEST On July 27
 

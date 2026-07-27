@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-27 01:31 CEST.
+Last updated: 2026-07-27 08:17 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,34 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-27 08:17 Dolmino control boundary, formal start, and conditioned-32B progress
+
+- Dolmino control first stage `3875825_0` reached iteration `5021` and ended
+  in the expected `TIMEOUT` after `1-00:00:10`, without an OOM, quota, or
+  unexpected fatal signature. Steps 4500 and 5000 independently passed the
+  complete 645-file, zero-byte, TP4/DP2 model/optimizer/scheduler/RNG gate;
+  step 5000 has exact offsets `5000/640000/2621440000`, solely normal data,
+  and is the sole retained restart state. Audits:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step4500_20260727.json`
+  and `analysis/nanotron_checkpoint_audits/dolmino_control_step5000_20260727.json`.
+  After acceptance, removed only superseded steps 3500/4000/4500, reclaiming
+  `319,885,160,841` bytes. Vault is `553G/1000G`, `180k/200k` files.
+- Control continuation `3875826_0` is released and account-GRES pending;
+  `3875827_0` remains dependency-held. Formal first stage `3875828_1` started
+  at 08:09 CEST on eight A100-80GB GPUs. Its config preserves Qwen2.5 RoPE
+  `1000000`, TP4/DP2, the preregistered schedule, and realized normal/formal
+  weights `0.95/0.0500002`; iteration 1 has finite loss/gradient diagnostics.
+  NL first stage `3875831_2` remains account-GRES pending.
+- Conditioned-32B SFT `3883534_13` is healthy through step `1968/10000` on
+  four A100-80GB GPUs, with complete nonempty steps 1500 and 1750 retained.
+  Row `3883534_14` remains array-throttle pending, exact resume
+  `3897965_12` remains account-GRES pending, and eval `3881781_12..17`
+  remains correctly dependency-gated. No new eval generations or metrics
+  exist, so no report or scientific-claim gate opened.
+- Recorded successor `3902223` is dependency-free, CPU-only/no-GRES, and
+  BeginTime-pending for 13:19 CEST. Both active critical paths remain
+  incomplete, so it is preserved.
 
 ### 2026-07-27 01:31 final single-modal 32B acceptance and Dolmino rotation
 

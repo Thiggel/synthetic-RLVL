@@ -927,3 +927,23 @@ Only after acceptance were superseded complete steps 2000, 2500, and 3000
 removed, reclaiming `319,885,160,841` bytes. Step 3500 remains the sole
 numeric restart state; user-wide Vault returned to `547G/1000G` with
 `180k/200k` files.
+
+At 08:17 CEST July 27, steps 4500 and 5000 had independently passed the same
+complete restart gate. Step 5000 contains 645 files with no empty file, 625
+model files, four equal `22,848,937,060`-byte optimizer shards, four scheduler
+shards, eight RNG shards, and exact step/sample/token offsets
+`5000/640000/2621440000`, all charged to the normal Nanoset. Audits:
+`analysis/nanotron_checkpoint_audits/dolmino_control_step4500_20260727.json`
+and `analysis/nanotron_checkpoint_audits/dolmino_control_step5000_20260727.json`.
+Only after acceptance were superseded steps 3500/4000/4500 removed, reclaiming
+`319,885,160,841` bytes. Step 5000 is the sole restart state and Vault is
+`553G/1000G`, `180k/200k` files.
+
+Control first stage `3875825_0` then reached iteration 5021 and ended in the
+expected `TIMEOUT` after `1-00:00:10`; no OOM, quota, or unexpected fatal
+signature was present. Continuation `3875826_0` released account-GRES pending.
+The freed eight-A100-80GB allocation immediately started formal stage
+`3875828_1`. Its live config preserves RoPE base `1000000`, sequence length
+4096, TP4/DP2, global batch 128, target 9537, peak LR `1e-5`, 256-step warmup,
+and the preregistered decay horizon. Nanotron realized normal/formal weights
+as `0.95/0.0500002`; iteration 1 reported finite loss and gradient norm.
