@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-28 01:52 CEST.
+Last updated: 2026-07-28 01:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,7 +24,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-28 01:52 formal rotation and conditioned-32B recovery
+### 2026-07-28 01:55 formal rotation and conditioned-32B recovery
 
 - Dolmino formal first stage `3875828_1` is healthy through iteration 3591
   at about `30.7K` tokens/s with finite loss and gradient norm. Step 3500
@@ -52,6 +52,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   Recorded successor `3910926` is dependency-free, CPU-only/no-GRES, and
   BeginTime-pending for 07:20 CEST July 28. Both active paths remain
   incomplete, so it is preserved.
+- Scoped commits are `74b3339` and `1324746`. A bounded 60-second
+  `git push origin main` produced no remote response and exited `124`, so the
+  existing GitHub SSH/network blocker remains.
 
 ### 2026-07-27 19:23 formal step-2000 rotation and live progress
 

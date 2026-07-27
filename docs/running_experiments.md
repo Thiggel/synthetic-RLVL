@@ -1,10 +1,10 @@
 # Running Experiments
 
-Last updated: 2026-07-28 01:52 CEST.
+Last updated: 2026-07-28 01:55 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 01:52 CEST On July 28
+## Live Delta At 01:55 CEST On July 28
 
 - Dolmino formal `3875828_1` is healthy through iteration 3591 at about
   `30.7K` tokens/s. Its step-3500 state passed the complete 645-file,
@@ -27,6 +27,9 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   account-GRES pending. Successor `3910926` is dependency-free,
   CPU-only/no-GRES, and scheduled for 07:20 CEST; the active plan is
   incomplete, so it is preserved.
+- Scoped commits are `74b3339` and `1324746`; a bounded 60-second push timed
+  out with no remote response (`124`), preserving the known publication
+  blocker.
 
 ## Live Delta At 19:23 CEST On July 27
 

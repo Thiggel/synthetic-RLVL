@@ -23,6 +23,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   `afterok:3897965:3910990:3883534_14`.
 - Successor `3910926` is dependency-free, CPU-only/no-GRES, and scheduled for
   07:20 CEST, so it is preserved.
+- Scoped commits are `74b3339` and `1324746`. A bounded 60-second
+  `git push origin main` produced no remote response and exited `124`; the
+  existing GitHub SSH/network blocker remains.
 
 ## 2026-07-27
 
