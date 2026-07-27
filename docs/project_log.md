@@ -21,6 +21,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - Successor `3902223` is verified dependency-free, CPU-only/no-GRES, and
   scheduled for 13:19 CEST. The two critical paths remain incomplete, so it
   is preserved.
+- Scoped checkpoint-audit and handoff commit is `a34dfd1`. A bounded
+  60-second `git push origin main` produced no remote response and exited
+  `124`; the existing GitHub SSH/network publication path remains blocked.
 
 - 01:31 CEST accepted final OLMo-3-32B NL row `3881780_5` after its complete
   artifact/log/fresh-constant/translated-validity audit and raw review. The

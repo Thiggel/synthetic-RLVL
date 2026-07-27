@@ -50,7 +50,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   exist, so no report or scientific-claim gate opened.
 - Recorded successor `3902223` is dependency-free, CPU-only/no-GRES, and
   BeginTime-pending for 13:19 CEST. Both active critical paths remain
-  incomplete, so it is preserved.
+  incomplete, so it is preserved. Scoped commit is `a34dfd1`; a bounded
+  60-second `git push origin main` produced no remote response and exited
+  `124`, so the existing GitHub SSH/network blocker remains.
 
 ### 2026-07-27 01:31 final single-modal 32B acceptance and Dolmino rotation
 
