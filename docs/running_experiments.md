@@ -27,7 +27,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - Watcher `3904173` is CPU-only on `a100mig`. Its recorded successor
   `3908135` is verified dependency-free, CPU-only/no-GRES, and scheduled for
   01:20 CEST July 28. Both critical paths remain incomplete, so it is
-  preserved.
+  preserved. Scoped audit commit `c53b21c` is local; a bounded 60-second push
+  produced no remote response and exited `124`.
 
 ## Live Delta At 13:24 CEST On July 27
 

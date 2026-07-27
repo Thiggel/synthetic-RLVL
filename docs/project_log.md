@@ -18,6 +18,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   checkpoints 5000/5250; its projected timeout is a recovery trigger, not a
   reason to edit the active job. Successor `3908135` is dependency-free,
   CPU-only/no-GRES, and scheduled for 01:20 CEST July 28, so it is preserved.
+- Scoped audit commit is `c53b21c`. A bounded 60-second
+  `git push origin main` produced no remote response and exited `124`; the
+  existing GitHub SSH/network publication blocker remains.
 
 - 13:24 CEST accepted Dolmino formal step 1000 under the complete 645-file,
   zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
