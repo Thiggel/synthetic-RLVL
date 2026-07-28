@@ -17,7 +17,7 @@ source ./scripts/env.sh
 export CUDA_DEVICE_MAX_CONNECTIONS=1
 export HF_HOME="${HF_HOME:-${HPCVAULT}/.cache/huggingface}"
 export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-${HF_HOME}/hub}"
-export WANDB_MODE="${WANDB_MODE:-offline}"
+export WANDB_MODE="${WANDB_MODE:-disabled}"
 
 source "${WORK}/nanotron/bin/activate"
 

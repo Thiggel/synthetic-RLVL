@@ -1,8 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-07-28 13:25 CEST.
+Last updated: 2026-07-28 13:55 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:55 CEST On July 28
+
+- Selected corrected BranchProof acceptance is `39/45`; only conditioned
+  OLMo-3-32B eval `3881781_12..17` remains. Row-12 SFT recovery is accepted;
+  row-13 recovery `3910990_13` and original row `3883534_14` are pending with
+  individual 17:22 CEST estimates.
+- Dolmino control/formal each retain audited step-5000 states at
+  `2,621,440,000` consumed tokens. Continuations `3875826_0/3875829_1` are
+  pending with current estimates of 18:44 CEST July 28 and 09:30 CEST July
+  29. NL retry `3875832_2` has no scientific state to resume and currently
+  shares the 09:30 CEST July 29 estimate.
+- Patched the shared Nanotron wrapper from W&B offline mode to disabled mode.
+  This preserves all training settings and queued jobs while preventing the
+  local service/port-file failure that killed the first NL attempt. Shell
+  syntax checks pass, and installed W&B source confirms disabled mode uses a
+  no-op run without starting a service.
+- There are no other active project GPU jobs. Successor oversight `3912896`
+  remains CPU-only/no-GRES and scheduled for 19:21 CEST.
 
 ## Live Delta At 13:25 CEST On July 28
 

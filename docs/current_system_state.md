@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-28 13:25 CEST.
+Last updated: 2026-07-28 13:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,34 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-28 13:55 live plan reconciled; Dolmino W&B retry hardened
+
+- The selected corrected BranchProof matrix is accepted at `39/45` eval
+  rows. All syntax/length, shortcut, both hybrid orders, conditioned-7B,
+  Qwen2.5-7B, and single-modal OLMo-3-32B rows are complete and reported.
+  The only missing six rows are conditioned OLMo-3-32B eval
+  `3881781_12..17`, gated on row-13 recovery `3910990_13` and original row
+  `3883534_14`; row-12 recovery is already final-backed and accepted.
+- Slurm currently projects both conditioned-32B SFT rows for about 17:22 CEST
+  July 28. Control Dolmino continuation `3875826_0` projects 18:44 CEST July
+  28; formal continuation `3875829_1` and exact from-base NL retry
+  `3875832_2` project 09:30 CEST July 29. These are scheduler estimates, not
+  reservations.
+- The NL failure exposed a repeatable operational risk rather than a training
+  defect: `WANDB_MODE=offline` still starts a local W&B service. Changed the
+  shared Nanotron production wrapper default to `WANDB_MODE=disabled`.
+  Pending immutable outer jobs call this shared script from disk at runtime,
+  so control/formal continuations and the NL retry retain their queue
+  positions and now avoid the port-file service entirely. Both Slurm scripts
+  pass `bash -n`; the installed W&B source explicitly maps disabled mode to a
+  no-op run and states that no service process starts.
+- The complete experimental picture is otherwise unchanged: corrected Tiny
+  models are an accepted negative capacity diagnostic; Attribute Constraints
+  is positive but high-variance; semantic iGSM and typed Maze are complete
+  negative/excluded tasks; the corrected 15% continual-pretraining pilot and
+  its multihop suite are null/mixed response-format diagnostics. No additional
+  broad grid is pending.
 
 ### 2026-07-28 13:25 formal boundary, NL retry, and conditioned row 12 accepted
 

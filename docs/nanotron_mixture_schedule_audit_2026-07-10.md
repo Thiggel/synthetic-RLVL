@@ -1,5 +1,19 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-07-28)
+
+The matched 5B Dolmino control and formal runs each reached an audited
+step-5000 state (`2,621,440,000` consumed tokens); their continuations are
+pending. The first NL allocation failed before optimizer step 1 because W&B
+offline mode attempted to start a local service and timed out waiting for its
+port file. The shared production wrapper now defaults to
+`WANDB_MODE=disabled`. This changes only experiment logging: installed W&B
+source maps disabled mode to a no-op run and does not launch the service.
+Pending outer Slurm jobs call the shared wrapper from disk at runtime, so the
+fix applies without resubmission or loss of queue priority. Both wrappers pass
+shell syntax validation. The next allocation must confirm disabled/no-op W&B
+before accepting optimizer progress.
+
 ## Conclusion
 
 The corrected Qwen2.5-7B continual-pretraining pilot implements the intended matched

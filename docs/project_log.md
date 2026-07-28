@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-28
 
+- 13:55 CEST reconciled the complete live plan. Selected corrected BranchProof
+  is accepted at `39/45`; only six conditioned OLMo-3-32B eval rows remain
+  behind pending row-13 recovery `3910990_13` and original row
+  `3883534_14`. Current estimates are 17:22 CEST for those SFT rows, 18:44
+  CEST for control Dolmino continuation, and 09:30 CEST July 29 for formal
+  continuation and the exact from-base NL retry. Because W&B offline mode
+  still launches the service that killed NL, changed the shared Nanotron
+  wrapper default to `WANDB_MODE=disabled`; immutable pending outer jobs call
+  that file at runtime and keep their queue positions. `bash -n` passes for
+  both wrappers, and installed W&B source confirms disabled mode starts no
+  service and returns a no-op run.
 - 13:25 CEST accepted Dolmino formal step 5000 under the complete 645-file,
   zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
   `5000/640000/2621440000` offset gates. Realized consumption is exactly
