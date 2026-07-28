@@ -20,6 +20,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   and passed its final-adapter artifact gate. Eval `3881781_12..17` now waits
   only on `3910990_13` and `3883534_14`. Successor `3912896` is CPU-only,
   no-GRES, and preserved because both active paths remain incomplete.
+- Scoped audit commit is `38089da`. A bounded 60-second
+  `git push origin main` produced no remote response and exited `124`; the
+  existing GitHub SSH/network publication blocker remains.
 
 - 07:25 CEST accepted Dolmino formal step 4500 under the complete 645-file,
   zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact

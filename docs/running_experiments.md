@@ -27,6 +27,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   `3910990_13` and `3883534_14`.
 - Successor `3912896` is dependency-free, CPU-only/no-GRES, and
   BeginTime-pending. The active plan remains incomplete, so it is preserved.
+- Scoped audit commit is `38089da`; a bounded 60-second push timed out with no
+  remote response (`124`), preserving the known publication blocker.
 
 ## Live Delta At 07:25 CEST On July 28
 
