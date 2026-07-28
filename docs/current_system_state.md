@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-28 13:55 CEST.
+Last updated: 2026-07-28 18:04 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-28 18:04 Dolmino step-5000 intermediate eval submitted
+
+- Submitted one-GPU A40 array `3913651_[0-1%2]` to compare the accepted
+  control and formal Dolmino step-5000 checkpoints before terminal 5B
+  training completes. Each row converts its Nanotron checkpoint into a
+  job-local temporary HF model, verifies files/RoPE/CUDA forward locally,
+  evaluates, and deletes only the temporary conversion; restart checkpoints
+  remain untouched.
+- The limited direct readout runs first on 100 examples each from tagged and
+  stock HotpotQA, 2WikiMultiHopQA, and MuSiQue, then on the standard reviewer
+  suite (`gsm8k`, ARC-Challenge, HellaSwag, WinoGrande, PIQA, LogiQA,
+  MATH-500, BBH, MMLU, and MMLU-Pro), also with lm-eval limit 100. Retained
+  generations and limit-aware audits are required.
+- A40 was selected so the eval does not consume the A100-80GB capacity needed
+  by the control/formal continuations and NL retry. The submitted array is
+  pending with no scheduler start estimate. Script:
+  `scripts/slurm/jobs/nanotron_qwen25_dolmino_step5000_intermediate_eval_2026-07-28.slurm`.
 
 ### 2026-07-28 13:55 live plan reconciled; Dolmino W&B retry hardened
 

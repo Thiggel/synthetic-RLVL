@@ -17,7 +17,10 @@ from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", type=Path, required=True)
-    parser.add_argument("--repo-id", required=True)
+    parser.add_argument(
+        "--repo-id",
+        help="Optional uploaded Hugging Face repository to verify. Omit for a local-only conversion audit.",
+    )
     parser.add_argument("--token-env", default="HF_TOKEN")
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args()
@@ -156,7 +159,11 @@ def main() -> None:
     if not model_config["accepted"]:
         raise SystemExit("; ".join(model_config["errors"]))
     forward = verify_cuda_forward(args.checkpoint)
-    remote = audit_remote_files(args.repo_id, set(local["local_files"]), args.token_env)
+    remote = (
+        audit_remote_files(args.repo_id, set(local["local_files"]), args.token_env)
+        if args.repo_id
+        else None
+    )
     report = {
         "accepted": True,
         "checkpoint": str(args.checkpoint),

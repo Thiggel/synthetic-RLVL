@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-28
 
+- 18:04 CEST submitted Dolmino step-5000 intermediate eval
+  `3913651_[0-1%2]` on one A40 per condition for the audited control/formal
+  checkpoints. Each row performs a temporary local Nanotron-to-HF conversion,
+  local files/RoPE/CUDA-forward verification, 100-example tagged and stock
+  HotpotQA/2Wiki/MuSiQue evaluation, then the normal reviewer suite at limit
+  100, with retained generations and limit-aware audits. Temporary HF weights
+  are deleted after eval; restart checkpoints are untouched. Validation:
+  task registries, `bash -n`, `py_compile`, `git diff --check`, Slurm
+  test-only, and focused tests (`11 passed`). The array is pending with no
+  scheduler estimate.
 - 13:55 CEST reconciled the complete live plan. Selected corrected BranchProof
   is accepted at `39/45`; only six conditioned OLMo-3-32B eval rows remain
   behind pending row-13 recovery `3910990_13` and original row

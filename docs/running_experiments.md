@@ -1,8 +1,24 @@
 # Running Experiments
 
-Last updated: 2026-07-28 13:55 CEST.
+Last updated: 2026-07-28 18:04 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 18:04 CEST On July 28
+
+- Submitted Dolmino step-5000 intermediate direct eval
+  `3913651_[0-1%2]` for accepted control/formal checkpoints. Each row uses
+  one A40, converts to a job-local HF checkpoint, locally verifies the
+  conversion, evaluates, and removes only the temporary HF copy.
+- Each condition first runs 100-example tagged and stock
+  HotpotQA/2WikiMultiHopQA/MuSiQue, then the normal reviewer suite at
+  lm-eval limit 100. Both outputs retain raw generations and must pass
+  limit-aware artifact/prompt/metric audits. The array is pending with no
+  start estimate.
+- Validation passed: both task registries, shell syntax, Python compilation,
+  `git diff --check`, Slurm test submission, and relevant tests (`11 passed`).
+  The A40 placement avoids competing with the full-node A100-80GB Dolmino
+  continuation and NL retry.
 
 ## Live Delta At 13:55 CEST On July 28
 
