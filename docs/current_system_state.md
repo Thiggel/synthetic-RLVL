@@ -51,6 +51,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   negative/excluded tasks; the corrected 15% continual-pretraining pilot and
   its multihop suite are null/mixed response-format diagnostics. No additional
   broad grid is pending.
+- Publication recovered in this pass. Main-repo push advanced GitHub from
+  `6c2a616` through `1bfb1d6`, and report-repo push advanced GitHub from
+  `e65926e` through `0265eae`; both local `main` branches are synchronized
+  with `origin/main`.
 
 ### 2026-07-28 13:25 formal boundary, NL retry, and conditioned row 12 accepted
 

@@ -14,7 +14,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   wrapper default to `WANDB_MODE=disabled`; immutable pending outer jobs call
   that file at runtime and keep their queue positions. `bash -n` passes for
   both wrappers, and installed W&B source confirms disabled mode starts no
-  service and returns a no-op run.
+  service and returns a no-op run. Retried publication successfully: all 39
+  accumulated main-repo commits through `1bfb1d6` and five report commits
+  through `0265eae` are now on their respective `origin/main` branches.
 - 13:25 CEST accepted Dolmino formal step 5000 under the complete 645-file,
   zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
   `5000/640000/2621440000` offset gates. Realized consumption is exactly

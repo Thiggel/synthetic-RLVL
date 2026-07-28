@@ -22,6 +22,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   no-op run without starting a service.
 - There are no other active project GPU jobs. Successor oversight `3912896`
   remains CPU-only/no-GRES and scheduled for 19:21 CEST.
+- The prior GitHub SSH timeout cleared: main repo through `1bfb1d6` and report
+  repo through `0265eae` are now pushed to `origin/main`.
 
 ## Live Delta At 13:25 CEST On July 28
 
