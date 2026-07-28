@@ -24,6 +24,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   account-GRES pending; later Dolmino stages retain their dependencies.
   Successor `3911426` is dependency-free, CPU-only/no-GRES, and scheduled for
   13:20 CEST. The active plan remains incomplete, so it is preserved.
+- Scoped audit commit is `162a0fe`; a bounded 60-second push timed out with no
+  remote response (`124`), preserving the known publication blocker.
 
 ## Live Delta At 01:55 CEST On July 28
 

@@ -48,6 +48,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   held until the first stage reaches its planned boundary. Recorded successor
   `3911426` is dependency-free, CPU-only/no-GRES, and BeginTime-pending for
   13:20 CEST. The plan is incomplete, so it is preserved.
+- Scoped audit commit is `162a0fe`. A bounded 60-second
+  `git push origin main` produced no remote response and exited `124`, so the
+  existing GitHub SSH/network blocker remains.
 
 ### 2026-07-28 01:55 formal rotation and conditioned-32B recovery
 
