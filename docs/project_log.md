@@ -4,6 +4,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-28
 
+- 13:25 CEST accepted Dolmino formal step 5000 under the complete 645-file,
+  zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
+  `5000/640000/2621440000` offset gates. Realized consumption is exactly
+  `2490368000` normal plus `131072000` formal tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step5000_20260728.json`.
+- Formal `3875828_1` ended at the planned 24-hour boundary after iteration
+  5021. After accepting step 5000, removed only superseded step 4500,
+  reclaiming about `106.63 GB`; step 5000 is the sole formal restart
+  state.
+- NL `3875831_2` failed before optimizer step 1 because the local W&B service
+  did not create its port file within 30 seconds. No checkpoint exists, so
+  released continuation `3875832_2` is the exact from-base retry.
+- Conditioned-32B row-12 recovery `3897965_12` completed `0:0` at step 10000
+  and passed its final-adapter artifact gate. Eval `3881781_12..17` now waits
+  only on `3910990_13` and `3883534_14`. Successor `3912896` is CPU-only,
+  no-GRES, and preserved because both active paths remain incomplete.
+
 - 07:25 CEST accepted Dolmino formal step 4500 under the complete 645-file,
   zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
   `4500/576000/2359296000` offset gates. Realized consumption is exactly

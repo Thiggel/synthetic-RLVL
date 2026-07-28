@@ -685,3 +685,13 @@ each contain 13 nonempty files with no zero-byte file. Row `3883534_14`
 remains array-throttle pending and exact row-12 resume `3897965_12` remains
 account-GRES pending. Evaluation `3881781_12..17` correctly waits for all
 three SFT rows, so no conditioned-32B result or report update is accepted yet.
+
+## 2026-07-28 Conditioned-32B row-12 recovery completion
+
+Exact row-12 recovery `3897965_12` completed `0:0` at step 10000. Its final
+adapter contains eight nonempty files, including a `536,991,984`-byte
+safetensors payload, and the checkpoint trainer state records
+`global_step=10000`. Slurm removed the fulfilled row-12 dependency
+automatically. Evaluation `3881781_12..17` remains correctly gated only on
+exact row-13 recovery `3910990_13` and original row `3883534_14`, both
+A100-80GB pending. No conditioned-32B metric or report update is accepted yet.

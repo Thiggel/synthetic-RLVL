@@ -1,8 +1,32 @@
 # Running Experiments
 
-Last updated: 2026-07-28 07:25 CEST.
+Last updated: 2026-07-28 13:25 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:25 CEST On July 28
+
+- Formal Dolmino `3875828_1` ended in the expected 24-hour `TIMEOUT` after
+  iteration 5021. Its step-5000 state passed the 645-file, zero-byte, TP4/DP2
+  model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
+  `5000/640000/2621440000` offset gates. Exact realized consumption is
+  `2490368000` normal plus `131072000` formal tokens (`95:5`). Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step5000_20260728.json`.
+- After acceptance, removed only superseded formal step 4500, reclaiming
+  about `106.63 GB`. Formal step 5000 is the sole numeric restart state;
+  project Vault use is `667,160,528 KiB`.
+- NL first stage `3875831_2` failed before step 1 when the local W&B service
+  timed out waiting for its port file. It created no checkpoint. Released
+  continuation `3875832_2` is therefore an exact from-base retry and remains
+  account-GRES pending alongside control/formal continuations
+  `3875826_0/3875829_1`; terminal stages retain their dependencies.
+- Conditioned-32B row-12 recovery `3897965_12` completed at step 10000 and
+  passed the final-adapter gate: eight nonempty files, a
+  `536,991,984`-byte adapter payload, no zero-byte file, and trainer
+  `global_step=10000`. Eval `3881781_12..17` now waits only on A100-80GB rows
+  `3910990_13` and `3883534_14`.
+- Successor `3912896` is dependency-free, CPU-only/no-GRES, and
+  BeginTime-pending. The active plan remains incomplete, so it is preserved.
 
 ## Live Delta At 07:25 CEST On July 28
 

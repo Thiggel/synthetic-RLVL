@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-28 07:25 CEST.
+Last updated: 2026-07-28 13:25 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,34 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-28 13:25 formal boundary, NL retry, and conditioned row 12 accepted
+
+- Dolmino formal first stage `3875828_1` reached iteration 5021 and ended in
+  the expected `TIMEOUT` after `1-00:00:28`, without OOM, quota, or unexpected
+  fatal signatures. Step 5000 passes the complete 645-file, zero-byte,
+  TP4/DP2 model/optimizer/scheduler/RNG gate, Qwen2.5 RoPE `1000000`, and
+  exact offsets `5000/640000/2621440000`. Realized consumption is exactly
+  `2490368000` Dolmino plus `131072000` formal tokens (`95:5`). Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step5000_20260728.json`.
+- Only after step 5000 passed, the superseded formal step-4500 tree was
+  removed, reclaiming about `106.63 GB`. Step 5000 is the sole formal
+  restart state and the project Vault tree is `667,160,528 KiB`.
+- NL first stage `3875831_2` failed before optimizer step 1 because the local
+  W&B service did not produce its port file within 30 seconds. It wrote no
+  training checkpoint, so released continuation `3875832_2` is the exact
+  from-base retry and remains account-GRES pending; no scientific state is
+  replayed. Control/formal continuations `3875826_0/3875829_1` are also
+  account-GRES pending.
+- Conditioned-32B exact row-12 recovery `3897965_12` completed `0:0` at step
+  10000. Its final adapter has eight nonempty files, a
+  `536,991,984`-byte safetensors payload, no zero-byte file, and trainer state
+  `global_step=10000`. Slurm removed the fulfilled dependency automatically;
+  eval `3881781_12..17` now waits only on row-13 recovery `3910990_13` and
+  original row `3883534_14`, both A100-80GB account-GRES pending.
+- Recorded successor `3912896` is dependency-free, CPU-only/no-GRES, and
+  BeginTime-pending. Both critical paths remain incomplete, so it is
+  preserved.
 
 ### 2026-07-28 07:25 formal step-4500 rotation and live recoveries
 

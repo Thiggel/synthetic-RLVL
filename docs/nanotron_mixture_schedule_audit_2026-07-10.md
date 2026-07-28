@@ -1015,3 +1015,21 @@ The writer retained steps 3500, 4000, and 4500 and raised user Vault use to
 superseded step-3500/4000 trees were removed, reclaiming
 `213,256,774,301` bytes. Step 4500 remains the sole numeric formal restart
 state and Vault returned to `751G/1000G`, `181k/200k` files.
+
+## 2026-07-28 Formal boundary and NL startup retry
+
+Formal first stage `3875828_1` logged iteration 5021 and ended at the expected
+24-hour boundary. Step 5000 independently passes the complete 645-file,
+zero-byte, TP4/DP2 model/optimizer/scheduler/RNG gate, Qwen2.5 RoPE
+`1000000`, and exact offsets `5000/640000/2621440000`. Its metadata records
+exactly `2490368000` normal Dolmino tokens and `131072000` formal tokens,
+preserving the exact 95:5 split. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_logic_step5000_20260728.json`.
+Only after acceptance was superseded step 4500 removed, reclaiming
+about `106.63 GB`; step 5000 is the sole formal restart state.
+
+NL first stage `3875831_2` reached model and dataloader initialization but
+failed before optimizer step 1 because the local W&B service did not create
+its port file within 30 seconds. It wrote no training checkpoint. The
+dependency-released continuation `3875832_2` is therefore the exact from-base
+retry with no scientific state or token exposure to replay.
