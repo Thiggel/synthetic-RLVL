@@ -39,7 +39,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   generations and limit-aware audits are required.
 - A40 was selected so the eval does not consume the A100-80GB capacity needed
   by the control/formal continuations and NL retry. The submitted array is
-  pending with no scheduler start estimate. Script:
+  pending with a provisional 07:42 CEST August 4 estimate. Script:
   `scripts/slurm/jobs/nanotron_qwen25_dolmino_step5000_intermediate_eval_2026-07-28.slurm`.
 
 ### 2026-07-28 13:55 live plan reconciled; Dolmino W&B retry hardened

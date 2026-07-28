@@ -13,8 +13,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - Each condition first runs 100-example tagged and stock
   HotpotQA/2WikiMultiHopQA/MuSiQue, then the normal reviewer suite at
   lm-eval limit 100. Both outputs retain raw generations and must pass
-  limit-aware artifact/prompt/metric audits. The array is pending with no
-  start estimate.
+  limit-aware artifact/prompt/metric audits. The array is pending with a
+  provisional 07:42 CEST August 4 estimate.
 - Validation passed: both task registries, shell syntax, Python compilation,
   `git diff --check`, Slurm test submission, and relevant tests (`11 passed`).
   The A40 placement avoids competing with the full-node A100-80GB Dolmino

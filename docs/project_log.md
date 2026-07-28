@@ -12,8 +12,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   100, with retained generations and limit-aware audits. Temporary HF weights
   are deleted after eval; restart checkpoints are untouched. Validation:
   task registries, `bash -n`, `py_compile`, `git diff --check`, Slurm
-  test-only, and focused tests (`11 passed`). The array is pending with no
-  scheduler estimate.
+  test-only, and focused tests (`11 passed`). The array is pending with a
+  provisional 07:42 CEST August 4 scheduler estimate; compatible A100
+  alternatives estimate later and would contend with production.
 - 13:55 CEST reconciled the complete live plan. Selected corrected BranchProof
   is accepted at `39/45`; only six conditioned OLMo-3-32B eval rows remain
   behind pending row-13 recovery `3910990_13` and original row
