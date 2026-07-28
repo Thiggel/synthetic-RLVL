@@ -1,8 +1,29 @@
 # Running Experiments
 
-Last updated: 2026-07-28 01:55 CEST.
+Last updated: 2026-07-28 07:25 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:25 CEST On July 28
+
+- Dolmino formal `3875828_1` is healthy through iteration 4851 at about
+  `30.8K` tokens/s. Its step-4500 state passed the complete 645-file,
+  zero-byte, TP4/DP2 model/optimizer/scheduler/RNG, RoPE-`1000000`, and exact
+  `4500/576000/2359296000` offset gates. Exact realized consumption is
+  `2241331200` normal plus `117964800` formal tokens (`95:5`). Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step4500_20260728.json`.
+- After that acceptance, removed only superseded formal steps 3500/4000,
+  reclaiming `213,256,774,301` bytes. Formal step 4500 is the sole numeric
+  restart state; Vault is back to `751G/1000G`, `181k/200k` files.
+- Conditioned-32B row-12 exact resume `3897965_12` is healthy through step
+  9160 on A100-80GB node `a0831`, with complete checkpoints 8750/9000.
+  Row-13 resume `3910990_13` and original row `3883534_14` are account-GRES
+  pending. Eval `3881781_12..17` retains its repaired three-job dependency
+  and A100-80GB protocol.
+- Control continuation `3875826_0` and NL first stage `3875831_2` remain
+  account-GRES pending; later Dolmino stages retain their dependencies.
+  Successor `3911426` is dependency-free, CPU-only/no-GRES, and scheduled for
+  13:20 CEST. The active plan remains incomplete, so it is preserved.
 
 ## Live Delta At 01:55 CEST On July 28
 

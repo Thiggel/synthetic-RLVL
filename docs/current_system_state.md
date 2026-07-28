@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-28 01:55 CEST.
+Last updated: 2026-07-28 07:25 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,31 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-28 07:25 formal step-4500 rotation and live recoveries
+
+- Dolmino formal first stage `3875828_1` is healthy through iteration 4851
+  at about `30.8K` tokens/s with finite loss and gradient norm. Step 4500
+  passed the complete 645-file, zero-byte, TP4/DP2
+  model/optimizer/scheduler/RNG gate, Qwen2.5 RoPE `1000000`, and exact
+  offsets `4500/576000/2359296000`. Realized consumption is exactly
+  `2241331200` Dolmino plus `117964800` formal tokens (`95:5`). Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step4500_20260728.json`.
+- The live writer retained formal steps 3500, 4000, and 4500, raising Vault
+  use to `1149G/1000G`. Only after step 4500 passed the complete restart
+  gate, the exact superseded step-3500/4000 trees were removed, reclaiming
+  `213,256,774,301` bytes. Step 4500 is now the sole numeric formal restart
+  state; Vault is `751G/1000G`, `181k/200k` files.
+- Conditioned-32B row-12 recovery `3897965_12` remains healthy on verified
+  A100-80GB node `a0831`, through step 9160 with complete checkpoints 8750
+  and 9000. Row-13 recovery `3910990_13` and original row `3883534_14`
+  remain account-GRES pending; eval `3881781_12..17` retains
+  `afterok:3897965:3910990:3883534_14` and its A100-80GB protocol.
+- Control continuation `3875826_0` and NL first stage `3875831_2` remain
+  account-GRES pending. Formal continuation `3875829_1` remains correctly
+  held until the first stage reaches its planned boundary. Recorded successor
+  `3911426` is dependency-free, CPU-only/no-GRES, and BeginTime-pending for
+  13:20 CEST. The plan is incomplete, so it is preserved.
 
 ### 2026-07-28 01:55 formal rotation and conditioned-32B recovery
 
