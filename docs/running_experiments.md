@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-07-29 14:53 CEST.
+Last updated: 2026-07-29 15:11 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 15:11 CEST On July 29
+
+- Work group inode use is now 463,067, below the 500k soft quota. No in-scope
+  job started, failed, or was canceled during cleanup; all pending logs remain
+  absent.
+- Synthetic conditioned-32B SFT `3910990_13/3883534_14` remains A100-80GB
+  account-GRES pending without current estimates. Eval `3881781_12..17`
+  retains its exact two-job dependency. Required final/resume artifacts remain
+  complete and nonempty.
+- Dolmino control continuation `3875826_0` provisionally estimates 18:45
+  CEST. Formal continuation `3875829_1` and exact NL retry `3875832_2`
+  estimate 06:46 CEST July 30. Terminal dependencies are intact, and both
+  accepted 645-file step-5000 restart states have no empty files.
+- A40 intermediate eval `3913651_[0-1%2]` provisionally estimates 16:37 CEST
+  and has not created an output root. Current compatible capacity is
+  allocated/mixed/draining, so no partition or dependency edit was made.
 
 ## Live Delta At 14:53 CEST On July 29
 

@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-29
 
+- 15:11 CEST post-cleanup verification found Work at 463,067 group inodes,
+  below the soft quota, with no new in-scope start/failure/cancellation or
+  pending-job log. Conditioned-32B SFT/eval dependencies, Dolmino
+  continuation chains, and all required final/restart artifacts remain
+  intact. Current provisional starts are 16:37 for A40 step-5000 eval, 18:45
+  for control continuation, and 06:46 July 30 for formal/NL. No compatible
+  partition widening or job mutation was applied.
 - 14:53 CEST removed only 157 W&B `tmp/` trees after verifying that each held
   one empty `code/` directory and zero files/bytes, freeing exactly 314 Work
   inodes without touching run histories. Removed Home-checkout Python/pytest

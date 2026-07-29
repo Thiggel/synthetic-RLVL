@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-29 14:53 CEST.
+Last updated: 2026-07-29 15:11 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,27 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-29 15:11 post-cleanup live job verification
+
+- Group Work usage is now `463,067` files, below both the 500k soft and 600k
+  hard inode limits. No synthetic-RLVL job started, failed, or was canceled
+  during cleanup, and no pending-job log was created.
+- Conditioned-32B SFT recovery `3910990_13` and original row `3883534_14`
+  remain A100-80GB account-GRES pending without current start estimates.
+  Eval `3881781_12..17` retains exactly those two dependencies. The accepted
+  seed-3407 final remains nine files/no empty files, and the row-13 step-7500
+  resume remains 13 files/no empty files with `global_step=7500`.
+- Dolmino control continuation `3875826_0` is capacity-pending with a
+  provisional 18:45 CEST start. Formal continuation `3875829_1` and exact
+  from-base NL retry `3875832_2` remain capacity-pending with provisional
+  06:46 CEST July-30 starts; their terminal stages retain correct `afterany`
+  dependencies. Both accepted step-5000 restart trees remain 645 files with
+  no empty files.
+- A40 step-5000 eval `3913651_[0-1%2]` remains capacity-pending with a
+  provisional 16:37 CEST start and no output root yet. Partition inspection
+  shows the relevant A100-80GB and A40 capacity allocated/mixed/draining;
+  no compatible beneficial widening or job mutation was applied.
 
 ### 2026-07-29 14:53 minimal safe project inode cleanup
 
