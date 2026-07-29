@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-29 15:11 CEST.
+Last updated: 2026-07-29 19:28 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-29 19:28 live scheduler and successor reconciliation
+
+- No in-scope experiment job has started, failed, or completed since the
+  15:11 handoff, and every pending-job log/output root remains absent.
+  Conditioned-32B SFT `3910990_13/3883534_14` now has provisional
+  20:52 CEST starts; eval `3881781_12..17` still depends exactly on those two
+  jobs and retains A100-80GB-only resources.
+- Dolmino control/formal continuations `3875826_0/3875829_1` now project
+  21:40 CEST, and exact from-base NL retry `3875832_2` projects 22:55 CEST.
+  Terminal stages `3875827_0/3875830_1/3875833_2` retain their respective
+  `afterany` dependencies. The accepted control/formal step-5000 trees remain
+  the sole numeric restart states at 645 files each with no empty files and
+  exact offsets `5000/640000/2621440000`; formal remains exactly 95:5.
+- A40 intermediate eval `3913651_[0-1%2]` lost its scheduler estimate and
+  remains account-GRES pending. One A40 node is physically idle, but the
+  association GPU cap is still binding, so no partition/dependency edit is
+  useful. Work group use is `464k/500k` files and Vault is
+  `743G/1000G`, `181k/200k` files.
+- Recorded successor `3925270` is verified dependency-free, CPU-only/no-GRES
+  on `a100mig`, and scheduled for 01:24 CEST July 30. Both critical paths
+  remain incomplete, so it is preserved.
 
 ### 2026-07-29 15:11 post-cleanup live job verification
 
