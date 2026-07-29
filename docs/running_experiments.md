@@ -1,8 +1,19 @@
 # Running Experiments
 
-Last updated: 2026-07-29 13:26 CEST.
+Last updated: 2026-07-29 14:22 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 14:22 CEST On July 29
+
+- Project-scoped quota audit removed only superseded conditioned-32B SFT
+  restart snapshots: seed-3407 steps 9750/10000 after its accepted final, and
+  seed-3408 step 7250 after validating the newer resume step 7500. Exact
+  reclaim was `9,728,633,344` bytes; Vault is now `743G/1000G`.
+- The eval-required seed-3407 final and recovery-required seed-3408
+  checkpoint-7500 remain complete and nonempty. Both Dolmino step-5000
+  restart trees and every other checkpoint/final remain untouched. The 69G
+  `$WORK/synthetic-RLVL` tree was audited but conservatively left unchanged.
 
 ## Live Delta At 13:26 CEST On July 29
 

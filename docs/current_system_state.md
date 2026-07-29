@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-29 13:26 CEST.
+Last updated: 2026-07-29 14:22 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-29 14:22 conservative project quota cleanup
+
+- Audited the project-scoped Vault and Work trees against live Slurm jobs,
+  resume/eval scripts, accepted artifact gates, and the active handoff. Removed
+  only three superseded conditioned-32B SFT restart snapshots:
+  seed-3407 `checkpoint-9750` and `checkpoint-10000`, whose completed,
+  accepted nine-file `final/` adapter is the eval input; and seed-3408
+  `checkpoint-7250`, whose pending exact recovery uses the newer complete
+  `checkpoint-7500`.
+- Reclaimed exactly `9,728,633,344` quota-accounted bytes. Vault use fell
+  from `752G` to `743G`; the project Vault tree fell from
+  `683,172,380,160` to `673,443,746,816` bytes. Revalidated the retained
+  seed-3407 final (nine files, no empty files) and seed-3408 step-7500
+  restart (13 files, no empty files).
+- Preserved both accepted Dolmino step-5000 trees, all final adapters,
+  datasets, raw generations, audits, and ambiguous historical outputs.
+  The 69G project tree under `$WORK` was audited but not changed because no
+  additional artifact there was provably disposable without risking retained
+  results or checkpoints.
 
 ### 2026-07-29 13:26 live gates and near-term scheduler estimates
 

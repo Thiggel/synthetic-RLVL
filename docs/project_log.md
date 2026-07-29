@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-29
 
+- 14:22 CEST completed a conservative `$HPCVAULT`/`$WORK` project quota
+  audit. Deleted only conditioned-32B seed-3407 checkpoints 9750/10000 after
+  its accepted final and seed-3408 checkpoint 7250 after validating the newer
+  step-7500 recovery state. Reclaimed `9,728,633,344` bytes and reduced Vault
+  use from `752G` to `743G`. Retained final/checkpoint gates have no empty
+  files; all Dolmino states, other checkpoints, datasets, generations, and
+  ambiguous historical outputs were preserved. No `$WORK` artifact met the
+  same high-confidence deletion threshold, so that 69G tree was unchanged.
 - 13:26 CEST scheduler reconciliation found no new in-scope GPU start or
   completion. Conditioned-32B `3910990_13/3883534_14` now estimates 17:23
   CEST; Dolmino control `3875826_0` estimates 22:16 CEST, formal/NL
