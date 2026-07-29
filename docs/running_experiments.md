@@ -1,8 +1,18 @@
 # Running Experiments
 
-Last updated: 2026-07-29 14:40 CEST.
+Last updated: 2026-07-29 14:53 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 14:53 CEST On July 29
+
+- Removed exactly 314 provably disposable Work inodes: 157 W&B run-local
+  `tmp/` directories and their 157 empty `code/` children. They contained no
+  files or bytes. All W&B histories and scientific artifacts remain intact.
+- Group Work usage now reports about 588.7k files and a fresh mkdir/file
+  probe succeeds. The roughly 11k total reduction from the prior hard limit
+  exceeds this repo's 314-inode cleanup, so it is not attributed to this
+  action. Work remains above the 500k soft limit and needs more margin.
 
 ## Live Delta At 14:40 CEST On July 29
 

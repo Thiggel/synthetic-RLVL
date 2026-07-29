@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-29 14:40 CEST.
+Last updated: 2026-07-29 14:53 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,23 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-29 14:53 minimal safe project inode cleanup
+
+- Confirmed there are no same-named top-level run, dataset, pass@k, lm-eval,
+  or analysis directories duplicated between the Work and Vault project
+  trees. Preserved all unique checkpoints, results, generations, datasets,
+  Slurm logs, W&B histories, and untracked audit artifacts.
+- Removed only 157 W&B per-run `tmp/` trees from Work after verifying that
+  each contained exactly one empty `code/` directory and no files or bytes.
+  This project-attributable cleanup freed exactly 314 Work inodes. Also
+  removed 15 Python `__pycache__` trees and the pytest cache from the Home
+  checkout (about 4.7M); these do not affect Work quota.
+- Group Work usage subsequently reported about 588.7k files, materially more
+  reduction than this repo's 314-inode cleanup and therefore consistent with
+  concurrent cleanup or delayed quota accounting. A fresh Work directory and
+  file creation probe now succeeds. The group remains above the 500k soft
+  limit, so additional cross-project cleanup is still required for margin.
 
 ### 2026-07-29 14:40 shared Work inode hard limit confirmed
 

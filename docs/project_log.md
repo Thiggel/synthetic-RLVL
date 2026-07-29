@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-29
 
+- 14:53 CEST removed only 157 W&B `tmp/` trees after verifying that each held
+  one empty `code/` directory and zero files/bytes, freeing exactly 314 Work
+  inodes without touching run histories. Removed Home-checkout Python/pytest
+  caches separately. No exact top-level Work/Vault artifact duplicates were
+  found, so all scientific data remained intact. Group Work count later read
+  about 588.7k and a write probe passed; the larger roughly 11k reduction is
+  not attributed to this repo cleanup. The 500k soft limit remains exceeded.
 - 14:40 CEST identified the cross-project controller blocker: group `c107fa`
   is at the exact 600,000-file hard quota on `$WORK` (`/home/atuin`), despite
   ample bytes and global filesystem inodes. Bounded probes reproduce
