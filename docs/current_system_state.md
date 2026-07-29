@@ -28,9 +28,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 - No in-scope experiment job has started, failed, or completed since the
   15:11 handoff, and every pending-job log/output root remains absent.
-  Conditioned-32B SFT `3910990_13/3883534_14` now has provisional
-  20:52 CEST starts; eval `3881781_12..17` still depends exactly on those two
-  jobs and retains A100-80GB-only resources.
+  Conditioned-32B SFT `3910990_13/3883534_14` briefly showed provisional
+  20:52 CEST starts, but those estimates disappeared on the final scheduler
+  sample; eval `3881781_12..17` still depends exactly on those two jobs and
+  retains A100-80GB-only resources.
 - Dolmino control/formal continuations `3875826_0/3875829_1` now project
   21:40 CEST, and exact from-base NL retry `3875832_2` projects 22:55 CEST.
   Terminal stages `3875827_0/3875830_1/3875833_2` retain their respective

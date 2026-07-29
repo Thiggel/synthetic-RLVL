@@ -5,12 +5,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 ## 2026-07-29
 
 - 19:28 CEST found no new in-scope experiment start, completion, failure,
-  log, or output artifact. Conditioned-32B `3910990_13/3883534_14` now
-  projects 20:52; Dolmino control/formal `3875826_0/3875829_1` project
-  21:40, and exact NL retry `3875832_2` projects 22:55. Their eval/terminal
-  dependencies remain exact. A40 intermediate eval `3913651` lost its
-  estimate and remains account-GRES pending despite physical idle capacity,
-  so no scheduler mutation was made. Revalidated the two BranchProof
+  log, or output artifact. Conditioned-32B `3910990_13/3883534_14` briefly
+  projected 20:52, but both estimates disappeared on the final sample;
+  Dolmino control/formal `3875826_0/3875829_1` project 21:40, and exact NL
+  retry `3875832_2` projects 22:55. Their eval/terminal dependencies remain
+  exact. A40 intermediate eval `3913651` lost its estimate and remains
+  account-GRES pending despite physical idle capacity, so no scheduler
+  mutation was made. Revalidated the two BranchProof
   final/resume artifacts and both 645-file Dolmino step-5000 restart states.
   Work is `464k/500k` files and Vault is `743G/1000G`, `181k/200k` files.
   Preserved dependency-free CPU-only successor `3925270` for 01:24 CEST

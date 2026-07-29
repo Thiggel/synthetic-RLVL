@@ -7,9 +7,10 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 ## Live Delta At 19:28 CEST On July 29
 
 - No in-scope experiment start, completion, or failure occurred. Conditioned
-  OLMo-3-32B SFT `3910990_13/3883534_14` now provisionally projects
-  20:52 CEST; eval `3881781_12..17` retains only those two dependencies and
-  its full A100-80GB protocol.
+  OLMo-3-32B SFT `3910990_13/3883534_14` briefly projected 20:52 CEST, but
+  both estimates disappeared on the final scheduler sample. Eval
+  `3881781_12..17` retains only those two dependencies and its full
+  A100-80GB protocol.
 - Dolmino control/formal continuations `3875826_0/3875829_1` provisionally
   project 21:40 CEST, while exact from-base NL retry `3875832_2` projects
   22:55 CEST. Terminal jobs `3875827_0/3875830_1/3875833_2` retain their
