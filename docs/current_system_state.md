@@ -38,13 +38,16 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   normally. The Work quota is shared by private trees for users
   `c107fa10..c107fa13`, so another group member can contribute to the
   aggregate blocker; sibling permissions prevent row-level attribution.
-- Known inode-heavy paths in this user's Work tree include `$WORK/.venv`
-  (94,362 entries), `$WORK/TextJEPA` (43,851), and
-  `$WORK/synthetic-RLVL` (9,946). No deletion was made because the venv and
-  other-project artifacts may be active. Synthetic-RLVL environment setup
-  directs caches and W&B state to Work, so pending jobs remain at risk of
-  write failures until the group frees inodes or the quota is raised; no
-  queued job or dependency was changed in this diagnostic pass.
+- A user-quota query and complete top-level inventory attribute `441,032` of
+  the group `600,000` Work inodes (73.5%) to `c107fa12`; the other three
+  users together account for `158,968`, but cross-user queries are
+  permission-denied. The largest local inode consumers are `FOMO_runtime`
+  (146,017), `$WORK/.venv` (94,362), `babylm_runtime` (47,899), TextJEPA
+  (43,851), `nanotron` (32,089), and `.local` (30,762). No deletion was made
+  because these cross-project runtimes may be active. Synthetic-RLVL
+  environment setup directs caches and W&B state to Work, so pending jobs
+  remain at risk of write failures until the group frees inodes or the quota
+  is raised; no queued job or dependency was changed in this diagnostic pass.
 
 ### 2026-07-29 14:22 conservative project quota cleanup
 

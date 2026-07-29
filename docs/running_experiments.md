@@ -11,10 +11,14 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   34 hours of grace shown). Direct `mkdir` probes fail with `Disk quota
   exceeded` in `$WORK` and succeed in Home, Vault, and scratch. Byte quota is
   not the constraint.
-- This group quota is shared across `c107fa10..c107fa13`; private sibling
-  trees prevent attribution. This user's known Work contributors include
-  `.venv` (94,362 entries), TextJEPA (43,851), and synthetic-RLVL (9,946).
-  No ambiguous venv, checkpoint, result, or other-project deletion was made.
+- This group quota is shared across `c107fa10..c107fa13`. Exact user quota
+  reports attribute 441,032 Work inodes (73.5%) to `c107fa12`; the other
+  three users together account for 158,968, but private sibling trees and
+  quota permissions prevent their individual split. The largest local
+  contributors are `FOMO_runtime` (146,017), `.venv` (94,362),
+  `babylm_runtime` (47,899), TextJEPA (43,851), `nanotron` (32,089), and
+  `.local` (30,762). No ambiguous runtime, checkpoint, result, or
+  other-project deletion was made.
 - All in-scope GPU jobs remain pending. Because `scripts/env.sh` points
   runtime caches and W&B directories to Work, they may fail on any new Work
   file until inodes are freed or the group quota is raised. W&B remains
