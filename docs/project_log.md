@@ -2,6 +2,20 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-29
+
+- 13:26 CEST scheduler reconciliation found no new in-scope GPU start or
+  completion. Conditioned-32B `3910990_13/3883534_14` now estimates 17:23
+  CEST; Dolmino control `3875826_0` estimates 22:16 CEST, formal/NL
+  `3875829_1/3875832_2` estimate 04:17 CEST July 30, and A40 intermediate
+  eval `3913651_[0-1%2]` advanced from August 4 to 23:01 CEST July 29.
+  Pending logs and the intermediate-eval output root remain absent.
+- Reconfirmed that accepted control/formal step-5000 trees are intact as the
+  sole numeric restart states, their audits retain 645 files and no empty
+  files, and the runtime wrapper supplies disabled/no-op W&B. Vault is
+  `752G/1000G`, `181k/200k` files. Preserved CPU-only/no-GRES successor
+  `3924006` for 19:22 CEST because both critical paths remain incomplete.
+
 ## 2026-07-28
 
 - 18:04 CEST submitted Dolmino step-5000 intermediate eval

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-28 18:04 CEST.
+Last updated: 2026-07-29 13:26 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,29 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-29 13:26 live gates and near-term scheduler estimates
+
+- No in-scope GPU job has started or completed since the July-28 handoff.
+  Conditioned-32B row-13 recovery `3910990_13` and original row
+  `3883534_14` remain A100-80GB account-GRES pending, now with provisional
+  17:23 CEST starts. Eval `3881781_12..17` still depends only on those two
+  rows and retains the full A100-80GB protocol.
+- Dolmino control continuation `3875826_0` remains account-GRES pending with
+  a provisional 22:16 CEST start. Formal continuation `3875829_1` and exact
+  from-base NL retry `3875832_2` remain pending with provisional 04:17 CEST
+  July-30 starts. The shared runtime wrapper still defaults to
+  `WANDB_MODE=disabled`; no pending continuation log or new checkpoint exists.
+- Step-5000 intermediate eval `3913651_[0-1%2]` remains A40 account-GRES
+  pending, but its estimate moved materially from August 4 to 23:01 CEST
+  July 29. Its output root is absent, so no raw-generation or metric audit is
+  open.
+- Accepted control/formal step-5000 checkpoint trees remain the sole numeric
+  restart states and their persisted audits still report `status=accepted`,
+  645 files, and no zero-byte files. Vault is `752G/1000G`, `181k/200k`
+  files. Recorded successor `3924006` is dependency-free, CPU-only/no-GRES,
+  and scheduled for 19:22 CEST; both critical paths remain incomplete, so it
+  is preserved.
 
 ### 2026-07-28 18:04 Dolmino step-5000 intermediate eval submitted
 

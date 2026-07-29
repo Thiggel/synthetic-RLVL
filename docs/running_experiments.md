@@ -1,8 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-07-28 18:04 CEST.
+Last updated: 2026-07-29 13:26 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:26 CEST On July 29
+
+- No in-scope GPU job started or completed. Conditioned-32B SFT
+  `3910990_13/3883534_14` remains A100-80GB account-GRES pending with
+  provisional 17:23 CEST starts; full-protocol eval `3881781_12..17`
+  retains its two-job dependency.
+- Dolmino continuation/retry `3875826_0/3875829_1/3875832_2` remains
+  account-GRES pending. Current provisional starts are 22:16 CEST for control
+  and 04:17 CEST July 30 for formal/NL. No pending-job log or new checkpoint
+  exists; the shared wrapper still supplies disabled/no-op W&B.
+- A40 intermediate eval `3913651_[0-1%2]` remains pending, but its estimate
+  advanced materially to 23:01 CEST July 29. The output root remains absent,
+  so there are no generations or metrics to inspect.
+- Accepted control/formal step-5000 trees remain intact as the sole numeric
+  restart checkpoints. Vault is `752G/1000G`, `181k/200k` files.
+  Successor `3924006` is dependency-free, CPU-only/no-GRES, and scheduled for
+  19:22 CEST; it remains required.
 
 ## Live Delta At 18:04 CEST On July 28
 
