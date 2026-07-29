@@ -2,6 +2,22 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-30
+
+- 01:27 CEST found no new in-scope experiment start, completion, failure,
+  log, or output artifact. Conditioned-32B `3910990_13/3883534_14` and A40
+  intermediate eval `3913651_[0-1%2]` remain account-GRES pending without
+  estimates. Dolmino control/formal/NL
+  `3875826_0/3875829_1/3875832_2` now share a provisional 02:11 CEST
+  forecast, but each requests a full eight-A100-80GB node under the same
+  association cap, so this is not a concurrent-start guarantee. Revalidated
+  the exact dependencies, conditioned-32B final/restart artifacts, and both
+  645-file nonempty Dolmino step-5000 states. Work is `464k/500k` files and
+  Vault is `743G/1000G`, `181k/200k` files. Preserved dependency-free,
+  CPU-only/no-GRES successor `3926040` for 07:24 CEST because both critical
+  paths remain incomplete; no scheduler mutation or report update was
+  justified.
+
 ## 2026-07-29
 
 - 19:28 CEST found no new in-scope experiment start, completion, failure,

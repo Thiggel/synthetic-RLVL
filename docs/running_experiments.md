@@ -1,8 +1,29 @@
 # Running Experiments
 
-Last updated: 2026-07-29 19:28 CEST.
+Last updated: 2026-07-30 01:27 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:27 CEST On July 30
+
+- No in-scope experiment start, completion, failure, log, or output artifact
+  appeared. Conditioned OLMo-3-32B SFT `3910990_13/3883534_14` remains
+  A100-80GB account-GRES pending without estimates; eval
+  `3881781_12..17` retains exactly those dependencies and the full protocol.
+- Dolmino control/formal continuations `3875826_0/3875829_1` and exact NL
+  retry `3875832_2` now provisionally project 02:11 CEST. All three request a
+  full eight-A100-80GB node under the same association cap, so the common
+  estimate does not imply concurrent starts. Terminal stages
+  `3875827_0/3875830_1/3875833_2` retain their correct `afterany`
+  dependencies.
+- Both accepted Dolmino step-5000 trees remain 645-file, nonempty,
+  exact-offset restart states. The accepted conditioned-32B seed-3407 final
+  and seed-3408 step-7500 state remain intact; seed 3409 has correctly written
+  no run root before starting. A40 step-5000 eval `3913651_[0-1%2]` remains
+  account-GRES pending without an estimate, so no scheduler mutation was made.
+- Work group quota is `464k/500k` files; Vault is `743G/1000G`,
+  `181k/200k` files. Successor oversight `3926040` is dependency-free,
+  CPU-only/no-GRES, and scheduled for 07:24 CEST; it remains required.
 
 ## Live Delta At 19:28 CEST On July 29
 

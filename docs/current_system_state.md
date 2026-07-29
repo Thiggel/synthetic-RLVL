@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-29 19:28 CEST.
+Last updated: 2026-07-30 01:27 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,31 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-30 01:27 scheduler and artifact reconciliation
+
+- No in-scope experiment job has started, failed, or completed since the
+  prior handoff, and every pending-job log plus the intermediate-eval output
+  root remains absent. Conditioned-32B SFT `3910990_13/3883534_14` still has
+  no start estimate; eval `3881781_12..17` retains exactly those two
+  dependencies and its A100-80GB-only resources.
+- Dolmino control/formal continuations `3875826_0/3875829_1` and exact
+  from-base NL retry `3875832_2` now share a provisional 02:11 CEST start.
+  These are competing full-node requests under the association GPU cap, so
+  the identical forecast is not a concurrent-start guarantee. Terminal jobs
+  `3875827_0/3875830_1/3875833_2` retain their exact `afterany`
+  dependencies.
+- Revalidated both accepted Dolmino step-5000 trees at 645 files with no
+  empty files and exact offsets `5000/640000/2621440000`; formal remains
+  exactly 95:5. The accepted conditioned-32B seed-3407 final and seed-3408
+  step-7500 restart remain intact, while the seed-3409 root is correctly
+  absent before first start. A40 intermediate eval `3913651_[0-1%2]`
+  remains account-GRES pending without an estimate despite physical idle A40
+  capacity, so no scheduler edit is useful.
+- Work group use is `464k/500k` files and Vault is `743G/1000G`,
+  `181k/200k` files. Recorded successor `3926040` is dependency-free,
+  CPU-only/no-GRES on `a100mig`, and scheduled for 07:24 CEST. Both critical
+  paths remain incomplete, so it is preserved.
 
 ### 2026-07-29 19:28 live scheduler and successor reconciliation
 
