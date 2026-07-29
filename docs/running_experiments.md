@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-07-29 14:22 CEST.
+Last updated: 2026-07-29 14:40 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 14:40 CEST On July 29
+
+- `$WORK` is currently unable to allocate an inode: group `c107fa` is at its
+  exact 600,000-file hard limit on `/home/atuin` (500,000 soft limit; about
+  34 hours of grace shown). Direct `mkdir` probes fail with `Disk quota
+  exceeded` in `$WORK` and succeed in Home, Vault, and scratch. Byte quota is
+  not the constraint.
+- This group quota is shared across `c107fa10..c107fa13`; private sibling
+  trees prevent attribution. This user's known Work contributors include
+  `.venv` (94,362 entries), TextJEPA (43,851), and synthetic-RLVL (9,946).
+  No ambiguous venv, checkpoint, result, or other-project deletion was made.
+- All in-scope GPU jobs remain pending. Because `scripts/env.sh` points
+  runtime caches and W&B directories to Work, they may fail on any new Work
+  file until inodes are freed or the group quota is raised. W&B remains
+  disabled for the pending Dolmino jobs, but no job/dependency mutation was
+  authorized or applied.
 
 ## Live Delta At 14:22 CEST On July 29
 

@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-29
 
+- 14:40 CEST identified the cross-project controller blocker: group `c107fa`
+  is at the exact 600,000-file hard quota on `$WORK` (`/home/atuin`), despite
+  ample bytes and global filesystem inodes. Bounded probes reproduce
+  `Disk quota exceeded` for Work `mkdir` and succeed in Home, Vault, and
+  scratch. The quota is shared across users `c107fa10..c107fa13`; private
+  sibling trees prevent per-user attribution. Recorded the risk to pending
+  jobs because project caches/W&B state target Work. No deletion, job edit,
+  cancellation, or resubmission was made.
 - 14:22 CEST completed a conservative `$HPCVAULT`/`$WORK` project quota
   audit. Deleted only conditioned-32B seed-3407 checkpoints 9750/10000 after
   its accepted final and seed-3408 checkpoint 7250 after validating the newer

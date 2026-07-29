@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-29 14:22 CEST.
+Last updated: 2026-07-29 14:40 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-29 14:40 shared Work inode hard limit confirmed
+
+- Diagnosed the controller `mkdir` failure as the group inode quota on
+  `/home/atuin`, not user byte quota or global filesystem capacity.
+  `quota -g` reports group `c107fa` at exactly `600,000` files against a
+  `500,000` soft and `600,000` hard limit, with about 34 hours of soft-limit
+  grace remaining. Group byte use is only about 6.55T against 10T soft/12.5T
+  hard, and the filesystem itself has 916T free.
+- Reproduced the failure with a bounded probe: both `$WORK` and
+  `$WORK/TextJEPA` reject `mkdir` with `Disk quota exceeded`; `$HOME`,
+  `$HPCVAULT`, and project scratch all create and remove a directory/file
+  normally. The Work quota is shared by private trees for users
+  `c107fa10..c107fa13`, so another group member can contribute to the
+  aggregate blocker; sibling permissions prevent row-level attribution.
+- Known inode-heavy paths in this user's Work tree include `$WORK/.venv`
+  (94,362 entries), `$WORK/TextJEPA` (43,851), and
+  `$WORK/synthetic-RLVL` (9,946). No deletion was made because the venv and
+  other-project artifacts may be active. Synthetic-RLVL environment setup
+  directs caches and W&B state to Work, so pending jobs remain at risk of
+  write failures until the group frees inodes or the quota is raised; no
+  queued job or dependency was changed in this diagnostic pass.
 
 ### 2026-07-29 14:22 conservative project quota cleanup
 
