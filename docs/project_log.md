@@ -14,7 +14,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   final/resume artifacts and both 645-file Dolmino step-5000 restart states.
   Work is `464k/500k` files and Vault is `743G/1000G`, `181k/200k` files.
   Preserved dependency-free CPU-only successor `3925270` for 01:24 CEST
-  July 30 because both critical paths remain incomplete.
+  July 30 because both critical paths remain incomplete. Handoff commit
+  `38e61f7` is local; a 90-second `git push origin main` produced no response
+  and was interrupted.
 - 15:11 CEST post-cleanup verification found Work at 463,067 group inodes,
   below the soft quota, with no new in-scope start/failure/cancellation or
   pending-job log. Conditioned-32B SFT/eval dependencies, Dolmino

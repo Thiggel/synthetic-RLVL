@@ -44,7 +44,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `743G/1000G`, `181k/200k` files.
 - Recorded successor `3925270` is verified dependency-free, CPU-only/no-GRES
   on `a100mig`, and scheduled for 01:24 CEST July 30. Both critical paths
-  remain incomplete, so it is preserved.
+  remain incomplete, so it is preserved. Handoff commit `38e61f7` is local;
+  `git push origin main` produced no remote response for 90 seconds and was
+  interrupted.
 
 ### 2026-07-29 15:11 post-cleanup live job verification
 
