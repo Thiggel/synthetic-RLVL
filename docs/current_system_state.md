@@ -45,7 +45,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   645 files, and no zero-byte files. Vault is `752G/1000G`, `181k/200k`
   files. Recorded successor `3924006` is dependency-free, CPU-only/no-GRES,
   and scheduled for 19:22 CEST; both critical paths remain incomplete, so it
-  is preserved.
+  is preserved. Handoff commit `a238518` is local; `git push origin main`
+  produced no remote response for 90 seconds and was interrupted, leaving
+  local `main` one commit ahead.
 
 ### 2026-07-28 18:04 Dolmino step-5000 intermediate eval submitted
 
