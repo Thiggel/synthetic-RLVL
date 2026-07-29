@@ -24,6 +24,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - Work group quota is `464k/500k` files; Vault is `743G/1000G`,
   `181k/200k` files. Successor oversight `3926040` is dependency-free,
   CPU-only/no-GRES, and scheduled for 07:24 CEST; it remains required.
+  Handoff commit `45c5c6a` remains local after a silent 90-second push
+  attempt exited `124`.
 
 ## Live Delta At 19:28 CEST On July 29
 

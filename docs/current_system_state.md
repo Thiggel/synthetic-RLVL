@@ -47,7 +47,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - Work group use is `464k/500k` files and Vault is `743G/1000G`,
   `181k/200k` files. Recorded successor `3926040` is dependency-free,
   CPU-only/no-GRES on `a100mig`, and scheduled for 07:24 CEST. Both critical
-  paths remain incomplete, so it is preserved.
+  paths remain incomplete, so it is preserved. Handoff commit `45c5c6a` is
+  local; `git push origin main` produced no remote response for 90 seconds
+  and exited `124`.
 
 ### 2026-07-29 19:28 live scheduler and successor reconciliation
 
