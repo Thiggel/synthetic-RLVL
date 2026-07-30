@@ -16,6 +16,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   exact offsets, finite diagnostics, and no W&B service process. Formal/NL
   `3875829_1/3875832_2` remain account-GRES pending. Preserved CPU-only,
   no-GRES successor `3930503` for 07:26 because both paths remain incomplete.
+  Commit `aee7093` is local; a bounded 60-second push timed out without
+  output, so the existing SSH/network publication blocker persists.
 
 ## 2026-07-30
 

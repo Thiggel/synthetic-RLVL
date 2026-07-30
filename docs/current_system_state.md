@@ -52,6 +52,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `181k/200k` files, group Work `469k/500k` files). Recorded successor
   `3930503` is dependency-free, CPU-only/no-GRES on `a100mig`, scheduled for
   07:26 CEST, and remains required because both critical paths are incomplete.
+  A bounded 60-second `git push origin main` again timed out without output;
+  commit `aee7093` and its two predecessors remain local.
 
 ### 2026-07-30 19:32 conditioned-32B restart progress and successor verification
 
