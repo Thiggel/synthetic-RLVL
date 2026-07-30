@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-30 10:32 CEST.
+Last updated: 2026-07-30 13:33 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-30 13:33 second conditioned-32B allocation and intermediate readout audit
+
+- Exact row-13 recovery `3910990_13` started at 13:04 CEST on four verified
+  A100-80GB GPUs on `a0632`. Its accepted step-7500 restart remains intact;
+  startup loaded all base shards and is rebuilding deterministic preprocessing
+  before optimizer resume. Original row `3883534_14` is healthy on four
+  A100-80GB GPUs on `a0931`, reached step 1077/10000, and has complete
+  checkpoints 750/1000. Eval `3881781_12..17` remains held on both jobs.
+- Both step-5000 readouts completed inference. Fixed the MATH-500 sidecar's
+  missing terminal-percent normalization exposed by `$10\%$` versus gold
+  `10`; `19` focused tests and forced CPU rescoring/re-audit pass, accepting
+  both 105-leaf/10,600-row standard bundles without a GPU rerun.
+- Limit-100 reviewer formal-minus-control macro is provisional `+0.0408`.
+  Multi-hop stock QA-F1 falls `0.3171 -> 0.1093`, while tagged QA-F1 changes
+  `0.3104 -> 0.3348`; raw review attributes the stock decline to 91--97%
+  formal QA-record continuation. This is intermediate response-control
+  evidence only. Audit:
+  `analysis/nanotron_dolmino_step5000_intermediate_20260730.md`.
+- Dolmino continuations remain `AssocGrpGRES` pending. Successor oversight
+  `3927534` is CPU-only/no-GRES and BeginTime-pending for 19:25 CEST; it is
+  preserved because both critical paths remain incomplete.
 
 ### 2026-07-30 10:32 shared capacity partially released
 

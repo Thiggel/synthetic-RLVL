@@ -30,6 +30,7 @@ _NEXT_PROMPT_RE = re.compile(r"^(?:problem|question)\s*:", re.IGNORECASE)
 _ANSWER_CUE_RE = re.compile(r"\b(?:answer|solution|therefore|thus|hence)\b", re.IGNORECASE)
 _MATH_SPAN_RE = re.compile(r"(?<!\\)\$((?:\\.|[^$])*)(?<!\\)\$")
 _UNESCAPED_DOLLAR_RE = re.compile(r"(?<!\\)\$")
+_TRAILING_PERCENT_RE = re.compile(r"(?:\\%|%)\s*$")
 
 
 def _sha256(path: Path) -> str:
@@ -173,8 +174,10 @@ def equivalent(target: str, candidate: str | None) -> tuple[bool, str | None]:
     if candidate is None:
         return False, None
     try:
-        gold = _parse_expression(target)
-        prediction = _parse_expression(candidate)
+        # Match the stock MATH normalizer for answers such as ``$10\%$``
+        # whose gold target is stored as ``10``.
+        gold = _parse_expression(_TRAILING_PERCENT_RE.sub("", target))
+        prediction = _parse_expression(_TRAILING_PERCENT_RE.sub("", candidate))
         if not gold or not prediction:
             return False, None
         return bool(verify(gold, prediction)), None

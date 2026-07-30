@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-07-30 10:32 CEST.
+Last updated: 2026-07-30 13:33 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:33 CEST On July 30
+
+- Conditioned-32B recovery `3910990_13` started at 13:04 on four A100-80GB
+  GPUs; its accepted step-7500 restart remains intact during preprocessing.
+  Original `3883534_14` is healthy at step 1077/10000 with complete
+  checkpoints 750/1000. Eval `3881781_12..17` remains dependency-held.
+- Repaired the MATH-500 sidecar's terminal-percent normalization. Focused
+  tests pass (`19 passed`); CPU-only rescoring and re-audit accept both
+  step-5000 bundles, so no GPU rerun is needed.
+- Limit-100 raw review is complete. Reviewer macro delta is provisional
+  `+0.0408`; stock multi-hop QA-F1 falls `0.3171 -> 0.1093` because formal
+  rows continue into new QA records, while tagged QA-F1 changes
+  `0.3104 -> 0.3348`. Artifact:
+  `analysis/nanotron_dolmino_step5000_intermediate_20260730.md`.
+- Dolmino continuation/retry jobs remain account-GRES pending. CPU-only
+  successor `3927534` remains BeginTime-pending and required.
 
 ## Live Delta At 10:32 CEST On July 30
 

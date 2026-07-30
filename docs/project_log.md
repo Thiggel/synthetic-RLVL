@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-30
 
+- 13:33 CEST conditioned-32B recovery `3910990_13` started; original
+  `3883534_14` reached step 1077 with complete checkpoints 750/1000. Fixed
+  the MATH-500 sidecar's missing percent normalization; `19` tests and forced
+  CPU re-audit pass, accepting both retained step-5000 bundles without a GPU
+  rerun. Raw review records provisional reviewer macro delta `+0.0408`, but
+  stock multi-hop QA-F1 falls `0.3171 -> 0.1093` from QA-record continuation;
+  tagged QA-F1 is `0.3104 -> 0.3348`. Preserved successor `3927534`.
 - 10:32 CEST shared GPU capacity partially released. Conditioned-32B SFT
   `3883534_14` started on four A100-80GB GPUs at 09:23 and is progressing
   cleanly (step 139/10000, W&B `u6cyipt5`), though observed throughput still

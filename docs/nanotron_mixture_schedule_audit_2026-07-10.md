@@ -1047,3 +1047,16 @@ failed before optimizer step 1 because the local W&B service did not create
 its port file within 30 seconds. It wrote no training checkpoint. The
 dependency-released continuation `3875832_2` is therefore the exact from-base
 retry with no scientific state or token exposure to replay.
+
+## 2026-07-30 Step-5000 intermediate readout
+
+The matched control/formal A40 readout completed all inference. A missing
+terminal-percent normalization in the MATH-500 sidecar initially rejected
+formal sample 67 (`$10\%$` for gold `10`); the focused scorer fix, tests,
+forced CPU rescore, and production re-audit now accept both retained bundles
+without rerunning inference. Limit-100 reviewer-suite formal-minus-control
+macro is `+0.0408`, but stock multi-hop QA-F1 falls `0.3171 -> 0.1093`
+because formal generations commonly continue into another QA record; tagged
+QA-F1 changes `0.3104 -> 0.3348`. This is provisional intermediate evidence
+only. Full artifact and raw-review notes:
+`analysis/nanotron_dolmino_step5000_intermediate_20260730.md`.
