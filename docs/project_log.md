@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-30
 
+- 10:32 CEST shared GPU capacity partially released. Conditioned-32B SFT
+  `3883534_14` started on four A100-80GB GPUs at 09:23 and is progressing
+  cleanly (step 139/10000, W&B `u6cyipt5`), though observed throughput still
+  implies a later checkpointed recovery. A40 intermediate eval row 0
+  completed with an accepted 105-leaf/10,600-sample bundle; row 1 completed
+  inference and wrote the same-sized bundle but failed its production audit
+  because the post-hoc MATH-500 scorer lost stock exact-positive sample 67.
+  Remaining four/eight-A100 jobs are still `AssocGrpGRES` blocked, with
+  forecasts of 23:06 and 06:51 July 31 respectively. Two sibling-user jobs
+  can still consume the cap if they are multi-GPU; their exact GPU counts
+  remain hidden by Slurm `PrivateData`. No job mutation was made.
 - 07:38 CEST explained the persistent priority behavior. `c107fa12` has 25%
   normalized account shares but 61.2% effective recent usage, so its
   fair-share factor is only 0.1768 (1,768/10,000 points). Fair-share decays

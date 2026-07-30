@@ -1,8 +1,32 @@
 # Running Experiments
 
-Last updated: 2026-07-30 07:38 CEST.
+Last updated: 2026-07-30 10:32 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 10:32 CEST On July 30
+
+- Conditioned-32B SFT `3883534_14` is now running on four A100-80GB GPUs
+  after starting at 09:23. Preprocessing completed and optimizer progress is
+  active at step 139/10000 with no fatal log signature; W&B run `u6cyipt5`
+  is syncing. No checkpoint exists yet. Current throughput projects beyond
+  the 24-hour walltime, so the established checkpoint/recovery chain remains
+  necessary.
+- A40 intermediate eval row 0 completed cleanly and produced an accepted
+  105-leaf/10,600-sample bundle. Row 1 also finished inference and wrote
+  105 leaf files/10,600 samples, but exited 1 because its production audit
+  found one MATH-500 stock-exact positive (sample 67) lost by the post-hoc
+  scorer. This is a result-validation failure, not compute, OOM, or quota
+  failure; no automatic resubmission was made.
+- Eligible pending A100 work remains blocked by `AssocGrpGRES`.
+  `3910990_13` requests four GPUs and forecasts 23:06 CEST; each Dolmino
+  continuation requests eight and forecasts 06:51 CEST July 31. Job count
+  from another account user does not reveal shared consumption because two
+  multi-GPU jobs can consume most or all of the inherited GPU cap, and
+  sibling GPU allocations remain hidden by `PrivateData`.
+- Latest job footer reports Home at 83.7 GB and 157k files against the
+  104.9-GB/500k soft limits, and Vault at 779.4 GB and 180k files against the
+  1048.6-GB/200k soft limits. No scheduler or job mutation was made.
 
 ## Live Delta At 07:38 CEST On July 30
 

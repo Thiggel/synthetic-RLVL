@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-30 07:38 CEST.
+Last updated: 2026-07-30 10:32 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,32 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-30 10:32 shared capacity partially released
+
+- Conditioned-32B SFT row `3883534_14` started at 09:23 CEST on four
+  A100-80GB GPUs and is healthy: dataset preprocessing completed, W&B run
+  `u6cyipt5` is syncing, and optimizer progress reached step 139/10000 by the
+  latest log sample without a fatal signature. No checkpoint has been
+  written yet. At the observed roughly 10--14 seconds per step, the full run
+  is longer than its 24-hour allocation and remains expected to rely on its
+  checkpoint/recovery path.
+- Step-5000 intermediate A40 eval row 0 completed after 1:02:20 and produced
+  an accepted 105-leaf/10,600-sample bundle. Row 1 completed all model
+  inference and wrote the same-sized bundle, but deliberately exited nonzero
+  because the production audit rejected one MATH-500 post-hoc discrepancy:
+  stock exact-positive sample 67 was lost. This is an evaluator/audit issue,
+  not an OOM, quota failure, or missing model output.
+- Remaining eligible work is still account-cap blocked:
+  conditioned recovery row `3910990_13` requests four A100s and currently
+  forecasts 23:06 CEST; Dolmino control/formal/NL
+  `3875826_0/3875829_1/3875832_2` each request eight A100s and independently
+  forecast 06:51 CEST July 31. The shared user's reported number of jobs is
+  insufficient to explain usage because `AssocGrpGRES` accounts GPUs, not
+  job count; exact sibling allocations remain hidden by Slurm `PrivateData`.
+- The completed-job quota footer reports Home `83.7G/104.9G` soft and Vault
+  `779.4G/1048.6G`, with 157k/500k and 180k/200k files respectively. No
+  disk-quota failure occurred in either eval condition.
 
 ### 2026-07-30 07:38 why queue age has not won priority
 
