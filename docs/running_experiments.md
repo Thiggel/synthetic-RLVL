@@ -1,8 +1,30 @@
 # Running Experiments
 
-Last updated: 2026-07-30 19:32 CEST.
+Last updated: 2026-07-31 01:33 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:33 CEST On July 31
+
+- Conditioned-32B recovery `3910990_13` completed `0:0` at step 10000 and its
+  final OLMo-3-32B adapter passed nonempty-file and 896-tensor safetensors
+  load gates. Final-backed checkpoints 9750/10000 were removed, reclaiming
+  `3,242,738,589` bytes; the final adapter remains intact.
+- Original conditioned row `3883534_14` is healthy at step 4867 with complete
+  checkpoints 4500/4750 on four A100-80GB GPUs. Eval `3881781_12..17` now
+  depends only on that row and retains partition `a100`, feature `a100_80`,
+  four GPUs, and 24 hours. Recover row 14 only after its expected actual
+  timeout from the newest complete state.
+- Dolmino control continuation `3875826_0` started on eight A100-80GB GPUs,
+  loaded the audited step-5000 restart offsets exactly, and reached iteration
+  5271/9537 at about 31.1K tokens/s with finite diagnostics. No W&B service
+  process is running. Formal `3875829_1` and NL `3875832_2` remain
+  `AssocGrpGRES` pending; terminal `3875827_0/3875830_1/3875833_2` remain
+  dependency-held.
+- Successor `3930503` is dependency-free, CPU-only/no-GRES on `a100mig`, and
+  BeginTime-pending for 07:26 CEST. It is preserved because both critical
+  paths remain incomplete. No evaluation output or new scientific metric was
+  available, so no report or broader-grid update was made.
 
 ## Live Delta At 19:32 CEST On July 30
 

@@ -695,3 +695,15 @@ safetensors payload, and the checkpoint trainer state records
 automatically. Evaluation `3881781_12..17` remains correctly gated only on
 exact row-13 recovery `3910990_13` and original row `3883534_14`, both
 A100-80GB pending. No conditioned-32B metric or report update is accepted yet.
+
+## 2026-07-31 Conditioned-32B row-13 recovery completion
+
+Exact row-13 recovery `3910990_13` completed `0:0` in `08:31:50` at step
+10000. The final adapter is nonempty, names `allenai/Olmo-3-1125-32B`, and
+passes a CPU safetensors open with 896 tensors. Slurm automatically removed
+the fulfilled dependency from evaluation `3881781_12..17`, which now waits
+only on original row `3883534_14` while retaining the A100-80GB-only full
+protocol. Final-backed checkpoints 9750/10000 were removed after acceptance;
+the final adapter remains intact. Row 14 is healthy at step 4867 with complete
+restart states 4500/4750. No conditioned-32B metric is accepted until row 14
+and all six evaluation rows pass artifact and raw-generation audits.

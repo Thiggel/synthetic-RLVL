@@ -1,5 +1,17 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-07-31)
+
+Control continuation `3875826_0` started at 00:05 CEST on eight A100-80GB
+GPUs. Startup restored the audited step-5000 model, optimizer, scheduler, RNG,
+sample offset `640000`, and token offset `2621440000`, then began at iteration
+5001. It reached iteration 5271 with finite loss/gradient diagnostics and
+about 31.1K tokens/s. A live process inspection found no `wandb-core` or W&B
+service process, so the disabled/no-op logging repair is effective. The next
+gate is an independent complete-state audit at the first new 500-step
+checkpoint before any rotation. Formal continuation `3875829_1` and exact
+from-base NL retry `3875832_2` remain account-GRES pending.
+
 ## Production update (2026-07-28)
 
 The matched 5B Dolmino control and formal runs each reached an audited

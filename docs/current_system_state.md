@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-30 19:32 CEST.
+Last updated: 2026-07-31 01:33 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,35 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-31 01:33 conditioned seed-3408 accepted and Dolmino control resumed
+
+- Exact conditioned-32B recovery `3910990_13` completed `0:0` in `08:31:50`
+  at step `10000/10000`. Its final adapter is nonempty, identifies
+  `allenai/Olmo-3-1125-32B`, and passes a CPU safetensors load with 896
+  tensors. Evaluation `3881781_12..17` now waits only on original SFT row
+  `3883534_14`; Slurm preserved partition `a100`, feature `a100_80`, four
+  A100s, and the 24-hour protocol. Final-backed checkpoints 9750/10000 were
+  removed after acceptance, reclaiming `3,242,738,589` bytes while preserving
+  the final adapter.
+- Original conditioned row `3883534_14` remains healthy on four verified
+  A100-80GB GPUs at step `4867/10000`; complete restart states 4500/4750 are
+  present and focused log scans find no OOM, quota, traceback, or nonfinite
+  signature. Its current allocation still projects a timeout, so submit an
+  exact recovery only after the timeout from the newest independently
+  complete checkpoint.
+- Dolmino control continuation `3875826_0` started at 00:05 CEST on eight
+  A100-80GB GPUs. It loaded the audited step-5000 model, optimizer, scheduler,
+  RNG, sample, and token offsets exactly and reached iteration `5271/9537`
+  with finite loss/gradient diagnostics at about `31.1K` tokens/s. Process
+  inspection found no W&B service process, confirming the disabled/no-op
+  logging fix. Formal continuation `3875829_1` and exact from-base NL retry
+  `3875832_2` remain `AssocGrpGRES` pending; terminal stages retain their
+  dependencies.
+- Quotas remain safe (Home about `81.9G/100G`, Vault `754G/1000G` and
+  `181k/200k` files, group Work `469k/500k` files). Recorded successor
+  `3930503` is dependency-free, CPU-only/no-GRES on `a100mig`, scheduled for
+  07:26 CEST, and remains required because both critical paths are incomplete.
 
 ### 2026-07-30 19:32 conditioned-32B restart progress and successor verification
 

@@ -2,6 +2,21 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-07-31
+
+- 01:33 CEST conditioned-32B recovery `3910990_13` completed `0:0` at step
+  10000; its final adapter passed nonempty-file, correct-base, and 896-tensor
+  safetensors gates. Eval `3881781_12..17` now waits only on healthy original
+  row `3883534_14`, currently step 4867 with complete checkpoints 4500/4750
+  on four A100-80GB GPUs. Removed only final-backed row-13 checkpoints
+  9750/10000, reclaiming `3,242,738,589` bytes; this deletion is not directly
+  recoverable, but the accepted final remains intact and the checkpoints can
+  be reproduced by rerunning SFT. Dolmino control continuation `3875826_0`
+  started from its audited step-5000 state and reached iteration 5271 with
+  exact offsets, finite diagnostics, and no W&B service process. Formal/NL
+  `3875829_1/3875832_2` remain account-GRES pending. Preserved CPU-only,
+  no-GRES successor `3930503` for 07:26 because both paths remain incomplete.
+
 ## 2026-07-30
 
 - 19:32 CEST conditioned-32B recovery `3910990_13` reached step 9360 with
