@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-30 01:27 CEST.
+Last updated: 2026-07-30 07:23 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-30 07:23 live queue remains healthy but capacity-stalled
+
+- No in-scope experiment job has started, completed, failed, or produced a
+  pending-job log/output since the 01:27 handoff. Conditioned-32B SFT
+  `3910990_13/3883534_14` remains A100-80GB account-GRES pending without
+  estimates; eval `3881781_12..17` retains exactly those two dependencies.
+- Dolmino control/formal continuations `3875826_0/3875829_1` and exact
+  from-base NL retry `3875832_2` now share a provisional 08:20 CEST forecast.
+  All request full eight-A100-80GB nodes under the same association cap, so
+  the common forecast is not a simultaneous-start promise. Their terminal
+  `afterany` dependencies remain intact.
+- A40 step-5000 eval `3913651_[0-1%2]` remains account-GRES pending without
+  an estimate despite four physically idle A40 nodes. The association limit,
+  rather than partition scarcity, remains binding, so widening partitions
+  would not help.
+- Revalidated both 645-file/nonempty Dolmino step-5000 restart trees, the
+  13-file/nonempty conditioned row-13 step-7500 state, and the
+  nine-file/nonempty row-12 final. Work remains healthy at
+  `463,069/500,000` group files; Home is `81,716M/100G` and Vault is
+  `743G/1000G`, `181k/200k` files. Successor `3926040` remains
+  dependency-free, CPU-only/no-GRES, and scheduled for 07:24 CEST.
 
 ### 2026-07-30 01:27 scheduler and artifact reconciliation
 

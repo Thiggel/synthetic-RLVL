@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-30
 
+- 07:23 CEST found the live experiment state unchanged: no start,
+  completion, failure, log, or output. Conditioned-32B SFT remains
+  A100-80GB account-GRES pending without estimates; its eval dependencies
+  remain exact. Dolmino control/formal/NL now share a provisional 08:20 CEST
+  forecast but compete under the same full-node association cap. A40
+  intermediate eval remains account-GRES pending without an estimate despite
+  idle physical nodes. Revalidated every required final/restart artifact.
+  Work is 463,069 files, below quota; no scheduler mutation was useful.
 - 01:27 CEST found no new in-scope experiment start, completion, failure,
   log, or output artifact. Conditioned-32B `3910990_13/3883534_14` and A40
   intermediate eval `3913651_[0-1%2]` remain account-GRES pending without

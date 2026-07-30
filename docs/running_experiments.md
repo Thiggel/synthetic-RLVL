@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-07-30 01:27 CEST.
+Last updated: 2026-07-30 07:23 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:23 CEST On July 30
+
+- No in-scope start, completion, failure, log, or output appeared.
+  Conditioned-32B SFT `3910990_13/3883534_14` remains A100-80GB
+  account-GRES pending without estimates; eval `3881781_12..17` retains its
+  exact two-job dependency.
+- Dolmino control/formal continuations `3875826_0/3875829_1` and exact NL
+  retry `3875832_2` now provisionally forecast 08:20 CEST. They compete for
+  full A100-80GB nodes under one association cap, and their terminal
+  `afterany` dependencies remain correct.
+- A40 intermediate eval `3913651_[0-1%2]` has no forecast despite idle
+  physical nodes because the association GRES cap is binding. All required
+  final/restart artifacts remain complete and nonempty.
+- Work group use is 463,069 files, below quota. Successor oversight `3926040`
+  remains dependency-free, CPU-only/no-GRES, and scheduled for 07:24 CEST.
+  No partition, dependency, cancellation, or resubmission edit was made.
 
 ## Live Delta At 01:27 CEST On July 30
 
