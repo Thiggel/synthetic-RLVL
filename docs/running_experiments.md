@@ -1,8 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-07-30 13:33 CEST.
+Last updated: 2026-07-30 19:32 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:32 CEST On July 30
+
+- Conditioned-32B recovery `3910990_13` resumed cleanly from step 7500 and is
+  healthy at step `9360/10000` with complete checkpoints 9000/9250. Original
+  row `3883534_14` is healthy at step `2981/10000` with complete checkpoints
+  2500/2750. Both use four verified A100-80GB GPUs, and focused fatal scans
+  found no OOM, quota, no-space, traceback, or nonfinite-loss signature.
+- Eval `3881781_12..17` remains dependency-held on exactly those two SFT jobs
+  and retains its A100-80GB-only full protocol. Recover row 14 only after an
+  actual timeout; row 13 currently fits its 12-hour recovery allocation.
+- Dolmino `3875826_0/3875829_1/3875832_2` remains account-GRES pending, with
+  provisional independent 23:44 CEST starts. Home is `81,863M/100G`, Vault
+  is `753G/1000G` and `181k/200k` files, and group Work is `469k/500k`
+  files.
+- Successor `3929539` is dependency-free, CPU-only/no-GRES, and BeginTime
+  pending for 01:25 CEST July 31. Both critical paths remain incomplete, so
+  it is preserved. A bounded 90-second main-repo push timed out silently.
 
 ## Live Delta At 13:33 CEST On July 30
 

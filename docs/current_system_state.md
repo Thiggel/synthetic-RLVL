@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-30 13:33 CEST.
+Last updated: 2026-07-30 19:32 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,30 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-30 19:32 conditioned-32B restart progress and successor verification
+
+- Exact row-13 recovery `3910990_13` is healthy on four verified A100-80GB
+  GPUs on `a0632`. It resumed from the accepted step-7500 state, reached step
+  `9360/10000`, and retains complete nonempty checkpoints 9000/9250. Original
+  row `3883534_14` is healthy on four A100-80GB GPUs on `a0931`, reached step
+  `2981/10000`, and retains complete checkpoints 2500/2750. Focused fatal
+  scans found no traceback, OOM, quota, no-space, or nonfinite-loss signature.
+- Eval `3881781_12..17` remains correctly held on both SFT jobs and retains
+  partition `a100`, feature `a100_80`, four GPUs, and the full 24-hour
+  protocol. Row 13 should finish within its current allocation at the observed
+  rate; row 14 still projects beyond one allocation and should be recovered
+  only after an actual timeout from its newest complete state.
+- Dolmino control/formal continuations `3875826_0/3875829_1` and exact
+  from-base NL retry `3875832_2` remain `AssocGrpGRES` pending. Slurm
+  provisionally projects 23:44 CEST for each when considered independently;
+  this is not a simultaneous-start promise under the shared full-node cap.
+- Home is `81,863M/100G`, Vault is `753G/1000G` with `181k/200k` files, and
+  group Work is `469k/500k` files. Recorded successor `3929539` is verified
+  dependency-free, CPU-only/no-GRES on `a100mig`, and scheduled for 01:25
+  CEST July 31. Both critical paths remain incomplete, so it is preserved.
+  A bounded 90-second `git push origin main` produced no response and exited
+  `124`; the existing SSH/network publication blocker remains.
 
 ### 2026-07-30 13:33 second conditioned-32B allocation and intermediate readout audit
 

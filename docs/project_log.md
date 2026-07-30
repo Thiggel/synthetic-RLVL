@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-30
 
+- 19:32 CEST conditioned-32B recovery `3910990_13` reached step 9360 with
+  complete checkpoints 9000/9250; original row `3883534_14` reached step
+  2981 with complete checkpoints 2500/2750. Both remain healthy on four
+  verified A100-80GB GPUs, while eval `3881781_12..17` retains its exact
+  dependencies and full protocol. Dolmino continuations/retry remain
+  `AssocGrpGRES` pending with independent 23:44 projections. Preserved
+  CPU-only/no-GRES successor `3929539` for 01:25 July 31. Quotas remain
+  within hard limits. A bounded 90-second main-repo push timed out silently.
 - 13:33 CEST conditioned-32B recovery `3910990_13` started; original
   `3883534_14` reached step 1077 with complete checkpoints 750/1000. Fixed
   the MATH-500 sidecar's missing percent normalization; `19` tests and forced
