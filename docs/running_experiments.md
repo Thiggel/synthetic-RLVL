@@ -1,8 +1,23 @@
 # Running Experiments
 
-Last updated: 2026-07-30 07:33 CEST.
+Last updated: 2026-07-30 07:38 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:38 CEST On July 30
+
+- Slurm intentionally deprioritizes `c107fa12` under fair-share: 25% account
+  shares versus 61.2% effective recent usage gives `LevelFS=0.4085` and only
+  1,768/10,000 fair-share priority points. Usage decays with a seven-day
+  half-life; fair-share weight 10,000 exceeds age weight 6,000.
+- Scheduler age starts when a job becomes eligible. Control only became
+  eligible July 27 and formal/NL plus conditioned SFT on July 28, despite
+  older chain submission dates. They therefore have about 1,690--2,552 age
+  points rather than the seven-day maximum 6,000.
+- Hidden sibling-user jobs can take newly released account GPU capacity when
+  their total priority is higher. Full-node eight-GPU Dolmino jobs are also
+  harder to backfill. Coordination or administrator QoS/reservation/cap
+  changes are the actionable remedies; no job setting was changed.
 
 ## Live Delta At 07:33 CEST On July 30
 

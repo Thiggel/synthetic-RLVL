@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-30 07:33 CEST.
+Last updated: 2026-07-30 07:38 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,31 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-30 07:38 why queue age has not won priority
+
+- Slurm multifactor priority uses a seven-day fair-share decay and seven-day
+  maximum age. Fair-share weight is 10,000 versus age weight 6,000.
+  `c107fa12` has 25% normalized shares but 61.2% effective recent account
+  usage (`LevelFS=0.4085`, fair-share factor `0.1768`), yielding only 1,768
+  fair-share priority points. Hidden sibling users with less recent usage can
+  therefore retain a much larger priority advantage.
+- Age begins at `EligibleTime`, not original submission. Control continuation
+  became eligible July 27 08:09 and currently has 2,552 age points; formal
+  and NL became eligible July 28 08:10/08:18 and have about 1,690. The
+  conditioned SFT rows became eligible July 28 and have about 1,921. Thus the
+  chain's July-21 submission date does not translate into nine days of age.
+- Current priorities are control 5,027, conditioned SFT 4,387/4,386, formal
+  4,169, NL 4,164, and A40 eval 4,132. Pending jobs consume no allocation,
+  but when hidden account capacity releases, higher-priority sibling-user
+  work may refill the group cap first. The eight-GPU/24-hour Dolmino shape
+  also requires a whole A100-80GB node and is difficult to backfill.
+- Fair-share recovers automatically as recent usage halves every seven days,
+  and age accrues until its seven-day cap, but neither guarantees immediate
+  service against a continuously refilled shared account cap. Practical
+  remedies are coordination with the other account users, an administrator
+  increase/reservation/QoS, or waiting for usage decay; no scientifically
+  invalid topology/time-limit edit was made.
 
 ### 2026-07-30 07:33 account-wide GPU-cap root cause confirmed
 

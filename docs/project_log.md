@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-30
 
+- 07:38 CEST explained the persistent priority behavior. `c107fa12` has 25%
+  normalized account shares but 61.2% effective recent usage, so its
+  fair-share factor is only 0.1768 (1,768/10,000 points). Fair-share decays
+  with a seven-day half-life and outweighs the 6,000-point age component.
+  Job age starts at eligibility: active continuations/SFT only became
+  eligible July 27--28 despite earlier chain submissions. Hidden sibling-user
+  jobs may therefore refill released group GPU capacity first; full-node
+  Dolmino jobs are additionally difficult to backfill. No invalid resource
+  or walltime edit was made.
 - 07:33 CEST confirmed the persistent `AssocGrpGRES` root cause: an inherited
   account-wide generic GPU cap is fully consumed by usage hidden under
   Slurm's `PrivateData=accounts,jobs,reservations,usage,users`. This user's
