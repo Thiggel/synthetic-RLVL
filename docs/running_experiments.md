@@ -1,10 +1,10 @@
 # Running Experiments
 
-Last updated: 2026-07-30 07:23 CEST.
+Last updated: 2026-07-30 07:29 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 07:23 CEST On July 30
+## Live Delta At 07:29 CEST On July 30
 
 - No in-scope start, completion, failure, log, or output appeared.
   Conditioned-32B SFT `3910990_13/3883534_14` remains A100-80GB
@@ -17,9 +17,11 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - A40 intermediate eval `3913651_[0-1%2]` has no forecast despite idle
   physical nodes because the association GRES cap is binding. All required
   final/restart artifacts remain complete and nonempty.
-- Work group use is 463,069 files, below quota. Successor oversight `3926040`
-  remains dependency-free, CPU-only/no-GRES, and scheduled for 07:24 CEST.
-  No partition, dependency, cancellation, or resubmission edit was made.
+- Work group use is about 464k files, below quota. Current oversight
+  `3926040` is running CPU-only/no-GRES; recorded successor `3926409` is
+  dependency-free, CPU-only/no-GRES, and scheduled for 13:24 CEST. No
+  partition, dependency, cancellation, or resubmission edit was made. The
+  handoff commit remains local after a silent 90-second push timed out.
 
 ## Live Delta At 01:27 CEST On July 30
 

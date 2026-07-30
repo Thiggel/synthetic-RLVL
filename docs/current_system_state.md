@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-30 07:23 CEST.
+Last updated: 2026-07-30 07:29 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -24,7 +24,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
-### 2026-07-30 07:23 live queue remains healthy but capacity-stalled
+### 2026-07-30 07:29 live queue remains healthy but capacity-stalled
 
 - No in-scope experiment job has started, completed, failed, or produced a
   pending-job log/output since the 01:27 handoff. Conditioned-32B SFT
@@ -41,10 +41,13 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   would not help.
 - Revalidated both 645-file/nonempty Dolmino step-5000 restart trees, the
   13-file/nonempty conditioned row-13 step-7500 state, and the
-  nine-file/nonempty row-12 final. Work remains healthy at
-  `463,069/500,000` group files; Home is `81,716M/100G` and Vault is
-  `743G/1000G`, `181k/200k` files. Successor `3926040` remains
-  dependency-free, CPU-only/no-GRES, and scheduled for 07:24 CEST.
+  nine-file/nonempty row-12 final. Work remains healthy at about
+  `464k/500k` group files; Home is `81,748M/100G` and Vault is
+  `743G/1000G`, `181k/200k` files. Current watcher `3926040` is running
+  CPU-only/no-GRES; recorded successor `3926409` is dependency-free,
+  CPU-only/no-GRES, and scheduled for 13:24 CEST. The handoff commit remains
+  local after a bounded 90-second `git push origin main` produced no remote
+  response and exited `124`.
 
 ### 2026-07-30 01:27 scheduler and artifact reconciliation
 
