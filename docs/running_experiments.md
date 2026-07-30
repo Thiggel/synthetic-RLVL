@@ -1,8 +1,23 @@
 # Running Experiments
 
-Last updated: 2026-07-30 07:29 CEST.
+Last updated: 2026-07-30 07:33 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:33 CEST On July 30
+
+- Root cause of the prolonged queue is confirmed as an inherited
+  account-wide generic GPU association cap. It blocks every GPU type,
+  including the one-GPU A40 eval, while `c107fa12` has zero visible running
+  GPU allocation.
+- Cluster `PrivateData` hides accounts/jobs/usage/users, so other `c107fa`
+  users' jobs and the parent association limit are not visible to this user.
+  Cross-user/account-limit queries are permission-denied. Hidden sibling-user
+  GPU usage is consuming the group cap.
+- The shared 08:20 forecast for the three eight-A100 Dolmino jobs reflects a
+  hidden allocation's projected release, not three simultaneous starts.
+  Pending or dependency-never-satisfied jobs consume no GPU and do not cause
+  the cap. No partition edit can bypass it, and no job mutation was made.
 
 ## Live Delta At 07:29 CEST On July 30
 

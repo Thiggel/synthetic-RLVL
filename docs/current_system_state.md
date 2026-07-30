@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-30 07:29 CEST.
+Last updated: 2026-07-30 07:33 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,31 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-30 07:33 account-wide GPU-cap root cause confirmed
+
+- Confirmed that `AssocGrpGRES` is an inherited account-association GPU
+  limit, not malformed jobs, disk quota, partition selection, dependencies,
+  or this user's visible allocations. Even the one-A40 intermediate eval is
+  blocked, while this user's association reports zero current
+  `GrpTRESRunMins`.
+- Slurm is configured with
+  `PrivateData=accounts,jobs,reservations,usage,users`. Consequently,
+  account-wide `squeue`, `sacct`, `sshare`, and association queries expose
+  only `c107fa12`; parent-account limits and other `c107fa` users' running
+  GPU jobs are hidden or permission-denied. The account-wide generic GPU cap
+  is therefore consumed by hidden sibling-user usage even though no running
+  job is visible locally.
+- All three full-node Dolmino jobs provisionally forecast 08:20 CEST because
+  the scheduler sees a hidden allocation ending then. Each forecast is
+  calculated independently and does not mean all three eight-GPU jobs can
+  start together. The conditioned-32B four-GPU SFT rows and one-GPU A40 eval
+  still have no forecast.
+- Pending/dependency-never-satisfied jobs allocate no GPU and are not the
+  cause. Partition widening cannot bypass an account-wide generic GRES cap,
+  and reducing the Dolmino topology would invalidate the accepted TP4/DP2
+  resume protocol. Exact cap/current sibling-user attribution requires a
+  Slurm administrator or the other account users; no job mutation was made.
 
 ### 2026-07-30 07:29 live queue remains healthy but capacity-stalled
 

@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-30
 
+- 07:33 CEST confirmed the persistent `AssocGrpGRES` root cause: an inherited
+  account-wide generic GPU cap is fully consumed by usage hidden under
+  Slurm's `PrivateData=accounts,jobs,reservations,usage,users`. This user's
+  association reports zero running GPU-minutes, but even a one-A40 request is
+  blocked; parent limits and sibling-user jobs are permission-hidden. The
+  three full-node Dolmino requests independently forecast 08:20 when a hidden
+  allocation is expected to release. Pending/dependency-held jobs consume no
+  GPU, and partition widening cannot bypass the account cap. No job was
+  changed.
 - 07:23 CEST found the live experiment state unchanged: no start,
   completion, failure, log, or output. Conditioned-32B SFT remains
   A100-80GB account-GRES pending without estimates; its eval dependencies
