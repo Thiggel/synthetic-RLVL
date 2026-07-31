@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-31 09:05 CEST.
+Last updated: 2026-07-31 10:40 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,27 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-31 10:40 step-5000 output audit and conditioned recovery
+
+- Extended review of all 1,200 control/formal multi-hop generations and the
+  generated standard-suite families finds no formal-tag or neutral-envelope
+  leakage. Formal bare-answer QA-record continuation is `91--97%`, including
+  `87.5--100%` among exact first answers; first-answer multi-hop macro is
+  nearly flat (`0.3893 -> 0.3799`) while tagged macro improves
+  `0.3104 -> 0.3348`, mainly on HotpotQA. MMLU-Pro invalid extraction rises
+  `2.50% -> 4.86%` through long repetitive tails. Detailed audit:
+  `analysis/nanotron_dolmino_step5000_intermediate_20260730.md`.
+- The current formal/NL intervention records share one outer envelope and
+  average about 3,816/3,875 tokens versus about 456 for Dolmino. The matched
+  NL step-5000 readout is now a P0 trigger to separate long-document
+  objective/boundary effects from formal-content effects. Do not alter the
+  active 5B runs; retain NL step 5000 for this readout.
+- Conditioned-32B row `3883534_14` timed out as expected after 24 hours.
+  Its complete nonempty step-7250 state records `global_step=7250` with
+  finite final loss/gradient diagnostics. Submitted exact one-row recovery
+  `3932131_[14%1]` with the same four-A100-80GB topology for 12 hours and
+  rewired eval `3881781_12..17` to `afterok:3932131`.
 
 ### 2026-07-31 09:05 live training progress
 

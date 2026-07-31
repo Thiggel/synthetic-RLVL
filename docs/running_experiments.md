@@ -1,8 +1,19 @@
 # Running Experiments
 
-Last updated: 2026-07-31 09:05 CEST.
+Last updated: 2026-07-31 10:40 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 10:40 CEST On July 31
+
+- Conditioned-32B row `3883534_14` reached the expected 24-hour timeout.
+  Step 7250 is complete and nonempty with `global_step=7250` and finite final
+  diagnostics. Exact row-14 recovery `3932131_[14%1]` is submitted for 12
+  hours on four A100-80GB GPUs. Eval `3881781_12..17` now depends on
+  `afterok:3932131` and retains its full A100-80GB protocol.
+- The deep step-5000 control/formal output audit is complete. It changes no
+  active job: preserve the future NL step-5000 checkpoint for the exact
+  matched limited readout recorded in the backlog.
 
 ## Live Delta At 09:05 CEST On July 31
 

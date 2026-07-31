@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-31
 
+- 10:40 CEST: Deep-audited all step-5000 control/formal multi-hop generations
+  and the generated standard-suite families. No formal/envelope marker leak
+  appears. Formal bare-answer QA continuation is `91--97%` even when the
+  first answer is exact; first-answer multi-hop macro is nearly flat and the
+  tagged gain is mainly HotpotQA. MMLU-Pro has a separate repetitive-tail
+  regression (`2.50% -> 4.86%` invalid extraction). Recorded the matched NL
+  step-5000 readout as the causal format/content discriminator. Conditioned
+  row `3883534_14` timed out as expected; accepted its complete step-7250
+  restart structure, submitted exact recovery `3932131_[14%1]`, and rewired
+  `3881781_12..17` to that recovery.
+
 - 09:05 CEST: Dolmino control continuation `3875826_0` remained healthy at
   iteration `6881/9537` (about 31.1K tokens/s; ETA near 21:30 CEST).
   Conditioned-32B row `3883534_14` reached step `7262/10000` without a fatal

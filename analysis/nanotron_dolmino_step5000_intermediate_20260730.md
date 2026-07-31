@@ -59,10 +59,139 @@ wrong entity selection, and the stock continuation artifact. No learned
 `<formal>` or `<think>` opening and no next-document assistant marker appeared
 in these limited multi-hop rows.
 
+## Extended generation audit
+
+The July 31 audit inspected all 1,200 retained multi-hop generations and all
+text generations in the 10,600-row standard bundles. The formal checkpoint
+does not emit formal syntax or the injected `Solution:`, `Context:`,
+`Derivation:`, `Conclusion:`, or `Final answer:` envelope on these tasks.
+Those markers occur in zero of the 600 formal multi-hop generations and are
+also effectively absent from GSM8K, BBH, MATH-500, and MMLU-Pro. The observed
+format change is instead a stopping-boundary failure after a bare answer.
+
+### Multi-hop results by benchmark
+
+| Benchmark | Protocol | Control F1 | Formal F1 | Delta |
+| --- | --- | ---: | ---: | ---: |
+| 2WikiMultiHopQA | stock | 0.3624 | 0.1271 | -0.2353 |
+| HotpotQA | stock | 0.3670 | 0.1454 | -0.2216 |
+| MuSiQue | stock | 0.2218 | 0.0556 | -0.1663 |
+| 2WikiMultiHopQA | tagged | 0.3295 | 0.3402 | +0.0107 |
+| HotpotQA | tagged | 0.4186 | 0.4774 | +0.0588 |
+| MuSiQue | tagged | 0.1830 | 0.1867 | +0.0037 |
+
+The stock task has no generation stop string and relies on model EOS after a
+short answer. Formal QA-record continuation rates are `91%`, `94%`, and `97%`
+for 2Wiki, HotpotQA, and MuSiQue, versus `33%`, `28%`, and `49%` for control.
+This happens independently of answer quality: among exact first answers, the
+formal continuation rates remain `87.5%`, `92.9%`, and `100%`.
+
+Scoring only the first generated line gives:
+
+| Benchmark | Control first-head F1 | Formal first-head F1 | Delta |
+| --- | ---: | ---: | ---: |
+| 2WikiMultiHopQA | 0.4072 | 0.3689 | -0.0383 |
+| HotpotQA | 0.4887 | 0.5541 | +0.0654 |
+| MuSiQue | 0.2719 | 0.2168 | -0.0551 |
+| Macro | 0.3893 | 0.3799 | -0.0094 |
+
+Thus formatting explains most of the catastrophic stock-score drop, but it
+does not reveal a broad hidden multi-hop gain. HotpotQA improves under both
+first-head and tagged scoring; 2Wiki and MuSiQue are flat-to-lower at this
+sample size. The tagged macro gain of `+0.0244` is driven mainly by HotpotQA.
+
+Representative failures make the scorer interaction explicit:
+
+- HotpotQA formal: `Charles L. Clifford` is the exact answer, followed by a
+  new generated `Question:`. Stock F1 is only `0.25`; the matched tagged
+  generation is `<answer>Charles L. Clifford`.
+- 2Wiki formal: `no` is the exact answer, followed by two new QA records.
+  Stock F1 is `0.095`.
+- MuSiQue formal: `1912` is the exact answer, followed by a new unrelated QA
+  record. Stock F1 is `0.118`; the tagged generation is `<answer>1912`.
+
+The retained tagged strings normally omit the literal closing tag because
+`</answer>` is configured as a generation stop string and lm-eval removes the
+matched stop text. This is not evidence that the model failed to close every
+tag.
+
+### Other generated tasks
+
+The standard suite shows real answer improvements without learned-envelope
+leakage. Formal corrects representative arithmetic, ordering, and
+multiple-choice reasoning errors, including a GSM8K house-profit calculation,
+a BBH five-object ordering, a BBH multistep arithmetic calculation, and
+MMLU-Pro math and computer-science items. Aggregate generated-task changes are
+GSM8K `0.7400 -> 0.8500`, BBH `0.6167 -> 0.6819`, MATH-500 sidecar
+`0.2800 -> 0.3300`, and MMLU-Pro `0.4614 -> 0.4743`.
+
+There is nevertheless a second response-control problem in the MMLU-Pro tail.
+Invalid extracted choices increase from `35/1400` (`2.50%`) to `68/1400`
+(`4.86%`). Invalid generations are long repetitive responses: their median
+length is about 5.5K characters under formal training, compared with about
+0.24K for valid formal responses. The formal MMLU-Pro response-length p95
+increases from 1,186 to 2,113 characters. BBH p95 also increases from 1,454
+to 1,969 characters, although BBH accuracy and empty-extraction counts
+improve. This is a tail-risk increase, not uniform verbosity.
+
+ARC-Challenge, HellaSwag, WinoGrande, PIQA, and MMLU are scored through
+multiple-choice likelihood rather than free-form answer extraction. In
+particular, the MMLU change `0.6844 -> 0.7246` cannot be explained by output
+formatting. The limited standard-suite gain therefore contains a competence
+signal, even though this single checkpoint and limit-100 sample cannot
+establish a final transfer claim.
+
+### Likely mechanism
+
+The current proof source uses the same modality-neutral outer envelope for
+formal and NL records, but the implemented envelope is more elaborate than
+the originally proposed minimal format:
+
+```text
+{full problem and premise list}
+
+Solution:
+Context:
+{declarations and a second copy of the premises}
+
+Derivation:
+{trace}
+
+Conclusion:
+{conclusion}
+
+Final answer: {answer}
+```
+
+It applies causal-LM loss to the entire document. Formal records average about
+3,816 tokens (`550,000,813 / 144,136`); matched NL records average about
+3,875 tokens (`550,000,176 / 141,932`), while the exported Dolmino records
+average about 456 tokens (`5,100,006,129 / 11,195,395`). Many proof chunks
+therefore contain premise/declaration continuation but no answer boundary.
+The intervention teaches EOS after `Final answer:`, not after the bare
+`Answer:` used by stock LongBench. Replacing 5% of Dolmino tokens with these
+long documents also reduces global document-boundary density by roughly 4.4%.
+
+This is a plausible indirect cause of poorer stopping, but it does not yet
+identify formal symbols as the cause. Formal and NL source records have nearly
+the same length and exactly the same outer envelope. The matched NL
+step-5000 evaluation is therefore the decisive control:
+
+- if NL shows the same continuation increase, the cause is the long
+  full-document objective/envelope;
+- if NL retains control-like stopping, the formal solution contents or their
+  gradients are implicated;
+- if both improve after identical answer-only calibration, the issue is
+  downstream response alignment rather than lost reasoning ability.
+
 ## Decision
 
 Retain this as an intermediate optimization/readout diagnostic. Do not update
 the official preprint or launch a broader mixture grid from it. Continue the
 preregistered control/formal/NL 5B gate and require terminal checkpoint,
 direct, post-midtraining readout, and raw-generation audits before a scientific
-transfer claim.
+transfer claim. Preserve the NL step-5000 checkpoint long enough to run the
+same limited direct readout, and use identical answer-only and neutral
+reasoning calibration for all three terminal checkpoints. For a later pilot,
+compare the current full-document objective with a minimal envelope and a
+proof-focused loss that masks copied problem/premise tokens.

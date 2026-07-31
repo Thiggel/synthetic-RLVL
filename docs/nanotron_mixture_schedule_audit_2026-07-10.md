@@ -1081,3 +1081,36 @@ because formal generations commonly continue into another QA record; tagged
 QA-F1 changes `0.3104 -> 0.3348`. This is provisional intermediate evidence
 only. Full artifact and raw-review notes:
 `analysis/nanotron_dolmino_step5000_intermediate_20260730.md`.
+
+## 2026-07-31 Step-5000 generation diagnosis
+
+Raw review of all 1,200 retained stock/tagged multi-hop generations and
+representative standard-suite outputs separates competence from response
+control. The formal checkpoint emits a new `Question:` record after its first
+answer in 91--97% of stock 2WikiMultiHopQA, HotpotQA, and MuSiQue samples,
+versus 28--49% for control. This also occurs in 87--100% of formal samples
+whose first answer is exactly correct. Explicit `<answer>...</answer>` prompts
+nearly eliminate the continuation and recover tagged macro QA-F1
+`0.3104 -> 0.3348`; first-answer-only rescoring gives `0.3893 -> 0.3799`, so
+there is no broad hidden multi-hop gain. HotpotQA improves, while 2Wiki and
+MuSiQue do not.
+
+The failure is not literal proof-format leakage: no inspected formal output
+emits the training envelope or formal tags. The likely mechanism is indirect
+response-boundary drift. The intervention examples are long full documents
+with repeated problem premises, `Context/Derivation/Conclusion` sections, and
+EOS after `Final answer:`; stock LongBench prompts end in bare `Answer:` and
+provide no stop string. Proof records average about 3.8K tokens versus 456 for
+Dolmino records, reducing document-boundary density in the mixed stream.
+MMLU-Pro also shows a genuine long-tail control regression: invalid extracted
+choices rise from 2.50% to 4.86% and affected generations become repetitive
+runaways. At the same time, likelihood-scored MMLU and several inspected
+GSM8K, MATH-500, BBH, and MMLU-Pro examples show real correctness gains.
+
+Formal-specific causality remains unresolved until the matched NL checkpoint
+reaches step 5000. Run the identical limited readout then; at terminal
+checkpoints evaluate control/formal/NL under stock, tagged, and a common
+answer-only calibration. Keep the current full-document format for the matched
+run, but compare a genuinely minimal envelope and proof-focused loss masking
+in any future format pilot. Full metrics, examples, and artifact paths are in
+`analysis/nanotron_dolmino_step5000_intermediate_20260730.md`.
