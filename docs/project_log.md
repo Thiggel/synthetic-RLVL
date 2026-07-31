@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-31
 
+- 09:05 CEST: Dolmino control continuation `3875826_0` remained healthy at
+  iteration `6881/9537` (about 31.1K tokens/s; ETA near 21:30 CEST).
+  Conditioned-32B row `3883534_14` reached step `7262/10000` without a fatal
+  signature but will hit its 09:23 walltime; retain the established rule to
+  submit an exact one-row recovery only after timeout from the newest
+  independently complete checkpoint. Formal/NL Dolmino jobs
+  `3875829_1/3875832_2` remained `AssocGrpGRES` pending with independent
+  14:08 estimates. No new experiment failure or scientific output appeared.
+
 - 07:33 CEST Dolmino control `3875826_0` reached iteration 6541 with finite
   diagnostics at about 31.1K tokens/s. Step 6500 passed the complete 645-file,
   zero-byte, TP4/DP2 model/optimizer/scheduler/RNG and exact

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-31 07:33 CEST.
+Last updated: 2026-07-31 09:05 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-31 09:05 live training progress
+
+- Dolmino control continuation `3875826_0` remains healthy on eight
+  A100-80GB GPUs at iteration `6881/9537`, about `31.1K` tokens/s, with
+  finite loss and gradient diagnostics. Nanotron reports about 12.5 hours
+  remaining, projecting completion near 21:30 CEST today within this
+  allocation.
+- Conditioned-32B row `3883534_14` remains healthy on four A100-80GB GPUs
+  and reached step `7262/10000` without a fatal signature. Its allocation
+  ends at 09:23 CEST and cannot finish. After the actual timeout, recover
+  only this row from the newest independently complete checkpoint (expected
+  step 7250), then rewire `3881781_12..17` to the recovery while preserving
+  the four-GPU A100-80GB evaluation protocol.
+- Formal continuation `3875829_1` and exact from-base NL retry `3875832_2`
+  remain `AssocGrpGRES` pending. Slurm independently estimates 14:08 CEST
+  for both, but each requests a full eight-GPU node and the common estimate
+  is not a simultaneous-start guarantee. Their terminal stages and the six
+  conditioned-32B evaluations remain correctly dependency-held. No new
+  failure or scientific result was observed.
 
 ### 2026-07-31 07:33 guarded control rotation and final conditioned seed progress
 

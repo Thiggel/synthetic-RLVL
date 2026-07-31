@@ -1,8 +1,22 @@
 # Running Experiments
 
-Last updated: 2026-07-31 07:33 CEST.
+Last updated: 2026-07-31 09:05 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 09:05 CEST On July 31
+
+- Dolmino control `3875826_0` is healthy at iteration `6881/9537` on eight
+  A100-80GB GPUs, sustaining about 31.1K tokens/s with finite diagnostics.
+  Its current ETA is about 12.5 hours, near 21:30 CEST today.
+- Conditioned-32B row `3883534_14` is healthy at step `7262/10000` on four
+  A100-80GB GPUs, but its allocation ends at 09:23 CEST. Recover only this
+  row after the actual timeout from the newest complete checkpoint (expected
+  step 7250), then replace the dependency for eval `3881781_12..17`.
+- Formal/NL `3875829_1/3875832_2` remain account-GRES pending with
+  independent 14:08 CEST estimates. Their identical estimates do not imply
+  simultaneous starts because both request full eight-GPU nodes. Terminal
+  stages remain dependency-held. No new failure or result artifact appeared.
 
 ## Live Delta At 07:33 CEST On July 31
 
