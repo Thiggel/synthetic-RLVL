@@ -44,7 +44,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - Recorded successor `3935384` is dependency-free, CPU-only/no-GRES on
   `a100mig`, and scheduled for 01:27 CEST on August 1. Both critical paths
   remain incomplete, so it is preserved. No evaluation artifact or new
-  scientific metric exists; neither report was regenerated.
+  scientific metric exists; neither report was regenerated. Scoped commit
+  `bd6d86e` remains local after a bounded 90-second `git push origin main`
+  produced no response and exited `124`.
 
 ### 2026-07-31 18:50 live progress and control rotation
 

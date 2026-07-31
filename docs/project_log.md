@@ -13,7 +13,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   complete steps 9250/9500; its eval remains dependency-held. Formal/NL
   Dolmino remain account-GRES pending. Preserved verified CPU-only/no-GRES
   successor `3935384` for 01:27 CEST August 1 because both critical paths
-  remain incomplete. No evaluation or report gate opened.
+  remain incomplete. No evaluation or report gate opened. Scoped commit
+  `bd6d86e` remains local after a silent bounded 90-second push exited `124`.
 
 - 18:50 CEST: Dolmino control `3875826_0` remained healthy at
   `8921/9537` (`4.68B/5B`) with ETA near 21:35. Accepted complete step-8000

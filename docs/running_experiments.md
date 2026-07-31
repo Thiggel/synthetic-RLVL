@@ -21,7 +21,9 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   Formal/NL `3875829_1/3875832_2` remain `AssocGrpGRES` pending.
 - Successor `3935384` is dependency-free, CPU-only/no-GRES, and BeginTime
   pending for 01:27 CEST August 1. It remains required. No eval artifact,
-  scientific metric, report update, or scheduler edit was available.
+  scientific metric, report update, or scheduler edit was available. Scoped
+  commit `bd6d86e` remains local after a silent bounded 90-second push exited
+  `124`.
 
 ## Live Delta At 18:50 CEST On July 31
 
