@@ -1,5 +1,20 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-07-31 19:32 CEST)
+
+Control continuation `3875826_0` reached iteration `9071/9537` at about
+31.1K tokens/s with finite loss and gradient diagnostics. Step 9000 passed
+the complete restart gate: 645 files, no zero-byte file, TP4/DP2, 625 model
+files, four equal `22,848,937,060`-byte optimizer shards, four scheduler
+shards, eight RNG shards, and exact step/sample/token offsets
+`9000/1152000/4718592000`, all charged to the normal Nanoset. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_control_step9000_20260731.json`.
+Only after acceptance was superseded step 8500 removed, reclaiming
+`106,628,386,982` bytes. Step 9000 is the sole numeric control restart state;
+Vault is `748G/1000G`, `181k/200k` files. Formal continuation
+`3875829_1` and exact from-base NL retry `3875832_2` remain account-GRES
+pending.
+
 ## Production update (2026-07-31)
 
 Control continuation `3875826_0` started at 00:05 CEST on eight A100-80GB

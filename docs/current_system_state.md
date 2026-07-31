@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-31 18:50 CEST.
+Last updated: 2026-07-31 19:32 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-31 19:32 live progress and step-9000 control rotation
+
+- Dolmino control `3875826_0` is healthy at iteration `9071/9537`
+  (`4.76B/5B` tokens), about `31.1K` tokens/s, with finite loss and gradient
+  diagnostics and an ETA near 21:37 CEST. Step 9000 passes the complete
+  645-file, zero-byte, TP4/DP2 model/optimizer/scheduler/RNG and exact
+  `9000/1152000/4718592000` offset gate, all charged to the control Nanoset.
+  Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step9000_20260731.json`.
+- Only after that acceptance, superseded control step 8500 was removed,
+  reclaiming `106,628,386,982` bytes. Step 9000 is now the sole numeric
+  control restart state; Vault is `748G/1000G`, `181k/200k` files.
+- Conditioned-32B recovery `3932131_14` is healthy at step `9612/10000` and
+  has complete nonempty steps 9250/9500. Eval `3881781_12..17` remains
+  correctly held on `afterok:3932131` with four A100-80GB GPUs and the full
+  24-hour protocol. Formal/NL Dolmino `3875829_1/3875832_2` remain
+  `AssocGrpGRES` pending, not failed.
+- Recorded successor `3935384` is dependency-free, CPU-only/no-GRES on
+  `a100mig`, and scheduled for 01:27 CEST on August 1. Both critical paths
+  remain incomplete, so it is preserved. No evaluation artifact or new
+  scientific metric exists; neither report was regenerated.
 
 ### 2026-07-31 18:50 live progress and control rotation
 

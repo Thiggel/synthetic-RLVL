@@ -1,8 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-07-31 18:50 CEST.
+Last updated: 2026-07-31 19:32 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:32 CEST On July 31
+
+- Dolmino control `3875826_0` is healthy at iteration `9071/9537`, or
+  `4.76B/5B` tokens, at about 31.1K tokens/s with finite diagnostics and an
+  ETA near 21:37 CEST. Step 9000 passed the complete 645-file, zero-byte,
+  TP4/DP2, optimizer/scheduler/RNG, and exact
+  `9000/1152000/4718592000` offset gates. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step9000_20260731.json`.
+- After acceptance, removed only superseded control step 8500
+  (`106,628,386,982` bytes). Step 9000 is the sole numeric restart state;
+  Vault is `748G/1000G`, `181k/200k` files.
+- Conditioned-32B recovery `3932131_14` is healthy at step `9612/10000`
+  with complete nonempty steps 9250/9500. Eval `3881781_12..17` remains
+  held on `afterok:3932131` with its four-A100-80GB 24-hour protocol.
+  Formal/NL `3875829_1/3875832_2` remain `AssocGrpGRES` pending.
+- Successor `3935384` is dependency-free, CPU-only/no-GRES, and BeginTime
+  pending for 01:27 CEST August 1. It remains required. No eval artifact,
+  scientific metric, report update, or scheduler edit was available.
 
 ## Live Delta At 18:50 CEST On July 31
 

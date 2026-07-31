@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-31
 
+- 19:32 CEST: Dolmino control `3875826_0` remained healthy at
+  `9071/9537` (`4.76B/5B`) and about 31.1K tokens/s. Accepted its complete
+  645-file step-9000 state with exact `9000/1152000/4718592000` offsets,
+  then removed only superseded step 8500, reclaiming `106,628,386,982`
+  bytes; step 9000 is the sole numeric restart state and Vault returned to
+  `748G/1000G`. Conditioned recovery `3932131_14` reached step 9612 with
+  complete steps 9250/9500; its eval remains dependency-held. Formal/NL
+  Dolmino remain account-GRES pending. Preserved verified CPU-only/no-GRES
+  successor `3935384` for 01:27 CEST August 1 because both critical paths
+  remain incomplete. No evaluation or report gate opened.
+
 - 18:50 CEST: Dolmino control `3875826_0` remained healthy at
   `8921/9537` (`4.68B/5B`) with ETA near 21:35. Accepted complete step-8000
   and step-8500 restart states, retained 8500, then removed only superseded
