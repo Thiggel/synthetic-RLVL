@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-31 10:40 CEST.
+Last updated: 2026-07-31 11:40 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-31 11:40 format and post-SFT decision
+
+- Exact packed-index audit finds formal/NL document p50
+  `3715/3797`, p95 `7321/7392`, maxima `7688/7814`, and
+  `44.0%/47.0%` above the 4,096-token training window. Active Nanotron
+  `TokenizedBytesFileDataset` slices the concatenated stream into fixed
+  windows and does not preserve document instances or apply a proof loss
+  mask. The Qwen EOS configuration is consistent; this is a document/objective
+  mismatch, not a wrong-EOS-ID bug.
+- The implemented neutral envelope drifted from the planned compact
+  `problem/Solution/Final answer` form by adding redundant
+  `Context/Derivation/Conclusion` scaffolding and another premise
+  representation. Do not alter or cancel the matched active series: the NL
+  step-5000 readout remains the decisive content-versus-envelope control.
+- Add identical modern post-SFT readouts for terminal control/formal/NL and
+  retain direct eval separately. The old effective-batch-one UltraChat LoRA
+  is a failed alignment diagnostic, not this readout. Gate any corrected 5B
+  rerun on a short compact/document-preserving objective pilot. Full decision:
+  `analysis/dolmino_format_and_post_sft_plan_20260731.md`.
 
 ### 2026-07-31 10:40 step-5000 output audit and conditioned recovery
 

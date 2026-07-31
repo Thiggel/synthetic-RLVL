@@ -1082,6 +1082,26 @@ QA-F1 changes `0.3104 -> 0.3348`. This is provisional intermediate evidence
 only. Full artifact and raw-review notes:
 `analysis/nanotron_dolmino_step5000_intermediate_20260730.md`.
 
+## 2026-07-31 Format and post-SFT decision
+
+Exact Nanoset index inspection strengthens the full-document diagnosis:
+formal/NL p95 document lengths are `7321/7392` tokens and `44.0%/47.0%`
+of records exceed the active 4,096-token window. The active
+`TokenizedBytesFileDataset` slices the concatenated token stream into fixed
+windows rather than constructing document-preserving instances. The
+implemented neutral envelope also contains more repeated context and
+scaffolding than the compact format selected on July 10. EOS insertion and
+the configured Qwen EOS ID agree.
+
+Do not change the active matched series before the NL step-5000 discriminator.
+After terminal checkpoints, add identical modern full-parameter,
+assistant-only instruction SFT for control/formal/NL and keep direct evaluation
+as a separate branch. Gate a corrected 5B formal/NL rerun on a roughly
+0.5B-token compact/document-preserving objective pilot. The prior
+effective-batch-one UltraChat LoRA remains a failed alignment diagnostic.
+Exact pilot and post-SFT design:
+`analysis/dolmino_format_and_post_sft_plan_20260731.md`.
+
 ## 2026-07-31 Step-5000 generation diagnosis
 
 Raw review of all 1,200 retained stock/tagged multi-hop generations and

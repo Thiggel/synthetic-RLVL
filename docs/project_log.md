@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-31
 
+- 11:40 CEST: Completed the Dolmino format/post-SFT design audit. Exact
+  Nanoset indices show `44.0%` formal and `47.0%` matched-NL documents exceed
+  the 4,096-token window; the active fixed-stream Nanotron loader does not
+  preserve document instances. Confirmed planned-versus-implemented envelope
+  drift and full-document loss on redundant context, with no EOS-ID mismatch.
+  Kept the active matched series unchanged, specified the NL step-5000 causal
+  gate, a 0.5B compact/document-preserving objective pilot, and an identical
+  modern full-parameter post-SFT readout for control/formal/NL. Details:
+  `analysis/dolmino_format_and_post_sft_plan_20260731.md`.
+
 - 10:40 CEST: Deep-audited all step-5000 control/formal multi-hop generations
   and the generated standard-suite families. No formal/envelope marker leak
   appears. Formal bare-answer QA continuation is `91--97%` even when the
