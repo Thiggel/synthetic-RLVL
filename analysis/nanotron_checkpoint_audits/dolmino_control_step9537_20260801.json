@@ -1,0 +1,46 @@
+{
+  "checkpoint": "/home/vault/c107fa/c107fa12/synthetic-RLVL/nanotron_dolmino_5b/qwen25_7b_dolmino_control_p5_5b/checkpoints/9537",
+  "errors": [],
+  "expected_samples": 1220736,
+  "expected_step": 9537,
+  "expected_tokens": 5000134656,
+  "file_count": 645,
+  "file_counts": {
+    "lr_scheduler": 4,
+    "model": 625,
+    "optimizer": 4,
+    "random": 8
+  },
+  "metadata": {
+    "cp": 1,
+    "custom_metas": null,
+    "dp": 2,
+    "metas": {
+      "consumed_tokens_total": 5000134656,
+      "consumed_train_samples": 1220736,
+      "data_stages": [
+        {
+          "consumed_tokens_per_dataset_folder": {
+            "/home/vault/c107fa/c107fa12/synthetic-RLVL/nanosets/qwen25_dolmino_neutral_v1_5p1b/dolmino": 5000134656
+          },
+          "consumed_train_samples": 1220736,
+          "name": "qwen25_midtrain_control_p0",
+          "sequence_length": 4096,
+          "start_training_step": 1
+        }
+      ],
+      "last_stage_idx": 0,
+      "last_train_step": 9537
+    },
+    "tp": 4,
+    "version": "1.5"
+  },
+  "optimizer_sizes": [
+    22848937060,
+    22848937060,
+    22848937060,
+    22848937060
+  ],
+  "status": "accepted",
+  "zero_byte_files": []
+}

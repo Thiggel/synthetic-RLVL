@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-31 19:32 CEST.
+Last updated: 2026-08-01 01:33 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,36 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-01 01:33 terminal control and conditioned-32B release
+
+- Dolmino control `3875826_0` completed `0:0` at step `9537/9537` in
+  `21:34:31`. Its terminal state passes the complete 645-file, zero-byte,
+  TP4/DP2 model/optimizer/scheduler/RNG and exact
+  `9537/1220736/5000134656` offset gate, with all tokens charged to the
+  control Nanoset. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step9537_20260801.json`.
+- Formal continuation `3875829_1` started at 21:40 CEST on eight verified
+  A100-80GB GPUs, restored the accepted step-5000 optimizer/scheduler/RNG and
+  exact `95:5` offsets, and reached step 5781 at about 31.0K tokens/s with
+  finite diagnostics. Its complete step-5500 state passes the same restart
+  gate with exact `2739404800 + 144179200` Dolmino/formal tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step5500_20260801.json`.
+- After those two acceptances, removed only superseded control steps
+  9000/9500 and formal step 5000, reclaiming `319,885,161,145` bytes. Control
+  step 9537 and formal step 5500 are the sole numeric restart states; Vault
+  returned from `1465G/1000G` to `869G/1000G`, `181k/200k` files. Canceled
+  redundant unstarted control stage `3875827_0` after terminal acceptance.
+- Conditioned-32B recovery `3932131_14` completed `0:0` at step 10000. Its
+  final has nine nonempty files, a `536,991,984`-byte adapter, terminal
+  trainer state, and 896 nonempty safetensors tensors. Eval
+  `3881781_12` started immediately on four A100-80GB GPUs and reached sampled
+  chunk 99/112 in about 4h44m with the audited 16,384 context and no fatal
+  signature; rows 13..17 remain array-throttle pending.
+- Recorded successor `3936407` is dependency-free, CPU-only/no-GRES on
+  `a100mig`, and BeginTime-pending for 07:27 CEST. Both critical paths remain
+  incomplete, so it is preserved. No completed eval bundle or new scientific
+  metric exists; neither report was regenerated.
 
 ### 2026-07-31 19:32 live progress and step-9000 control rotation
 

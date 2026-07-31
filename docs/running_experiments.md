@@ -1,8 +1,35 @@
 # Running Experiments
 
-Last updated: 2026-07-31 19:32 CEST.
+Last updated: 2026-08-01 01:33 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:33 CEST On August 1
+
+- Dolmino control `3875826_0` completed `0:0` at step 9537. Its terminal
+  checkpoint passes the full 645-file restart gate and exact
+  `9537/1220736/5000134656` offsets, solely from the control Nanoset. Formal
+  continuation `3875829_1` started on eight A100-80GB GPUs, restored the
+  audited step-5000 state exactly, and reached step 5781 at about 31.0K
+  tokens/s with finite diagnostics. Its accepted step-5500 state contains
+  exact `2739404800 + 144179200` Dolmino/formal tokens.
+- Audits are
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step9537_20260801.json`
+  and `analysis/nanotron_checkpoint_audits/dolmino_logic_step5500_20260801.json`.
+  After acceptance, removed only superseded control 9000/9500 and formal 5000
+  states (`319,885,161,145` bytes). Retained terminal control 9537 and live
+  formal 5500; Vault is `869G/1000G`, `181k/200k` files. Redundant unstarted
+  control stage `3875827_0` was canceled.
+- Conditioned-32B recovery `3932131_14` completed at step 10000 and its final
+  passed the nine-file, zero-byte, terminal-state, and 896-tensor adapter
+  gates. Eval `3881781_12` is running on four verified A100-80GB GPUs at
+  sampled chunk 99/112 after about 4h44m; rows 13..17 are throttle-pending.
+  The full 24-hour, 16,384-context protocol remains unchanged.
+- NL `3875832_2` remains account-GRES pending and formal terminal stage
+  `3875830_1` remains correctly dependency-held. Successor `3936407` is
+  dependency-free, CPU-only/no-GRES, and scheduled for 07:27 CEST; it remains
+  required. No final eval artifact, scientific metric, or report update is
+  available yet.
 
 ## Live Delta At 19:32 CEST On July 31
 

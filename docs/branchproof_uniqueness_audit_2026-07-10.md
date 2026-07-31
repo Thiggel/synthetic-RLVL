@@ -2,6 +2,17 @@
 
 Date: 2026-07-10
 
+## Operational update (2026-08-01 01:33 CEST)
+
+The final conditioned OLMo-3-32B SFT recovery `3932131_14` completed `0:0`
+at step 10000. Its final contains nine nonempty files, a
+`536,991,984`-byte adapter, a terminal trainer state, and 896 nonempty
+safetensors tensors. Eval row `3881781_12` then started immediately on four
+verified A100-80GB GPUs with context 16,384 and the unchanged full protocol.
+It reached sampled chunk 99/112 in about 4h44m without a fatal signature;
+rows 13..17 remain array-throttle pending. No result is accepted before all
+six bundles pass their row and cross-grid qualitative audits.
+
 ## Executive finding
 
 The pre-2026-07-10 `hard_fsa`/`hard_fsa_schema` generator is not a

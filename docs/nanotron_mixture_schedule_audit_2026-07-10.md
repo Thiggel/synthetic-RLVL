@@ -1,5 +1,26 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-01 01:33 CEST)
+
+Control continuation `3875826_0` completed `0:0` at step 9537. Its terminal
+checkpoint passes the complete 645-file, zero-byte, TP4/DP2
+model/optimizer/scheduler/RNG gate with exact offsets
+`9537/1220736/5000134656`, all from Dolmino. Formal continuation
+`3875829_1` started on eight A100-80GB GPUs, restored the accepted step-5000
+state and exact sampler offsets, and reached step 5781 at about 31.0K tokens/s
+with finite diagnostics. Its complete step-5500 state passes the same gate and
+records `2739404800` Dolmino plus `144179200` formal tokens, exactly 95:5.
+Audits are
+`analysis/nanotron_checkpoint_audits/dolmino_control_step9537_20260801.json`
+and `analysis/nanotron_checkpoint_audits/dolmino_logic_step5500_20260801.json`.
+
+Only after those acceptances were superseded control steps 9000/9500 and
+formal step 5000 removed, reclaiming `319,885,161,145` bytes. Terminal control
+9537 and live formal 5500 are the sole numeric restart states; Vault returned
+from `1465G/1000G` to `869G/1000G`, `181k/200k` files. Redundant unstarted
+control stage `3875827_0` was canceled after terminal acceptance. NL retry
+`3875832_2` remains account-GRES pending.
+
 ## Production update (2026-07-31 19:32 CEST)
 
 Control continuation `3875826_0` reached iteration `9071/9537` at about

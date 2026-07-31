@@ -2,6 +2,20 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-01
+
+- 01:33 CEST: Dolmino control `3875826_0` completed at step 9537 and passed
+  the full 645-file restart/offset gate; formal `3875829_1` started on eight
+  A100-80GB GPUs, resumed the exact step-5000 state, and reached step 5781
+  with finite diagnostics. Accepted formal step 5500 with exact `95:5` token
+  accounting. After acceptance, removed superseded control 9000/9500 and
+  formal 5000 (`319,885,161,145` bytes), returning Vault from `1465G` to
+  `869G`; canceled redundant unstarted control stage `3875827_0`. Conditioned
+  recovery `3932131_14` completed and its 896-tensor final passed; eval
+  `3881781_12` is healthy at sampled chunk 99/112 on four A100-80GB GPUs.
+  Preserved CPU-only/no-GRES successor `3936407` for 07:27 because both paths
+  remain incomplete. No result or report gate opened.
+
 ## 2026-07-31
 
 - 19:32 CEST: Dolmino control `3875826_0` remained healthy at
