@@ -17,7 +17,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   after the actual timeout. Formal/NL `3875829_1/3875832_2` remain
   account-GRES pending. Preserved CPU-only/no-GRES successor `3930712` for
   13:26 because both paths remain incomplete. No evaluation or report gate
-  opened.
+  opened. Scoped commit `5e084e0` is local; a bounded 60-second push timed out
+  without a remote response.
 
 - 01:33 CEST conditioned-32B recovery `3910990_13` completed `0:0` at step
   10000; its final adapter passed nonempty-file, correct-base, and 896-tensor

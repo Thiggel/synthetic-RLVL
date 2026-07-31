@@ -50,7 +50,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   estimates. Recorded successor `3930712` is dependency-free,
   CPU-only/no-GRES on `a100mig`, and scheduled for 13:26 CEST. Both critical
   paths remain incomplete, so it is preserved. No new evaluation artifact or
-  scientific metric exists, and neither report was regenerated.
+  scientific metric exists, and neither report was regenerated. Scoped commit
+  `5e084e0` is local; a bounded 60-second `git push origin main` produced no
+  response and exited `124`, so the existing SSH/network publication blocker
+  remains.
 
 ### 2026-07-31 01:33 conditioned seed-3408 accepted and Dolmino control resumed
 

@@ -23,7 +23,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - Formal/NL `3875829_1/3875832_2` remain account-GRES pending with
   provisional independent 10:06 starts. Successor `3930712` is
   dependency-free, CPU-only/no-GRES, and scheduled for 13:26 CEST. It remains
-  required. No evaluation output or report gate opened.
+  required. No evaluation output or report gate opened. Scoped commit
+  `5e084e0` remains local after a silent 60-second push timed out.
 
 ## Live Delta At 01:33 CEST On July 31
 
