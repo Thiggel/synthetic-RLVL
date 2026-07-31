@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-31
 
+- 18:50 CEST: Dolmino control `3875826_0` remained healthy at
+  `8921/9537` (`4.68B/5B`) with ETA near 21:35. Accepted complete step-8000
+  and step-8500 restart states, retained 8500, then removed only superseded
+  accepted 7500/8000 trees, reclaiming `213,256,773,961` bytes.
+  Conditioned-32B recovery `3932131_14` reached a complete finite step-9250
+  state and remains on track for roughly 21:00--22:00; its eval stays held.
+  Formal/NL Dolmino remain account-GRES pending, not failed, with optimistic
+  independent 00:05 Slurm estimates.
+
 - 13:30 CEST: Dolmino control `3875826_0` remained healthy at iteration
   `7801/9537` and about 31.1K tokens/s. Accepted its complete 645-file
   step-7500 restart state with exact `7500/960000/3932160000` offsets, then

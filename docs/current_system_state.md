@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-31 13:30 CEST.
+Last updated: 2026-07-31 18:50 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-31 18:50 live progress and control rotation
+
+- Dolmino control `3875826_0` is healthy at iteration `8921/9537`
+  (`4.68B/5B` tokens), about `31.1K` tokens/s, with finite diagnostics and an
+  ETA near 21:35 CEST. Steps 8000 and 8500 independently pass the complete
+  645-file, zero-byte, TP4/DP2 restart and exact-offset gates. Step 8500 is
+  now the sole numeric control restart state; only after acceptance were
+  superseded steps 7500/8000 removed, reclaiming `213,256,773,961` bytes.
+- Conditioned-32B recovery `3932131_14` is healthy. Its latest complete
+  checkpoint is step `9250/10000` with finite loss `0.0109` and grad norm
+  `0.0186`; it should finish around 21:00--22:00 CEST. Eval
+  `3881781_12..17` remains correctly dependency-held.
+- Formal/NL Dolmino jobs `3875829_1/3875832_2` remain account-GRES pending,
+  not failed. Slurm currently prints 2026-08-01 00:05 for both, but they each
+  need eight GPUs and the estimates do not imply a simultaneous start. The
+  older formal continuation is likely to start first. No new result metric is
+  available.
 
 ### 2026-07-31 13:30 live recovery and control rotation
 

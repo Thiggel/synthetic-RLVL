@@ -1,8 +1,24 @@
 # Running Experiments
 
-Last updated: 2026-07-31 13:30 CEST.
+Last updated: 2026-07-31 18:50 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 18:50 CEST On July 31
+
+- Dolmino control `3875826_0` is healthy at iteration `8921/9537`, or
+  `4.68B/5B` tokens, with an ETA near 21:35 CEST. Complete steps 8000/8500
+  passed all restart, shard, zero-byte, topology, and exact-offset gates.
+  Retained step 8500 and removed only accepted superseded steps 7500/8000,
+  reclaiming `213,256,773,961` bytes. Audits are under
+  `analysis/nanotron_checkpoint_audits/`.
+- Conditioned-32B recovery `3932131_14` is healthy with a complete step-9250
+  checkpoint (`loss=0.0109`, `grad_norm=0.0186`). Expected completion is
+  approximately 21:00--22:00 CEST; eval `3881781_12..17` remains held on
+  `afterok:3932131`.
+- Formal/NL `3875829_1/3875832_2` remain `AssocGrpGRES` pending. Slurm's
+  identical 00:05 CEST estimates are optimistic/independent because each row
+  requests a full eight-GPU node. Neither row has failed or started.
 
 ## Live Delta At 13:30 CEST On July 31
 
