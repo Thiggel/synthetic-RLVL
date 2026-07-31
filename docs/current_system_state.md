@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-31 11:40 CEST.
+Last updated: 2026-07-31 13:30 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,34 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-31 13:30 live recovery and control rotation
+
+- Dolmino control continuation `3875826_0` remains healthy on eight
+  A100-80GB GPUs at iteration `7801/9537`, about `31.1K` tokens/s, with
+  finite loss and gradient diagnostics. Its step-7500 state passes the full
+  645-file, zero-byte, TP4/DP2 model/optimizer/scheduler/RNG and exact-offset
+  gate at `7500/960000/3932160000`, all charged to the control Nanoset.
+  Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step7500_20260731.json`.
+- Only after that acceptance and independent completeness checks, superseded
+  control steps 6500/7000 were removed, reclaiming `213,256,773,958` bytes.
+  Step 7500 remains the sole numeric control restart state; Vault returned
+  from `1145G/1000G` soft to `748G/1000G`, `181k/200k` files.
+- Exact conditioned-32B row-14 recovery `3932131_14` resumed from step 7250
+  on four verified A100-80GB GPUs and reached step `7717/10000`. It has
+  written a complete nonempty step-7500 state and currently projects to
+  finish within its 12-hour allocation. Eval `3881781_12..17` remains
+  correctly held on `afterok:3932131` with four A100-80GB GPUs and the full
+  24-hour protocol.
+- Formal/NL continuations `3875829_1/3875832_2` remain account-GRES pending;
+  their identical 21:26 CEST estimates are independent and do not imply a
+  simultaneous start. Recorded successor `3933417` is dependency-free,
+  CPU-only/no-GRES on `a100mig`, and scheduled for 19:26 CEST. Both critical
+  paths remain incomplete, so it is preserved. No evaluation artifact or new
+  scientific metric exists and neither report was regenerated. The scoped
+  handoff commit remains local after a bounded 90-second `git push origin
+  main` produced no response and exited `124`.
 
 ### 2026-07-31 11:40 format and post-SFT decision
 

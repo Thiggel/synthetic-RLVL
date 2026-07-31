@@ -4,6 +4,20 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-31
 
+- 13:30 CEST: Dolmino control `3875826_0` remained healthy at iteration
+  `7801/9537` and about 31.1K tokens/s. Accepted its complete 645-file
+  step-7500 restart state with exact `7500/960000/3932160000` offsets, then
+  removed only independently complete superseded steps 6500/7000, reclaiming
+  `213,256,773,958` bytes and returning Vault to `748G/1000G`. Conditioned
+  row-14 recovery `3932131_14` resumed from 7250, reached step 7717, and
+  wrote a complete nonempty step-7500 checkpoint on four A100-80GB GPUs;
+  eval `3881781_12..17` retains its exact dependency and resources. Formal/NL
+  Dolmino continuations remain account-GRES pending. Preserved verified
+  CPU-only/no-GRES successor `3933417` for 19:26 because both critical paths
+  remain incomplete. No evaluation or report gate opened. A bounded
+  90-second `git push origin main` produced no response and exited `124`, so
+  the scoped commit remains local.
+
 - 11:40 CEST: Completed the Dolmino format/post-SFT design audit. Exact
   Nanoset indices show `44.0%` formal and `47.0%` matched-NL documents exceed
   the 4,096-token window; the active fixed-stream Nanotron loader does not

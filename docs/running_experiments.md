@@ -1,8 +1,32 @@
 # Running Experiments
 
-Last updated: 2026-07-31 10:40 CEST.
+Last updated: 2026-07-31 13:30 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:30 CEST On July 31
+
+- Dolmino control `3875826_0` is healthy at iteration `7801/9537` on eight
+  A100-80GB GPUs, sustaining about 31.1K tokens/s with finite diagnostics.
+  Step 7500 passed the complete 645-file, zero-byte, TP4/DP2
+  model/optimizer/scheduler/RNG and exact `7500/960000/3932160000` offset
+  gate. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step7500_20260731.json`.
+- After accepting step 7500 and independently checking both older states,
+  removed only superseded control steps 6500/7000
+  (`213,256,773,958` bytes). Step 7500 is the sole numeric control restart
+  state; Vault is back to `748G/1000G`, `181k/200k` files.
+- Conditioned-32B recovery `3932131_14` resumed from step 7250 and is healthy
+  at step `7717/10000` on four A100-80GB GPUs. Its complete nonempty
+  step-7500 checkpoint is intact, and current throughput fits the 12-hour
+  allocation. Eval `3881781_12..17` retains `afterok:3932131`, four
+  A100-80GB GPUs, and 24 hours.
+- Formal/NL `3875829_1/3875832_2` remain `AssocGrpGRES` pending with
+  independent 21:26 estimates. Successor `3933417` is dependency-free,
+  CPU-only/no-GRES, and BeginTime-held for 19:26 CEST; it remains required.
+  No evaluation artifact, new metric, report update, or scheduler edit was
+  justified. A bounded 90-second main-repo push produced no response and
+  exited `124`; the scoped commit remains local.
 
 ## Live Delta At 10:40 CEST On July 31
 
