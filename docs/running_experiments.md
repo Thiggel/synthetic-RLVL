@@ -1,8 +1,29 @@
 # Running Experiments
 
-Last updated: 2026-07-31 01:33 CEST.
+Last updated: 2026-07-31 07:33 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:33 CEST On July 31
+
+- Dolmino control `3875826_0` reached iteration 6541 with finite diagnostics
+  at about 31.1K tokens/s. Step 6500 passed the complete 645-file,
+  zero-byte, TP4/DP2 model/optimizer/scheduler/RNG and exact
+  `6500/832000/3407872000` offset gate. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step6500_20260731.json`.
+- After accepting step 6500, removed only superseded complete control steps
+  5000/5500/6000 (`319,885,160,905` bytes). Step 6500 remains intact as the
+  sole numeric restart state; Vault is back to `748G/1000G`,
+  `181k/200k` files.
+- Conditioned-32B row `3883534_14` is healthy at step 6763 with complete
+  checkpoints 6500/6750 on four A100-80GB GPUs. It projects past its 09:23
+  CEST walltime; submit an exact one-row recovery only after the actual
+  timeout, then rewire `3881781_12..17` to the recovery without changing its
+  A100-80GB four-GPU 24-hour protocol.
+- Formal/NL `3875829_1/3875832_2` remain account-GRES pending with
+  provisional independent 10:06 starts. Successor `3930712` is
+  dependency-free, CPU-only/no-GRES, and scheduled for 13:26 CEST. It remains
+  required. No evaluation output or report gate opened.
 
 ## Live Delta At 01:33 CEST On July 31
 

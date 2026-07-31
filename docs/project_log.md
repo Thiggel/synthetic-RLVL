@@ -4,6 +4,21 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-07-31
 
+- 07:33 CEST Dolmino control `3875826_0` reached iteration 6541 with finite
+  diagnostics at about 31.1K tokens/s. Step 6500 passed the complete 645-file,
+  zero-byte, TP4/DP2 model/optimizer/scheduler/RNG and exact
+  `6500/832000/3407872000` offset gate. Only after acceptance, removed
+  superseded complete steps 5000/5500/6000, reclaiming
+  `319,885,160,905` bytes; this deletion is not directly recoverable, but the
+  accepted step-6500 state remains and older states can be reproduced by
+  replaying training. Vault fell from `1344G` to `748G`, with 181k files.
+  Conditioned-32B row `3883534_14` is healthy at step 6763 with complete
+  checkpoints 6500/6750 but projects beyond its 09:23 walltime; recover only
+  after the actual timeout. Formal/NL `3875829_1/3875832_2` remain
+  account-GRES pending. Preserved CPU-only/no-GRES successor `3930712` for
+  13:26 because both paths remain incomplete. No evaluation or report gate
+  opened.
+
 - 01:33 CEST conditioned-32B recovery `3910990_13` completed `0:0` at step
   10000; its final adapter passed nonempty-file, correct-base, and 896-tensor
   safetensors gates. Eval `3881781_12..17` now waits only on healthy original

@@ -707,3 +707,15 @@ protocol. Final-backed checkpoints 9750/10000 were removed after acceptance;
 the final adapter remains intact. Row 14 is healthy at step 4867 with complete
 restart states 4500/4750. No conditioned-32B metric is accepted until row 14
 and all six evaluation rows pass artifact and raw-generation audits.
+
+## 2026-07-31 Conditioned-32B row-14 timeout approach
+
+Original row `3883534_14` remains healthy on four verified A100-80GB GPUs at
+step 6763 with complete, nonempty restart states 6500/6750 and no focused
+fatal signature. Its allocation ends at 09:23 CEST and cannot reach step
+10000 at the observed rate. Do not pre-submit a duplicate: after the actual
+timeout, submit only row 14 from the newest independently complete checkpoint
+and replace the stale dependency on evaluation `3881781_12..17`. Preserve the
+evaluation's partition `a100`, feature `a100_80`, four GPUs, 24-hour limit,
+16,384-token context, 7,168-token equal cap, all 14 depths, 32 prompts/depth,
+16 generations, pass@1/2/4/8/16, and retained qualitative samples.

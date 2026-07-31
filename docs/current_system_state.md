@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-07-31 01:33 CEST.
+Last updated: 2026-07-31 07:33 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,34 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-07-31 07:33 guarded control rotation and final conditioned seed progress
+
+- Dolmino control continuation `3875826_0` is healthy on eight A100-80GB
+  GPUs at iteration `6541/9537`, about `31.1K` tokens/s, with finite loss and
+  gradient diagnostics. Its step-6500 state passed the complete 645-file,
+  zero-byte, TP4/DP2 model/optimizer/scheduler/RNG and exact-offset gate at
+  `6500/832000/3407872000`, all charged to the normal Nanoset. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_control_step6500_20260731.json`.
+- Only after that acceptance, superseded complete control steps
+  5000/5500/6000 were removed, reclaiming `319,885,160,905` bytes. Step 6500
+  remains the sole numeric control restart state. Vault quota fell from
+  `1344G/1000G` soft to `748G/1000G`, with `181k/200k` files; the deleted
+  optimizer states are not directly recoverable but can be reproduced by
+  replaying training.
+- Conditioned-32B row `3883534_14` remains healthy on four verified
+  A100-80GB GPUs at step `6763/10000`, with complete nonempty checkpoints
+  6500/6750 and no fatal signature. Its allocation ends at 09:23 CEST and
+  cannot finish at the observed rate. Recover only after the actual timeout
+  from the newest independently complete checkpoint, then replace the stale
+  `3881781_12..17` dependency while preserving its A100-80GB four-GPU
+  24-hour protocol.
+- Formal continuation `3875829_1` and exact from-base NL retry `3875832_2`
+  remain `AssocGrpGRES` pending with provisional independent 10:06 CEST
+  estimates. Recorded successor `3930712` is dependency-free,
+  CPU-only/no-GRES on `a100mig`, and scheduled for 13:26 CEST. Both critical
+  paths remain incomplete, so it is preserved. No new evaluation artifact or
+  scientific metric exists, and neither report was regenerated.
 
 ### 2026-07-31 01:33 conditioned seed-3408 accepted and Dolmino control resumed
 

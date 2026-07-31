@@ -5,12 +5,21 @@
 Control continuation `3875826_0` started at 00:05 CEST on eight A100-80GB
 GPUs. Startup restored the audited step-5000 model, optimizer, scheduler, RNG,
 sample offset `640000`, and token offset `2621440000`, then began at iteration
-5001. It reached iteration 5271 with finite loss/gradient diagnostics and
+5001. It reached iteration 6541 with finite loss/gradient diagnostics and
 about 31.1K tokens/s. A live process inspection found no `wandb-core` or W&B
-service process, so the disabled/no-op logging repair is effective. The next
-gate is an independent complete-state audit at the first new 500-step
-checkpoint before any rotation. Formal continuation `3875829_1` and exact
-from-base NL retry `3875832_2` remain account-GRES pending.
+service process, so the disabled/no-op logging repair is effective.
+
+Step 6500 independently passed the complete restart gate: 645 files, no
+zero-byte file, TP4/DP2, 625 model files, four equal
+`22,848,937,060`-byte optimizer shards, four scheduler shards, eight RNG
+shards, and exact step/sample/token offsets
+`6500/832000/3407872000`, all charged to the normal Nanoset. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_control_step6500_20260731.json`.
+Only after acceptance were superseded complete steps 5000/5500/6000 removed,
+reclaiming `319,885,160,905` bytes. Step 6500 is the sole numeric control
+restart state and Vault returned from `1344G/1000G` soft to `748G/1000G`,
+`181k/200k` files. Formal continuation `3875829_1` and exact from-base NL
+retry `3875832_2` remain account-GRES pending.
 
 ## Production update (2026-07-28)
 
