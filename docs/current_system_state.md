@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-01 07:33 CEST.
+Last updated: 2026-08-01 13:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,37 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-01 13:35 second conditioned-32B eval accepted and formal rotation
+
+- Conditioned-32B NL eval row `3881781_13` completed as raw job `3936773`
+  `0:0` in `06:45:28` on four A100-80GB GPUs. Its fail-closed audit accepts
+  448 prompts, 16 generations, all 14 depths, 576 retained rows, complete
+  `7/112` chunk logs, and no credited diagnostic contradiction. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_13.json`.
+- Raw review covers shallow, train-edge, OOD, and depth-50 success and
+  cap-limited failure cases. Prompts use the intended natural-language mode,
+  exact answer extraction is clean, and translated valid-and-correct equals
+  answer correctness in the retained/aggregate cells. Row-scoped OOD
+  greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.6938/0.6949/0.6949/0.8125/0.8125`; depth 50 is
+  `0.0000/0.0176/0.0176/0.0625/0.0625`. Greedy and 24 sampled chunks reach
+  the shared cap through incomplete premise copying. Eval `3881781_14` is
+  healthy at sampled chunk 84/112 after about three hours; rows 15..17 remain
+  throttle-pending. No conditioned-32B family claim is yet permitted.
+- Formal Dolmino `3875829_1` is healthy beyond step 8331 at about 31.0K
+  tokens/s with finite diagnostics. Step 8000 passes the complete 645-file,
+  zero-byte, TP4/DP2 optimizer/scheduler/RNG and exact
+  `8000/1024000/4194304000` offset gate, including exact
+  `3984588800 + 209715200` Dolmino/formal tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step8000_20260801.json`.
+  Only after acceptance, removed superseded formal steps 7000/7500,
+  reclaiming `213,256,774,362` bytes; step 8000 is the sole numeric formal
+  restart state and re-audits unchanged. The project Vault tree is `753G`
+  with 8,755 files.
+- Successor `3937914` is dependency-free, CPU-only/no-GRES on `a100mig`, and
+  BeginTime-pending for 19:28 CEST. Both critical paths remain incomplete, so
+  it is preserved. No report or broader-submission gate is open.
 
 ### 2026-08-01 07:33 first conditioned-32B eval accepted and formal rotation
 

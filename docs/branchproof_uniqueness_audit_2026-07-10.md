@@ -749,3 +749,23 @@ greedy/pass@1/joint@1/pass@16/joint@16 is
 `0.8438/0.7070`. This is row-scoped evidence only. Eval row `3881781_13` is
 running and rows 14..17 remain throttle-pending, so no conditioned-32B family
 claim or report update is accepted yet.
+
+## 2026-08-01 Second Conditioned-32B Eval Acceptance
+
+Conditioned NL eval row `3881781_13` completed as raw job `3936773` `0:0` in
+`06:45:28` on four verified A100-80GB GPUs. Its fail-closed audit accepts 448
+prompts, 16 generations, all 14 depths, 576 retained rows, complete `7/112`
+chunk logs, and no credited diagnostic contradiction. Audit:
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_13.json`.
+
+Representative retained review covers shallow, train-edge, and OOD
+correct/translated-valid outputs plus depth-50 incomplete cap-limited failures.
+Prompts contain the intended `natural_language` mode, exact answer extraction
+is clean, and translated correct-and-valid equals answer correctness in the
+reported cells. Greedy generation and 24 sampled chunks hit the shared 7,168
+cap through premise copying rather than a prompt or evaluator defect. This
+row's OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+`0.6938/0.6949/0.6949/0.8125/0.8125`; depth-50 values are
+`0.0000/0.0176/0.0176/0.0625/0.0625`. This remains row-scoped evidence.
+Eval row `3881781_14` is running and rows 15..17 remain throttle-pending, so
+no conditioned-32B family claim or report update is accepted yet.

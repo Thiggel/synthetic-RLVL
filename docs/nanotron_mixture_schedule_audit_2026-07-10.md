@@ -1,5 +1,22 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-01 13:35 CEST)
+
+Formal continuation `3875829_1` remains healthy beyond step 8331 on eight
+A100-80GB GPUs with about 31.0K tokens/s and finite diagnostics. Its complete
+step-8000 state passes the full restart gate: 645 files, no zero-byte file,
+TP4/DP2, 625 model files, four equal `22,848,937,060`-byte optimizer shards,
+four scheduler shards, eight RNG shards, and exact step/sample/token offsets
+`8000/1024000/4194304000`. Dataset offsets are exact `3984588800` Dolmino
+plus `209715200` formal tokens, or 95:5. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_logic_step8000_20260801.json`.
+
+Only after acceptance were superseded formal steps 7000/7500 removed,
+reclaiming `213,256,774,362` bytes. Step 8000 is the sole numeric formal
+restart state and passes a post-delete re-audit unchanged. The project Vault
+tree is `753G` with 8,755 files. The job remains projected to finish within
+its current allocation. NL retry `3875832_2` remains account-GRES pending.
+
 ## Production update (2026-08-01 07:33 CEST)
 
 Formal continuation `3875829_1` remains healthy at step 7051 on eight

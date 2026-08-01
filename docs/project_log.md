@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-01
 
+- 13:35 CEST: Conditioned-32B NL eval row `3881781_13` completed as raw job
+  `3936773` in `06:45:28` and passed the full row audit plus representative
+  NL-mode review. Its row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16
+  is `0.6938/0.6949/0.6949/0.8125/0.8125`; depth-50 failures copy premises
+  to the shared cap. Row 14 is healthy at sampled chunk 84/112. Formal
+  Dolmino `3875829_1` passed the complete step-8000 restart gate with exact
+  `95:5` offsets; removed only superseded steps 7000/7500, reclaiming
+  `213,256,774,362` bytes, and re-audited retained step 8000 unchanged.
+  Preserved CPU-only/no-GRES successor `3937914` for 19:28 because both paths
+  remain incomplete. No family-level result, report, or submission gate opened.
+
 - 07:33 CEST: Conditioned-32B eval row `3881781_12` completed as raw job
   `3935515` in `07:05:27` and passed the full row audit plus representative
   formal-mode review. Its row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16

@@ -1,8 +1,34 @@
 # Running Experiments
 
-Last updated: 2026-08-01 07:33 CEST.
+Last updated: 2026-08-01 13:35 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:35 CEST On August 1
+
+- Conditioned-32B NL eval row `3881781_13` completed as raw job `3936773`
+  `0:0` in `06:45:28` on four A100-80GB GPUs and passed the fail-closed
+  448-prompt, 16-generation, 14-depth, 576-retained-row, complete-log, and
+  credited-diagnostic gates. Representative review covers clean intended NL
+  prompts/extraction, shallow/train/OOD successes, and depth-50 cap-limited
+  failures. Row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.6938/0.6949/0.6949/0.8125/0.8125`. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_13.json`.
+- Eval `3881781_14` is healthy on four verified A100-80GB GPUs at sampled
+  chunk 84/112 after about three hours with no fatal signature. Rows 15..17
+  remain array-throttle pending; the full 24-hour, 16,384-context protocol is
+  unchanged.
+- Formal Dolmino `3875829_1` is healthy beyond step 8331 at about 31.0K
+  tokens/s with finite diagnostics. Accepted its complete step-8000 restart
+  state with exact `8000/1024000/4194304000` offsets and exact `95:5` token
+  accounting. After acceptance, removed only superseded steps 7000/7500,
+  reclaiming `213,256,774,362` bytes. Step 8000 is the sole numeric formal
+  restart state and re-audits unchanged. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step8000_20260801.json`.
+- NL `3875832_2` remains account-GRES pending and formal terminal stage
+  `3875830_1` remains dependency-held. Successor `3937914` is CPU-only,
+  no-GRES, dependency-free, and scheduled for 19:28 CEST. It remains required.
+  No report regeneration or broader submission is justified.
 
 ## Live Delta At 07:33 CEST On August 1
 
