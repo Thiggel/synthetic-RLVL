@@ -1,5 +1,26 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-01 19:35 CEST)
+
+Formal continuation `3875829_1` completed `0:0` at terminal step 9537 in
+`21:37:48`. Its terminal checkpoint passes the full restart gate: 645 files,
+no zero-byte file, TP4/DP2, 625 model files, four equal
+`22,848,937,060`-byte optimizer shards, four scheduler shards, eight RNG
+shards, Qwen2.5 RoPE 1000000, and exact step/sample/token offsets
+`9537/1220736/5000134656`. Dataset offsets are exact `4750127104` Dolmino
+plus `250007552` formal tokens, or 95:5. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_logic_step9537_20260801.json`.
+
+Only after acceptance was redundant unstarted formal stage `3875830_1`
+canceled and superseded formal steps 8000/8500/9000/9500 removed, reclaiming
+`426,513,548,736` bytes. Step 9537 is the sole numeric formal restart state
+and passes a post-delete re-audit unchanged. Vault settled to `869G/1000G`,
+181k files. Exact from-base NL retry `3875832_2` started on eight A100-80GB
+GPUs, loaded the untouched base, built the exact 0.95/0.05 blend, and is
+healthy beyond step 41 at about 31.2K tokens/s with finite diagnostics and no
+repeated W&B-service failure. Protect and audit its step-5000 state before the
+matched limited readout.
+
 ## Production update (2026-08-01 13:35 CEST)
 
 Formal continuation `3875829_1` remains healthy beyond step 8331 on eight

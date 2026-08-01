@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-01 13:35 CEST.
+Last updated: 2026-08-01 19:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,41 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-01 19:35 third conditioned-32B eval and formal terminal accepted
+
+- Conditioned-32B formal eval row `3881781_14` completed as raw job `3937636`
+  `0:0` in `06:37:56` on four A100-80GB GPUs. Its fail-closed audit accepts
+  448 prompts, 16 generations, all 14 depths, 576 retained rows, complete
+  `7/112` chunk logs, fresh constants, and no credited validity-diagnostic
+  contradiction. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_14.json`.
+- Representative review covers the intended formal prompt, exact extraction,
+  shallow and OOD correct-valid chains, answer-correct citation-free-invalid
+  chains, and depth-50 wrong/invalid cases. Row-scoped OOD
+  greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.8250/0.7387/0.5859/0.9938/0.9375`; depth 50 is
+  `0.6562/0.5449/0.3281/1.0000/0.8750`. Six sampled chunks reached the
+  shared cap, but retained credited rows remain diagnostic-clean. Eval
+  `3881781_15` is healthy at sampled chunk 75/112; rows 16/17 remain
+  throttle-pending. No conditioned-32B family claim is yet permitted.
+- Formal Dolmino `3875829_1` completed `0:0` at step `9537/9537` in
+  `21:37:48`. Its terminal state passes the complete 645-file, zero-byte,
+  TP4/DP2 optimizer/scheduler/RNG and exact
+  `9537/1220736/5000134656` offset gate, including exact
+  `4750127104 + 250007552` Dolmino/formal tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step9537_20260801.json`.
+  Only after acceptance, canceled redundant unstarted stage `3875830_1` and
+  removed superseded formal steps 8000/8500/9000/9500, reclaiming
+  `426,513,548,736` bytes. Formal step 9537 is the sole numeric restart state
+  and re-audits unchanged; Vault settled to `869G/1000G`, 181k files.
+- Exact from-base NL retry `3875832_2` started on eight A100-80GB GPUs,
+  loaded the untouched Qwen base, built the exact `0.95/0.05` blend, and is
+  healthy beyond step 41 at about 31.2K tokens/s with finite diagnostics.
+  No W&B service failure recurred. Successor `3939882` is dependency-free,
+  CPU-only/no-GRES on `a100mig`, and scheduled for 01:29 CEST August 2; both
+  critical paths remain incomplete, so it is preserved. No report or broader
+  submission gate is open.
 
 ### 2026-08-01 13:35 second conditioned-32B eval accepted and formal rotation
 

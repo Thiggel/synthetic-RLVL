@@ -1,8 +1,34 @@
 # Running Experiments
 
-Last updated: 2026-08-01 13:35 CEST.
+Last updated: 2026-08-01 19:35 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:35 CEST On August 1
+
+- Conditioned-32B formal eval row `3881781_14` completed as raw job
+  `3937636` `0:0` in `06:37:56` and passed the full 448-prompt,
+  16-generation, 14-depth, 576-row artifact and raw-review gates. Intended
+  formal prompts/extraction and credited validity are clean; deeper
+  answer-correct-invalid and wrong chains are genuine generation failures.
+  Row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.8250/0.7387/0.5859/0.9938/0.9375`. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_14.json`.
+- Eval `3881781_15` is healthy on four verified A100-80GB GPUs at sampled
+  chunk 75/112 after about 2h20m; rows 16/17 remain throttle-pending. The full
+  24-hour, 16,384-context protocol is unchanged.
+- Formal Dolmino `3875829_1` completed at terminal step 9537 and passed the
+  complete 645-file restart gate with exact `9537/1220736/5000134656`
+  offsets and exact `95:5` accounting. Canceled only redundant unstarted
+  stage `3875830_1`; after acceptance removed superseded formal steps
+  8000/8500/9000/9500, reclaiming `426,513,548,736` bytes. Retained step
+  9537 re-audits unchanged. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step9537_20260801.json`.
+- Exact from-base NL retry `3875832_2` is running on eight A100-80GB GPUs,
+  beyond step 41 at about 31.2K tokens/s with the exact 95:5 blend and finite
+  diagnostics. Successor `3939882` is CPU-only/no-GRES, dependency-free, and
+  scheduled for 01:29 CEST August 2. It remains required; no family-level
+  report or broader submission is justified.
 
 ## Live Delta At 13:35 CEST On August 1
 
