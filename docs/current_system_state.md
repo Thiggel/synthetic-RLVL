@@ -51,7 +51,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - Recorded successor `3937058` is dependency-free, CPU-only/no-GRES on
   `a100mig`, and BeginTime-pending for 13:28 CEST. Both critical paths remain
   incomplete, so it is preserved. No family-level result or report gate is
-  open.
+  open. Scoped commit `c3649b9` remains local after both the 90-second direct
+  GitHub SSH push and 60-second port-443 fallback produced no response and
+  exited `124`.
 
 ### 2026-08-01 01:33 terminal control and conditioned-32B release
 

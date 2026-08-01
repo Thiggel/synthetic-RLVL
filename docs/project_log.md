@@ -12,7 +12,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   complete step-7000 restart state with exact `95:5` offsets, then removed
   only superseded steps 5500/6000/6500, reclaiming about 319.9 GB. Preserved
   CPU-only/no-GRES successor `3937058` for 13:28 because both paths remain
-  incomplete. No family-level report gate opened.
+  incomplete. No family-level report gate opened. Scoped commit `c3649b9`
+  remains local: direct GitHub SSH and the port-443 fallback both produced no
+  response and timed out after 90/60 seconds (`124`).
 
 - 01:33 CEST: Dolmino control `3875826_0` completed at step 9537 and passed
   the full 645-file restart/offset gate; formal `3875829_1` started on eight
