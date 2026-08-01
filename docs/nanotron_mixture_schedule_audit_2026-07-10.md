@@ -13,7 +13,7 @@ four scheduler shards, eight RNG shards, and exact step/sample/token offsets
 
 Only after acceptance were superseded formal steps 5500/6000/6500 removed,
 reclaiming about 319.9 GB. Step 7000 is the sole numeric formal restart state;
-Vault is `1003G/1000G`, 181k files. The job remains projected to finish within
+Vault is `869G/1000G`, 181k files. The job remains projected to finish within
 its current allocation. NL retry `3875832_2` remains account-GRES pending.
 
 ## Production update (2026-08-01 01:33 CEST)

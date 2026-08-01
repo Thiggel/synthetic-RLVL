@@ -23,7 +23,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   exact `7000/896000/3670016000` offsets and exact `95:5` token accounting.
   After acceptance, removed only superseded steps 5500/6000/6500, reclaiming
   about 319.9 GB. Step 7000 is the sole numeric formal restart state; Vault
-  is `1003G/1000G`, 181k files. Audit:
+  is `869G/1000G`, 181k files. Audit:
   `analysis/nanotron_checkpoint_audits/dolmino_logic_step7000_20260801.json`.
 - NL `3875832_2` remains account-GRES pending; formal terminal stage
   `3875830_1` remains dependency-held. Successor `3937058` is CPU-only,

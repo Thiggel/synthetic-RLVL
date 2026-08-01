@@ -47,7 +47,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `analysis/nanotron_checkpoint_audits/dolmino_logic_step7000_20260801.json`.
   Only after acceptance, removed superseded formal steps 5500/6000/6500,
   reclaiming about 319.9 GB; step 7000 is the sole numeric formal restart
-  state. Vault is `1003G/1000G`, 181k files.
+  state. Vault is `869G/1000G`, 181k files.
 - Recorded successor `3937058` is dependency-free, CPU-only/no-GRES on
   `a100mig`, and BeginTime-pending for 13:28 CEST. Both critical paths remain
   incomplete, so it is preserved. No family-level result or report gate is
