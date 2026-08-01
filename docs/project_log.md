@@ -15,6 +15,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   9537 re-audits unchanged. Exact from-base NL `3875832_2` started cleanly
   and is healthy beyond step 41. Preserved CPU-only/no-GRES successor
   `3939882` for 01:29 August 2. No family-level report gate opened.
+  Scoped commit `c499ba8` remains local after a silent bounded 90-second
+  GitHub SSH push exited `124`; local `main` is nine commits ahead.
 
 - 13:35 CEST: Conditioned-32B NL eval row `3881781_13` completed as raw job
   `3936773` in `06:45:28` and passed the full row audit plus representative

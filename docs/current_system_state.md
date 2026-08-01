@@ -57,7 +57,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   No W&B service failure recurred. Successor `3939882` is dependency-free,
   CPU-only/no-GRES on `a100mig`, and scheduled for 01:29 CEST August 2; both
   critical paths remain incomplete, so it is preserved. No report or broader
-  submission gate is open.
+  submission gate is open. Scoped commit `c499ba8` remains local after a
+  bounded 90-second GitHub SSH push produced no response and exited `124`;
+  local `main` is nine commits ahead of `origin/main`.
 
 ### 2026-08-01 13:35 second conditioned-32B eval accepted and formal rotation
 

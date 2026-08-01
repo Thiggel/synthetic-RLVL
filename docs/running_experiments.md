@@ -28,7 +28,9 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   beyond step 41 at about 31.2K tokens/s with the exact 95:5 blend and finite
   diagnostics. Successor `3939882` is CPU-only/no-GRES, dependency-free, and
   scheduled for 01:29 CEST August 2. It remains required; no family-level
-  report or broader submission is justified.
+  report or broader submission is justified. Scoped commit `c499ba8` remains
+  local after a silent bounded 90-second GitHub SSH push exited `124`; local
+  `main` is nine commits ahead of `origin/main`.
 
 ## Live Delta At 13:35 CEST On August 1
 
