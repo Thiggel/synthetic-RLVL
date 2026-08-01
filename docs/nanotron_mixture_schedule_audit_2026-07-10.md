@@ -1,5 +1,23 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-02 01:35 CEST)
+
+Exact from-base NL retry `3875832_2` remains healthy beyond step 1301 on eight
+A100-80GB GPUs at about 31.1K tokens/s with finite loss and gradient
+diagnostics. Its complete step-1000 checkpoint passes the full restart gate:
+645 files, no zero-byte file, TP4/DP2, 625 model files, four equal optimizer
+shards, four scheduler shards, eight RNG shards, Qwen2.5 RoPE `1000000`, and
+exact step/sample/token offsets `1000/128000/524288000`. Dataset offsets are
+exact `498073600` Dolmino plus `26214400` matched-NL tokens, or 95:5. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step1000_20260802.json`.
+
+Only after acceptance was superseded step 500 removed, reclaiming
+`106,628,387,164` bytes. Step 1000 is the sole numeric NL restart state and
+passes a post-delete re-audit unchanged. User Vault usage fell from about
+`1266G` to `1068G` against the 1,000G soft quota; continue the guarded
+latest-complete-state rotation and preserve the future step-5000 state for the
+matched limited readout.
+
 ## Production update (2026-08-01 19:35 CEST)
 
 Formal continuation `3875829_1` completed `0:0` at terminal step 9537 in

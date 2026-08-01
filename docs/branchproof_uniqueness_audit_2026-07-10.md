@@ -791,3 +791,23 @@ the shared cap, but retained credited rows remain clean. Eval row
 `3881781_15` is healthy at sampled chunk 75/112 and rows 16/17 remain
 throttle-pending, so no conditioned-32B family claim or report update is yet
 accepted.
+
+## 2026-08-02 Fourth Conditioned-32B Eval Acceptance
+
+Conditioned NL eval row `3881781_15` completed as raw job `3938243` `0:0` in
+`06:23:40` on four verified A100-80GB GPUs. Its fail-closed audit accepts 448
+prompts, 16 generations, all 14 depths, 576 retained rows, complete `7/112`
+chunk logs, and no credited validity-diagnostic contradiction. Audit:
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_15.json`.
+
+Representative review confirms the intended `natural_language` prompt and
+exact answer extraction on complete outputs. Train-band and most OOD retained
+generations are correct and translated-citation-free-valid. The depth-50
+failure examples copy premises/proof chains to the shared cap or emit malformed
+closing wrappers without a usable answer; these are generation failures, not
+validator credit. Row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+`0.7063/0.6840/0.6742/0.8562/0.7937`; depth-50 values are
+`0.0000/0.0332/0.0000/0.3125/0.0000`. Greedy generation and 20 sampled chunks
+reached the 7,168-token cap. Eval row `3881781_16` is healthy at sampled chunk
+68/112 and row 17 remains throttle-pending, so the six-row family and report
+remain gated.

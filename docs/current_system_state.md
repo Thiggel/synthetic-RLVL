@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-01 19:35 CEST.
+Last updated: 2026-08-02 01:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,36 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-02 01:35 fourth conditioned-32B eval and NL restart rotation
+
+- Conditioned-32B NL eval row `3881781_15` completed as raw job `3938243`
+  `0:0` in `06:23:40` on four A100-80GB GPUs. Its fail-closed audit accepts
+  448 prompts, 16 generations, all 14 depths, 576 retained rows, complete
+  `7/112` chunk logs, and no credited validity-diagnostic contradiction.
+  Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_15.json`.
+- Representative review confirms the intended natural-language mode, exact
+  answer extraction on complete outputs, clean train-band and OOD
+  correct/translated-valid chains, and genuine long-depth format/cap failures.
+  Row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.7063/0.6840/0.6742/0.8562/0.7937`; depth 50 is
+  `0.0000/0.0332/0.0000/0.3125/0.0000`. Greedy and 20 sampled chunks reached
+  the 7,168-token cap, mostly through incomplete premise/proof copying. Eval
+  row `3881781_16` is healthy at sampled chunk 68/112; row 17 remains
+  throttle-pending. No conditioned-32B family claim is yet permitted.
+- Exact from-base Dolmino NL `3875832_2` is healthy beyond step 1301 at about
+  31.1K tokens/s with finite loss and gradient diagnostics. Its step-1000
+  state passes the complete 645-file TP4/DP2 restart gate, Qwen2.5 RoPE
+  `1000000`, and exact `1000/128000/524288000` offsets, including
+  `498073600 + 26214400` Dolmino/NL tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step1000_20260802.json`.
+  Only after acceptance, removed superseded step 500, reclaiming
+  `106,628,387,164` bytes; retained step 1000 re-audits unchanged. Vault is
+  about `1068G/1000G`, so continue guarded latest-complete-state rotation.
+- Successor `3940687` is dependency-free, CPU-only/no-GRES on `a100mig`, and
+  scheduled for 07:29 CEST. Both critical paths remain incomplete, so it is
+  preserved. No report or broader-submission gate is open.
 
 ### 2026-08-01 19:35 third conditioned-32B eval and formal terminal accepted
 

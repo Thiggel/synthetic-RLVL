@@ -1,8 +1,34 @@
 # Running Experiments
 
-Last updated: 2026-08-01 19:35 CEST.
+Last updated: 2026-08-02 01:35 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:35 CEST On August 2
+
+- Conditioned-32B NL eval row `3881781_15` completed as raw job `3938243`
+  `0:0` in `06:23:40` and passed the 448-prompt, 16-generation, 14-depth,
+  576-row artifact and representative raw-generation gates. Its row-scoped
+  OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.7063/0.6840/0.6742/0.8562/0.7937`; depth-50 answer/joint pass@1 is
+  `0.0332/0.0000`. Long-depth failures are format/cap-limited generation
+  behavior, not prompt, extraction, or translated-validity artifacts. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_15.json`.
+- Eval `3881781_16` is healthy on four A100-80GB GPUs at sampled chunk
+  68/112 after about 1h56m; row 17 remains throttle-pending. The full
+  24-hour, 16,384-context protocol is unchanged.
+- Exact from-base Dolmino NL `3875832_2` is healthy beyond step 1301 at about
+  31.1K tokens/s with finite diagnostics. Step 1000 passed the complete
+  645-file restart gate with exact `1000/128000/524288000` offsets and exact
+  `498073600 + 26214400` Dolmino/NL token accounting. After acceptance,
+  removed only superseded step 500 (`106,628,387,164` bytes); step 1000
+  re-audits unchanged. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step1000_20260802.json`.
+  Vault remains above its soft space quota at about `1068G/1000G`, so the
+  next complete checkpoint must be audited and rotated promptly.
+- Successor `3940687` is dependency-free, CPU-only/no-GRES, and scheduled for
+  07:29 CEST. It remains required. No family-level report or broader
+  submission is justified.
 
 ## Live Delta At 19:35 CEST On August 1
 

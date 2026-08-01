@@ -2,6 +2,19 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-02
+
+- 01:35 CEST: Conditioned-32B NL eval row `3881781_15` completed as raw job
+  `3938243` in `06:23:40` and passed the full artifact plus representative
+  raw-generation audit. Row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16
+  is `0.7063/0.6840/0.6742/0.8562/0.7937`; row 16 is healthy at sampled
+  chunk 68/112. Exact from-base Dolmino NL `3875832_2` reached healthy step
+  1301. Accepted its complete step-1000 restart state with exact 95:5 offsets,
+  then removed only superseded step 500, reclaiming `106,628,387,164` bytes;
+  retained step 1000 re-audits unchanged. Preserved CPU-only/no-GRES successor
+  `3940687` for 07:29 because both critical paths remain incomplete. No
+  family-level report or broader-submission gate opened.
+
 ## 2026-08-01
 
 - 19:35 CEST: Conditioned-32B formal eval row `3881781_14` completed as raw
