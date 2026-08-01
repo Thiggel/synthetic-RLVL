@@ -13,7 +13,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   then removed only superseded step 500, reclaiming `106,628,387,164` bytes;
   retained step 1000 re-audits unchanged. Preserved CPU-only/no-GRES successor
   `3940687` for 07:29 because both critical paths remain incomplete. No
-  family-level report or broader-submission gate opened.
+  family-level report or broader-submission gate opened. Scoped commit
+  `d000c73` remains local after a silent bounded 90-second GitHub SSH push
+  exited `124`.
 
 ## 2026-08-01
 

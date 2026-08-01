@@ -52,7 +52,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   about `1068G/1000G`, so continue guarded latest-complete-state rotation.
 - Successor `3940687` is dependency-free, CPU-only/no-GRES on `a100mig`, and
   scheduled for 07:29 CEST. Both critical paths remain incomplete, so it is
-  preserved. No report or broader-submission gate is open.
+  preserved. No report or broader-submission gate is open. Scoped commit
+  `d000c73` remains local after a bounded 90-second GitHub SSH push produced
+  no response and exited `124`.
 
 ### 2026-08-01 19:35 third conditioned-32B eval and formal terminal accepted
 

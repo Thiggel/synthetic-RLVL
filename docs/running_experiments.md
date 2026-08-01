@@ -28,7 +28,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   next complete checkpoint must be audited and rotated promptly.
 - Successor `3940687` is dependency-free, CPU-only/no-GRES, and scheduled for
   07:29 CEST. It remains required. No family-level report or broader
-  submission is justified.
+  submission is justified. Scoped commit `d000c73` remains local after a
+  silent bounded 90-second GitHub SSH push exited `124`.
 
 ## Live Delta At 19:35 CEST On August 1
 
