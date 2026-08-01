@@ -730,3 +730,22 @@ and replace the stale dependency on evaluation `3881781_12..17`. Preserve the
 evaluation's partition `a100`, feature `a100_80`, four GPUs, 24-hour limit,
 16,384-token context, 7,168-token equal cap, all 14 depths, 32 prompts/depth,
 16 generations, pass@1/2/4/8/16, and retained qualitative samples.
+
+## 2026-08-01 First Conditioned-32B Eval Acceptance
+
+Conditioned formal eval row `3881781_12` completed as raw job `3935515`
+`0:0` in `07:05:27` on four verified A100-80GB GPUs. Its fail-closed audit
+accepts 448 prompts, 16 generations, all 14 depths, 576 retained rows, complete
+`7/112` chunk logs, fresh constants, and no credited validity-diagnostic
+contradiction. Audit:
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_12.json`.
+
+Representative retained review covers shallow, train-edge, OOD, and depth-50
+correct-valid, answer-correct citation-free-invalid, and wrong outputs. Prompts
+contain the intended `formal_logic` mode, exact answer extraction is clean, and
+no generation reaches the 7,168-token cap. This one seed's OOD
+greedy/pass@1/joint@1/pass@16/joint@16 is
+`0.9375/0.9508/0.8871/1.0000/1.0000`; depth-50 pass@1 answer/joint is
+`0.8438/0.7070`. This is row-scoped evidence only. Eval row `3881781_13` is
+running and rows 14..17 remain throttle-pending, so no conditioned-32B family
+claim or report update is accepted yet.

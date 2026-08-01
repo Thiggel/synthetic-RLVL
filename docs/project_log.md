@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-01
 
+- 07:33 CEST: Conditioned-32B eval row `3881781_12` completed as raw job
+  `3935515` in `07:05:27` and passed the full row audit plus representative
+  formal-mode review. Its row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16
+  is `0.9375/0.9508/0.8871/1.0000/1.0000`; row 13 is healthy at sampled chunk
+  89/112. Formal Dolmino `3875829_1` reached healthy step 7051. Accepted the
+  complete step-7000 restart state with exact `95:5` offsets, then removed
+  only superseded steps 5500/6000/6500, reclaiming about 319.9 GB. Preserved
+  CPU-only/no-GRES successor `3937058` for 13:28 because both paths remain
+  incomplete. No family-level report gate opened.
+
 - 01:33 CEST: Dolmino control `3875826_0` completed at step 9537 and passed
   the full 645-file restart/offset gate; formal `3875829_1` started on eight
   A100-80GB GPUs, resumed the exact step-5000 state, and reached step 5781

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-01 01:33 CEST.
+Last updated: 2026-08-01 07:33 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,35 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-01 07:33 first conditioned-32B eval accepted and formal rotation
+
+- Conditioned-32B eval row `3881781_12` completed as raw job `3935515`
+  `0:0` in `07:05:27` on four A100-80GB GPUs. Its fail-closed audit accepts
+  448 prompts, 16 generations, all 14 depths, 576 retained rows, complete
+  `7/112` chunk logs, fresh constants, and no credited validity-diagnostic
+  contradiction. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_12.json`.
+- Representative formal-mode review covers shallow/train-edge/OOD/depth-50,
+  correct-valid, answer-correct citation-free-invalid, and wrong cases. The
+  intended mode prompt and exact answer extraction are clean. This one seed's
+  OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.9375/0.9508/0.8871/1.0000/1.0000`; it is row-scoped evidence only.
+  Eval `3881781_13` is running on four verified A100-80GB GPUs and reached
+  sampled chunk 89/112 after about 3h38m; rows 14..17 remain throttle-pending.
+- Formal Dolmino continuation `3875829_1` remains healthy at step 7051 with
+  about 31.0K tokens/s and finite diagnostics. Step 7000 passes the complete
+  645-file, zero-byte, TP4/DP2 optimizer/scheduler/RNG and exact
+  `7000/896000/3670016000` offset gate, including exact
+  `3486515200 + 183500800` Dolmino/formal tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_logic_step7000_20260801.json`.
+  Only after acceptance, removed superseded formal steps 5500/6000/6500,
+  reclaiming about 319.9 GB; step 7000 is the sole numeric formal restart
+  state. Vault is `1003G/1000G`, 181k files.
+- Recorded successor `3937058` is dependency-free, CPU-only/no-GRES on
+  `a100mig`, and BeginTime-pending for 13:28 CEST. Both critical paths remain
+  incomplete, so it is preserved. No family-level result or report gate is
+  open.
 
 ### 2026-08-01 01:33 terminal control and conditioned-32B release
 
