@@ -14,6 +14,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   `213,256,774,362` bytes, and re-audited retained step 8000 unchanged.
   Preserved CPU-only/no-GRES successor `3937914` for 19:28 because both paths
   remain incomplete. No family-level result, report, or submission gate opened.
+  Scoped commit `9979d5d` remains local after a silent bounded 90-second
+  GitHub SSH push and a port-443 connection timeout; local `main` is seven
+  commits ahead of `origin/main`.
 
 - 07:33 CEST: Conditioned-32B eval row `3881781_12` completed as raw job
   `3935515` in `07:05:27` and passed the full row audit plus representative
@@ -857,7 +860,7 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   no report/preprint update was justified.
 - Committed the scoped recovery, audits, and handoff as `636e4ca`. A bounded
   90-second `git push origin main` produced no remote output and exited `124`,
-  leaving local `main` seven commits ahead of `origin/main` before this
+  leaving local `main` eight commits ahead of `origin/main` before this
   publication note. The report repository is unchanged.
 
 - 01:16 CEST accepted 32B SFT `3854837_1`/`3850115_4` and shortcut SFT

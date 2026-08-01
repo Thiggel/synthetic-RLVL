@@ -53,7 +53,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   with 8,755 files.
 - Successor `3937914` is dependency-free, CPU-only/no-GRES on `a100mig`, and
   BeginTime-pending for 19:28 CEST. Both critical paths remain incomplete, so
-  it is preserved. No report or broader-submission gate is open.
+  it is preserved. No report or broader-submission gate is open. Scoped commit
+  `9979d5d` remains local after a bounded 90-second GitHub SSH push produced
+  no response and the port-443 fallback timed out connecting; local `main` is
+  eight commits ahead of `origin/main`.
 
 ### 2026-08-01 07:33 first conditioned-32B eval accepted and formal rotation
 
@@ -1537,7 +1540,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   critical paths are incomplete. No report or preprint gate opened. Scoped
   recovery/audit commit `636e4ca` is local; a bounded `git push origin main`
   produced no remote output and timed out after 90 seconds with exit `124`,
-  leaving `main` seven commits ahead of `origin/main` before this publication
+  leaving `main` eight commits ahead of `origin/main` before this publication
   note. The report repository is unchanged.
 
 ### 2026-07-22 01:16 duplicate conditioned stages stopped; five more SFT finals

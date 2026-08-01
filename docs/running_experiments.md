@@ -28,7 +28,10 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - NL `3875832_2` remains account-GRES pending and formal terminal stage
   `3875830_1` remains dependency-held. Successor `3937914` is CPU-only,
   no-GRES, dependency-free, and scheduled for 19:28 CEST. It remains required.
-  No report regeneration or broader submission is justified.
+  No report regeneration or broader submission is justified. Scoped commit
+  `9979d5d` remains local after a silent bounded 90-second push and a
+  port-443 connection timeout; local `main` is eight commits ahead of
+  `origin/main`.
 
 ## Live Delta At 07:33 CEST On August 1
 
