@@ -4,6 +4,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-02
 
+- 19:44 CEST: Final conditioned-32B NL eval row `3881781_17` completed in
+  `06:17:22` and passed the 448-prompt, 16-generation, 14-depth artifact and
+  representative raw-generation gates. The six-row family is accepted:
+  formal versus natural OOD answer/joint pass@1 is `0.8501/0.7504` versus
+  `0.7724/0.7505`. Refreshed the in-repo report, informal mirror, and official
+  preprint only after acceptance. Dolmino NL `3875832_2` reached step 5061
+  and timed out as planned; accepted its complete step-5000 state with exact
+  95:5 offsets, then removed steps 3500/4000/4500, reclaiming
+  `319,885,161,515` bytes. Submitted matched step-5000 NL readout
+  `3942598_2`; terminal continuation `3875833_2` is priority-pending.
+  Preserved CPU-only/no-GRES successor `3942568` for 01:31 August 3 because
+  the terminal and post-SFT plan remains incomplete.
+
 - 13:40 CEST: Dolmino NL `3875832_2` remained healthy beyond step 3861.
   Accepted its complete step-3500 restart state with Qwen2.5 RoPE `1000000`
   and exact 95:5 offsets, then removed only superseded steps 2500/3000,

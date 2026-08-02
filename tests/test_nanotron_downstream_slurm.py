@@ -19,3 +19,12 @@ def test_downstream_aggregate_does_not_request_a_gpu() -> None:
     )
     assert "#SBATCH --partition=a100mig" in text
     assert "#SBATCH --gres" not in text
+
+
+def test_dolmino_step5000_readout_includes_matched_nl_condition() -> None:
+    text = (
+        JOBS / "nanotron_qwen25_dolmino_step5000_intermediate_eval_2026-07-28.slurm"
+    ).read_text(encoding="utf-8")
+    assert "#SBATCH --array=0-2%2" in text
+    assert "CONDITIONS=(control logic nl_exact)" in text
+    assert "qwen25_7b_dolmino_nl_exact_p5_5b" in text

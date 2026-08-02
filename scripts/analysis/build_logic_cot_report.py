@@ -3847,7 +3847,7 @@ and {100 * natural['ood_joint1_mean']:.1f}$\pm${100 * natural['ood_joint1_std']:
 Representative failures explain why correctness and validity remain separate: long formal
 generations can reach the right answer through an invalid branch, while many natural-language
 failures copy premises until the shared cap and never emit an answer. Selected length, shortcut,
-hybrid, conditioned-dual, and architecture controls remain in progress and are not used here.
+hybrid, conditioned-dual, and architecture controls that passed the same gates are reported next.
 """
     return block, executive, True
 

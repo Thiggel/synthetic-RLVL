@@ -2,6 +2,29 @@
 
 Date: 2026-07-10
 
+## Operational update (2026-08-02 19:44 CEST)
+
+Final conditioned natural eval row `3881781_17` completed `0:0` in
+`06:17:22` on four A100-80GB GPUs. Its production audit accepts all 448
+prompts, 16 generations, 14 depths, 576 retained rows, and complete `7/112`
+generation logs with no cap hit or credited diagnostic contradiction.
+Representative review covers the intended natural-language prompt, exact
+tagged extraction, shallow/train/OOD/depth-50 successes, format failures,
+answer-correct invalid chains, and wrong valid/invalid chains. Row-scoped OOD
+greedy/pass@1/joint@1/pass@16/joint@16 is
+`0.9563/0.9383/0.8824/0.9938/0.9938`; depth 50 is
+`0.9688/0.9375/0.9141/1.0000/1.0000`. Audit:
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_17.json`.
+
+All six conditioned OLMo-3-32B rows are now accepted. Three-seed OOD
+greedy/pass@1/joint@1/pass@16/joint@16 is
+`0.8979/0.8501/0.7504/0.9979/0.9771` for formal mode and
+`0.7854/0.7724/0.7505/0.8875/0.8667` for natural mode. Formal has the higher
+answer pass@1 mean, but joint pass@1 is essentially tied and variable. This is
+a within-checkpoint mode comparison, not evidence that conditioned training
+uniformly improves both modalities. The generated and official reports were
+updated only after this artifact and raw-generation gate passed.
+
 ## Operational update (2026-08-02 07:35 CEST)
 
 Conditioned formal eval row `3881781_16` completed as raw job `3940286`

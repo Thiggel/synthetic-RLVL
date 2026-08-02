@@ -1,8 +1,33 @@
 # Running Experiments
 
-Last updated: 2026-08-02 13:40 CEST.
+Last updated: 2026-08-02 19:44 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:44 CEST On August 2
+
+- Conditioned-32B NL eval row `3881781_17` completed `0:0` in `06:17:22`
+  on four A100-80GB GPUs and passed the full 448-prompt, 16-generation,
+  14-depth, 576-row artifact and representative raw-generation gates. Its
+  row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.9563/0.9383/0.8824/0.9938/0.9938`; depth-50 answer/joint pass@1 is
+  `0.9375/0.9141`. Complete `7/112` logs have no cap hit. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_17.json`.
+- The six-row conditioned OLMo-3-32B family is accepted. Formal versus natural
+  OOD answer/joint pass@1 is `0.8501/0.7504` versus `0.7724/0.7505`, and
+  answer/joint pass@16 is `0.9979/0.9771` versus `0.8875/0.8667`. Reports
+  were refreshed only after the raw gate passed.
+- Dolmino NL `3875832_2` reached step 5061 and ended in the expected 24-hour
+  `TIMEOUT`. Step 5000 passes the full 645-file restart/RoPE/exact-offset gate
+  at `5000/640000/2621440000`, with exact
+  `2490368000 + 131072000` Dolmino/NL tokens. After acceptance, removed only
+  steps 3500/4000/4500 (`319,885,161,515` bytes); retained step 5000 re-audits
+  unchanged. Terminal continuation `3875833_2` is priority-pending.
+- Submitted matched NL step-5000 limited direct eval `3942598_2` on one A40;
+  it is priority-pending with the same reviewer and tagged/stock multi-hop
+  limit-100 protocol as the accepted control/formal rows. Successor `3942568`
+  remains dependency-free, CPU-only/no-GRES, and scheduled for 01:31 CEST
+  August 3 because terminal training and downstream/post-SFT gates remain.
 
 ## Live Delta At 13:40 CEST On August 2
 

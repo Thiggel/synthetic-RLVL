@@ -1,5 +1,27 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-02 19:44 CEST)
+
+Exact from-base NL retry `3875832_2` reached step 5061 and ended at the planned
+24-hour boundary with Slurm state `TIMEOUT`, exit `0:0`, and no OOM, quota, or
+unexpected fatal signature. Its step-5000 checkpoint passes the full restart
+gate: 645 files, no zero-byte file, TP4/DP2, 625 model files, four equal
+optimizer shards, four scheduler shards, eight RNG shards, Qwen2.5 RoPE
+`1000000`, and exact step/sample/token offsets
+`5000/640000/2621440000`. Dataset offsets are exact `2490368000` Dolmino plus
+`131072000` matched-NL tokens, or 95:5. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step5000_20260802.json`.
+
+Only after acceptance were superseded steps 3500/4000/4500 removed,
+reclaiming `319,885,161,515` bytes. Step 5000 is the sole numeric NL restart
+state and passes a post-delete re-audit unchanged; Vault is about
+`948G/1000G`, 182k files. Terminal continuation `3875833_2` is
+priority-pending and must resume this state. The matched limit-100 NL
+step-5000 direct readout was added to the existing control/formal wrapper and
+submitted as A40 job `3942598_2`; it preserves the standard reviewer suite,
+32,768-window tagged/stock multi-hop protocol, retained generations, RoPE
+preflight, production audits, and corrected MATH sidecar gates.
+
 ## Production update (2026-08-02 13:40 CEST)
 
 Exact from-base NL retry `3875832_2` remains healthy beyond step 3861 on eight

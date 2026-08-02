@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-02 13:40 CEST.
+Last updated: 2026-08-02 19:44 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,40 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-02 19:44 conditioned-32B complete and NL step-5000 gate
+
+- Final conditioned-32B NL eval row `3881781_17` completed `0:0` in
+  `06:17:22` on four A100-80GB GPUs. Its fail-closed audit accepts 448
+  prompts, 16 generations, all 14 depths, 576 retained rows, complete
+  `7/112` chunk logs, and no credited validity-diagnostic contradiction or
+  cap hit. Representative shallow/train/OOD/depth-50 review confirms the
+  intended natural-language prompt, exact extraction, clean correct-valid
+  chains, and genuine wrong, malformed, and underivable failures. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_17.json`.
+- All six conditioned OLMo-3-32B rows now pass their artifact and raw gates.
+  Three-seed OOD greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.8979/0.8501/0.7504/0.9979/0.9771` under formal prompting and
+  `0.7854/0.7724/0.7505/0.8875/0.8667` under natural prompting. This is a
+  within-checkpoint output-mode result: formal has the higher answer pass@1
+  mean, while joint@1 is tied within variance. The in-repo report and official
+  preprint were refreshed from only the audited corrected rows.
+- Exact from-base NL `3875832_2` reached step 5061 and ended in the planned
+  24-hour `TIMEOUT`, with no OOM, quota, or fatal training signature. Step
+  5000 passes the complete 645-file TP4/DP2 restart gate, RoPE `1000000`, and
+  exact `5000/640000/2621440000` offsets, including exact
+  `2490368000 + 131072000` Dolmino/NL tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step5000_20260802.json`.
+  Only after acceptance, removed superseded steps 3500/4000/4500, reclaiming
+  `319,885,161,515` bytes; step 5000 re-audits unchanged and Vault is about
+  `948G/1000G`, 182k files.
+- Terminal NL continuation `3875833_2` is priority-pending with the accepted
+  step-5000 restart. Matched limit-100 NL step-5000 direct readout
+  `3942598_2` was submitted on one A40 and is priority-pending; it uses the
+  same standard and tagged/stock multi-hop protocol as control/formal.
+  Successor `3942568` is dependency-free, CPU-only/no-GRES on `a100mig`, and
+  scheduled for 01:31 CEST August 3. The Dolmino terminal/post-SFT plan remains
+  incomplete, so the successor is preserved.
 
 ### 2026-08-02 13:40 NL step-3500 rotation and final conditioned eval progress
 

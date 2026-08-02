@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:a40:1
 #SBATCH --cpus-per-task=16
 #SBATCH --time=24:00:00
-#SBATCH --array=0-1%2
+#SBATCH --array=0-2%2
 #SBATCH --output=logs/%x_%A_%a.out
 #SBATCH --error=logs/%x_%A_%a.err
 
@@ -14,9 +14,13 @@ mkdir -p logs
 source ./scripts/env.sh
 
 CHECKPOINT_STEP=5000
-CONDITIONS=(control logic)
-MIX_PCTS=(0 5)
-RUN_DIR_TAGS=(qwen25_7b_dolmino_control_p5_5b qwen25_7b_dolmino_logic_p5_5b)
+CONDITIONS=(control logic nl_exact)
+MIX_PCTS=(0 5 5)
+RUN_DIR_TAGS=(
+  qwen25_7b_dolmino_control_p5_5b
+  qwen25_7b_dolmino_logic_p5_5b
+  qwen25_7b_dolmino_nl_exact_p5_5b
+)
 IDX="${SLURM_ARRAY_TASK_ID}"
 CONDITION="${CONDITIONS[$IDX]}"
 MIX_PCT="${MIX_PCTS[$IDX]}"
