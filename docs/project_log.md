@@ -2,6 +2,19 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-03
+
+- 01:36 CEST: Matched NL step-5000 readout `3942598_2` completed `0:0` in
+  `00:54:31` and passed local-HF/RoPE, 600-row multi-hop, 10,600-row standard,
+  schema-v4 MATH, and representative raw-generation gates. Its ten-task macro
+  is `0.6327`, essentially formal `0.6341`; stock continuation is
+  `93/94/96%`, essentially formal `91/94/97%`. Tagged/stock/first-head QA-F1
+  macros are `0.3420/0.1067/0.3863`. This identifies the shared
+  long-document/full-loss intervention, not formal syntax, as the stopping
+  cause. No broader grid or preprint update was triggered. Terminal NL
+  `3875833_2` remains priority-pending with a provisional 16:59 start;
+  successor `3943558` remains CPU-only/no-GRES for 07:31.
+
 ## 2026-08-02
 
 - 20:05 CEST: NL step-5000 readout `3942598_2` started on A40 node `a1721`.

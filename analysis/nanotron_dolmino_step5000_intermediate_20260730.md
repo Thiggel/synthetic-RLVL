@@ -1,6 +1,6 @@
 # Dolmino step-5000 intermediate readout
 
-Date: 2026-07-30
+Date: 2026-07-30; matched-NL gate added 2026-08-03
 
 This is a matched, limited (`100` examples per task) direct readout of the
 accepted control and formal-5% Nanotron checkpoints at step 5000
@@ -184,14 +184,51 @@ step-5000 evaluation is therefore the decisive control:
 - if both improve after identical answer-only calibration, the issue is
   downstream response alignment rather than lost reasoning ability.
 
+## Matched-NL causal gate
+
+The exact matched-NL step-5000 readout completed as `3942598_2` on 2026-08-02
+and passed the same local-HF, RoPE-`1000000`, retained-sample, multi-hop,
+standard-suite, and schema-v4 MATH sidecar gates. The bundle contains 600
+multi-hop rows and 10,600 standard-suite rows.
+
+The ten-task macro is `0.6327`, compared with `0.5932` for control and
+`0.6341` for formal. Formal-minus-NL is only `+0.0014` at this limited
+readout. The per-task matched-NL values are GSM8K `0.8300`, ARC-Challenge
+`0.5500`, HellaSwag `0.6900`, WinoGrande `0.7600`, PIQA `0.8200`, LogiQA
+`0.4700`, BBH `0.6789`, MMLU `0.7235`, MMLU-Pro `0.4743`, and the MATH-500
+sidecar `0.3300`. Thus the encouraging control-to-intervention competence
+change is shared by formal and matched NL at this checkpoint; it is not a
+formal-modality advantage.
+
+The stopping diagnostic is equally decisive. Matched-NL stock continuation
+rates are `93%/94%/96%` on 2Wiki/HotpotQA/MuSiQue, versus formal
+`91%/94%/97%` and control `33%/28%/49%`. Among exact first answers, matched-NL
+continuation remains `90.6%/95.0%/100%`. Its stock QA-F1 macro is `0.1067`,
+tagged QA-F1 macro is `0.3420`, and first-answer macro is `0.3863`; the formal
+values are `0.1093/0.3348/0.3799`. This near identity supports the shared
+long-document/full-loss envelope and boundary-density mechanism, not formal
+syntax, as the cause of bare-answer continuation.
+
+Raw review covered correct and incorrect GSM8K, MATH-500, BBH, MMLU-Pro, and
+stock/tagged multi-hop generations. Prompts and extraction match the intended
+protocol. Correct rows contain ordinary task reasoning; incorrect rows contain
+genuine arithmetic, entity-selection, or option-selection errors. Tagged
+outputs obey the answer boundary, while stock rows often continue into a new
+QA record. BBH invalid extraction is `5.56%` under matched NL, close to formal
+`5.44%` and below control `6.30%`. MMLU-Pro invalid extraction is `5.00%`,
+close to formal `4.86%` and above control `2.50%`; the invalid rows are long
+repetitive tails. No `You are an AI assistant` next-document marker appears in
+matched-NL BBH or MMLU-Pro generations.
+
 ## Decision
 
 Retain this as an intermediate optimization/readout diagnostic. Do not update
-the official preprint or launch a broader mixture grid from it. Continue the
-preregistered control/formal/NL 5B gate and require terminal checkpoint,
-direct, post-midtraining readout, and raw-generation audits before a scientific
-transfer claim. Preserve the NL step-5000 checkpoint long enough to run the
-same limited direct readout, and use identical answer-only and neutral
-reasoning calibration for all three terminal checkpoints. For a later pilot,
-compare the current full-document objective with a minimal envelope and a
-proof-focused loss that masks copied problem/premise tokens.
+the official preprint or launch a broader mixture grid from it. The matched-NL
+gate has now shown that both the competence gain and stopping regression are
+shared intervention effects at step 5000, not evidence for a formal-modality
+advantage. Continue the preregistered control/formal/NL 5B gate and require
+terminal checkpoint, direct, post-midtraining readout, and raw-generation
+audits before a scientific transfer claim. Use identical answer-only and
+neutral reasoning calibration for all three terminal checkpoints. For a later
+pilot, compare the current full-document objective with a minimal envelope and
+a proof-focused loss that masks copied problem/premise tokens.

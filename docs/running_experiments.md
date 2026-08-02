@@ -1,8 +1,34 @@
 # Running Experiments
 
-Last updated: 2026-08-02 20:05 CEST.
+Last updated: 2026-08-03 01:36 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:36 CEST On August 3
+
+- Matched NL step-5000 limited direct eval `3942598_2` completed `0:0` in
+  `00:54:31` on A40 node `a1721`. Local HF conversion/finite-forward and
+  legacy/modern RoPE-`1000000` gates pass. Production audits accept six
+  multi-hop files/600 rows, 105 standard leaf files/10,600 rows, and the
+  schema-v4 MATH sidecar with zero lost stock-exact positives.
+- Matched-NL ten-task macro is `0.6327`, versus control `0.5932` and formal
+  `0.6341`. Its stock/tagged/first-head multi-hop macros are
+  `0.1067/0.3420/0.3863`, and stock continuation is `93%/94%/96%` across
+  2Wiki/HotpotQA/MuSiQue, essentially formal `91%/94%/97%`. Representative
+  correct/incorrect raw review confirms intact prompts and extraction,
+  ordinary task errors, tagged-boundary adherence, and long repetitive
+  MMLU-Pro invalid tails. This supports a shared long-document/full-loss
+  mechanism, not a formal-modality advantage.
+- Terminal NL continuation `3875833_2` remains priority-pending from the
+  audited 645-file step-5000 restart, with a provisional 16:59 CEST start.
+  No compatible partition widening is useful: it requires one full
+  A100-80GB node and all healthy matching nodes are allocated. Vault is about
+  `948G/1000G`, 182k files; group Work is about `471k/500k` files.
+  Dependency-free CPU-only/no-GRES successor `3943558` remains scheduled for
+  07:31 because terminal training and downstream/post-SFT gates are incomplete.
+- No broader mixture grid, duplicate BranchProof family, report regeneration,
+  or official-preprint update was triggered. Detailed intermediate audit:
+  `analysis/nanotron_dolmino_step5000_intermediate_20260730.md`.
 
 ## Live Delta At 20:05 CEST On August 2
 

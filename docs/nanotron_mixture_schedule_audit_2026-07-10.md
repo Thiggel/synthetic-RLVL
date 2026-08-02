@@ -1,5 +1,33 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-03 01:36 CEST)
+
+Matched NL step-5000 direct readout `3942598_2` completed `0:0` in `00:54:31`
+on A40 node `a1721`. Its local four-shard HF conversion and finite forward
+pass succeeded, both legacy and modern consumers resolved Qwen2.5 RoPE
+`1000000`, and the production audits accepted six multi-hop files/600 rows and
+105 standard-suite leaf files/10,600 rows. The schema-v4
+`answer_prefix_math_verify,none` sidecar accepted MATH-500 at `0.3300` with
+zero lost stock-exact positives.
+
+The matched-NL ten-task macro is `0.6327`, versus control `0.5932` and formal
+`0.6341`. Stock/tagged/first-head multi-hop macros are
+`0.1067/0.3420/0.3863`. Stock continuation is `93%/94%/96%` on
+2Wiki/HotpotQA/MuSiQue, essentially the formal `91%/94%/97%` pattern. BBH and
+MMLU-Pro invalid extraction are `5.56%` and `5.00%`; correct and incorrect raw
+review found intended prompts/extraction, genuine task errors, tagged-boundary
+adherence, and long repetitive invalid MMLU-Pro tails. No assistant-preamble
+marker appeared. This resolves the intermediate causal gate in favor of the
+shared long-document/full-loss intervention, not formal syntax. It does not
+trigger a broader mixture grid or preprint update. Full detail:
+`analysis/nanotron_dolmino_step5000_intermediate_20260730.md`.
+
+Terminal NL continuation `3875833_2` remains priority-pending from the audited
+step-5000 state, with a provisional 16:59 CEST start. The accepted checkpoint
+still has 645 nonempty files. Vault is about `948G/1000G`, 182k files; group
+Work is about `471k/500k` files. Successor oversight `3943558` is
+dependency-free, CPU-only/no-GRES on `a100mig`, and scheduled for 07:31 CEST.
+
 ## Production update (2026-08-02 19:44 CEST)
 
 Exact from-base NL retry `3875832_2` reached step 5061 and ended at the planned

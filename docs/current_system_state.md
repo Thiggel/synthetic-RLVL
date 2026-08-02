@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-02 20:05 CEST.
+Last updated: 2026-08-03 01:36 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,32 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-03 01:36 matched NL step-5000 causal gate
+
+- Matched NL readout `3942598_2` completed `0:0` in `00:54:31` on A40 node
+  `a1721`. Local HF conversion/finite-forward and both RoPE-`1000000`
+  consumer paths pass. Audits accept 600 retained multi-hop rows, 10,600
+  standard rows, all expected tasks, and the schema-v4 MATH sidecar with zero
+  lost stock-exact positives.
+- Ten-task macro is `0.6327`, versus control `0.5932` and formal `0.6341`.
+  Matched-NL stock/tagged/first-head multi-hop macros are
+  `0.1067/0.3420/0.3863`; continuation is `93%/94%/96%` on
+  2Wiki/HotpotQA/MuSiQue, essentially formal `91%/94%/97%`. Raw review across
+  correct and incorrect GSM8K, MATH-500, BBH, MMLU-Pro, and stock/tagged QA
+  confirms intended prompts/extraction, genuine task errors, tagged boundary
+  adherence, and repetitive invalid tails. The stopping regression therefore
+  comes from the shared long-document/full-loss intervention, not formal
+  syntax. This intermediate result does not support a broader mixture grid or
+  preprint claim.
+- Terminal NL continuation `3875833_2` remains priority-pending from the
+  accepted 645-file step-5000 state, with provisional start 16:59 CEST. No
+  safe partition widening is useful because the fixed TP4/DP2 job requires a
+  full A100-80GB node and all healthy compatible nodes are allocated. Vault is
+  about `948G/1000G`, 182k files; group Work is about `471k/500k` files.
+  Successor `3943558` is verified dependency-free, CPU-only/no-GRES on
+  `a100mig`, and scheduled for 07:31 CEST. The terminal/direct/post-SFT plan
+  remains incomplete, so it is preserved.
 
 ### 2026-08-02 19:44 conditioned-32B complete and NL step-5000 gate
 
