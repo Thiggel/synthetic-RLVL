@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-02
 
+- 20:00 CEST: Committed the accepted conditioned-32B result, Dolmino NL
+  step-5000 gate/readout submission, and regenerated report as `16999e6`; the
+  mirrored/official report update is `165042b`. Independent bounded 90-second
+  GitHub SSH pushes for both repositories produced no response and exited
+  `124`, so both commits remain local.
+
 - 19:44 CEST: Final conditioned-32B NL eval row `3881781_17` completed in
   `06:17:22` and passed the 448-prompt, 16-generation, 14-depth artifact and
   representative raw-generation gates. The six-row family is accepted:

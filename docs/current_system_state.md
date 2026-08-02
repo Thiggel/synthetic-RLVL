@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-02 19:44 CEST.
+Last updated: 2026-08-02 20:00 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -57,6 +57,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   Successor `3942568` is dependency-free, CPU-only/no-GRES on `a100mig`, and
   scheduled for 01:31 CEST August 3. The Dolmino terminal/post-SFT plan remains
   incomplete, so the successor is preserved.
+- Scoped commits `16999e6` (experiment repo) and `165042b` (report repo)
+  remain local: independent bounded 90-second `git push origin main` attempts
+  produced no remote response and exited `124`. No uncommitted tracked changes
+  remain from this pass.
 
 ### 2026-08-02 13:40 NL step-3500 rotation and final conditioned eval progress
 
