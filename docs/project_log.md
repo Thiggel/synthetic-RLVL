@@ -4,6 +4,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-02
 
+- 07:35 CEST: Conditioned-32B formal eval row `3881781_16` completed as raw
+  job `3940286` in `06:28:35` and passed the full artifact and representative
+  raw-generation audit. Row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16
+  is `0.9688/0.8999/0.8428/1.0000/1.0000`; only row 17 remains and is
+  priority-pending on four A100-80GB GPUs. Dolmino NL `3875832_2` is healthy
+  beyond step 2581. Accepted its complete step-2500 state with exact 95:5
+  offsets, then removed superseded steps 1000/1500/2000, reclaiming
+  `319,885,161,508` bytes; step 2500 re-audits unchanged and Vault is about
+  `948G/1000G`. Preserved CPU-only/no-GRES successor `3941017` for 13:30
+  because both critical paths remain incomplete. No report or submission gate
+  opened. The scoped commit remains local after a silent bounded 90-second
+  GitHub SSH push exited `124`.
+
 - 01:35 CEST: Conditioned-32B NL eval row `3881781_15` completed as raw job
   `3938243` in `06:23:40` and passed the full artifact plus representative
   raw-generation audit. Row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16

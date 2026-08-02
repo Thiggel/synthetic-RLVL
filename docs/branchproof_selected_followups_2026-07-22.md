@@ -90,6 +90,15 @@ verified checkpoints through step 7,500; exact resume `3897965_12` was
 submitted, and conditioned eval `3881781` now depends on that recovery plus
 untouched rows `3883534_13/14`.
 
+Update 2026-08-02 07:35 CEST: conditioned formal eval row `3881781_16`
+completed as raw job `3940286` `0:0` in `06:28:35` on four A100-80GB GPUs
+and passed the full artifact, invariant, chunk-log, and representative
+raw-generation gates. Row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16
+is `0.9688/0.8999/0.8428/1.0000/1.0000`; depth-50 answer/joint pass@1 is
+`0.7051/0.5195`. Row 17 is the sole remaining selected eval and remains
+priority-pending under the unchanged protocol. Selected acceptance is
+`44/45`; no conditioned-32B family claim is released until row 17 passes.
+
 | Claim/control | Exact rows | Job | Rows |
 | --- | --- | --- | ---: |
 | Length/syntax | surface eval `0..2` symbol-padded logic, `6..8` terse NL, `24..26` target-token-matched NL; all train-1-to-25, three seeds | `3881774` | 9 eval |

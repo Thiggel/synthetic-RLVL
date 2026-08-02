@@ -1,8 +1,35 @@
 # Running Experiments
 
-Last updated: 2026-08-02 01:35 CEST.
+Last updated: 2026-08-02 07:35 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:35 CEST On August 2
+
+- Conditioned-32B formal eval row `3881781_16` completed as raw job
+  `3940286` `0:0` in `06:28:35` and passed the full 448-prompt,
+  16-generation, 14-depth, 576-row artifact and representative raw-generation
+  gates. Intended formal prompts/extraction are clean, and answer-correct
+  invalid long traces are rejected by the cited diagnostics. Row-scoped OOD
+  greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.9688/0.8999/0.8428/1.0000/1.0000`; depth-50 answer/joint pass@1 is
+  `0.7051/0.5195`. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_16.json`.
+- Eval row `3881781_17` is the sole remaining selected row. It is
+  priority-pending with no dependency, partition `a100`, feature `a100_80`,
+  four A100 GPUs, 16,384 context, and the full 24-hour protocol unchanged.
+- Exact from-base Dolmino NL `3875832_2` is healthy beyond step 2581 at about
+  31.1K tokens/s with finite diagnostics. Its complete step-2500 state passed
+  the 645-file restart gate with exact `2500/320000/1310720000` offsets and
+  exact `1245184000 + 65536000` Dolmino/NL token accounting. After acceptance,
+  removed only superseded steps 1000/1500/2000 (`319,885,161,508` bytes);
+  retained step 2500 re-audits unchanged. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step2500_20260802.json`.
+  Vault is back below its soft quota at about `948G/1000G`, `182k/200k` files.
+- Successor `3941017` is dependency-free, CPU-only/no-GRES, and scheduled for
+  13:30 CEST. It remains required. No family-level report, broader submission,
+  scheduler edit, or additional GPU job is justified. The scoped commit
+  remains local after a silent bounded 90-second GitHub SSH push exited `124`.
 
 ## Live Delta At 01:35 CEST On August 2
 

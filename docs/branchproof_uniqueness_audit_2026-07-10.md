@@ -2,6 +2,26 @@
 
 Date: 2026-07-10
 
+## Operational update (2026-08-02 07:35 CEST)
+
+Conditioned formal eval row `3881781_16` completed as raw job `3940286`
+`0:0` in `06:28:35` on four A100-80GB GPUs. Its production audit accepts all
+448 prompts, 16 generations, 14 depths, 576 retained rows, complete `7/112`
+generation logs, fresh constants, and zero credited validity-diagnostic
+contradictions. Representative review confirms the intended formal prompt,
+exact tagged answers on complete outputs, clean shallow/train/OOD
+correct-valid chains, rejected answer-correct invalid chains, and genuine
+depth-50 wrong/invalid or cap-limited failures. Row-scoped OOD
+greedy/pass@1/joint@1/pass@16/joint@16 is
+`0.9688/0.8999/0.8428/1.0000/1.0000`; depth 50 is
+`0.7812/0.7051/0.5195/1.0000/0.9688`. Audit:
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_16.json`.
+
+Row `3881781_17` is the sole remaining selected evaluation and is
+priority-pending with the unchanged four-A100-80GB, 16,384-context, 24-hour
+protocol. Do not aggregate or refresh the conditioned-32B claim until it also
+passes the artifact and raw-generation gates.
+
 ## Operational update (2026-08-01 01:33 CEST)
 
 The final conditioned OLMo-3-32B SFT recovery `3932131_14` completed `0:0`

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-02 01:35 CEST.
+Last updated: 2026-08-02 07:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,39 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-02 07:35 fifth conditioned-32B eval and NL step-2500 rotation
+
+- Conditioned-32B formal eval row `3881781_16` completed as raw job `3940286`
+  `0:0` in `06:28:35` on four A100-80GB GPUs. Its fail-closed audit accepts
+  448 prompts, 16 generations, all 14 depths, 576 retained rows, complete
+  `7/112` chunk logs, fresh constants, and no credited validity-diagnostic
+  contradiction. Audit:
+  `$HPCVAULT/synthetic-RLVL/analysis/branchproof_selected_followups_audits_20260723/large_16.json`.
+- Representative review confirms the intended formal prompt and exact tagged
+  answers on shallow, train-band, and OOD correct-valid cases. Answer-correct
+  invalid OOD traces are rejected at their first underivable proof line, and
+  depth-50 wrong/invalid cases are genuine model failures. Row-scoped OOD
+  greedy/pass@1/joint@1/pass@16/joint@16 is
+  `0.9688/0.8999/0.8428/1.0000/1.0000`; depth 50 is
+  `0.7812/0.7051/0.5195/1.0000/0.9688`. Twelve sampled chunks, but no greedy
+  chunk, reached the 7,168-token cap. Row 17 is the sole remaining selected
+  eval and is priority-pending with the unchanged four-A100-80GB protocol; no
+  family claim or report refresh is yet permitted.
+- Exact from-base Dolmino NL `3875832_2` is healthy beyond step 2581 at about
+  31.1K tokens/s with finite diagnostics. Step 2500 passes the complete
+  645-file TP4/DP2 restart gate and exact `2500/320000/1310720000` offsets,
+  including `1245184000 + 65536000` Dolmino/NL tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step2500_20260802.json`.
+  Only after acceptance, removed superseded steps 1000/1500/2000, reclaiming
+  `319,885,161,508` bytes; retained step 2500 re-audits unchanged. Vault is
+  about `948G/1000G`, `182k/200k` files. Preserve and audit step 5000 for the
+  matched limited readout before rotating it.
+- Successor `3941017` is dependency-free, CPU-only/no-GRES on `a100mig`, and
+  scheduled for 13:30 CEST. Both critical paths remain incomplete, so it is
+  preserved. No scheduler edit, new submission, or report regeneration was
+  justified. The scoped commit remains local after a bounded 90-second GitHub
+  SSH push produced no response and exited `124`.
 
 ### 2026-08-02 01:35 fourth conditioned-32B eval and NL restart rotation
 
