@@ -21,7 +21,8 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   full 24-hour protocol unchanged. It is the sole remaining selected eval.
 - Successor `3941585` is dependency-free, CPU-only/no-GRES, and scheduled for
   19:30 CEST. It remains required. No scheduler edit, new GPU submission, or
-  report refresh is yet justified.
+  report refresh is yet justified. Scoped commit `1783749` remains local after
+  a silent bounded 90-second GitHub SSH push exited `124`.
 
 ## Live Delta At 07:35 CEST On August 2
 

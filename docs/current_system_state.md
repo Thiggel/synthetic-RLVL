@@ -45,6 +45,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - Successor `3941585` is dependency-free, CPU-only/no-GRES on `a100mig`, and
   scheduled for 19:30 CEST. Both critical paths remain incomplete, so it is
   preserved. No scheduler edit or new experiment submission is justified.
+  Scoped commit `1783749` remains local after a bounded 90-second GitHub SSH
+  push produced no response and exited `124`.
 
 ### 2026-08-02 07:35 fifth conditioned-32B eval and NL step-2500 rotation
 

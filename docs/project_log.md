@@ -12,7 +12,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   NL eval `3881781_17` remained healthy at sampled chunk 98/112 on four
   A100-80GB GPUs. Preserved CPU-only/no-GRES successor `3941585` for 19:30
   because both critical paths remain incomplete. No report or submission gate
-  opened.
+  opened. Scoped commit `1783749` remains local after a silent bounded
+  90-second GitHub SSH push exited `124`.
 
 - 07:35 CEST: Conditioned-32B formal eval row `3881781_16` completed as raw
   job `3940286` in `06:28:35` and passed the full artifact and representative
