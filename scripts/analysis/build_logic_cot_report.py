@@ -3952,6 +3952,23 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
             "audits": ("large_3.json", "large_4.json", "large_5.json"),
             "joint_metric": "nl_logic_joint_pass",
         },
+        "OLMo-3-32B conditioned formal": {
+            "subdir": "large",
+            "stem": (
+                "sft_branchproof_unique_v2_arch_olmo3_1125_32b_conditioned_dual_"
+                "train1to25_10k_seed{seed}_conditioned_logic"
+            ),
+            "audits": ("large_12.json", "large_14.json", "large_16.json"),
+        },
+        "OLMo-3-32B conditioned natural": {
+            "subdir": "large",
+            "stem": (
+                "sft_branchproof_unique_v2_arch_olmo3_1125_32b_conditioned_dual_"
+                "train1to25_10k_seed{seed}_conditioned_nl"
+            ),
+            "audits": ("large_13.json", "large_15.json", "large_17.json"),
+            "joint_metric": "nl_logic_joint_pass",
+        },
     }
     for spec in families.values():
         audit_paths = [SELECTED_BRANCHPROOF_AUDIT_ROOT / name for name in spec["audits"]]
@@ -4048,8 +4065,10 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
     qwen_nl = by_condition["Qwen2.5-7B natural"]
     olmo32_logic = by_condition["OLMo-3-32B formal"]
     olmo32_nl = by_condition["OLMo-3-32B natural"]
+    olmo32_conditioned_logic = by_condition["OLMo-3-32B conditioned formal"]
+    olmo32_conditioned_nl = by_condition["OLMo-3-32B conditioned natural"]
     executive = (
-        "Thirteen corrected train-1-to-25 control conditions now pass complete three-seed row "
+        "Fifteen corrected train-1-to-25 control conditions now pass complete three-seed row "
         "and raw-generation gates. Symbol padding preserves most of the formal OOD advantage "
         f"({100 * float(surface['ood_correct1_mean']):.1f}% answer pass@1), while the "
         "two same-example hybrid orders collapse under extrapolation "
@@ -4064,12 +4083,14 @@ def build_selected_branchproof_report_block() -> tuple[str, str, bool]:
         f"OOD answer pass@1 versus {100 * float(conditioned_nl['ood_correct1_mean']):.1f}% for NL. "
         f"At OLMo-3-32B, formal versus natural reaches "
         f"{100 * float(olmo32_logic['ood_correct1_mean']):.1f}% versus "
-        f"{100 * float(olmo32_nl['ood_correct1_mean']):.1f}%."
+        f"{100 * float(olmo32_nl['ood_correct1_mean']):.1f}%; the shared conditioned checkpoint "
+        f"reaches {100 * float(olmo32_conditioned_logic['ood_correct1_mean']):.1f}% in formal mode "
+        f"and {100 * float(olmo32_conditioned_nl['ood_correct1_mean']):.1f}% in natural mode."
     )
     block = rf"""
 \subsection{{Accepted corrected BranchProof controls}}
 The selected syntax/length, shortcut, hybrid-order, conditioned-dual, Qwen2.5-7B, and
-single-modal OLMo-3-32B controls are complete across three seeds. All accepted rows
+single-modal and conditioned OLMo-3-32B controls are complete across three seeds. All accepted rows
 pass the same 448-prompt, 16-generation, 14-depth artifact and qualitative gates as the corrected
 main grid. OOD contains depths 30--50. Joint uses citation-free formal validity for formal
 outputs and translated citation-free validity for natural-language outputs.
@@ -4122,8 +4143,18 @@ The matched OLMo-3-32B single-modal comparison reaches OOD answer/joint pass@1
 {100 * float(olmo32_nl['ood_correct1_mean']):.1f}$\pm$
 {100 * float(olmo32_nl['ood_correct1_std']):.1f} /
 {100 * float(olmo32_nl['ood_joint1_mean']):.1f}$\pm$
-{100 * float(olmo32_nl['ood_joint1_std']):.1f} for natural supervision. The remaining
-OLMo-3-32B conditioned-dual replacement is incomplete and is not used as family-level evidence.
+{100 * float(olmo32_nl['ood_joint1_std']):.1f} for natural supervision. The shared conditioned
+OLMo-3-32B checkpoint reaches OOD answer/joint pass@1
+{100 * float(olmo32_conditioned_logic['ood_correct1_mean']):.1f}$\pm$
+{100 * float(olmo32_conditioned_logic['ood_correct1_std']):.1f} /
+{100 * float(olmo32_conditioned_logic['ood_joint1_mean']):.1f}$\pm$
+{100 * float(olmo32_conditioned_logic['ood_joint1_std']):.1f} under formal prompting and
+{100 * float(olmo32_conditioned_nl['ood_correct1_mean']):.1f}$\pm$
+{100 * float(olmo32_conditioned_nl['ood_correct1_std']):.1f} /
+{100 * float(olmo32_conditioned_nl['ood_joint1_mean']):.1f}$\pm$
+{100 * float(olmo32_conditioned_nl['ood_joint1_std']):.1f} under natural prompting. This is a
+within-checkpoint output-mode comparison; the single-modal rows remain the matched independent
+checkpoint controls.
 """
     return block, executive, True
 
@@ -4512,7 +4543,7 @@ Full evidence and recovery jobs are recorded in
 \item {selected_branchproof_executive if selected_branchproof_ready else "Selected corrected BranchProof controls remain gated."}
 \item AttrCon remains independent positive-but-mixed evidence: formal traces improve mean answer correctness, while natural traces have the higher joint-validity mean.
 \item The corrected Qwen2.5 continual-pretraining pilot remains null or mixed after raw-generation and truncation audits, so the broader mixture grid is rejected.
-\item All later sections based on the wrapped-constant BranchProof construction are retained only as quarantined provenance. Only the audited corrected controls summarized above are evidence; the conditioned OLMo-3-32B replacement remains incomplete.
+\item All later sections based on the wrapped-constant BranchProof construction are retained only as quarantined provenance. Only the audited corrected controls summarized above are evidence.
 \end{{itemize}}
 
 \section{{Metric note for OOD benchmarks}}

@@ -1,8 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-08-02 07:35 CEST.
+Last updated: 2026-08-02 13:40 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:40 CEST On August 2
+
+- Exact from-base Dolmino NL `3875832_2` is healthy beyond step 3861 at about
+  31.1K tokens/s with finite diagnostics. Its complete step-3500 state passed
+  the 645-file restart gate with Qwen2.5 RoPE `1000000`, exact
+  `3500/448000/1835008000` offsets, and exact
+  `1743257600 + 91750400` Dolmino/NL token accounting. After acceptance,
+  removed only superseded steps 2500/3000 (`213,256,774,342` bytes); retained
+  step 3500 re-audits unchanged. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step3500_20260802.json`.
+  User Vault is about `1068G/1000G`, `182k/200k` files, so guarded rotation
+  remains required and step 5000 must be preserved for the matched readout.
+- Conditioned-32B NL eval row `3881781_17` is healthy on four A100-80GB GPUs
+  at sampled chunk 98/112 after about 4h11m, with no fatal signature and the
+  full 24-hour protocol unchanged. It is the sole remaining selected eval.
+- Successor `3941585` is dependency-free, CPU-only/no-GRES, and scheduled for
+  19:30 CEST. It remains required. No scheduler edit, new GPU submission, or
+  report refresh is yet justified.
 
 ## Live Delta At 07:35 CEST On August 2
 

@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-02
 
+- 13:40 CEST: Dolmino NL `3875832_2` remained healthy beyond step 3861.
+  Accepted its complete step-3500 restart state with Qwen2.5 RoPE `1000000`
+  and exact 95:5 offsets, then removed only superseded steps 2500/3000,
+  reclaiming `213,256,774,342` bytes; retained step 3500 re-audits unchanged.
+  User Vault is about `1068G/1000G`, `182k/200k` files. Final conditioned-32B
+  NL eval `3881781_17` remained healthy at sampled chunk 98/112 on four
+  A100-80GB GPUs. Preserved CPU-only/no-GRES successor `3941585` for 19:30
+  because both critical paths remain incomplete. No report or submission gate
+  opened.
+
 - 07:35 CEST: Conditioned-32B formal eval row `3881781_16` completed as raw
   job `3940286` in `06:28:35` and passed the full artifact and representative
   raw-generation audit. Row-scoped OOD greedy/pass@1/joint@1/pass@16/joint@16

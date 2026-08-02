@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-02 07:35 CEST.
+Last updated: 2026-08-02 13:40 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-02 13:40 NL step-3500 rotation and final conditioned eval progress
+
+- Exact from-base Dolmino NL `3875832_2` is healthy beyond step 3861 at about
+  31.1K tokens/s with finite loss and gradient diagnostics. Its complete
+  step-3500 state passes the 645-file TP4/DP2 restart gate, Qwen2.5 RoPE
+  `1000000`, and exact `3500/448000/1835008000` offsets, including exact
+  `1743257600 + 91750400` Dolmino/NL tokens. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step3500_20260802.json`.
+  Only after acceptance, removed superseded steps 2500/3000, reclaiming
+  `213,256,774,342` bytes; retained step 3500 re-audits unchanged. User Vault
+  is about `1068G/1000G`, `182k/200k` files. Preserve and audit step 5000 for
+  the matched limited readout before any later rotation.
+- Conditioned-32B NL eval row `3881781_17` is healthy on four verified
+  A100-80GB GPUs at sampled chunk 98/112 after about 4h11m. It retains the
+  full 16,384-context, 7,168-token-cap, 448-prompt, 16-generation protocol
+  and has no fatal signature. This is the sole remaining selected eval; no
+  family claim or report refresh is permitted before its artifact and raw
+  generation gates pass.
+- Successor `3941585` is dependency-free, CPU-only/no-GRES on `a100mig`, and
+  scheduled for 19:30 CEST. Both critical paths remain incomplete, so it is
+  preserved. No scheduler edit or new experiment submission is justified.
 
 ### 2026-08-02 07:35 fifth conditioned-32B eval and NL step-2500 rotation
 
