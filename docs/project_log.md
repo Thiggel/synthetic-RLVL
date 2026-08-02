@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-02
 
+- 20:05 CEST: NL step-5000 readout `3942598_2` started on A40 node `a1721`.
+  Its local four-shard conversion, finite-forward, and consumer RoPE
+  `1000000` preflight passed before evaluation began. Terminal continuation
+  `3875833_2` remains priority-pending and successor `3942568` remains
+  dependency-free for 01:31 August 3.
+
 - 20:00 CEST: Committed the accepted conditioned-32B result, Dolmino NL
   step-5000 gate/readout submission, and regenerated report as `16999e6`; the
   mirrored/official report update is `165042b`. Independent bounded 90-second

@@ -1,10 +1,10 @@
 # Running Experiments
 
-Last updated: 2026-08-02 19:44 CEST.
+Last updated: 2026-08-02 20:05 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 19:44 CEST On August 2
+## Live Delta At 20:05 CEST On August 2
 
 - Conditioned-32B NL eval row `3881781_17` completed `0:0` in `06:17:22`
   on four A100-80GB GPUs and passed the full 448-prompt, 16-generation,
@@ -23,9 +23,11 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   `2490368000 + 131072000` Dolmino/NL tokens. After acceptance, removed only
   steps 3500/4000/4500 (`319,885,161,515` bytes); retained step 5000 re-audits
   unchanged. Terminal continuation `3875833_2` is priority-pending.
-- Submitted matched NL step-5000 limited direct eval `3942598_2` on one A40;
-  it is priority-pending with the same reviewer and tagged/stock multi-hop
-  limit-100 protocol as the accepted control/formal rows. Successor `3942568`
+- Matched NL step-5000 limited direct eval `3942598_2` started on A40 node
+  `a1721`. Its local four-shard conversion, finite forward pass, and consumer
+  RoPE `1000000` preflight passed; it is running the same reviewer and
+  tagged/stock multi-hop limit-100 protocol as the accepted control/formal
+  rows. Terminal continuation `3875833_2` remains priority-pending. Successor `3942568`
   remains dependency-free, CPU-only/no-GRES, and scheduled for 01:31 CEST
   August 3 because terminal training and downstream/post-SFT gates remain.
 

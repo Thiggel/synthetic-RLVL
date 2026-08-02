@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-02 20:00 CEST.
+Last updated: 2026-08-02 20:05 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -52,8 +52,10 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `948G/1000G`, 182k files.
 - Terminal NL continuation `3875833_2` is priority-pending with the accepted
   step-5000 restart. Matched limit-100 NL step-5000 direct readout
-  `3942598_2` was submitted on one A40 and is priority-pending; it uses the
-  same standard and tagged/stock multi-hop protocol as control/formal.
+  `3942598_2` started on A40 node `a1721`; local conversion passed its
+  four-shard/finite-forward gate and the consumer resolved RoPE `1000000`
+  through both legacy and modern config paths. It is now running the same
+  standard and tagged/stock multi-hop protocol as control/formal.
   Successor `3942568` is dependency-free, CPU-only/no-GRES on `a100mig`, and
   scheduled for 01:31 CEST August 3. The Dolmino terminal/post-SFT plan remains
   incomplete, so the successor is preserved.
