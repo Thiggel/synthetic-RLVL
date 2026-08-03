@@ -2,6 +2,12 @@
 
 Date: 2026-08-03 14:10 CEST
 
+Progress update at 14:55 CEST: job `3946030` is about 72% complete by logical
+bytes. Control is fully transferred and symlinked; logic has one complete shard
+and most of the second. Vault is already `754 GiB/1000 GiB`. Atuin reports
+906 TB free, 1% inode use, and no visible per-user quota; projected final
+`$WORK/synthetic-RLVL` usage is about 238.7 GiB.
+
 ## Vault ownership
 
 Sizes use filesystem-allocated bytes. File counts count regular files.

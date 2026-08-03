@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-03
 
+- 14:55 CEST: Optimizer offload `3946030` reached about 72% by logical bytes.
+  Control is fully copied and symlinked after exact shard-size verification;
+  logic has one complete shard and most of a second. Vault is already
+  `754G/1000G`. Projected final `$WORK` project usage is about 238.7 GiB;
+  Atuin reports 906 TB free, 1% inode use, and no visible user quota. Smoke
+  remains dependency-held until both full post-offload checkpoint audits pass.
+
 - 14:10 CEST: Reclaimed 25,985,174,016 bytes from only lifecycle-complete
   project artifacts: rejected old-format BranchProof packed data, invalid
   quarantined outputs, and two redundant conditioned-32B seed-3409 recovery

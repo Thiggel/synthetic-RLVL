@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-03 14:10 CEST.
+Last updated: 2026-08-03 14:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,18 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-03 14:55 optimizer offload progress
+
+- Offload `3946030` is healthy and about 72% complete by logical optimizer
+  bytes. Control's four 22,848,937,060-byte shards are complete and its Vault
+  optimizer path is now a symlink to `$WORK`; logic has one complete shard and
+  most of the second. User Vault has already fallen to `754G/1000G`.
+- `$WORK` remains suitable: the move adds about 170.2 GiB logical data, taking
+  this project's Atuin footprint from about 68.5 to 238.7 GiB. Atuin reports
+  906 TB filesystem free, 1% inode use, and no user quota through `quota -s`.
+  At the observed rate, transfer and final checkpoint audits should finish in
+  roughly 20--35 minutes. Smoke `3945777_0` remains safely dependency-held.
 
 ### 2026-08-03 14:10 Vault cleanup and reversible checkpoint offload
 

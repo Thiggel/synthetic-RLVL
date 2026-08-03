@@ -1,8 +1,21 @@
 # Running Experiments
 
-Last updated: 2026-08-03 14:10 CEST.
+Last updated: 2026-08-03 14:55 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 14:55 CEST On August 3
+
+- Optimizer offload `3946030` is running cleanly and approximately 72%
+  complete by logical bytes. Control is fully transferred and symlinked;
+  logic has one complete shard and a mostly copied second shard. Vault is
+  already `754G/1000G`, down from `949G` before cleanup/offload.
+- Projected final `$WORK/synthetic-RLVL` footprint is about 238.7 GiB. Atuin
+  has 906 TB filesystem free, 1% inode use, and no visible per-user quota.
+  Expected completion is roughly 20--35 minutes at the observed rate.
+- Post-SFT smoke `3945777_0` remains correctly held on `afterok:3946030`.
+  Terminal NL remains independent and priority-pending with the current
+  August 4 02:19 estimate.
 
 ## Live Delta At 14:10 CEST On August 3
 
