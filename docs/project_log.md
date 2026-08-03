@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-03
 
+- 13:40 CEST: Full-model smoke `3944070_0` failed `126:0` after its complete
+  checkpoint audit and Nanotron-to-HF conversion passed; the post-SFT venv's
+  `torchrun` entrypoint had a stale deleted-Atuin Python shebang. Patched only
+  the training launcher to use the verified venv Python module, then passed
+  shell syntax, module-launch, and Slurm test-only checks. Submitted exact
+  replacement `3945777_0` and rewired LR pilot `3944071_[0-1]` to
+  `afterok:3945777:3875833_2`. Replacement smoke and terminal NL are
+  priority-pending with current 19:02/21:32 estimates. Preserved CPU-only
+  successor `3945763`; the plan remains incomplete. Smoke epilogue measured
+  user Vault at `994.1G/1048.6G` soft and about `181k/200k` files; no protected
+  or dependency-referenced checkpoint was deleted without a completed gate.
+
 - 07:36 CEST: Terminal NL `3875833_2` remains priority-pending with the
   unchanged eight-A100-80GB TP4/DP2 request and a current `12:58:36` CEST
   projection on `a0535`; no safe partition or resource edit is useful. Its

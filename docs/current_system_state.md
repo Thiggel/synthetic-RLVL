@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-03 10:20 CEST.
+Last updated: 2026-08-03 13:40 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,29 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-03 13:40 post-SFT smoke recovery
+
+- Full-model smoke `3944070_0` failed after successful checkpoint verification
+  and Nanotron-to-HF conversion because the post-SFT venv's `torchrun` entrypoint
+  retained a deleted Atuin Python shebang. The model, prepared data, and FSDP
+  path had not failed. The wrapper now launches training through the verified
+  venv Python module (`python -m torch.distributed.run`); shell syntax, module
+  launch, and Slurm test-only checks pass.
+- Exact 32-step cleanup-smoke replacement `3945777_0` is priority-pending with
+  the original four-A100-80GB resources and Slurm currently estimates a 19:02
+  start. LR pilot `3944071_[0-1]` was rewired to
+  `afterok:3945777:3875833_2` and is ordinary dependency-pending again.
+- Terminal NL `3875833_2` remains dependency-free and priority-pending with the
+  unchanged TP4/DP2 eight-A100-80GB request; its current estimate is 21:32.
+  Matched terminal eval `3944017_2` remains correctly held. Watcher `3943787`
+  is running CPU-only/no-GRES and successor `3945763` remains scheduled because
+  the terminal and post-SFT plan is incomplete.
+- The failed smoke's scheduler epilogue measured user Vault at
+  `994.1G/1048.6G` soft and about `181k/200k` files; the project subtree is
+  about `833G`. This is a tight checkpoint margin, but no protected or
+  dependency-referenced artifact was deleted in this pass. Preserve guarded
+  cleanup/rotation gates before terminal and post-SFT outputs accumulate.
 
 ### 2026-08-03 10:20 terminal control/formal acceptance
 

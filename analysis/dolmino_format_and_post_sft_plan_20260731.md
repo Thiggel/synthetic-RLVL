@@ -32,8 +32,12 @@ terminal continuation.
 The control-only post-SFT LR gate is submitted as a fail-cheap chain. CPU job
 `3944069` creates and fingerprints disjoint 100K/2,048 single-turn splits from
 the pinned Dolci No-Tools revision. Four-GPU full-parameter FSDP smoke
-`3944070_0` runs 32 steps and deletes its model only after an acceptance
-audit. Pilot `3944071_[0-1]` then compares `2e-6` and `5e-6` at effective
+`3944070_0` failed before training on a stale post-SFT `torchrun` shebang after
+checkpoint verification and conversion passed. The launcher now uses the
+verified venv Python module; exact replacement `3945777_0` runs the same 32
+steps and deletes its model only after an acceptance audit. Pilot
+`3944071_[0-1]` now waits for that replacement and terminal NL, then compares
+`2e-6` and `5e-6` at effective
 batch 128, one epoch, linear decay, and 3% warmup. The selected recipe is
 determined from held-out SFT loss and response-format diagnostics.
 Because this control-only LR choice does not inspect downstream benchmark

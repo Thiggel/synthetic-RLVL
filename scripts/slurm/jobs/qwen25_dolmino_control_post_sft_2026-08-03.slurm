@@ -67,7 +67,7 @@ export WANDB_RUN_GROUP="${WANDB_GROUP}"
 export WANDB_NAME="${RUN_NAME}"
 export HF_HUB_ENABLE_HF_TRANSFER=0
 
-torchrun --standalone --nproc_per_node=4 scripts/train_instruction_sft.py \
+"${VENV_PATH}/bin/python" -m torch.distributed.run --standalone --nproc_per_node=4 scripts/train_instruction_sft.py \
   --model "${HF_CHECKPOINT}" \
   --dataset allenai/Dolci-Instruct-SFT-No-Tools \
   --dataset-revision 9156a5a542b2503100d4f1fabbf50be5eb25d977 \

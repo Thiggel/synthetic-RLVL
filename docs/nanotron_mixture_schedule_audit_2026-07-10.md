@@ -1,5 +1,27 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-03 13:40 CEST)
+
+The control post-SFT full-model smoke `3944070_0` failed `126:0` only after
+the complete step-9537 TP4/DP2 checkpoint audit and Nanotron-to-HF conversion
+succeeded. The failure was a stale `torchrun` shebang in
+`$HPCVAULT/.venv_rlvl_posttrain` pointing to a deleted Atuin Python, before
+FSDP training began. The Slurm wrapper now invokes the verified venv Python as
+`python -m torch.distributed.run`; `bash -n`, module-launch, and Slurm
+test-only validation pass.
+
+Exact 32-step cleanup replacement `3945777_0` preserves the original
+1,024-train/128-eval, four-A100-80GB smoke protocol and is priority-pending.
+Control LR rows `3944071_[0-1]` were dependency-repaired to
+`afterok:3945777:3875833_2`. Terminal NL `3875833_2` remains unchanged and
+dependency-free; matched terminal eval `3944017_2` remains held. Current
+watcher `3943787` is running CPU-only/no-GRES and successor `3945763` is
+preserved because terminal and post-SFT acceptance remain incomplete.
+The failed smoke epilogue measured user Vault at `994.1G/1048.6G` soft and
+about `181k/200k` files; the project subtree is about `833G`. No protected or
+pending-job-referenced state was removed in this pass. Guarded rotation remains
+mandatory before terminal and post-SFT outputs accumulate.
+
 ## Production update (2026-08-03 07:36 CEST)
 
 Terminal NL continuation `3875833_2` remains dependency-free and

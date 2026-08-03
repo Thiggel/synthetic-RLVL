@@ -1,8 +1,30 @@
 # Running Experiments
 
-Last updated: 2026-08-03 10:20 CEST.
+Last updated: 2026-08-03 13:40 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:40 CEST On August 3
+
+- Smoke `3944070_0` failed `126:0` after six minutes. Its full base-checkpoint
+  audit and Nanotron-to-HF conversion passed; the first post-SFT launch then
+  hit a stale `torchrun` shebang pointing to a deleted Atuin Python. The wrapper
+  now uses the verified posttrain venv Python with
+  `-m torch.distributed.run`. `bash -n`, module-launch, and Slurm test-only
+  checks pass.
+- Submitted only the exact replacement smoke `3945777_0`, preserving the
+  32-step, 1,024-train/128-eval, full-parameter four-A100-80GB protocol and
+  guarded output cleanup. It is priority-pending with a current 19:02 start
+  estimate. Rewired LR array `3944071_[0-1%2]` from the failed predecessor to
+  `afterok:3945777:3875833_2`; it is dependency-pending, not dead.
+- Terminal NL `3875833_2` remains dependency-free and priority-pending with a
+  current 21:32 estimate. Terminal NL eval `3944017_2` remains held on it.
+  Current watcher `3943787` is running CPU-only/no-GRES; recorded successor
+  `3945763` remains BeginTime-pending and must be preserved.
+- Smoke epilogue quota is `994.1G/1048.6G` user Vault soft usage and about
+  `181k/200k` files; the project subtree is about `833G`. No artifact has a
+  sufficiently proven safe-delete gate in this pass, so preserve all current
+  checkpoints and use only the documented guarded cleanup paths.
 
 ## Live Delta At 10:20 CEST On August 3
 
