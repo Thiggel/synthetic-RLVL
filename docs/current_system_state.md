@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-03 09:30 CEST.
+Last updated: 2026-08-03 10:20 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,31 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-03 10:20 terminal control/formal acceptance
+
+- Terminal direct control/formal rows `3944016_0/1` completed `0:0`. Both
+  passed full TP4/DP2 checkpoint/accounting, local HF/RoPE, MATH symbolic,
+  multi-hop, retained-sample, and 105-leaf standard-suite gates. Their
+  limit-100 ten-task macros are control `0.6246` and formal `0.6169`; this
+  provisional endpoint does not show an aggregate formal gain.
+- Formal nevertheless improves all six stock/tagged multi-hop QA-F1 cells.
+  The largest cleaner tagged gains are HotpotQA `0.4404 -> 0.4937` and MuSiQue
+  `0.1810 -> 0.2210`. Raw inspection confirms standard prompts often continue
+  into a new `Question:`/`Answer:` pair after a bare answer, whereas tagged
+  extraction gives a reliable boundary. Keep both, but treat tagged as the
+  cleaner interface comparison. Detailed partial audit:
+  `analysis/nanotron_dolmino_terminal_partial_20260803.md`.
+- Dolci preparation `3944069` completed `0:0`. It materialized 100,000
+  formatted train and 2,046 formatted held-out rows; fail-closed tokenization
+  retained 99,817/2,044. The decoded audit confirms native Qwen chat and
+  assistant-only supervision. The small count reduction is deterministic and
+  shared by both LR rows, so it does not threaten LR comparability.
+- Full-model smoke `3944070_0` remains priority-pending with current Slurm
+  start estimate August 3 17:22. Terminal NL `3875833_2` remains
+  dependency-free and priority-pending with current estimate August 4 02:19;
+  matched eval `3944017_2` and LR rows `3944071_[0-1]` remain correctly held.
+  No current project job has an unrecovered failure.
 
 ### 2026-08-03 09:30 accelerated terminal-readout and post-SFT wave
 

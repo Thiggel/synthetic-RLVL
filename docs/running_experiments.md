@@ -1,8 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-08-03 09:30 CEST.
+Last updated: 2026-08-03 10:20 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 10:20 CEST On August 3
+
+- Terminal direct control/formal `3944016_0/1` completed `0:0` and passed all
+  checkpoint, conversion, RoPE, task, symbolic-MATH, and retained-sample
+  gates. Ten-task macros are `0.6246/0.6169`; formal improves every multi-hop
+  cell, including tagged HotpotQA `0.4404 -> 0.4937` and MuSiQue
+  `0.1810 -> 0.2210`. Raw review finds coherent GSM8K/MATH outputs and confirms
+  untagged multi-hop continuation contamination. Partial audit:
+  `analysis/nanotron_dolmino_terminal_partial_20260803.md`.
+- Dolci preparation `3944069` completed `0:0` in 11 minutes. Deterministic
+  fail-closed retention is 99,817 train and 2,044 eval examples; fingerprints,
+  decoded native-Qwen chat, and assistant-only labels are recorded under
+  `$HPCVAULT/synthetic-RLVL/analysis/dolci_control_sft_20260803`.
+- Full-parameter smoke `3944070_0` is priority-pending, currently estimated
+  for August 3 17:22. Terminal NL `3875833_2` is priority-pending, currently
+  estimated for August 4 02:19. NL terminal eval `3944017_2` and LR pilot
+  `3944071_[0-1%2]` remain dependency-held as designed. No row needs recovery.
 
 ## Live Delta At 09:30 CEST On August 3
 

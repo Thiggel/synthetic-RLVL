@@ -3284,3 +3284,21 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   the winning recipe then expands to the percentage grid. Merely filtering
   records below 4,096 tokens is insufficient because fixed-stream sampling
   can still split them.
+
+## 2026-08-03 10:20 CEST
+
+- Accepted terminal direct control/formal jobs `3944016_0/1`: both completed
+  `0:0` and passed complete checkpoint/accounting, HF/RoPE, symbolic-MATH,
+  multi-hop, and retained-sample gates. Ten-task macros are `0.6246/0.6169`.
+  Formal improves all six multi-hop cells, led by tagged HotpotQA and MuSiQue;
+  raw samples confirm untagged continuation contamination. Recorded the
+  provisional analysis in
+  `analysis/nanotron_dolmino_terminal_partial_20260803.md`; deferred report
+  integration until matched terminal NL exists.
+- Accepted deterministic Dolci preparation `3944069` at 99,817 train and
+  2,044 held-out tokenizable examples after fail-closed filtering. Decoded
+  native-Qwen chat and assistant-only labels are correct. Smoke `3944070_0`
+  remains priority-pending; LR rows remain dependency-held.
+- Terminal NL `3875833_2` remains dependency-free and priority-pending with
+  current Slurm estimate August 4 02:19. No project row has an unrecovered
+  failure and no resubmission or resource edit was warranted.
