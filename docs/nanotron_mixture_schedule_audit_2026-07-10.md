@@ -1,5 +1,26 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-03 07:36 CEST)
+
+Terminal NL continuation `3875833_2` remains dependency-free and
+priority-pending with the required one-node TP4/DP2, eight-A100-80GB request.
+Slurm now projects `12:58:36` CEST on `a0535`. Every healthy A100-80GB node
+is allocated or mixed, so no compatible partition widening or resource edit
+can improve the scientifically fixed topology.
+
+The accepted step-5000 restart remains intact at 645 files, zero empty files,
+and `106,628,387,172` bytes. Its accepted audit still records exact
+`5000/640000/2621440000` step/sample/token offsets and exact
+`2490368000 + 131072000` Dolmino/NL tokens. Pending-job stdout/stderr are
+correctly absent. Vault remains about `948G/1000G`, 182k files; group Work is
+about `471k/500k` files.
+
+Current watcher `3943558` is running CPU-only/no-GRES. Its recorded successor
+`3943787` is dependency-free, CPU-only/no-GRES on `a100mig`, and BeginTime-held
+for `13:32:24` CEST. The terminal and matched direct/post-SFT plan remains
+incomplete, so the successor is preserved. No broader mixture grid or report
+trigger is open.
+
 ## Production update (2026-08-03 01:36 CEST)
 
 Matched NL step-5000 direct readout `3942598_2` completed `0:0` in `00:54:31`

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-03 01:36 CEST.
+Last updated: 2026-08-03 07:36 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,27 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-03 07:36 terminal NL queue and successor verification
+
+- Terminal NL continuation `3875833_2` remains dependency-free and
+  priority-pending on the required full A100-80GB node. Slurm now projects
+  `12:58:36` CEST on `a0535`. No safe widening or resource edit is useful:
+  every healthy A100-80GB node is allocated or mixed, and the accepted
+  TP4/DP2 topology requires all eight GPUs on one node.
+- The accepted NL step-5000 restart revalidates at 645 files, zero empty
+  files, and `106,628,387,172` bytes. Its persisted audit remains accepted at
+  exact `5000/640000/2621440000` step/sample/token offsets with exact
+  `2490368000 + 131072000` Dolmino/NL tokens. Pending-job stdout/stderr are
+  correctly absent. Vault remains about `948G/1000G`, 182k files; group Work
+  is about `471k/500k` files.
+- Current watcher `3943558` is running CPU-only/no-GRES on `a100mig`.
+  Recorded successor `3943787` is dependency-free, CPU-only/no-GRES, and
+  BeginTime-pending for `13:32:24` CEST. Terminal training and the matched
+  direct/post-SFT readouts remain incomplete, so the successor is preserved.
+  No broader mixture grid, report refresh, or official-preprint update is
+  triggered. The scoped handoff commit remains local: bounded main/report
+  GitHub SSH pushes produced no response and exited `124`.
 
 ### 2026-08-03 01:36 matched NL step-5000 causal gate
 

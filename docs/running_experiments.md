@@ -1,8 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-08-03 01:36 CEST.
+Last updated: 2026-08-03 07:36 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:36 CEST On August 3
+
+- Terminal NL continuation `3875833_2` remains dependency-free and
+  priority-pending with the unchanged one-node TP4/DP2, eight-A100-80GB
+  request. Slurm now projects `12:58:36` CEST on `a0535`; every healthy
+  A100-80GB node is allocated or mixed, so there is no compatible beneficial
+  widening or resource mutation.
+- Its accepted step-5000 restart remains intact at 645 files, zero empty
+  files, and `106,628,387,172` bytes. The accepted audit still records exact
+  `5000/640000/2621440000` offsets and exact 95:5 token accounting. No
+  pending-job stdout/stderr exists. Vault is about `948G/1000G`, 182k files;
+  group Work is about `471k/500k` files.
+- Current watcher `3943558` is running CPU-only/no-GRES. Recorded successor
+  `3943787` is dependency-free, CPU-only/no-GRES on `a100mig`, and scheduled
+  for `13:32:24` CEST. It remains required because terminal training and the
+  direct/post-SFT gate are incomplete. No broader grid or report trigger is
+  open. Bounded main/report GitHub SSH pushes produced no response and exited
+  `124`; the scoped handoff commit remains local.
 
 ## Live Delta At 01:36 CEST On August 3
 

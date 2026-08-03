@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-03
 
+- 07:36 CEST: Terminal NL `3875833_2` remains priority-pending with the
+  unchanged eight-A100-80GB TP4/DP2 request and a current `12:58:36` CEST
+  projection on `a0535`; no safe partition or resource edit is useful. Its
+  accepted step-5000 state revalidates at 645 files, zero empty files, exact
+  95:5 offsets, and `106,628,387,172` bytes. Current watcher `3943558` is
+  running CPU-only/no-GRES; recorded successor `3943787` is dependency-free,
+  CPU-only/no-GRES, and scheduled for `13:32:24` CEST. Preserved the successor
+  because terminal training and matched direct/post-SFT readouts remain
+  incomplete. No broader grid or report update was triggered. Bounded
+  main/report GitHub SSH pushes produced no response and exited `124`; the
+  scoped handoff commit remains local.
+
 - 01:36 CEST: Matched NL step-5000 readout `3942598_2` completed `0:0` in
   `00:54:31` and passed local-HF/RoPE, 600-row multi-hop, 10,600-row standard,
   schema-v4 MATH, and representative raw-generation gates. Its ten-task macro
