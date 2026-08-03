@@ -1,8 +1,21 @@
 # Running Experiments
 
-Last updated: 2026-08-03 14:55 CEST.
+Last updated: 2026-08-03 15:55 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 15:55 CEST On August 3
+
+- Offload `3946030` completed cleanly and both post-move full checkpoint audits
+  pass. Final epilogue usage is Vault 611.7 GB and Atuin 995.5 GB; both
+  control/formal optimizer paths are valid `$WORK` symlinks.
+- Replacement smoke `3945777_0` is running on four A100-80GB GPUs. Training
+  reached `32/32`; eval loss is finite and improved `0.9334 -> 0.9202`. Full
+  FSDP checkpoint serialization is actively progressing. Large checkpoint
+  output is temporary and is removed only after the smoke audit is written.
+- LR rows remain correctly dependency-held. Terminal NL `3875833_2` remains
+  priority-pending with the current August 4 02:19 estimate; its matched eval
+  remains dependency-held.
 
 ## Live Delta At 14:55 CEST On August 3
 

@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-03
 
+- 15:55 CEST: Optimizer offload `3946030` completed `0:0`; both exact
+  control/formal optimizer manifests and full post-symlink checkpoint audits
+  pass. Epilogue usage is Vault 611.7 GB and Atuin 995.5 GB. Replacement
+  full-parameter FSDP smoke `3945777_0` started automatically, completed all
+  32 training steps and two finite evals (`0.9334 -> 0.9202` held-out loss),
+  and is actively serializing its full checkpoint before guarded cleanup.
+
 - 14:55 CEST: Optimizer offload `3946030` reached about 72% by logical bytes.
   Control is fully copied and symlinked after exact shard-size verification;
   logic has one complete shard and most of a second. Vault is already

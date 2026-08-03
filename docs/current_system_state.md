@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-03 14:55 CEST.
+Last updated: 2026-08-03 15:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-03 15:55 offload accepted and FSDP smoke healthy
+
+- Optimizer offload `3946030` completed `0:0` in `01:05:52`. Both control and
+  formal now expose their four exact 22,848,937,060-byte optimizer shards via
+  Vault-to-`$WORK` symlinks, and both complete step-9537 checkpoint audits
+  pass after the move. Job epilogue usage is Vault 611.7 GB and Atuin 995.5 GB,
+  safely below the user's 3 TB `$WORK` planning ceiling.
+- Dependency-released replacement smoke `3945777_0` started on four A100-80GB
+  GPUs. All 32 full-parameter FSDP steps and both eval passes completed with
+  finite held-out loss `0.9334 -> 0.9202`. It is actively writing the full
+  checkpoint/final state; model shards and the 30.5-GB FSDP state are present,
+  and optimizer output is growing. This is expected, not a stall. The wrapper
+  removes the large smoke output after writing its acceptance audit.
+- Terminal NL `3875833_2` remains independent and priority-pending with the
+  current August 4 02:19 estimate. LR pilot `3944071_[0-1]` still waits on
+  both accepted smoke completion and terminal NL; matched NL direct eval
+  remains held on the terminal checkpoint.
 
 ### 2026-08-03 14:55 optimizer offload progress
 

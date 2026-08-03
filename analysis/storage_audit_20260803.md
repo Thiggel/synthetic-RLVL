@@ -2,6 +2,11 @@
 
 Date: 2026-08-03 14:10 CEST
 
+Completion update at 15:55 CEST: offload `3946030` completed `0:0` in
+`01:05:52`. Both optimizer manifests and full post-symlink checkpoint audits
+pass. Job epilogue usage is Vault 611.7 GB and Atuin 995.5 GB. The dependent
+FSDP smoke started automatically and is healthy.
+
 Progress update at 14:55 CEST: job `3946030` is about 72% complete by logical
 bytes. Control is fully transferred and symlinked; logic has one complete shard
 and most of the second. Vault is already `754 GiB/1000 GiB`. Projected final
