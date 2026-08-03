@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import os
 import random
 import shutil
@@ -11,7 +13,7 @@ from typing import Any
 
 import torch
 import wandb
-from datasets import Dataset, load_dataset
+from datasets import Dataset, DatasetDict, load_dataset, load_from_disk
 from peft import LoraConfig, get_peft_model
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments, set_seed
 from transformers.trainer_utils import get_last_checkpoint
@@ -76,11 +78,21 @@ def _format_dataset(
     seed: int,
     format_mode: str,
     wrap_answer_tags: bool,
+    single_turn_only: bool = False,
 ) -> Dataset:
     if limit > 0 and len(raw) > limit:
-        raw = raw.shuffle(seed=seed).select(range(limit))
+        raw = raw.shuffle(seed=seed)
     rows: list[dict[str, str]] = []
     for row in raw:
+        if single_turn_only:
+            messages = row.get("messages")
+            if not (
+                isinstance(messages, list)
+                and len(messages) == 2
+                and str(messages[0].get("role", "")).lower() == "user"
+                and str(messages[1].get("role", "")).lower() == "assistant"
+            ):
+                continue
         formatted = _row_to_prompt_target(
             dict(row),
             wrap_question_tags=format_mode == "tagged",
@@ -88,6 +100,8 @@ def _format_dataset(
         )
         if formatted is not None:
             rows.append(formatted)
+            if limit > 0 and len(rows) >= limit:
+                break
     if not rows:
         raise ValueError("No usable instruction rows after formatting.")
     return Dataset.from_list(rows)
@@ -129,14 +143,34 @@ def _tokenize_dataset(ds: Dataset, tokenizer, *, max_length: int, format_mode: s
 
 
 def _load_instruction_splits(args: argparse.Namespace) -> tuple[Dataset, Dataset]:
-    raw_train = load_dataset(args.dataset, split=args.train_split)
-    raw_eval = load_dataset(args.dataset, split=args.eval_split)
+    if args.prepared_dataset:
+        prepared = load_from_disk(args.prepared_dataset)
+        if not isinstance(prepared, DatasetDict) or not {"train", "eval"}.issubset(prepared):
+            raise ValueError("Prepared dataset must be a DatasetDict with train and eval splits.")
+        return prepared["train"], prepared["eval"]
+    load_kwargs = {"revision": args.dataset_revision} if args.dataset_revision else {}
+    if args.train_split == args.eval_split:
+        raw = load_dataset(args.dataset, split=args.train_split, **load_kwargs).shuffle(seed=int(args.seed))
+        requested = int(args.train_samples) + int(args.eval_samples)
+        if len(raw) < requested:
+            raise ValueError(f"Dataset has {len(raw)} rows, fewer than requested {requested}.")
+        # Use a generous disjoint candidate pool because optional row filters
+        # can reject examples before the requested count is reached.
+        candidate_count = min(len(raw), max(requested * 3, requested))
+        raw = raw.select(range(candidate_count))
+        split_at = min(len(raw), max(int(args.train_samples) * 2, int(args.train_samples)))
+        raw_train = raw.select(range(split_at))
+        raw_eval = raw.select(range(split_at, len(raw)))
+    else:
+        raw_train = load_dataset(args.dataset, split=args.train_split, **load_kwargs)
+        raw_eval = load_dataset(args.dataset, split=args.eval_split, **load_kwargs)
     train = _format_dataset(
         raw_train,
         limit=int(args.train_samples),
         seed=int(args.seed),
         format_mode=str(args.format_mode),
         wrap_answer_tags=bool(args.wrap_answer_tags),
+        single_turn_only=bool(args.single_turn_only),
     )
     eval_limit = int(args.eval_samples)
     if len(raw_eval) > eval_limit:
@@ -147,6 +181,7 @@ def _load_instruction_splits(args: argparse.Namespace) -> tuple[Dataset, Dataset
         seed=int(args.seed) + 1,
         format_mode=str(args.format_mode),
         wrap_answer_tags=bool(args.wrap_answer_tags),
+        single_turn_only=bool(args.single_turn_only),
     )
     return train, eval_ds
 
@@ -166,6 +201,9 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="LoRA instruction SFT control for OLMo-style causal LMs.")
     parser.add_argument("--model", default="allenai/Olmo-3-1025-7B")
     parser.add_argument("--dataset", default="HuggingFaceH4/ultrachat_200k")
+    parser.add_argument("--dataset-revision", default=None)
+    parser.add_argument("--prepared-dataset", default=None)
+    parser.add_argument("--prepared-dataset-output", default=None)
     parser.add_argument("--train-split", default="train_sft")
     parser.add_argument("--eval-split", default="test_sft")
     parser.add_argument("--run-name", default="sft_instruction_ultrachat200k_olmo3_7b_10k_seed3407")
@@ -175,8 +213,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--eval-samples", type=int, default=512)
     parser.add_argument("--max-length", type=int, default=4096)
     parser.add_argument("--max-steps", type=int, default=10000)
+    parser.add_argument("--num-train-epochs", type=float, default=1.0)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--warmup-steps", type=int, default=50)
+    parser.add_argument("--warmup-ratio", type=float, default=0.0)
     parser.add_argument("--per-device-batch-size", type=int, default=1)
     parser.add_argument("--per-device-eval-batch-size", type=int, default=1)
     parser.add_argument("--grad-accum", type=int, default=1)
@@ -196,6 +236,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-wrap-answer-tags", dest="wrap_answer_tags", action="store_false")
     parser.set_defaults(wrap_answer_tags=True)
     parser.add_argument("--gradient-checkpointing", action="store_true")
+    parser.add_argument("--single-turn-only", action="store_true")
+    parser.add_argument("--full-parameter", action="store_true")
+    parser.add_argument("--fsdp", default=None)
+    parser.add_argument("--fsdp-transformer-layer-cls-to-wrap", default=None)
     parser.add_argument(
         "--resume-from-checkpoint",
         default=None,
@@ -204,6 +248,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--bf16", action="store_true", default=True)
     parser.add_argument("--report-to", nargs="*", default=["wandb"])
     parser.add_argument("--dry-run", action="store_true", help="Only load and tokenize data; do not load/train model.")
+    parser.add_argument("--audit-output", default=None)
     return parser.parse_args()
 
 
@@ -218,6 +263,14 @@ def main() -> None:
         tokenizer.pad_token = tokenizer.eos_token
 
     train_raw, eval_raw = _load_instruction_splits(args)
+    if args.prepared_dataset_output:
+        if args.prepared_dataset:
+            raise ValueError("Cannot rewrite an already prepared dataset.")
+        prepared_path = Path(args.prepared_dataset_output)
+        if prepared_path.exists():
+            raise FileExistsError(f"Prepared dataset output already exists: {prepared_path}")
+        prepared_path.parent.mkdir(parents=True, exist_ok=True)
+        DatasetDict({"train": train_raw, "eval": eval_raw}).save_to_disk(str(prepared_path))
     if args.format_mode == "chat" and not tokenizer.chat_template:
         raise ValueError(f"Tokenizer for {args.model} does not define a chat template.")
     train_ds = _tokenize_dataset(
@@ -241,13 +294,26 @@ def main() -> None:
             for token_id, label in zip(first["input_ids"], first["labels"], strict=True)
             if label != -100
         ]
-        print(
-            {
+        def fingerprint(dataset: Dataset) -> str:
+            digest = hashlib.sha256()
+            for row in dataset:
+                digest.update(str(row["prompt"]).encode("utf-8"))
+                digest.update(b"\0")
+                digest.update(str(row["target"]).encode("utf-8"))
+                digest.update(b"\n")
+            return digest.hexdigest()
+
+        audit = {
                 "format_mode": args.format_mode,
+                "dataset": args.dataset,
+                "dataset_revision": args.dataset_revision,
+                "seed": int(args.seed),
                 "formatted_train_rows": len(train_raw),
                 "retained_train_rows": len(train_ds),
                 "formatted_eval_rows": len(eval_raw),
                 "retained_eval_rows": len(eval_ds),
+                "train_fingerprint": fingerprint(train_raw),
+                "eval_fingerprint": fingerprint(eval_raw),
                 "min_len": min(lengths),
                 "mean_len": sum(lengths) / len(lengths),
                 "max_len": max(lengths),
@@ -256,32 +322,38 @@ def main() -> None:
                 "first_rendered": tokenizer.decode(first["input_ids"][:1000]),
                 "first_supervised": tokenizer.decode(supervised_ids[:500]),
             }
-        )
+        if audit["train_fingerprint"] == audit["eval_fingerprint"]:
+            raise ValueError("Train and evaluation fingerprints unexpectedly match.")
+        if args.audit_output:
+            audit_path = Path(args.audit_output)
+            audit_path.parent.mkdir(parents=True, exist_ok=True)
+            audit_path.write_text(json.dumps(audit, indent=2) + "\n", encoding="utf-8")
+        print(json.dumps(audit, indent=2))
         return
 
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model,
-        torch_dtype=torch.bfloat16 if bool(args.bf16) else torch.float16,
-        device_map="auto",
-    )
+    model_kwargs = {"torch_dtype": torch.bfloat16 if bool(args.bf16) else torch.float16}
+    if not bool(args.full_parameter):
+        model_kwargs["device_map"] = "auto"
+    model = AutoModelForCausalLM.from_pretrained(args.model, **model_kwargs)
     if bool(args.gradient_checkpointing):
         if hasattr(model.config, "use_cache"):
             model.config.use_cache = False
         if hasattr(model, "enable_input_require_grads"):
             model.enable_input_require_grads()
 
-    lora_cfg = LoraConfig(
-        r=int(args.lora_r),
-        lora_alpha=int(args.lora_alpha),
-        target_modules=list(args.lora_target_modules),
-        lora_dropout=float(args.lora_dropout),
-        bias="none",
-        task_type="CAUSAL_LM",
-    )
-    model = get_peft_model(model, lora_cfg)
+    if not bool(args.full_parameter):
+        lora_cfg = LoraConfig(
+            r=int(args.lora_r),
+            lora_alpha=int(args.lora_alpha),
+            target_modules=list(args.lora_target_modules),
+            lora_dropout=float(args.lora_dropout),
+            bias="none",
+            task_type="CAUSAL_LM",
+        )
+        model = get_peft_model(model, lora_cfg)
 
     report_to = [str(x).lower() for x in args.report_to]
-    if "wandb" in report_to:
+    if "wandb" in report_to and not bool(args.full_parameter):
         group = os.environ.get("WANDB_RUN_GROUP") or os.environ.get("WANDB_GROUP")
         wandb.init(
             project=os.environ.get("WANDB_PROJECT"),
@@ -298,7 +370,11 @@ def main() -> None:
         gradient_accumulation_steps=int(args.grad_accum),
         learning_rate=float(args.lr),
         max_steps=int(args.max_steps),
+        num_train_epochs=float(args.num_train_epochs),
         warmup_steps=int(args.warmup_steps),
+        warmup_ratio=float(args.warmup_ratio),
+        lr_scheduler_type="linear",
+        optim="adamw_torch_fused",
         logging_steps=int(args.logging_steps),
         eval_strategy="steps",
         eval_steps=int(args.eval_steps),
@@ -311,6 +387,17 @@ def main() -> None:
         label_names=["labels"],
         gradient_checkpointing=bool(args.gradient_checkpointing),
         gradient_checkpointing_kwargs={"use_reentrant": False} if bool(args.gradient_checkpointing) else None,
+        fsdp=args.fsdp,
+        fsdp_config=(
+            {
+                "transformer_layer_cls_to_wrap": str(args.fsdp_transformer_layer_cls_to_wrap),
+                "use_orig_params": True,
+                "limit_all_gathers": True,
+                "sync_module_states": True,
+            }
+            if args.fsdp
+            else None
+        ),
     )
     trainer = Trainer(
         model=model,

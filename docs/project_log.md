@@ -3264,3 +3264,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   intervention; conditioned OLMo-3-32B improves formal-mode pass@1 over its
   single-modal baseline but degrades natural mode, so capacity helps only one
   conditioned output mode.
+## 2026-08-03 09:30 CEST
+
+- Parameterized and strengthened the terminal Dolmino evaluator. Submitted
+  control/formal `3944016_[0-1]` (both running on A40) and dependency-held NL
+  `3944017_2`. The job now verifies the full TP4/DP2 checkpoint structure
+  before conversion; 12 focused tests and shell/Python checks pass across the
+  evaluator and new post-SFT code.
+- Implemented deterministic same-split Dolci preparation with disjoint
+  100K/2,048 single-turn examples, pinned dataset revision, native Qwen chat,
+  assistant-only labels, saved dataset fingerprints, and local prepared-data
+  reuse. Implemented full-parameter four-GPU FSDP training at effective batch
+  128, linear schedule, and 3% warmup.
+- Submitted CPU data audit `3944069`, 32-step cleanup smoke `3944070_0`, and
+  control LR pilot `3944071_[0-1]` for `2e-6/5e-6`. LR rows wait for both the
+  smoke and terminal NL, protecting the restart path and quota.
+- Elevated the corrected document-preserving proof-mixture rerun to P0. It is
+  gated on a decoded-batch/masking/token-accounting audit and a 0.5B pilot;
+  the winning recipe then expands to the percentage grid. Merely filtering
+  records below 4,096 tokens is insufficient because fixed-stream sampling
+  can still split them.

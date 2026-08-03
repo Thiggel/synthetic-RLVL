@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-03 08:35 CEST.
+Last updated: 2026-08-03 09:30 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,39 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-03 09:30 accelerated terminal-readout and post-SFT wave
+
+- Submitted terminal direct control/formal eval `3944016_[0-1%2]`; both rows
+  started on A40s and are healthy through conversion/vLLM startup. Submitted
+  matched NL row `3944017_2` with `afterok:3875833_2`. The evaluator now
+  accepts a checkpoint-step override and fail-closes on the complete
+  TP4/DP2 model/optimizer/scheduler/RNG checkpoint gate before conversion.
+- Terminal direct means no instruction tuning: identical limit-100 standard
+  and stock/tagged context-QA tasks, checkpoint conversion, RoPE/context
+  checks, decoding caps, extraction, retained samples, and production audits
+  are applied to all three final step-9537 base checkpoints. This separates
+  endpoint midtraining effects from the later instruction-interface readout.
+- Implemented and tested a modern control-only post-SFT gate: deterministic
+  disjoint 100K/2,048 Dolci No-Tools single-turn splits at pinned revision
+  `9156a5a542b2503100d4f1fabbf50be5eb25d977`, Qwen native chat rendering,
+  assistant-only loss, full-parameter four-GPU FSDP, effective batch 128,
+  one epoch, linear decay, and 3% warmup. Twelve focused tests plus Python and
+  shell syntax checks pass. This control-only LR selection may proceed before
+  benchmark decontamination because it never selects on benchmark scores; the
+  fixed subset still requires an explicit n-gram overlap audit before the
+  selected recipe is applied as final evidentiary SFT to all three models.
+- Dolci preparation/audit `3944069` is running CPU-only. A 32-step full-model
+  smoke `3944070_0` depends on it and deletes its large output after recording
+  an acceptance audit. LR pilot `3944071_[0-1%2]` tests `2e-6/5e-6` only after
+  both the smoke and terminal NL finish. Selection is by held-out SFT loss and
+  format diagnostics, never treatment-checkpoint benchmark gains.
+- Terminal NL `3875833_2` remains priority-pending; Slurm moved its provisional
+  start to August 4 02:19 CEST. The corrected proof-mixture rerun is now a
+  required follow-up, but training remains gated on a decoded-batch audit that
+  proves every proof record fits, document boundaries are preserved, and loss
+  masking/token accounting are correct. A short 0.5B gate precedes the full
+  percentage grid so a loader defect cannot consume the deadline budget.
 
 ### 2026-08-03 08:35 failure triage and terminal-NL resource audit
 

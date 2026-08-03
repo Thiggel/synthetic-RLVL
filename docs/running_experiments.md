@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-08-03 08:35 CEST.
+Last updated: 2026-08-03 09:30 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 09:30 CEST On August 3
+
+- Terminal direct control/formal eval `3944016_0/1` is running on two A40s;
+  both rows passed full Nanotron checkpoint verification, local conversion,
+  and vLLM startup. NL row `3944017_2` is held by
+  `afterok:3875833_2`. Output root:
+  `$HPCVAULT/synthetic-RLVL/lm_eval_results/qwen25_dolmino_terminal_5b_20260803`.
+- Deterministic Dolci subset/tokenization preparation `3944069` is running
+  CPU-only/no-GRES. Full-parameter four-A100 smoke `3944070_0` depends on it;
+  LR pilot `3944071_[0-1%2]` depends on both the smoke and terminal NL. The LR
+  rows use `2e-6/5e-6`, effective batch 128, one epoch, 3% warmup, and the
+  exact same pinned 100K data order. The smoke removes its final model after
+  writing an acceptance audit.
+- Terminal NL continuation `3875833_2` remains dependency-free and
+  priority-pending. Its provisional start moved to August 4 02:19 CEST. No
+  resource reduction is safe under the measured host-RSS gate.
 
 ## Live Delta At 08:35 CEST On August 3
 

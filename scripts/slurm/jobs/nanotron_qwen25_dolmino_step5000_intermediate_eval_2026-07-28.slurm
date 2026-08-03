@@ -13,7 +13,7 @@ cd "${SLURM_SUBMIT_DIR:-$PWD}"
 mkdir -p logs
 source ./scripts/env.sh
 
-CHECKPOINT_STEP=5000
+CHECKPOINT_STEP="${CHECKPOINT_STEP:-5000}"
 CONDITIONS=(control logic nl_exact)
 MIX_PCTS=(0 5 5)
 RUN_DIR_TAGS=(
@@ -32,6 +32,7 @@ OUT_ROOT="${OUT_ROOT_OVERRIDE:-${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25
 OUT_PREFIX="${OUT_ROOT}/${EVAL_TAG}_step${CHECKPOINT_STEP}_direct"
 MULTIHOP_OUT="${OUT_PREFIX}_multihop"
 STANDARD_OUT="${OUT_PREFIX}_standard"
+mkdir -p "${OUT_ROOT}"
 
 STANDARD_TASKS="${STANDARD_TASKS:-gsm8k,arc_challenge,hellaswag,winogrande,piqa,agieval_logiqa_en,hendrycks_math500,bbh,mmlu,mmlu_pro}"
 MULTIHOP_TASKS="${MULTIHOP_TASKS:-synthrlvl_longbench_hotpotqa_tagged,synthrlvl_longbench_2wikimqa_tagged,synthrlvl_longbench_musique_tagged,synthrlvl_longbench_hotpotqa_standard,synthrlvl_longbench_2wikimqa_standard,synthrlvl_longbench_musique_standard}"
@@ -53,12 +54,25 @@ if [[ ! -s "${NANOTRON_CKPT}/model_config.json" \
   exit 2
 fi
 
+python scripts/nanotron/verify_training_checkpoint.py \
+  --checkpoint "${NANOTRON_CKPT}" \
+  --expected-step "${CHECKPOINT_STEP}" \
+  --sequence-length 4096 \
+  --global-batch-samples 128 \
+  --tp 4 \
+  --dp 2 \
+  --model-files 625 \
+  --optimizer-shards 4 \
+  --lr-scheduler-shards 4 \
+  --rng-shards 8 \
+  --output "${OUT_PREFIX}_nanotron_audit.json"
+
 LOCAL_BASE="${SLURM_TMPDIR:-/tmp}"
-HF_WORK="$(mktemp -d "${LOCAL_BASE%/}/dolmino_step5000_${CONDITION}_${SLURM_JOB_ID}_XXXXXX")"
+HF_WORK="$(mktemp -d "${LOCAL_BASE%/}/dolmino_step${CHECKPOINT_STEP}_${CONDITION}_${SLURM_JOB_ID}_XXXXXX")"
 HF_CHECKPOINT="${HF_WORK}/hf"
 cleanup() {
   case "${HF_WORK}" in
-    "${LOCAL_BASE%/}"/dolmino_step5000_"${CONDITION}"_"${SLURM_JOB_ID}"_*) rm -rf -- "${HF_WORK}" ;;
+    "${LOCAL_BASE%/}"/dolmino_step"${CHECKPOINT_STEP}"_"${CONDITION}"_"${SLURM_JOB_ID}"_*) rm -rf -- "${HF_WORK}" ;;
     *) echo "Refusing unexpected temporary cleanup target: ${HF_WORK}" >&2 ;;
   esac
 }

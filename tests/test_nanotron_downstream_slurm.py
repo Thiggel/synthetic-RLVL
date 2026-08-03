@@ -28,3 +28,15 @@ def test_dolmino_step5000_readout_includes_matched_nl_condition() -> None:
     assert "#SBATCH --array=0-2%2" in text
     assert "CONDITIONS=(control logic nl_exact)" in text
     assert "qwen25_7b_dolmino_nl_exact_p5_5b" in text
+    assert 'CHECKPOINT_STEP="${CHECKPOINT_STEP:-5000}"' in text
+
+
+def test_dolmino_post_sft_pilot_is_full_parameter_and_assistant_only() -> None:
+    text = (JOBS / "qwen25_dolmino_control_post_sft_2026-08-03.slurm").read_text(
+        encoding="utf-8"
+    )
+    assert "--full-parameter" in text
+    assert '--fsdp "full_shard auto_wrap"' in text
+    assert "--single-turn-only" in text
+    assert "--grad-accum 32" in text
+    assert "--per-device-batch-size 1" in text

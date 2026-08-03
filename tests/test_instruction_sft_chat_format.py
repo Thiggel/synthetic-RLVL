@@ -99,6 +99,31 @@ def test_tagged_format_remains_available_for_legacy_runs():
     }
 
 
+def test_single_turn_filter_excludes_multiturn_rows():
+    raw = Dataset.from_list(
+        [
+            {"messages": [{"role": "user", "content": "Q"}, {"role": "assistant", "content": "A"}]},
+            {
+                "messages": [
+                    {"role": "user", "content": "Q1"},
+                    {"role": "assistant", "content": "A1"},
+                    {"role": "user", "content": "Q2"},
+                    {"role": "assistant", "content": "A2"},
+                ]
+            },
+        ]
+    )
+    formatted = MODULE._format_dataset(
+        raw,
+        limit=2,
+        seed=3407,
+        format_mode="chat",
+        wrap_answer_tags=False,
+        single_turn_only=True,
+    )
+    assert formatted.to_list() == [{"prompt": "Q", "target": "A"}]
+
+
 def test_auto_resume_selects_latest_trainer_checkpoint(tmp_path: Path):
     (tmp_path / "checkpoint-100").mkdir()
     latest = tmp_path / "checkpoint-200"

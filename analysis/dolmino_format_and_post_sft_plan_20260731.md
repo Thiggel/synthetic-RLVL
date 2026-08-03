@@ -20,6 +20,36 @@ the pilot preserves or improves competence while repairing stopping behavior.
 The unchanged control run can be reused if the corrected branches retain the
 same base checkpoint, Dolmino stream, schedule, token budget, and seed.
 
+## Execution update: 2026-08-03
+
+Terminal direct evaluation is the unchanged final-checkpoint base-model
+readout: the same limit-100 standard tasks, stock/tagged context-QA tasks,
+conversion and RoPE checks, decoding caps, extraction, retained generations,
+and fail-closed audits are applied to control, formal, and NL at step 9537.
+Control/formal `3944016_[0-1]` are running; NL `3944017_2` depends on the
+terminal continuation.
+
+The control-only post-SFT LR gate is submitted as a fail-cheap chain. CPU job
+`3944069` creates and fingerprints disjoint 100K/2,048 single-turn splits from
+the pinned Dolci No-Tools revision. Four-GPU full-parameter FSDP smoke
+`3944070_0` runs 32 steps and deletes its model only after an acceptance
+audit. Pilot `3944071_[0-1]` then compares `2e-6` and `5e-6` at effective
+batch 128, one epoch, linear decay, and 3% warmup. The selected recipe is
+determined from held-out SFT loss and response-format diagnostics.
+Because this control-only LR choice does not inspect downstream benchmark
+scores, it can run before the final contamination filter. An explicit
+benchmark-prompt n-gram overlap audit/filter remains mandatory before freezing
+the shared treatment SFT subset and applying the chosen LR to all three models.
+
+The corrected mixture experiment is required, but no GPU row is released
+until decoded training batches prove that every proof document fits within
+the context, document boundaries/positions are preserved, copied-context and
+padding loss masks match the declared objective, and modality-token counts
+match the requested mixture. The smallest gate remains a 0.5B
+`{formal, matched NL} x {compact CLM, proof-focused masked}` pilot. A clean
+winner triggers the percentage grid; the old full-document format is not
+rerun.
+
 ## Confirmed problems
 
 ### Corpus construction drift
