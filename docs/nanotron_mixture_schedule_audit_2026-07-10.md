@@ -1,5 +1,18 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-03 14:10 CEST)
+
+After accepted terminal direct readouts, control/formal step-9537 optimizer
+states remain potentially necessary for the predeclared 10B--20B continuation
+gate but do not need to occupy Vault. Job `3946030` moves their eight shards
+(`365,583,141,888` bytes) to
+`$WORK/synthetic-RLVL/checkpoint_state_offload/nanotron_dolmino_5b`, leaves
+symlinked optimizer directories at the original checkpoints, and reruns both
+full checkpoint audits. Post-SFT smoke `3945777_0` now waits for this gate.
+The live NL step-5000 optimizer and all current Dolmino Nanosets/model shards
+remain untouched. Separate immediate cleanup restored user Vault from
+`949G` to `924G/1000G`; see `analysis/storage_audit_20260803.md`.
+
 ## Production update (2026-08-03 13:40 CEST)
 
 The control post-SFT full-model smoke `3944070_0` failed `126:0` only after

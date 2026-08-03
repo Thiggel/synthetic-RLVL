@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-03 13:40 CEST.
+Last updated: 2026-08-03 14:10 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-03 14:10 Vault cleanup and reversible checkpoint offload
+
+- Deleted 25,985,174,016 bytes of lifecycle-complete project artifacts: the
+  rejected old-format BranchProof p15 Nanoset, invalid pre-declaration-fix
+  quarantine, and conditioned-32B seed-3409 checkpoints 9750/10000 after
+  confirming the accepted final adapter is retained and checkpoint-10000 has
+  the same adapter hash. User Vault fell from `949G` to `924G` against the
+  `1000G` soft quota; the immediate quota issue is resolved.
+- This project remains the dominant Vault byte user at 867,830,053,376 bytes
+  (808.3 GiB, about 87.5% of measured usage). Other leading subtrees are
+  `sequence-editing` 66.9 GiB, the active shared posttrain venv 21.3 GiB,
+  shared cache 16.8 GiB, HF model archives 9.3 GiB, and `babylm` 1.5 GiB.
+  They were not modified. File-count pressure is mostly the venv and
+  `sequence-editing`; this project has only 9,475 regular Vault files.
+- Control/formal step-9537 optimizers cannot be deleted because the staged
+  10B--20B continuation gate remains open. CPU-only job `3946030` is moving
+  their eight shards (365,583,141,888 bytes) to `$WORK`, preserving symlinked
+  resume paths and rerunning full checkpoint audits. Replacement FSDP smoke
+  `3945777_0` now waits on `afterok:3946030`; its LR dependents remain intact.
+  Detailed inventory and protection decisions:
+  `analysis/storage_audit_20260803.md`.
 
 ### 2026-08-03 13:40 post-SFT smoke recovery
 

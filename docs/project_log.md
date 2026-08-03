@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-03
 
+- 14:10 CEST: Reclaimed 25,985,174,016 bytes from only lifecycle-complete
+  project artifacts: rejected old-format BranchProof packed data, invalid
+  quarantined outputs, and two redundant conditioned-32B seed-3409 recovery
+  checkpoints. Vault moved `949G -> 924G/1000G`. This project remains the byte
+  driver at 808.3 GiB; other projects/shared roots were measured and left
+  untouched. Submitted CPU-only optimizer offload `3946030` for the 340.4-GiB
+  control/formal restart-only states and added `afterok:3946030` to replacement
+  smoke `3945777_0`. The transfer preserves `$WORK` copies, Vault symlinks,
+  exact file manifests, and full checkpoint audits. Inventory:
+  `analysis/storage_audit_20260803.md`.
+
 - 13:40 CEST: Full-model smoke `3944070_0` failed `126:0` after its complete
   checkpoint audit and Nanotron-to-HF conversion passed; the post-SFT venv's
   `torchrun` entrypoint had a stale deleted-Atuin Python shebang. Patched only

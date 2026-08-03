@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-08-03 13:40 CEST.
+Last updated: 2026-08-03 14:10 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 14:10 CEST On August 3
+
+- Vault cleanup reclaimed 25,985,174,016 bytes and reduced user usage from
+  `949G` to `924G/1000G`. Removed only completed/invalid project artifacts;
+  all active Dolmino Nanosets, model shards, the live NL restart, accepted
+  results, and final adapters remain protected.
+- Optimizer offload `3946030` is running CPU-only on `a0605`. It moves the
+  accepted control/formal step-9537 optimizer shards to `$WORK`, verifies
+  exact file manifests and both full checkpoints, then leaves symlinks at the
+  original paths. Expected additional Vault recovery is 365,583,141,888 bytes.
+- Replacement smoke `3945777_0` now has `afterok:3946030`; its previous start
+  estimate is superseded by this safety dependency. Terminal NL `3875833_2`
+  remains independent and priority-pending, currently estimated for 23:50.
+  NL terminal eval and LR-pilot dependencies remain valid.
+- Detailed cross-project usage and cleanup gates are in
+  `analysis/storage_audit_20260803.md`.
 
 ## Live Delta At 13:40 CEST On August 3
 
