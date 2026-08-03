@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-03 07:36 CEST.
+Last updated: 2026-08-03 08:35 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,35 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-03 08:35 failure triage and terminal-NL resource audit
+
+- No current synthetic-RLVL failure requires a fresh resubmission. The
+  conditioned-32B SFT timeout was recovered by `3932131_14`, and all six
+  dependent eval rows are complete and accepted. Dolmino NL `3875832_2`
+  ended at its planned 24-hour wall-time boundary with an accepted step-5000
+  restart; terminal continuation `3875833_2` is already dependency-free and
+  pending. Recent `tj-*` failures and the visible `co_dense_probe` dead
+  dependencies belong to other repositories and were not modified.
+- Slurm projects `3875833_2` to start at `12:58:36` CEST on `a0535`. Its
+  one-node TP4/DP2 request cannot safely be reduced to use the currently idle
+  1-TB A100 node: measured batch-step peak RSS was about 1.21--1.25 TiB for
+  completed control/formal and about 1.05 TiB for the NL stage. Preserve the
+  1.875-TB request and accepted 645-file step-5000 restart.
+- New accepted evidence remains: matched NL at step 5000 reaches ten-task
+  macro `0.6327`, essentially formal `0.6341`, and reproduces formal's high
+  bare-answer continuation. This attributes both the intermediate competence
+  gain and response-control regression to the shared long-document/full-loss
+  intervention rather than formal syntax. The corrected conditioned-32B
+  family is also complete: conditioned formal improves over single-modal
+  formal at OOD answer/joint pass@1 (`0.850/0.750` versus `0.639/0.511`),
+  while conditioned natural remains below single-modal natural
+  (`0.772/0.751` versus `0.989/0.988`).
+- Next gates are unchanged: accept the terminal NL state, run matched terminal
+  direct readouts, then select a control-only full-SFT learning rate and apply
+  the identical post-SFT recipe to all three terminal checkpoints. The 0.5B
+  compact/document-preserving objective pilot follows only after this P0 path
+  releases capacity. No broader mixture grid is justified by current data.
 
 ### 2026-08-03 07:36 terminal NL queue and successor verification
 

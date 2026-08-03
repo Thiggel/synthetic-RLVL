@@ -1,8 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-08-03 07:36 CEST.
+Last updated: 2026-08-03 08:35 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 08:35 CEST On August 3
+
+- Terminal Dolmino NL continuation `3875833_2` is the only pending GPU job for
+  this project. It is dependency-free, priority-pending, and Slurm projects a
+  `12:58:36` CEST start on high-memory A100-80GB node `a0535`.
+- Resource reduction is unsafe. Completed control/formal batch steps peaked at
+  about 1.21--1.25 TiB RSS and the NL stage at about 1.05 TiB, so the idle
+  approximately 1-TB A100 node cannot host this accepted TP4/DP2 run. Keep the
+  eight-GPU, 1.875-TB request and exact step-5000 restart unchanged.
+- No failed synthetic-RLVL row needs resubmission. Conditioned SFT timeout
+  `3883534_14` was recovered by completed `3932131_14`; all six downstream
+  evals passed. NL timeout `3875832_2` was the expected wall-time boundary and
+  is already covered by `3875833_2`. Visible dead-dependency and `tj-*` rows
+  are owned by other repositories and were left untouched.
+- Current CPU-only watcher successor `3943787` remains BeginTime-pending for
+  `13:32:24` CEST. It should verify startup/restart or safely recover the queue
+  if the provisional start changes.
 
 ## Live Delta At 07:36 CEST On August 3
 

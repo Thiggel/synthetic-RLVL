@@ -3247,3 +3247,20 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - 2026-06-05 09:19 CEST: Typed maze SFT is `14/30` final adapters with rows `12/15/16` running and eval `3695239` still dependency-pending at `0` JSONs. Row `12` is near walltime and is the current maze watch item.
 - 2026-06-06 10:01 CEST: Semantic iGSM original/recovery eval reached `30/30` JSONs. Sample inspection found the current zero NL translated-validity is an evaluator alias issue: generated semantic NL traces parse and use meaningful lines such as `From the definition of ... (s)`, but generated handles need not match gold formal handles. Patched `synthrlvl/natural_logic.py` to canonicalize iGSM NL definition-line handles by semantic quantity name while preserving explicit `intermediate calculation` helper handles; added regression coverage for alias canonicalization. Verification: `tests/test_training_stack.py` and `tests/test_paired_synthetic_datasets.py` passed (`46 passed`), and `py_compile` passed. Canceled first forced NL re-eval `3705801` because some rows started before the helper-line fix; submitted clean forced NL-only iGSM re-eval `3705807_[3-5,9-11,15-17,21-23,27-29%4]`.
 - 2026-06-06 10:01 CEST: Typed maze and batch-size recoveries were refreshed. Maze row `12` timed out with `checkpoint-5000`, row `22` node-failed on `a0531`, and recovery `3705793_[12,22%2]` is running with `--exclude=a0531` after adding `SFT_RESUME_FROM_CHECKPOINT` support to `scripts/slurm/sweeps/sft/paired_maze_typed_2026-06-03.slurm`; replacement eval is `3705795_[0-29%3]` after `afterany:3695238:3705793`. Batch row `10` timed out with `checkpoint-5000`, bsz16 rows `3/7/11` were canceled near walltime after saving frequent checkpoints, recovery `3705794_[3,7,10,11%3]` is running/pending, and replacement eval is `3705796_[0-15%4]` after `afterany:3695197:3698877:3702079:3705794`.
+## 2026-08-03 08:35 CEST
+
+- Audited all jobs visible since July 31. No unresolved synthetic-RLVL failure
+  needs resubmission: conditioned-32B timeout `3883534_14` was recovered by
+  completed `3932131_14`, all six eval rows passed, and planned Dolmino NL
+  timeout `3875832_2` is already covered by terminal continuation
+  `3875833_2`. Did not alter failed/dead-dependency jobs owned by TextJEPA or
+  `sequence-editing`.
+- Verified terminal NL is dependency-free and priority-pending with Slurm
+  estimate `12:58:36` CEST on `a0535`. A memory-request reduction is unsafe:
+  batch-step peak RSS is about 1.21--1.25 TiB for completed control/formal and
+  about 1.05 TiB for NL, excluding currently idle 1-TB A100 nodes.
+- Recorded the two accepted new findings: matched-NL step-5000 competence and
+  stopping behavior nearly equal formal, implicating the shared full-document
+  intervention; conditioned OLMo-3-32B improves formal-mode pass@1 over its
+  single-modal baseline but degrades natural mode, so capacity helps only one
+  conditioned output mode.
