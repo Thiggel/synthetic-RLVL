@@ -26,17 +26,21 @@ Terminal direct evaluation is the unchanged final-checkpoint base-model
 readout: the same limit-100 standard tasks, stock/tagged context-QA tasks,
 conversion and RoPE checks, decoding caps, extraction, retained generations,
 and fail-closed audits are applied to control, formal, and NL at step 9537.
-Control/formal `3944016_[0-1]` are running; NL `3944017_2` depends on the
-terminal continuation.
+Control/formal `3944016_[0-1]` completed and passed their checkpoint,
+conversion, RoPE, task, MATH-sidecar, and retained-generation gates; NL
+`3944017_2` depends on the terminal continuation.
 
 The control-only post-SFT LR gate is submitted as a fail-cheap chain. CPU job
 `3944069` creates and fingerprints disjoint 100K/2,048 single-turn splits from
 the pinned Dolci No-Tools revision. Four-GPU full-parameter FSDP smoke
 `3944070_0` failed before training on a stale post-SFT `torchrun` shebang after
 checkpoint verification and conversion passed. The launcher now uses the
-verified venv Python module; exact replacement `3945777_0` runs the same 32
-steps and deletes its model only after an acceptance audit. Pilot
-`3944071_[0-1]` now waits for that replacement and terminal NL, then compares
+verified venv Python module; exact replacement `3945777_0` ran the same 32
+steps and deleted its model only after an acceptance audit. The replacement
+completed all 32 steps and two finite eval passes, serialized its full
+152.3-GB output, wrote an accepted audit, and then deleted the temporary model
+through the guarded path. Pilot `3944071_[0-1]` now waits only for terminal NL,
+then compares
 `2e-6` and `5e-6` at effective
 batch 128, one epoch, linear decay, and 3% warmup. The selected recipe is
 determined from held-out SFT loss and response-format diagnostics.

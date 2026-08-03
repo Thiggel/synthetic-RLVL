@@ -1,5 +1,23 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-03 19:40 CEST)
+
+Replacement full-parameter FSDP smoke `3945777_0` completed `0:0` in
+`00:27:11` on four A100-80GB GPUs. Its complete step-9537 control checkpoint
+gate passed after optimizer offload, all 32 training steps and both eval passes
+were finite, and held-out loss improved `0.93337 -> 0.92020`. The smoke
+serialized 44 files totaling `152,344,783,631` bytes, wrote an accepted audit,
+and removed the temporary output through the guarded path.
+
+Slurm consumed the fulfilled smoke dependency from `3944071_[0-1]`; the LR
+pilot now waits only on terminal NL `3875833_2`. That job remains
+dependency-free and priority-pending for a current 02:19 CEST start with its
+accepted 645-file step-5000 restart intact. Matched direct eval `3944017_2`
+waits on the same terminal state. No safe scheduler edit is useful while all
+compatible A100-80GB nodes are allocated, completing, or draining. Successor
+watcher `3947425` remains required because the terminal, LR-selection, and
+treatment post-SFT paths are incomplete.
+
 ## Production update (2026-08-03 14:10 CEST)
 
 After accepted terminal direct readouts, control/formal step-9537 optimizer

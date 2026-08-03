@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-03 15:55 CEST.
+Last updated: 2026-08-03 19:40 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-03 19:40 post-SFT smoke accepted
+
+- Replacement full-parameter FSDP smoke `3945777_0` completed `0:0` in
+  `00:27:11` on four A100-80GB GPUs. It passed the complete step-9537 control
+  checkpoint gate, all 32 training steps, and both finite eval passes; held-out
+  loss improved `0.93337 -> 0.92020`. The smoke serialized 44 files totaling
+  `152,344,783,631` bytes, wrote an accepted audit, and then removed the large
+  temporary output as required.
+- LR pilot `3944071_[0-1]` now waits only on `afterok:3875833_2`, confirming
+  the completed smoke dependency was consumed correctly. Terminal NL
+  `3875833_2` remains dependency-free and priority-pending with an intact
+  645-file, zero-empty-file step-5000 restart and a current August 4 02:19
+  estimate. Matched terminal eval `3944017_2` remains held on the same job.
+- All compatible A100-80GB nodes are allocated, completing, or draining, so no
+  safe partition/resource edit is useful. Vault is `585G/1000G` with 182k
+  files; group Work is `492k/500k` files and requires continued monitoring.
+  Current watcher `3945763` is CPU-only/no-GRES; recorded successor `3947425`
+  is dependency-free, CPU-only/no-GRES, and scheduled for 01:33 CEST. The plan
+  remains incomplete, so the successor is preserved.
 
 ### 2026-08-03 15:55 offload accepted and FSDP smoke healthy
 

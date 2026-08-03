@@ -1,8 +1,28 @@
 # Running Experiments
 
-Last updated: 2026-08-03 15:55 CEST.
+Last updated: 2026-08-03 19:40 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:40 CEST On August 3
+
+- Replacement smoke `3945777_0` completed `0:0` in `00:27:11` on four
+  A100-80GB GPUs. Its complete base-checkpoint gate passed, all 32 FSDP steps
+  and two eval passes were finite, and held-out loss improved
+  `0.93337 -> 0.92020`. The accepted smoke audit records 44 serialized files,
+  `152,344,783,631` bytes, and successful guarded removal of the temporary
+  output.
+- Slurm removed the fulfilled smoke dependency from LR pilot
+  `3944071_[0-1]`; it now waits only on `afterok:3875833_2`. Terminal NL
+  `3875833_2` is priority-pending with its current August 4 02:19 estimate and
+  intact accepted step-5000 restart. Matched terminal eval `3944017_2` remains
+  correctly held on the same terminal checkpoint.
+- Compatible A100-80GB nodes are currently allocated, completing, or draining;
+  no safe widening or resource edit is useful. Vault is `585G/1000G` with
+  182k files and group Work is `492k/500k` files. Current watcher `3945763`
+  is running CPU-only/no-GRES; successor `3947425` is dependency-free,
+  CPU-only/no-GRES, and BeginTime-pending for 01:33 CEST. Preserve it because
+  terminal NL and post-SFT LR/treatment readouts remain incomplete.
 
 ## Live Delta At 15:55 CEST On August 3
 

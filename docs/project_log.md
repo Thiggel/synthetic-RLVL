@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-03
 
+- 19:40 CEST: Replacement full-parameter FSDP smoke `3945777_0` completed
+  `0:0` in `00:27:11` on four A100-80GB GPUs. It passed the complete control
+  checkpoint gate, 32 finite training steps, and two eval passes with held-out
+  loss `0.93337 -> 0.92020`; its accepted audit records 44 files and
+  `152,344,783,631` bytes before successful guarded cleanup. LR pilot
+  `3944071_[0-1]` now waits only on terminal NL `3875833_2`, which remains
+  priority-pending for 02:19 with its accepted 645-file restart intact. No
+  compatible scheduler edit is useful. Preserved CPU-only/no-GRES successor
+  `3947425` for 01:33 because the terminal and post-SFT paths remain incomplete.
+  Vault is `585G/1000G`; group Work is `492k/500k` files.
+
 - 15:55 CEST: Optimizer offload `3946030` completed `0:0`; both exact
   control/formal optimizer manifests and full post-symlink checkpoint audits
   pass. Epilogue usage is Vault 611.7 GB and Atuin 995.5 GB. Replacement
