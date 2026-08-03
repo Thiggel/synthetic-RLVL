@@ -1,5 +1,24 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-04 01:40 CEST)
+
+Terminal matched-NL continuation `3875833_2` started at 23:40 CEST on eight
+verified A100-80GB GPUs on `a0933`. It restored the accepted step-5000 TP4/DP2
+model, optimizer, scheduler, and RNG state plus exact
+`5000/640000/2621440000` step/sample/token offsets. The resumed dataloader
+records exact `2490368000` Dolmino and `131072000` matched-NL tokens, and the
+live Qwen2.5 config retains RoPE `1000000`.
+
+Training is healthy through logged step `5371/9537` at about 31.0K tokens/s
+with finite loss and gradient diagnostics and an ETA near 19.6 hours. Disabled
+W&B initialized without launching the prior failing service path. No OOM,
+quota, restart, scheduler, or device failure signature is present. Direct eval
+`3944017_2` and post-SFT LR pilot `3944071_[0-1]` remain correctly held on
+successful terminal completion. Audit the first new complete checkpoint before
+any guarded rotation. Successor watcher `3948110` is dependency-free,
+CPU-only/no-GRES, and scheduled for 07:33 CEST; preserve it because the
+terminal, direct-eval, and post-SFT paths remain incomplete.
+
 ## Production update (2026-08-03 19:40 CEST)
 
 Replacement full-parameter FSDP smoke `3945777_0` completed `0:0` in

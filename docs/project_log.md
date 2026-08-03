@@ -2,6 +2,19 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-04
+
+- 01:40 CEST: Terminal matched-NL continuation `3875833_2` started at 23:40
+  on eight verified A100-80GB GPUs on `a0933`. It restored the accepted
+  step-5000 TP4/DP2 optimizer/scheduler/RNG state, exact
+  `5000/640000/2621440000` offsets, exact 95:5 token accounting, and RoPE
+  `1000000`. It is healthy through logged step `5371/9537` at about 31.0K
+  tokens/s with finite diagnostics and an ETA inside the allocation. Direct
+  eval `3944017_2` and LR pilot `3944071_[0-1]` remain correctly held.
+  Preserved dependency-free CPU-only/no-GRES successor `3948110` for 07:33
+  because terminal evaluation and matched post-SFT remain incomplete. Vault
+  is `585G/1000G`; group Work is `492k/500k` files.
+
 ## 2026-08-03
 
 - 19:40 CEST: Replacement full-parameter FSDP smoke `3945777_0` completed

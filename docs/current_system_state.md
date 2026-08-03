@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-03 19:40 CEST.
+Last updated: 2026-08-04 01:40 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-04 01:40 terminal NL continuation healthy
+
+- Terminal matched-NL continuation `3875833_2` started at 23:40 CEST on
+  `a0933` with eight verified A100-80GB GPUs. It restored the accepted
+  step-5000 TP4/DP2 checkpoint, optimizer/scheduler/RNG state, and exact
+  `5000/640000/2621440000` step/sample/token offsets. The dataloader resumed
+  exact `2490368000 + 131072000` Dolmino/NL tokens, RoPE remains `1000000`,
+  and disabled W&B initialized without the prior service failure.
+- Training is healthy through logged step `5371/9537` at about 31.0K tokens/s
+  with finite loss and gradient diagnostics. The current ETA is about 19.6
+  hours from the last log point, inside the 24-hour allocation. No restart,
+  scheduler, quota, OOM, or device failure signature is present. Preserve the
+  full topology and audit the first new complete checkpoint before rotation.
+- Matched terminal direct eval `3944017_2` and post-SFT LR pilot
+  `3944071_[0-1]` remain correctly held on `afterok:3875833_2`. User Vault is
+  `585G/1000G`, 182k files; group Work is `492k/500k` files. Recorded
+  successor `3948110` is dependency-free, CPU-only/no-GRES on `a100mig`, and
+  scheduled for 07:33 CEST. The terminal/direct/post-SFT plan is incomplete,
+  so it is preserved.
 
 ### 2026-08-03 19:40 post-SFT smoke accepted
 
