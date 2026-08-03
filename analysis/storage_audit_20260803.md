@@ -4,9 +4,11 @@ Date: 2026-08-03 14:10 CEST
 
 Progress update at 14:55 CEST: job `3946030` is about 72% complete by logical
 bytes. Control is fully transferred and symlinked; logic has one complete shard
-and most of the second. Vault is already `754 GiB/1000 GiB`. Atuin reports
-906 TB free, 1% inode use, and no visible per-user quota; projected final
-`$WORK/synthetic-RLVL` usage is about 238.7 GiB.
+and most of the second. Vault is already `754 GiB/1000 GiB`. Projected final
+`$WORK/synthetic-RLVL` usage is about 238.7 GiB. Recent job epilogues measured
+the whole user Atuin tree near 806 GB before the move, so projected total usage
+is about 989 GB, safely below the user's 3 TB planning ceiling. The 906 TB
+filesystem-free value is cluster-wide and is not evidence about user quota.
 
 ## Vault ownership
 
@@ -54,8 +56,10 @@ successful offload.
 
 When complete, this preserves exact resume capability while reclaiming another
 365,583,141,888 bytes (340.4 GiB) from Vault. `$WORK/synthetic-RLVL` was only
-73,510,830,080 bytes (68.5 GiB) before this move; the filesystem reports ample
-physical capacity and no Atuin user quota in `quota -s`.
+73,510,830,080 bytes (68.5 GiB) before this move. The whole user Atuin tree was
+about 806 GB in recent job epilogues, projecting to about 989 GB after the move
+against the user's 3 TB planning ceiling. `quota -s` does not expose Atuin, so
+shared filesystem free space must not be mistaken for a user allocation.
 
 ## Protected large data
 

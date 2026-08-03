@@ -30,11 +30,14 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   bytes. Control's four 22,848,937,060-byte shards are complete and its Vault
   optimizer path is now a symlink to `$WORK`; logic has one complete shard and
   most of the second. User Vault has already fallen to `754G/1000G`.
-- `$WORK` remains suitable: the move adds about 170.2 GiB logical data, taking
-  this project's Atuin footprint from about 68.5 to 238.7 GiB. Atuin reports
-  906 TB filesystem free, 1% inode use, and no user quota through `quota -s`.
-  At the observed rate, transfer and final checkpoint audits should finish in
-  roughly 20--35 minutes. Smoke `3945777_0` remains safely dependency-held.
+- `$WORK` remains suitable under the user's actual planning bound: the move
+  adds about 170.2 GiB logical data. Recent job epilogues measured the whole
+  user Atuin tree at about 806 GB before the move, so projected total usage is
+  about 989 GB, or roughly one third of the requested 3 TB personal ceiling.
+  The previously quoted 906 TB is shared filesystem free space, not a user
+  allocation, and must not be used as the capacity argument. At the observed
+  rate, transfer and final checkpoint audits should finish in roughly 20--35
+  minutes. Smoke `3945777_0` remains safely dependency-held.
 
 ### 2026-08-03 14:10 Vault cleanup and reversible checkpoint offload
 

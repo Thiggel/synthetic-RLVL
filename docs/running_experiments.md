@@ -10,9 +10,11 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   complete by logical bytes. Control is fully transferred and symlinked;
   logic has one complete shard and a mostly copied second shard. Vault is
   already `754G/1000G`, down from `949G` before cleanup/offload.
-- Projected final `$WORK/synthetic-RLVL` footprint is about 238.7 GiB. Atuin
-  has 906 TB filesystem free, 1% inode use, and no visible per-user quota.
-  Expected completion is roughly 20--35 minutes at the observed rate.
+- Projected final `$WORK/synthetic-RLVL` footprint is about 238.7 GiB. Recent
+  epilogues put the whole user Atuin tree near 806 GB before the move; adding
+  about 183 GB projects approximately 989 GB total, safely below the user's
+  3 TB planning ceiling. The 906 TB filesystem-free figure is cluster-wide,
+  not the user's allocation. Expected completion is roughly 20--35 minutes.
 - Post-SFT smoke `3945777_0` remains correctly held on `afterok:3946030`.
   Terminal NL remains independent and priority-pending with the current
   August 4 02:19 estimate.

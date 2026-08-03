@@ -8,8 +8,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   Control is fully copied and symlinked after exact shard-size verification;
   logic has one complete shard and most of a second. Vault is already
   `754G/1000G`. Projected final `$WORK` project usage is about 238.7 GiB;
-  Atuin reports 906 TB free, 1% inode use, and no visible user quota. Smoke
-  remains dependency-held until both full post-offload checkpoint audits pass.
+  recent epilogues put the whole user Atuin tree near 806 GB before the move,
+  so projected total usage is about 989 GB versus the user's 3 TB planning
+  ceiling. Corrected the earlier misleading 906-TB statement: that is shared
+  filesystem free space, not a user allocation. Smoke remains dependency-held
+  until both full post-offload checkpoint audits pass.
 
 - 14:10 CEST: Reclaimed 25,985,174,016 bytes from only lifecycle-complete
   project artifacts: rejected old-format BranchProof packed data, invalid
