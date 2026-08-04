@@ -48,7 +48,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   27--29 remain held only by the `%3` throttle, and aggregate `3950179`
   remains correctly dependency-held. Recorded successor `3951596` is
   dependency-free, CPU-only/no-GRES, and scheduled for 01:35 CEST; the plan
-  remains incomplete, so it is preserved.
+  remains incomplete, so it is preserved. Scoped commit `6e49022` remains
+  local after a bounded 90-second GitHub SSH push produced no response and
+  exited `124`.
 
 ### 2026-08-04 16:18 fixed three-way post-SFT submitted
 

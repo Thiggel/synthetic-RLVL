@@ -14,7 +14,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   re-audits accepted and Vault fell `1263G -> 667G/1000G`, 182k files. Formal
   BranchProof full-retention rows `3950178_12/13/14` were healthy at sampled
   chunks `99/92/91`; preserved CPU-only/no-GRES successor `3951596` for 01:35
-  because the full plan remains incomplete.
+  because the full plan remains incomplete. Scoped commit `6e49022` remains
+  local after a silent bounded 90-second GitHub SSH push exited `124`.
 
 - 16:18 CEST: Fixed the identical post-SFT recipe at `5e-6` and canceled
   pending control-only LR pilot `3944071_[0-1]`. Submitted full-parameter
