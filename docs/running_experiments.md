@@ -1,8 +1,21 @@
 # Running Experiments
 
-Last updated: 2026-08-04 19:45 CEST.
+Last updated: 2026-08-04 21:02 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 21:02 CEST On August 4
+
+- Terminal matched-NL `3875833_2` reached step `9471/9537` at about 31.1K
+  tokens/s and has roughly 19 minutes remaining. Diagnostics remain finite
+  and no failure signature is present.
+- Direct NL eval `3944017_2` and three-way post-SFT `3950714` remain ordinary
+  dependency-pending. Standard `3950715` and multi-hop `3950716` remain held
+  after corresponding SFT rows. Slurm provides no post-SFT start estimate
+  before the terminal dependency clears.
+- BranchProof formal rows 12/13/14 are around chunks 106/100/99 of 112 and
+  remain healthy. NL rows 27--29 are throttle-pending and aggregate `3950179`
+  is dependency-pending. No active project row needs recovery.
 
 ## Live Delta At 19:45 CEST On August 4
 

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-04 19:45 CEST.
+Last updated: 2026-08-04 21:02 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,20 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-04 21:02 terminal NL nearly complete
+
+- Matched-NL Dolmino `3875833_2` is healthy at step `9471/9537`, about 4.97B
+  consumed tokens, and 31.1K tokens/s. Its live ETA is about 19 minutes. Loss
+  and gradient diagnostics remain finite; repeated iteration-timer warnings
+  are logging-only and do not affect throughput or state.
+- Terminal NL direct eval `3944017_2` and fixed-`5e-6` three-way post-SFT
+  `3950714_[0-2%2]` remain correctly held on successful completion. Standard
+  `3950715` and multi-hop `3950716` remain corresponding-row held after SFT.
+  No post-SFT output exists yet and no failed row requires recovery.
+- BranchProof full-retention formal rows 12/13/14 are healthy around chunks
+  106/100/99 of 112. NL rows 27--29 remain pending only under the `%3` array
+  throttle and will follow. Aggregate `3950179` remains correctly held.
 
 ### 2026-08-04 19:45 terminal NL step-9000 accepted and rotated
 

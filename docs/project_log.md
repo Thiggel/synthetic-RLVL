@@ -4,6 +4,12 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-04
 
+- 21:02 CEST: Terminal matched-NL `3875833_2` reached step `9471/9537`,
+  about 4.97B tokens, with a live ETA near 21:21 and finite diagnostics.
+  Direct NL eval and fixed-`5e-6` post-SFT/eval chains remain correctly held.
+  BranchProof formal rows 12/13/14 are healthy around chunks 106/100/99 of
+  112; NL rows 27--29 remain throttle-pending. No failure was found.
+
 - 19:45 CEST: Terminal matched-NL `3875833_2` remained healthy at step
   `9171/9537` with a live ETA near 21:19. Step 9000 passed the complete
   645-file TP4/DP2 restart gate, exact `9000/1152000/4718592000` offsets,
