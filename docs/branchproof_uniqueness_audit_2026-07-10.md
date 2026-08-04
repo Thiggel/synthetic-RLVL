@@ -2,6 +2,24 @@
 
 Date: 2026-07-10
 
+## Operational update (2026-08-05 01:45 CEST)
+
+Targeted full-retention formal row `3950178_12` completed `0:0` in
+`11:21:49`. Its output has exactly 448 prompt groups, 16 generations per
+group, and 7,168 sampled rows, with zero empty generations and zero credited
+citation-free-valid rows carrying a citation-free validity error, invalid-line
+diagnostic, or line-valid fraction below one. OOD random-first answer/joint is
+`0.7625/0.6688`; first-valid answer/joint is `0.9688/0.9625`; maximum-line-
+validity answer/joint is `0.9750/0.9625`, with `0.9750` mechanically valid
+coverage. These are one-seed provisional verifier-selection diagnostics only.
+
+Formal rows 13/14 completed generation and are scoring. NL row 27 started
+after row 12 released the `%3` throttle; rows 28/29 remain throttle-pending.
+Aggregate `3950179` remains correctly held until all six rows pass. The
+tokenizer warning remains deliberately unfixed because the audited base/SFT
+token IDs match and enabling the generic Mistral regex fix would create the
+known train/eval mismatch.
+
 ## Operational update (2026-08-02 19:44 CEST)
 
 Final conditioned natural eval row `3881781_17` completed `0:0` in

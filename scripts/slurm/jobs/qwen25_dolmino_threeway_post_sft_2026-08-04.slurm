@@ -77,6 +77,9 @@ export WANDB_GROUP="qwen25_dolmino_threeway_post_sft_5em6"
 export WANDB_RUN_GROUP="${WANDB_GROUP}"
 export WANDB_NAME="${RUN_NAME}"
 export HF_HUB_ENABLE_HF_TRANSFER=0
+# Full-parameter FSDP checkpoint serialization can hold the Python GIL for
+# longer than PyTorch's eight-minute NCCL watchdog default on this filesystem.
+export TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC="${TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC:-1800}"
 
 "${VENV_PATH}/bin/python" -m torch.distributed.run --standalone --nproc_per_node=4 scripts/train_instruction_sft.py \
   --model "${HF_CHECKPOINT}" \

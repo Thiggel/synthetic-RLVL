@@ -2,6 +2,27 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-05
+
+- 01:45 CEST: Terminal matched-NL `3875833_2` completed at exact step 9537
+  and passed the 645-file TP4/DP2, optimizer/scheduler/RNG, exact-offset,
+  exact-95:5, and RoPE gates. Direct NL `3944017_2` passed all production and
+  raw-sample gates; control/formal/NL ten-task macros are
+  `0.6246/0.6169/0.6149`, and NL repeats the shared stock multi-hop stopping
+  failure at `95/95/95%` continuation. After all three states passed the full
+  restart gate and `latest.txt=9537`, removed only superseded NL steps
+  9000/9500 (`213,256,774,416` bytes); step 9537 passes post-rotation re-audit
+  and Vault is `677G/1000G`. Control post-SFT row `3950714_0`
+  failed as raw job `3952024` only during the step-250 FSDP save when the
+  eight-minute NCCL watchdog expired. Quarantined its incomplete non-resumable
+  checkpoint, raised the wrapper heartbeat timeout to 30 minutes, submitted
+  exact row-0 recovery `3952245_0`, and rewired only downstream rows
+  `3950715_0/3950716_0`. Formal post-SFT remains running and NL pending.
+  BranchProof full-retention row `3950178_12` passed its 448-group,
+  16-generation, 7,168-row invariant gate; rows 13/14 are scoring and row 27
+  is running. Preserved CPU-only/no-GRES successor `3952243` for 07:35 because
+  both active paths remain incomplete.
+
 ## 2026-08-04
 
 - 21:02 CEST: Terminal matched-NL `3875833_2` reached step `9471/9537`,

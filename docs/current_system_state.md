@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-04 21:02 CEST.
+Last updated: 2026-08-05 01:45 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,45 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-05 01:45 terminal direct gate complete; post-SFT recovery
+
+- Terminal matched-NL `3875833_2` completed `0:0` at step 9537. Its terminal
+  checkpoint passes the complete 645-file TP4/DP2 model/optimizer/scheduler/RNG
+  gate with exact `9537/1220736/5000134656` offsets, exact
+  `4750127104 + 250007552` Dolmino/NL tokens, and RoPE `1000000`. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step9537_20260805.json`.
+- Terminal direct NL eval `3944017_2` completed `0:0` and passed the local-HF,
+  RoPE, 600-row multi-hop, 10,600-row standard-suite, and schema-v4 MATH
+  gates. Ten-task macros are control/formal/NL `0.6246/0.6169/0.6149`.
+  Stock QA-record continuation remains `95%` on all three NL multi-hop tasks;
+  tagged QA-F1 is `0.2697/0.4548/0.2173`. Raw correct/incorrect GSM8K,
+  MATH, BBH, MMLU-Pro, and stock/tagged multi-hop review found intended prompts
+  and extraction, genuine task errors, and the already known shared stopping
+  regression. Full direct note:
+  `analysis/nanotron_dolmino_terminal_partial_20260803.md`.
+- Post-SFT control row `3950714_0` failed as raw job `3952024` at the step-250
+  save after finite training and eval loss (`eval_loss=0.78444`): the FSDP
+  checkpoint write held the host long enough to trip PyTorch's eight-minute
+  NCCL watchdog. The incomplete checkpoint lacks `trainer_state.json` and was
+  quarantined outside the auto-resume path. The wrapper now sets a 30-minute
+  NCCL heartbeat timeout. Exact row-0 recovery `3952245_0` is submitted, and
+  only its standard/multi-hop dependents `3950715_0/3950716_0` were rewired.
+  Formal row `3950714_1` remains healthy; NL row 2 is priority-pending.
+- BranchProof full-retention formal row `3950178_12` completed `0:0` in
+  `11:21:49`. It has exactly 448 prompt groups and 7,168 sampled rows, 16 per
+  group, with zero empty generations and zero credited-validity diagnostic
+  contradictions. Its provisional OOD random/first-valid/max-line answer
+  rates are `0.7625/0.9688/0.9750`; first-valid/max-line joint are both
+  `0.9625` at `0.9750` valid coverage. Rows 13/14 are scoring, row 27 is
+  running, rows 28/29 remain throttle-pending, and aggregate `3950179` remains
+  correctly held.
+- After terminal step 9537 and superseded steps 9000/9500 independently passed
+  the full restart gate and `latest.txt=9537`, removed only 9000/9500,
+  reclaiming `213,256,774,416` logical bytes. Step 9537 passes a post-rotation
+  re-audit. User Vault is now `677G/1000G` (`182k/200k` files); Work group
+  files are `498k/500k`. The plan is incomplete, so dependency-free
+  CPU-only/no-GRES successor `3952243` remains scheduled for 07:35 CEST.
 
 ### 2026-08-04 21:02 terminal NL nearly complete
 

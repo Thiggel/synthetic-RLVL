@@ -1,8 +1,32 @@
 # Running Experiments
 
-Last updated: 2026-08-04 21:02 CEST.
+Last updated: 2026-08-05 01:45 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:45 CEST On August 5
+
+- Terminal matched-NL `3875833_2` and direct eval `3944017_2` completed
+  `0:0`. The terminal checkpoint passes its complete 645-file, exact-offset,
+  exact-95:5, and RoPE gates. Direct control/formal/NL ten-task macros are
+  `0.6246/0.6169/0.6149`; NL multi-hop retained samples and production audits
+  pass, but stock continuation remains `95/95/95%`. After accepting terminal
+  step 9537, independently revalidated and removed only superseded NL steps
+  9000/9500 (`213,256,774,416` bytes); 9537 passes post-rotation re-audit and
+  Vault is `677G/1000G`.
+- Post-SFT control `3950714_0` failed as raw job `3952024` during the step-250
+  FSDP save because the eight-minute NCCL watchdog expired while serialization
+  was still progressing. Training and eval were finite; the checkpoint is not
+  resumable because it lacks trainer state. It was moved outside the auto-
+  resume path, the wrapper timeout was raised to 30 minutes, and only row 0 was
+  resubmitted as `3952245_0`. Standard/multi-hop rows
+  `3950715_0/3950716_0` now depend on that recovery. Formal row `3950714_1`
+  is running and row 2 is priority-pending; neither was duplicated.
+- BranchProof full-retention row `3950178_12` completed and passes the exact
+  448-group/16-generation/7,168-row and credited-validity invariant gates.
+  Rows 13/14 are scoring, row 27 is running, rows 28/29 are throttle-pending,
+  and `3950179` remains dependency-held. Successor `3952243` is CPU-only,
+  no-GRES, dependency-free, and scheduled for 07:35 CEST; preserve it.
 
 ## Live Delta At 21:02 CEST On August 4
 

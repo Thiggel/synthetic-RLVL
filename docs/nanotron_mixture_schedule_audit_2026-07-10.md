@@ -1,5 +1,38 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-05 01:45 CEST)
+
+Terminal matched-NL `3875833_2` completed `0:0` at step 9537. Its terminal
+checkpoint passes the full 645-file TP4/DP2 model/optimizer/scheduler/RNG
+gate, with four equal `22,848,937,060`-byte optimizer shards, exact
+`9537/1220736/5000134656` offsets, exact
+`4750127104 + 250007552` Dolmino/NL token accounting, and Qwen2.5 RoPE
+`1000000`. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step9537_20260805.json`.
+After terminal step 9537 and superseded steps 9000/9500 independently passed
+the full gate and `latest.txt` pointed to 9537, removed only 9000/9500,
+reclaiming `213,256,774,416` logical bytes. Step 9537 passes post-rotation
+re-audit and user Vault is `677G/1000G`, 182k files.
+
+Direct NL eval `3944017_2` completed `0:0` and passed the local conversion,
+RoPE, retained-sample, standard-suite, multi-hop, and schema-v4 MATH gates.
+The complete terminal direct control/formal/NL ten-task macros are
+`0.6246/0.6169/0.6149`. NL stock QA-record continuation is `95%` for each of
+2Wiki, HotpotQA, and MuSiQue, while tagged QA-F1 is
+`0.2697/0.4548/0.2173`. Representative correct and incorrect raw generations
+across GSM8K, MATH, BBH, MMLU-Pro, and stock/tagged multi-hop show intact
+prompts/extraction, genuine task errors, and the shared stopping regression.
+The direct readout therefore provides no broad formal-specific transfer gain.
+
+Post-SFT control row `3950714_0` failed as raw job `3952024` during the
+step-250 FSDP checkpoint write after finite training and eval loss. PyTorch's
+NCCL watchdog expired after eight minutes of host-side serialization; the
+written directory lacks trainer state and cannot safely resume. It was moved
+outside the auto-resume path, and the wrapper now raises the heartbeat timeout
+to 30 minutes. Exact control recovery `3952245_0` is submitted, and only its
+standard/multi-hop dependents were rewired. Formal row 1 remains healthy and
+NL row 2 remains priority-pending.
+
 ## Production update (2026-08-04 19:45 CEST)
 
 Terminal matched-NL `3875833_2` remains healthy at step `9171/9537`, about
