@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-04 01:40 CEST.
+Last updated: 2026-08-04 07:38 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-04 07:38 terminal NL step-6500 accepted and rotated
+
+- Terminal matched-NL continuation `3875833_2` remains healthy on eight
+  A100-80GB GPUs through logged step `6641/9537` at about 31.1K tokens/s.
+  Loss and gradient diagnostics are finite, Qwen2.5 RoPE remains `1000000`,
+  and the live ETA is about 13.6 hours, inside the allocation.
+- Step 6500 passed the complete 645-file, zero-empty-file TP4/DP2
+  model/optimizer/scheduler/RNG gate with four equal 22,848,937,060-byte
+  optimizer shards and exact `6500/832000/3407872000` step/sample/token
+  offsets. Metadata records exactly `3237478400 + 170393600`
+  Dolmino/matched-NL tokens, preserving the exact 95:5 split. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step6500_20260804.json`.
+- Only after step 6500 and each older state independently passed the same gate,
+  removed superseded steps 5000/5500/6000, reclaiming
+  `319,885,161,582` bytes. Step 6500 is now the sole numeric NL restart state
+  and re-audits unchanged; user Vault is `585G/1000G`, 182k files.
+- Direct terminal eval `3944017_2` and post-SFT LR pilot
+  `3944071_[0-1]` remain correctly held on `afterok:3875833_2`. Recorded
+  successor `3948360` is dependency-free, CPU-only/no-GRES on `a100mig`, and
+  BeginTime-pending for 13:34 CEST. The terminal/direct/post-SFT and corrected
+  objective plan remains incomplete, so the successor is preserved.
 
 ### 2026-08-04 01:40 terminal NL continuation healthy
 

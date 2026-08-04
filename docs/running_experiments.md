@@ -1,8 +1,29 @@
 # Running Experiments
 
-Last updated: 2026-08-04 01:40 CEST.
+Last updated: 2026-08-04 07:38 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:38 CEST On August 4
+
+- Terminal NL `3875833_2` is healthy through step `6641/9537` on eight
+  A100-80GB GPUs at about 31.1K tokens/s, with finite loss/gradient
+  diagnostics and an ETA of about 13.6 hours. RoPE remains `1000000`; no OOM,
+  quota, restart, scheduler, device, or W&B failure signature is present.
+- Step 6500 passed the complete 645-file TP4/DP2 restart gate with zero empty
+  files, four equal 22,848,937,060-byte optimizer shards, exact
+  `6500/832000/3407872000` offsets, and exact
+  `3237478400 + 170393600` Dolmino/NL token accounting. Accepted audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step6500_20260804.json`.
+- After independently validating every target, removed only superseded NL
+  steps 5000/5500/6000 (`319,885,161,582` bytes). Step 6500 remains the sole
+  numeric restart state and passes a post-rotation re-audit. User Vault is
+  `585G/1000G`, 182k files.
+- Direct eval `3944017_2` and post-SFT LR rows `3944071_[0-1]` remain held on
+  the terminal checkpoint. Successor watcher `3948360` is dependency-free,
+  CPU-only/no-GRES, and BeginTime-pending for 13:34 CEST; preserve it because
+  terminal evaluation, matched post-SFT, and the corrected objective plan are
+  incomplete.
 
 ## Live Delta At 01:40 CEST On August 4
 

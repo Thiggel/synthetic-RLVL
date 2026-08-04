@@ -4,6 +4,20 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-04
 
+- 07:38 CEST: Terminal NL `3875833_2` is healthy through step `6641/9537`
+  at about 31.1K tokens/s with finite diagnostics and a 13.6-hour ETA. Step
+  6500 passed the 645-file TP4/DP2 model/optimizer/scheduler/RNG gate, RoPE
+  `1000000`, exact `6500/832000/3407872000` offsets, and exact
+  `3237478400 + 170393600` Dolmino/NL accounting. Persisted the accepted audit
+  at `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step6500_20260804.json`.
+  After independently validating every target, removed only superseded steps
+  5000/5500/6000, reclaiming `319,885,161,582` bytes; retained step 6500
+  passes a post-rotation re-audit and Vault is `585G/1000G`, 182k files.
+  Direct eval `3944017_2` and LR pilot `3944071_[0-1]` remain correctly held.
+  Preserved dependency-free CPU-only/no-GRES successor `3948360` for 13:34
+  because the terminal/direct/post-SFT and corrected objective plan remains
+  incomplete.
+
 - 01:40 CEST: Terminal matched-NL continuation `3875833_2` started at 23:40
   on eight verified A100-80GB GPUs on `a0933`. It restored the accepted
   step-5000 TP4/DP2 optimizer/scheduler/RNG state, exact
