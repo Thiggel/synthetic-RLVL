@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-04 13:00 CEST.
+Last updated: 2026-08-04 14:05 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -13,6 +13,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Short dated operational log | `docs/project_log.md` |
 | Full preserved operational history | `docs/operational_history_2026-05-29.md` |
 | Active research plan | `docs/formal_logic_cot_research_plan_2026-05-19.md` |
+| ICLR five-week execution plan | `docs/iclr_2027_execution_plan_2026-08-04.md` |
 | HFSA implementation/eval plan | `docs/hfsa_depth_scaling_plan_2026-05-19.md` |
 | Dataset materialization details | `docs/materialized_dataset.md` |
 | Paired synthetic benchmark details | `docs/paired_synthetic_benchmarks_2026-05-20.md` |
@@ -20,9 +21,36 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Nanotron mixture/resume audit | `docs/nanotron_mixture_schedule_audit_2026-07-10.md` |
 | Ongoing LaTeX report | `analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex` |
 | Official preprint draft | `../synthetic-RLVL-report/main.tex` |
+| ICLR 2027 conference draft | `../synthetic-RLVL-report/iclr2027/main.tex` |
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-04 14:05 ICLR draft and verifier-selection readout staged
+
+- Added a separate anonymous ICLR 2027 draft under the official conference
+  template at `../synthetic-RLVL-report/iclr2027/main.tex`. The draft uses the
+  paired synthetic comparison as the causal core, treats the 32B conditioned
+  result as evidence that formal and natural modes can coexist, and reserves
+  downstream transfer claims until the complete control/NL/formal comparison
+  after identical instruction tuning. The current root preprint was not
+  replaced.
+- The Dolmino transfer design remains the interpretable three-way comparison:
+  100% Dolmino control, 95% Dolmino plus 5% matched NL proofs, and 95% Dolmino
+  plus 5% matched formal proofs. No conditioned-dual Dolmino run is planned at
+  this gate because Dolmino already contains abundant natural-language
+  reasoning and the extra condition would not isolate the value of formal
+  data.
+- Existing corrected BranchProof logs retained only two of 16 sampled
+  generations per prompt. Submitted the minimal six-row train-25 re-eval
+  `3950178_[12-14,27-29%3]` with all 7,168 sampled rows retained per seed and
+  no duplicate greedy pass. Dependency-held CPU aggregation `3950179` will
+  measure answer-blind first-valid and maximum-line-valid selection against
+  random top-1, valid coverage, and oracle coverage.
+- Terminal matched-NL Dolmino `3875833_2` remains healthy at step 7991/9537
+  with about 4.19B consumed tokens and a live ETA near 21:16 CEST. Terminal NL
+  direct eval `3944017_2` and control post-SFT LR pilots `3944071_[0-1]`
+  remain correctly dependency-held.
 
 ### 2026-08-04 13:00 terminal NL step-7500 accepted and rotated
 

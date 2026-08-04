@@ -4,6 +4,13 @@
 
 We are pausing the RL-validity-reward direction and focusing on supervised / midtraining experiments.
 
+The deadline-focused transfer sequence and preregistered three-way Dolmino
+comparison are maintained in
+`docs/iclr_2027_execution_plan_2026-08-04.md`. The active transfer intervention
+is control versus 5% matched natural-language proofs versus 5% matched formal
+proofs. A conditioned-dual Dolmino condition is deferred until that simpler
+causal comparison is complete.
+
 Main question:
 
 > Does reasoning in a formal-logic chain-of-thought substrate improve a language model's reasoning ability and length extrapolation compared with semantically matched natural-language CoT?

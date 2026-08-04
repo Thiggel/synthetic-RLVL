@@ -1,8 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-08-04 13:00 CEST.
+Last updated: 2026-08-04 14:05 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 14:05 CEST On August 4
+
+- Terminal matched-NL Dolmino `3875833_2` is healthy at step `7991/9537`,
+  about 4.19B consumed tokens, 30.9K tokens/s, and a current finish estimate
+  near 21:16 CEST. Direct NL eval `3944017_2` and post-SFT LR pilots
+  `3944071_[0-1%2]` remain ordinary dependency-pending.
+- Submitted targeted corrected BranchProof full-sample eval
+  `3950178_[12-14,27-29%3]` for train-25 formal/NL across three seeds. Each row
+  retains all `448 * 16 = 7168` sampled generations and skips the redundant
+  greedy pass. The array is priority-pending on A100-80GB with no scheduler
+  start estimate.
+- Verifier-selection aggregate `3950179` is held on successful completion of
+  `3950178`. It reports random first-sample, first mechanically valid, maximum
+  line-validity, valid coverage, and answer/joint oracle metrics. Selection
+  never reads the gold answer.
+- CPU oversight successor `3950080` is BeginTime-pending. No project job has a
+  new failure.
 
 ## Live Delta At 13:00 CEST On August 4
 

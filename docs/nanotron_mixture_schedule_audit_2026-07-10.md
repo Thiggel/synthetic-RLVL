@@ -1,5 +1,17 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-04 14:05 CEST)
+
+Terminal matched-NL `3875833_2` remains healthy at step `7991/9537`, about
+4.19B consumed tokens, and a live ETA near 21:16 CEST. The transfer comparison
+is fixed to Dolmino control, 5% matched NL, and 5% formal. Do not add a
+conditioned-dual midtraining row before this three-way result is complete.
+Dolmino already contains natural-language reasoning, so the matched-NL
+replacement is the cleaner control for whether formal structure adds value.
+Direct NL eval `3944017_2` and control LR pilots `3944071_[0-1]` remain held
+on successful terminal completion. The primary transfer readout remains the
+three conditions after the same selected instruction-tuning recipe.
+
 ## Production update (2026-08-04 13:00 CEST)
 
 Terminal matched-NL continuation `3875833_2` is healthy through step

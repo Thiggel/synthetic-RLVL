@@ -3396,3 +3396,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - Terminal NL `3875833_2` remains dependency-free and priority-pending with
   current Slurm estimate August 4 02:19. No project row has an unrecovered
   failure and no resubmission or resource edit was warranted.
+- 2026-08-04 14:05 CEST: created a separate anonymous ICLR 2027 manuscript at
+  `../synthetic-RLVL-report/iclr2027/main.tex` using the official July 2026
+  conference template. The draft centers the paired formal-vs-matched-NL
+  intervention, includes contradictory controls and the 32B conditioned
+  result, and leaves the three-way Dolmino transfer claim pending identical
+  post-SFT evaluation. Existing pass@16 logs retain only two samples per
+  prompt, so submitted minimal full-retention train-25 eval
+  `3950178_[12-14,27-29%3]` and dependency-held answer-blind verifier
+  selection aggregate `3950179`. Terminal matched-NL Dolmino remains healthy
+  at step 7991/9537.
