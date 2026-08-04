@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-04
 
+- 19:45 CEST: Terminal matched-NL `3875833_2` remained healthy at step
+  `9171/9537` with a live ETA near 21:19. Step 9000 passed the complete
+  645-file TP4/DP2 restart gate, exact `9000/1152000/4718592000` offsets,
+  exact `4482662400 + 235929600` Dolmino/NL accounting, four equal
+  22,848,937,060-byte optimizer shards, and RoPE `1000000`. After independently
+  accepting steps 7500/8000/8500/9000 and confirming `latest.txt=9000`, removed
+  only superseded 7500/8000/8500 (`319,885,161,621` logical bytes). Step 9000
+  re-audits accepted and Vault fell `1263G -> 667G/1000G`, 182k files. Formal
+  BranchProof full-retention rows `3950178_12/13/14` were healthy at sampled
+  chunks `99/92/91`; preserved CPU-only/no-GRES successor `3951596` for 01:35
+  because the full plan remains incomplete.
+
 - 16:18 CEST: Fixed the identical post-SFT recipe at `5e-6` and canceled
   pending control-only LR pilot `3944071_[0-1]`. Submitted full-parameter
   terminal control/formal/matched-NL SFT `3950714_[0-2%2]` after terminal NL,

@@ -1,5 +1,25 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-04 19:45 CEST)
+
+Terminal matched-NL `3875833_2` remains healthy at step `9171/9537`, about
+4.81B consumed tokens, 30.9--31.1K tokens/s, and a live ETA near 21:19 CEST.
+Loss and gradient diagnostics are finite and the remaining runtime is more
+than two hours inside the allocation.
+
+Step 9000 passed the complete 645-file TP4/DP2 model/optimizer/scheduler/RNG
+gate, with zero empty files, four equal `22,848,937,060`-byte optimizer shards,
+exact `9000/1152000/4718592000` step/sample/token offsets, exact
+`4482662400 + 235929600` Dolmino/NL token accounting, and Qwen2.5 RoPE
+`1000000`. Audit:
+`analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step9000_20260804.json`.
+After independently accepting steps 7500, 8000, 8500, and 9000 and confirming
+`latest.txt=9000`, removed only superseded steps 7500/8000/8500, reclaiming
+`319,885,161,621` logical bytes. Step 9000 is the sole numeric restart and
+passes a post-rotation re-audit. User Vault fell from `1263G` to
+`667G/1000G`, 182k files. Direct NL eval `3944017_2` and three-way post-SFT
+`3950714` remain correctly dependency-held on terminal success.
+
 ## Production update (2026-08-04 16:18 CEST)
 
 Canceled pending control LR pilot `3944071_[0-1]` and fixed the shared

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-04 16:18 CEST.
+Last updated: 2026-08-04 19:45 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,30 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-04 19:45 terminal NL step-9000 accepted and rotated
+
+- Terminal matched-NL Dolmino `3875833_2` remains healthy at step
+  `9171/9537`, about 4.81B consumed tokens, 30.9--31.1K tokens/s, and a live
+  ETA near 21:19 CEST. Loss and gradient diagnostics are finite and the job
+  retains more than two hours of wall-time margin.
+- Step 9000 passed the complete 645-file TP4/DP2 restart gate with zero empty
+  files, four equal 22,848,937,060-byte optimizer shards, exact
+  `9000/1152000/4718592000` offsets, exact
+  `4482662400 + 235929600` Dolmino/NL token accounting, and RoPE `1000000`.
+  Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step9000_20260804.json`.
+- After independently accepting steps 7500, 8000, 8500, and 9000 and
+  confirming `latest.txt=9000`, removed only superseded steps 7500/8000/8500,
+  reclaiming `319,885,161,621` logical bytes. Step 9000 is the sole numeric NL
+  restart state and passes a post-rotation re-audit. User Vault fell from
+  `1263G` to `667G/1000G`, with 182k files.
+- Corrected BranchProof full-retention formal rows `3950178_12/13/14` are
+  healthy at sampled chunks `99/92/91` of 112 on A100-80GB GPUs. NL rows
+  27--29 remain held only by the `%3` throttle, and aggregate `3950179`
+  remains correctly dependency-held. Recorded successor `3951596` is
+  dependency-free, CPU-only/no-GRES, and scheduled for 01:35 CEST; the plan
+  remains incomplete, so it is preserved.
 
 ### 2026-08-04 16:18 fixed three-way post-SFT submitted
 

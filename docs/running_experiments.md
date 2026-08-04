@@ -1,8 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-08-04 16:18 CEST.
+Last updated: 2026-08-04 19:45 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:45 CEST On August 4
+
+- Terminal matched-NL `3875833_2` is healthy at step `9171/9537`, about 4.81B
+  consumed tokens, 30.9--31.1K tokens/s, and a live ETA near 21:19 CEST.
+  Loss/gradient diagnostics remain finite and no OOM, quota, device, restart,
+  or W&B failure signature is present.
+- Step 9000 passed the complete 645-file TP4/DP2 restart, exact-offset, exact
+  95:5 accounting, and RoPE gates. After independently accepting retained
+  steps 7500/8000/8500/9000 and confirming `latest.txt=9000`, removed only
+  superseded 7500/8000/8500, reclaiming `319,885,161,621` logical bytes.
+  Step 9000 remains the sole numeric restart and passes a post-rotation
+  re-audit. Vault fell from `1263G` to `667G/1000G`, 182k files. Audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step9000_20260804.json`.
+- BranchProof full-retention formal rows `3950178_12/13/14` are healthy at
+  sampled chunks `99/92/91` of 112. NL rows 27--29 remain throttle-pending;
+  CPU aggregate `3950179` remains correctly held. Successor watcher `3951596`
+  is dependency-free, CPU-only/no-GRES, and scheduled for 01:35 CEST, so it is
+  preserved while terminal, post-SFT, and verifier-selection gates remain open.
 
 ## Live Delta At 16:18 CEST On August 4
 
