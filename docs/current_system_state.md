@@ -44,7 +44,9 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3944071_[0-1]` remain correctly held on `afterok:3875833_2`. Recorded
   successor `3948360` is dependency-free, CPU-only/no-GRES on `a100mig`, and
   BeginTime-pending for 13:34 CEST. The terminal/direct/post-SFT and corrected
-  objective plan remains incomplete, so the successor is preserved.
+  objective plan remains incomplete, so the successor is preserved. Handoff
+  commit `db5c2d8` is local because the bounded GitHub SSH push produced no
+  response and exited `124`.
 
 ### 2026-08-04 01:40 terminal NL continuation healthy
 

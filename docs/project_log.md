@@ -16,7 +16,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   Direct eval `3944017_2` and LR pilot `3944071_[0-1]` remain correctly held.
   Preserved dependency-free CPU-only/no-GRES successor `3948360` for 13:34
   because the terminal/direct/post-SFT and corrected objective plan remains
-  incomplete.
+  incomplete. Commit `db5c2d8` is local after a silent bounded 90-second
+  GitHub SSH push exited `124`.
 
 - 01:40 CEST: Terminal matched-NL continuation `3875833_2` started at 23:40
   on eight verified A100-80GB GPUs on `a0933`. It restored the accepted
