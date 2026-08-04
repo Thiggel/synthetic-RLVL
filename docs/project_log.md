@@ -3411,3 +3411,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   the Overleaf entrypoint for `iclr2027/main.tex`, corrected root-relative
   figure and bibliography paths, and archived the previous root preprint under
   `official_preprint/main_pre_iclr_2026-08-04.tex`.
+- 2026-08-04 15:50 CEST: manually merged report branch
+  `overleaf-2026-08-04-1340` into `main`. Preserved its edited legacy preprint
+  as `official_preprint/main_overleaf_2026-08-04-1340.tex`, while retaining the
+  ICLR root entrypoint and preventing stale branch deletions of corrected
+  figures and result tables. Report merge commit: `730cd39`.
