@@ -3416,3 +3416,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   as `official_preprint/main_overleaf_2026-08-04-1340.tex`, while retaining the
   ICLR root entrypoint and preventing stale branch deletions of corrected
   figures and result tables. Report merge commit: `730cd39`.
+- 2026-08-04 16:00 CEST: changed ICLR Figure 1 from the across-training-range
+  reversal plot to the accepted train-1-to-25 sampling-efficiency plot, which
+  directly presents the formal advantage in answer and joint accuracy from
+  pass@1 through pass@16. Moved the shallower-training negative boundary plot
+  to the appendix rather than omitting it.
