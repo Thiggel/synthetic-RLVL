@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-04
 
+- 13:00 CEST: Terminal matched-NL `3875833_2` reached step `7761/9537`
+  (81.4%) at about 30.9K tokens/s with a live finish estimate near 21:17 CEST
+  and no failure signature. Step 7500 passed the complete restart, exact 95:5
+  accounting, and RoPE gates. After independently accepting step 7000 and
+  confirming `latest.txt=7500`, removed superseded steps 6500/7000 and
+  reclaimed `213,256,774,410` bytes. Step 7500 remains the sole restart and
+  passes re-audit. NL direct eval and the LR pilot remain correctly held.
+
 - 08:25 CEST: Terminal matched-NL `3875833_2` reached step `6791/9537`
   (71.2%) at about 31.1K tokens/s with finite loss/gradient diagnostics and
   projected completion near 21:10 CEST, about 2.5 hours inside wall time.

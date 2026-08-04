@@ -1,5 +1,20 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-04 13:00 CEST)
+
+Terminal matched-NL continuation `3875833_2` is healthy through step
+`7761/9537` (81.4%) at about 30.9K tokens/s with finite diagnostics. Its live
+finish estimate near 21:17 CEST remains about 2 hours 23 minutes inside wall
+time. Step 7500 passed the complete 645-file TP4/DP2 state gate, exact
+`7500/960000/3932160000` offsets, exact
+`3735552000 + 196608000` Dolmino/NL accounting, and RoPE `1000000`; the audit
+is `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step7500_20260804.json`.
+After independently accepting step 7000 and confirming `latest.txt=7500`,
+removed superseded steps 6500/7000 (`213,256,774,410` bytes). Step 7500 is the
+sole numeric restart and passes a post-rotation re-audit. Direct NL eval
+`3944017_2` and LR pilot `3944071_[0-1]` remain correctly dependency-held; no
+recovery action is warranted.
+
 ## Production update (2026-08-04 08:25 CEST)
 
 Terminal matched-NL continuation `3875833_2` is healthy through step

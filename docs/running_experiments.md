@@ -1,8 +1,22 @@
 # Running Experiments
 
-Last updated: 2026-08-04 08:25 CEST.
+Last updated: 2026-08-04 13:00 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:00 CEST On August 4
+
+- Terminal NL `3875833_2` reached step `7761/9537` (81.4%) at about 30.9K
+  tokens/s with finite diagnostics and a live finish estimate near 21:17 CEST,
+  about 2 hours 23 minutes before wall time. No failure signature is present.
+- Step 7500 passed the full 645-file TP4/DP2 restart gate, exact offsets, exact
+  95:5 token accounting, and RoPE check. After independently accepting step
+  7000 and confirming `latest.txt=7500`, removed superseded steps 6500/7000
+  and reclaimed `213,256,774,410` bytes. Step 7500 remains the sole restart
+  and passes a post-rotation re-audit.
+- NL direct eval `3944017_2` and control LR pilot `3944071_[0-1%2]` remain
+  ordinary dependency-pending. CPU-only oversight `3948360` remains scheduled
+  for 13:34 CEST. No project job has newly failed.
 
 ## Live Delta At 08:25 CEST On August 4
 

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-04 08:25 CEST.
+Last updated: 2026-08-04 13:00 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-04 13:00 terminal NL step-7500 accepted and rotated
+
+- Terminal matched-NL `3875833_2` is healthy through step `7761/9537`
+  (81.4%) on eight A100-80GB GPUs at about 30.9K tokens/s. Loss and gradient
+  diagnostics remain finite. The live ETA is near 21:17 CEST, about 2 hours
+  23 minutes inside the allocation.
+- Step 7500 passed the complete 645-file TP4/DP2 restart gate with zero empty
+  files, four equal 22,848,937,060-byte optimizer shards, exact
+  `7500/960000/3932160000` offsets, exact
+  `3735552000 + 196608000` Dolmino/NL token accounting, and RoPE `1000000`.
+  Accepted audit:
+  `analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step7500_20260804.json`.
+- After step 7000 independently passed the same gate and `latest.txt` pointed
+  to 7500, removed only superseded steps 6500/7000, reclaiming
+  `213,256,774,410` bytes. Step 7500 passed a post-rotation re-audit and is the
+  sole numeric NL restart state. This project currently occupies about 470G
+  on Vault and 239G on Work/Atuin; the user Vault quota reports 585G/1000G.
+- Direct NL eval `3944017_2` and control post-SFT LR pilot
+  `3944071_[0-1]` remain correctly held on successful terminal completion.
+  No failed project job requires recovery. CPU-only oversight `3948360` is
+  BeginTime-pending for 13:34 CEST and remains useful while this chain is live.
 
 ### 2026-08-04 08:25 terminal NL progress
 
