@@ -3407,3 +3407,7 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   selection aggregate `3950179`. Terminal matched-NL Dolmino remains healthy
   at step 7991/9537. Verifier eval row 12 subsequently started on A100-80GB
   node `a0833`; remaining rows are account-GRES pending.
+- 2026-08-04 14:20 CEST: changed the report repository root `main.tex` into
+  the Overleaf entrypoint for `iclr2027/main.tex`, corrected root-relative
+  figure and bibliography paths, and archived the previous root preprint under
+  `official_preprint/main_pre_iclr_2026-08-04.tex`.

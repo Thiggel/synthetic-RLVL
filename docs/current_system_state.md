@@ -20,21 +20,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Paired iGSM validity audit | `docs/paired_igsm_validity_audit_2026-06-01.md` |
 | Nanotron mixture/resume audit | `docs/nanotron_mixture_schedule_audit_2026-07-10.md` |
 | Ongoing LaTeX report | `analysis/logic_cot_report_2026-05-25/logic_cot_report_2026-05-25.tex` |
-| Official preprint draft | `../synthetic-RLVL-report/main.tex` |
-| ICLR 2027 conference draft | `../synthetic-RLVL-report/iclr2027/main.tex` |
+| ICLR 2027 Overleaf entrypoint | `../synthetic-RLVL-report/main.tex` |
+| ICLR 2027 canonical source | `../synthetic-RLVL-report/iclr2027/main.tex` |
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
 
 ### 2026-08-04 14:05 ICLR draft and verifier-selection readout staged
 
-- Added a separate anonymous ICLR 2027 draft under the official conference
-  template at `../synthetic-RLVL-report/iclr2027/main.tex`. The draft uses the
+- Added an anonymous ICLR 2027 draft under the official conference template at
+  `../synthetic-RLVL-report/iclr2027/main.tex`. The report repository root
+  `main.tex` now loads this source so Overleaf renders it by default. The
+  previous root preprint is archived at
+  `../synthetic-RLVL-report/official_preprint/main_pre_iclr_2026-08-04.tex`.
+  The draft uses the
   paired synthetic comparison as the causal core, treats the 32B conditioned
   result as evidence that formal and natural modes can coexist, and reserves
   downstream transfer claims until the complete control/NL/formal comparison
-  after identical instruction tuning. The current root preprint was not
-  replaced.
+  after identical instruction tuning.
 - The Dolmino transfer design remains the interpretable three-way comparison:
   100% Dolmino control, 95% Dolmino plus 5% matched NL proofs, and 95% Dolmino
   plus 5% matched formal proofs. No conditioned-dual Dolmino run is planned at
