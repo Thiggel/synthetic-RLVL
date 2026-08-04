@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-04
 
+- 16:18 CEST: Fixed the identical post-SFT recipe at `5e-6` and canceled
+  pending control-only LR pilot `3944071_[0-1]`. Submitted full-parameter
+  terminal control/formal/matched-NL SFT `3950714_[0-2%2]` after terminal NL,
+  plus corresponding-row standard eval `3950715` and multi-hop eval
+  `3950716`. All conditions use the same frozen Dolci 99,817/2,044 split,
+  effective batch 128, one epoch, Qwen chat, and assistant-only labels.
+  Outputs target Work; the `%2` throttle bounds the approximately 152-GB
+  transient per-row FSDP footprint, and successful rows retain only final
+  weights after deleting resumable Trainer checkpoints.
+  Matched step-5000 weights were previously removed after accepted direct
+  evaluations, so no unmatched six-row post-SFT matrix was submitted.
+
 - 13:00 CEST: Terminal matched-NL `3875833_2` reached step `7761/9537`
   (81.4%) at about 30.9K tokens/s with a live finish estimate near 21:17 CEST
   and no failure signature. Step 7500 passed the complete restart, exact 95:5

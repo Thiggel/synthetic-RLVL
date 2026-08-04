@@ -189,17 +189,23 @@ For this study:
    EOS, and packed instances with correct per-instance masks.
 3. Use full-parameter SFT for the evidentiary run. LoRA is acceptable for a
    smoke test but should not be the primary transfer result.
-4. Start with a fixed, decontaminated 100K-example subset of
+4. Start with a fixed 100K-example subset of
    `allenai/Dolci-Instruct-SFT-No-Tools`, one epoch, effective batch 128,
-   maximum length 4,096, linear schedule, 3% warmup, and a control-only
-   learning-rate pilot at `2e-6` and `5e-6`. Select the recipe using held-out
-   SFT loss plus format diagnostics, not treatment-checkpoint benchmark gains.
+   maximum length 4,096, linear schedule, 3% warmup, and learning rate `5e-6`
+   for every condition. The fixed recipe avoids condition-specific
+   hyperparameter selection and matches the accepted full-model smoke.
 5. Save adaptation checkpoints near 10K, 30K, and 100K seen examples. If the
    modality deltas survive and behavior is clean, run one full standard SFT
    epoch as the final readout.
 6. Source-filter and n-gram audit the SFT data against every reported
    benchmark. Report direct and post-SFT treatment deltas separately; do not
    compare their absolute macros as if they used the same interface.
+
+Operationally, terminal three-way SFT is `3950714_[0-2]`; corresponding
+standard and multi-hop evaluations are `3950715_[0-2]` and
+`3950716_[0-2]`. The matched step-5000 Nanotron weights were removed after
+accepted direct evaluation during guarded storage rotation, so intermediate
+post-SFT is not part of the matched comparison.
 
 The previous generic UltraChat branch is not this experiment. It used a
 rank-16 LoRA, effective batch one, 10,000 steps, and no shared reasoning

@@ -52,11 +52,12 @@ show continuation and stopping artifacts.
 
 - Finish and audit terminal matched-NL training `3875833_2`.
 - Complete identical direct NL evaluation `3944017_2`.
-- Run control-only post-SFT LR pilots `3944071_[0-1]`.
-- Freeze one instruction dataset order after benchmark-overlap audit.
-- Select one LR from held-out loss, answer-format adherence, repetition, and
-  short benchmark diagnostics. Do not select on the final reported aggregate.
-- Start identical control, matched-NL, and formal instruction tuning.
+- Use the fixed `5e-6` post-SFT recipe for all conditions; pending LR pilot
+  `3944071_[0-1]` was canceled to avoid treatment-specific selection.
+- Complete the benchmark-overlap audit on the already frozen instruction-data
+  order before using the readout as publication evidence.
+- Run identical control, matched-NL, and formal instruction tuning in
+  `3950714`, followed by standard and multi-hop arrays `3950715/3950716`.
 - Finish the six-row verifier-selection readout `3950178 -> 3950179`.
 
 ### Week 2

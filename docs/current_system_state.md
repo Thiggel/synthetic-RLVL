@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-04 16:10 CEST.
+Last updated: 2026-08-04 16:18 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,31 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-04 16:18 fixed three-way post-SFT submitted
+
+- Replaced the control-only `2e-6/5e-6` pilot with one fixed `5e-6` recipe for
+  all three terminal checkpoints. Canceled pending array `3944071_[0-1]` and
+  submitted full-parameter Dolci SFT `3950714_[0-2%2]` for control, formal,
+  and matched NL. Every row uses the same frozen 99,817/2,044 split, native
+  Qwen chat, assistant-only labels, one epoch, effective batch 128, 3% warmup,
+  and seed 3407. The array waits on successful terminal NL `3875833_2`.
+- Submitted corresponding standard evaluation `3950715_[0-2%3]` and multi-hop
+  evaluation `3950716_[0-2%3]` with `aftercorr:3950714`. Each modality can
+  therefore release both evaluations as soon as its own SFT row succeeds.
+  Both suites use chat-formatted prompts, retained samples, and production
+  artifact audits.
+- Post-SFT outputs target
+  `$WORK/synthetic-RLVL/post_sft_dolci_20260804`, not Vault. The accepted
+  smoke reached about 152 GB while both resumable FSDP state and final weights
+  existed. The `%2` throttle limits that transient pressure, and each row
+  removes `checkpoint-*` only after validating its roughly 15-GB final model.
+  This is acceptable under the user's below-3-TB Work planning ceiling and
+  avoids current Vault pressure. Matched
+  step-5000 midtraining weights were removed after their accepted direct
+  evaluations during guarded checkpoint rotation, so the available matched
+  post-SFT comparison is the scientifically primary three terminal models,
+  not six terminal-plus-intermediate models.
 
 ### 2026-08-04 16:10 live training and dependency check
 

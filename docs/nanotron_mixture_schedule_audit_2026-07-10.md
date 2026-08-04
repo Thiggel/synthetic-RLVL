@@ -1,5 +1,17 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-04 16:18 CEST)
+
+Canceled pending control LR pilot `3944071_[0-1]` and fixed the shared
+instruction-tuning LR at `5e-6`. Submitted terminal control/formal/matched-NL
+full-parameter SFT `3950714_[0-2%2]` after successful terminal NL, with the
+same frozen Dolci rows, effective batch 128, one epoch, native Qwen chat, and
+assistant-only loss. Corresponding standard `3950715` and multi-hop `3950716`
+arrays use `aftercorr:3950714` dependencies. Final SFT checkpoints are written
+to Work to avoid Vault pressure. The matched step-5000 weights were removed
+after accepted direct readout during guarded checkpoint rotation; only the
+three terminal models form the matched post-SFT comparison.
+
 ## Production update (2026-08-04 14:05 CEST)
 
 Terminal matched-NL `3875833_2` remains healthy at step `7991/9537`, about

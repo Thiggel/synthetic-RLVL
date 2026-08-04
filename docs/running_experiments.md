@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-08-04 16:10 CEST.
+Last updated: 2026-08-04 16:18 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 16:18 CEST On August 4
+
+- Canceled pending control LR pilot `3944071_[0-1]`. The shared-LR decision is
+  fixed at `5e-6`, avoiding treatment-specific hyperparameter selection.
+- Submitted full-parameter terminal three-way Dolci SFT
+  `3950714_[0-2%2]`, mapping rows 0/1/2 to control/formal/matched NL. It waits
+  on `afterok:3875833_2`, uses four A100-80GB GPUs per row, and runs at most
+  two rows concurrently. Outputs are on Work under
+  `post_sft_dolci_20260804`.
+- Submitted standard eval `3950715_[0-2%3]` and multi-hop eval
+  `3950716_[0-2%3]`. Both use corresponding-row dependencies on `3950714`, so
+  each condition is evaluated after its own SFT succeeds. Scheduler start
+  times remain unknown while dependencies are unfulfilled.
+- The matched step-5000 Nanotron weights no longer exist after guarded storage
+  rotation. Their direct evaluations remain accepted, but no matched six-row
+  terminal-plus-intermediate post-SFT matrix is currently possible.
 
 ## Live Delta At 16:10 CEST On August 4
 
