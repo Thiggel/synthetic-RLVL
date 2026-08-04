@@ -1,8 +1,21 @@
 # Running Experiments
 
-Last updated: 2026-08-04 07:38 CEST.
+Last updated: 2026-08-04 08:25 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 08:25 CEST On August 4
+
+- Terminal NL `3875833_2` reached step `6791/9537` (71.2%) at about 31.1K
+  tokens/s with finite loss/gradient diagnostics. Projected completion is near
+  21:10 CEST, about 2.5 hours before wall time. Accepted step 6500 is the sole
+  restart state; no recovery action is needed.
+- Terminal NL eval `3944017_2` and LR pilot `3944071_[0-1%2]` remain ordinary
+  dependency-pending and will release only after successful terminal training.
+  No scheduler start estimate exists while they are held.
+- Post-SFT smoke `3945777_0` and optimizer offload `3946030` remain accepted
+  `0:0`. Current CPU-only successor `3948360` is scheduled for 13:34 CEST and
+  remains necessary because the terminal/readout chain is incomplete.
 
 ## Live Delta At 07:38 CEST On August 4
 

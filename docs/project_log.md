@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-04
 
+- 08:25 CEST: Terminal matched-NL `3875833_2` reached step `6791/9537`
+  (71.2%) at about 31.1K tokens/s with finite loss/gradient diagnostics and
+  projected completion near 21:10 CEST, about 2.5 hours inside wall time.
+  Accepted step 6500 remains the sole restart state. Terminal direct eval and
+  LR pilot remain correctly dependency-held; no failure or recovery action is
+  needed. Group Work file usage near `492k/500k` remains the storage watch.
+
 - 07:38 CEST: Terminal NL `3875833_2` is healthy through step `6641/9537`
   at about 31.1K tokens/s with finite diagnostics and a 13.6-hour ETA. Step
   6500 passed the 645-file TP4/DP2 model/optimizer/scheduler/RNG gate, RoPE

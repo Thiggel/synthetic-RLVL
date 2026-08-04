@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-04 07:38 CEST.
+Last updated: 2026-08-04 08:25 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -23,6 +23,22 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-04 08:25 terminal NL progress
+
+- Terminal matched-NL `3875833_2` is healthy at step `6791/9537` (71.2%) on
+  eight A100-80GB GPUs, sustaining about 31.1K tokens/s with finite losses and
+  gradients. The remaining 2,746 steps imply completion near 21:10 CEST,
+  roughly 2.5 hours inside the 23:40 wall-time boundary.
+- Fully audited step 6500 remains the sole numeric restart state, so the run is
+  recoverable if interrupted. No OOM, quota, scheduler, device, or stale-data
+  signature is present; output is current through 08:20 CEST.
+- Post-SFT smoke `3945777_0` is accepted and complete. Terminal direct eval
+  `3944017_2` and control LR pilot `3944071_[0-1]` remain correctly held on
+  successful NL completion. They have no scheduler estimate while dependency-
+  held. Vault remains around `585G/1000G`; group Work file usage near
+  `492k/500k` is the active storage watch item, though current jobs add few
+  files before guarded rotation.
 
 ### 2026-08-04 07:38 terminal NL step-6500 accepted and rotated
 

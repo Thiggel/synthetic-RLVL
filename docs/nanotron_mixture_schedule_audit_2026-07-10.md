@@ -1,5 +1,18 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-04 08:25 CEST)
+
+Terminal matched-NL continuation `3875833_2` is healthy through step
+`6791/9537` (71.2%) at about 31.1K tokens/s. Loss and gradient diagnostics are
+finite, no OOM/quota/device/W&B/stale-output signature is present, and the
+projected finish near 21:10 CEST is about 2.5 hours inside the allocation.
+Accepted step 6500 is the sole numeric restart after guarded rotation of
+superseded steps 5000/5500/6000; its exact TP4/DP2 state, offsets, RoPE, and
+95:5 token accounting are recorded in
+`analysis/nanotron_checkpoint_audits/dolmino_nl_exact_step6500_20260804.json`.
+Direct eval `3944017_2` and the control-only LR pilot `3944071_[0-1]` remain
+correctly dependency-held. No recovery or scheduler action is warranted.
+
 ## Production update (2026-08-04 01:40 CEST)
 
 Terminal matched-NL continuation `3875833_2` started at 23:40 CEST on eight
