@@ -3421,3 +3421,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   directly presents the formal advantage in answer and joint accuracy from
   pass@1 through pass@16. Moved the shallower-training negative boundary plot
   to the appendix rather than omitting it.
+- 2026-08-04 16:10 CEST: terminal matched-NL Dolmino remained healthy at step
+  8431/9537 with a live 21:16 ETA. Confirmed that successful completion releases
+  only direct NL eval `3944017_2` and control post-SFT LR pilots
+  `3944071_[0-1]`; no new midtraining continuation is staged. BranchProof
+  verifier formal rows 12--14 are concurrently running without an observed
+  failure signature.

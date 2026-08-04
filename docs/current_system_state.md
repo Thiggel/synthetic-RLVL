@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-04 14:05 CEST.
+Last updated: 2026-08-04 16:10 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,21 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-04 16:10 live training and dependency check
+
+- Terminal matched-NL Dolmino `3875833_2` is healthy at step `8431/9537`,
+  about 4.42B consumed tokens, 31.0K tokens/s, and a live ETA near 21:16 CEST.
+  It has about 2 hours 24 minutes of wall-time margin and no failure signature.
+- Successful completion releases direct NL evaluation `3944017_2` on A40 and
+  the two control-only post-SFT LR pilots `3944071_[0-1]` on four A100-80GB
+  GPUs each. No additional midtraining run is dependency-staged. A 10B
+  continuation remains deliberately gated on the complete 5B direct and
+  identical post-SFT control/NL/formal comparison.
+- Corrected BranchProof full-retention formal rows `3950178_12/13/14` are
+  running on three A100-80GB GPUs without an error signature. NL rows 27--29
+  are held only by the array concurrency limit and will follow as formal rows
+  finish. Aggregate `3950179` remains correctly dependency-held.
 
 ### 2026-08-04 14:05 ICLR draft and verifier-selection readout staged
 

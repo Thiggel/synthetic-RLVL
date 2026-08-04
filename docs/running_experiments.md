@@ -1,8 +1,21 @@
 # Running Experiments
 
-Last updated: 2026-08-04 14:05 CEST.
+Last updated: 2026-08-04 16:10 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 16:10 CEST On August 4
+
+- Terminal matched-NL Dolmino `3875833_2` is healthy at step `8431/9537`,
+  about 4.42B consumed tokens, and 31.0K tokens/s. The live ETA is near 21:16
+  CEST, about 2 hours 24 minutes before its allocation ends.
+- Direct NL eval `3944017_2` and control LR pilots `3944071_[0-1%2]` remain
+  held on `afterok:3875833_2`. These are the only automatic successors. No
+  10B or other midtraining continuation is currently submitted.
+- BranchProof full-retention formal rows `3950178_12/13/14` are running on
+  A100-80GB nodes. NL rows 27--29 are pending under the `%3` array throttle.
+  The three live rows reached vLLM startup without an OOM, quota, or artifact
+  failure signature. Verifier aggregate `3950179` remains dependency-held.
 
 ## Live Delta At 14:05 CEST On August 4
 
