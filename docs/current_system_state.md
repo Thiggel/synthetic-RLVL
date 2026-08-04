@@ -46,7 +46,8 @@ This is the short operational handoff. Historical detail was preserved verbatim 
   `3950178_[12-14,27-29%3]` with all 7,168 sampled rows retained per seed and
   no duplicate greedy pass. Dependency-held CPU aggregation `3950179` will
   measure answer-blind first-valid and maximum-line-valid selection against
-  random top-1, valid coverage, and oracle coverage.
+  random top-1, valid coverage, and oracle coverage. Formal seed-3407 row 12
+  started on A100-80GB node `a0833`; the other rows are account-GRES pending.
 - Terminal matched-NL Dolmino `3875833_2` remains healthy at step 7991/9537
   with about 4.19B consumed tokens and a live ETA near 21:16 CEST. Terminal NL
   direct eval `3944017_2` and control post-SFT LR pilots `3944071_[0-1]`

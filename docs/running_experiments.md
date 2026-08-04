@@ -13,8 +13,9 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - Submitted targeted corrected BranchProof full-sample eval
   `3950178_[12-14,27-29%3]` for train-25 formal/NL across three seeds. Each row
   retains all `448 * 16 = 7168` sampled generations and skips the redundant
-  greedy pass. The array is priority-pending on A100-80GB with no scheduler
-  start estimate.
+  greedy pass. Row 12 started on A100-80GB node `a0833`; the remaining rows
+  are account-GRES pending while the eight-GPU NL run and other user jobs use
+  the account allocation.
 - Verifier-selection aggregate `3950179` is held on successful completion of
   `3950178`. It reports random first-sample, first mechanically valid, maximum
   line-validity, valid coverage, and answer/joint oracle metrics. Selection

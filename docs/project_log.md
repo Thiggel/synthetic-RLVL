@@ -3405,4 +3405,5 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   prompt, so submitted minimal full-retention train-25 eval
   `3950178_[12-14,27-29%3]` and dependency-held answer-blind verifier
   selection aggregate `3950179`. Terminal matched-NL Dolmino remains healthy
-  at step 7991/9537.
+  at step 7991/9537. Verifier eval row 12 subsequently started on A100-80GB
+  node `a0833`; remaining rows are account-GRES pending.
