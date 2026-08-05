@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-05 16:38 CEST.
+Last updated: 2026-08-05 19:39 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-05 19:39 formal resume remains the sole active gate
+
+- Exact formal post-SFT resume `3955485_1` is priority-pending on `a100` with
+  the required `a100_80` feature, four A100s, `a0532,a0934` excluded, and a
+  current scheduler start estimate of 05:31 CEST. Its retained step-250
+  state was rechecked in place: all seven model shards, the
+  60,925,255,300-byte optimizer, FSDP state, scheduler, four RNG files, and
+  trainer state are present. Formal standard/multi-hop consumers
+  `3950715_1/3950716_1` remain correctly held on `afterok:3955485_1`.
+- Corrected BranchProof full-retention aggregate `3950179` remains accepted:
+  all six audit files report `accepted=true` with exactly 7,168 retained
+  samples each. No newly completed BranchProof or Nanotron bundle requires a
+  fresh metric interpretation or report regeneration this pass.
+- CPU-only/no-GRES watcher `3954132` began on `a0605` at 19:36 CEST and its
+  self-scheduled successor is `3956217`, BeginTime-held for 01:36 CEST on
+  August 6. Keep `3956217`: the matched three-way post-SFT comparison is not
+  complete.
 
 ### 2026-08-05 16:38 formal post-SFT node-failure recovery resubmitted
 

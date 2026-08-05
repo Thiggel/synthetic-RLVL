@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-05
 
+- 19:39 CEST: Rechecked the sole live science gate. Formal exact post-SFT
+  resume `3955485_1` is priority-pending with A100-80GB, four GPUs, and both
+  prior node-failure hosts excluded; its step-250 model/optimizer/FSDP/
+  scheduler/RNG/trainer state remains complete. Formal consumers
+  `3950715_1/3950716_1` remain correctly dependency-held. BranchProof
+  aggregate `3950179` remains accepted at six clean 7,168-sample retention
+  audits. CPU-only watcher `3954132` started on `a0605` and scheduled
+  successor `3956217` for 01:36 CEST August 6; it was retained because the
+  three-way comparison is incomplete.
+
 - 16:38 CEST: Formal recovery `3954143_1` received `NODE_FAIL` on `a0934`,
   after its predecessor failed on `a0532`; neither reached meaningful training.
   Verified the step-250 model/optimizer/FSDP/scheduler/RNG/trainer state,

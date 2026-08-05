@@ -1,10 +1,19 @@
 # Running Experiments
 
-Last updated: 2026-08-05 16:38 CEST.
+Last updated: 2026-08-05 19:39 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 16:38 CEST On August 5
+## Live Delta At 19:39 CEST On August 5
+
+- Formal exact resume `3955485_1` is priority-pending with the correct
+  A100-80GB/4-GPU request, `a0532,a0934` excluded, and a 05:31 CEST scheduler
+  estimate. The retained step-250 state was rechecked complete; no recovery
+  or dependency edit is warranted. Consumers `3950715_1/3950716_1` remain
+  held only on `afterok:3955485_1`.
+- `3954132` is running CPU-only/no-GRES on `a0605`; it scheduled successor
+  `3956217` (01:36 CEST August 6). Preserve that successor because formal is
+  still missing from the matched post-SFT readout.
 
 - Formal resume `3954143_1` ended `NODE_FAIL` on `a0934`, following the prior
   node failure on `a0532`; it did not reach meaningful model work. Exact
