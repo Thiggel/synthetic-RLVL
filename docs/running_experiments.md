@@ -1,8 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-08-05 08:15 CEST.
+Last updated: 2026-08-05 08:42 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 08:42 CEST On August 5
+
+- Control recovery `3952245_0` is training cleanly at step `739/780` and has
+  a complete step-500 checkpoint. Matched-NL `3950714_2` reached `780/780`
+  and is writing its final checkpoint: all model/FSDP files are present and
+  `optimizer.bin` is actively growing toward the expected 60.9 GB. The job
+  remains running during serialization and has not hit the repaired
+  60-minute timeout.
+- Formal exact resume `3952767_1` is dependency-free but remains
+  `AssocGrpGRES` pending with no scheduler estimate while control and NL use
+  four A100s each. No job edit is useful.
+- BranchProof NL full-retention row 27 completed `0:0` and its sample file
+  passes the exact 448-group, 16-per-group, 7,168-row, zero-empty retention
+  gate. Rows 28/29 are healthy at generation chunks `112/112` and `109/112`;
+  aggregate `3950179` remains dependency-held.
+- No new OOM, quota, device, fatal evaluator, or checkpoint-corruption
+  signature was found. No scheduler mutation was made.
 
 ## Live Delta At 08:15 CEST On August 5
 

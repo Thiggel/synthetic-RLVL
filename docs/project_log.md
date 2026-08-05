@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-05
 
+- 08:42 CEST: Control post-SFT recovery `3952245_0` is healthy at step
+  `739/780` with a complete step-500 restart; matched-NL `3950714_2`
+  completed `780/780` and is actively writing its terminal checkpoint, with
+  model/FSDP state complete and the optimizer file still growing. Formal
+  exact resume `3952767_1` is dependency-free but account-GRES pending.
+  BranchProof NL row 27 completed `0:0` and passes the exact 448-group,
+  16-generation, 7,168-row, zero-empty retention gate; rows 28/29 are at
+  chunks `112/112` and `109/112`. No new fatal, quota, OOM, device, or
+  corruption signature was found, and no scheduler mutation was made.
+
 - 08:15 CEST: Formal post-SFT `3950714_1` failed as raw job `3952209` at
   the step-250 FSDP save when nonzero ranks hit the 30-minute collective
   timeout while rank 0 serialized. Its step-250 state is complete; raised

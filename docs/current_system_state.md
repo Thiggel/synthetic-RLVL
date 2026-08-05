@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-05 08:15 CEST.
+Last updated: 2026-08-05 08:42 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-05 08:42 post-SFT and verifier rows near handoff
+
+- Control post-SFT recovery `3952245_0` is healthy at step `739/780`, with
+  finite loss/gradient diagnostics and a complete step-500 restart state.
+  Original matched-NL row `3950714_2` completed all `780/780` optimizer
+  steps and is actively serializing its terminal checkpoint. Its model and
+  30,462,624,740-byte FSDP state are complete; `optimizer.bin` is still
+  growing toward the known 60,925,255,300-byte size. This is active I/O, not
+  a hang, and it remains inside the repaired 60-minute timeout.
+- Corrected formal exact resume `3952767_1` remains eligible but blocked by
+  the shared account GPU cap (`AssocGrpGRES`) because control and NL consume
+  eight A100s. It has no dependency or malformed-resource blocker and Slurm
+  currently provides no start estimate.
+- BranchProof NL full-retention row 27 completed `0:0` at 08:18. Its retained
+  artifact has exactly 7,168 nonempty generations in 448 prompt groups with
+  16 generations per group. Row 28 is processing its final generation chunk
+  `112/112`; row 29 is at `109/112`, with no fatal signatures. Aggregate
+  `3950179` remains correctly dependency-held until both finish.
+- No new quota, OOM, CUDA, device, or checkpoint-corruption failure was
+  found. The most recent accepted quota snapshot remains Vault
+  `683G/1000G`, 182k files, and group Work about `498k/500k` files.
 
 ### 2026-08-05 08:15 formal post-SFT recovery; verifier rows advance
 
