@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-05 19:39 CEST.
+Last updated: 2026-08-06 01:40 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,22 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-06 01:40 formal resume remains the sole active science gate
+
+- Exact formal post-SFT resume `3955485_1` remains priority-pending on
+  `a100`, correctly constrained to four `a100_80` GPUs with `a0532,a0934`
+  excluded. The scheduler currently projects a 01:51 CEST start; no compatible
+  partition widening exists. Its retained step-250 checkpoint was rechecked
+  complete in place: seven model shards, the 60,925,255,300-byte optimizer,
+  FSDP state, scheduler, four RNG files, and trainer state.
+- Formal consumers `3950715_1/3950716_1` remain dependency-held only on
+  `afterok:3955485_1`. Corrected BranchProof aggregate `3950179` remains
+  accepted; no new completed scientific artifact requires metric analysis or a
+  report refresh.
+- CPU-only/no-GRES watcher `3956217` is running on `a0605`; it scheduled
+  successor `3957092` for 07:37 CEST. Preserve `3957092` because the matched
+  three-condition post-SFT comparison remains incomplete.
 
 ### 2026-08-05 19:39 formal resume remains the sole active gate
 

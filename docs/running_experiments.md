@@ -1,10 +1,24 @@
 # Running Experiments
 
-Last updated: 2026-08-05 19:39 CEST.
+Last updated: 2026-08-06 01:40 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Live Delta At 19:39 CEST On August 5
+## Live Delta At 01:40 CEST On August 6
+
+- Formal exact resume `3955485_1` remains priority-pending on the required
+  four-A100-80GB `a100` allocation, with `a0532,a0934` excluded and a current
+  01:51 CEST scheduler estimate. Its step-250 model/optimizer/FSDP/scheduler/
+  RNG/trainer state remains complete; no compatible partition widening or
+  recovery is warranted. Consumers `3950715_1/3950716_1` remain held only on
+  `afterok:3955485_1`.
+- `3956217` is the running CPU-only/no-GRES oversight job on `a0605` and has
+  scheduled CPU-only/no-GRES successor `3957092` for 07:37 CEST. Keep the
+  successor while the formal consumer chain is unfinished.
+- BranchProof verifier aggregate `3950179` remains accepted; this pass found
+  no new completed scientific artifact to analyze or report.
+
+## Prior Live Delta At 19:39 CEST On August 5
 
 - Formal exact resume `3955485_1` is priority-pending with the correct
   A100-80GB/4-GPU request, `a0532,a0934` excluded, and a 05:31 CEST scheduler

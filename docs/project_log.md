@@ -2,6 +2,18 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-06
+
+- 01:40 CEST: Formal exact resume `3955485_1` remains priority-pending on the
+  required four-A100-80GB `a100` allocation with `a0532,a0934` excluded; the
+  scheduler projects 01:51 CEST. Rechecked its complete step-250 model,
+  60,925,255,300-byte optimizer, FSDP, scheduler, RNG, and trainer state.
+  No compatible partition widening or recovery is warranted. Formal consumers
+  `3950715_1/3950716_1` remain correctly dependency-held. BranchProof
+  aggregate `3950179` remains accepted. CPU-only watcher `3956217` running on
+  `a0605` scheduled successor `3957092` for 07:37 CEST; it is retained because
+  the matched three-way post-SFT comparison is unfinished.
+
 ## 2026-08-05
 
 - 19:39 CEST: Rechecked the sole live science gate. Formal exact post-SFT
