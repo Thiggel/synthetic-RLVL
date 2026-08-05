@@ -1,5 +1,24 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-05 08:15 CEST)
+
+Formal post-SFT row `3950714_1` failed as raw job `3952209` at the step-250
+FSDP save after finite training and eval loss (`0.78465`). The wrapper's
+30-minute heartbeat was active, but Transformers retained its separate
+30-minute process-group timeout: rank 0 remained in host-side serialization
+while ranks 1--3 timed out in the next all-gather. The checkpoint is complete,
+including trainer state, scheduler, four RNG states, full model shards,
+optimizer, and FSDP state. The wrapper now sets both timeouts to 60 minutes.
+The first pending recovery `3952741_1` was canceled before start because
+Slurm had snapshotted its older payload; corrected exact resume `3952767_1`
+was submitted without discarding valid work. Only standard and multi-hop dependents
+`3950715_1/3950716_1` were rewired. Control recovery `3952245_0` remains
+healthy near step 632. Original NL row `3950714_2` completed its step-750 save
+with all model/FSDP/optimizer/scheduler/RNG/trainer state, including the exact
+60,925,255,300-byte optimizer, and resumed at step 751; no speculative NL
+recovery was submitted. Group Work is near its soft inode quota at `498k/500k`
+but has about 2.8T byte margin; no protected checkpoint was removed.
+
 ## Production update (2026-08-05 01:45 CEST)
 
 Terminal matched-NL `3875833_2` completed `0:0` at step 9537. Its terminal

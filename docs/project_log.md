@@ -4,6 +4,23 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-05
 
+- 08:15 CEST: Formal post-SFT `3950714_1` failed as raw job `3952209` at
+  the step-250 FSDP save when nonzero ranks hit the 30-minute collective
+  timeout while rank 0 serialized. Its step-250 state is complete; raised
+  both heartbeat and process-group timeouts to 60 minutes. Canceled unstarted
+  stale-payload recovery `3952741_1`, submitted corrected exact resume
+  `3952767_1`, and rewired only
+  `3950715_1/3950716_1`. Control recovery `3952245_0` remains healthy;
+  original NL row `3950714_2` passed its complete step-750 resumability gate
+  and resumed, so it was not duplicated. BranchProof formal full-retention rows
+  `3950178_12..14` all passed 448-by-16 retention and credited-validity
+  consistency checks; provisional OOD random/first-valid/max-line answer is
+  `0.7583/0.9729/0.9646`. Raw depth-50 successes and genuine invalid/wrong
+  failures were reviewed. NL row 27 completed generation/scoring while rows
+  28/29 remain healthy near completion; aggregate `3950179` is held. Preserved
+  CPU-only/no-GRES successor `3952735` for 13:35 CEST because both gates
+  remain incomplete.
+
 - 01:45 CEST: Terminal matched-NL `3875833_2` completed at exact step 9537
   and passed the 645-file TP4/DP2, optimizer/scheduler/RNG, exact-offset,
   exact-95:5, and RoPE gates. Direct NL `3944017_2` passed all production and

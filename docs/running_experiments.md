@@ -1,8 +1,33 @@
 # Running Experiments
 
-Last updated: 2026-08-05 01:45 CEST.
+Last updated: 2026-08-05 08:15 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 08:15 CEST On August 5
+
+- Formal post-SFT `3950714_1` failed as raw job `3952209` at the step-250
+  save: rank 0 remained in host-side FSDP serialization while ranks 1--3 hit
+  the 30-minute collective timeout. Its checkpoint-250 is complete and
+  resumable. The wrapper now sets both heartbeat and process-group timeouts
+  to 60 minutes. Canceled unstarted `3952741_1`, whose stored payload predated
+  the repair, and submitted corrected exact resume `3952767_1`. Only
+  `3950715_1/3950716_1` were repaired to depend on it. Control recovery
+  `3952245_0` is near step 632. Original NL row `3950714_2` completed its
+  step-750 save with all resumable state, including the exact
+  60,925,255,300-byte optimizer, and resumed training. No other row was
+  duplicated.
+- BranchProof full-retention formal rows `3950178_12..14` completed `0:0` and
+  pass exact 448-group, 16-generation, 7,168-row, nonempty, and credited-
+  validity consistency checks. Their provisional three-seed OOD
+  random/first-valid/max-line answer rates are
+  `0.7583/0.9729/0.9646`; representative depth-50 successes and genuine
+  wrong/invalid failures were reviewed. NL row 27 completed generation and
+  pass@k scoring and is building the retained artifact; rows 28/29 are near
+  chunks `108/105` of 112. Aggregate `3950179` remains dependency-held.
+- Vault is `683G/1000G`, 182k files; group Work is `498k/500k` files.
+  Successor `3952735` is dependency-free, CPU-only/no-GRES, and scheduled for
+  13:35 CEST; preserve it while post-SFT and verifier-selection remain open.
 
 ## Live Delta At 01:45 CEST On August 5
 

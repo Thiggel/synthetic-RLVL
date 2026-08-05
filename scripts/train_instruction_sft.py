@@ -240,6 +240,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--full-parameter", action="store_true")
     parser.add_argument("--fsdp", default=None)
     parser.add_argument("--fsdp-transformer-layer-cls-to-wrap", default=None)
+    parser.add_argument("--ddp-timeout", type=int, default=1800)
     parser.add_argument(
         "--resume-from-checkpoint",
         default=None,
@@ -388,6 +389,7 @@ def main() -> None:
         gradient_checkpointing=bool(args.gradient_checkpointing),
         gradient_checkpointing_kwargs={"use_reentrant": False} if bool(args.gradient_checkpointing) else None,
         fsdp=args.fsdp,
+        ddp_timeout=int(args.ddp_timeout),
         fsdp_config=(
             {
                 "transformer_layer_cls_to_wrap": str(args.fsdp_transformer_layer_cls_to_wrap),

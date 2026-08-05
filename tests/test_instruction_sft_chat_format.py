@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
 from datasets import Dataset
@@ -13,6 +14,13 @@ WRAPPER = (
     / "slurm"
     / "jobs"
     / "nanotron_qwen25_instruction_sft_2026-06-24.slurm"
+)
+POST_SFT_WRAPPER = (
+    Path(__file__).parents[1]
+    / "scripts"
+    / "slurm"
+    / "jobs"
+    / "qwen25_dolmino_threeway_post_sft_2026-08-04.slurm"
 )
 SPEC = importlib.util.spec_from_file_location("train_instruction_sft", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
@@ -137,3 +145,14 @@ def test_auto_resume_is_noop_for_clean_output_root(tmp_path: Path):
 
 def test_nanotron_instruction_wrapper_enables_auto_resume():
     assert "--resume-from-checkpoint auto" in WRAPPER.read_text(encoding="utf-8")
+
+
+def test_ddp_timeout_is_configurable(monkeypatch):
+    monkeypatch.setattr(sys, "argv", [str(SCRIPT), "--ddp-timeout", "3600"])
+    assert MODULE.parse_args().ddp_timeout == 3600
+
+
+def test_threeway_post_sft_raises_both_distributed_timeouts():
+    wrapper = POST_SFT_WRAPPER.read_text(encoding="utf-8")
+    assert 'TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC:-3600' in wrapper
+    assert '--ddp-timeout "${DDP_TIMEOUT_SECONDS:-3600}"' in wrapper

@@ -2,6 +2,26 @@
 
 Date: 2026-07-10
 
+## Operational update (2026-08-05 08:15 CEST)
+
+All three formal full-retention rows `3950178_12..14` completed `0:0`. Each
+contains exactly 448 prompt groups, 16 generations per group, 7,168 sampled
+rows, all 14 depths with 512 samples each, and zero empty generations. Across
+all three files, no credited citation-free-valid row carries a citation-free
+validity error, invalid citation-free proof line, or line-valid fraction below
+one. Representative depth-50 review covers clean correct-valid chains,
+complete wrong chains, and answer-correct citation-free-invalid chains with
+explicit underivable-line diagnostics; those failures are not credited.
+
+The provisional formal three-seed OOD random-first answer/joint is
+`0.7583 +/- 0.1123` / `0.6854 +/- 0.1180`; first-valid answer/joint is
+`0.9729 +/- 0.0106` / `0.9667 +/- 0.0106`; maximum-line-validity answer/joint
+is `0.9646 +/- 0.0193` / `0.9604 +/- 0.0179`, with
+`0.9833 +/- 0.0059` valid coverage. NL row 27 has completed generation and
+pass@k scoring and is collecting/writing the retained rows; rows 28/29 are
+near sampled chunks `108/105` of 112. These formal-only diagnostics remain
+provisional; aggregate `3950179` must wait for all three matched NL files.
+
 ## Operational update (2026-08-05 01:45 CEST)
 
 Targeted full-retention formal row `3950178_12` completed `0:0` in

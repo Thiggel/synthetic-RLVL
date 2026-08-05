@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-05 01:45 CEST.
+Last updated: 2026-08-05 08:15 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,40 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-05 08:15 formal post-SFT recovery; verifier rows advance
+
+- Formal post-SFT row `3950714_1` failed as raw job `3952209` at its
+  step-250 FSDP save. Training and eval were finite
+  (`eval_loss=0.78465`), but the save held rank 0 long enough for ranks 1--3
+  to hit the already-raised 30-minute collective timeout. Unlike the earlier
+  control failure, its checkpoint-250 is complete and contains trainer,
+  scheduler, RNG, model, optimizer, and FSDP state. The wrapper now sets both
+  heartbeat and process-group timeouts to 60 minutes. The first pending
+  recovery `3952741_1` was canceled before start because its Slurm snapshot
+  predated that repair. Corrected exact resume `3952767_1` was submitted from
+  the checkpoint; only standard/multi-hop
+  dependents `3950715_1/3950716_1` were rewired. Control recovery
+  `3952245_0` is training near step 632. Original NL row `3950714_2` passed
+  its step-750 save with the complete 60,925,255,300-byte optimizer plus
+  model/FSDP/scheduler/RNG/trainer state and resumed training; no duplicate NL
+  recovery was submitted.
+- BranchProof full-retention formal rows `3950178_12..14` are complete. Each
+  has exactly 448 prompt groups, 16 generations per group, 7,168 sampled
+  rows, zero empty generations, and zero credited citation-free-valid rows
+  with an error, invalid citation-free line, or line-valid fraction below
+  one. Their provisional three-seed OOD random/first-valid/max-line answer
+  rates are `0.7583 +/- 0.1123`, `0.9729 +/- 0.0106`, and
+  `0.9646 +/- 0.0193`; first-valid/max-line joint are
+  `0.9667 +/- 0.0106` and `0.9604 +/- 0.0179`. Raw depth-50 review confirms
+  clean correct-valid chains and real wrong or answer-correct invalid traces.
+  NL row 27 finished generation and pass@k scoring and is collecting/writing
+  the retained rows; rows 28/29 are around chunks 108/105 of 112. Aggregate
+  `3950179` remains correctly held.
+- User Vault is `683G/1000G` with 182k files; group Work is
+  `498k/500k` files and about 7.16T/10T. Successor `3952735` is verified
+  dependency-free, CPU-only/no-GRES on `a100mig`, and scheduled for 13:35
+  CEST. The plan remains incomplete, so it is preserved.
 
 ### 2026-08-05 01:45 terminal direct gate complete; post-SFT recovery
 

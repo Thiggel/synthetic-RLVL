@@ -78,8 +78,9 @@ export WANDB_RUN_GROUP="${WANDB_GROUP}"
 export WANDB_NAME="${RUN_NAME}"
 export HF_HUB_ENABLE_HF_TRANSFER=0
 # Full-parameter FSDP checkpoint serialization can hold the Python GIL for
-# longer than PyTorch's eight-minute NCCL watchdog default on this filesystem.
-export TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC="${TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC:-1800}"
+# more than 30 minutes on this filesystem. Keep the heartbeat and process-
+# group collective timeout aligned above the longest observed save.
+export TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC="${TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC:-3600}"
 
 "${VENV_PATH}/bin/python" -m torch.distributed.run --standalone --nproc_per_node=4 scripts/train_instruction_sft.py \
   --model "${HF_CHECKPOINT}" \
@@ -111,6 +112,7 @@ export TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC="${TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC:-180
   --full-parameter \
   --fsdp "full_shard auto_wrap" \
   --fsdp-transformer-layer-cls-to-wrap Qwen2DecoderLayer \
+  --ddp-timeout "${DDP_TIMEOUT_SECONDS:-3600}" \
   --gradient-checkpointing \
   --resume-from-checkpoint auto
 
