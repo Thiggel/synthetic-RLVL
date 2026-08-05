@@ -4,6 +4,25 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-05
 
+- 13:59 CEST: Accepted corrected BranchProof verifier-selection aggregate
+  `3950179` after all six full-retention files passed exact 7,168-row,
+  448-group, 16-generation, unique-constant, validity-consistency, and raw-
+  sample gates. Answer-blind first-valid logic OOD answer/joint is
+  `0.9729/0.9667` versus pass@1 `0.7535/0.6840`; matched NL first-valid is
+  `0.3375/0.3292`. Added audited tables and narrative to both reports.
+- 13:59 CEST: Control post-SFT recovery `3952245_0` completed all 780 steps
+  but timed out in final distributed save. Independently validated and
+  hardlink-promoted its complete terminal HF shards; `3950715_0` passed the
+  RoPE consumer preflight and started on A100-80GB `a0537`. Replaced formal
+  immediate node failure `3952767_1` with exact resume `3954143_1` and
+  rewired only formal downstream rows.
+- 13:59 CEST: Matched-NL post-SFT evals `3950715_2/3950716_2` passed all
+  production and representative raw-generation gates. Ten-task macro is
+  `0.5862`; tagged multi-hop F1 is `0.2440/0.3683/0.2483`. Instruction SFT
+  removes next-document markers and lowers BBH/MMLU-Pro invalid extraction
+  to `5.0%/3.8%`. Preserved successor `3954132` because control/formal remain
+  incomplete.
+
 - 08:42 CEST: Control post-SFT recovery `3952245_0` is healthy at step
   `739/780` with a complete step-500 restart; matched-NL `3950714_2`
   completed `780/780` and is actively writing its terminal checkpoint, with

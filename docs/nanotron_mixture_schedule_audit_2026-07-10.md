@@ -1,5 +1,32 @@
 # Nanotron Mixture-Schedule Audit (2026-07-10)
 
+## Production update (2026-08-05 13:59 CEST)
+
+Control post-SFT recovery `3952245_0` completed all 780 optimizer steps and
+then timed out during the terminal distributed checkpoint save. The terminal
+seven-shard HF payload itself is complete: its index covers 339 weights, every
+safetensor header opens, and legacy, modern, and loaded Qwen2.5 RoPE are all
+`1000000`. These files were hardlink-promoted to `final` without deleting the
+incomplete restart checkpoint. Standard consumer `3950715_0` passed the same
+preflight and is running on A100-80GB `a0537`; multi-hop `3950716_0` is
+priority-pending.
+
+Formal recovery `3952767_1` ended in an immediate `NODE_FAIL` on `a0532`.
+Replacement `3954143_1` resumes the complete step-250 state with both
+heartbeat and process-group timeouts set to 60 minutes. Only formal standard
+and multi-hop rows `3950715_1/3950716_1` depend on it.
+
+Matched-NL standard and multi-hop `3950715_2/3950716_2` completed `0:0` and
+passed the model/RoPE, retained-sample, schema-v4 MATH, and 32,768-token
+multi-hop audits. Its standard ten-task macro is `0.5862`; tagged
+2Wiki/Hotpot/MuSiQue exact is `0.185/0.275/0.160` and F1 is
+`0.2440/0.3683/0.2483`. Representative correct and incorrect generations
+show genuine task successes/errors and intact stock/tagged extraction.
+Instruction SFT reduces BBH/MMLU-Pro invalid extraction from direct
+`9.1%/20.5%` to `5.0%/3.8%` and removes the direct
+`22.9%/3.7%` next-document marker incidence. Do not interpret modality
+transfer until matched control and formal bundles pass the same gates.
+
 ## Production update (2026-08-05 08:15 CEST)
 
 Formal post-SFT row `3950714_1` failed as raw job `3952209` at the step-250

@@ -1,0 +1,812 @@
+{
+  "expected_k": 16,
+  "files": [
+    {
+      "metrics_by_band": {
+        "all": {
+          "first_valid_correct": 0.9888392857142857,
+          "first_valid_joint": 0.9866071428571429,
+          "first_valid_valid": 0.9910714285714286,
+          "max_line_correct": 0.9910714285714286,
+          "max_line_joint": 0.9866071428571429,
+          "max_line_valid": 0.9910714285714286,
+          "oracle_correct": 0.9977678571428571,
+          "oracle_joint": 0.9910714285714286,
+          "random_correct": 0.9151785714285714,
+          "random_joint": 0.8816964285714286,
+          "random_valid": 0.8839285714285714,
+          "valid_coverage": 0.9910714285714286
+        },
+        "depth50": {
+          "first_valid_correct": 0.96875,
+          "first_valid_joint": 0.9375,
+          "first_valid_valid": 0.9375,
+          "max_line_correct": 0.96875,
+          "max_line_joint": 0.9375,
+          "max_line_valid": 0.9375,
+          "oracle_correct": 1.0,
+          "oracle_joint": 0.9375,
+          "random_correct": 0.53125,
+          "random_joint": 0.28125,
+          "random_valid": 0.28125,
+          "valid_coverage": 0.9375
+        },
+        "id": {
+          "first_valid_correct": 1.0,
+          "first_valid_joint": 1.0,
+          "first_valid_valid": 1.0,
+          "max_line_correct": 1.0,
+          "max_line_joint": 1.0,
+          "max_line_valid": 1.0,
+          "oracle_correct": 1.0,
+          "oracle_joint": 1.0,
+          "random_correct": 1.0,
+          "random_joint": 1.0,
+          "random_valid": 1.0,
+          "valid_coverage": 1.0
+        },
+        "ood": {
+          "first_valid_correct": 0.96875,
+          "first_valid_joint": 0.9625,
+          "first_valid_valid": 0.975,
+          "max_line_correct": 0.975,
+          "max_line_joint": 0.9625,
+          "max_line_valid": 0.975,
+          "oracle_correct": 0.99375,
+          "oracle_joint": 0.975,
+          "random_correct": 0.7625,
+          "random_joint": 0.66875,
+          "random_valid": 0.675,
+          "valid_coverage": 0.975
+        }
+      },
+      "modality": "logic",
+      "path": "/home/vault/c107fa/c107fa12/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/sft_branchproof_unique_v2_logic_train1to25_10k_seed3407_verifier_fullsamples_samples.jsonl",
+      "prompt_groups": 448,
+      "sampled_rows": 7168,
+      "seed": 3407
+    },
+    {
+      "metrics_by_band": {
+        "all": {
+          "first_valid_correct": 0.9955357142857143,
+          "first_valid_joint": 0.9933035714285714,
+          "first_valid_valid": 0.9955357142857143,
+          "max_line_correct": 0.9933035714285714,
+          "max_line_joint": 0.9933035714285714,
+          "max_line_valid": 0.9955357142857143,
+          "oracle_correct": 1.0,
+          "oracle_joint": 0.9955357142857143,
+          "random_correct": 0.9620535714285714,
+          "random_joint": 0.9419642857142857,
+          "random_valid": 0.9419642857142857,
+          "valid_coverage": 0.9955357142857143
+        },
+        "depth50": {
+          "first_valid_correct": 0.9375,
+          "first_valid_joint": 0.90625,
+          "first_valid_valid": 0.9375,
+          "max_line_correct": 0.90625,
+          "max_line_joint": 0.90625,
+          "max_line_valid": 0.9375,
+          "oracle_correct": 1.0,
+          "oracle_joint": 0.9375,
+          "random_correct": 0.875,
+          "random_joint": 0.75,
+          "random_valid": 0.75,
+          "valid_coverage": 0.9375
+        },
+        "id": {
+          "first_valid_correct": 1.0,
+          "first_valid_joint": 1.0,
+          "first_valid_valid": 1.0,
+          "max_line_correct": 1.0,
+          "max_line_joint": 1.0,
+          "max_line_valid": 1.0,
+          "oracle_correct": 1.0,
+          "oracle_joint": 1.0,
+          "random_correct": 1.0,
+          "random_joint": 1.0,
+          "random_valid": 1.0,
+          "valid_coverage": 1.0
+        },
+        "ood": {
+          "first_valid_correct": 0.9875,
+          "first_valid_joint": 0.98125,
+          "first_valid_valid": 0.9875,
+          "max_line_correct": 0.98125,
+          "max_line_joint": 0.98125,
+          "max_line_valid": 0.9875,
+          "oracle_correct": 1.0,
+          "oracle_joint": 0.9875,
+          "random_correct": 0.89375,
+          "random_joint": 0.8375,
+          "random_valid": 0.8375,
+          "valid_coverage": 0.9875
+        }
+      },
+      "modality": "logic",
+      "path": "/home/vault/c107fa/c107fa12/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/sft_branchproof_unique_v2_logic_train1to25_10k_seed3408_verifier_fullsamples_samples.jsonl",
+      "prompt_groups": 448,
+      "sampled_rows": 7168,
+      "seed": 3408
+    },
+    {
+      "metrics_by_band": {
+        "all": {
+          "first_valid_correct": 0.9866071428571429,
+          "first_valid_joint": 0.984375,
+          "first_valid_valid": 0.9955357142857143,
+          "max_line_correct": 0.9776785714285714,
+          "max_line_joint": 0.9776785714285714,
+          "max_line_valid": 0.9888392857142857,
+          "oracle_correct": 1.0,
+          "oracle_joint": 0.9955357142857143,
+          "random_correct": 0.8638392857142857,
+          "random_joint": 0.8392857142857143,
+          "random_valid": 0.84375,
+          "valid_coverage": 0.9955357142857143
+        },
+        "depth50": {
+          "first_valid_correct": 0.96875,
+          "first_valid_joint": 0.96875,
+          "first_valid_valid": 1.0,
+          "max_line_correct": 0.96875,
+          "max_line_joint": 0.96875,
+          "max_line_valid": 1.0,
+          "oracle_correct": 1.0,
+          "oracle_joint": 1.0,
+          "random_correct": 0.40625,
+          "random_joint": 0.3125,
+          "random_valid": 0.3125,
+          "valid_coverage": 1.0
+        },
+        "id": {
+          "first_valid_correct": 1.0,
+          "first_valid_joint": 1.0,
+          "first_valid_valid": 1.0,
+          "max_line_correct": 1.0,
+          "max_line_joint": 1.0,
+          "max_line_valid": 1.0,
+          "oracle_correct": 1.0,
+          "oracle_joint": 1.0,
+          "random_correct": 1.0,
+          "random_joint": 1.0,
+          "random_valid": 1.0,
+          "valid_coverage": 1.0
+        },
+        "ood": {
+          "first_valid_correct": 0.9625,
+          "first_valid_joint": 0.95625,
+          "first_valid_valid": 0.9875,
+          "max_line_correct": 0.9375,
+          "max_line_joint": 0.9375,
+          "max_line_valid": 0.96875,
+          "oracle_correct": 1.0,
+          "oracle_joint": 0.9875,
+          "random_correct": 0.61875,
+          "random_joint": 0.55,
+          "random_valid": 0.5625,
+          "valid_coverage": 0.9875
+        }
+      },
+      "modality": "logic",
+      "path": "/home/vault/c107fa/c107fa12/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/sft_branchproof_unique_v2_logic_train1to25_10k_seed3409_verifier_fullsamples_samples.jsonl",
+      "prompt_groups": 448,
+      "sampled_rows": 7168,
+      "seed": 3409
+    },
+    {
+      "metrics_by_band": {
+        "all": {
+          "first_valid_correct": 0.7678571428571429,
+          "first_valid_joint": 0.765625,
+          "first_valid_valid": 0.765625,
+          "max_line_correct": 0.7678571428571429,
+          "max_line_joint": 0.765625,
+          "max_line_valid": 0.765625,
+          "oracle_correct": 0.7723214285714286,
+          "oracle_joint": 0.765625,
+          "random_correct": 0.7209821428571429,
+          "random_joint": 0.7165178571428571,
+          "random_valid": 0.7165178571428571,
+          "valid_coverage": 0.765625
+        },
+        "depth50": {
+          "first_valid_correct": 0.15625,
+          "first_valid_joint": 0.15625,
+          "first_valid_valid": 0.15625,
+          "max_line_correct": 0.15625,
+          "max_line_joint": 0.15625,
+          "max_line_valid": 0.15625,
+          "oracle_correct": 0.15625,
+          "oracle_joint": 0.15625,
+          "random_correct": 0.03125,
+          "random_joint": 0.03125,
+          "random_valid": 0.03125,
+          "valid_coverage": 0.15625
+        },
+        "id": {
+          "first_valid_correct": 1.0,
+          "first_valid_joint": 1.0,
+          "first_valid_valid": 1.0,
+          "max_line_correct": 1.0,
+          "max_line_joint": 1.0,
+          "max_line_valid": 1.0,
+          "oracle_correct": 1.0,
+          "oracle_joint": 1.0,
+          "random_correct": 1.0,
+          "random_joint": 1.0,
+          "random_valid": 1.0,
+          "valid_coverage": 1.0
+        },
+        "ood": {
+          "first_valid_correct": 0.35,
+          "first_valid_joint": 0.34375,
+          "first_valid_valid": 0.34375,
+          "max_line_correct": 0.35,
+          "max_line_joint": 0.34375,
+          "max_line_valid": 0.34375,
+          "oracle_correct": 0.3625,
+          "oracle_joint": 0.34375,
+          "random_correct": 0.21875,
+          "random_joint": 0.20625,
+          "random_valid": 0.20625,
+          "valid_coverage": 0.34375
+        }
+      },
+      "modality": "nl_exact",
+      "path": "/home/vault/c107fa/c107fa12/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/sft_branchproof_unique_v2_nl_exact_train1to25_10k_seed3407_verifier_fullsamples_samples.jsonl",
+      "prompt_groups": 448,
+      "sampled_rows": 7168,
+      "seed": 3407
+    },
+    {
+      "metrics_by_band": {
+        "all": {
+          "first_valid_correct": 0.7566964285714286,
+          "first_valid_joint": 0.7566964285714286,
+          "first_valid_valid": 0.8482142857142857,
+          "max_line_correct": 0.7566964285714286,
+          "max_line_joint": 0.7566964285714286,
+          "max_line_valid": 0.8482142857142857,
+          "oracle_correct": 0.7700892857142857,
+          "oracle_joint": 0.7700892857142857,
+          "random_correct": 0.6763392857142857,
+          "random_joint": 0.6763392857142857,
+          "random_valid": 0.6919642857142857,
+          "valid_coverage": 0.8482142857142857
+        },
+        "depth50": {
+          "first_valid_correct": 0.25,
+          "first_valid_joint": 0.25,
+          "first_valid_valid": 0.65625,
+          "max_line_correct": 0.25,
+          "max_line_joint": 0.25,
+          "max_line_valid": 0.65625,
+          "oracle_correct": 0.34375,
+          "oracle_joint": 0.34375,
+          "random_correct": 0.03125,
+          "random_joint": 0.03125,
+          "random_valid": 0.03125,
+          "valid_coverage": 0.65625
+        },
+        "id": {
+          "first_valid_correct": 1.0,
+          "first_valid_joint": 1.0,
+          "first_valid_valid": 1.0,
+          "max_line_correct": 1.0,
+          "max_line_joint": 1.0,
+          "max_line_valid": 1.0,
+          "oracle_correct": 1.0,
+          "oracle_joint": 1.0,
+          "random_correct": 1.0,
+          "random_joint": 1.0,
+          "random_valid": 1.0,
+          "valid_coverage": 1.0
+        },
+        "ood": {
+          "first_valid_correct": 0.31875,
+          "first_valid_joint": 0.31875,
+          "first_valid_valid": 0.575,
+          "max_line_correct": 0.31875,
+          "max_line_joint": 0.31875,
+          "max_line_valid": 0.575,
+          "oracle_correct": 0.35625,
+          "oracle_joint": 0.35625,
+          "random_correct": 0.09375,
+          "random_joint": 0.09375,
+          "random_valid": 0.1375,
+          "valid_coverage": 0.575
+        }
+      },
+      "modality": "nl_exact",
+      "path": "/home/vault/c107fa/c107fa12/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/sft_branchproof_unique_v2_nl_exact_train1to25_10k_seed3408_verifier_fullsamples_samples.jsonl",
+      "prompt_groups": 448,
+      "sampled_rows": 7168,
+      "seed": 3408
+    },
+    {
+      "metrics_by_band": {
+        "all": {
+          "first_valid_correct": 0.765625,
+          "first_valid_joint": 0.7589285714285714,
+          "first_valid_valid": 0.859375,
+          "max_line_correct": 0.765625,
+          "max_line_joint": 0.7589285714285714,
+          "max_line_valid": 0.859375,
+          "oracle_correct": 0.796875,
+          "oracle_joint": 0.7879464285714286,
+          "random_correct": 0.7254464285714286,
+          "random_joint": 0.7165178571428571,
+          "random_valid": 0.7276785714285714,
+          "valid_coverage": 0.859375
+        },
+        "depth50": {
+          "first_valid_correct": 0.125,
+          "first_valid_joint": 0.125,
+          "first_valid_valid": 0.4375,
+          "max_line_correct": 0.125,
+          "max_line_joint": 0.125,
+          "max_line_valid": 0.4375,
+          "oracle_correct": 0.1875,
+          "oracle_joint": 0.15625,
+          "random_correct": 0.03125,
+          "random_joint": 0.03125,
+          "random_valid": 0.125,
+          "valid_coverage": 0.4375
+        },
+        "id": {
+          "first_valid_correct": 1.0,
+          "first_valid_joint": 1.0,
+          "first_valid_valid": 1.0,
+          "max_line_correct": 1.0,
+          "max_line_joint": 1.0,
+          "max_line_valid": 1.0,
+          "oracle_correct": 1.0,
+          "oracle_joint": 1.0,
+          "random_correct": 1.0,
+          "random_joint": 1.0,
+          "random_valid": 1.0,
+          "valid_coverage": 1.0
+        },
+        "ood": {
+          "first_valid_correct": 0.34375,
+          "first_valid_joint": 0.325,
+          "first_valid_valid": 0.60625,
+          "max_line_correct": 0.34375,
+          "max_line_joint": 0.325,
+          "max_line_valid": 0.60625,
+          "oracle_correct": 0.43125,
+          "oracle_joint": 0.40625,
+          "random_correct": 0.23125,
+          "random_joint": 0.20625,
+          "random_valid": 0.2375,
+          "valid_coverage": 0.60625
+        }
+      },
+      "modality": "nl_exact",
+      "path": "/home/vault/c107fa/c107fa12/synthetic-RLVL/passk_eval/branchproof_unique_v2_20260710/sft_branchproof_unique_v2_nl_exact_train1to25_10k_seed3409_verifier_fullsamples_samples.jsonl",
+      "prompt_groups": 448,
+      "sampled_rows": 7168,
+      "seed": 3409
+    }
+  ],
+  "schema_version": 1,
+  "selection_uses_gold_answer": false,
+  "summary": {
+    "logic": {
+      "all": {
+        "first_valid_correct": {
+          "mean": 0.9903273809523809,
+          "std": 0.003793913328566054
+        },
+        "first_valid_joint": {
+          "mean": 0.9880952380952381,
+          "std": 0.0037939133285660393
+        },
+        "first_valid_valid": {
+          "mean": 0.9940476190476191,
+          "std": 0.002104484467817098
+        },
+        "max_line_correct": {
+          "mean": 0.9873511904761904,
+          "std": 0.006900013761529553
+        },
+        "max_line_joint": {
+          "mean": 0.9858630952380952,
+          "std": 0.0064005396332162436
+        },
+        "max_line_valid": {
+          "mean": 0.9918154761904763,
+          "std": 0.0027839712699210973
+        },
+        "n_seeds": 3,
+        "oracle_correct": {
+          "mean": 0.9992559523809524,
+          "std": 0.0010522422339085753
+        },
+        "oracle_joint": {
+          "mean": 0.9940476190476191,
+          "std": 0.002104484467817098
+        },
+        "random_correct": {
+          "mean": 0.9136904761904762,
+          "std": 0.040109618964117716
+        },
+        "random_joint": {
+          "mean": 0.8876488095238096,
+          "std": 0.042129129960988276
+        },
+        "random_valid": {
+          "mean": 0.8898809523809524,
+          "std": 0.040316122571857335
+        },
+        "valid_coverage": {
+          "mean": 0.9940476190476191,
+          "std": 0.002104484467817098
+        }
+      },
+      "depth50": {
+        "first_valid_correct": {
+          "mean": 0.9583333333333334,
+          "std": 0.01473139127471974
+        },
+        "first_valid_joint": {
+          "mean": 0.9375,
+          "std": 0.02551551815399144
+        },
+        "first_valid_valid": {
+          "mean": 0.9583333333333334,
+          "std": 0.02946278254943948
+        },
+        "max_line_correct": {
+          "mean": 0.9479166666666666,
+          "std": 0.02946278254943948
+        },
+        "max_line_joint": {
+          "mean": 0.9375,
+          "std": 0.02551551815399144
+        },
+        "max_line_valid": {
+          "mean": 0.9583333333333334,
+          "std": 0.02946278254943948
+        },
+        "n_seeds": 3,
+        "oracle_correct": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "oracle_joint": {
+          "mean": 0.9583333333333334,
+          "std": 0.02946278254943948
+        },
+        "random_correct": {
+          "mean": 0.6041666666666666,
+          "std": 0.19819059990042134
+        },
+        "random_joint": {
+          "mean": 0.4479166666666667,
+          "std": 0.21398581858514726
+        },
+        "random_valid": {
+          "mean": 0.4479166666666667,
+          "std": 0.21398581858514726
+        },
+        "valid_coverage": {
+          "mean": 0.9583333333333334,
+          "std": 0.02946278254943948
+        }
+      },
+      "id": {
+        "first_valid_correct": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "first_valid_joint": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "first_valid_valid": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "max_line_correct": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "max_line_joint": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "max_line_valid": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "n_seeds": 3,
+        "oracle_correct": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "oracle_joint": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "random_correct": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "random_joint": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "random_valid": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "valid_coverage": {
+          "mean": 1.0,
+          "std": 0.0
+        }
+      },
+      "ood": {
+        "first_valid_correct": {
+          "mean": 0.9729166666666668,
+          "std": 0.010622957319984982
+        },
+        "first_valid_joint": {
+          "mean": 0.9666666666666667,
+          "std": 0.010622957319984931
+        },
+        "first_valid_valid": {
+          "mean": 0.9833333333333334,
+          "std": 0.005892556509887927
+        },
+        "max_line_correct": {
+          "mean": 0.9645833333333332,
+          "std": 0.0193200385322827
+        },
+        "max_line_joint": {
+          "mean": 0.9604166666666667,
+          "std": 0.017921510973005456
+        },
+        "max_line_valid": {
+          "mean": 0.9770833333333333,
+          "std": 0.0077951195557790665
+        },
+        "n_seeds": 3,
+        "oracle_correct": {
+          "mean": 0.9979166666666667,
+          "std": 0.0029462782549439376
+        },
+        "oracle_joint": {
+          "mean": 0.9833333333333334,
+          "std": 0.005892556509887927
+        },
+        "random_correct": {
+          "mean": 0.7583333333333333,
+          "std": 0.11230693309952963
+        },
+        "random_joint": {
+          "mean": 0.6854166666666667,
+          "std": 0.11796156389076722
+        },
+        "random_valid": {
+          "mean": 0.6916666666666668,
+          "std": 0.11288514320120056
+        },
+        "valid_coverage": {
+          "mean": 0.9833333333333334,
+          "std": 0.005892556509887927
+        }
+      }
+    },
+    "nl_exact": {
+      "all": {
+        "first_valid_correct": {
+          "mean": 0.7633928571428572,
+          "std": 0.004821979686315372
+        },
+        "first_valid_joint": {
+          "mean": 0.7604166666666666,
+          "std": 0.003793913328566054
+        },
+        "first_valid_valid": {
+          "mean": 0.8244047619047619,
+          "std": 0.04181256344710451
+        },
+        "max_line_correct": {
+          "mean": 0.7633928571428572,
+          "std": 0.004821979686315372
+        },
+        "max_line_joint": {
+          "mean": 0.7604166666666666,
+          "std": 0.003793913328566054
+        },
+        "max_line_valid": {
+          "mean": 0.8244047619047619,
+          "std": 0.04181256344710451
+        },
+        "n_seeds": 3,
+        "oracle_correct": {
+          "mean": 0.7797619047619048,
+          "std": 0.012135049427306612
+        },
+        "oracle_joint": {
+          "mean": 0.7745535714285715,
+          "std": 0.009643959372630762
+        },
+        "random_correct": {
+          "mean": 0.7075892857142857,
+          "std": 0.022172119681177615
+        },
+        "random_joint": {
+          "mean": 0.703125,
+          "std": 0.018940360210353935
+        },
+        "random_valid": {
+          "mean": 0.7120535714285715,
+          "std": 0.014918108374823966
+        },
+        "valid_coverage": {
+          "mean": 0.8244047619047619,
+          "std": 0.04181256344710451
+        }
+      },
+      "depth50": {
+        "first_valid_correct": {
+          "mean": 0.17708333333333334,
+          "std": 0.05311478659992484
+        },
+        "first_valid_joint": {
+          "mean": 0.17708333333333334,
+          "std": 0.05311478659992484
+        },
+        "first_valid_valid": {
+          "mean": 0.4166666666666667,
+          "std": 0.20465502817071354
+        },
+        "max_line_correct": {
+          "mean": 0.17708333333333334,
+          "std": 0.05311478659992484
+        },
+        "max_line_joint": {
+          "mean": 0.17708333333333334,
+          "std": 0.05311478659992484
+        },
+        "max_line_valid": {
+          "mean": 0.4166666666666667,
+          "std": 0.20465502817071354
+        },
+        "n_seeds": 3,
+        "oracle_correct": {
+          "mean": 0.22916666666666666,
+          "std": 0.0820209153542897
+        },
+        "oracle_joint": {
+          "mean": 0.21875,
+          "std": 0.08838834764831845
+        },
+        "random_correct": {
+          "mean": 0.03125,
+          "std": 0.0
+        },
+        "random_joint": {
+          "mean": 0.03125,
+          "std": 0.0
+        },
+        "random_valid": {
+          "mean": 0.0625,
+          "std": 0.04419417382415922
+        },
+        "valid_coverage": {
+          "mean": 0.4166666666666667,
+          "std": 0.20465502817071354
+        }
+      },
+      "id": {
+        "first_valid_correct": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "first_valid_joint": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "first_valid_valid": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "max_line_correct": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "max_line_joint": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "max_line_valid": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "n_seeds": 3,
+        "oracle_correct": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "oracle_joint": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "random_correct": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "random_joint": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "random_valid": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "valid_coverage": {
+          "mean": 1.0,
+          "std": 0.0
+        }
+      },
+      "ood": {
+        "first_valid_correct": {
+          "mean": 0.33749999999999997,
+          "std": 0.013501543121683045
+        },
+        "first_valid_joint": {
+          "mean": 0.32916666666666666,
+          "std": 0.010622957319984975
+        },
+        "first_valid_valid": {
+          "mean": 0.5083333333333333,
+          "std": 0.11707517765189263
+        },
+        "max_line_correct": {
+          "mean": 0.33749999999999997,
+          "std": 0.013501543121683045
+        },
+        "max_line_joint": {
+          "mean": 0.32916666666666666,
+          "std": 0.010622957319984975
+        },
+        "max_line_valid": {
+          "mean": 0.5083333333333333,
+          "std": 0.11707517765189263
+        },
+        "n_seeds": 3,
+        "oracle_correct": {
+          "mean": 0.3833333333333333,
+          "std": 0.03397813839645853
+        },
+        "oracle_joint": {
+          "mean": 0.36874999999999997,
+          "std": 0.027003086243366083
+        },
+        "random_correct": {
+          "mean": 0.18125,
+          "std": 0.06208193510729725
+        },
+        "random_joint": {
+          "mean": 0.16874999999999998,
+          "std": 0.05303300858899106
+        },
+        "random_valid": {
+          "mean": 0.19375,
+          "std": 0.04177070344950712
+        },
+        "valid_coverage": {
+          "mean": 0.5083333333333333,
+          "std": 0.11707517765189263
+        }
+      }
+    }
+  },
+  "train_max": 25
+}

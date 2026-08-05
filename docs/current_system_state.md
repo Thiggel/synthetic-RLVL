@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-05 08:42 CEST.
+Last updated: 2026-08-05 13:59 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,44 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-05 13:59 corrected verifier result and post-SFT recovery
+
+- All six BranchProof full-retention files and aggregate `3950179` completed
+  `0:0`. Fail-closed re-audits accept exactly 7,168 nonempty samples per
+  condition/seed, 16 generations for each of 448 prompt groups, all 14
+  depths, fresh constants, and zero credited validity contradictions. Logic
+  OOD answer/joint pass@1 is `0.7535 +/- 0.1095` / `0.6840 +/- 0.1181` and
+  pass@16 is `0.9979 +/- 0.0030` / `0.9833 +/- 0.0059`; matched NL is
+  `0.1744 +/- 0.0503` / `0.1712 +/- 0.0480` and
+  `0.3833 +/- 0.0340` / `0.3688 +/- 0.0270`. Answer-blind first-valid
+  selection reaches logic answer/joint `0.9729 +/- 0.0106` /
+  `0.9667 +/- 0.0106`, versus NL `0.3375 +/- 0.0135` /
+  `0.3292 +/- 0.0106`. Raw shallow/train/OOD/depth-50 successes and failures
+  were reviewed. NL often copies premises until truncation at depths 30--50;
+  missing closing answers are 27.1--32.0% for NL versus 1.1--2.8% for logic.
+- Control post-SFT recovery `3952245_0` completed all 780 optimizer steps but
+  timed out during the final distributed checkpoint save. Its terminal seven-
+  shard HF model is complete and independently passes index, safetensor, and
+  Qwen2.5 RoPE-1,000,000 checks. Those terminal files were promoted into
+  `final` by hardlink without deleting checkpoint state. Standard eval
+  `3950715_0` passed its consumer preflight and is running on A100-80GB node
+  `a0537`; multi-hop `3950716_0` is priority-pending.
+- Formal recovery `3952767_1` ended in an immediate node failure on `a0532`.
+  Exact replacement `3954143_1`, submitted from the complete step-250 state
+  with both process-group and heartbeat timeouts at 60 minutes, is priority-
+  pending. Only formal dependents `3950715_1/3950716_1` were rewired.
+- Matched-NL standard and multi-hop evals `3950715_2/3950716_2` completed and
+  passed production audits, including schema-v4 MATH and the 32,768-token
+  multi-hop protocol. Its ten-task macro is `0.5862`; tagged 2Wiki/Hotpot/
+  MuSiQue F1 is `0.2440/0.3683/0.2483`. Instruction tuning removes the direct
+  next-document markers and lowers BBH/MMLU-Pro invalid extraction from
+  `9.1%/20.5%` to `5.0%/3.8%`. Representative correct and incorrect MATH,
+  BBH, MMLU-Pro, and stock/tagged multi-hop samples are genuine and clean;
+  interpretation remains withheld until control and formal finish.
+- User Vault is about `594G/1000G`, 182k files. CPU-only/no-GRES successor
+  `3954132` remains scheduled because the three-way post-SFT comparison is
+  incomplete.
 
 ### 2026-08-05 08:42 post-SFT and verifier rows near handoff
 

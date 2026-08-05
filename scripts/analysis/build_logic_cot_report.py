@@ -44,6 +44,18 @@ SELECTED_BRANCHPROOF_AUDIT_ROOT = (
     / "analysis"
     / "branchproof_selected_followups_audits_20260723"
 )
+VERIFIER_BRANCHPROOF_PASSK_ROOT = (
+    Path(os.environ.get("HPCVAULT", WORK_ROOT))
+    / "synthetic-RLVL"
+    / "passk_eval"
+    / "branchproof_unique_v2_20260710"
+)
+VERIFIER_BRANCHPROOF_AUDIT_ROOT = (
+    Path(os.environ.get("HPCVAULT", WORK_ROOT))
+    / "synthetic-RLVL"
+    / "analysis"
+    / "branchproof_verifier_fullsamples_audits_20260805"
+)
 TOKENIZER_NAME = "allenai/Olmo-3-1025-7B"
 
 MAIN_RE = re.compile(r"sft_hfsa_depth_scaling_(logic|nl_exact)_train1to(\d+)_10k_seed(\d+)_passk\.json$")
@@ -3794,6 +3806,171 @@ def build_corrected_branchproof_report_block() -> tuple[str, str, bool]:
     train25 = summary[summary["train_max"] == 25].set_index("template")
     logic = train25.loc["logic"]
     natural = train25.loc["nl_exact"]
+    verifier_block = ""
+    verifier_path = CORRECTED_BRANCHPROOF_ROOT / "verifier_selection_train25.json"
+    verifier_audits = [
+        VERIFIER_BRANCHPROOF_AUDIT_ROOT / f"{modality}_seed{seed}.json"
+        for modality in ("logic", "nl_exact")
+        for seed in (3407, 3408, 3409)
+    ]
+    verifier_passk = [
+        VERIFIER_BRANCHPROOF_PASSK_ROOT
+        / f"sft_branchproof_unique_v2_{modality}_train1to25_10k_seed{seed}_verifier_fullsamples_passk.json"
+        for modality in ("logic", "nl_exact")
+        for seed in (3407, 3408, 3409)
+    ]
+    verifier_ready = (
+        verifier_path.is_file()
+        and all(path.is_file() for path in verifier_audits)
+        and all(path.is_file() for path in verifier_passk)
+    )
+    if verifier_ready:
+        verifier = json.loads(verifier_path.read_text(encoding="utf-8"))
+        verifier_ready = (
+            verifier.get("selection_uses_gold_answer") is False
+            and verifier.get("expected_k") == 16
+            and len(verifier.get("files", [])) == 6
+            and all(row.get("prompt_groups") == 448 for row in verifier.get("files", []))
+            and all(
+                json.loads(path.read_text(encoding="utf-8")).get("accepted") is True
+                for path in verifier_audits
+            )
+        )
+    if verifier_ready:
+        sampling_rows: list[dict[str, object]] = []
+        selection_rows: list[dict[str, object]] = []
+        for modality, joint_metric in (
+            ("logic", "citation_free_joint_pass"),
+            ("nl_exact", "nl_logic_joint_pass"),
+        ):
+            seed_metrics = []
+            for seed in (3407, 3408, 3409):
+                path = VERIFIER_BRANCHPROOF_PASSK_ROOT / (
+                    f"sft_branchproof_unique_v2_{modality}_train1to25_10k_seed{seed}_"
+                    "verifier_fullsamples_passk.json"
+                )
+                seed_metrics.append(json.loads(path.read_text(encoding="utf-8"))["metrics"])
+            for band, metric_band in (("OOD", "band_ood"), ("Depth 50", "step_50")):
+                for k in (1, 2, 4, 8, 16):
+                    correct = [
+                        metrics[f"synthetic_sampled/{metric_band}/correct_pass@{k}"]
+                        for metrics in seed_metrics
+                    ]
+                    joint = [
+                        metrics[f"synthetic_sampled/{metric_band}/{joint_metric}@{k}"]
+                        for metrics in seed_metrics
+                    ]
+                    sampling_rows.append(
+                        {
+                            "trace": modality,
+                            "band": band,
+                            "k": k,
+                            "answer_mean": mean(correct),
+                            "answer_std": pstdev(correct),
+                            "joint_mean": mean(joint),
+                            "joint_std": pstdev(joint),
+                        }
+                    )
+            selected = verifier["summary"][modality]["ood"]
+            for strategy, prefix in (
+                ("First valid", "first_valid"),
+                ("Max line-valid", "max_line"),
+                ("Oracle ceiling", "oracle"),
+            ):
+                selection_rows.append(
+                    {
+                        "trace": modality,
+                        "strategy": strategy,
+                        "answer_mean": selected[f"{prefix}_correct"]["mean"],
+                        "answer_std": selected[f"{prefix}_correct"]["std"],
+                        "joint_mean": selected[f"{prefix}_joint"]["mean"],
+                        "joint_std": selected[f"{prefix}_joint"]["std"],
+                    }
+                )
+        write_csv(TABLE_DIR / "corrected_branchproof_verifier_sampling_curve.csv", sampling_rows)
+        write_csv(TABLE_DIR / "corrected_branchproof_verifier_selection.csv", selection_rows)
+
+        sampling_table = [
+            r"\begin{tabular}{llrrr}",
+            r"\toprule",
+            r"Trace & $k$ & OOD answer & OOD joint & Depth-50 joint \\",
+            r"\midrule",
+        ]
+        for modality in ("logic", "nl_exact"):
+            trace = "Logic" if modality == "logic" else "Natural"
+            for k in (1, 4, 8, 16):
+                ood = next(
+                    row for row in sampling_rows
+                    if row["trace"] == modality and row["band"] == "OOD" and row["k"] == k
+                )
+                depth50 = next(
+                    row for row in sampling_rows
+                    if row["trace"] == modality and row["band"] == "Depth 50" and row["k"] == k
+                )
+                sampling_table.append(
+                    f"{trace} & {k} & {100 * float(ood['answer_mean']):.1f} $\\pm$ "
+                    f"{100 * float(ood['answer_std']):.1f} & "
+                    f"{100 * float(ood['joint_mean']):.1f} $\\pm$ "
+                    f"{100 * float(ood['joint_std']):.1f} & "
+                    f"{100 * float(depth50['joint_mean']):.1f} $\\pm$ "
+                    f"{100 * float(depth50['joint_std']):.1f} \\\\"
+                )
+        sampling_table.extend([r"\bottomrule", r"\end{tabular}"])
+
+        selection_table = [
+            r"\begin{tabular}{llrr}",
+            r"\toprule",
+            r"Trace & Selection from 16 & OOD answer & OOD joint \\",
+            r"\midrule",
+        ]
+        for row in selection_rows:
+            trace = "Logic" if row["trace"] == "logic" else "Natural"
+            selection_table.append(
+                f"{trace} & {row['strategy']} & "
+                f"{100 * float(row['answer_mean']):.1f} $\\pm$ "
+                f"{100 * float(row['answer_std']):.1f} & "
+                f"{100 * float(row['joint_mean']):.1f} $\\pm$ "
+                f"{100 * float(row['joint_std']):.1f} \\\\"
+            )
+        selection_table.extend([r"\bottomrule", r"\end{tabular}"])
+        verifier_block = rf"""
+\subsection{{Verifier-guided selection from retained generations}}
+All six train-1-to-25 full-retention rows contain 448 prompt groups and 16 generations per
+prompt. The fail-closed audit accepted all 43,008 generations, including fresh-constant and
+credited-validity checks. The sampling curve remains strongly separated before selection.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{chr(10).join(sampling_table)}
+\caption{{Corrected BranchProof sampling efficiency over the fully retained generations.
+Joint is modality-appropriate citation-free correct-and-valid performance.}}
+\end{{table}}
+
+The first-valid and maximum-line-valid selectors use only verifier diagnostics and never the
+gold answer. The oracle row is reported only as a coverage ceiling.
+
+\begin{{table}}[H]
+\centering
+\scriptsize
+{chr(10).join(selection_table)}
+\caption{{OOD selection from 16 retained candidates. First-valid and max-line-valid are
+non-oracle; the oracle ceiling uses the gold answer and is not a deployable selector.}}
+\end{{table}}
+
+For logic, first-valid selection reaches
+{100 * verifier['summary']['logic']['ood']['first_valid_correct']['mean']:.1f}$\pm${100 * verifier['summary']['logic']['ood']['first_valid_correct']['std']:.1f}
+percent OOD answer accuracy and
+{100 * verifier['summary']['logic']['ood']['first_valid_joint']['mean']:.1f}$\pm${100 * verifier['summary']['logic']['ood']['first_valid_joint']['std']:.1f}
+percent joint accuracy. The corresponding natural-language values are
+{100 * verifier['summary']['nl_exact']['ood']['first_valid_correct']['mean']:.1f}$\pm${100 * verifier['summary']['nl_exact']['ood']['first_valid_correct']['std']:.1f}
+and {100 * verifier['summary']['nl_exact']['ood']['first_valid_joint']['mean']:.1f}$\pm${100 * verifier['summary']['nl_exact']['ood']['first_valid_joint']['std']:.1f} percent.
+Raw depth-50 review shows complete correct-valid chains and genuine answer-correct-invalid
+formal traces. Natural-language failures predominantly copy premises until truncation: across
+seeds, 27--32 percent omit a closing answer, versus 1.1--2.8 percent for logic. Thus the
+selection result reflects both proof checkability and a large representation-dependent
+long-context generation failure; it is not evidence that a verifier alone closes the gap.
+"""
     executive = (
         "The corrected 30-run BranchProof grid passed all row and cross-grid gates. At "
         "train-1-to-25, logic leads natural-language supervision on OOD greedy correctness "
@@ -3848,6 +4025,8 @@ Representative failures explain why correctness and validity remain separate: lo
 generations can reach the right answer through an invalid branch, while many natural-language
 failures copy premises until the shared cap and never emit an answer. Selected length, shortcut,
 hybrid, conditioned-dual, and architecture controls that passed the same gates are reported next.
+
+{verifier_block}
 """
     return block, executive, True
 

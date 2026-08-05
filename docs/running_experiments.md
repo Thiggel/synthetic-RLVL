@@ -1,8 +1,34 @@
 # Running Experiments
 
-Last updated: 2026-08-05 08:42 CEST.
+Last updated: 2026-08-05 13:59 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:59 CEST On August 5
+
+- BranchProof full-retention `3950178` and aggregate `3950179` are complete.
+  All six 7,168-row artifacts pass the independent fail-closed audit and raw
+  review. Answer-blind first-valid selection raises logic OOD answer/joint
+  from pass@1 `0.7535/0.6840` to `0.9729/0.9667`; matched NL reaches
+  `0.3375/0.3292`. These are three-seed population mean results; oracle
+  pass@16 remains a labeled ceiling.
+- Control recovery `3952245_0` finished all 780 optimizer steps but timed out
+  only while saving the final distributed checkpoint. The complete terminal
+  HF shards were independently validated and hardlink-promoted to `final`.
+  Standard eval `3950715_0` passed the RoPE/model consumer preflight and is
+  running on A100-80GB `a0537`; `3950716_0` is priority-pending.
+- Formal recovery `3952767_1` hit an immediate `NODE_FAIL` on `a0532`.
+  Replacement `3954143_1` is priority-pending from the complete step-250
+  checkpoint with 60-minute distributed timeouts; formal eval rows depend on
+  it. No unaffected condition was resubmitted.
+- Matched-NL standard/multi-hop `3950715_2/3950716_2` completed and passed all
+  production gates. The ten-task macro is `0.5862`; tagged multi-hop F1 is
+  `0.2440/0.3683/0.2483`. Raw correct/incorrect samples are genuine.
+  BBH/MMLU-Pro invalid extraction falls to `5.0%/3.8%` and next-document
+  markers fall to zero after instruction SFT. Await the matched three-way
+  result before interpretation.
+- Successor `3954132` remains CPU-only/no-GRES and BeginTime-held. The plan is
+  incomplete, so it was not canceled.
 
 ## Live Delta At 08:42 CEST On August 5
 

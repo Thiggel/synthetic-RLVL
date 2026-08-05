@@ -2,6 +2,34 @@
 
 Date: 2026-07-10
 
+## Operational update (2026-08-05 13:59 CEST)
+
+Full-retention `3950178` and aggregate `3950179` completed `0:0`. Independent
+fail-closed audits accept all six condition/seed artifacts: each has 448
+prompt groups, 16 nonempty generations per group, 7,168 rows, all 14 depths,
+fresh constants, and zero credited citation-free-valid rows with a validity
+error, invalid line, or line-valid fraction below one. Audits live under
+`$HPCVAULT/synthetic-RLVL/analysis/branchproof_verifier_fullsamples_audits_20260805/`.
+
+Three-seed OOD logic answer/joint pass@1 is
+`0.7535 +/- 0.1095` / `0.6840 +/- 0.1181`; pass@16 is
+`0.9979 +/- 0.0030` / `0.9833 +/- 0.0059`. Matched NL is
+`0.1744 +/- 0.0503` / `0.1712 +/- 0.0480` at pass@1 and
+`0.3833 +/- 0.0340` / `0.3688 +/- 0.0270` at pass@16. The answer-blind
+first-valid selector reaches logic `0.9729 +/- 0.0106` answer and
+`0.9667 +/- 0.0106` joint, versus NL `0.3375 +/- 0.0135` and
+`0.3292 +/- 0.0106`. Maximum-line-validity gives logic
+`0.9646 +/- 0.0193` / `0.9604 +/- 0.0179`. Oracle is retained only as a
+labeled ceiling.
+
+Raw review spans every seed and shallow, train-range, OOD, and depth-50
+successes and failures. Logic includes clean complete depth-50 proofs and
+genuine wrong or answer-correct-invalid chains. NL often copies premises
+until truncation at depths 30--50; missing closing answers occur in
+`27.1--32.0%` of NL rows versus `1.1--2.8%` of logic rows. This is part of
+the observed modality effect, not an extraction repair. Accepted aggregate:
+`analysis/branchproof_unique_v2_20260711/verifier_selection_train25.json`.
+
 ## Operational update (2026-08-05 08:15 CEST)
 
 All three formal full-retention rows `3950178_12..14` completed `0:0`. Each
