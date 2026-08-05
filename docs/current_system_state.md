@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-05 13:59 CEST.
+Last updated: 2026-08-05 14:09 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -63,6 +63,11 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - User Vault is about `594G/1000G`, 182k files. CPU-only/no-GRES successor
   `3954132` remains scheduled because the three-way post-SFT comparison is
   incomplete.
+- Main/report commits `f72f210` and `f9d3472` contain the audited tables,
+  narrative, and informal-report mirror. The main repo also has this handoff
+  update; it is two commits ahead and the report repo one commit ahead of
+  `origin/main`. Authenticated GitHub SSH on port 22 timed out during bounded
+  push attempts.
 
 ### 2026-08-05 08:42 post-SFT and verifier rows near handoff
 

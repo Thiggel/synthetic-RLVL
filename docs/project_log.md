@@ -22,6 +22,10 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   removes next-document markers and lowers BBH/MMLU-Pro invalid extraction
   to `5.0%/3.8%`. Preserved successor `3954132` because control/formal remain
   incomplete.
+- 14:09 CEST: Committed the accepted verifier/report handoff as `f72f210`
+  and the mirrored official/informal report as `f9d3472`. Both bounded pushes
+  failed with `ssh: connect to host github.com port 22: Connection timed out`;
+  the main repository has an additional handoff commit recording the blocker.
 
 - 08:42 CEST: Control post-SFT recovery `3952245_0` is healthy at step
   `739/780` with a complete step-500 restart; matched-NL `3950714_2`

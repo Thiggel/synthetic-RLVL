@@ -1,6 +1,6 @@
 # Running Experiments
 
-Last updated: 2026-08-05 13:59 CEST.
+Last updated: 2026-08-05 14:09 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
@@ -29,6 +29,9 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   result before interpretation.
 - Successor `3954132` remains CPU-only/no-GRES and BeginTime-held. The plan is
   incomplete, so it was not canceled.
+- Audited report commits are local as `f72f210` (main repo) and `f9d3472`
+  (report repo), with one additional main-repo handoff commit. Both pushes
+  failed because SSH connections to GitHub port 22 timed out.
 
 ## Live Delta At 08:42 CEST On August 5
 
