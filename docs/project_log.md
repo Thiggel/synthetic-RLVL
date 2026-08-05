@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-05
 
+- 16:38 CEST: Formal recovery `3954143_1` received `NODE_FAIL` on `a0934`,
+  after its predecessor failed on `a0532`; neither reached meaningful training.
+  Verified the step-250 model/optimizer/FSDP/scheduler/RNG/trainer state,
+  submitted exact resume `3955485_1` excluding both nodes with the existing
+  60-minute distributed timeout repair, and rewired only formal eval rows
+  `3950715_1/3950716_1`. Control and matched-NL post-SFT standard/multi-hop
+  bundles are complete and audit-clean.
+
 - 13:59 CEST: Accepted corrected BranchProof verifier-selection aggregate
   `3950179` after all six full-retention files passed exact 7,168-row,
   448-group, 16-generation, unique-constant, validity-consistency, and raw-

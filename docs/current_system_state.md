@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-05 14:09 CEST.
+Last updated: 2026-08-05 16:38 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,22 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-05 16:38 formal post-SFT node-failure recovery resubmitted
+
+- Formal recovery `3954143_1` received `NODE_FAIL` after 24 minutes on
+  `a0934`; the predecessor `3952767_1` had likewise failed immediately on
+  `a0532`. Neither failure reached meaningful training or indicates a model,
+  data, or checkpoint defect.
+- Verified the retained formal step-250 checkpoint has all seven model shards,
+  60,925,255,300-byte optimizer, FSDP state, scheduler, RNG, and trainer
+  state. Submitted exact resume `3955485_1` with `a0532,a0934` excluded and
+  retained 60-minute DDP and NCCL heartbeat timeouts. Rewired only formal
+  standard and multi-hop evaluations `3950715_1/3950716_1` to
+  `afterok:3955485_1`.
+- Control and matched-NL post-SFT standard and multi-hop bundles have now all
+  completed and passed their production audits. Formal remains the sole
+  missing condition; do not interpret the partial two-way readout.
 
 ### 2026-08-05 13:59 corrected verifier result and post-SFT recovery
 

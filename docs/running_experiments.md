@@ -1,8 +1,20 @@
 # Running Experiments
 
-Last updated: 2026-08-05 14:09 CEST.
+Last updated: 2026-08-05 16:38 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 16:38 CEST On August 5
+
+- Formal resume `3954143_1` ended `NODE_FAIL` on `a0934`, following the prior
+  node failure on `a0532`; it did not reach meaningful model work. Exact
+  replacement `3955485_1` resumes the validated step-250 state with both
+  nodes excluded and the repaired 60-minute distributed timeouts.
+- Formal standard/multi-hop rows `3950715_1/3950716_1` were rewired from the
+  failed dependency to `afterok:3955485_1`. They are ordinary dependency
+  pending, not permanently blocked.
+- Control and matched-NL standard and multi-hop bundles are complete and pass
+  artifact audits. Formal is the only active recovery.
 
 ## Live Delta At 13:59 CEST On August 5
 
