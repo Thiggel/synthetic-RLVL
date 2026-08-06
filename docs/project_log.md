@@ -4,6 +4,20 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-06
 
+- 16:45 Three-way Dolmino 5B post-SFT readout aggregated (formal rows
+  `3950715_1/3950716_1` completed today; all six bundles `accepted: true`).
+  Ten-task macro control/logic/nl = 0.5903/0.5886/0.5862 (flat). Tagged
+  multi-hop macro 0.2352/0.3124/0.2868 with significant pairwise bootstrap
+  deltas, but decomposition + raw-generation inspection show the entire gap
+  is `<answer>`-tag compliance: conditional-on-extraction and
+  fallback-rescored deltas are all null (logic-nl +0.011 [-0.006,+0.027]).
+  Standard-protocol multi-hop is null. Preregistered formal-positive gate NOT
+  passed at 5B; per Week-3 stop rule, no percentage grid, no 10B
+  continuation on this recipe; diagnosis compute goes to the P0
+  document-preserving objective pilot. Full readout:
+  `analysis/dolmino_threeway_post_sft_readout_20260806.md`.
+
+
 - 13:45 CEST: Formal recovery `3957664_1` completed cleanly after its
   idempotent final-checkpoint guard found the completed post-SFT model. Formal
   standard/multi-hop evaluation `3950715_1/3950716_1` then started on A100-80

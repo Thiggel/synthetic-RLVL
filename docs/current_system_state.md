@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-06 13:45 CEST.
+Last updated: 2026-08-06 16:45 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,28 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-06 16:45 three-way post-SFT readout aggregated; gate verdict null-for-reasoning
+
+- Formal standard and multi-hop consumers `3950715_1/3950716_1` completed
+  `0:0` (14:24 and 13:53 CEST); all six three-way bundles report
+  `accepted: true` in their production/multihop audits.
+- First full aggregation (`analysis/dolmino_threeway_post_sft_readout_20260806.md`):
+  ten-task macro control/logic/nl `0.5903/0.5886/0.5862`; standard multi-hop
+  null; tagged multi-hop macro `0.2352/0.3124/0.2868` with significant
+  bootstrap deltas that decompose entirely into `<answer>`-tag compliance
+  (tag rates ~0.50 vs ~0.84). Fallback-rescored and conditional-on-extraction
+  deltas are null. The preregistered formal-positive transfer gate is NOT
+  passed at 5B.
+- Consequences per the execution-plan stop rules: no percentage grid, no 10B
+  continuation on this recipe. Diagnosis compute goes to the P0
+  document-preserving/compact-objective pilot. The honest positive transfer
+  statements: 5% synthetic replacement is benchmark-neutral, and both
+  synthetic conditions strongly improve instructed answer-format compliance
+  (logic slightly above NL).
+- Remaining before quoting in the paper: in-repo reimplementation of the
+  fallback rescorer and the full cross-task raw-generation review (next
+  oversight pass `3958665`, 19:43 CEST, can absorb this).
 
 ### 2026-08-06 13:45 formal consumer evaluations started
 
