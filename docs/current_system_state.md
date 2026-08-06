@@ -26,6 +26,25 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
+### 2026-08-07 02:00 CEST oversight handoff: frozen 5B result; P0 remains open
+
+- Rechecked the terminal queue and accepted artifacts.  There are no active
+  in-scope GPU jobs: corrected BranchProof verifier aggregate `3950179`, the
+  six Dolmino post-SFT bundles, and corrected p15 evidence remain accepted.
+  All six BranchProof retained-sample audits and all discovered post-SFT
+  production/multi-hop audits report `accepted: true` with no errors.
+- The three-way 5B conclusion is unchanged: the 1,800-record raw audit and
+  fallback readout support a null reasoning result, so the percentage grid and
+  10B continuation remain prohibited.  The document-preserving/compact
+  objective P0 pilot is the next science gate.
+- Verified the staged real-benchmark pass@k wrapper with `py_compile`, CLI
+  help, `bash -n`, and `sbatch --test-only`; it remains uncommitted and lacks
+  dedicated tests, so it is not submitted or used as paper evidence.
+- Current CPU-only/no-GRES watcher `3960506` is running on `a0605`.  Its
+  recorded successor `3961367` is dependency-free, CPU-only (`cpu=4`,
+  `mem=30000M`, no GRES), and BeginTime-pending for 07:44 CEST.  Preserve it:
+  the P0 pilot is not implemented or verified.
+
 ### 2026-08-06 20:00 three-way raw-generation audit completes; keep null verdict
 
 - A fresh cross-condition review covered every tagged LongBench task

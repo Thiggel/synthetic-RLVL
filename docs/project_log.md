@@ -2,6 +2,20 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-07
+
+- 02:00 CEST: Rechecked the in-scope queue and all accepted BranchProof
+  verifier (`3950179`) and three-way Dolmino post-SFT artifacts. No project
+  GPU job needs recovery; the frozen 5B conclusion remains null for reasoning,
+  so no percentage grid or 10B continuation was submitted. Static checks pass
+  for the staged (uncommitted) real-benchmark pass@k wrapper and Slurm script,
+  but it has no dedicated tests and was not used as evidence or launched.
+  Watcher `3960506` is CPU-only running; preserved dependency-free CPU-only
+  successor `3961367` for 07:44 CEST because the P0
+  document-preserving/compact-objective pilot remains unimplemented.
+  The handoff commit is local; the bounded push made no remote progress and
+  `main` remains ahead of `origin/main`.
+
 ## 2026-08-06
 
 - 20:02 CEST: Committed the raw-generation handoff as `6b59183`. A bounded
