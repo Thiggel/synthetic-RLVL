@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-06 07:43 CEST.
+Last updated: 2026-08-06 13:45 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,23 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-06 13:45 formal consumer evaluations started
+
+- The exact formal post-SFT recovery `3957664_1` started on an A100-80GB
+  node and exited cleanly in 17 seconds because the expected final checkpoint
+  was already present. Its log confirms that it used
+  `qwen25_7b_dolmino_logic_5b_dolci_100k_lr5em6/final`; this is an
+  idempotent completion, not a skipped training recovery.
+- Formal standard and multi-hop consumer rows `3950715_1` and `3950716_1`
+  started at 13:22 CEST on A100-80GB `a0932`. Both passed the local model and
+  RoPE-1,000,000 preflight, loaded the seven safetensor shards, and began
+  vLLM evaluation with the intended 8,192 and 32,768 token windows,
+  respectively. They are the sole remaining scientific gate; await production
+  artifact and raw-generation audits before accepting any three-way claim.
+- CPU-only watcher `3957659` scheduled successor `3958665` for 19:43 CEST.
+  Keep it: corrected BranchProof and p15 gates are accepted, but the matched
+  Dolmino post-SFT comparison is still incomplete.
 
 ### 2026-08-06 07:43 formal save-timeout recovery submitted
 

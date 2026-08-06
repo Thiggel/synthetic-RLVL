@@ -4,6 +4,13 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-06
 
+- 13:45 CEST: Formal recovery `3957664_1` completed cleanly after its
+  idempotent final-checkpoint guard found the completed post-SFT model. Formal
+  standard/multi-hop evaluation `3950715_1/3950716_1` then started on A100-80
+  `a0932`, passing seven-shard and RoPE-1,000,000 preflights with the intended
+  8,192/32,768-token windows. No results are accepted pending production
+  artifact and raw-generation audits. Kept CPU-only successor `3958665`.
+
 - 07:43 CEST: Formal post-SFT `3955485_1` completed optimizer work but failed
   only during terminal FSDP serialization: the final all-gather exceeded the
   repaired 60-minute limit. The newer step-750 directory lacks trainer,

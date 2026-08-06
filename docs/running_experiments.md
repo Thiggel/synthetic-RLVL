@@ -1,10 +1,24 @@
 # Running Experiments
 
-Last updated: 2026-08-06 07:43 CEST.
+Last updated: 2026-08-06 13:45 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
 ## Live Delta At 01:40 CEST On August 6
+
+## Live Delta At 13:45 CEST On August 6
+
+- Formal recovery `3957664_1` completed `0:0` after detecting the already
+  complete final checkpoint, so it did not replay training. The final is the
+  expected logic post-SFT path and its consumer preflight resolves
+  `rope_theta=1000000`.
+- Formal standard and multi-hop evaluations `3950715_1/3950716_1` are running
+  on A100-80GB `a0932`. Logs show successful seven-shard loading and the
+  intended native-chat vLLM protocols (`8192` standard; `32768` multi-hop).
+  No artifact or raw-generation result is yet available for acceptance.
+- Watcher `3957659` is CPU-only/no-GRES and successor `3958665` is
+  BeginTime-held for 19:43 CEST. Preserve the chain until the formal bundles
+  pass production and raw-generation audits.
 
 ## Live Delta At 07:43 CEST On August 6
 
