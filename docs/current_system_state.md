@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-06 16:45 CEST.
+Last updated: 2026-08-06 20:00 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,31 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-06 20:00 three-way raw-generation audit completes; keep null verdict
+
+- A fresh cross-condition review covered every tagged LongBench task
+  (HotpotQA, 2WikiMultiHopQA, MuSiQue) for control, formal, and matched-NL:
+  1,800 accepted greedy records total, including tagged and bare-answer,
+  correct and incorrect examples. No prompt leakage, task-specific reversal,
+  or hidden reasoning advantage was found.
+- Control emits `<answer>` in only `0.495/0.495/0.530` of those task records,
+  versus formal `0.850/0.840/0.825` and NL `0.810/0.765/0.850`. Recomputing
+  first-line fallback F1 from the raw records gives control/formal/NL
+  `0.351/0.354/0.345` macro (task values are preserved in the accepted sample
+  files), supporting the existing null-for-reasoning conclusion rather than
+  the strict-tag aggregate.
+- The staged in-repo pass@k evaluator includes the same fallback rule and
+  compiles cleanly; it is not yet a committed, independently tested artifact,
+  so the fallback numbers remain audit support rather than a new paper table.
+  No GPU evaluation was launched: the frozen 5B gate is already null and the
+  execution-plan stop rule directs compute to the compact/document-preserving
+  pilot instead.
+- BranchProof aggregate `3950179` and corrected Nanotron p15 aggregate remain
+  accepted; no active project GPU job needs recovery. CPU-only watcher
+  `3958665` is running and its successor `3960506` is BeginTime-held for
+  01:44 CEST; retain the chain while the P0 clean-objective pilot remains
+  unimplemented.
 
 ### 2026-08-06 16:45 three-way post-SFT readout aggregated; gate verdict null-for-reasoning
 

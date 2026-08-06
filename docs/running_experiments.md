@@ -1,8 +1,20 @@
 # Running Experiments
 
-Last updated: 2026-08-06 13:45 CEST.
+Last updated: 2026-08-06 20:00 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 20:00 CEST On August 6
+
+- There are no running BranchProof, Nanotron, or three-way consumer GPU jobs.
+  Corrected BranchProof aggregate `3950179`, corrected p15 consumers, and all
+  six three-way post-SFT bundles are accepted. No recovery, scheduler edit,
+  or new percentage-grid submission is warranted.
+- CPU-only/no-GRES oversight `3958665` is running on `a0605`; successor
+  `3960506` is correctly BeginTime-held on `a100mig` for 01:44 CEST August 7.
+  It needs to remain because the null three-way result has released the P0
+  document-preserving/compact-objective implementation gate, not completed
+  the research plan.
 
 ## Live Delta At 01:40 CEST On August 6
 

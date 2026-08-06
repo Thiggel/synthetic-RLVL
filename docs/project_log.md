@@ -4,6 +4,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-06
 
+- 20:00 CEST: Completed the deferred raw-generation breadth audit for the
+  accepted three-way post-SFT result: reviewed all three tagged LongBench
+  tasks across control/formal/NL (1,800 accepted records), with both tagged
+  and bare, correct and incorrect outputs. Control tag rates are
+  `0.495/0.495/0.530` versus formal `0.850/0.840/0.825` and NL
+  `0.810/0.765/0.850`; raw first-line fallback F1 macro is
+  control/formal/NL `0.351/0.354/0.345`. No prompt leakage or cross-task
+  counterexample was found, so the frozen conclusion remains response-format
+  transfer, not reasoning transfer. The staged fallback/pass@k evaluator
+  pycompiled, but is not yet committed/tested; no GPU readout was submitted.
+  Kept CPU-only successor `3960506` because the P0 compact/document-
+  preserving objective pilot is still unimplemented.
+
 - 16:45 Three-way Dolmino 5B post-SFT readout aggregated (formal rows
   `3950715_1/3950716_1` completed today; all six bundles `accepted: true`).
   Ten-task macro control/logic/nl = 0.5903/0.5886/0.5862 (flat). Tagged
