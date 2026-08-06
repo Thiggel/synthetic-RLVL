@@ -1,10 +1,26 @@
 # Running Experiments
 
-Last updated: 2026-08-06 01:40 CEST.
+Last updated: 2026-08-06 07:43 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
 ## Live Delta At 01:40 CEST On August 6
+
+## Live Delta At 07:43 CEST On August 6
+
+- Formal recovery `3955485_1` failed after completing training while the
+  terminal FSDP save blocked an all-gather for 60 minutes; no loss, optimizer,
+  quota, or model defect appeared. Its incomplete step-750 directory is not a
+  valid restart source. Complete step-500 state is retained.
+- Exact replacement `3957664_1` is priority-pending on `a100` with four
+  A100-80GB GPUs, `a0532,a0934` excluded, and 120-minute DDP/NCCL timeouts.
+  The SFT resolver now chooses the newest complete Trainer state, so it will
+  resume step 500 rather than the incomplete step 750. Formal standard and
+  multi-hop rows `3950715_1/3950716_1` now depend only on
+  `afterok:3957664_1`.
+- CPU-only watcher `3957092` is running; successor `3957659` is BeginTime
+  held. The BranchProof accepted aggregate `3950179` is unchanged. No report
+  refresh is justified before the matched formal branch is complete.
 
 - Formal exact resume `3955485_1` remains priority-pending on the required
   four-A100-80GB `a100` allocation, with `a0532,a0934` excluded and a current

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-06 01:40 CEST.
+Last updated: 2026-08-06 07:43 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,23 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-06 07:43 formal save-timeout recovery submitted
+
+- Formal post-SFT `3955485_1` finished all optimizer work but failed only
+  during the terminal FSDP all-gather/save after its 60-minute collective
+  limit. Its newer step-750 directory is deliberately not resumable: it lacks
+  `trainer_state.json`, `scheduler.pt`, and rank-0 RNG state. The complete
+  step-500 state (seven model shards, 60,925,255,300-byte optimizer, FSDP,
+  scheduler, and four RNG files) is retained.
+- Submitted exact recovery `3957664_1` from that state, preserving four
+  `a100_80` GPUs and excluding `a0532,a0934`, with 120-minute DDP/NCCL save
+  timeouts. The instruction-SFT auto-resolver now skips incomplete checkpoint
+  directories; regression coverage passed (`11 passed`). Formal consumers
+  `3950715_1/3950716_1` were rewired solely to `afterok:3957664_1`.
+- Corrected BranchProof aggregate `3950179` remains accepted. CPU-only
+  watcher `3957092` is running and its successor `3957659` remains scheduled;
+  preserve the chain until this formal consumer pair completes and audits.
 
 ### 2026-08-06 01:40 formal resume remains the sole active science gate
 

@@ -4,6 +4,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-06
 
+- 07:43 CEST: Formal post-SFT `3955485_1` completed optimizer work but failed
+  only during terminal FSDP serialization: the final all-gather exceeded the
+  repaired 60-minute limit. The newer step-750 directory lacks trainer,
+  scheduler, and rank-0 RNG state and is therefore quarantined as incomplete;
+  step-500 has all seven model shards, the 60,925,255,300-byte optimizer,
+  FSDP, scheduler, and four RNG files. Submitted exact recovery `3957664_1`
+  with the required four A100-80GB GPUs, `a0532,a0934` excluded, and 120-minute
+  DDP/NCCL timeouts; rewired only `3950715_1/3950716_1`. Patched auto-resume to
+  skip incomplete Trainer checkpoints and verified `11` focused tests. Kept
+  running CPU-only watcher `3957092` and scheduled successor `3957659` because
+  the formal evaluation branch remains incomplete. The commit remains local;
+  a bounded GitHub push again timed out on SSH port 22.
+
 - 01:40 CEST: Formal exact resume `3955485_1` remains priority-pending on the
   required four-A100-80GB `a100` allocation with `a0532,a0934` excluded; the
   scheduler projects 01:51 CEST. Rechecked its complete step-250 model,

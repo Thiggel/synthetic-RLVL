@@ -136,7 +136,20 @@ def test_auto_resume_selects_latest_trainer_checkpoint(tmp_path: Path):
     (tmp_path / "checkpoint-100").mkdir()
     latest = tmp_path / "checkpoint-200"
     latest.mkdir()
+    for name in ("trainer_state.json", "scheduler.pt", "optimizer.pt"):
+        (latest / name).touch()
     assert MODULE._resolve_resume_checkpoint(tmp_path, "auto") == str(latest)
+
+
+def test_auto_resume_skips_incomplete_newer_checkpoint(tmp_path: Path):
+    complete = tmp_path / "checkpoint-100"
+    complete.mkdir()
+    for name in ("trainer_state.json", "scheduler.pt", "optimizer.bin"):
+        (complete / name).touch()
+    incomplete = tmp_path / "checkpoint-200"
+    incomplete.mkdir()
+    (incomplete / "optimizer.bin").touch()
+    assert MODULE._resolve_resume_checkpoint(tmp_path, "auto") == str(complete)
 
 
 def test_auto_resume_is_noop_for_clean_output_root(tmp_path: Path):

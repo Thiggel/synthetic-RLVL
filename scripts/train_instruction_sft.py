@@ -16,7 +16,6 @@ import wandb
 from datasets import Dataset, DatasetDict, load_dataset, load_from_disk
 from peft import LoraConfig, get_peft_model
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments, set_seed
-from transformers.trainer_utils import get_last_checkpoint
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
@@ -190,7 +189,29 @@ def _resolve_resume_checkpoint(output_dir: Path, value: str | None) -> str | Non
     if value is None:
         return None
     if value == "auto":
-        return get_last_checkpoint(str(output_dir)) if output_dir.is_dir() else None
+        if not output_dir.is_dir():
+            return None
+        candidates = sorted(
+            (
+                path
+                for path in output_dir.glob("checkpoint-*")
+                if path.is_dir() and path.name.removeprefix("checkpoint-").isdigit()
+            ),
+            key=lambda path: int(path.name.removeprefix("checkpoint-")),
+            reverse=True,
+        )
+        for checkpoint in candidates:
+            # A failed FSDP save can leave a newer directory that looks like a
+            # checkpoint to get_last_checkpoint but cannot restore optimizer,
+            # scheduler, or RNG state. Resume only a fully committed Trainer
+            # state so recovery does not silently replay or corrupt training.
+            if (
+                (checkpoint / "trainer_state.json").is_file()
+                and (checkpoint / "scheduler.pt").is_file()
+                and any(checkpoint.glob("optimizer.*"))
+            ):
+                return str(checkpoint)
+        return None
     checkpoint = Path(value)
     if not checkpoint.is_dir():
         raise ValueError(f"Instruction SFT resume checkpoint does not exist: {checkpoint}")
