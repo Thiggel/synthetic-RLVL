@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-07 07:47 CEST.
+Last updated: 2026-08-07 13:58 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,25 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-07 13:58 CEST oversight: sampled post-SFT readout is diagnostic-only
+
+- Resubmitted A100-80GB array `3962322_[0-5%3]` completed cleanly. Its six
+  audits accept the corrected RoPE, exact prompts, full expected coverage, no
+  prompt truncation, and 16 nonempty samples per document. The raw review
+  covers correct and incorrect generations for control/formal/matched-NL on
+  GSM8K, MATH-500, HotpotQA, 2WikiMQA, and MuSiQue.
+- The sample distribution does not reopen the formal-transfer claim: standard
+  pass@16 is control/formal/NL `0.7588/0.7540/0.7621`; tagged multi-hop is
+  `0.5150/0.5383/0.5283`, but tag rates remain `0.6445/0.8346/0.8440` and
+  fallback pass@16 is `0.5317/0.5417/0.5317`. Representative raw outputs
+  retain the known answer/prompt continuation behavior. This one-run
+  diagnostic therefore supports neither a robust sampled reasoning gain nor
+  a percentage-grid launch.
+- P0 remains document-aware instance loading plus decoded-batch, padding-mask,
+  exact-mixture, and zero-overlength audits. No project GPU recovery is live.
+  Watcher `3962002` is CPU-only running and its successor `3964081` is
+  CPU-only/no-GRES BeginTime-held; retain the chain.
 
 ### 2026-08-07 07:47 CEST oversight: compact P0 surface is implemented; loader gate remains
 

@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-07
 
+- 13:58 CEST: Resubmitted sampled real-benchmark array `3962322_[0-5%3]`
+  completed `0:0`; all six audit files accept corrected RoPE, complete prompt
+  coverage, 16 nonempty samples/document, and zero prompt truncation. Summary:
+  `$HPCVAULT/synthetic-RLVL/lm_eval_results/qwen25_dolmino_post_sft_passk_20260806/summary_passk.md`.
+  Correct/incorrect raw review across all five tasks and three conditions
+  found the established answer-boundary/prompt-continuation behavior. Standard
+  pass@16 control/formal/NL is `0.7588/0.7540/0.7621`; strict tagged
+  multi-hop `0.5150/0.5383/0.5283` is confounded by tag rates
+  `0.6445/0.8346/0.8440` (fallback `0.5317/0.5417/0.5317`). Kept the frozen
+  null-for-reasoning verdict and did not submit a grid or update the paper.
+
 - 08:50 CEST: Built the real-benchmark pass@k/maj@k harness
   (`scripts/analysis/evaluate_real_passk.py`; prompts replayed verbatim from
   the accepted post-SFT sample files; scorers imported from

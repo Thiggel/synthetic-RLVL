@@ -1,8 +1,30 @@
 # Running Experiments
 
-Last updated: 2026-08-07 08:50 CEST.
+Last updated: 2026-08-07 13:58 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:58 CEST On August 7
+
+- The resubmitted real-benchmark sampled readout `3962322_[0-5%3]` completed
+  `0:0` (six rows, 29--58 min). All six `audit_{standard,multihop}.json`
+  files accept the intended post-SFT checkpoint, `rope_theta=1000000`, exact
+  prompt coverage, zero prompt truncation, and 16 nonempty T=0.8 samples per
+  document. The generated summary is
+  `$HPCVAULT/synthetic-RLVL/lm_eval_results/qwen25_dolmino_post_sft_passk_20260806/summary_passk.md`.
+- This is a completed diagnostic, not a new positive-transfer result. Standard
+  two-task pass@16 macro is control/logic/NL `0.7588/0.7540/0.7621`; tagged
+  multi-hop pass@16 is `0.5150/0.5383/0.5283`, while sampled tag rates are
+  `0.6445/0.8346/0.8440`. Raw correct and incorrect samples across all five
+  tasks and all three conditions preserve identical prompt hashes but include
+  the already-known answer/prompt continuation fragments. Fallback multi-hop
+  pass@16 is `0.5317/0.5417/0.5317`; with one training run per condition these
+  results neither establish a robust sample-distribution gain nor change the
+  frozen null-for-reasoning verdict.
+- No BranchProof or Nanotron GPU recovery is active. CPU-only watcher
+  `3962002` is running and successor `3964081` is BeginTime-held; retain the
+  chain because the document-aware compact-objective P0 loader gate remains
+  open.
 
 ## Live Delta At 08:50 CEST On August 7
 

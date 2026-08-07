@@ -101,3 +101,29 @@ What survives as a positive, honest transfer statement:
   full cross-task, cross-condition review per the analysis discipline should
   be completed by the next oversight pass before the verdict is quoted in
   the paper.
+
+## 2026-08-07 sampled pass@k / maj@k follow-up
+
+The preregistered sampled readout `3962322_[0-5%3]` completed after the
+initial aggregation. It replays the same accepted prompts with one greedy
+generation and 16 T=0.8 samples (top-p 0.95, seed 20260806). Every one of the
+six full runs passes its coverage/RoPE/prompt-truncation audit. Generated
+summary: `$HPCVAULT/synthetic-RLVL/lm_eval_results/qwen25_dolmino_post_sft_passk_20260806/summary_passk.md`.
+
+| macro | control | logic | nl_exact |
+| --- | ---: | ---: | ---: |
+| standard greedy | 0.4461 | 0.4339 | 0.4324 |
+| standard pass@16 | 0.7588 | 0.7540 | 0.7621 |
+| standard maj@16 | 0.5243 | 0.5145 | 0.5174 |
+| tagged multi-hop pass@16 | 0.5150 | 0.5383 | 0.5283 |
+| fallback multi-hop pass@16 | 0.5317 | 0.5417 | 0.5317 |
+| sampled multi-hop tag rate | 0.6445 | 0.8346 | 0.8440 |
+
+Correct and incorrect sampled generations were inspected for all five tasks
+and all three conditions; prompt hashes match across conditions. The samples
+include the already-diagnosed answer/prompt continuation fragments (for
+example, repeated `Answer:` or `<answer>` instructions) and the strict
+multi-hop ordering follows wrapper compliance. Consequently this one-run
+follow-up supplies no robust sampled-reasoning advantage and leaves the
+null-for-reasoning stop decision unchanged. It is a diagnostic supplement,
+not an ICLR result table.
