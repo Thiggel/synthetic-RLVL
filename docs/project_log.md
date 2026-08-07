@@ -3679,3 +3679,36 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   `3944071_[0-1]`; no new midtraining continuation is staged. BranchProof
   verifier formal rows 12--14 are concurrently running without an observed
   failure signature.
+
+## 2026-08-07 16:10 CEST
+
+- Launched the clean synthetic three-way 2.5B rerun (document-preserving
+  objective, depths 1-14 -- decision accepted: state the depth cap honestly in
+  the paper; depth >=15 compact docs cannot fit the 4,097 window). CPU build
+  `3964788` (a100mig, no GRES) builds the nl_exact compact docpack (same
+  packer, same seed-3407 depth-1-14 source docs, NL twins) and audits both
+  logic and nl_exact packs at the 2.5B blend size (4,770 steps x GBS 128)
+  into `analysis/docpack_rerun_audit_20260807/`.
+- Submitted nine serialized 8-GPU training jobs under job name
+  `q25_docpack_rerun` with `--dependency=singleton` (plus
+  `afterany:3964239` on all and `afterany:3964788` on synthetic conditions),
+  i.e. at most 8 GPUs at a time and only after the 0.5B pilot has left the
+  queue (afterany, not afterok, so the rerun does not require pilot success):
+  control `3964798/3964799/3964800`, logic `3964801/3964802/3964803`,
+  nl_exact `3964807/3964808/3964809`. Three passes per condition cover the
+  ~2-2.5-day-per-condition runtime under the 24h walltime via the grid
+  resume path; completed conditions exit early ("skipping"). Each synthetic
+  job is fail-closed on its committed rerun audit JSON (all_pass plus
+  blend-size match); control is Dolmino-only (grid row 0, no docpack).
+  Wrapper: `scripts/slurm/jobs/nanotron_qwen25_dolmino_docpack_rerun_2026-08-07.slurm`
+  (2.5B = 4,770 steps x 128 x 4,096; checkpoint interval 500; alias `2p5b`;
+  run roots `$HPCVAULT/synthetic-RLVL/nanotron_docpack_rerun/`).
+- Submitted CPU real-corpus packing job `3964789` (a100mig, no GRES):
+  flattens the 451,162 deduplicated pararule/prontoqa/proofwriter
+  formal/NL pairs into per-condition JSONLs, packs both conditions with the
+  document-preserving packer (Qwen2.5 tokenizer, 4,097 windows), reports
+  token counts/overlength/efficiency and the ProofWriter depth-0 fraction
+  (reported only, not filtered), and runs the four-gate auditor
+  (template nl_exact markers; informational) into
+  `analysis/real_logic_docpack_audit_20260807/`. Outputs under
+  `$HPCVAULT/synthetic-RLVL/nanosets/qwen25_real_logic_docpack_v1/`.

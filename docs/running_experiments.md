@@ -1,8 +1,28 @@
 # Running Experiments
 
-Last updated: 2026-08-07 14:45 CEST.
+Last updated: 2026-08-07 16:10 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 16:10 CEST On August 7 (2.5B three-way rerun + real-corpus packing)
+
+- CPU build `3964788` (a100mig, no GRES, RUNNING): nl_exact compact docpack
+  (depths 1-14, NL twins of the logic pack) plus 2.5B-blend-size audits of
+  both synthetic packs into `analysis/docpack_rerun_audit_20260807/`.
+- CPU build `3964789` (a100mig, no GRES, RUNNING): real-data logic corpus
+  (451,162 pararule/prontoqa/proofwriter pairs) packed into formal and NL
+  docpacks under
+  `$HPCVAULT/synthetic-RLVL/nanosets/qwen25_real_logic_docpack_v1/`, with
+  composition/overlength/depth-0 reporting and informational four-gate
+  audits in `analysis/real_logic_docpack_audit_20260807/`.
+- Clean three-way 2.5B rerun queued as nine serialized 8-GPU jobs
+  (`q25_docpack_rerun`, singleton + afterany:3964239; synthetic rows also
+  afterany:3964788): control `3964798-3964800`, logic `3964801-3964803`,
+  nl_exact `3964807-3964809`. 4,770 steps x GBS 128 x 4,096 = 2.5B tokens
+  per condition, checkpoint interval 500, fail-closed on the committed
+  rerun audit JSONs for logic/nl_exact, alias `2p5b`, run roots
+  `$HPCVAULT/synthetic-RLVL/nanotron_docpack_rerun/`. Depth cap 1-14 is an
+  accepted decision (paper states the boundary honestly).
 
 ## Live Delta At 14:45 CEST On August 7 (docpack pilot)
 
