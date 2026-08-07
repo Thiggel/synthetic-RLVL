@@ -4,6 +4,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-07
 
+- 08:50 CEST: Built the real-benchmark pass@k/maj@k harness
+  (`scripts/analysis/evaluate_real_passk.py`; prompts replayed verbatim from
+  the accepted post-SFT sample files; scorers imported from
+  `rescore_math500.py` and `lm_eval_tasks/synthrlvl_ood/utils.py`; CPU
+  parity rescore reproduces the accepted greedy metrics exactly on all five
+  tasks). Smoke `3959920_[1,4]` (logic, limit 8, a40) completed `0:0` with
+  format-correct raw generations. Production array `3962260_[0-5%3]`
+  (6 rows, <=3 concurrent A100-80GB, 12 h) submitted; outputs to
+  `lm_eval_results/qwen25_dolmino_post_sft_passk_20260806/`. Deviations:
+  greedy caps replicate the accepted 256-token lm-eval default on
+  GSM8K/MATH-500 while sampled generations get 512 tokens to avoid
+  truncation-biased pass@k; multi-hop stays at the accepted 64-token cap.
+
 - 07:47 CEST: Implemented and tested the P0 `compact_solution` generated
   proof surface. It removes the rejected redundant `Context`/`Conclusion`
   scaffold while preserving the single problem, formal definitions/premises

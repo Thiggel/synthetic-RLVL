@@ -1,8 +1,35 @@
 # Running Experiments
 
-Last updated: 2026-08-07 07:47 CEST.
+Last updated: 2026-08-07 08:50 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 08:50 CEST On August 7
+
+- Real-benchmark pass@k/maj@k readout submitted: production array
+  `3962260_[0-5%3]` on `a100`/`a100_80` (1 GPU per row, `a0532,a0934`
+  excluded, 12 h walltime, at most 3 concurrent rows). Rows 0-2 are the
+  standard group (GSM8K + MATH-500, 8k window) and rows 3-5 the multi-hop
+  group (tagged HotpotQA/2WikiMQA/MuSiQue, 32k window), each over
+  control/logic/nl_exact.
+- Harness: `scripts/analysis/evaluate_real_passk.py` +
+  `scripts/slurm/jobs/qwen25_dolmino_threeway_passk_eval_2026-08-06.slurm`.
+  It replays the exact accepted post-SFT lm-eval prompts from the
+  `qwen25_dolmino_post_sft_20260804` sample files through vLLM with n=16
+  samples (T=0.8, top_p=0.95, seed 20260806) plus one greedy generation, and
+  scores with the accepted extractors (lm-eval GSM8K strict/flexible,
+  `rescore_math500` answer-prefix + math_verify, tagged QA-F1 utils plus a
+  first-line fallback). CPU parity rescore of the accepted greedy responses
+  reproduces the accepted metrics exactly on all five tasks.
+- Smoke `3959920_[1,4]` (logic, limit 8, a40) completed `0:0` in ~19 min;
+  metrics finite/monotone, raw generations format-correct, audits correctly
+  fail-closed (`accepted: false`) under `--limit`.
+- Output root
+  `$HPCVAULT/synthetic-RLVL/lm_eval_results/qwen25_dolmino_post_sft_passk_20260806/<condition>/`
+  (about 8 files per condition to respect the Vault file quota). After all six
+  rows complete: `python scripts/analysis/evaluate_real_passk.py summarize`,
+  verify audits report `accepted: true`, and inspect raw sampled generations
+  before accepting any pass@k/maj@k claim.
 
 ## Live Delta At 07:47 CEST On August 7
 
