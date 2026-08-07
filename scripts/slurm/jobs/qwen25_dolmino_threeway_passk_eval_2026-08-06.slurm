@@ -26,6 +26,11 @@
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-$PWD}"
 mkdir -p logs
+
+# Robust to non-login submission shells (ssh sbatch): NHR@FAU cluster vars may be absent.
+export WORK="${WORK:-/home/atuin/c107fa/c107fa12}"
+export HPCVAULT="${HPCVAULT:-/home/vault/c107fa/c107fa12}"
+
 source ./scripts/env.sh
 
 CONDITIONS=(control logic nl_exact)
