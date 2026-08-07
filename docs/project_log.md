@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-07
 
+- 14:55 CEST: Full pass@k statistical readout recorded in
+  analysis/dolmino_threeway_passk_readout_20260807.md (commit c748d6c).
+  Paired bootstrap (10k resamples): untagged tasks flat at every k; tagged
+  low-k gaps close by k=16; oracle best-F1@16 flat. New second compliance
+  layer identified: degenerate tag content (literal ellipsis echoed from the
+  instruction template) survives tag-presence conditioning and first-line
+  fallback; excluding it collapses EM-conditional deltas to null. Residual
+  significants (musique strict pass@16 logic-control +0.060; hotpotqa
+  EM-good logic-nl +0.015) are isolated, uncorroborated by the paired
+  contrast, and within multiple-testing expectations. Preregistered gate
+  remains NOT passed; P0 document-preserving pilot unchanged as next gate.
+
 - 13:58 CEST: Resubmitted sampled real-benchmark array `3962322_[0-5%3]`
   completed `0:0`; all six audit files accept corrected RoPE, complete prompt
   coverage, 16 nonempty samples/document, and zero prompt truncation. Summary:
