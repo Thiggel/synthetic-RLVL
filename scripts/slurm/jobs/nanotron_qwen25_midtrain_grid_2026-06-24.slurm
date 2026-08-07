@@ -154,22 +154,43 @@ if [[ "${MIX_KIND}" == "control" ]]; then
       dataset_weights:
       - 1.0"
 else
-  NORMAL_WEIGHT=$(python - <<PY
+  if [[ -n "${PROOF_WEIGHT_OVERRIDE:-}" ]]; then
+    # Document-preserving packed synthetic windows carry loss-masked padding;
+    # the override is the padding-compensated weight from the mixture audit.
+    PROOF_WEIGHT=$(python - <<PY
+w = float("${PROOF_WEIGHT_OVERRIDE}")
+assert 0.0 < w < 1.0
+print(f"{w:.8f}")
+PY
+)
+    NORMAL_WEIGHT=$(python - <<PY
+w = float("${PROOF_WEIGHT_OVERRIDE}")
+print(f"{1.0 - w:.8f}")
+PY
+)
+  else
+    NORMAL_WEIGHT=$(python - <<PY
 p = int("${MIX_PCT}") / 100.0
 print(f"{1.0 - p:.6f}")
 PY
 )
-  PROOF_WEIGHT=$(python - <<PY
+    PROOF_WEIGHT=$(python - <<PY
 p = int("${MIX_PCT}") / 100.0
 print(f"{p:.6f}")
 PY
 )
+  fi
   DATASET_YAML="      dataset_folder:
       - ${NORMAL_DATASET_FOLDER}
       - ${PROOF_DATASET_FOLDER}
       dataset_weights:
       - ${NORMAL_WEIGHT}
       - ${PROOF_WEIGHT}"
+fi
+if [[ -n "${NANOSET_PADDING_LABEL_ID:-}" ]]; then
+  # Loss-mask padding labels in document-preserving packed windows.
+  DATASET_YAML="${DATASET_YAML}
+      padding_label_id: ${NANOSET_PADDING_LABEL_ID}"
 fi
 
 cat > "${CONFIG}" <<YAML
