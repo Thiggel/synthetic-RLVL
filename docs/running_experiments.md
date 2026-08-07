@@ -7,7 +7,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 ## Live Delta At 08:50 CEST On August 7
 
 - Real-benchmark pass@k/maj@k readout submitted: production array
-  `3962260_[0-5%3]` on `a100`/`a100_80` (1 GPU per row, `a0532,a0934`
+  `3962322_[0-5%3] (resubmitted; see note)` on `a100`/`a100_80` (1 GPU per row, `a0532,a0934`
   excluded, 12 h walltime, at most 3 concurrent rows). Rows 0-2 are the
   standard group (GSM8K + MATH-500, 8k window) and rows 3-5 the multi-hop
   group (tagged HotpotQA/2WikiMQA/MuSiQue, 32k window), each over

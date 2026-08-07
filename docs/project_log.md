@@ -11,6 +11,7 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   parity rescore reproduces the accepted greedy metrics exactly on all five
   tasks). Smoke `3959920_[1,4]` (logic, limit 8, a40) completed `0:0` with
   format-correct raw generations. Production array `3962260_[0-5%3]`
+  NOTE 2026-08-07: original array 3962260 FAILED instantly (WORK unset in non-login submission shell; env.sh aborted); job script now defaults WORK/HPCVAULT (commit d045e4f) and the run was resubmitted as 3962322_[0-5%3].
   (6 rows, <=3 concurrent A100-80GB, 12 h) submitted; outputs to
   `lm_eval_results/qwen25_dolmino_post_sft_passk_20260806/`. Deviations:
   greedy caps replicate the accepted 256-token lm-eval default on
