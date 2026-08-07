@@ -1,8 +1,21 @@
 # Running Experiments
 
-Last updated: 2026-08-07 19:50 CEST.
+Last updated: 2026-08-08 01:49 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:49 CEST On August 8 (P0 remains the only science gate)
+
+- Formal compact P0 pilot `3964239_0` is still priority-pending, with no log
+  or output, on its unchanged 8x A100-80GB protocol. Current Slurm estimated
+  start is 10:49 CEST; no resource, partition, dependency, or protocol edit
+  is warranted.
+- Serialized 2.5B jobs `3964798-3964809` remain dependency-held by
+  `afterany:3964239` and have consumed no GPU time. Their prerequisite
+  docpack audit bundles remain all-pass.
+- CPU-only/no-GRES watcher `3965376` is running and has scheduled CPU-only
+  successor `3966699` for 07:47 CEST. Retain the chain while the P0 readout
+  and downstream audit gates are open.
 
 ## Live Delta At 19:50 CEST On August 7 (docpack prerequisites completed)
 

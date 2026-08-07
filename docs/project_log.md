@@ -2,6 +2,16 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-08
+
+- 01:49 CEST: P0 formal compact pilot `3964239_0` remains priority-pending
+  without a log or output (current Slurm estimate 10:49 CEST); its 8x
+  A100-80GB protocol is unchanged. Serialized 2.5B chain `3964798-3964809`
+  remains dependency-held and has consumed no GPU time. Current CPU-only
+  watcher `3965376` scheduled CPU-only/no-GRES successor `3966699` for 07:47
+  CEST, which was retained because the P0 artifact/readout gate remains open.
+  No recovery, resubmission, metric aggregation, or report edit was justified.
+
 ## 2026-08-07
 
 - 19:50 CEST: Oversight accepted the completed CPU-only docpack prerequisites:

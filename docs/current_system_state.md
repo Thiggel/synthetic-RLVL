@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-07 19:50 CEST.
+Last updated: 2026-08-08 01:49 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,21 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-08 01:49 CEST oversight: P0 remains priority-held; watcher chain advanced
+
+- Formal P0 pilot `3964239_0` remains dependency-free and priority-pending on
+  8x A100-80GB (feature `a100_80`, `a0532,a0934` excluded), with no runtime
+  log or output. Slurm's current estimate is 10:49 CEST; this is a scheduler
+  estimate, not a launch or a reason to alter its protocol.
+- The serialized 2.5B control/formal/NL chain `3964798-3964809` remains
+  correctly held by `afterany:3964239` and has consumed no GPU time. Its
+  committed formal/NL docpack audits still report all four gates passing.
+- Current CPU-only/no-GRES watcher `3965376` is running. It scheduled
+  successor `3966699`, also CPU-only/no-GRES, BeginTime-held for 07:47 CEST;
+  retain it because the P0 artifact/readout and all downstream gates remain
+  incomplete. No recovery, resubmission, scientific aggregation, or report
+  update is justified before the pilot emits artifacts and raw generations.
 
 ### 2026-08-07 19:50 CEST oversight: prerequisites accepted; P0 pilot remains the live gate
 
