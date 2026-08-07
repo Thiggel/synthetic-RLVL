@@ -25,7 +25,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tokenizer", required=True)
     parser.add_argument("--target-tokens", type=int, required=True)
     parser.add_argument("--max-records", type=int, default=None)
-    parser.add_argument("--document-format", choices=["legacy", "neutral_solution"], default="legacy")
+    parser.add_argument(
+        "--document-format",
+        choices=["legacy", "neutral_solution", "compact_solution"],
+        default="legacy",
+    )
     parser.add_argument("--seed", type=int, default=3407)
     parser.add_argument("--start-index", type=int, default=0)
     parser.add_argument("--train-min-step", type=int, default=1)
@@ -80,6 +84,35 @@ def format_neutral_solution_document(sample, template: TemplateName) -> str:
         f"Conclusion:\n{trace_fields['conclusion']}\n\n"
         f"Final answer: {answer}"
     )
+
+
+def format_compact_solution_document(sample, template: TemplateName) -> str:
+    """Emit the P0 surface without the redundant Context/Conclusion scaffold.
+
+    The natural-language problem remains the sole natural-language premise
+    copy. Formal traces retain only the symbol definitions needed to read
+    their derivation; matched-NL traces need no second premise rendering.
+    """
+    problem = extract_tag(sample.prompt, "question").strip()
+    trace_tag = "formal" if template == TemplateName.LOGIC else "think"
+    trace = extract_tag(sample.target, trace_tag)
+    if not problem or not trace:
+        raise ValueError(f"Missing problem or {trace_tag} trace wrapper")
+    trace_fields = {
+        tag: extract_tag(trace, tag).strip()
+        for tag in ("constants", "predicates", "premises", "proof")
+    }
+    answer = (extract_tag(sample.target, "answer") or str(sample.answer)).strip()
+
+    if template == TemplateName.LOGIC:
+        derivation = (
+            f"Definitions:\n{trace_fields['constants']}\n{trace_fields['predicates']}\n\n"
+            f"Formal premises:\n{trace_fields['premises']}\n\n"
+            f"Derivation:\n{trace_fields['proof']}"
+        )
+    else:
+        derivation = f"Derivation:\n{trace_fields['proof']}"
+    return f"{problem}\n\nSolution:\n{derivation}\n\nFinal answer: {answer}"
 
 
 def main() -> None:
@@ -145,6 +178,8 @@ def main() -> None:
             sample = builder.sample(next_index, train=True)
             if args.document_format == "neutral_solution":
                 text = format_neutral_solution_document(sample, TemplateName(args.template))
+            elif args.document_format == "compact_solution":
+                text = format_compact_solution_document(sample, TemplateName(args.template))
             else:
                 text = sample.prompt + sample.target
             n_tokens = len(tokenizer.encode(text, add_special_tokens=False))

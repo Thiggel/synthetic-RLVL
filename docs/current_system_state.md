@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-06 20:00 CEST.
+Last updated: 2026-08-07 07:47 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,22 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-07 07:47 CEST oversight: compact P0 surface is implemented; loader gate remains
+
+- Added the separately selected `compact_solution` proof-export surface and
+  regression coverage. It retains one natural-language problem, removes the
+  redundant `Context`/`Conclusion` scaffold, retains formal definitions and
+  formal premises only where needed to read a formal derivation, and keeps the
+  terminal answer boundary. The frozen `neutral_solution` builder remains
+  unchanged.
+- The P0 pilot is still not submit-ready: the active Nanotron Nanoset path is
+  flat-stream sampling. A document-aware instance loader plus decoded-batch,
+  padding-loss-mask, exact-mixture, and zero-overlength audits are required
+  before any GPU row can be released.
+- No in-scope GPU recovery exists. Watcher `3961367` is CPU-only running and
+  its recorded successor `3962002` is CPU-only/no-GRES BeginTime-held; retain
+  the chain while the P0 loader gate is open.
 
 ### 2026-08-07 02:00 CEST oversight handoff: frozen 5B result; P0 remains open
 

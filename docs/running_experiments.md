@@ -1,8 +1,19 @@
 # Running Experiments
 
-Last updated: 2026-08-07 02:00 CEST.
+Last updated: 2026-08-07 07:47 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:47 CEST On August 7
+
+- No BranchProof, Nanotron, or three-way consumer GPU job is running or needs
+  recovery. The next P0 prerequisite changed in code only: `compact_solution`
+  now removes the rejected redundant proof scaffold, but the flat-stream
+  Nanoset loader has not been replaced and no pilot was submitted.
+- CPU-only/no-GRES oversight `3961367` is running on `a0605`; its recorded
+  successor `3962002` is dependency-free, CPU-only/no-GRES, and
+  BeginTime-held on `a100mig`. Preserve the chain until the document-aware
+  P0 loader and its decoded-batch gates pass.
 
 ## Live Delta At 02:00 CEST On August 7
 

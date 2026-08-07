@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-07
 
+- 07:47 CEST: Implemented and tested the P0 `compact_solution` generated
+  proof surface. It removes the rejected redundant `Context`/`Conclusion`
+  scaffold while preserving the single problem, formal definitions/premises
+  needed to read formal derivations, and final answer boundary. The old
+  `neutral_solution` path is untouched. This is not a pilot release: the
+  current Nanoset loader remains flat-stream, so document-aware loading and
+  decoded-batch/mask/overlength gates are still required. No project GPU job
+  was submitted. Watcher `3961367` and CPU-only successor `3962002` remain.
+
 - 02:00 CEST: Rechecked the in-scope queue and all accepted BranchProof
   verifier (`3950179`) and three-way Dolmino post-SFT artifacts. No project
   GPU job needs recovery; the frozen 5B conclusion remains null for reasoning,

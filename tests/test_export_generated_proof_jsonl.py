@@ -11,6 +11,7 @@ assert SPEC and SPEC.loader
 EXPORTER = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(EXPORTER)
 format_neutral_solution_document = EXPORTER.format_neutral_solution_document
+format_compact_solution_document = EXPORTER.format_compact_solution_document
 
 
 def _sample(template: TemplateName):
@@ -55,3 +56,21 @@ def test_neutral_solution_preserves_answer_and_conclusion() -> None:
     text = format_neutral_solution_document(sample, TemplateName.LOGIC)
     assert f"Final answer: {sample.answer}" in text
     assert sample.metadata["query_constant"] in text
+
+
+def test_compact_solution_removes_redundant_scaffolding() -> None:
+    logic = format_compact_solution_document(_sample(TemplateName.LOGIC), TemplateName.LOGIC)
+    nl = format_compact_solution_document(_sample(TemplateName.NL_EXACT), TemplateName.NL_EXACT)
+
+    for text in (logic, nl):
+        assert "\n\nSolution:\n" in text
+        assert "\n\nFinal answer: " in text
+        assert "Context:\n" not in text
+        assert "Conclusion:\n" not in text
+        assert "<formal>" not in text
+        assert "<think>" not in text
+
+    assert "Definitions:\n" in logic
+    assert "Formal premises:\n" in logic
+    assert "Definitions:\n" not in nl
+    assert "Formal premises:\n" not in nl
