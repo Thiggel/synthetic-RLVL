@@ -1,0 +1,23 @@
+{
+  "ngram": 10,
+  "threshold": 0.8,
+  "test_problems_exact": 112455,
+  "test_theories_ngram": 13756,
+  "stats": {
+    "pararule": {
+      "kept": 212352,
+      "exact_dropped": 0,
+      "near_dup_dropped": 0
+    },
+    "prontoqa": {
+      "kept": 21000,
+      "exact_dropped": 0,
+      "near_dup_dropped": 0
+    },
+    "proofwriter": {
+      "kept": 217810,
+      "exact_dropped": 0,
+      "near_dup_dropped": 34
+    }
+  }
+}

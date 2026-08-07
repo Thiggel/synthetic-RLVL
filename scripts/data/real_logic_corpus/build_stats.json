@@ -1,0 +1,24 @@
+{
+  "proofwriter": {
+    "kept": 217844,
+    "total": 399640,
+    "reasons": {
+      "skip_strategy_inv-rconc": 45579,
+      "skip_strategy_random": 66319,
+      "skip_strategy_inv-random": 45319,
+      "skip_strategy_rconc": 24579
+    }
+  },
+  "prontoqa": {
+    "kept": 21000,
+    "total": 21000,
+    "reasons": {}
+  },
+  "pararule": {
+    "kept": 212352,
+    "total": 424658,
+    "reasons": {
+      "not_derivable_explicit": 212306
+    }
+  }
+}
