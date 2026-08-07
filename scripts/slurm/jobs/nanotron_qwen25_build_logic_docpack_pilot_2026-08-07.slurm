@@ -2,7 +2,6 @@
 #SBATCH --job-name=build_q25_docpack
 #SBATCH --partition=a100mig
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=32000M
 #SBATCH --time=06:00:00
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --error=logs/%x_%j.err

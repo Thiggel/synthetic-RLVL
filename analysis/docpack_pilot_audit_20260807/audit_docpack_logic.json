@@ -1,0 +1,70 @@
+{
+  "all_pass": true,
+  "packed_folder": "/home/vault/c107fa/c107fa12/synthetic-RLVL/nanosets/qwen25_dolmino_compact_docpack_v1/logic",
+  "dolmino_folder": "/home/vault/c107fa/c107fa12/synthetic-RLVL/nanosets/qwen25_dolmino_neutral_v1_5p1b/dolmino",
+  "template": "logic",
+  "seq_len": 4096,
+  "train_steps": 954,
+  "global_batch_size": 128,
+  "packing_efficiency": 0.9492922717397569,
+  "gates": {
+    "zero_overlength": {
+      "pass": true,
+      "overlength_count": 0,
+      "doc_len_min": 362,
+      "doc_len_mean": 2117.368763557484,
+      "doc_len_max": 4082,
+      "doc_len_percentiles": {
+        "1": 365.0,
+        "10": 622.0,
+        "25": 1137.0,
+        "50": 2191.0,
+        "75": 3074.0,
+        "90": 3704.0,
+        "99": 4039.0,
+        "100": 4082.0
+      },
+      "window_len": 4097,
+      "depth_range": [
+        1,
+        14
+      ]
+    },
+    "decoded_batch": {
+      "pass": true,
+      "windows_decoded": 32,
+      "documents_seen": 59,
+      "split_documents_found": 0,
+      "failures": [],
+      "examples_file": "analysis/docpack_pilot_audit_20260807/decoded_windows_logic.md",
+      "dataset_windows": 10290,
+      "windows_match_stats": true
+    },
+    "padding_loss_mask": {
+      "pass": true,
+      "windows_checked": 64,
+      "masked_labels": 12937,
+      "pad_labels": 12937,
+      "mask_equals_padding_everywhere": true,
+      "failing_windows": [],
+      "dolmino_mask_unchanged_all_ones": true
+    },
+    "exact_mixture": {
+      "pass": true,
+      "target_loss_token_ratio": 0.05,
+      "realized_loss_token_ratio": 0.049997892264386584,
+      "abs_error": 2.107735613418593e-06,
+      "tolerance": 0.0002,
+      "proof_weight": 0.05250141264914705,
+      "normal_weight": 0.9474985873508529,
+      "blend_size_samples": 122112,
+      "synthetic_samples": 6411,
+      "dolmino_samples": 115701,
+      "synthetic_sample_ratio": 0.05250098270440252,
+      "synthetic_loss_tokens": 24941593,
+      "dolmino_loss_tokens": 473911296,
+      "synthetic_epochs_consumed": 0.6230320699708455,
+      "note": "loss tokens = label positions contributing loss (padding labels masked; Dolmino windows contribute all seq_len labels, matching the original runs)"
+    }
+  }
+}

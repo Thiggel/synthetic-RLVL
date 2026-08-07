@@ -4,6 +4,14 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-07
 
+- 14:45 CEST: Implemented + audited the P0 document-preserving docpack
+  loader path (repo `e2fb672`, nanotron `dd6aae2e`): whole compact_solution
+  docs packed into 4,097-token loader-aligned windows, `<|fim_pad|>` padding
+  loss-masked via new `padding_label_id`. Build+audit `3964215` passed all
+  four gates (0 overlength, 0 split docs, exact pad masking, realized 5%
+  loss-token mixture at proof weight 0.05250141). Submitted 0.5B logic pilot
+  `3964239_0` (8x A100-80). Depth cap 1-14 forced by the 4,096 window.
+
 - 14:55 CEST: Full pass@k statistical readout recorded in
   analysis/dolmino_threeway_passk_readout_20260807.md (commit c748d6c).
   Paired bootstrap (10k resamples): untagged tasks flat at every k; tagged

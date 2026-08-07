@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-07 13:58 CEST.
+Last updated: 2026-08-07 14:45 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,43 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-07 14:45 CEST P0 document-preserving loader implemented, audited, and 0.5B logic pilot submitted
+
+- Implemented the P0 document-aware instance path. The active
+  TokenizedBytes/Datatrove loader reads disjoint `seq_len+1` chunks, so
+  `scripts/data/pack_document_preserving_nanoset.py` packs whole
+  `compact_solution` documents into 4,097-token loader-aligned windows
+  (greedy first-fit, `<|fim_pad|>` tail padding). New opt-in nanotron config
+  `padding_label_id` (nanotron commit `dd6aae2e`) loss-masks padding labels;
+  with the flag unset, and for the unchanged Dolmino stream, collator
+  behavior is bit-identical to the accepted 5B runs.
+- Forced design decision, recorded for the paper: compact logic documents
+  measure ~367 tokens at depth 1 up to ~4,057 at depth 14, while depth 15
+  already reaches 4,377 and can never be document-preserved at the fixed
+  4,096 window. The pilot corpus therefore samples depths 1-14 (the original
+  split-document runs sampled 1-25); a complete depth-25 compact derivation
+  is ~7.6k tokens.
+- All four preregistered gates PASS (CPU build+audit job `3964215`, bundle
+  `analysis/docpack_pilot_audit_20260807/`, reusable auditor
+  `scripts/nanotron/audit_docpack_training_path.py`): zero overlength
+  (0/18,901 docs; max 4,082 vs window 4,097), decoded batches contain only
+  whole problem->derivation->final-answer documents with tail-only padding
+  (32 windows / 59 docs decoded, 0 split docs, vs 44-48% split rate in the
+  original flat-stream runs), the real training collator masks exactly the
+  12,937 padding labels in the checked 64 windows and leaves Dolmino windows
+  all-ones, and the replayed BlendableDataset mixture realizes a synthetic
+  loss-token share of 0.0499979 vs the 0.05 spec (|err| 2.1e-6) with
+  padding-compensated proof weight 0.05250141 (packing efficiency 94.93%,
+  10,290 windows, 0.62 synthetic epochs consumed, no wrap).
+- Pilot `3964239_0` submitted (fail-closed on the committed audit bundle):
+  logic condition, 954 steps x GBS 128 x 4,096 = 0.5B tokens, 8x A100-80
+  with `a0532,a0934` excluded, identical base checkpoint/LR schedule/
+  parallelism/Dolmino nanoset as the 5B recipe; only the synthetic loader
+  changed. 120-min PG timeout via new `NANOTRON_PG_TIMEOUT_MINUTES` plus
+  `TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC=7200`. Matched-NL and the proof-focused
+  masked objective reuse this audited path after the pilot readout; the
+  percentage grid stays prohibited until then.
 
 ### 2026-08-07 13:58 CEST oversight: sampled post-SFT readout is diagnostic-only
 

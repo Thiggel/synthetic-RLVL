@@ -1,8 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-08-07 13:58 CEST.
+Last updated: 2026-08-07 14:45 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 14:45 CEST On August 7 (docpack pilot)
+
+- CPU-only build+audit `3964215` (a100mig, no GRES) completed `0:0` in 2m57s:
+  exported 18,901 compact_solution logic documents (depths 1-14, 40.0M real
+  tokens), packed them into 10,290 document-preserving 4,097-token windows at
+  `$HPCVAULT/synthetic-RLVL/nanosets/qwen25_dolmino_compact_docpack_v1/logic`,
+  and passed all four audit gates (zero-overlength, decoded-batch,
+  padding-loss-mask, exact-mixture; bundle
+  `analysis/docpack_pilot_audit_20260807/`).
+- P0 pilot `3964239_[0%1]` PENDING on `a100` (8x a100_80, excl. `a0532,a0934`,
+  24h limit): `qwen25_7b_dolmino_logic_docpack_p5_0p5b`, 954 steps = 0.5B
+  tokens, run root
+  `$HPCVAULT/synthetic-RLVL/nanotron_docpack_pilot/qwen25_7b_dolmino_logic_docpack_p5_0p5b`.
+  Expected runtime ~2.5-4h once started (5B recipe throughput). The job
+  refuses to train unless the committed audit JSON reports `all_pass: true`.
+- GPU budget: no other project GPU jobs are active (pass@k array `3962322`
+  completed). Watcher successor `3964081` is CPU-only BeginTime-held; chain
+  untouched.
 
 ## Live Delta At 13:58 CEST On August 7
 
