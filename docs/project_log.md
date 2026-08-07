@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-07
 
+- 19:50 CEST: Oversight accepted the completed CPU-only docpack prerequisites:
+  `3964788` (`0:0`, 7m52s) produced the 2.5B compact formal/NL audit bundle,
+  and `3964789` (`0:0`, 11m50s) produced the real-logic docpacks. All four
+  document-preservation gates pass in both bundles; formal/NL 2.5B realized
+  loss-token shares are `0.04999982/0.04999870`. Formal P0 pilot `3964239_0`
+  remains priority-pending without a runtime artifact, and serialized rerun
+  jobs `3964798-3964809` remain dependency-held. No scientific conclusion or
+  recovery was taken. Successor `3965376` is CPU-only/no-GRES BeginTime-held
+  for 2026-08-08 01:46 CEST and was retained.
+
 - 14:45 CEST: Implemented + audited the P0 document-preserving docpack
   loader path (repo `e2fb672`, nanotron `dd6aae2e`): whole compact_solution
   docs packed into 4,097-token loader-aligned windows, `<|fim_pad|>` padding

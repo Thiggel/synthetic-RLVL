@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-07 14:45 CEST.
+Last updated: 2026-08-07 19:50 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-07 19:50 CEST oversight: prerequisites accepted; P0 pilot remains the live gate
+
+- The two CPU-only follow-on builds completed cleanly: `3964788` materialized
+  the matched-NL compact docpack and 2.5B-horizon logic/NL audit bundle, and
+  `3964789` materialized the separate real-logic docpacks. All four gates
+  pass in `analysis/docpack_rerun_audit_20260807/` and
+  `analysis/real_logic_docpack_audit_20260807/`: zero overlength and split
+  documents, exact padding masking, and realized 5% loss-token mixtures.
+- The only active scientific job is still the fail-closed 0.5B formal compact
+  pilot `3964239_0`, priority-pending on 8x A100-80GB. It has not started and
+  has no log/output yet. The serialized 2.5B control/formal/NL chain
+  `3964798-3964809` remains dependency-held; it has consumed no GPU time.
+  No recovery, metric aggregation, or transfer claim is due before pilot
+  artifacts and raw generations exist.
+- The scheduled CPU-only/no-GRES oversight successor is `3965376`
+  (BeginTime 2026-08-08 01:46 CEST). Retain the watcher chain while the P0
+  readout and downstream audit gates remain open.
 
 ### 2026-08-07 14:45 CEST P0 document-preserving loader implemented, audited, and 0.5B logic pilot submitted
 

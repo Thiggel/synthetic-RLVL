@@ -1,8 +1,24 @@
 # Running Experiments
 
-Last updated: 2026-08-07 16:10 CEST.
+Last updated: 2026-08-07 19:50 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:50 CEST On August 7 (docpack prerequisites completed)
+
+- CPU-only/no-GRES build `3964788` completed `0:0` in 7m52s. The 2.5B
+  horizon audits for compact formal and matched-NL are accepted in
+  `analysis/docpack_rerun_audit_20260807/`: all four gates pass, including
+  zero overlength/split documents and realized loss-token shares
+  `0.04999982` (formal) and `0.04999870` (NL).
+- CPU-only/no-GRES real-corpus build `3964789` completed `0:0` in 11m50s.
+  Its formal/NL docpacks and informational audits are accepted in
+  `analysis/real_logic_docpack_audit_20260807/`; all four gates pass and the
+  unfiltered depth-0 composition is recorded rather than silently changed.
+- Formal P0 pilot `3964239_0` remains priority-pending on 8x A100-80GB,
+  with no runtime log or output. Serialized rerun jobs `3964798-3964809`
+  remain dependency-held and have consumed no GPU time. New CPU-only
+  successor `3965376` is BeginTime-held for 01:46 CEST on August 8; retain it.
 
 ## Live Delta At 16:10 CEST On August 7 (2.5B three-way rerun + real-corpus packing)
 
