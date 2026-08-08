@@ -2,6 +2,19 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-09
+
+- 01:49 CEST: Formal compact P0 pilot `3964239_0` remains dependency-free and
+  capacity-pending on its unchanged 8x A100-80GB protocol; every compatible
+  non-drained node is allocated, and there is no runtime artifact. Its
+  fail-closed audit remains clean (zero overlength/split documents, exact
+  padding loss masking, `0.0499978923` synthetic loss-token share).
+  Serialized `3964798-3964803,3964807-3964809` remains dependency-held and
+  unused. CPU-only/no-GRES watcher `3968589` recorded successor `3969182` for
+  07:48 CEST; it was retained because P0/readout gates remain incomplete.
+  Vault quota is `607G/1000G`, `183k/200k` files; no recovery, resubmission,
+  aggregation, report change, or cleanup was justified.
+
 ## 2026-08-08
 
 - 13:49 CEST: P0 formal compact pilot `3964239_0` remains dependency-free and

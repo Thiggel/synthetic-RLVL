@@ -26,6 +26,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
+### 2026-08-09 01:49 CEST oversight: P0 still capacity-held; successor `3969182` retained
+
+- Formal compact P0 pilot `3964239_0` remains dependency-free and pending
+  only on its unchanged 8x A100-80GB allocation (feature `a100_80`, exclusions
+  `a0532,a0934`). Every compatible non-drained node is allocated and there is
+  still no runtime log, checkpoint, or training artifact. The scheduler's
+  02:37 CEST estimate is advisory; no partition, resource, dependency, or
+  scientific-protocol edit is justified.
+- The committed pilot audit remains fail-closed clean: zero overlength records,
+  zero decoded split documents, exact padding-loss masking, and realized
+  synthetic loss-token share `0.0499978923`. Serialized 2.5B jobs
+  `3964798-3964803,3964807-3964809` remain dependency-held by
+  `afterany:3964239` and have consumed no GPU time.
+- Running CPU-only/no-GRES watcher `3968589` on `a0605` recorded CPU-only/no-GRES
+  successor `3969182`, BeginTime-held for 07:48 CEST. Retain it: the P0
+  artifact, readout, and downstream gates remain incomplete. User vault quota
+  remains `607G/1000G`, `183k/200k` files; no guarded cleanup is due.
+
 ### 2026-08-08 13:49 CEST oversight: P0 remains capacity-held; watcher chain advanced
 
 - Formal compact P0 pilot `3964239_0` remains dependency-free and pending
