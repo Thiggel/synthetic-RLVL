@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-08 01:49 CEST.
+Last updated: 2026-08-08 07:48 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,27 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-08 07:48 CEST oversight: P0 remains priority-held; successor chain verified
+
+- Formal compact P0 pilot `3964239_0` is still dependency-free and
+  priority-pending on its unchanged 8x A100-80GB protocol (feature
+  `a100_80`, `a0532,a0934` excluded). It has no runtime log or training
+  artifact; Slurm currently estimates 10:49 CEST, which is not a launch
+  signal. Its committed config resolves Qwen2.5 `rope_theta=1000000.0`,
+  document-pack padding label `151662`, depths 1--14, 954 steps, and the
+  audited proof mixture weight `0.05250141`.
+- The formal pilot audit remains fail-closed clean: its JSON reports
+  `all_pass: true`, zero split documents, exact padding masks, and exact
+  loss-token accounting. Serialized 2.5B control/formal/NL jobs
+  `3964798-3964809` remain held by `afterany:3964239` and have consumed no
+  GPU time. No recovery, resubmission, aggregation, or report change is
+  justified before pilot artifacts and raw generations exist.
+- Current CPU-only/no-GRES watcher `3966699` is running. It recorded
+  CPU-only/no-GRES successor `3967141`, BeginTime-held for 13:47 CEST; retain
+  it because the P0 artifact/readout and downstream gates are incomplete.
+  Vault use is `607G/1000G` with `183k/200k` files, so no checkpoint cleanup
+  is needed.
 
 ### 2026-08-08 01:49 CEST oversight: P0 remains priority-held; watcher chain advanced
 

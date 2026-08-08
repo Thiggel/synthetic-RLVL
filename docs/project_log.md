@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-08
 
+- 07:48 CEST: P0 formal compact pilot `3964239_0` remains priority-pending,
+  dependency-free, and without runtime artifacts on its unchanged 8x
+  A100-80GB protocol (current scheduler estimate 10:49 CEST). Submitted
+  config/audit checks reconfirm RoPE `1000000`, documented padding masking,
+  zero split documents, and exact 5% loss-token accounting. Serialized
+  `3964798-3964809` remains dependency-held and unused. Current CPU-only
+  watcher `3966699` scheduled CPU-only/no-GRES successor `3967141` for 13:47
+  CEST; it was retained because P0 and downstream gates remain incomplete.
+  Vault is `607G/1000G`, `183k/200k` files. No recovery, resubmission,
+  aggregation, report change, or cleanup was justified.
+
 - 01:49 CEST: P0 formal compact pilot `3964239_0` remains priority-pending
   without a log or output (current Slurm estimate 10:49 CEST); its 8x
   A100-80GB protocol is unchanged. Serialized 2.5B chain `3964798-3964809`

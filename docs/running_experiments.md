@@ -1,8 +1,24 @@
 # Running Experiments
 
-Last updated: 2026-08-08 01:49 CEST.
+Last updated: 2026-08-08 07:48 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:48 CEST On August 8 (P0 still waits only on priority)
+
+- Formal compact P0 pilot `3964239_0` remains dependency-free and
+  priority-pending on `a100` with 8x `a100_80`, excluding `a0532,a0934`.
+  Its expected start is currently 10:49 CEST; no runtime log or checkpoint
+  exists. The submitted configuration retains Qwen2.5 RoPE base `1000000`,
+  document-pack padding labels, 954 steps, and audited mixture weight.
+- All nine serialized 2.5B jobs `3964798-3964803,3964807-3964809` remain
+  dependency-held by `afterany:3964239` and have used no GPU time. The pilot
+  audit remains `all_pass: true` (zero split documents, correct padding mask,
+  exact loss-token mixture).
+- CPU-only/no-GRES watcher `3966699` is running on `a0605`; it scheduled
+  CPU-only/no-GRES successor `3967141`, BeginTime-held for 13:47 CEST. Keep
+  the successor: P0 and all downstream readout gates remain open. Vault is
+  `607G/1000G`, `183k/200k` files; no guarded cleanup is due.
 
 ## Live Delta At 01:49 CEST On August 8 (P0 remains the only science gate)
 
