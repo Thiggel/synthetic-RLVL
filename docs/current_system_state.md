@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-08 07:48 CEST.
+Last updated: 2026-08-08 13:49 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,23 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-08 13:49 CEST oversight: P0 remains capacity-held; watcher chain advanced
+
+- Formal compact P0 pilot `3964239_0` remains dependency-free and pending
+  only on 8x A100-80GB capacity (feature `a100_80`, exclusions
+  `a0532,a0934`). All compatible nodes are allocated; the currently reported
+  20:44 CEST start estimate is advisory, not a reason to alter its 24-hour
+  protocol. There is still no runtime log or training artifact.
+- The fail-closed audit remains clean (`all_pass: true`, zero split documents,
+  exact padding loss mask, and 0.0499979 synthetic loss-token share). The
+  nine serialized 2.5B control/formal/NL jobs `3964798-3964803,3964807-3964809`
+  remain correctly held by `afterany:3964239` and have used no GPU time.
+- CPU-only/no-GRES watcher `3967141` is running and has recorded successor
+  `3967875`, BeginTime-held for 19:47 CEST. Retain it: P0 artifacts, readout,
+  and downstream gates remain incomplete. User vault quota is healthy at
+  `607G/1000G` and `183k/200k` files; the shared-filesystem global inode
+  display is not the user quota and requires no cleanup.
 
 ### 2026-08-08 07:48 CEST oversight: P0 remains priority-held; successor chain verified
 

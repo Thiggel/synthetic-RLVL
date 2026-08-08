@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-08
 
+- 13:49 CEST: P0 formal compact pilot `3964239_0` remains dependency-free and
+  capacity-pending on its unchanged 8x A100-80GB protocol; all compatible
+  nodes are allocated and its 20:44 CEST scheduler estimate is advisory. The
+  committed document-pack audit remains all-pass and no pilot output exists.
+  Serialized `3964798-3964803,3964807-3964809` remains dependency-held and
+  unused. Running CPU-only/no-GRES watcher `3967141` recorded CPU-only/no-GRES
+  successor `3967875` for 19:47 CEST and it was retained because P0/readout
+  gates remain incomplete. User vault quota is `607G/1000G`, `183k/200k`
+  files; no cleanup, recovery, resubmission, aggregation, or report change
+  was justified.
+
 - 07:48 CEST: P0 formal compact pilot `3964239_0` remains priority-pending,
   dependency-free, and without runtime artifacts on its unchanged 8x
   A100-80GB protocol (current scheduler estimate 10:49 CEST). Submitted

@@ -1,8 +1,24 @@
 # Running Experiments
 
-Last updated: 2026-08-08 07:48 CEST.
+Last updated: 2026-08-08 13:49 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 13:49 CEST On August 8 (P0 capacity-held; watcher successor verified)
+
+- Formal compact P0 pilot `3964239_0` is dependency-free and pending only on
+  8x `a100_80` capacity on `a100` (excluding `a0532,a0934`). Every compatible
+  node is allocated; Slurm's 20:44 CEST estimate is advisory. No runtime log,
+  checkpoint, or other pilot artifact exists, so no recovery or scientific
+  aggregation is due.
+- The pilot audit is still all-pass: whole documents, exact padding masks, and
+  `0.0499979` realized synthetic loss-token share. The serialized 2.5B chain
+  `3964798-3964803,3964807-3964809` remains dependency-held by
+  `afterany:3964239` and unused.
+- CPU-only/no-GRES watcher `3967141` is running on `a0605`; it recorded
+  CPU-only/no-GRES successor `3967875`, BeginTime-held for 19:47 CEST. Keep
+  the successor because P0 and its downstream audit gates are open. User vault
+  quota remains `607G/1000G`, `183k/200k` files; no cleanup is due.
 
 ## Live Delta At 07:48 CEST On August 8 (P0 still waits only on priority)
 
