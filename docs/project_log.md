@@ -2,6 +2,18 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-10
+
+- 01:52 CEST: Serialized control rerun `3964798` was healthy on `a0832` at
+  finite iteration `3881/4770` (2.03B tokens, 30.7--30.8k tokens/s, about
+  4h13m ETA). Complete checkpoint `3500` passed the 645-file,
+  metadata/config/model, and four-equal-22,848,937,060-byte-optimizer-shard
+  gate. Only unused superseded 2500/3000 states were removed, retaining 3500.
+  Vault fell `1401G -> 1004G/1000G`. The inherited watcher
+  hop limit would have ended an incomplete chain, so CPU-only/no-GRES successor
+  `3973898` was submitted for 07:52 CEST; current watcher `3972756` remains
+  running. No scientific or scheduler-protocol change was made.
+
 ## 2026-08-09
 
 - 19:52 CEST: Control rerun `3964798` remained healthy on `a0832` at finite

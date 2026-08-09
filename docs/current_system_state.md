@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-09 19:52 CEST.
+Last updated: 2026-08-10 01:52 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,23 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-10 01:52 CEST oversight: control rerun healthy; checkpoint boundary reclaimed
+
+- Serialized control rerun `3964798` is healthy on verified eight-A100-80GB
+  node `a0832` at finite iteration `3881/4770` (2.03B consumed tokens),
+  30.7--30.8k tokens/s, and about 4h13m remaining. It stays within its
+  unchanged 24-hour allocation. Rows `3964799-3964803,3964807-3964809`
+  remain singleton/dependency-held.
+- `latest.txt=3500` passed the complete-state gate: 645 nonempty files,
+  metadata/config/model files, and four equal 22,848,937,060-byte optimizer
+  shards. Superseded complete states 2500 and 3000 were not open and were
+  removed; 3500 remains as the sole restart state. Vault usage fell from
+  `1401G` to `1004G/1000G`; repeat the gate at the next boundary.
+- Watcher `3972756` is running CPU-only/no-GRES on `a0605`. Its inherited
+  hop limit would have ended the chain despite incomplete P0/readout work, so
+  CPU-only/no-GRES successor `3973898` was submitted for 07:52 CEST on
+  `a100mig`; retain it until the full plan is complete and verified.
 
 ### 2026-08-09 19:52 CEST oversight: control checkpoint boundary reclaimed
 
