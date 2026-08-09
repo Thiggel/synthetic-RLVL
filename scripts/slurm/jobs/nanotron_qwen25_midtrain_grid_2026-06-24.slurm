@@ -316,3 +316,19 @@ fi
 if [[ -n "${FINAL_CHECKPOINT_ALIAS:-}" && -d "${RUN_ROOT}/checkpoints/${TRAIN_STEPS}" ]]; then
   ln -sfn "${TRAIN_STEPS}" "${RUN_ROOT}/checkpoints/${FINAL_CHECKPOINT_ALIAS}"
 fi
+
+# A successful terminal checkpoint is the only restart state needed once this
+# invocation exits.  Keep it and reclaim earlier complete states when the
+# caller explicitly enabled the guarded pruning policy.
+if [[ "${PRUNE_SUPERSEDED_RUN_CHECKPOINTS:-0}" == "1" ]]; then
+  while IFS= read -r CANDIDATE_STEP; do
+    if [[ "${CANDIDATE_STEP}" -lt "${TRAIN_STEPS}" ]] &&
+      checkpoint_is_complete "${RUN_ROOT}/checkpoints/${CANDIDATE_STEP}"; then
+      echo "Removing superseded complete run checkpoint: ${RUN_ROOT}/checkpoints/${CANDIDATE_STEP}"
+      find "${RUN_ROOT}/checkpoints/${CANDIDATE_STEP}" -depth -delete
+    fi
+  done < <(
+    find "${RUN_ROOT}/checkpoints" -maxdepth 1 -mindepth 1 -type d \
+      -printf '%f\n' | rg '^[0-9]+$' | sort -n
+  )
+fi

@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-08 13:49 CEST.
+Last updated: 2026-08-09 07:51 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,31 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-09 07:51 CEST oversight: compact P0 pilot completes; clean 2.5B chain starts
+
+- Formal compact pilot `3964239_0` completed `0:0` on `a0832` in 4:37:16.
+  It reached its exact 954-step/500,170,752-token target with Qwen2.5
+  `rope_theta=1000000`, stable 30.7--30.8k tokens/s, and a complete terminal
+  checkpoint (four equal 22,848,937,060-byte optimizer shards plus nonempty
+  config/model/metadata). This establishes training-path execution only; its
+  readout and the compact/masked comparison gates remain open.
+- Serialized control rerun `3964798` started on the same verified eight
+  A100-80GB node at 07:15 CEST. Its first 111 iterations are finite
+  (loss `0.334`, 30.7k tokens/s, ETA about 22 hours); `3964799-3964803` and
+  `3964807-3964809` remain singleton/dependency-held, so no duplicate family
+  was released.
+- Vault had crossed its 1,000G soft quota because the pilot retained both
+  complete 199G states. After validating the terminal step-954 manifest,
+  nonempty required files, and all four equal optimizer shards, the
+  superseded step-500 restart was removed, leaving the final intact and vault
+  usage `805G/1000G`. The midtrain wrapper now applies the same opt-in,
+  complete-checkpoint-only prune policy after a successful terminal save;
+  `bash -n` and `git diff --check` pass. The current already-started row must
+  still be checked at each checkpoint boundary until it exits.
+- CPU-only/no-GRES watcher `3969182` remains running on `a0605`; recorded
+  successor `3969592` is BeginTime-held. Retain it: the pilot readout and
+  serialized clean rerun are incomplete.
 
 ### 2026-08-09 01:49 CEST oversight: P0 still capacity-held; successor `3969182` retained
 

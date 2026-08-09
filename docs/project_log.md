@@ -4,6 +4,21 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-09
 
+- 07:51 CEST: Compact document-preserving formal P0 pilot `3964239_0`
+  completed `0:0` in 4:37:16 on eight A100-80GB GPUs. It reached step 954
+  exactly with finite losses, Qwen2.5 RoPE `1000000`, and sustained
+  30.7--30.8k tokens/s. Terminal checkpoint validation accepted nonempty
+  required files and four equal 22,848,937,060-byte optimizer shards. Control
+  row `3964798` then began the serialized 2.5B clean rerun; first 111 steps
+  are finite (loss `0.334`).
+- 07:51 CEST: Vault soft usage exceeded 1,000G because both pilot checkpoints
+  were retained. After validating the terminal step-954 restart state, removed
+  only the superseded complete step-500 state, returning usage to `805G`.
+  Added terminal-path guarded pruning to the Nanotron wrapper; it removes only
+  earlier complete run checkpoints after a complete final exists. `bash -n`
+  and `git diff --check` pass. The pre-edit active control job remains under
+  checkpoint-boundary monitoring.
+
 - 01:49 CEST: Formal compact P0 pilot `3964239_0` remains dependency-free and
   capacity-pending on its unchanged 8x A100-80GB protocol; every compatible
   non-drained node is allocated, and there is no runtime artifact. Its

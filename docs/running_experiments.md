@@ -1,8 +1,30 @@
 # Running Experiments
 
-Last updated: 2026-08-09 01:49 CEST.
+Last updated: 2026-08-09 07:51 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:51 CEST On August 9 (P0 complete; serialized clean rerun active)
+
+- Formal compact P0 pilot `3964239_0` completed `0:0` in 4:37:16 on verified
+  A100-80GB node `a0832`. The terminal `954` checkpoint is complete: required
+  metadata/config/model files are nonempty and all four optimizer shards are
+  equal at 22,848,937,060 bytes. Runtime reached the exact 0.5B-token target
+  with 30.7--30.8k tokens/s and no error signature. This is only a training
+  artifact: readout and the compact/masked comparison remain gates.
+- Control row `3964798` of the serial 2.5B rerun started at 07:15 CEST on
+  `a0832`; its first 111 iterations are finite (loss `0.334`, 30.7k tokens/s).
+  Rows `3964799-3964803,3964807-3964809` remain correctly singleton/
+  dependency-held. No recovery or duplicate submission is justified.
+- The pilot's complete but superseded step-500 checkpoint was safely removed
+  only after the terminal checkpoint gate above passed, reducing Vault use
+  from over-soft-quota to `805G/1000G`. The Nanotron wrapper now repeats this
+  complete-checkpoint-only cleanup after a successful final save. Since
+  `3964798` started before that edit, inspect its checkpoint boundaries and
+  retain only its newest complete restart state until it exits.
+- CPU-only/no-GRES watcher `3969182` remains running; successor `3969592` is
+  BeginTime-held and must be retained while the rerun and readout gates remain
+  open.
 
 ## Live Delta At 01:49 CEST On August 9 (P0 capacity-held; successor `3969182` verified)
 
