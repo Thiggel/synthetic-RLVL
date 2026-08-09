@@ -3767,3 +3767,25 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   (template nl_exact markers; informational) into
   `analysis/real_logic_docpack_audit_20260807/`. Outputs under
   `$HPCVAULT/synthetic-RLVL/nanosets/qwen25_real_logic_docpack_v1/`.
+
+## 2026-08-09 07:25 CEST
+
+- Accepted both 2026-08-07 CPU builds. `3964788` (7m52s): nl_exact compact
+  docpack built (9,942 docs / 40.03M real tokens / 2,481 windows-equivalent
+  -- see stats: 9,942 windows, packing efficiency 98.28%, max doc 2,382
+  tokens, depths 1-14, zero overlength) and BOTH rerun audits pass all four
+  gates at the 2.5B blend size: logic proof_weight 0.05253055 (realized
+  0.04999982, 3.117 synthetic epochs), nl_exact proof_weight 0.05082719
+  (realized 0.04999870, 3.121 epochs). Bundle
+  `analysis/docpack_rerun_audit_20260807/` committed.
+- Accepted `3964789` (11m50s): real logic corpus packed. Formal: 451,162
+  docs -> 299.34M real tokens, 78,497 windows, packing efficiency 93.08%,
+  zero overlength (max doc 1,355 tokens). NL: 213.83M real tokens, 55,113
+  windows, efficiency 94.70%, zero overlength (max doc 973). ProofWriter
+  depth-0: 96,972/217,810 = 44.52% of ProofWriter, 21.49% of the corpus
+  (reported only; down-weighting still open). Informational four-gate
+  audits pass for both packs (template nl_exact markers); bundle
+  `analysis/real_logic_docpack_audit_20260807/`.
+- Pilot `3964239_0` COMPLETED 0:0 (4h37m, 954 steps). Rerun singleton chain
+  began: control pass 1 `3964798` RUNNING since 07:15 CEST; remaining eight
+  jobs pending on singleton.

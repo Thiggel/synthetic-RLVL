@@ -1,0 +1,38 @@
+{
+  "records_total": 451162,
+  "records_by_source": {
+    "pararule": 212352,
+    "prontoqa": 21000,
+    "proofwriter": 217810
+  },
+  "depth_hist_by_source": {
+    "pararule": {
+      "0": 5892,
+      "1": 11794,
+      "2": 53122,
+      "3": 53172,
+      "4": 47158,
+      "5": 41214
+    },
+    "prontoqa": {
+      "0": 3000,
+      "1": 6000,
+      "2": 3000,
+      "3": 3000,
+      "4": 3000,
+      "5": 3000
+    },
+    "proofwriter": {
+      "0": 96972,
+      "1": 53800,
+      "2": 33150,
+      "3": 18676,
+      "4": 7606,
+      "5": 7606
+    }
+  },
+  "proofwriter_depth0_count": 96972,
+  "proofwriter_depth0_fraction_of_proofwriter": 0.4452137183784032,
+  "proofwriter_depth0_fraction_of_corpus": 0.2149383148403456,
+  "note": "depth-0 restatement proofs reported only; down-weighting is an open question, NOT filtered here"
+}
