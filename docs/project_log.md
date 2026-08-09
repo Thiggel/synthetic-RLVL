@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-09
 
+- 13:50 CEST: Serialized clean-control rerun `3964798` passed its first
+  active checkpoint-boundary audit on `a0832`: finite step `1361/4770`, 714M
+  tokens, 30.8k tokens/s, and complete equal-shard restart states at 500 and
+  1000. With `latest.txt=1000`, only the immutable complete step-500 state
+  was stale and not locally open; removed it, retaining step 1000. Vault use
+  fell `1203G -> 1004G` (soft quota remains narrowly exceeded). The row's
+  projected finish remains within its 24-hour allocation; no scheduler or
+  protocol change. Running CPU-only watcher `3969592` recorded retained
+  BeginTime-held successor `3971634`.
+
 - 07:51 CEST: Compact document-preserving formal P0 pilot `3964239_0`
   completed `0:0` in 4:37:16 on eight A100-80GB GPUs. It reached step 954
   exactly with finite losses, Qwen2.5 RoPE `1000000`, and sustained

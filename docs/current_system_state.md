@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-09 07:51 CEST.
+Last updated: 2026-08-09 13:50 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,25 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-09 13:50 CEST oversight: serialized control checkpoint gate passes; stale restart reclaimed
+
+- Control rerun `3964798` remains healthy on verified eight-A100-80GB node
+  `a0832`, with finite step `1361/4770` (714M consumed tokens), 30.8k
+  tokens/s, and a projected finish inside its 24-hour allocation. Complete
+  step-500 and step-1000 restart states both passed the required
+  metadata/config/model and four-equal-optimizer-shard checks; `latest.txt`
+  names step 1000. No runtime, protocol, or scheduler edit is justified.
+- Vault had risen to `1203G/1000G` because this pre-pruning active row held
+  both 199G restart states. The older step-500 state was verified immutable
+  (metadata timestamp 09:41 CEST), superseded by the complete step-1000
+  state (12:04 CEST), and not locally open before guarded removal. Only that
+  stale state was removed; the latest restart state remains intact. Usage is
+  now `1004G/1000G`, so the next watcher must repeat this exact
+  complete-newer-checkpoint gate at subsequent checkpoint boundaries.
+- CPU-only watcher `3969592` is running on `a0605`; it scheduled successor
+  `3971634`, BeginTime-held on `a100mig`. Retain the successor: the clean
+  rerun and P0 readout remain incomplete.
 
 ### 2026-08-09 07:51 CEST oversight: compact P0 pilot completes; clean 2.5B chain starts
 
