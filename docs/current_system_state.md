@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-09 13:50 CEST.
+Last updated: 2026-08-09 19:52 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-09 19:52 CEST oversight: control checkpoint boundary reclaimed
+
+- Serialized control rerun `3964798` is healthy on verified eight-A100-80GB
+  node `a0832`, at finite step `2621/4770` (1.37B tokens), 30.7k tokens/s,
+  with an ETA of about 10h11m. It remains within its unchanged 24-hour
+  allocation; no protocol or scheduler edit is warranted. Dependent rows
+  `3964799-3964803,3964807-3964809` remain singleton/dependency-held.
+- The complete-state gate passed for steps 1000, 1500, 2000, and 2500:
+  each has nonempty metadata/config/model files, 625 nonempty model files,
+  and four equal 22,848,937,060-byte optimizer shards. `latest.txt` names
+  2500. The three older complete states were not locally open and were
+  removed; step 2500 remains. Vault use fell `1600G -> 1004G` (still narrowly
+  over the 1000G soft quota). Repeat this exact newer-complete gate after the
+  next checkpoint boundary.
+- CPU-only watcher `3971634` is running and its pre-scheduled CPU-only/no-GRES
+  successor `3972756` is BeginTime-held on `a100mig`. Retain it: the clean
+  rerun, matched conditions, and P0 readout remain incomplete.
 
 ### 2026-08-09 13:50 CEST oversight: serialized control checkpoint gate passes; stale restart reclaimed
 

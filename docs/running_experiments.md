@@ -1,8 +1,25 @@
 # Running Experiments
 
-Last updated: 2026-08-09 13:50 CEST.
+Last updated: 2026-08-09 19:52 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:52 CEST On August 9 (control remains healthy; restart states reclaimed)
+
+- Serialized control `3964798` is RUNNING on verified eight-A100-80GB node
+  `a0832` at finite iteration `2621/4770` (1.37B consumed tokens), 30.7k
+  tokens/s, and an approximately 10h11m ETA. This remains inside the
+  unchanged 24-hour allocation. `3964799-3964803,3964807-3964809` remain
+  correctly singleton/dependency-held.
+- `latest.txt=2500`. Steps 1000/1500/2000/2500 all passed the complete-state
+  gate: nonempty metadata/config/model, 625 nonempty model files, and four
+  equal 22,848,937,060-byte optimizer shards. Only the immutable superseded
+  1000/1500/2000 states were removed after the newest gate passed; 2500 is
+  retained. Vault usage fell `1600G -> 1004G`; repeat the gate at the next
+  checkpoint boundary rather than deleting any active/latest state.
+- CPU-only/no-GRES watcher `3971634` is RUNNING; successor `3972756` is
+  BeginTime-held on `a100mig` and must remain while the rerun and P0 readout
+  remain open.
 
 ## Live Delta At 13:50 CEST On August 9 (control checkpoint boundary audited)
 

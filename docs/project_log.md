@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-09
 
+- 19:52 CEST: Control rerun `3964798` remained healthy on `a0832` at finite
+  step `2621/4770` (1.37B tokens, 30.7k tokens/s, about 10h11m ETA). Complete
+  checkpoint validation accepted steps 1000/1500/2000/2500 (nonempty required
+  files, 625 nonempty model files, and four equal 22,848,937,060-byte
+  optimizer shards); `latest.txt=2500`. Removed only the superseded immutable
+  1000/1500/2000 states after confirming the newest state was complete and
+  not locally open. Vault use fell `1600G -> 1004G`; 2500 is retained. No
+  scheduler or scientific-protocol change was justified. Running CPU-only
+  watcher `3971634` retained BeginTime-held successor `3972756`.
+
 - 13:50 CEST: Serialized clean-control rerun `3964798` passed its first
   active checkpoint-boundary audit on `a0832`: finite step `1361/4770`, 714M
   tokens, 30.8k tokens/s, and complete equal-shard restart states at 500 and
