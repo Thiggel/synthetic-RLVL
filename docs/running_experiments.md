@@ -1,8 +1,22 @@
 # Running Experiments
 
-Last updated: 2026-08-10 14:10 CEST.
+Last updated: 2026-08-10 19:55 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:55 CEST On August 10 (formal recovery queued)
+
+- `3964802` is dependency-free and priority-pending for eight A100-80GB GPUs
+  (current candidate `a0633`, Slurm estimate 2026-08-11 12:28 CEST). The
+  singleton chain correctly keeps `3964803` and `3964807-3964809` held. No
+  restart output exists yet; do not infer a model result or submit a duplicate.
+- Revalidated the only formal restart state: step `1500` has 645 nonempty
+  files and four equal 22,848,937,060-byte optimizer shards. Account quota is
+  185k/200k files and 1.033 TiB/2 TiB hard space despite a misleading global
+  inode display, so no preemptive checkpoint deletion is authorized.
+- Watcher `3977427` is running CPU-only/no-GRES. Its recorded successor
+  `3979555` is CPU-only/no-GRES and BeginTime-held for 01:53 CEST on August
+  11; retain it while this chain and the consumer readout remain incomplete.
 
 ## Live Delta At 14:10 CEST On August 10 (formal recovery released)
 

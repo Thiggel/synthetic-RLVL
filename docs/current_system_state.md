@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-10 14:10 CEST.
+Last updated: 2026-08-10 19:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,25 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-10 19:55 CEST oversight: formal recovery queued with verified quota headroom
+
+- Recovery `3964802` is dependency-free and priority-pending for the verified
+  eight-A100-80GB candidate `a0633` (current Slurm estimate 2026-08-11
+  12:28 CEST); `3964803` and NL `3964807-3964809` remain correctly
+  singleton-held. No row has restarted yet, so there are no new losses,
+  checkpoints, generations, or scientific metrics to accept.
+- Rechecked the formal restart state before it can run: `1500` is the only
+  local state, with 645 nonempty files and four equal 22,848,937,060-byte
+  optimizer shards. The committed logic docpack audit remains all-pass
+  (zero overlength/split documents, exact padding mask, 32,073 draws and
+  realized loss-token share `0.0499998208`).
+- The shared filesystem's global inode display is exhausted, but the relevant
+  account quota is healthy at 185k/200k files (15k headroom) and 1.033 TiB
+  against a 2 TiB hard limit. No guarded deletion is justified before the
+  restart. Current watcher `3977427` is CPU-only/no-GRES; retain its already
+  scheduled CPU-only/no-GRES successor `3979555` (BeginTime 2026-08-11
+  01:53 CEST) until the compact three-way rerun and readout close.
 
 ### 2026-08-10 14:10 CEST oversight: formal docpack recovery fixed and released
 

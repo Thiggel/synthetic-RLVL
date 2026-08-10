@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-10
 
+- 19:55 CEST: Recovery `3964802` is dependency-free and priority-pending for
+  eight A100-80GB GPUs (current estimate August 11 12:28); formal `3964803`
+  and NL `3964807-3964809` remain singleton-held. Step 1500 re-passed the
+  complete-state check (645 nonempty files; four equal 22,848,937,060-byte
+  optimizer shards). Although the shared mount's global inode display is
+  exhausted, account quota is 185k/200k files and 1.033 TiB/2 TiB hard space,
+  so no deletion or scheduler change was justified. Current CPU-only watcher
+  `3977427` retained its CPU-only/no-GRES successor `3979555` for 01:53 CEST
+  August 11. No new generation, aggregate, or report trigger exists.
+
 - 14:10 CEST: Formal compact/docpack row `3964801` failed `1:0` after the
   accepted step-1500 save with a dataloader `IndexError`: exact-mixture audit
   requires 32,073 synthetic draws (3.1169 passes) from a finite 10,290-window
