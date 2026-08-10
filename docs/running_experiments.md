@@ -1,8 +1,21 @@
 # Running Experiments
 
-Last updated: 2026-08-10 19:55 CEST.
+Last updated: 2026-08-11 01:55 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 01:55 CEST On August 11 (recovery remains quota-held)
+
+- `3964802` remains dependency-free and PENDING only for `AssocGrpGRES` on
+  its unchanged 8x A100-80GB (`a100_80`) protocol; the current scheduler
+  estimate is 10:28 CEST. The complete formal step-1500 restart remains the
+  sole recovery state (645 nonempty files; four equal 22,848,937,060-byte
+  optimizer shards). `3964803` and `3964807-3964809` remain correctly
+  singleton-held. No recovery, partition widening, or checkpoint cleanup is
+  justified.
+- Watcher `3979555` is CPU-only/no-GRES on `a0605`; it scheduled CPU-only/
+  no-GRES successor `3980820` for 07:53 CEST. Retain the chain because the
+  three-way compact rerun and consumer/readout work remain incomplete.
 
 ## Live Delta At 19:55 CEST On August 10 (formal recovery queued)
 

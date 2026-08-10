@@ -2,6 +2,18 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-11
+
+- 01:55 CEST: Formal recovery `3964802` remains dependency-free and pending
+  only for the account GPU-group limit on its unchanged 8x A100-80GB request
+  (current estimate 10:28 CEST). Step 1500 remains complete with 645 nonempty
+  files and four equal 22,848,937,060-byte optimizer shards; held `3964803`
+  and `3964807-3964809` were not touched. Accepted BranchProof `3857769` and
+  null/mixed, sample-unclean p15 `3854847` were rechecked from their raw-audit
+  bundles; no historical metric was revived and no mixture grid was submitted.
+  CPU-only watcher `3979555` retained its CPU-only/no-GRES successor `3980820`
+  for 07:53 CEST because the compact three-way rerun/readout remains open.
+
 ## 2026-08-10
 
 - 19:55 CEST: Recovery `3964802` is dependency-free and priority-pending for
