@@ -1,8 +1,23 @@
 # Running Experiments
 
-Last updated: 2026-08-10 07:54 CEST.
+Last updated: 2026-08-10 14:10 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 14:10 CEST On August 10 (formal recovery released)
+
+- Formal `3964801` failed `1:0` at the first draw beyond the third finite
+  docpack pass, after an accepted step-1500 checkpoint. The 2.5B audit
+  explicitly requires 32,073 synthetic samples from 10,290 windows
+  (3.1169 epochs); it had not exercised the loader's missing wraparound.
+- Nanotron commit `13625f34` adds deterministic modulo indexing in
+  `BlendableDataset`, with a direct cycle test plus `compileall` passing.
+  Recovery `3964802` was held during that verification and then released;
+  it will resume from complete `1500` and use the existing guarded prune for
+  complete `500/1000` states. Do not treat `3964801` as a scientific result.
+  `3964803` and `3964807-3964809` remain singleton-held.
+- Successor watcher `3977427` is CPU-only/no-GRES and BeginTime-held. Retain
+  it while the corrected three-way chain and readout remain incomplete.
 
 ## Live Delta At 07:54 CEST On August 10 (control terminal accepted; formal active)
 

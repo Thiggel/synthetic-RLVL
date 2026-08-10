@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-10 07:54 CEST.
+Last updated: 2026-08-10 14:10 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-10 14:10 CEST oversight: formal docpack recovery fixed and released
+
+- Formal `3964801` failed `1:0` after its accepted step-1500 save, not from
+  model instability: the finite 10,290-window docpack was indexed linearly
+  even though the committed exact-mixture audit requires 32,073 synthetic
+  draws (3.1169 epochs). The failure is a deterministic dataloader
+  `IndexError`, so its partial run is not evidence.
+- Nanotron commit `13625f34` changes only `BlendableDataset.__getitem__` to
+  wrap a finite source index modulo its length, preserving the audit's
+  deterministic blended ordering. A direct 10,290-window, 32,073-draw test
+  and `compileall` pass. Complete checkpoint `1500` has 645 nonempty files;
+  `3964802` was briefly user-held during the fix, then released to resume
+  exactly from that state. Its wrapper will remove only verified superseded
+  `500/1000` states before restart. Formal `3964803` and NL `3964807-3964809`
+  remain singleton-held.
+- Keep CPU-only successor `3977427` (recorded by this pass) pending: the
+  compact three-way rerun and consumer readout remain incomplete. The shared
+  Vault mount currently reports inode exhaustion, so the next pass must check
+  post-prune inode headroom before accepting additional checkpoint saves.
 
 ### 2026-08-10 07:54 CEST oversight: clean control final accepted; serialized logic begins
 

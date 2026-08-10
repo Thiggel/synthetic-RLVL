@@ -4,6 +4,15 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-10
 
+- 14:10 CEST: Formal compact/docpack row `3964801` failed `1:0` after the
+  accepted step-1500 save with a dataloader `IndexError`: exact-mixture audit
+  requires 32,073 synthetic draws (3.1169 passes) from a finite 10,290-window
+  dataset, while `BlendableDataset` did not cycle finite sources. Nanotron
+  commit `13625f34` adds modulo indexing only; direct cycle test and
+  `compileall` pass. Held then released `3964802` to resume exactly from the
+  645-file complete step-1500 state; guarded wrapper pruning may remove only
+  complete `500/1000` predecessors. Retained CPU-only successor `3977427`.
+
 - 07:54 CEST: Clean control `3964798` completed `0:0` in 22:52:00 on verified
   eight-A100-80GB node `a0832`, reaching 4,770 steps / 2.5B tokens. Terminal
   `4770` passed the 645-file, nonempty metadata/config/model, and
