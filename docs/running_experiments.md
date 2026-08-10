@@ -1,8 +1,27 @@
 # Running Experiments
 
-Last updated: 2026-08-10 01:52 CEST.
+Last updated: 2026-08-10 07:54 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:54 CEST On August 10 (control terminal accepted; formal active)
+
+- Control `3964798` completed `0:0` in 22:52:00 on verified eight-A100-80GB
+  node `a0832` at the exact 4,770-step / 2.5B-token target. Its terminal
+  `4770` state passes the 645-nonempty-file, metadata/config/model, and
+  four-equal-22,848,937,060-byte-optimizer-shard gate. The terminal wrapper
+  reclaimed only superseded complete restart states `3500/4000/4500`.
+  Released duplicate control singletons `3964799/3964800` observed the final
+  and exited `0:0`; this is expected, not a recovery failure.
+- Formal `3964801` is RUNNING on eight A100-80GB GPUs at `a0632`, with finite
+  training through step 351/4770 (184M tokens), 29.9--30.2k tokens/s, and
+  audited Qwen2.5 RoPE `1000000.0`. Its 2.5B docpack audit is all-pass,
+  including 0.0499998208 realized synthetic loss-token share. Formal
+  `3964802/3964803` and NL `3964807-3964809` remain singleton-held.
+- Vault is `1004G/1000G`, 185k/200k files. Retain the control final for its
+  downstream consumer chain; only test formal checkpoint cleanup after a
+  newer complete state passes the same gate. CPU-only/no-GRES successor
+  `3976066` is BeginTime-held for 13:52 CEST and must remain pending.
 
 ## Live Delta At 01:52 CEST On August 10 (control healthy; checkpoint rotation continues)
 

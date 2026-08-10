@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-10 01:52 CEST.
+Last updated: 2026-08-10 07:54 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,31 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-10 07:54 CEST oversight: clean control final accepted; serialized logic begins
+
+- Clean control rerun `3964798` completed `0:0` on verified eight-A100-80GB
+  node `a0832` in 22:52:00, reaching its exact 4,770-step / 2.5B-token
+  target. Terminal `latest.txt=4770` passes the complete-state gate: 645
+  nonempty files, required metadata/config/model files, and four identical
+  22,848,937,060-byte optimizer shards. The terminal wrapper removed only
+  superseded complete restart states `3500`, `4000`, and `4500` after the
+  final save. Released duplicate control singletons `3964799` and `3964800`
+  correctly detected the final and exited `0:0` without changing it.
+- Serialized formal row `3964801` is RUNNING on verified eight-A100-80GB node
+  `a0632`; it has finite losses through step 351/4770 (184M tokens), sustains
+  about 29.9--30.2k tokens/s, resolves Qwen2.5 `rope_theta=1000000.0`, and
+  uses the audited logic proof weight `0.05253054987314899`. Its committed
+  audit remains fail-closed clean (zero overlength/split documents, exact
+  padding labels, realized 0.0499998208 loss-token share). Remaining formal
+  `3964802/3964803` and NL `3964807-3964809` rows remain singleton-held; no
+  duplicate submission, protocol change, or checkpoint deletion is justified.
+- Vault is `1004G/1000G` (185k/200k files). Keep the control terminal state
+  until conversion/upload/evaluation is safely complete, and apply the same
+  complete-newer-state gate to formal at its next checkpoint boundary.
+- The active CPU-only watcher recorded CPU-only/no-GRES successor `3976066`,
+  BeginTime-held on `a100mig` for 13:52 CEST. Retain it because formal/NL,
+  readout, and audit gates remain incomplete.
 
 ### 2026-08-10 01:52 CEST oversight: control rerun healthy; checkpoint boundary reclaimed
 

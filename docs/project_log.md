@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-10
 
+- 07:54 CEST: Clean control `3964798` completed `0:0` in 22:52:00 on verified
+  eight-A100-80GB node `a0832`, reaching 4,770 steps / 2.5B tokens. Terminal
+  `4770` passed the 645-file, nonempty metadata/config/model, and
+  four-equal-22,848,937,060-byte optimizer-shard gate; only superseded complete
+  `3500/4000/4500` restart states were reclaimed after final save. Released
+  duplicate control singletons `3964799/3964800` skipped cleanly. Formal
+  `3964801` then began serially on `a0632`, with finite step 351/4770,
+  29.9--30.2k tokens/s, Qwen2.5 RoPE 1000000, and the committed all-pass
+  docpack audit. Vault is `1004G/1000G`, 185k/200k files; retain the control
+  terminal and use the complete-newer-state gate for formal. CPU-only/no-GRES
+  successor `3976066` is BeginTime-held for 13:52 CEST and remains retained.
+
 - 01:52 CEST: Serialized control rerun `3964798` was healthy on `a0832` at
   finite iteration `3881/4770` (2.03B tokens, 30.7--30.8k tokens/s, about
   4h13m ETA). Complete checkpoint `3500` passed the 645-file,
