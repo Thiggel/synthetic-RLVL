@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-11 13:55 CEST.
+Last updated: 2026-08-11 19:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,24 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-11 19:55 CEST oversight: formal recovery healthy past prior failure
+
+- Formal recovery `3964802` started at 18:38 CEST on verified eight-A100-80GB
+  node `a0833` and resumed cleanly from the sole complete step-1500 state. It
+  is finite at step 1711/4770 (897M consumed tokens), about 30.7k tokens/s,
+  with a 14.5-hour ETA inside the unchanged 24-hour allocation. This is past
+  `3964801`'s deterministic finite-docpack indexing failure at step 1521;
+  the modulo-index fix is therefore exercising successfully. The expected
+  timer/NCCL warnings are non-fatal and no error signature is present.
+- `latest.txt` remains `1500` until the next checkpoint boundary; that state
+  still passes the 645-nonempty-file/four-equal-22,848,937,060-byte optimizer
+  shard gate. Do not prune it until a newer complete state passes the same
+  gate. Formal singleton `3964803` and NL singletons `3964807-3964809` remain
+  correctly held.
+- CPU-only/no-GRES watcher `3982880` is RUNNING on `a0605` and has scheduled
+  CPU-only/no-GRES successor `3984726` for 01:54 CEST on August 12. Retain it:
+  the compact three-way rerun and consumer/readout gates remain incomplete.
 
 ### 2026-08-11 13:55 CEST oversight: recovery still account-GRES-held; watcher advanced
 

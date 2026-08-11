@@ -4,6 +4,19 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-11
 
+- 19:55 CEST: Formal recovery `3964802` started at 18:38 CEST on verified
+  eight-A100-80GB node `a0833`, resumed the accepted step-1500 state, and is
+  finite through step 1711/4770 (897M tokens, about 30.7k tokens/s, 14.5-hour
+  ETA). This passes the predecessor's deterministic step-1521 docpack-index
+  failure, confirming the committed modulo-index recovery is active. Expected
+  timer/NCCL warnings are non-fatal; no error or protocol drift is present.
+  `latest=1500` remains complete (645 nonempty files and four equal
+  22,848,937,060-byte optimizer shards), so no pruning is authorized yet.
+  Held `3964803` and `3964807-3964809` were untouched. CPU-only/no-GRES
+  watcher `3982880` scheduled retained successor `3984726` for 01:54 CEST
+  August 12. No evaluation artifact, scientific conclusion, mixture-grid
+  launch, or report update is due.
+
 - 13:55 CEST: Formal recovery `3964802` remains dependency-free and pending
   only for `AssocGrpGRES` on the unchanged 8x A100-80GB request (current
   estimate 17:45 CEST). The sole step-1500 state again passes the 645-nonempty

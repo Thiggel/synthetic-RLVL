@@ -1,8 +1,22 @@
 # Running Experiments
 
-Last updated: 2026-08-11 13:55 CEST.
+Last updated: 2026-08-11 19:55 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 19:55 CEST On August 11 (formal recovery passes old failure)
+
+- `3964802` is RUNNING since 18:38 CEST on verified 8x A100-80GB node
+  `a0833`. It resumed from accepted step 1500 and is finite through step
+  1711/4770 (897M tokens), about 30.7k tokens/s, with a 14.5-hour ETA. It has
+  passed predecessor `3964801`'s step-1521 finite-docpack indexing failure;
+  the committed modulo-index recovery is healthy. Expected timer/NCCL warnings
+  are non-fatal. Retain the still-complete `latest=1500` state until a newer
+  checkpoint passes the 645-file/four-equal-optimizer-shard gate.
+- `3964803` and `3964807-3964809` remain correctly singleton/dependency-held.
+  Current CPU-only/no-GRES watcher `3982880` runs on `a0605`; it scheduled
+  CPU-only/no-GRES successor `3984726` (BeginTime 01:54 CEST August 12).
+  Retain the chain while the rerun and consumer/readout remain open.
 
 ## Live Delta At 13:55 CEST On August 11 (recovery remains quota-held)
 
