@@ -4,6 +4,18 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-11
 
+- 13:55 CEST: Formal recovery `3964802` remains dependency-free and pending
+  only for `AssocGrpGRES` on the unchanged 8x A100-80GB request (current
+  estimate 17:45 CEST). The sole step-1500 state again passes the 645-nonempty
+  file/four-equal-22,848,937,060-byte-optimizer-shard gate; `3964801` was
+  finite through step 1521 before the repaired finite-docpack indexing error.
+  Held `3964803` and `3964807-3964809` remain untouched. CPU-only/no-GRES
+  watcher `3981612` runs on `a0605` and retained its already-scheduled
+  CPU-only/no-GRES successor `3982880` for 19:53 CEST. No recovery duplicate,
+  resource edit, cleanup, or mixture-grid launch is warranted. Committed the
+  handoff as `adb0fa5`; push remains blocked because SSH to `github.com:22`
+  timed out.
+
 - 07:55 CEST: Formal recovery `3964802` remains dependency-free and pending
   only for `AssocGrpGRES` on its unchanged 8x A100-80GB request (current
   estimate 14:00 CEST). Re-read predecessor `3964801`: it reached finite step
