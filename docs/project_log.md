@@ -2,6 +2,19 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-08-12
+
+- 01:57 CEST: Formal recovery `3964802` is healthy on `a0833` through step
+  `2981/4770` (1.56B tokens, ~30.6k tokens/s, 8:30 ETA), well past the repaired
+  step-1521 docpack-indexing failure. Accepted `latest=2500` independently
+  passed the 645-nonempty-file/625-model-file/four-equal-22,848,937,060-byte
+  optimizer-shard gate and exact 95:5 token accounting. Guarded rotation
+  removed only superseded complete states `1500` and `2000`, retaining `2500`;
+  Vault fell 1.43 TiB -> 1.03 TiB and 187k -> 185k files. Held `3964803` and
+  `3964807-3964809` remain untouched. Watcher `3984726` retained scheduled
+  CPU-only/no-GRES successor `3985510`; no scientific result or report trigger
+  is due.
+
 ## 2026-08-11
 
 - 19:55 CEST: Formal recovery `3964802` started at 18:38 CEST on verified

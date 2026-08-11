@@ -26,6 +26,26 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
+### 2026-08-12 01:57 CEST oversight: formal checkpoint rotation after healthy recovery
+
+- Formal recovery `3964802` remains healthy on verified eight-A100-80GB node
+  `a0833`, finite through step `2981/4770` (1.56B tokens) at about `30.6k`
+  tokens/s with an `8:30` ETA. It is well past the repaired predecessor's
+  step-1521 finite-docpack indexing failure; timer/NCCL warnings remain
+  non-fatal and no error signature is present. Formal singleton `3964803` and
+  NL singletons `3964807-3964809` remain correctly dependency-held.
+- `latest.txt=2500` independently passed the restart gate: 645 nonempty files,
+  625 model files, four equal `22,848,937,060`-byte optimizer shards, and exact
+  95:5 normal/logic token accounting (`1,241,866,240/68,853,760`). The guarded
+  rotation then removed only complete superseded states `1500` and `2000`;
+  `2500` remains the sole restart state. Vault use fell from 1.43 TiB to 1.03
+  TiB and file use from 187k to 185k, still above the soft space quota but below
+  its 2 TiB hard limit.
+- CPU-only/no-GRES watcher `3984726` is active and recorded successor `3985510`
+  is BeginTime-held. Retain it: the compact three-way rerun and its downstream
+  consumer/readout gates are incomplete. No BranchProof evidence, p15 result,
+  mixture-grid decision, or report update changed this pass.
+
 ### 2026-08-11 19:55 CEST oversight: formal recovery healthy past prior failure
 
 - Formal recovery `3964802` started at 18:38 CEST on verified eight-A100-80GB

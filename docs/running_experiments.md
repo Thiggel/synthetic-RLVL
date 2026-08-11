@@ -6,6 +6,22 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 ## Live Delta At 19:55 CEST On August 11 (formal recovery passes old failure)
 
+## Live Delta At 01:57 CEST On August 12 (formal recovery rotates accepted state)
+
+- `3964802` remains RUNNING on verified 8x A100-80GB node `a0833`, finite
+  through `2981/4770` (1.56B tokens) at about 30.6k tokens/s with an 8:30 ETA.
+  It has passed the predecessor's fixed step-1521 docpack-indexing failure;
+  expected timer/NCCL warnings are non-fatal. `3964803` and `3964807-3964809`
+  remain correctly dependency-held.
+- `latest=2500` independently passes the 645-file, nonempty, 625-model-file,
+  four-equal-22,848,937,060-byte optimizer-shard restart gate with exact 95:5
+  token accounting. Guarded rotation removed only complete superseded `1500`
+  and `2000`; `2500` is the sole retained restart. Vault is now 1.033 TiB of
+  the 2 TiB hard limit and 185k/200k files.
+- Watcher `3984726` is CPU-only/no-GRES on `a0605`; successor `3985510` is
+  BeginTime-held and must remain while the rerun and consumer/readout gates are
+  open.
+
 - `3964802` is RUNNING since 18:38 CEST on verified 8x A100-80GB node
   `a0833`. It resumed from accepted step 1500 and is finite through step
   1711/4770 (897M tokens), about 30.7k tokens/s, with a 14.5-hour ETA. It has
