@@ -1,6 +1,6 @@
 # Synthetic-RLVL Current Handoff
 
-Last updated: 2026-08-11 01:55 CEST.
+Last updated: 2026-08-11 07:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
@@ -25,6 +25,22 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Informal generated report | `../synthetic-RLVL-report/informal_report/main.tex` |
 
 ## Current Scientific State
+
+### 2026-08-11 07:55 CEST oversight: recovery remains quota-held; watcher chain preserved
+
+- Formal recovery `3964802` remains dependency-free and PENDING solely for
+  `AssocGrpGRES` on its unchanged eight-A100-80GB (`a100_80`) request. Slurm
+  currently estimates 14:00 CEST. Its retained step-1500 restart remains the
+  sole complete state; the predecessor log confirms finite optimization through
+  step 1521 before the known finite-docpack indexing failure. Do not create a
+  duplicate or change the protocol. Formal singleton `3964803` and NL
+  singletons `3964807-3964809` remain correctly held.
+- Current CPU-only/no-GRES watcher `3980820` is running on `a0605` and had
+  already scheduled CPU-only/no-GRES successor `3981612` for 13:53 CEST.
+  Retain that successor: the compact three-way rerun and its consumer/readout
+  gates remain incomplete. BranchProof `3857769` remains accepted historical
+  evidence, while p15 `3854847` remains null/mixed and sample-unclean; neither
+  result triggers a new mixture grid.
 
 ### 2026-08-11 01:55 CEST oversight: recovery remains quota-held; watcher chain advanced
 

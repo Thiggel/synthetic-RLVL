@@ -4,6 +4,16 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-11
 
+- 07:55 CEST: Formal recovery `3964802` remains dependency-free and pending
+  only for `AssocGrpGRES` on its unchanged 8x A100-80GB request (current
+  estimate 14:00 CEST). Re-read predecessor `3964801`: it reached finite step
+  1521 after the accepted step-1500 save before the known docpack-indexing
+  error, so no protocol change or duplicate recovery is justified. Held
+  `3964803` and `3964807-3964809` remain untouched. Watcher `3980820` is
+  CPU-only/no-GRES on `a0605` and its already-scheduled CPU-only/no-GRES
+  successor `3981612` is retained for 13:53 CEST because the compact three-way
+  rerun and consumer/readout remain incomplete.
+
 - 01:55 CEST: Formal recovery `3964802` remains dependency-free and pending
   only for the account GPU-group limit on its unchanged 8x A100-80GB request
   (current estimate 10:28 CEST). Step 1500 remains complete with 645 nonempty
