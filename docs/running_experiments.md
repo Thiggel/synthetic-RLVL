@@ -1,8 +1,23 @@
 # Running Experiments
 
-Last updated: 2026-08-11 19:55 CEST.
+Last updated: 2026-08-12 07:56 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Live Delta At 07:56 CEST On August 12 (formal recovery passes 4k restart gate)
+
+- `3964802` remains RUNNING on verified 8x A100-80GB node `a0833`, finite
+  through `4231/4770` (2.22B tokens) at about 30.6k tokens/s with a 2.5-hour
+  ETA. Expected timer/NCCL warnings remain non-fatal and the error log has no
+  failure signature. Its `latest=4000` restart independently passes the
+  645-nonempty-file/625-model-file/four-equal-22,848,937,060-byte optimizer
+  shard gate. `3964803` and `3964807-3964809` remain correctly dependency-held.
+- Account quota is `1.628 TiB/2 TiB` and `188k/200k` files. The mount-wide
+  two-free-inode display is not the account quota; leave the guarded active
+  job to rotate its complete `2500/3000/3500/4000` states after the next save.
+  CPU-only/no-GRES watcher `3985510` is running; its recorded successor
+  `3986097` is BeginTime-held and must remain while consumer/readout gates are
+  open.
 
 ## Live Delta At 19:55 CEST On August 11 (formal recovery passes old failure)
 

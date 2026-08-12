@@ -4,6 +4,17 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 
 ## 2026-08-12
 
+- 07:56 CEST: Formal recovery `3964802` remains finite through `4231/4770`
+  (2.22B tokens, ~30.6k tokens/s, ~2.5-hour ETA) on verified 8x A100-80GB
+  `a0833`, with only expected non-fatal timer/NCCL warnings. Its new
+  `latest=4000` restart passes 645 nonempty files, 625 model files, and four
+  equal 22,848,937,060-byte optimizer shards. Account vault quota is 1.628
+  TiB/2 TiB and 188k/200k files; the mount-wide two-free-inode reading is not
+  an account exhaustion. Leave guarded rotation to the active job rather than
+  manually pruning its complete 2500/3000/3500/4000 states. Held `3964803`
+  and `3964807-3964809` remain untouched. CPU-only watcher `3985510` retained
+  BeginTime-held successor `3986097`; no scientific/report trigger is due.
+
 - 01:57 CEST: Formal recovery `3964802` is healthy on `a0833` through step
   `2981/4770` (1.56B tokens, ~30.6k tokens/s, 8:30 ETA), well past the repaired
   step-1521 docpack-indexing failure. Accepted `latest=2500` independently

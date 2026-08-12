@@ -26,6 +26,22 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
+### 2026-08-12 07:56 CEST oversight: formal recovery past 4k restart gate
+
+- Formal recovery `3964802` remains finite on verified eight-A100-80GB node
+  `a0833`, through step `4231/4770` (2.22B tokens) at about `30.6k` tokens/s
+  with a 2.5-hour ETA. The expected timer/NCCL warnings remain non-fatal and
+  its error log has no failure signature. Its new `latest=4000` independently
+  passes the restart gate: 645 nonempty files, 625 model files, and four equal
+  `22,848,937,060`-byte optimizer shards. Do not manually prune the retained
+  `2500/3000/3500/4000` states while the guarded job is active; it owns the
+  next rotation after a complete save.
+- User vault quota is `1.628 TiB/2 TiB` and `188k/200k` files (the shared
+  filesystem's two-free-inode display is global and not the user quota). Held
+  formal `3964803` and NL `3964807-3964809` remain correctly dependency-held;
+  no duplicate, protocol edit, or report result is justified. CPU-only watcher
+  `3985510` is running and retained successor `3986097` is BeginTime-held.
+
 ### 2026-08-12 01:57 CEST oversight: formal checkpoint rotation after healthy recovery
 
 - Formal recovery `3964802` remains healthy on verified eight-A100-80GB node
