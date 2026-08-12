@@ -105,4 +105,25 @@ export RUN_ROOT_OVERRIDE="${RUN_ROOT_OVERRIDE:-${HPCVAULT}/synthetic-RLVL/nanotr
 export FINAL_CHECKPOINT_ALIAS=2p5b
 export PRUNE_SUPERSEDED_RUN_CHECKPOINTS=1
 
+# Mid-run checkpoint pruner: ~199G per checkpoint at interval 500 accumulates
+# past the HPCVAULT hard quota within a single 24h pass (this truncated the
+# logic 4770 save on 2026-08-12). The grid script only prunes at start/end, so
+# reclaim superseded states while training runs: keep the two newest numeric
+# checkpoint dirs (the newest may still be mid-write; the second-newest is the
+# resume state), delete anything older.
+(
+  while sleep 600; do
+    CKPT_DIR="${RUN_ROOT_OVERRIDE}/checkpoints"
+    [[ -d "${CKPT_DIR}" ]] || continue
+    find "${CKPT_DIR}" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' \
+      | grep -E '^[0-9]+$' | sort -n | head -n -2 \
+      | while IFS= read -r OLD_STEP; do
+          echo "mid-run prune: removing superseded checkpoint ${CKPT_DIR}/${OLD_STEP}"
+          find "${CKPT_DIR}/${OLD_STEP}" -depth -delete
+        done
+  done
+) &
+PRUNER_PID=$!
+trap 'kill "${PRUNER_PID}" 2>/dev/null || true' EXIT
+
 bash scripts/slurm/jobs/nanotron_qwen25_midtrain_grid_2026-06-24.slurm
