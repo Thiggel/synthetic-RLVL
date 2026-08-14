@@ -2851,3 +2851,10 @@ for f in \
   [ -f "$f" ] && echo "### $f" && tail -n 20 "$f"
 done
 ```
+
+## Docpack 2.5B rerun: post-midtrain chain (queued 2026-08-14)
+
+- Midtrain: control 4770 DONE, logic 4770 DONE (job 3964803), nl_exact RUNNING (job 3964807, spares 3964808/3964809).
+- Dolci SFT: job array 4007408 (0-2%2), dependency afterany:3964807, script scripts/slurm/jobs/qwen25_docpack_rerun_threeway_post_sft_2026-08-14.slurm. Identical recipe to the accepted three-way SFT; only the base checkpoint changes (docpack rerun step 4770). Fail-closed via verify_training_checkpoint.py --expected-step 4770. Outputs: $WORK/synthetic-RLVL/post_sft_dolci_docpack_rerun_20260814/.
+- Greedy readout: scripts/slurm/jobs/qwen25_docpack_rerun_threeway_post_sft_eval_2026-08-14.slurm, submit per suite with EVAL_SUITE=standard and EVAL_SUITE=multihop once SFT lands. Results: $HPCVAULT/synthetic-RLVL/lm_eval_results/qwen25_docpack_rerun_post_sft_20260814/.
+- NOTE: if 3964807 hits the 24h walltime short of step 4770, the SFT array fail-closes on the audit; let 3964808 finish the run, then resubmit the array.
