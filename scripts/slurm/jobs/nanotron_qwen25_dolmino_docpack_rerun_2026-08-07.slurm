@@ -111,11 +111,18 @@ export PRUNE_SUPERSEDED_RUN_CHECKPOINTS=1
 # reclaim superseded states while training runs: keep the two newest numeric
 # checkpoint dirs (the newest may still be mid-write; the second-newest is the
 # resume state), delete anything older.
+#
+# The subshell must NOT inherit errexit/pipefail: before the first checkpoint
+# exists the grep finds no numeric directories and exits 1, which silently
+# killed the pruner on 2026-08-14 and let nl_exact fill the quota again.
 (
+  set +e +o pipefail
   while sleep 600; do
     CKPT_DIR="${RUN_ROOT_OVERRIDE}/checkpoints"
     [[ -d "${CKPT_DIR}" ]] || continue
-    find "${CKPT_DIR}" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' \
+    KEEP_COUNT=$(find "${CKPT_DIR}" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' 2>/dev/null | grep -cE '^[0-9]+$')
+    echo "mid-run prune heartbeat: ${KEEP_COUNT} checkpoint(s) present"
+    find "${CKPT_DIR}" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' 2>/dev/null \
       | grep -E '^[0-9]+$' | sort -n | head -n -2 \
       | while IFS= read -r OLD_STEP; do
           echo "mid-run prune: removing superseded checkpoint ${CKPT_DIR}/${OLD_STEP}"
