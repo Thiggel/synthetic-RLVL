@@ -56,10 +56,19 @@ export TVM_FFI_CACHE_DIR="${TVM_FFI_CACHE_DIR:-$XDG_CACHE_HOME/tvm-ffi}"
 # Disable it to avoid startup overhead and spurious writes to $HOME/.cache.
 export TVM_FFI_DISABLE_TORCH_C_DLPACK="${TVM_FFI_DISABLE_TORCH_C_DLPACK:-1}"
 
-export WANDB_DIR="${WANDB_DIR:-$SYNTHRLVL_WORK_ROOT/wandb}"
-export WANDB_CACHE_DIR="${WANDB_CACHE_DIR:-$XDG_CACHE_HOME/wandb}"
-export WANDB_ARTIFACT_DIR="${WANDB_ARTIFACT_DIR:-$SYNTHRLVL_WORK_ROOT/wandb_artifacts}"
-export WANDB_DATA_DIR="${WANDB_DATA_DIR:-$SYNTHRLVL_WORK_ROOT/wandb_data}"
+# 2026-08-18: the atuin ($WORK) GROUP INODE quota is exhausted (574k files vs
+# 500k soft / 600k hard, grace expired), so creating any NEW directory there
+# fails with "Disk quota exceeded". wandb creates a fresh run directory per
+# run, which killed post-SFT job 4040675_1 after 7m39s with
+# OSError: [Errno 122] ... /wandb/wandb/run-20260818_120147-jb44mvvd.
+# Telemetry paths are therefore rooted on HPCVAULT, which has both space and
+# inode headroom. Revert to $SYNTHRLVL_WORK_ROOT once the atuin inode quota is
+# back under its soft limit.
+SYNTHRLVL_VAULT_ROOT="${SYNTHRLVL_VAULT_ROOT:-${HPCVAULT:-/home/vault/c107fa/c107fa12}/synthetic-RLVL}"
+export WANDB_DIR="${WANDB_DIR:-$SYNTHRLVL_VAULT_ROOT/wandb}"
+export WANDB_CACHE_DIR="${WANDB_CACHE_DIR:-$SYNTHRLVL_VAULT_ROOT/wandb_cache}"
+export WANDB_ARTIFACT_DIR="${WANDB_ARTIFACT_DIR:-$SYNTHRLVL_VAULT_ROOT/wandb_artifacts}"
+export WANDB_DATA_DIR="${WANDB_DATA_DIR:-$SYNTHRLVL_VAULT_ROOT/wandb_data}"
 
 export TMPDIR="${TMPDIR:-$SYNTHRLVL_SCRATCH_ROOT/tmp}"
 export TMP="${TMP:-$TMPDIR}"
