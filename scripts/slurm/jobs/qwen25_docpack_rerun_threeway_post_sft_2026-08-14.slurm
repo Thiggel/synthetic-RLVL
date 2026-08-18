@@ -62,8 +62,10 @@ python scripts/nanotron/verify_training_checkpoint.py \
   --expected-step "${CHECKPOINT_STEP}" \
   --sequence-length 4096 \
   --global-batch-samples 128 \
-  --tp 4 --dp 2 --model-files 625 --optimizer-shards 4 \
-  --lr-scheduler-shards 4 --rng-shards 8 \
+  --tp 4 --dp 2 --model-files "${EXPECT_MODEL_FILES:-625}" \
+  --optimizer-shards "${EXPECT_OPTIMIZER_SHARDS:-4}" \
+  --lr-scheduler-shards "${EXPECT_LR_SHARDS:-4}" \
+  --rng-shards "${EXPECT_RNG_SHARDS:-8}" \
   --output "${OUT_DIR}_base_checkpoint_audit.json"
 
 LOCAL_BASE="${SLURM_TMPDIR:-/tmp}"

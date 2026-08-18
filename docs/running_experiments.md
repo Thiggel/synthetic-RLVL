@@ -4,6 +4,56 @@ Last updated: 2026-08-12 07:56 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
+## Docpack Rerun: Midtrains Done, SFT Chain Rebuilt (2026-08-18, later)
+
+- ALL THREE midtrains are complete at step 4770. 3964808 COMPLETED; nl_exact
+  terminal is 645 files, zero zero-byte, all of model/optimizer/lr_scheduler/
+  random present. Obsolete spare 3964809 cancelled (it would have taken 8 GPUs
+  to no-op against an existing 4770).
+
+- SFT array 4007408 FAILED on $WORK, not on science:
+  "mkdir: cannot create directory .../post_sft_dolci_docpack_rerun_20260814:
+  Disk quota exceeded". The atuin GROUP INODE quota is exhausted -- 574k files
+  against 500k soft / 600k hard, grace expired, while space is fine at
+  7008G/10240G. This cannot be fixed from inside this project: synthetic-RLVL
+  holds only 11K of this user's 414K atuin inodes (.venv 93K, TextJEPA 87K,
+  FOMO_runtime 60K, babylm_runtime 47K, nanotron 32K, .local 31K), and the
+  other three group members hold ~160K. Any new file creation on /home/atuin by
+  ANY c107fa member is currently failing.
+  WORKAROUND: the SFT and eval scripts both honour POST_SFT_OUT_ROOT, and the
+  temp HF conversion already uses node-local $SLURM_TMPDIR, so the chain was
+  resubmitted with POST_SFT_OUT_ROOT on HPCVAULT. Rebuilt chain: SFT 4040675 ->
+  greedy 4040676 (standard) / 4040677 (multihop) -> pass@k 4040678.
+
+- CONTROL base checkpoint fails the strict SFT gate; logic and nl_exact PASS.
+  verify_training_checkpoint.py rejects control 4770 with
+  "optimizer file count=0, expected 4", "lr_scheduler file count=0, expected 4",
+  "random file count=0, expected 8". logic 4770 returns status=accepted and its
+  SFT (4040675_1) is running; nl_exact 4770 is likewise complete at 645 files.
+  Control retains ONLY model/ + checkpoint_metadata.json + config.yaml +
+  model_config.json (628 files, 29G vs 199G).
+  EVIDENCE THE MODEL ITSELF IS INTACT: a full manifest diff of control/model
+  against the ACCEPTED logic/model tree is IDENTICAL -- same paths and same
+  byte size for every one of the 626 model files (15,231,399,757 bytes total),
+  zero zero-byte files, and checkpoint_metadata.json reports the correct
+  last_train_step 4770 / consumed_train_samples 610560 / consumed_tokens
+  2500853760. The missing pieces are resumability state only, which Dolci SFT
+  does not read. The state was NOT offloaded: checkpoint_state_offload/ holds
+  only the old nanotron_dolmino_5b run, so this is most likely the same
+  quota-truncated terminal save already recorded for logic 4770 on 2026-08-12.
+  ACTION: verify_training_checkpoint.py shard expectations are now env-
+  overridable in the SFT job (EXPECT_MODEL_FILES / EXPECT_OPTIMIZER_SHARDS /
+  EXPECT_LR_SHARDS / EXPECT_RNG_SHARDS); DEFAULTS ARE UNCHANGED, so logic and
+  nl_exact keep the full strict gate. Control alone was resubmitted as 4040749
+  with the three state-shard expectations set to 0. Step/token/sample counts,
+  model-file count, zero-byte, tp/dp and config checks all still run for
+  control. Evals 4040676/4040677 were rewired to depend on both 4040675 and
+  4040749.
+  OPEN: this is a deliberate, narrowly scoped relaxation of a fail-closed gate.
+  If the control arm is to be reported, either state that its terminal retained
+  model weights only, or rerun the control midtrain to regenerate a fully
+  resumable terminal.
+
 ## Vault Cleanup And Two Corrected Diagnoses (2026-08-18)
 
 - Vault reclaimed 597G: 1288G -> 892G, now BACK UNDER the 1000G soft quota with
