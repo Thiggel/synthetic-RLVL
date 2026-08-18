@@ -4,6 +4,95 @@ Last updated: 2026-08-12 07:56 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
+## Vault Cleanup And Two Corrected Diagnoses (2026-08-18)
+
+- Vault reclaimed 597G: 1288G -> 892G, now BACK UNDER the 1000G soft quota with
+  grace cleared (hard 2000G; files 186k/200k). Deleted only superseded nl_exact
+  restart states 3000, 3500 and 4000 from
+  nanotron_docpack_rerun/qwen25_7b_dolmino_nl_exact_docpack_p5_2p5b/checkpoints/
+  plus a 1.5K .incomplete.3847792_0 eval stub whose accepted 449M counterpart
+  exists. Each deletion was guarded on latest.txt and taken only after the
+  retained successor independently passed the 645-nonempty-file /
+  626-model-file / four-equal-22,848,937,060-byte optimizer-shard gate.
+  4500 is retained, passes that gate, and is now latest.
+
+- CORRECTED DIAGNOSIS (mid-run pruner). The pruner is NOT broken and the
+  errexit/pipefail fix in commit 5e8f4f1 is not implicated in this run.
+  Slurm snapshots the batch script at SUBMIT time, and 3964808 was submitted
+  2026-08-07T17:09:34 -- before the pruner was ever added to the file.
+  "scontrol write batch_script 3964808" confirms zero mid-run prune lines in
+  the script Slurm is actually executing, which is why 3000/3500/4000
+  accumulated and why the log shows zero heartbeats in 6h45m. Every job
+  submitted before 2026-08-15 lacks the pruner, INCLUDING the held spare
+  3964809. Jobs submitted from the current file do carry it. Do not "fix" the
+  pruner code in response to this run; resubmit instead if a pre-2026-08-15
+  job needs it.
+
+- CORRECTED DIAGNOSIS (oversight watcher). The bp_nano_oversight chain is not
+  failing on a code or scheduler fault. It is a Codex-driven agent job
+  (scripts/slurm/codex/branchproof_nanotron_oversight_2026-07-11.slurm) and
+  every run since 2026-08-12 died on
+  "ERROR: You've hit your usage limit ... try again at Sep 10th, 2026".
+  The chain stopped self-scheduling after 3998398 (2026-08-13 13:58). That
+  quota does not reset until AFTER the 2026-09-03 deadline, so automated
+  oversight is unavailable for the remainder of the paper push unless it is
+  repointed at a different backend. Session-driven oversight in the meantime.
+
+## Live Delta At 10:35 CEST On August 18 (readout chain staged; real corpus gated)
+
+- `3964808` (nl_exact midtrain pass 3) RUNNING on `a0535`, finite through
+  `4421/4770` at about 31.2k tokens/s, roughly 1.6h to the terminal save.
+  control and logic are both accepted at `4770`. `3964809` stays singleton-held
+  as the spare.
+- Post-SFT array `4007408` was JobHeldUser and idle since August 14. control
+  (`4040288`) and logic (`4040289`) are released and eligible now -- both base
+  checkpoints are already at 4770, so they no longer wait on nl_exact. Task 2
+  (nl_exact) is released under `afterany:3964808` and self-launches on midtrain
+  exit; it stays fail-closed on the step-4770 audit.
+- Greedy readout submitted and chained on the whole SFT array:
+  `4040306` (EVAL_SUITE=standard) and `4040307` (EVAL_SUITE=multihop).
+- Sampled pass@k/maj@k readout submitted as `4040311`, chained
+  `afterok:4040306:4040307`. New wrapper
+  `scripts/slurm/jobs/qwen25_docpack_rerun_threeway_passk_eval_2026-08-18.slurm`
+  reuses the accepted sampler/seed/n=16+greedy and only redirects the
+  checkpoint root and the accepted-greedy prompt source, so the rerun is
+  reported on the same footing as the 5B full-document run. It fail-closes if
+  the greedy bundle for its condition/suite is missing.
+
+## Real-corpus 2.5B midtrain: plumbing ready, GPU launch NOT submitted
+
+- Design decided 2026-08-18: match the synthetic rerun exactly (5% replacement,
+  4,770 steps x GBS 128 x 4,096 = 2.5B tokens, same LR/warmup, same Dolmino
+  nanoset) and REUSE the finished Dolmino-only control at 4770. Only formal and
+  NL need GPU time.
+- Audit `4040346` COMPLETED: both real packs pass all four gates at the 2.5B
+  horizon. formal proof_weight `0.053516531571887335` (realized
+  `0.049998662081001725`); nl proof_weight `0.05264683675123945` (realized
+  `0.05000147883675023`). Bundle
+  `analysis/real_logic_docpack_audit_2p5b_20260818/`.
+- First attempt `4040332` failed the `decoded_batch` gate. Cause is a marker
+  NAME mismatch, not a data defect: the gate hardcoded the synthetic
+  `Definitions:`/`Formal premises:` section names, while the real corpus uses
+  `Constants:`/`Predicates:`/`Premises:` under the same `Solution:`/
+  `Derivation:`/`Final answer: ` structure. Added a `real_logic` template
+  branch to `scripts/nanotron/audit_docpack_training_path.py` with the correct
+  markers. The other three gates (zero_overlength, padding_loss_mask,
+  exact_mixture) passed on the first attempt too.
+- Staged jobs `4040335-4040340` were CANCELLED after the first audit failed
+  (they were correctly `DependencyNeverSatisfied`, so no GPU time was spent).
+  They are NOT resubmitted pending two open items below.
+- OPEN 1 (scientific): the real corpus is depth `0-5` (audit `depth_range`,
+  mean doc 663 tokens, max 1,355). The synthetic result is a depth CROSSOVER --
+  NL wins train-max 5-20 and logic only reverses at 25. A real-corpus midtrain
+  at depth 0-5 therefore sits in the regime where NL wins synthetically and
+  cannot test the paper claim. Decide whether it is worth 2 x ~2.5 days of
+  8-GPU time before submitting.
+- OPEN 2 (operational): Vault is `1288G` used against a `1000G` soft quota with
+  grace expired, `2000G` hard, `188k/200k` files. Headroom to hard is about
+  712G; `nanotron_docpack_rerun/` alone holds 823G. Prune the superseded
+  nl_exact `3000/3500/4000` states once `4770` is accepted before launching any
+  new midtrain.
+
 ## Live Delta At 07:56 CEST On August 12 (formal recovery passes 4k restart gate)
 
 - `3964802` remains RUNNING on verified 8x A100-80GB node `a0833`, finite

@@ -106,6 +106,11 @@ def gate_decoded_batch(
     required_markers = ["\nSolution:\n", "\nFinal answer: "]
     if template == "logic":
         required_markers += ["Derivation:\n", "Definitions:\n", "Formal premises:\n"]
+    elif template == "real_logic":
+        # Real corpus (ProofWriter/PARARULE/PrOntoQA) carries the same
+        # structure under its own section names: Constants:/Predicates:/
+        # Premises: instead of the synthetic Definitions:/Formal premises:.
+        required_markers += ["Derivation:\n", "Constants:\n", "Premises:\n"]
 
     failures = []
     n_docs_total = 0
@@ -273,7 +278,7 @@ def main() -> None:
     parser.add_argument("--packed-folder", required=True)
     parser.add_argument("--dolmino-folder", required=True)
     parser.add_argument("--tokenizer", default="Qwen/Qwen2.5-7B")
-    parser.add_argument("--template", default="logic", choices=["logic", "nl_exact"])
+    parser.add_argument("--template", default="logic", choices=["logic", "nl_exact", "real_logic"])
     parser.add_argument("--seq-len", type=int, default=4096)
     parser.add_argument("--train-steps", type=int, required=True)
     parser.add_argument("--global-batch-size", type=int, required=True)
