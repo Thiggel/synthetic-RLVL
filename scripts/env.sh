@@ -28,7 +28,16 @@ export SYNTHRLVL_REPO_ROOT="${SYNTHRLVL_REPO_ROOT:-$REPO_ROOT}"
 export SYNTHRLVL_REPO_NAME="${SYNTHRLVL_REPO_NAME:-$REPO_NAME}"
 export SYNTHRLVL_WORK_ROOT="${SYNTHRLVL_WORK_ROOT:-$WORK_ROOT/$REPO_NAME}"
 export SYNTHRLVL_SCRATCH_ROOT="${SYNTHRLVL_SCRATCH_ROOT:-$SCRATCH_ROOT/$REPO_NAME}"
-export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$WORK_ROOT/.cache}"
+# 2026-08-18: atuin ($WORK) is at its GROUP INODE hard limit, so even creating
+# a new lock FILE there fails. This killed greedy eval 4040676_0 in the HF
+# datasets loader:
+#   OSError: [Errno 122] Disk quota exceeded: .../.cache/hf/datasets/..._gsm8k_....lock
+# The HF tree was COPIED (not re-downloaded) to vault to preserve the exact
+# dataset revisions the accepted readouts used -- repopulating from the hub
+# could silently fetch different revisions and break comparability with the 5B
+# run. vllm/triton/inductor caches under here are compile artifacts and simply
+# regenerate. Revert once atuin is back under its soft inode limit.
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HPCVAULT:-/home/vault/c107fa/c107fa12}/.cache_rlvl}"
 
 export http_proxy="${http_proxy:-http://proxy:80}"
 export https_proxy="${https_proxy:-http://proxy:80}"

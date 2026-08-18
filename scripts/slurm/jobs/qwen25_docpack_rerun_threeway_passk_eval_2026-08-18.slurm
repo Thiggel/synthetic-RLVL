@@ -3,7 +3,7 @@
 #SBATCH --partition=a100
 #SBATCH --constraint=a100_80
 #SBATCH --gres=gpu:a100:1
-#SBATCH --exclude=a0532,a0934
+#SBATCH --exclude=a0532,a0934,a0534
 #SBATCH --cpus-per-task=16
 #SBATCH --time=12:00:00
 #SBATCH --array=0-5%3
