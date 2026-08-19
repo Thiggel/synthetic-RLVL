@@ -1,5 +1,8 @@
 import json, random
-R='/home/vault/c107fa/c107fa12/synthetic-RLVL/lm_eval_results/qwen25_dolmino_post_sft_passk_20260806'
+import os
+# Root is overridable so the identical audited analysis can be re-run against
+# other pass@k bundles (e.g. the document-preserving rerun). Default unchanged.
+R=os.environ.get('PASSK_ROOT','/home/vault/c107fa/c107fa12/synthetic-RLVL/lm_eval_results/qwen25_dolmino_post_sft_passk_20260806')
 CONDS=['control','logic','nl_exact']
 TASKS=['synthrlvl_longbench_2wikimqa_tagged','synthrlvl_longbench_hotpotqa_tagged','synthrlvl_longbench_musique_tagged']
 random.seed(20260808)
