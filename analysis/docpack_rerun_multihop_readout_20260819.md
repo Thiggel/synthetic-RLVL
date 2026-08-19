@@ -70,3 +70,26 @@ does not produce a formal-logic reasoning gain.
 - The control arm's midtrain terminal retained model weights only, so its base
   checkpoint passed a narrowed gate (state-shard expectations set to 0). Model
   weights were verified byte-identical in manifest to the accepted logic tree.
+
+## Ten-task standard suite (added once logic/nl_exact standard evals landed)
+
+Preregistered PRIMARY_METRICS; MATH-500 via the answer-prefix math-verify sidecar.
+
+| metric | control | logic | nl_exact | logic-ctl | logic-nl |
+| --- | --- | --- | --- | --- | --- |
+| gsm8k | 0.7892 | 0.7832 | 0.7847 | -0.0061 | -0.0015 |
+| math500 (sidecar) | 0.0960 | 0.1220 | 0.1000 | +0.0260 | +0.0220 |
+| arc_challenge | 0.5546 | 0.5503 | 0.5503 | -0.0043 | +0.0000 |
+| hellaswag | 0.7342 | 0.7363 | 0.7367 | +0.0021 | -0.0004 |
+| winogrande | 0.6851 | 0.6843 | 0.6867 | -0.0008 | -0.0024 |
+| piqa | 0.7949 | 0.7987 | 0.8014 | +0.0038 | -0.0027 |
+| agieval_logiqa_en | 0.3241 | 0.3379 | 0.3487 | +0.0138 | -0.0108 |
+| bbh | 0.6902 | 0.6830 | 0.6901 | -0.0072 | -0.0071 |
+| mmlu | 0.6869 | 0.6867 | 0.6889 | -0.0001 | -0.0021 |
+| mmlu_pro | 0.4595 | 0.4530 | 0.4595 | -0.0066 | -0.0066 |
+| **MACRO10** | **0.5815** | **0.5835** | **0.5847** | +0.0021 | -0.0012 |
+
+Flat, matching the accepted 5B run (0.5903 / 0.5886 / 0.5862). 5% synthetic
+replacement remains benchmark-neutral under the document-preserving objective;
+no gain and no material regression. All six bundles (3 conditions x 2 suites)
+report accepted: true.
