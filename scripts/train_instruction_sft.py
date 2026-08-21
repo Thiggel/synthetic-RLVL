@@ -106,7 +106,8 @@ def _format_dataset(
     return Dataset.from_list(rows)
 
 
-def _tokenize_dataset(ds: Dataset, tokenizer, *, max_length: int, format_mode: str) -> Dataset:
+def _tokenize_dataset(ds: Dataset, tokenizer, *, max_length: int, format_mode: str,
+                     max_truncated_frac: float | None = None, split_name: str = "train") -> Dataset:
     def tokenize_row(row: dict[str, str]) -> dict[str, list[int]]:
         if format_mode == "chat":
             user = {"role": "user", "content": row["prompt"]}
@@ -123,7 +124,8 @@ def _tokenize_dataset(ds: Dataset, tokenizer, *, max_length: int, format_mode: s
             prompt_ids = tokenizer(row["prompt"], add_special_tokens=False)["input_ids"]
             target_ids = tokenizer(row["target"], add_special_tokens=False)["input_ids"]
             input_ids = prompt_ids + target_ids + [tokenizer.eos_token_id]
-        if len(input_ids) > max_length:
+        truncated = len(input_ids) > max_length
+        if truncated:
             input_ids = input_ids[:max_length]
         labels = [-100] * min(len(prompt_ids), len(input_ids)) + input_ids[min(len(prompt_ids), len(input_ids)) :]
         if len(labels) < len(input_ids):
@@ -132,9 +134,25 @@ def _tokenize_dataset(ds: Dataset, tokenizer, *, max_length: int, format_mode: s
             "input_ids": input_ids,
             "attention_mask": [1] * len(input_ids),
             "labels": labels,
+            "_truncated": bool(truncated),
         }
 
     tokenized = ds.map(tokenize_row, remove_columns=ds.column_names)
+    # Fail-closed truncation gate. Silent right-truncation of a reasoning trace
+    # removes its conclusion and its <answer>, which is exactly the mid-proof
+    # splitting defect that invalidated the 2026-08 midtraining transfer run.
+    # Depth-25 BranchProof traces reach 7,695 tokens, so at the historical
+    # 4,096 default ~43% of them would be silently cut.
+    n_trunc = sum(1 for row in tokenized if row["_truncated"])
+    frac = n_trunc / max(len(tokenized), 1)
+    print(f"[truncation] {split_name}: {n_trunc}/{len(tokenized)} = {frac:.4%} exceeded max_length={max_length}")
+    if max_truncated_frac is not None and frac > max_truncated_frac:
+        raise ValueError(
+            f"Refusing to train: {split_name} truncation {frac:.4%} exceeds "
+            f"--max-truncated-frac {max_truncated_frac:.4%} at max_length={max_length}. "
+            "Raise --max-length or rebuild the mixture."
+        )
+    tokenized = tokenized.remove_columns(["_truncated"])
     tokenized = tokenized.filter(lambda row: any(label != -100 for label in row["labels"]))
     if len(tokenized) == 0:
         raise ValueError("No instruction rows retain assistant target tokens after truncation.")
@@ -233,6 +251,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--train-samples", type=int, default=50000)
     parser.add_argument("--eval-samples", type=int, default=512)
     parser.add_argument("--max-length", type=int, default=4096)
+    parser.add_argument("--max-truncated-frac", type=float, default=None,
+                        help="Fail if the truncated fraction exceeds this (e.g. 0.0 for zero-truncation).")
     parser.add_argument("--max-steps", type=int, default=10000)
     parser.add_argument("--num-train-epochs", type=float, default=1.0)
     parser.add_argument("--lr", type=float, default=1e-4)
@@ -295,17 +315,22 @@ def main() -> None:
         DatasetDict({"train": train_raw, "eval": eval_raw}).save_to_disk(str(prepared_path))
     if args.format_mode == "chat" and not tokenizer.chat_template:
         raise ValueError(f"Tokenizer for {args.model} does not define a chat template.")
+    max_trunc = None if args.max_truncated_frac is None else float(args.max_truncated_frac)
     train_ds = _tokenize_dataset(
         train_raw,
         tokenizer,
         max_length=int(args.max_length),
         format_mode=str(args.format_mode),
+        max_truncated_frac=max_trunc,
+        split_name="train",
     )
     eval_ds = _tokenize_dataset(
         eval_raw,
         tokenizer,
         max_length=int(args.max_length),
         format_mode=str(args.format_mode),
+        max_truncated_frac=max_trunc,
+        split_name="eval",
     )
 
     if args.dry_run:

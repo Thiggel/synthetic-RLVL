@@ -54,6 +54,71 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
   model weights only, or rerun the control midtrain to regenerate a fully
   resumable terminal.
 
+## Depth-Threshold Transfer Test At SFT Scale (launched 2026-08-21)
+
+RATIONALE. The controlled study says formal traces beat prose only ABOVE a
+depth threshold. The midtraining transfer study could NEVER test that regime:
+deep proofs did not fit its 4,096-token window, so the corpus was capped at
+depths 1-14. SFT is cheap enough to afford a longer window, so the
+above-threshold regime is testable here for the first time. This is
+instruction-tuning transfer, NOT pretraining transfer -- a different and weaker
+claim than the midtrain study, and it must be labelled as such in the paper.
+
+DESIGN. Replacement, not addition: every condition trains on exactly 100k
+examples and conditions differ only in what the replaced 10% contains, so a
+difference cannot be attributed to training on more data. Eval split is
+Dolci-only in every condition so eval loss stays comparable.
+
+  control       100k Dolci
+  logic_band15  90k Dolci + 10k formal traces, depths 1-15  (BELOW threshold)
+  nl_exact_band15  90k Dolci + 10k prose traces, depths 1-15  (BELOW threshold)
+  logic_band25  90k Dolci + 10k formal traces, depths 1-25  (ABOVE threshold)
+  nl_exact_band25  90k Dolci + 10k prose traces, depths 1-25  (ABOVE threshold)
+
+5 conditions x 2 seeds (3407/3408) = job array
+`scripts/slurm/jobs/reasoning_mixture_depth_sft_2026-08-21.slurm`, 0-9%4,
+4x A100-80GB each. PREDICTION UNDER TEST: formal beats prose on real
+benchmarks only in the band-25 conditions.
+
+Traces render through `task_sample_from_materialized_row`, i.e. the SAME path
+as the controlled BranchProof grid, so trace text is identical to the study
+that established the crossover. Builder:
+`scripts/data/build_reasoning_mixture_sft.py`. Mixtures at
+`$HPCVAULT/synthetic-RLVL/datasets/reasoning_mixture_20260821/`, each verified
+at exactly 10.00% synthetic (10,000/100,000) with correct paired renderings
+(`<formal>` for logic, `<think>` for nl_exact).
+
+WINDOW SET FROM MEASUREMENT (1,500-row sample, Qwen2.5-7B tokenizer,
+prompt+target):
+
+  band template   p50   p90   p99   max   >4096   >8192
+    15 logic     2250  4077  4399  4432    7.9%    0.0%
+    15 nl_exact  2274  4165  4502  4567   14.3%    0.0%
+    25 logic     3737  7030  7673  7695   43.3%    0.0%
+    25 nl_exact  3796  7067  7747  7793   46.9%    0.0%
+
+8192 is exactly sufficient; nothing overflows it. Note also that logic and
+nl_exact are length-matched here (3737 vs 3796 at band 25), so unlike the
+midtrain compact corpus (2117 vs 1212, formal 1.75x longer) there is NO length
+confound between representations in this experiment.
+
+CRITICAL TRAP, NOW GUARDED. At the script's historical 4,096 default,
+43-47% of band-25 examples would be silently right-truncated -- almost exactly
+the 44-48% of proof documents the midtraining loader split mid-document, the
+defect that took eleven days to eliminate. Truncation removes the proof
+conclusion and the `<answer>`, and would have produced a clean-looking null.
+`scripts/train_instruction_sft.py` previously did a silent
+`input_ids[:max_length]`; it now reports the truncated fraction per split and
+is FAIL-CLOSED via `--max-truncated-frac` (jobs run at 0.005).
+
+STATUS 2026-08-21: smoke test `4073785` queued (band-25 logic, 8 steps, gate
+deliberately opened to 1.0 so it MEASURES rather than fails) to validate memory
+at 8192 and fix the gate from data before committing all ten runs. Full array
+not yet submitted. Downstream: the existing greedy + pass@k harness
+(ten-task standard, multihop, sampled) plus the two-layer compliance
+decomposition, which is mandatory here -- any apparent multi-hop gain must be
+checked against tag presence AND degenerate tag echo before it is believed.
+
 ## Vault Cleanup And Two Corrected Diagnoses (2026-08-18)
 
 - Vault reclaimed 597G: 1288G -> 892G, now BACK UNDER the 1000G soft quota with
