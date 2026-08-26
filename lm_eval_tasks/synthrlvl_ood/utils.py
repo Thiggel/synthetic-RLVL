@@ -193,3 +193,82 @@ def process_longbench_qa_standard(doc: dict, results: list[str]) -> dict[str, fl
         default=0.0,
     )
     return {"score": float(best_f1), "qa_f1_score": float(best_f1)}
+
+
+# --- Graded deduction eval (ProofWriter OWA + deep BranchProof), 2026-08-26 ---
+
+_TFU_RE = re.compile(r"\b(true|false|unknown)\b", re.IGNORECASE)
+
+
+def doc_to_text_deduction_pw(doc: dict) -> str:
+    return (
+        f"{str(doc['context']).strip()}\n\n"
+        f"Question: {str(doc['question']).strip()}\n"
+        "Based only on the statements above, is the claim true, false, or unknown? "
+        "Answer with exactly one word: True, False, or Unknown.\n"
+        "Answer:"
+    )
+
+
+def process_deduction_pw(doc: dict, results: list[str]) -> dict[str, float]:
+    raw = str(results[0]) if results else ""
+    match = _TFU_RE.search(raw)
+    pred = match.group(1).lower() if match else ""
+    gold = str(doc["answer"]).strip().lower()
+    return {
+        "exact_match": float(bool(pred) and pred == gold),
+        "extracted_nonempty": float(bool(pred)),
+    }
+
+
+def doc_to_text_deduction_bp(doc: dict) -> str:
+    return (
+        f"{str(doc['context']).strip()}\n\n"
+        f"Question: {str(doc['question']).strip()}\n"
+        "Give only the final answer.\n"
+        "Answer:"
+    )
+
+
+def process_deduction_bp(doc: dict, results: list[str]) -> dict[str, float]:
+    raw = str(results[0]) if results else ""
+    first_line = raw.strip().split("\n", 1)[0]
+    pred = normalize_answer(first_line)
+    gold = normalize_answer(str(doc["answer"]))
+    return {
+        "exact_match": float(bool(pred) and pred == gold),
+        "extracted_nonempty": float(bool(pred)),
+    }
+
+
+# --- CoT-prompted BP deduction variant, 2026-08-26 ---
+
+_BP_COT_ANSWER_RE = re.compile(r"(?:final answer|answer)\s*:\s*(.+)", re.IGNORECASE)
+
+
+def doc_to_text_deduction_bp_cot(doc: dict) -> str:
+    return (
+        f"{str(doc['context']).strip()}\n\n"
+        f"Question: {str(doc['question']).strip()}\n"
+        "Reason step by step, then give the final answer on its own last line "
+        "in the form \"Answer: <answer>\"."
+    )
+
+
+def process_deduction_bp_cot(doc: dict, results: list[str]) -> dict[str, float]:
+    raw = str(results[0]) if results else ""
+    matches = _BP_COT_ANSWER_RE.findall(raw)
+    if matches:
+        pred_src = matches[-1].strip().split("\n")[0]
+        tag_found = 1.0
+    else:
+        lines = [l for l in raw.strip().splitlines() if l.strip()]
+        pred_src = lines[-1] if lines else ""
+        tag_found = 0.0
+    pred = normalize_answer(pred_src)
+    gold = normalize_answer(str(doc["answer"]))
+    return {
+        "exact_match": float(bool(pred) and pred == gold),
+        "tag_found": tag_found,
+        "extracted_nonempty": float(bool(pred)),
+    }

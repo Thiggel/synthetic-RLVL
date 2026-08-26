@@ -1,0 +1,36 @@
+# CoT-prompted variant of synthrlvl_deduction_bp_d20. max_gen_toks 2048 is a
+# compromise: d25 latent proofs run ~3.4k tokens when rendered WITH the proof,
+# so 2048 of free-form reasoning may truncate the deepest chains; prompt max is
+# 3392 tokens, so 3392 + 2048 (+ chat template) fits 8192 with margin.
+tag:
+  - synthrlvl_deduction_graded
+  - synthrlvl_deduction_bp_cot
+task: synthrlvl_deduction_bp_cot_d20
+dataset_path: json
+dataset_kwargs:
+  data_files:
+    test: /home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/graded_deduction_eval_20260826/branchproof_nl_d20.jsonl
+test_split: test
+output_type: generate_until
+doc_to_text: !function utils.doc_to_text_deduction_bp_cot
+doc_to_target: "{{answer}}"
+process_results: !function utils.process_deduction_bp_cot
+generation_kwargs:
+  max_gen_toks: 2048
+  until: []
+  do_sample: false
+  temperature: 0.0
+repeats: 1
+num_fewshot: 0
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+  - metric: tag_found
+    aggregation: mean
+    higher_is_better: true
+  - metric: extracted_nonempty
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0

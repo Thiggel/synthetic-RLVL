@@ -1,0 +1,30 @@
+tag:
+  - synthrlvl_deduction_graded
+  - synthrlvl_deduction_pw
+task: synthrlvl_deduction_pw_d0
+dataset_path: json
+dataset_kwargs:
+  data_files:
+    test: /home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/graded_deduction_eval_20260826/proofwriter_owa_d0.jsonl
+test_split: test
+output_type: generate_until
+doc_to_text: !function utils.doc_to_text_deduction_pw
+doc_to_target: "{{answer}}"
+process_results: !function utils.process_deduction_pw
+generation_kwargs:
+  max_gen_toks: 16
+  until:
+    - "\n"
+  do_sample: false
+  temperature: 0.0
+repeats: 1
+num_fewshot: 0
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+  - metric: extracted_nonempty
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0
