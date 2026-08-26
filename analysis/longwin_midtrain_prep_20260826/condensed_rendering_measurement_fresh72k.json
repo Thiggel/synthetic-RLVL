@@ -1,0 +1,61 @@
+{
+  "parquet": "/home/atuin/c107fa/c107fa12/synthetic-RLVL/datasets/branchproof_unique_v2_longwin_20260826/train_fixedtarget_up_to_25_72000/train.parquet",
+  "tokenizer": "Qwen/Qwen2.5-7B",
+  "band": 25,
+  "sample": 400,
+  "roundtrip_validated": 100,
+  "standard_logic_doc": {
+    "n": 400,
+    "p50": 3785.0,
+    "p95": 7350.05,
+    "p99": 7672.0,
+    "max": 7686,
+    "mean": 3921.165,
+    "frac_gt_4096": 0.4575,
+    "frac_gt_8192": 0.0
+  },
+  "condensed_logic_doc": {
+    "n": 400,
+    "p50": 1452.5,
+    "p95": 2886.0,
+    "p99": 3007.01,
+    "max": 3010,
+    "mean": 1524.005,
+    "frac_gt_4096": 0.0,
+    "frac_gt_8192": 0.0
+  },
+  "reduction_ratio_mean": 0.38866127796203426,
+  "reduction_ratio_p50": 0.38375165125495375,
+  "arm5_gate": {
+    "criterion": "condensed p99 <= 3686 (4096 with >=10% margin)",
+    "condensed_p99": 3007.01,
+    "go": true
+  },
+  "per_depth_condensed_max": {
+    "1": 201,
+    "2": 294,
+    "3": 389,
+    "4": 483,
+    "5": 581,
+    "6": 681,
+    "7": 780,
+    "8": 878,
+    "9": 977,
+    "10": 1091,
+    "11": 1211,
+    "12": 1330,
+    "13": 1453,
+    "14": 1574,
+    "15": 1693,
+    "16": 1814,
+    "17": 1936,
+    "18": 2056,
+    "19": 2177,
+    "20": 2297,
+    "21": 2417,
+    "22": 2591,
+    "23": 2768,
+    "24": 2891,
+    "25": 3010
+  }
+}
