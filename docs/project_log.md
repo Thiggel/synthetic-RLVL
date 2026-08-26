@@ -3938,3 +3938,61 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - Pilot `3964239_0` COMPLETED 0:0 (4h37m, 954 steps). Rerun singleton chain
   began: control pass 1 `3964798` RUNNING since 07:15 CEST; remaining eight
   jobs pending on singleton.
+
+## 2026-08-25 — mixdepth SFT eval campaign: greedy complete, pass@k running
+
+- **Truncation hazard instance 4** (eval-side): synthrlvl longbench yamls capped max_gen_toks at 64 (tagged)/32 (standard); mixdepth treatments open a `<formal>` scaffold and were cut before `<answer>` → all treatments scored exactly 0.0 tagged. Fixed: yaml caps → 4096; matching hard-coded caps in `scripts/analysis/evaluate_real_passk.py` and `scripts/analysis/audit_nanotron_multihop_eval.py`. Cap-64 bundles quarantined at `lm_eval_results/qwen25_mixdepth_post_sft_20260824_cap64`. Lesson: "protocol identical to accepted runs" is insufficient when trained output style changed.
+- math500 note: raw hendrycks_math500 exact_match ≈ 0 for everyone BY DESIGN; real scores in `math500_answer_prefix_math_verify.json` sidecar. Do not swap to minerva_math500 (breaks audit). antlr4-python3-runtime upgraded to 4.11 in .venv_rlvl_posttrain (harmless).
+- **Greedy 20/20 accepted** at `lm_eval_results/qwen25_mixdepth_post_sft_20260824/` (jobs 4101588/4101590/4101805/4103366 after two NODE_FAILs on a0531 without requeue). Replicated across both seeds:
+  - Standard prompting: treatments flat vs control on multihop AND the ten-task standard suite. No transfer gain, no harm.
+  - Tagged prompting: treatments collapse (logic_band25 hotpot F1 0.088/0.067 vs control 0.541/0.546); damage ordering logic>nl_exact, band25>band15; tag_found 0.17–0.66 vs 1.00 for controls at the 4096 cap → genuine non-termination/repetition, only in the treatment×tagged cell. Opposite of the band-25-formal-wins prediction on greedy OOD multihop.
+- **pass@k array 4103375** (16 samples, T=0.8/top_p 0.95, seed 20260806; tagged multihop at 4096) running to OUT_ROOT `..._passk_20260824`; tests whether sampling rescues the tagged cell (repetition is a classic greedy artifact). Wave 1: gsm8k/math500 pass@16 flat across conditions (control gsm8k 0.762 greedy → 0.980 pass@16). Next: `evaluate_real_passk.py summarize --conditions <10 labels>`.
+- Pending: commit/push eval scripts + yaml/audit/passk cap patches + generation_config EOS fixes; vault slightly over soft quota (~1055G/1048G) — small cleanup advisable.
+
+## 2026-08-26 — mixdepth pass@k complete (arrays 4103375 + 4105865_15)
+
+All 20 tasks done; summary at `lm_eval_results/qwen25_mixdepth_post_sft_passk_20260824/summary_passk.{json,md}`. Third a0531 NODE_FAIL-without-requeue → always `--exclude=a0531`. Findings (both seeds):
+- gsm8k/math500: flat across all 5 conditions at every k (gsm8k pass@16 0.970–0.980, math500 0.57–0.62). No sampled coverage gain from any treatment.
+- Tagged multihop: greedy crater is mostly a greedy-decoding pathology — logic_b25 hotpot 0.085/0.035 greedy → 0.455/0.425 pass@16, maj@16 0.325/0.295 vs control 0.405/0.415. But treatments < control at every k on every task; band25>band15 residual deficit persists. Sampled tag rate: control ~1.00, treatments 0.30–0.78 (logic_b25 lowest) — per-sample non-termination persists; sampling rescues via retries.
+- Weak depth-threshold echo: logic_b25 ≥ nl_b25 on maj@16 (hotpot+2wiki, both seeds), reversing the greedy ordering; never robustly beats control. Footnote-grade.
+Paper implication: the band-25-formal-wins transfer prediction is NOT supported at SFT scale; framing = scaffold brittleness under greedy + transfer null, maj@16 flip as footnote. TODO: commit/push all eval patches; vault cleanup.
+
+## 2026-08-26 — Graded-depth deduction eval: first positive transfer
+
+**What ran.** New eval family `scripts/data/build_graded_deduction_eval.py` (seed 20260826) → `$HPCVAULT/synthetic-RLVL/datasets/graded_deduction_eval_20260826/`:
+ProofWriter-OWA meta-test bucketed by QDep (d0/1/2/3/5, 500 items each) and freshly generated BranchProof at d5/10/15/20/25 (200 each, generator mirrors branchproof_unique_v2, no training collision), each in answer-only and CoT (2048-token) form.
+15 tasks x 10 mixdepth SFT models, arrays 4107575 (0-7) + 4107737 (redo of _8/_9 after a fifth a0531 NODE_FAIL-without-requeue; --exclude=a0531 as always).
+Results: `$HPCVAULT/synthetic-RLVL/lm_eval_results/qwen25_mixdepth_graded_deduction_20260826/`. Metric key is `exact_match,none`, not acc.
+
+**Motivation.** The multihop/standard suites are shallow: they cannot detect a depth threshold even if one exists, so the flat greedy + pass@k readouts were uninformative about the actual hypothesis. This eval measures the skill the traces teach.
+
+**Result 1 — external transfer, positive, replicated.** On ProofWriter-OWA every treatment beats control by +0.07 to +0.12 at d2/d3/d5 in BOTH seeds (control 0.39-0.42 -> treatments 0.46-0.53). d0 (lookup, no inference required) is nearly flat, which is the expected shape.
+
+**Result 2 — it is not purely a label-bias artifact.** Pooled d1-d5 (n=2000/model), per-gold-class:
+control predicts `true` 74-76% of the time; treatments 58-66%. Accuracy on gold=true is preserved (treatments 0.67-0.75 vs control 0.72-0.73) while accuracy on gold=false roughly doubles (0.22-0.25 -> 0.45-0.53).
+Balanced 3-class accuracy 0.333/0.343 -> 0.395-0.423; true/false-only accuracy 0.475/0.487 -> 0.571-0.623.
+HONESTY LIMIT: the `unknown` class is unsolved by every model (<=0.05). This is a two-class deduction gain, NOT open-world-assumption competence, and must be reported that way.
+
+**Result 3 — near transfer is enormous, and the trace-language contrast REVERSES.** BranchProof with CoT: control 0.06-0.14 at every depth; nl_exact_band15 0.95/0.88/0.84/0.74/0.75 at d5/10/15/20/25. Prose beats formal at every depth (nl_b15 0.75 vs logic_b15 0.36 at d25) - the opposite of the synthetic BranchProof headline where formal wins above the threshold. Answer-only (no CoT) is near-floor for everyone (control 0.00-0.02, treatments 0.09-0.28): the chain has to be written out.
+
+**Result 4 — generalization inversion.** Training on band 15 generalizes to depth 25 BETTER than training on band 25: nl 0.75/0.75 vs 0.47/0.46, logic 0.37/0.30 vs 0.19/0.20; both languages, both seeds. Complicates the "train above the threshold" prescription - state it plainly rather than hide it.
+
+**Paper impact.** The transfer null is now specific rather than global: no gain on QA benchmarks that never ask for a chain, a replicated external gain on a benchmark that does. Full tables in the results artifact (Mixdepth SFT Readout).
+
+**Still open.** Uncommitted on alex: eval slurm scripts, yaml cap raises, audit/passk cap patches, EOS fixes, the whole graded-deduction eval family, midtrain prep scripts. Long-window (8192) 5-arm midtrain prep in progress under `analysis/longwin_midtrain_prep_20260826/`.
+
+**Addendum 2026-08-26 (vault deletions resolved).** The missing `$HPCVAULT/synthetic-RLVL/nanosets/`, `nanotron_checkpoints/qwen25_7b_tp1`, and `$WORK/nanotron` venv (noticed Aug 26, gone sometime Aug 24-26) were user-initiated cleanup, not an unexplained loss or a runaway job. No investigation needed. All three are being regenerated by the rebuild chain (4109435 venv, 4109436 nanoset + tp1, 4109442 band-25 corpus). Action item: record regeneration cost + retention date for every large vault artifact (see docs/vault_inventory.md) so future space-clearing is informed.
+
+## 2026-08-26 — Paper scope narrowed; SFT finals deleted
+
+**Scope decision (user).** The SFT transfer experiments are OUT of the paper. Both the mixdepth depth-threshold SFT campaign and the dolmino/docpack transfer null are excluded; the paper is the synthetic experiments only, plus the long-window midtrain if it turns out well. Reasoning: the graded-deduction gain is not in favour of logic (prose >= formal at every depth) and the tagged-prompting behaviour is brittle, so the SFT campaign does not support the trace-language thesis.
+Consequence raised and accepted: the transfer null was load-bearing in the 2026-08-20 framing (null as boundary condition), so a synthetic-only paper carries NO real-model evidence unless the long-window midtrain lands by the 2026-09-17 abstract deadline.
+
+**Deletion.** 13 full SFT finals removed from vault, 739 G freed (synthetic-RLVL vault footprint 906 G -> 167 G):
+- 10 x post_sft_reasoning_mixture_20260821 (57 G each, fp32)
+- 3 x post_sft_dolci_docpack_rerun_20260814 (57 G each, fp32); the three *_base_checkpoint_audit.json files were kept.
+Inventory and regeneration instructions recorded in docs/deleted_sft_finals_20260826.md before removal.
+
+**Retained deliberately:** all eval results and raw samples under lm_eval_results/ (23 G, includes the greedy, pass@k and graded-deduction bundles) and passk_eval/ (5.2 G), so every number and every per-sample analysis stays reproducible without the weights; the SFT mixtures under datasets/reasoning_mixture_20260821/; and the base nanotron docpack checkpoints (86 G), which are what an SFT rerun would start from.
+
+This clears the storage block on the 5-arm long-window midtrain.
