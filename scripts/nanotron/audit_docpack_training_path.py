@@ -103,7 +103,19 @@ def gate_decoded_batch(
     idxs = sorted(
         set([0, 1, 2, 3, n // 2, n // 2 + 1, n - 2, n - 1] + list(rng.randint(0, n, size=max(n_decode - 8, 0))))
     )
-    required_markers = ["\nSolution:\n", "\nFinal answer: "]
+    # SFT-style long-window templates (2026-08-26): documents are the
+    # prompt+target SFT rendering (or the condensed formal rendering), and the
+    # long-doc control has no structural markers at all.
+    sft_style = {
+        "sft_logic": ["<question>\n", "<formal>\n", "<proof>\n", "<answer>\n"],
+        "sft_nl_exact": ["<question>\n", "<think>\n", "<proof>\n", "<answer>\n"],
+        "condensed_logic": ["<cformal>\n", "<premises>\n", "<proof>\n", "<answer>\n"],
+        "longdoc": [],
+    }
+    if template in sft_style:
+        required_markers = list(sft_style[template])
+    else:
+        required_markers = ["\nSolution:\n", "\nFinal answer: "]
     if template == "logic":
         required_markers += ["Derivation:\n", "Definitions:\n", "Formal premises:\n"]
     elif template == "real_logic":
@@ -151,8 +163,12 @@ def gate_decoded_batch(
             missing = [m for m in required_markers if m not in text]
             if missing:
                 problems.append(f"doc {d_i} missing markers: {missing}")
-            if not text.rstrip().splitlines()[-1].startswith("Final answer:"):
-                problems.append(f"doc {d_i} does not end with a Final answer line")
+            if template in ("sft_logic", "sft_nl_exact", "condensed_logic"):
+                if not text.rstrip().endswith("</answer>"):
+                    problems.append(f"doc {d_i} does not end with </answer>")
+            elif template != "longdoc":
+                if not text.rstrip().splitlines()[-1].startswith("Final answer:"):
+                    problems.append(f"doc {d_i} does not end with a Final answer line")
             window_doc_summaries.append(
                 {"tokens": len(doc), "head": text[:80].replace("\n", " "), "tail": text[-60:].replace("\n", " ")}
             )
@@ -278,7 +294,7 @@ def main() -> None:
     parser.add_argument("--packed-folder", required=True)
     parser.add_argument("--dolmino-folder", required=True)
     parser.add_argument("--tokenizer", default="Qwen/Qwen2.5-7B")
-    parser.add_argument("--template", default="logic", choices=["logic", "nl_exact", "real_logic"])
+    parser.add_argument("--template", default="logic", choices=["logic", "nl_exact", "real_logic", "sft_logic", "sft_nl_exact", "condensed_logic", "longdoc"])
     parser.add_argument("--seq-len", type=int, default=4096)
     parser.add_argument("--train-steps", type=int, required=True)
     parser.add_argument("--global-batch-size", type=int, required=True)

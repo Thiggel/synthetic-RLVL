@@ -88,20 +88,20 @@ TASK_GROUPS = {
             "synthrlvl_longbench_hotpotqa_tagged": {
                 "expected": 200,
                 "stop": ["</answer>", "<|im_end|>", "</s>"],
-                "greedy_max_tokens": 64,  # matches accepted task yaml max_gen_toks
-                "sampled_max_tokens": 64,
+                "greedy_max_tokens": 4096,  # matches raised task yaml cap (2026-08-25 capfix)
+                "sampled_max_tokens": 4096,
             },
             "synthrlvl_longbench_2wikimqa_tagged": {
                 "expected": 200,
                 "stop": ["</answer>", "<|im_end|>", "</s>"],
-                "greedy_max_tokens": 64,
-                "sampled_max_tokens": 64,
+                "greedy_max_tokens": 4096,  # matches raised task yaml cap (2026-08-25 capfix)
+                "sampled_max_tokens": 4096,
             },
             "synthrlvl_longbench_musique_tagged": {
                 "expected": 200,
                 "stop": ["</answer>", "<|im_end|>", "</s>"],
-                "greedy_max_tokens": 64,
-                "sampled_max_tokens": 64,
+                "greedy_max_tokens": 4096,  # matches raised task yaml cap (2026-08-25 capfix)
+                "sampled_max_tokens": 4096,
             },
         },
     },
@@ -699,8 +699,9 @@ def cmd_run(args) -> None:
 
 def cmd_summarize(args) -> None:
     output_root = Path(args.output_root)
+    conditions = tuple(args.conditions.split(",")) if args.conditions else CONDITIONS
     all_metrics: dict[str, dict[str, dict]] = {}
-    for condition in CONDITIONS:
+    for condition in conditions:
         for path in sorted((output_root / condition).glob("metrics_*.json")):
             metrics = json.loads(path.read_text())
             all_metrics.setdefault(metrics["task"], {})[condition] = metrics
@@ -729,7 +730,7 @@ def cmd_summarize(args) -> None:
         )
         lines.append(header)
         lines.append("|" + "---|" * (2 + len(PASS_KS) + len(MAJ_KS) + 1))
-        for condition in CONDITIONS:
+        for condition in conditions:
             metrics = by_condition.get(condition)
             if metrics is None:
                 lines.append(f"| {condition} | (missing) |" + " |" * (len(PASS_KS) + len(MAJ_KS) + 1))
@@ -746,7 +747,7 @@ def cmd_summarize(args) -> None:
                 "bestF1@16 (fallback) | majF1@16 (fallback) | tag rate (sampled) |"
             )
             lines.append("|" + "---|" * 8)
-            for condition in CONDITIONS:
+            for condition in conditions:
                 metrics = by_condition.get(condition)
                 if metrics is None:
                     continue
@@ -768,7 +769,7 @@ def main() -> None:
     sub = parser.add_subparsers(dest="command", required=True)
 
     run = sub.add_parser("run", help="evaluate one condition x task-group")
-    run.add_argument("--condition", required=True, choices=CONDITIONS)
+    run.add_argument("--condition", required=True)
     run.add_argument("--task-group", required=True, choices=sorted(TASK_GROUPS))
     run.add_argument("--checkpoint", default=None)
     run.add_argument("--accepted-run-dir", default=None)
@@ -780,6 +781,11 @@ def main() -> None:
 
     summarize = sub.add_parser("summarize", help="aggregate metrics across conditions")
     summarize.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
+    summarize.add_argument(
+        "--conditions",
+        default=None,
+        help="comma-separated condition labels (default: the dolmino three-way)",
+    )
     summarize.set_defaults(func=cmd_summarize)
 
     args = parser.parse_args()

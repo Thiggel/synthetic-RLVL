@@ -218,3 +218,4 @@ wandb
 wandb/*
 .external/
 logs
+tmp/

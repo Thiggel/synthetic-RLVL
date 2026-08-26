@@ -79,11 +79,21 @@ def audit_model_config(checkpoint: Path, *, expected_rope_theta: float = 1_000_0
     legacy_theta = raw.get("rope_theta")
     rope_parameters = raw.get("rope_parameters")
     modern_theta = rope_parameters.get("rope_theta") if isinstance(rope_parameters, dict) else None
-    for field, value in (
-        ("rope_theta", legacy_theta),
-        ("rope_parameters.rope_theta", modern_theta),
-    ):
-        if value is None or float(value) != float(expected_rope_theta):
+    # Trainer-saved configs carry only the legacy top-level rope_theta;
+    # nanotron-converted ones also carry rope_parameters. Accept either
+    # source, but fail on any present-but-wrong value or if both are absent.
+    present = [
+        (field, value)
+        for field, value in (
+            ("rope_theta", legacy_theta),
+            ("rope_parameters.rope_theta", modern_theta),
+        )
+        if value is not None
+    ]
+    if not present:
+        errors.append(f"no rope_theta in config, expected {expected_rope_theta}")
+    for field, value in present:
+        if float(value) != float(expected_rope_theta):
             errors.append(f"{field}={value!r}, expected {expected_rope_theta}")
 
     loaded_theta: float | None = None

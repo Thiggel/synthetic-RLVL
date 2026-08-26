@@ -75,7 +75,8 @@ export WANDB_GROUP="qwen25_mixdepth_sft"
 export WANDB_RUN_GROUP="${WANDB_GROUP}"
 export WANDB_NAME="${RUN_NAME}"
 export HF_HUB_ENABLE_HF_TRANSFER=0
-export TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC="${TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC:-3600}"
+export TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC="${TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC:-7200}"
+export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
 
 echo "condition=${COND} seed=${SEED} prepared=${PREPARED} out=${OUT_DIR}"
 
@@ -101,7 +102,19 @@ echo "condition=${COND} seed=${SEED} prepared=${PREPARED} out=${OUT_DIR}"
   --per-device-eval-batch-size 1 \
   --grad-accum 32 \
   --eval-steps 250 \
-  --save-steps 250 \
+  --save-steps "${SAVE_STEPS:-250}" \
   --save-total-limit 1 \
   --format-mode chat \
-  --single-turn-only
+  --single-turn-only \
+  --full-parameter \
+  --fsdp "full_shard auto_wrap" \
+  --fsdp-transformer-layer-cls-to-wrap Qwen2DecoderLayer \
+  --ddp-timeout "${DDP_TIMEOUT_SECONDS:-7200}" \
+  --gradient-checkpointing \
+  --resume-from-checkpoint auto
+
+# Fail loudly if the terminal save did not land, then drop the optimizer-state
+# checkpoint (~227G each) and keep only final/ (~30G). Without this, the ten
+# array tasks would need ~2.8TB on a vault that is already over its soft quota.
+test -s "${OUT_DIR}/final/config.json"
+find "${OUT_DIR}" -maxdepth 1 -type d -name 'checkpoint-*' -exec rm -rf -- {} +

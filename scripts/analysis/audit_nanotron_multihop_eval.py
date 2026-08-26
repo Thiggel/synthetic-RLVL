@@ -139,7 +139,7 @@ def audit(run_dir: Path, *, mode: str, expected_tasks: list[str], require_full: 
             if len(rows) != effective or len({row.get("doc_id") for row in rows}) != effective:
                 errors.append(f"sample coverage mismatch for {task}")
             prompt_errors: set[str] = set()
-            expected_max_tokens = 64 if protocol == "strict_tagged" else 32
+            expected_max_tokens = 4096  # raised from 64/32 in 2026-08-25 capfix (silent truncation of formal-style answers)
             for row in rows:
                 prompt, kwargs = _generation_request(row)
                 if prompt is None or kwargs is None:
