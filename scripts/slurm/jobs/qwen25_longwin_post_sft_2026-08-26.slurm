@@ -51,7 +51,12 @@ RUN_DIR_TAG="${RUN_DIR_TAGS[$IDX]}"
 CHECKPOINT_STEP="${CHECKPOINT_STEP:-2385}"
 LR="${LR:-5e-6}"
 SAVE_STEPS="${SAVE_STEPS:-100000}"
-RUN_NAME="qwen25_7b_longwin_${CONDITION}_2p5b_dolci_100k_lr5em6"
+# Seed replication (2026-09-07). SEED defaults to 3407 and, at that value,
+# reproduces the ORIGINAL run names/paths exactly so the accepted seed-3407
+# artifacts are matched by the skip-if-final-exists guard and never rebuilt.
+SEED="${SEED:-3407}"
+if [[ "${SEED}" == "3407" ]]; then RUN_TAG_SUFFIX=""; else RUN_TAG_SUFFIX="_seed${SEED}"; fi
+RUN_NAME="qwen25_7b_longwin_${CONDITION}_2p5b_dolci_100k_lr5em6${RUN_TAG_SUFFIX}"
 RUN_ROOT="${WORK}/synthetic-RLVL/nanotron_longwin_midtrain/${RUN_DIR_TAG}"
 NANOTRON_CKPT="${RUN_ROOT}/checkpoints/${CHECKPOINT_STEP}"
 OUT_ROOT="${POST_SFT_OUT_ROOT:-${WORK}/synthetic-RLVL/post_sft_dolci_longwin_20260826}"
@@ -117,7 +122,7 @@ export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:T
   --eval-split train \
   --run-name "${RUN_NAME}" \
   --output-dir "${OUT_DIR}" \
-  --seed 3407 \
+  --seed "${SEED}" \
   --train-samples 100000 \
   --eval-samples 2048 \
   --max-length 4096 \

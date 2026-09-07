@@ -49,6 +49,13 @@ class RewardSchema(str, Enum):
     CORRECT_PLUS_0P75_VALID_PLUS_0P1_FORMAT = "correct_plus_0p75_valid_plus_0p1_format"
     CORRECT_PLUS_0P5_VALID_PLUS_0P1_FORMAT = "correct_plus_0p5_valid_plus_0p1_format"
     CORRECT_PLUS_0P25_VALID_PLUS_0P1_FORMAT = "correct_plus_0p25_valid_plus_0p1_format"
+    # Pure reward variants for the long-window RL study (2026-09-07).
+    # No 0.1 format bonus: the post-SFT arms already emit a parseable answer
+    # on 94-100% of greedy generations (measured tag_rate), so format shaping
+    # is unnecessary and would blur the correctness-vs-validity contrast.
+    CORRECT_ONLY = "correct_only"
+    CORRECT_TIMES_VALID = "correct_times_valid"
+    CORRECT_PLUS_VALID = "correct_plus_valid"
     INDICATOR_ALL = "indicator_all"
 
 

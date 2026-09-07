@@ -105,6 +105,42 @@ TASK_GROUPS = {
             },
         },
     },
+    "deduction_cot": {
+        "suite_suffix": "graded_deduction",
+        "max_model_len": 8192,
+        "tasks": {
+            "synthrlvl_deduction_bp_cot_d5": {
+                "expected": 200,
+                "stop": [],
+                "greedy_max_tokens": 2048,
+                "sampled_max_tokens": 2048,
+            },
+            "synthrlvl_deduction_bp_cot_d10": {
+                "expected": 200,
+                "stop": [],
+                "greedy_max_tokens": 2048,
+                "sampled_max_tokens": 2048,
+            },
+            "synthrlvl_deduction_bp_cot_d15": {
+                "expected": 200,
+                "stop": [],
+                "greedy_max_tokens": 2048,
+                "sampled_max_tokens": 2048,
+            },
+            "synthrlvl_deduction_bp_cot_d20": {
+                "expected": 200,
+                "stop": [],
+                "greedy_max_tokens": 2048,
+                "sampled_max_tokens": 2048,
+            },
+            "synthrlvl_deduction_bp_cot_d25": {
+                "expected": 200,
+                "stop": [],
+                "greedy_max_tokens": 2048,
+                "sampled_max_tokens": 2048,
+            },
+        },
+    },
 }
 
 MAX_EMPTY_GREEDY_RATE = 0.02
@@ -322,6 +358,38 @@ class MultihopScorer:
 
 
 
+class DeductionCoTScorer:
+    """Scores BranchProof-CoT deduction using the EXACT extractor the accepted
+    greedy eval used (lm_eval_tasks/synthrlvl_ood/utils.process_deduction_bp_cot),
+    imported rather than reimplemented so sampled and greedy numbers are
+    directly comparable."""
+
+    name = "deduction_bp_cot"
+
+    def __init__(self):
+        self._u = _load_module(
+            "synthrlvl_ood_utils_imported",
+            SCRIPT_DIR.parent.parent / "lm_eval_tasks" / "synthrlvl_ood" / "utils.py",
+        )
+
+    def score(self, doc: dict, target: str, response: str) -> dict[str, Any]:
+        out = self._u.process_deduction_bp_cot(doc, [response])
+        matches = self._u._BP_COT_ANSWER_RE.findall(response or "")
+        if matches:
+            pred_src = matches[-1].strip().split("\n")[0]
+        else:
+            lines = [l for l in (response or "").strip().splitlines() if l.strip()]
+            pred_src = lines[-1] if lines else ""
+        pred = self._u.normalize_answer(pred_src)
+        return {
+            "extracted": pred or None,
+            "correct": bool(out["exact_match"]),
+            "maj_key": pred if pred else None,
+            "extraction_failed": not bool(out["extracted_nonempty"]),
+            "tag_found": bool(out["tag_found"]),
+        }
+
+
 def make_scorer(task: str):
     if task == "gsm8k":
         return Gsm8kScorer()
@@ -329,6 +397,8 @@ def make_scorer(task: str):
         return Math500Scorer()
     if task.startswith("synthrlvl_longbench_") and task.endswith("_tagged"):
         return MultihopScorer(task)
+    if task.startswith("synthrlvl_deduction_bp_cot_"):
+        return DeductionCoTScorer()
     raise ValueError(f"no scorer for task {task}")
 
 
@@ -511,6 +581,10 @@ def evaluate_task(task, task_cfg, docs, greedy_out, sampled_out, out_dir: Path, 
         metrics["sampled"]["qa_f1_fallback"] = statistics.fmean(
             r["f1_fallback"] for r in all_sample_recs
         )
+        metrics["sampled"]["tag_rate"] = rate([r["tag_found"] for r in all_sample_recs])
+
+    if isinstance(scorer, DeductionCoTScorer):
+        metrics["greedy"]["tag_rate"] = rate([r["tag_found"] for r in greedy_recs])
         metrics["sampled"]["tag_rate"] = rate([r["tag_found"] for r in all_sample_recs])
 
     # pass@k over binary per-sample success

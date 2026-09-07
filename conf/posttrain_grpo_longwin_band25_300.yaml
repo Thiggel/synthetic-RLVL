@@ -1,0 +1,117 @@
+# GRPO RL post-training for the long-window (8192) band-25 arms. 2026-09-07.
+#
+# Cloned from posttrain_grpo_hard_fsa_schema_fixedtarget_500.yaml. Deliberate
+# diffs, everything else identical to that accepted config:
+#   - task.train_max_step 10 -> 25 (these arms were midtrained at band 25).
+#   - data points at branchproof_unique_v2_rl_20260907 (seed 20260907), which is
+#     DISJOINT from the seed-20260830 corpus consumed by midtraining. Running RL
+#     on the midtrain proofs would reward memorisation and confound logic-vs-NL.
+#   - grpo.train_steps 500 -> 300.
+#   - reward.schema is set per run to one of the three pure schemas added
+#     2026-09-07 (correct_only / correct_times_valid / correct_plus_valid);
+#     no 0.1 format bonus, because the post-SFT arms already emit a parseable
+#     answer on 94-100% of generations, so format shaping is unnecessary and
+#     would blur the correctness-vs-validity contrast.
+#   - optim.loss_agg_mode: per-prompt rather than per-token aggregation.
+seed: 3407
+run_name: rl_longwin_base
+output_dir: ${oc.env:WORK,${oc.env:HOME}}/synthetic-RLVL/runs
+allow_base_model: false
+
+model:
+  path: ${oc.env:SFT_CHECKPOINT,null}
+  lora_rank: 16
+  lora_alpha: 16
+  merge_adapter_for_rollout: false
+
+task:
+  template: logic
+  prefill: none
+  distractor_ratio: 0.5
+  difficulty: hard_fsa_schema
+  branching_factor: 4
+  decoy_chains: null
+  near_miss_ratio: null
+  side_chain_depth: null
+  entity_decoy_ratio: null
+  answer_decoy_ratio: null
+  shortcut_rate: 0.0
+  require_unique_solution: true
+  train_min_step: 1
+  train_max_step: 25
+  val_min_step: 1
+  val_max_step: 25
+
+data:
+  source: materialized
+  train_samples: 30000
+  val_samples: 512
+  materialized:
+    dataset_id: null
+    local_root: ${oc.env:WORK}/synthetic-RLVL/datasets/branchproof_unique_v2_rl_20260907
+    train_subset: train_fixedtarget_up_to_25_30000
+    val_subset: auto
+
+reward:
+  schema: correct_only
+
+grpo:
+  train_steps: 300
+  rollout_backend: vllm
+  num_prompts: 8
+  num_rollouts: 8
+  max_prompt_length: 8192
+  max_response_length: 2048
+  max_model_len: 12288
+  max_num_batched_tokens: 32768
+  temperature: 1.0
+  gpu_memory_utilization: 0.55
+
+optim:
+  lr: 1e-6
+  weight_decay: 0.01
+  warmup_steps: 0
+  micro_batch_size: 4
+  logprob_micro_batch_size: 4
+  kl_coef: 0.0
+  # SkyRL finding: per-prompt aggregation beat per-token by +3.9 points on
+  # variable-length trajectories. bp_cot responses span 0-2048 tokens.
+  loss_agg_mode: seq-mean-token-mean
+
+validation:
+  enabled: true
+  before_train: true
+  eval_every: 50
+  save_every: 100
+  max_actor_ckpt_to_keep: 2
+  run_verl_validation: false
+
+eval:
+  synthetic_samples_per_step: 10
+  max_new_tokens: 2048
+
+logging:
+  project: synthetic-rlvl
+  entity: null
+
+resume:
+  mode: disable
+  from_path: null
+
+system:
+  n_gpus_per_node: 1
+  ray_max_colocate_count: 3
+  ray_cpus: 12
+  reward_num_workers: 2
+
+log_generations:
+  num_samples: 8
+  train_every: 50
+  train_num_samples: 4
+  train_max_chars: 2000
+  train_dump_jsonl: false
+
+debug:
+  verl_sanity_only: false
+  verl_sanity_prompt_path: null
+  verl_sanity_max_new_tokens: 256

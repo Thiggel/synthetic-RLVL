@@ -242,6 +242,15 @@ def _build_verl_cfg(cfg: DictConfig, train_file: Path, val_file: Path) -> DictCo
         base.actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu = int(cfg.optim.micro_batch_size)
         base.actor_rollout_ref.actor.ppo_max_token_len_per_gpu = int(cfg.grpo.max_num_batched_tokens)
         base.actor_rollout_ref.actor.use_dynamic_bsz = True
+        # Loss aggregation (2026-09-07). verl defaults to "token-mean", which
+        # weights long rollouts more heavily. The SkyRL report measured +3.9
+        # points for per-prompt aggregation over per-token on highly
+        # variable-length trajectories; our bp_cot responses run 0-2048 tokens,
+        # so each rollout group should contribute equally. verl's equivalent is
+        # "seq-mean-token-mean". Overridable via optim.loss_agg_mode.
+        base.actor_rollout_ref.actor.loss_agg_mode = str(
+            getattr(cfg.optim, "loss_agg_mode", "seq-mean-token-mean")
+        )
 
         base.actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu = int(cfg.optim.logprob_micro_batch_size)
         base.actor_rollout_ref.ref.log_prob_max_token_len_per_gpu = int(cfg.grpo.max_num_batched_tokens)

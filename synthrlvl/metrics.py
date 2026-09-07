@@ -504,6 +504,12 @@ class RewardComputer:
             value = m.correct + 0.5 * m.valid + 0.1 * m.format_ok
         elif schema == RewardSchema.CORRECT_PLUS_0P25_VALID_PLUS_0P1_FORMAT:
             value = m.correct + 0.25 * m.valid + 0.1 * m.format_ok
+        elif schema == RewardSchema.CORRECT_ONLY:
+            value = float(m.correct > 0)
+        elif schema == RewardSchema.CORRECT_TIMES_VALID:
+            value = float(m.correct > 0 and m.valid > 0)
+        elif schema == RewardSchema.CORRECT_PLUS_VALID:
+            value = float(m.correct > 0) + float(m.valid > 0)
         elif schema == RewardSchema.INDICATOR_ALL:
             value = float(m.correct > 0 and m.valid > 0 and m.format_ok > 0)
         else:
