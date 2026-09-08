@@ -3062,3 +3062,13 @@ done
 - Dolci SFT: job array 4007408 (0-2%2), dependency afterany:3964807, script scripts/slurm/jobs/qwen25_docpack_rerun_threeway_post_sft_2026-08-14.slurm. Identical recipe to the accepted three-way SFT; only the base checkpoint changes (docpack rerun step 4770). Fail-closed via verify_training_checkpoint.py --expected-step 4770. Outputs: $WORK/synthetic-RLVL/post_sft_dolci_docpack_rerun_20260814/.
 - Greedy readout: scripts/slurm/jobs/qwen25_docpack_rerun_threeway_post_sft_eval_2026-08-14.slurm, submit per suite with EVAL_SUITE=standard and EVAL_SUITE=multihop once SFT lands. Results: $HPCVAULT/synthetic-RLVL/lm_eval_results/qwen25_docpack_rerun_post_sft_20260814/.
 - NOTE: if 3964807 hits the 24h walltime short of step 4770, the SFT array fail-closes on the audit; let 3964808 finish the run, then resubmit the array.
+
+## 30-percent-share long-window sweep (submitted 2026-09-08)
+
+See `analysis/longwin_p30_20260908/PLAN.md`. Chain: build 4201577 -> audit 4201578 -> `q25_longwin_p30` singleton passes 4201579-4201587 (condensed, nl_exact, logic; three passes each). Post-SFT and readouts not yet submitted. Watch rules: after the audit, check `analysis/longwin_p30_20260908/audit_docpack_*.json` for all_pass=true and realized ratio ~0.30 before the first midtrain pass starts; if the build exceeds the 12 h walltime, resubmit with the materialize step split; add a0531/a0533 to any resubmission's exclude list.
+
+## Readouts of the 10-percent arms still running (2026-09-08)
+
+- seed-3408 replicate: graded 4200590 -> pass@k 4200591; downstream multihop 4200592, standard 4200593. One-shot readout: `analysis/longwin_readout_20260908/seed3408_readout.sh`.
+- clean pass@k, condensed arm: 4200609_4 (arms 0-3 done, root `qwen25_longwin_passk_20260908_eosfix`).
+- sampled multihop (tagged hotpot/2wiki/musique) 4201311 and standard (gsm8k, math500) 4201312, seed 3407, root `qwen25_longwin_passk_downstream_20260908/<group>`.

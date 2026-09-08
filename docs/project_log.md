@@ -3996,3 +3996,19 @@ Inventory and regeneration instructions recorded in docs/deleted_sft_finals_2026
 **Retained deliberately:** all eval results and raw samples under lm_eval_results/ (23 G, includes the greedy, pass@k and graded-deduction bundles) and passk_eval/ (5.2 G), so every number and every per-sample analysis stays reproducible without the weights; the SFT mixtures under datasets/reasoning_mixture_20260821/; and the base nanotron docpack checkpoints (86 G), which are what an SFT rerun would start from.
 
 This clears the storage block on the 5-arm long-window midtrain.
+
+## 2026-09-08 — Sampled readout was corrupted; midtrain notation contrast reverses; RL cancelled; 30-percent sweep submitted
+
+**Stop-token bug (silent-truncation instance 5).** `evaluate_real_passk.py` built explicit vLLM SamplingParams with `stop=[]` and no `stop_token_ids`; explicit params do not inherit the checkpoint's generation_config eos list, and the Qwen tokenizer eos is `<|endoftext|>` (151643), so `<|im_end|>` (151645) never stopped generation. Every T=0.8 sample ran to the 2048 cap (mean 2047 tokens) with a degenerate tail, and `process_deduction_bp_cot` takes the LAST `Answer:` match. Greedy was unaffected (lm-eval uses the model's default sampling params). Fixed (stop_token_ids from generation_config + tokenizer, SCHEMA_VERSION 2); the 2026-09-07 root is marked SUPERSEDED; clean rerun `qwen25_longwin_passk_20260908_eosfix` (job 4200609). Detection heuristic: sampled mean_response_tokens equal to the cap for every arm.
+
+**Clean result (seed 3407, pooled d5-d25):** pass@16 control 57.0 / longdoc 61.4 / logic 81.4 / nl 86.4; nl - logic +5.0 [2.1, 7.9]; pass@1 nl - logic +6.8. The 2026-09-07 "+0.050 logic over nl" contrast is an artifact and must not be cited. English >= formal on every decoding rule at midtraining scale, consistent with the Qwen2.5-7B controlled tie (69.9 vs 74.9 pass@1). Verified three ways: recomputation from raw samples, first-match rescoring of the superseded generations, and cap-hit fractions (treatments 1-4%, control 10-28%).
+
+**Per-class ProofWriter (new):** control predicts true 66%, treatments 50-57%; gold-false 38.5 -> 54.2 (logic) / 68.0 (nl); unknown unsolved. Scripts in `analysis/longwin_readout_20260908/`.
+
+**Rendering accounting (new):** the standard formal document states the theory twice (NL prompt + FOL premises); the English document states it once; FOL premises are ~1.5x more compact than controlled English (depth 25: 3,420 vs 4,029 tokens). Condensed is the formal document with the theory once. So Formal vs English are length-matched by offset, and Condensed vs English is compact-seen-2.3x vs verbose-seen-once.
+
+**Paper:** complete rewrite committed to synthetic-RLVL-report (0f2ea22, pushed; alex clone pulled): teacher-free derivations as midtraining data + depth-dependent notation; 86 verified references. Sampled midtrain numbers replaced by the clean rerun.
+
+**RL:** midtrain-arm sweep cancelled (arms write no derivations after SFT; formal coverage below English). Controlled-model RL not started (adapters deleted in August, not on the Hub). Config repairs kept (eval block restored in `posttrain_grpo_longwin_band25_300.yaml`; `update_weights_bucket_megabytes=4096` in `posttrain_grpo_verl.py`, since the fp32 embedding is 2.18 GB).
+
+**Submitted:** 30-percent-share sweep, three arms on a 520k-document corpus (`analysis/longwin_p30_20260908/PLAN.md`): build 4201577 -> audit 4201578 -> midtrains 4201579-4201587 (singleton q25_longwin_p30). Also running: seed-3408 replicate chain (4200590/91/92/93), condensed arm of the clean pass@k (4200609_4), sampled multihop/standard readouts of the 10-percent arms (4201311/4201312). One downstream bundle (longdoc, standard) is audit-rejected on a single MATH-500 item (doc 277: stock exact match correct, math_verify sidecar lost it); numbers are fine.
