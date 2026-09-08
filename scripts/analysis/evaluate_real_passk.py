@@ -60,7 +60,7 @@ MAJ_KS = (1, 4, 8, 16)
 SAMPLING_TEMPERATURE = 0.8
 SAMPLING_TOP_P = 0.95
 DEFAULT_SEED = 20260806
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 TASK_GROUPS = {
     "standard": {
@@ -465,12 +465,20 @@ def prepare_token_prompts(tokenizer, docs, max_model_len: int, max_new_tokens: i
     return token_prompts, truncated
 
 
-def generate_for_task(llm, sampling_params_cls, token_prompts, task_cfg, seed: int):
+def generate_for_task(llm, sampling_params_cls, token_prompts, task_cfg, seed: int, stop_token_ids=None):
+    # 2026-09-08: explicit SamplingParams do NOT inherit the checkpoint"s
+    # generation_config eos list in vLLM, so without stop_token_ids a chat model
+    # whose end-of-turn token (<|im_end|>, 151645) differs from the tokenizer
+    # eos (<|endoftext|>, 151643) never stops: every T=0.8 sample ran to the cap
+    # with a degenerate tail, and last-match answer extraction then read the
+    # tail. Both samplers now stop on every eos id of the checkpoint.
+    stop_ids = sorted(set(stop_token_ids or []))
     greedy_params = sampling_params_cls(
         n=1,
         temperature=0.0,
         max_tokens=task_cfg["greedy_max_tokens"],
         stop=list(task_cfg["stop"]),
+        stop_token_ids=stop_ids,
         seed=seed,
     )
     sampled_params = sampling_params_cls(
@@ -479,6 +487,7 @@ def generate_for_task(llm, sampling_params_cls, token_prompts, task_cfg, seed: i
         top_p=SAMPLING_TOP_P,
         max_tokens=task_cfg["sampled_max_tokens"],
         stop=list(task_cfg["stop"]),
+        stop_token_ids=stop_ids,
         seed=seed,
     )
     prompts = [{"prompt_token_ids": ids} for ids in token_prompts]
@@ -705,6 +714,20 @@ def cmd_run(args) -> None:
     import vllm
 
     tokenizer = AutoTokenizer.from_pretrained(str(checkpoint), trust_remote_code=True)
+    eos_ids = set()
+    if tokenizer.eos_token_id is not None:
+        eos_ids.add(int(tokenizer.eos_token_id))
+    gen_cfg_path = Path(checkpoint) / "generation_config.json"
+    if gen_cfg_path.exists():
+        gen_eos = json.loads(gen_cfg_path.read_text()).get("eos_token_id")
+        if gen_eos is not None:
+            eos_ids |= {int(x) for x in (gen_eos if isinstance(gen_eos, list) else [gen_eos])}
+    for tok in ("<|im_end|>", "<|endoftext|>"):
+        tid = tokenizer.convert_tokens_to_ids(tok)
+        if isinstance(tid, int) and tid >= 0 and tid != tokenizer.unk_token_id:
+            eos_ids.add(tid)
+    stop_token_ids = sorted(eos_ids)
+    print(f"stop_token_ids={stop_token_ids}")
     llm = LLM(
         model=str(checkpoint),
         dtype="bfloat16",
@@ -730,6 +753,7 @@ def cmd_run(args) -> None:
         },
         "limit": args.limit,
         "vllm_version": vllm.__version__,
+        "stop_token_ids": stop_token_ids,
     }
 
     audit: dict[str, Any] = {
@@ -745,7 +769,7 @@ def cmd_run(args) -> None:
             tokenizer, docs, group_cfg["max_model_len"], max_new
         )
         greedy_out, sampled_out = generate_for_task(
-            llm, SamplingParams, token_prompts, task_cfg, args.seed
+            llm, SamplingParams, token_prompts, task_cfg, args.seed, stop_token_ids
         )
         metrics, audit_entry = evaluate_task(
             task, task_cfg, docs, greedy_out, sampled_out, out_dir, meta

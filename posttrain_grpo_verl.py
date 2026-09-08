@@ -251,6 +251,12 @@ def _build_verl_cfg(cfg: DictConfig, train_file: Path, val_file: Path) -> DictCo
         base.actor_rollout_ref.actor.loss_agg_mode = str(
             getattr(cfg.optim, "loss_agg_mode", "seq-mean-token-mean")
         )
+        # 2026-09-08: the vLLM weight-sync bucket defaults to 2048 MB, and the
+        # fp32 Qwen2.5-7B embedding (152064 x 3584 x 4 B = 2.18 GB) does not fit,
+        # which asserts inside rollout.update_weights on the first sync.
+        base.actor_rollout_ref.rollout.update_weights_bucket_megabytes = int(
+            getattr(cfg.grpo, "update_weights_bucket_megabytes", 4096)
+        )
 
         base.actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu = int(cfg.optim.logprob_micro_batch_size)
         base.actor_rollout_ref.ref.log_prob_max_token_len_per_gpu = int(cfg.grpo.max_num_batched_tokens)

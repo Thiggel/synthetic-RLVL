@@ -87,8 +87,30 @@ validation:
   run_verl_validation: false
 
 eval:
+  enabled: true
+  synthetic_step_min: 1
+  synthetic_step_max: 25
   synthetic_samples_per_step: 10
   max_new_tokens: 2048
+  generation_backend: vllm
+  generation_batch_size: 512
+  vllm_gpu_memory_utilization: 0.55
+  sampled_enabled: false
+  sampled_num_generations: 64
+  sampled_k_values: [1, 2, 4, 8, 16, 32, 64]
+  sampled_temperature: 1.0
+  external_enabled: false
+  external_benchmarks: [proofwriter, folio, prontoqa, proverqa, logiqa2, bbh, mmlu_philosophy, mmlu_formal_logic, strategyqa]
+  external_limit_per_benchmark: 20
+  constrained_enabled: false
+  constrained_samples_per_step: 4
+  constrained_num_generations: 8
+  constrained_candidates_per_line: 8
+  constrained_k_values: [1, 2, 4, 8]
+  constrained_max_lines: 32
+  constrained_max_line_tokens: 48
+  constrained_suffix_max_tokens: 256
+  constrained_temperature: 1.0
 
 logging:
   project: synthetic-rlvl

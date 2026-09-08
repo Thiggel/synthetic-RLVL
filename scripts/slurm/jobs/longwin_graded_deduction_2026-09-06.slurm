@@ -33,9 +33,13 @@ source ./scripts/env.sh
 
 CONDITIONS=(control longdoc logic_band25 nl_exact_band25 condensed_logic_band25)
 CONDITION="${CONDITIONS[$SLURM_ARRAY_TASK_ID]}"
-RUN_NAME="qwen25_7b_longwin_${CONDITION}_2p5b_dolci_100k_lr5em6"
+# Seed replication (2026-09-08): SEED=3407 keeps the original names; any other
+# seed appends _seed<SEED> to the checkpoint name and to every output root.
+SEED="${SEED:-3407}"
+if [[ "${SEED}" == "3407" ]]; then RUN_TAG_SUFFIX=""; else RUN_TAG_SUFFIX="_seed${SEED}"; fi
+RUN_NAME="qwen25_7b_longwin_${CONDITION}_2p5b_dolci_100k_lr5em6${RUN_TAG_SUFFIX}"
 CHECKPOINT="${WORK}/synthetic-RLVL/post_sft_dolci_longwin_20260826/${RUN_NAME}/final"
-OUT_DIR="${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_longwin_graded_deduction_20260906/${RUN_NAME}"
+OUT_DIR="${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_longwin_graded_deduction_20260906${RUN_TAG_SUFFIX}/${RUN_NAME}"
 
 VENV_PATH="${HPCVAULT}/.venv_rlvl_posttrain"
 export VIRTUAL_ENV="${VENV_PATH}"
