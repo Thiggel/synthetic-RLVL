@@ -98,3 +98,19 @@ of post-SFT and evals, queue permitting.
 - Condensed at 30 percent with 0.96 epochs: its 10-percent lead over English
   on near transfer should persist if it came from seeing more distinct
   proofs, and shrink if it came from repetition.
+
+## Audit result (2026-09-08, after the build)
+
+Build 4201577 completed in 2h06 (520,000 rows, three renderings, three
+docpacks). Audit 4201578 passed all four gates for every arm at target ratio
+0.30 (zero_overlength, decoded_batch, padding_loss_mask, exact_mixture):
+
+| arm | proof_weight | realised loss-token ratio | epochs over the 520k docs | windows | real tokens |
+|---|---|---|---|---|---|
+| logic_band25 | 0.3097 | 0.30000 | 0.369 | 256,247 | 2,099,431,671 |
+| nl_exact_band25 | 0.3098 | 0.30000 | 0.364 | 259,766 | 2,128,262,838 |
+| condensed_logic_band25 | 0.3018 | 0.30000 | 0.959 | 96,124 | 787,543,932 |
+
+Rendered lengths match the 72k corpus (logic p50 3,749, max 7,718, 0 percent
+over the window). No arm repeats a document. The first midtrain pass
+(4201579, condensed) is released from its dependency and waits on priority.
