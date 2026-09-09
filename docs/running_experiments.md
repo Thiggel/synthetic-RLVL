@@ -3072,3 +3072,15 @@ See `analysis/longwin_p30_20260908/PLAN.md`. Chain: build 4201577 -> audit 42015
 - seed-3408 replicate: graded 4200590 -> pass@k 4200591; downstream multihop 4200592, standard 4200593. One-shot readout: `analysis/longwin_readout_20260908/seed3408_readout.sh`.
 - clean pass@k, condensed arm: 4200609_4 (arms 0-3 done, root `qwen25_longwin_passk_20260908_eosfix`).
 - sampled multihop (tagged hotpot/2wiki/musique) 4201311 and standard (gsm8k, math500) 4201312, seed 3407, root `qwen25_longwin_passk_downstream_20260908/<group>`.
+
+### 2026-09-09 scheduling restructure of the p30 sweep
+
+The nine serialized passes (4201579-4201587) were cancelled and resubmitted as
+three per-arm singleton chains: `q25_p30_logic` (4203200-4203202),
+`q25_p30_nl` (4203203-4203205), `q25_p30_cond` (4203206-4203208, `--nice=500`).
+Reason: measured 8-GPU queue waits on this account are 34-53 h, so nine
+serialized passes would have taken about 16 days against an eight-day
+deadline. Two arms can now hold the 16-GPU account cap at once. Watch rule:
+while two midtrains run, the 1-GPU readouts are blocked by the cap; if they
+have not started within a day of a midtrain pass ending, check that the cap,
+and not a fault, is the reason.

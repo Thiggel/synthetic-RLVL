@@ -114,3 +114,36 @@ docpacks). Audit 4201578 passed all four gates for every arm at target ratio
 Rendered lengths match the 72k corpus (logic p50 3,749, max 7,718, 0 percent
 over the window). No arm repeats a document. The first midtrain pass
 (4201579, condensed) is released from its dependency and waits on priority.
+
+## Scheduling restructure (2026-09-09)
+
+Measured queue waits for 8-GPU jobs on this account (fair-share 0.211), from
+the 10-percent campaign: 34.3 h and 53.1 h submit-to-start. A 2,385-step run
+needs two 24 h passes. So one pass costs roughly 40 h of waiting plus 24 h of
+running, and the original submission, which serialized all nine passes under a
+single `q25_longwin_p30` job name, would have taken about 6 x 64 h = 16 days.
+The ICLR abstract deadline is 2026-09-17, eight days out.
+
+The nine passes were cancelled and resubmitted as three per-arm singleton
+chains, so that two arms can hold the 16-GPU account cap at once:
+
+| chain | job name | passes | jobs |
+|---|---|---|---|
+| logic_band25 | q25_p30_logic | 3 | 4203200, 4203201, 4203202 |
+| nl_exact_band25 | q25_p30_nl | 3 | 4203203, 4203204, 4203205 |
+| condensed_logic_band25 | q25_p30_cond | 3 (nice 500) | 4203206, 4203207, 4203208 |
+
+The condensed chain carries `--nice=500` so that the two concurrent slots go
+to the logic-versus-English contrast, which is the comparison the sweep exists
+to make; condensed runs in whatever room is left. Surplus passes cost seconds
+(the grid script exits with "Final checkpoint exists; skipping").
+
+Revised estimate: the two key arms need 2 passes each, two at a time, so about
+2 x 64 h = 5.5 days to the final checkpoints, plus about 4 h of instruction
+tuning and 2 h of evaluation per arm. That lands around 2026-09-15 if the
+queue behaves. Condensed is expected to miss the abstract deadline and to
+arrive for the full-paper deadline instead.
+
+Consequence for the 16-GPU cap: while two midtrains run, the 1-GPU readout
+jobs (seed-3408 chain, sampled downstream) cannot start. They are short and
+fit in the gaps between passes.
