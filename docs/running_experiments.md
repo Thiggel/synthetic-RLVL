@@ -3084,3 +3084,6 @@ deadline. Two arms can now hold the 16-GPU account cap at once. Watch rule:
 while two midtrains run, the 1-GPU readouts are blocked by the cap; if they
 have not started within a day of a midtrain pass ending, check that the cap,
 and not a fault, is the reason.
+
+### 2026-09-09 readouts moved to a40
+All six 1-GPU readouts now run on a40, not a100: graded seed-3408 4203330 -> sampled seed-3408 4203331, downstream multihop 4203332 / standard 4203333 (seed 3408), sampled downstream multihop 4203334 / standard 4203335 (seed 3407). Submit pattern is `sbatch --partition=a40 --gres=gpu:a40:1 --constraint= ...`; the `--constraint=` is required because the wrappers hardcode `a100_80`. Verified by smoke 4203235 (both production evaluators, peak 43.3 GB of 49.1 GB). Watch rule: a40 capacity is thin (often one non-reserved node with a handful of free GPUs), so these can still sit in Priority for a while; that is expected and not a fault. The three p30 midtrain chains now have a100 to themselves and all carry Nice=0.

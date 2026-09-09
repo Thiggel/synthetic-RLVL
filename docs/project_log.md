@@ -4012,3 +4012,45 @@ This clears the storage block on the 5-arm long-window midtrain.
 **RL:** midtrain-arm sweep cancelled (arms write no derivations after SFT; formal coverage below English). Controlled-model RL not started (adapters deleted in August, not on the Hub). Config repairs kept (eval block restored in `posttrain_grpo_longwin_band25_300.yaml`; `update_weights_bucket_megabytes=4096` in `posttrain_grpo_verl.py`, since the fp32 embedding is 2.18 GB).
 
 **Submitted:** 30-percent-share sweep, three arms on a 520k-document corpus (`analysis/longwin_p30_20260908/PLAN.md`): build 4201577 -> audit 4201578 -> midtrains 4201579-4201587 (singleton q25_longwin_p30). Also running: seed-3408 replicate chain (4200590/91/92/93), condensed arm of the clean pass@k (4200609_4), sampled multihop/standard readouts of the 10-percent arms (4201311/4201312). One downstream bundle (longdoc, standard) is audit-rejected on a single MATH-500 item (doc 277: stock exact match correct, math_verify sidecar lost it); numbers are fine.
+
+## 2026-09-09 — Readouts moved to a40; rtxpro6k ruled out; the reservation behind the queue waits
+
+**The queue waits are a reservation, not fair-share or colleagues.** `scontrol show reservation`
+lists `REINST-CONFLUENT`, flags `MAINT,IGNORE_JOBS,SPEC_NODES`, `Accounts=root`, running
+2026-09-08 to 2026-12-16 over 56 nodes: a0129, a0221-0227, a0321-0329, a0422-0428, a0522,
+a0531-0537, a0601-0604, a0631-0633, a0802-0803, a0901-0904, a0931-0934, a1721-1722 and
+a2041-2943. That covers a large share of a100 (why 16 of its nodes read `down$`) and ten of the
+eleven rtxpro6k nodes. It explains the 34-53 h submit-to-start times measured on the 10-percent
+midtrain passes. No other user on account c107fa has a job queued or running, and the `normal`
+QOS carries no `GrpTRES`/`MaxTRESPU`, so the 24-GPU ceiling is project policy, not a scheduler
+limit. Partition limits that do bind: `a100` and `a40` both have `MaxNodes=1` and a 24 h walltime,
+which is why a 2385-step midtrain needs two passes of one 8-GPU node.
+
+**rtxpro6k: ruled out on availability, not on software.** Ten of eleven nodes are inside the
+reservation, the eleventh (a2741) is fully allocated, and three more are `drained` with reason
+"vLLM". The old audit note said our torch cannot target Blackwell; that is still true of the
+training venv (`$WORK/nanotron`, torch 2.6.0+cu124) but no longer of the evaluation venv, which
+is now vllm 0.11.1 / torch 2.9.0+cu128 whose `arch_list` includes sm_120 (verified inside a job;
+`torch.cuda.get_arch_list()` returns `[]` on the login node, so it must be checked on a node).
+Smoke 4203220 was cancelled after sitting unschedulable.
+
+**a40 runs the whole 1-GPU readout stack.** Smoke `scripts/slurm/jobs/a40_eval_smoke_2026-09-09.slurm`
+(job 4203235) COMPLETED in 15 min on a0429: the production `evaluate_lm_eval.py` graded-deduction
+path (16 items, exact_match 0.3125) and the production `evaluate_real_passk.py` sampled path
+(4 docs x 16 samples at 8192 context), peak 43.3 GB of the card's 49.1 GB at
+`gpu_memory_utilization 0.80`. A first attempt (4203229) failed for a reason unrelated to the
+hardware and worth remembering: it drove vllm from a shell heredoc, and vllm v1 spawns its
+EngineCore worker with the "spawn" start method, which re-imports `__main__` from its path; with
+a heredoc that path is `<stdin>` and the worker dies with `FileNotFoundError: .../<stdin>`. Stage 1
+(bf16 matmul on the A40) had already passed. Production evaluators are real files and never hit
+this.
+
+**Consequence.** All six queued readouts were cancelled off a100 and resubmitted to a40 with
+`--partition=a40 --gres=gpu:a40:1 --constraint=` (the wrappers hardcode `--constraint=a100_80`,
+which must be cleared or the allocation fails with "Requested node configuration is not
+available"): graded seed-3408 4203330, sampled seed-3408 4203331 (afterok the graded bundle,
+whose prompts it replays), downstream multihop 4203332 and standard 4203333 seed-3408, and the
+seed-3407 sampled downstream readouts 4203334 (multihop) and 4203335 (standard). All five
+seed-3408 post-SFT finals were verified present first. With the readouts off a100, the nice on
+the condensed p30 chain was lifted (4203206-4203208 to Nice=0), so all three 30-percent midtrain
+chains now compete equally for the project GPU budget instead of two.
