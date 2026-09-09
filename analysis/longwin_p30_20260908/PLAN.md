@@ -147,3 +147,53 @@ arrive for the full-paper deadline instead.
 Consequence for the 16-GPU cap: while two midtrains run, the 1-GPU readout
 jobs (seed-3408 chain, sampled downstream) cannot start. They are short and
 fit in the gaps between passes.
+
+## Downstream wrappers, prepared 2026-09-09 (not yet submitted)
+
+The readout stack now carries a `MIX_TAG` variable: empty for the 10-percent
+arms and `_p30` for the 30-percent arms. It is inserted into the checkpoint
+name and into every output root, so the two sweeps cannot write to the same
+place. With `MIX_TAG` unset every 10-percent path is byte-identical to before,
+which was checked, so the skip-if-final-exists guards still match the accepted
+artifacts. The six readout jobs already queued were submitted before this edit
+and are unaffected, because Slurm snapshots the batch script at submit time.
+
+- `scripts/slurm/jobs/qwen25_longwin_p30_post_sft_2026-09-09.slurm`, array
+  `0-2` over logic / nl_exact / condensed, job name `q25_p30_sft`. Same Dolci
+  subset at the same pinned revision, lr 5e-6, full-parameter FSDP, and the
+  same checkpoint-verification gate as the accepted 10-percent wrapper. Reads
+  `nanotron_longwin_midtrain/qwen25_7b_longwin_<arm>_p30_2p5b_s8192/checkpoints/2385`
+  and writes `post_sft_dolci_longwin_20260826/qwen25_7b_longwin_<arm>_p30_2p5b_dolci_100k_lr5em6`.
+- the three eval wrappers take `MIX_TAG=_p30` and array indices 2-4, which are
+  logic / nl_exact / condensed in their shared `CONDITIONS` array.
+
+Submission recipe, once an arm's step-2385 checkpoint exists:
+
+```bash
+# one arm at a time is fine; the wrapper skips arms whose final/ already exists
+S=$(sbatch --parsable --array=0-2%3 \
+     scripts/slurm/jobs/qwen25_longwin_p30_post_sft_2026-09-09.slurm)
+sbatch --dependency=afterok:$S --array=2-4 --export=ALL,MIX_TAG=_p30,SEED=3407 \
+     scripts/slurm/jobs/longwin_graded_deduction_2026-09-06.slurm
+# then, chained on the graded bundle (the sampled readout replays its prompts):
+#   longwin_passk_2026-09-07.slurm            MIX_TAG=_p30
+#   longwin_downstream_eval_2026-09-07.slurm  MIX_TAG=_p30 EVAL_SUITE={standard,multihop}
+#   longwin_passk_downstream_2026-09-08.slurm MIX_TAG=_p30 TASK_GROUP={standard,multihop}
+```
+
+## Account capacity, checked 2026-09-09
+
+No other user on account c107fa has a job queued or running, and the `normal`
+QOS carries no `MaxTRESPU`, `MaxTRESPA` or `GrpTRES`, so the GPU ceiling is a
+project policy (24 GPUs) rather than a scheduler limit. Partition `a100`
+enforces `MaxNodes=1` and a 24-hour walltime, which is why each midtrain pass
+is one node of 8 GPUs and why a 2,385-step run needs two passes. Sixteen of
+the partition's nodes were `down` at the time of checking, which is the main
+reason for the 34-53 hour queue waits measured on the 10-percent campaign.
+
+Under a 24-GPU ceiling the current arrangement is deliberate: the logic and
+nl_exact chains take 16 GPUs together, the queued 1-GPU readouts take up to 4
+more, and the condensed chain carries `--nice=500` so it claims the remaining
+8 only once the readouts drain. Raising the condensed chain's priority would
+cost the readouts their slots, so it should be left as it is until the
+seed-3408 and sampled-downstream bundles have landed.

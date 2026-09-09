@@ -37,9 +37,13 @@ CONDITION="${CONDITIONS[$SLURM_ARRAY_TASK_ID]}"
 # seed appends _seed<SEED> to the checkpoint name and to every output root.
 SEED="${SEED:-3407}"
 if [[ "${SEED}" == "3407" ]]; then RUN_TAG_SUFFIX=""; else RUN_TAG_SUFFIX="_seed${SEED}"; fi
-RUN_NAME="qwen25_7b_longwin_${CONDITION}_2p5b_dolci_100k_lr5em6${RUN_TAG_SUFFIX}"
+# MIX_TAG is empty for the 10-percent arms and "_p30" for the 30-percent
+# arms. It goes into the checkpoint name and into every output root, so the
+# two sweeps can never write to the same place.
+MIX_TAG="${MIX_TAG:-}"
+RUN_NAME="qwen25_7b_longwin_${CONDITION}${MIX_TAG}_2p5b_dolci_100k_lr5em6${RUN_TAG_SUFFIX}"
 CHECKPOINT="${WORK}/synthetic-RLVL/post_sft_dolci_longwin_20260826/${RUN_NAME}/final"
-OUT_DIR="${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_longwin_graded_deduction_20260906${RUN_TAG_SUFFIX}/${RUN_NAME}"
+OUT_DIR="${HPCVAULT}/synthetic-RLVL/lm_eval_results/qwen25_longwin_graded_deduction_20260906${MIX_TAG}${RUN_TAG_SUFFIX}/${RUN_NAME}"
 
 VENV_PATH="${HPCVAULT}/.venv_rlvl_posttrain"
 export VIRTUAL_ENV="${VENV_PATH}"
