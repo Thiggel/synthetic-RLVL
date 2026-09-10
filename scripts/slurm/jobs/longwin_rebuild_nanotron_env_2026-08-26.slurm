@@ -72,8 +72,19 @@ PY="${ENV_DIR}/bin/python"
   torch==2.6.0 --index-url https://download.pytorch.org/whl/cu124
 "${UV}" pip install --python "${PY}" \
   -e "${NANOTRON_REPO}" \
-  transformers "datatrove[io,processing]" numba pybind11 ninja wandb zstandard huggingface_hub \
+  transformers "datatrove[io,processing] @ git+https://github.com/huggingface/datatrove" \
+  numba pybind11 ninja wandb zstandard huggingface_hub \
+  psutil pip \
   "numpy<2"
+# datatrove MUST come from git main, not PyPI. nanotron/pyproject.toml pins
+# "datatrove[io,processing]@git+https://github.com/huggingface/datatrove", and
+# only that version has DatatroveFolderDataset(return_positions=...), which the
+# document-preserving loader passes. PyPI datatrove 0.3.0 installs fine, imports
+# fine, and then fails at dataloader construction with
+#   TypeError: DatatroveFolderDataset.__init__() got an unexpected keyword
+#   argument 'return_positions'   (job 4113729)
+# pip is likewise NOT optional: nanotron trainer init calls
+# torch.utils.collect_env, which shells out to `pip list` (job 4113566).
 # flash-attn matching the accepted env (source build; needs nvcc + GPU node).
 "${UV}" pip install --python "${PY}" flash-attn==2.7.4.post1 --no-build-isolation
 
@@ -93,5 +104,10 @@ from nanotron.data.clm_collator import DataCollatorForCLMWithPositionIds
 from datatrove.utils.dataset import DatatroveFolderDataset
 print("nanotron + datatrove loader imports OK; LR resume fix present")
 PY
-python -m pip freeze > "logs/nanotron_env_freeze_${SLURM_JOB_ID}.txt" 2>/dev/null || pip freeze > "logs/nanotron_env_freeze_${SLURM_JOB_ID}.txt"
+# uv-created venvs have NO pip, and ~/.local/bin/pip has a stale anaconda
+# shebang (/apps/python/3.9-anaconda/bin/python: bad interpreter), so both
+# halves of the old "python -m pip freeze || pip freeze" line failed and
+# set -e killed job 4109846 AFTER a successful 85-minute flash-attn build.
+# Use uv, and never let the record-keeping step fail the job.
+"${UV}" pip freeze --python "${PY}" > "logs/nanotron_env_freeze_${SLURM_JOB_ID}.txt" || true
 echo "nanotron venv rebuilt at ${ENV_DIR}"

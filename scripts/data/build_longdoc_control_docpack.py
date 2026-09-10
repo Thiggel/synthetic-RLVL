@@ -60,8 +60,17 @@ def main() -> None:
 
     dtype = {2: np.uint16, 4: np.uint32}[args.token_size]
     shards = sorted(Path(args.dolmino_folder).glob("*.ds"))
+    # datatrove pre-creates one .ds per worker but only the workers that
+    # actually received documents write to theirs; the 5.1B Dolmino nanoset has
+    # all 20GB in 00000 and ~60 zero-length siblings. np.memmap raises
+    # "cannot mmap an empty file" on those, so drop them here rather than
+    # letting the build die after the index scan.
+    empty = [sh for sh in shards if sh.stat().st_size == 0]
+    shards = [sh for sh in shards if sh.stat().st_size > 0]
+    if empty:
+        print(f"skipping {len(empty)} zero-length shard(s), keeping {len(shards)}", flush=True)
     if not shards:
-        raise SystemExit(f"no .ds shards under {args.dolmino_folder}")
+        raise SystemExit(f"no non-empty .ds shards under {args.dolmino_folder}")
 
     band = json.loads(Path(args.band25_stats_json).read_text())
     edges = np.asarray(band["histogram_bin_edges"], dtype=np.int64)
