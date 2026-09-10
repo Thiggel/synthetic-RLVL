@@ -156,3 +156,14 @@ changes nothing. So the ProofWriter effect is a calibration-of-negation
 effect with a minor discrimination component, and it should be described
 that way. (vLLM returns bf16-quantised logprobs on a 1/8 grid; 6 percent of
 items tie True/False, handled by mid-ranks.)
+
+Base models (no chat template), same probe: Control base pooled AUC .755,
+within-negated .818, within-positive .821, P(True) .59; English base .782 /
+.875 / .856 / .64. Two things follow. (a) Instruction tuning is what creates
+Control's negation offset: its pooled AUC falls from .755 to .662 through
+Dolci SFT, while the English-midtrained model keeps .78 -> .77. (b) Before
+instruction tuning the midtrained English model has a real within-polarity
+discrimination advantage (+.06 negated, +.035 positive) that Dolci SFT
+compresses to +.03 / +.01. So the derivations do improve the base model's
+deduction signal, and the instruction-tuning stage both erodes that and
+introduces the negation-blindness that the derivation arms then resist.
