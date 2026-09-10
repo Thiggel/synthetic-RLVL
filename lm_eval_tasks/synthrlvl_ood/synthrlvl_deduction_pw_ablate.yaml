@@ -1,0 +1,33 @@
+# Perturbation probe of the graded ProofWriter items, 2026-09-10; see
+# scripts/data/build_proofwriter_perturbations.py. Same prompt and scorer as
+# synthrlvl_deduction_pw_d*; the item keeps its original source_id, depth,
+# question and gold so predictions pair with the unperturbed run.
+tag:
+  - synthrlvl_deduction_pw_pert
+task: synthrlvl_deduction_pw_ablate
+dataset_path: json
+dataset_kwargs:
+  data_files:
+    test: /home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/proofwriter_perturbations_20260910/pw_ablate.jsonl
+test_split: test
+output_type: generate_until
+doc_to_text: !function utils.doc_to_text_deduction_pw
+doc_to_target: "{{answer}}"
+process_results: !function utils.process_deduction_pw
+generation_kwargs:
+  max_gen_toks: 16
+  until:
+    - "\n"
+  do_sample: false
+  temperature: 0.0
+repeats: 1
+num_fewshot: 0
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+  - metric: extracted_nonempty
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0

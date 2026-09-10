@@ -138,6 +138,7 @@ python -m torch.distributed.run --standalone --nproc_per_node="${NGPU}" \
   --per-device-eval-batch-size 1 \
   --grad-accum "${GRAD_ACCUM}" \
   --eval-steps 250 \
+  --logging-steps "${LOGGING_STEPS:-10}" \
   --save-steps "${SAVE_STEPS:-100000}" \
   --save-total-limit 1 \
   --format-mode chat \

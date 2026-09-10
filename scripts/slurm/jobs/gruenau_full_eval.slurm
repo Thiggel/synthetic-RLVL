@@ -26,6 +26,8 @@
 #   SUITE=multihop    HotpotQA, 2Wiki, MuSiQue, standard and tagged
 #   SUITE=deduction_cot  ProofWriter d0-d5 with a derive-then-answer prompt
 #   SUITE=deduction_mc   ProofWriter d0-d5 scored by choice log-likelihood
+#   SUITE=deduction_pert ProofWriter decidable items with the claim polarity
+#                        flipped, and with the proof's premises removed
 #
 # ARM selects the condition. Everything fails closed on a missing checkpoint.
 
@@ -54,6 +56,7 @@ case "${SUITE}" in
     TASKS="synthrlvl_deduction_pw_d0,synthrlvl_deduction_pw_d1,synthrlvl_deduction_pw_d2,synthrlvl_deduction_pw_d3,synthrlvl_deduction_pw_d5,synthrlvl_deduction_bp_cot_d5,synthrlvl_deduction_bp_cot_d10,synthrlvl_deduction_bp_cot_d15,synthrlvl_deduction_bp_cot_d20,synthrlvl_deduction_bp_cot_d25" ;;
   folio_gpqa) TASKS="synthrlvl_folio,synthrlvl_gpqa_diamond" ;;
   deduction_cot) TASKS="synthrlvl_deduction_pw_cot_d0,synthrlvl_deduction_pw_cot_d1,synthrlvl_deduction_pw_cot_d2,synthrlvl_deduction_pw_cot_d3,synthrlvl_deduction_pw_cot_d5" ;;
+  deduction_pert) TASKS="synthrlvl_deduction_pw_flip,synthrlvl_deduction_pw_ablate" ;;
   deduction_mc)  TASKS="synthrlvl_deduction_pw_mc_d0,synthrlvl_deduction_pw_mc_d1,synthrlvl_deduction_pw_mc_d2,synthrlvl_deduction_pw_mc_d3,synthrlvl_deduction_pw_mc_d5" ;;
   standard)   TASKS="gsm8k,hendrycks_math500,bbh,mmlu,arc_challenge,hellaswag,winogrande,piqa,agieval_logiqa_en" ;;
   multihop)   TASKS="synthrlvl_longbench_hotpotqa_standard,synthrlvl_longbench_hotpotqa_tagged,synthrlvl_longbench_2wikimqa_standard,synthrlvl_longbench_2wikimqa_tagged,synthrlvl_longbench_musique_standard,synthrlvl_longbench_musique_tagged" ;;
