@@ -307,3 +307,31 @@ def process_gpqa(doc: dict, results: list[str]) -> dict[str, float]:
         "extracted_nonempty": float(bool(pred)),
         "answer_marker_found": float(bool(marked)),
     }
+
+
+# --- FOLIO (human-written first-order logic), 2026-09-10 -------------------
+# Same prompt shape as the ProofWriter task so the two are comparable; FOLIO's
+# third label is "uncertain", not ProofWriter's "unknown".
+
+_FOLIO_LABEL_RE = re.compile(r"\b(true|false|uncertain)\b", re.IGNORECASE)
+
+
+def doc_to_text_folio(doc: dict) -> str:
+    return (
+        f"{str(doc['context']).strip()}\n\n"
+        f"Question: {str(doc['question']).strip()}\n"
+        "Based only on the statements above, is the claim true, false, or uncertain? "
+        "Answer with exactly one word: True, False, or Uncertain.\n"
+        "Answer:"
+    )
+
+
+def process_folio(doc: dict, results: list[str]) -> dict[str, float]:
+    raw = str(results[0]) if results else ""
+    match = _FOLIO_LABEL_RE.search(raw)
+    pred = match.group(1).lower() if match else ""
+    gold = str(doc["answer"]).strip().lower()
+    return {
+        "exact_match": float(bool(pred) and pred == gold),
+        "extracted_nonempty": float(bool(pred)),
+    }
