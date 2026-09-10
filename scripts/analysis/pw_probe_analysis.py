@@ -90,7 +90,7 @@ def mc(kind, seed):
 
 def cot(kind, seed):
     print("\n== CoT probe, %s, seed %d ==" % (kind, seed))
-    print("%-10s %7s %8s %8s %9s %9s %9s %9s" % ("arm", "acc", "tag", "words", "neg/false", "neg/true", "pos/false", "pos/true"))
+    print("%-10s %7s %8s %8s %8s %6s %9s %9s %9s %9s" % ("arm", "acc", "tag", "acc|tag", "words", "loop", "neg/false", "neg/true", "pos/false", "pos/true"))
     for arm in ARMS:
         d = run_dir(kind, "deduction_cot", arm, seed)
         if not d:
@@ -106,9 +106,16 @@ def cot(kind, seed):
             if g in ("true", "false"):
                 cell[("neg" if negated(r["doc"]["question"]) else "pos", g)].append(r["exact_match"])
         f = lambda k: sum(cell[k]) / len(cell[k]) if cell[k] else float("nan")
-        print("%-10s %7.3f %8.3f %8.0f %9.3f %9.3f %9.3f %9.3f" % (
+
+        def loops(r):  # any non-trivial line repeated three or more times
+            c = Counter(l.strip() for l in r["resps"][0][0].splitlines() if len(l.strip()) > 12)
+            return 1.0 if c and max(c.values()) >= 3 else 0.0
+        tagged = [r for r in rows if r["tag_found"]]
+        print("%-10s %7.3f %8.3f %8.3f %8.0f %6.3f %9.3f %9.3f %9.3f %9.3f" % (
             SHORT[arm], sum(r["exact_match"] for r in rows) / len(rows), sum(r["tag_found"] for r in rows) / len(rows),
-            sum(r["response_words"] for r in rows) / len(rows), f(("neg", "false")), f(("neg", "true")), f(("pos", "false")), f(("pos", "true"))))
+            sum(r["exact_match"] for r in tagged) / max(1, len(tagged)),
+            sum(r["response_words"] for r in rows) / len(rows), sum(loops(r) for r in rows) / len(rows),
+            f(("neg", "false")), f(("neg", "true")), f(("pos", "false")), f(("pos", "true"))))
 
 
 def pert(kind, seed):

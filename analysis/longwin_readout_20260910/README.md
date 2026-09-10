@@ -167,3 +167,25 @@ discrimination advantage (+.06 negated, +.035 positive) that Dolci SFT
 compresses to +.03 / +.01. So the derivations do improve the base model's
 deduction signal, and the instruction-tuning stage both erodes that and
 introduces the negation-blindness that the derivation arms then resist.
+
+## 9. CoT probe: the answer-only gain does not survive a written chain
+
+Derive-then-answer prompt, 1,024 tokens, same 2,500 items (seed 3407 / 3408):
+
+| arm | acc | marker found | acc given marker | neg/false | pos/true |
+|---|---|---|---|---|---|
+| Control | .480 / .484 | .82 / .83 | .584 / .580 | .504 / .502 | .630 / .615 |
+| LongDoc | .558 / .549 | .89 / .91 | .617 / .603 | .589 / .575 | .667 / .650 |
+| Formal | .454 / .454 | .76 / .75 | .596 / .599 | .506 / .508 | .579 / .573 |
+| English | .507 / - | .81 / - | .620 / - | .552 / - | .620 / - |
+
+Once the model writes a chain, Control's negated/false accuracy rises from
+.35 to .50 on its own, Formal is level with Control, English keeps a +.05
+edge, and LongDoc is the best arm. Conditional on the chain terminating with
+a marker, all arms sit at .58-.62. The differences that remain are mostly
+chain termination (Formal loops and runs past 1,024 tokens on a quarter of
+items; loop rate 8.4 vs 7.2 percent, mean 266 vs 231 words), not deduction.
+So the ProofWriter effect is specific to the answer-only regime: it is a
+change in the direct-answer decision rule, and a written chain replaces
+that rule with whatever the chain concludes. This is the honest framing for
+the paper, alongside the base-model discrimination gain of section 8.
