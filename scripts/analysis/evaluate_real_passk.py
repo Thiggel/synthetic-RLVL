@@ -105,6 +105,69 @@ TASK_GROUPS = {
             },
         },
     },
+    # ProofWriter is a three-way label emitted in one word, so pass@16
+    # saturates; it is included because maj@16 and pass@1 are still
+    # informative and the paper reports one table per decoding rule.
+    "deduction_pw": {
+        "suite_suffix": "graded_deduction",
+        "max_model_len": 8192,
+        "tasks": {
+            "synthrlvl_deduction_pw_d0": {
+                "expected": 500,
+                "stop": ["\n"],
+                "greedy_max_tokens": 16,
+                "sampled_max_tokens": 16,
+            },
+            "synthrlvl_deduction_pw_d1": {
+                "expected": 500,
+                "stop": ["\n"],
+                "greedy_max_tokens": 16,
+                "sampled_max_tokens": 16,
+            },
+            "synthrlvl_deduction_pw_d2": {
+                "expected": 500,
+                "stop": ["\n"],
+                "greedy_max_tokens": 16,
+                "sampled_max_tokens": 16,
+            },
+            "synthrlvl_deduction_pw_d3": {
+                "expected": 500,
+                "stop": ["\n"],
+                "greedy_max_tokens": 16,
+                "sampled_max_tokens": 16,
+            },
+            "synthrlvl_deduction_pw_d5": {
+                "expected": 500,
+                "stop": ["\n"],
+                "greedy_max_tokens": 16,
+                "sampled_max_tokens": 16,
+            },
+        },
+    },
+    "multihop_standard": {
+        "suite_suffix": "multihop",
+        "max_model_len": 8192,
+        "tasks": {
+            "synthrlvl_longbench_hotpotqa_standard": {
+                "expected": 200,
+                "stop": [],
+                "greedy_max_tokens": 4096,
+                "sampled_max_tokens": 4096,
+            },
+            "synthrlvl_longbench_2wikimqa_standard": {
+                "expected": 200,
+                "stop": [],
+                "greedy_max_tokens": 4096,
+                "sampled_max_tokens": 4096,
+            },
+            "synthrlvl_longbench_musique_standard": {
+                "expected": 200,
+                "stop": [],
+                "greedy_max_tokens": 4096,
+                "sampled_max_tokens": 4096,
+            },
+        },
+    },
     "deduction_cot": {
         "suite_suffix": "graded_deduction",
         "max_model_len": 8192,
@@ -390,6 +453,54 @@ class DeductionCoTScorer:
         }
 
 
+class ProofWriterScorer:
+    """ProofWriter OWA: one word of true/false/unknown, scored by exact match."""
+
+    def __init__(self):
+        self._u = _load_module(
+            "synthrlvl_ood_utils_imported",
+            SCRIPT_DIR.parent.parent / "lm_eval_tasks" / "synthrlvl_ood" / "utils.py",
+        )
+
+    def score(self, doc: dict, target: str, response: str) -> dict:
+        out = self._u.process_deduction_pw(doc, [response])
+        m = self._u._TFU_RE.search(response or "")
+        pred = m.group(1).lower() if m else ""
+        return {
+            "extracted": pred or None,
+            "correct": bool(out["exact_match"]),
+            "maj_key": pred or None,
+            "extraction_failed": not bool(out["extracted_nonempty"]),
+        }
+
+
+class MultihopStandardScorer:
+    """Untagged LongBench QA: the raw completion is the prediction."""
+
+    def __init__(self, name: str):
+        self.name = name
+        self._u = _load_module(
+            "synthrlvl_ood_utils_imported",
+            SCRIPT_DIR.parent.parent / "lm_eval_tasks" / "synthrlvl_ood" / "utils.py",
+        )
+
+    def score(self, doc: dict, target: str, response: str) -> dict:
+        out = self._u.process_longbench_qa_standard(doc, [response])
+        prediction = str(response).strip()
+        best_em = max(
+            (self._u.qa_exact_match(prediction, str(a)) for a in doc["answers"]),
+            default=0.0,
+        )
+        return {
+            "extracted": prediction or None,
+            "f1": float(out["qa_f1_score"]),
+            "em": float(best_em),
+            "correct": bool(best_em),
+            "maj_key": self._u.normalize_answer(prediction) if prediction else None,
+            "extraction_failed": not prediction,
+        }
+
+
 def make_scorer(task: str):
     if task == "gsm8k":
         return Gsm8kScorer()
@@ -397,6 +508,10 @@ def make_scorer(task: str):
         return Math500Scorer()
     if task.startswith("synthrlvl_longbench_") and task.endswith("_tagged"):
         return MultihopScorer(task)
+    if task.startswith("synthrlvl_longbench_") and task.endswith("_standard"):
+        return MultihopStandardScorer(task)
+    if task.startswith("synthrlvl_deduction_pw_"):
+        return ProofWriterScorer()
     if task.startswith("synthrlvl_deduction_bp_cot_"):
         return DeductionCoTScorer()
     raise ValueError(f"no scorer for task {task}")

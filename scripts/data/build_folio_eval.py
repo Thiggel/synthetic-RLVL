@@ -22,7 +22,13 @@ import pathlib
 import sys
 
 VAULT = os.environ.get("HPCVAULT", "/home/vault/c107fa/c107fa12")
-OUT_DIR = pathlib.Path(VAULT) / "datasets" / "folio_eval_20260910"
+# The two clusters lay the vault out differently: alex nests everything under
+# a synthetic-RLVL directory, gruenau does not. Detect rather than hardcode so
+# one file works on both.
+_BASE = pathlib.Path(VAULT)
+if (_BASE / "synthetic-RLVL").is_dir():
+    _BASE = _BASE / "synthetic-RLVL"
+OUT_DIR = _BASE / "datasets" / "folio_eval_20260910"
 REPO = pathlib.Path(__file__).resolve().parents[1] if "__file__" in dir() else pathlib.Path(".")
 
 
