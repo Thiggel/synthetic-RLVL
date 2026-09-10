@@ -6,7 +6,7 @@ task: synthrlvl_gpqa_diamond
 dataset_path: json
 dataset_kwargs:
   data_files:
-    test: /vol/home-vol2/ml/laitenbf/rlvl_data/datasets/gpqa_diamond_20260910/gpqa_diamond.jsonl
+    test: /home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/gpqa_diamond_20260910/gpqa_diamond.jsonl
 test_split: test
 output_type: generate_until
 doc_to_text: !function utils.doc_to_text_gpqa
