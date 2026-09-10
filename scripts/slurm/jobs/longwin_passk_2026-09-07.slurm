@@ -38,7 +38,10 @@ source ./scripts/env.sh
 
 CONDITIONS=(control longdoc logic_band25 nl_exact_band25 condensed_logic_band25)
 CONDITION="${CONDITIONS[$SLURM_ARRAY_TASK_ID]}"
-TASK_GROUP=deduction_cot
+# TASK_GROUP selects which suite to sample. Both groups replay prompts from
+# the graded-deduction greedy bundle: deduction_cot (BranchProof chains) and
+# deduction_pw (ProofWriter, one-word labels).
+TASK_GROUP="${TASK_GROUP:-deduction_cot}"
 
 # Seed replication (2026-09-08): SEED=3407 keeps the original names; any other
 # seed appends _seed<SEED> to the checkpoint name and to every output root.
