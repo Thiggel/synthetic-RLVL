@@ -134,3 +134,25 @@ driver/kernels, and gruenau11 is currently DOWN anyway. Offload runs at
 run on gruenau9 this way; it needs gruenau11 back (and then a smoke there
 first) or alex GPUs once the p30 arms release the cap. The alex notation
 array 4208280 is queued for exactly that.
+
+## 8. MC log-likelihood probe: mostly offset removal, a little discrimination
+
+Choice log-likelihood over True/False/Unknown, margin = ll(True) - ll(False),
+AUC between gold-true and gold-false decidable items (seed 3407 / 3408):
+
+| arm | AUC pooled | AUC within negated | AUC within positive | P(argmax=True) |
+|---|---|---|---|---|
+| Control | .662 / .654 | .872 / .869 | .860 / .858 | .64 / .63 |
+| LongDoc | .663 / .664 | .876 / .877 | .867 / .867 | .64 / .64 |
+| Formal | .711 / .707 | .889 / .889 | .868 / .868 | .55 / .54 |
+| English | .770 / - | .898 / - | .873 / - | .48 / - |
+
+Control already ranks items well within each polarity; its pooled AUC is low
+because negated claims carry a wholesale shift of the margin toward True.
+The derivation arms mostly remove that shift (pooled AUC +.05 Formal, +.11
+English) and add a small within-polarity discrimination gain on negated
+claims (+.02/+.03) and almost none on positive claims (+.01). LongDoc
+changes nothing. So the ProofWriter effect is a calibration-of-negation
+effect with a minor discrimination component, and it should be described
+that way. (vLLM returns bf16-quantised logprobs on a 1/8 grid; 6 percent of
+items tie True/False, handled by mid-ranks.)
