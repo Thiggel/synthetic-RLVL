@@ -63,6 +63,15 @@ case "${SUITE}" in
   *) echo "unknown SUITE=${SUITE}" >&2; exit 2 ;;
 esac
 
+# The multihop contexts are LongBench documents of 15-75k characters. Alex ran
+# them at max_model_len 32768 (longwin_downstream_eval_2026-09-07.slurm); at
+# 8192 lm-eval left-truncates the prompt and the first gruenau multihop
+# bundles came out 15-30 points below alex. Match alex per suite.
+if [[ "${SUITE}" == "multihop" ]]; then
+  MAX_MODEL_LEN="${MAX_MODEL_LEN:-32768}"; NEED_GIB="${NEED_GIB:-40}"
+else
+  MAX_MODEL_LEN="${MAX_MODEL_LEN:-8192}"
+fi
 if [[ "${SEED}" == "3407" ]]; then SUF=""; else SUF="_seed${SEED}"; fi
 if [[ "${KIND}" == "it" ]]; then
   RUN_NAME="qwen25_7b_longwin_${ARM}_2p5b_dolci_100k_lr5em6${SUF}"
@@ -126,7 +135,7 @@ python scripts/evaluate_lm_eval.py \
   --batch-size auto \
   --dtype bfloat16 \
   --gpu-memory-utilization "${GPU_UTIL}" \
-  --model-arg "max_model_len=8192" \
+  --model-arg "max_model_len=${MAX_MODEL_LEN}" \
   --trust-remote-code \
   --confirm-run-unsafe-code \
   "${CHAT_ARGS[@]}" \

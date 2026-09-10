@@ -89,3 +89,16 @@ GPQA comes from the gruenau matrix.
   deduction dataset (14 MB) and the ProofWriter per-item samples of both seeds
   were copied from alex to `~/rlvl_data/datasets/` and
   `~/rlvl_data/lm_eval_results/alex_mirror/`.
+
+## 5. Cross-cluster check (`scripts/analysis/cross_cluster_check.py`)
+
+Standard suite, seed 3407, logic/nl arms: gruenau reproduces alex to within
+vLLM batching noise (log-likelihood tasks identical, BBH subtasks within 1-2
+points, aggregate BBH +0.0025). The first gruenau multihop bundles did NOT
+reproduce (control HotpotQA F1 .36 vs .56 on alex, tagged near zero): the job
+ran at max_model_len 8192 while alex used 32768, so lm-eval left-truncated
+the LongBench contexts. Those bundles are quarantined under
+`lm_eval_results/quarantine/gruenau_it_multihop_20260910_len8192_truncated`
+and the suite was resubmitted at 32768 (jobs listed in the session log).
+Rule: every gruenau suite must pass this check on seed 3407 before any of its
+numbers, including the base-model ones, enter the paper.
