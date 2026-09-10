@@ -46,9 +46,10 @@ declare -A TEMPLATES=(
   [logic_band25]=sft_logic
   [nl_exact_band25]=sft_nl_exact
   [condensed_logic_band25]=condensed_logic
+  [nl_scrambled_band25]=sft_nl_exact
 )
 
-for ARM in longdoc_control logic_band25 nl_exact_band25 condensed_logic_band25; do
+for ARM in ${LONGWIN_AUDIT_ARMS:-longdoc_control logic_band25 nl_exact_band25 condensed_logic_band25}; do
   FOLDER="${PACK_ROOT}/${ARM}"
   python scripts/nanotron/audit_docpack_training_path.py \
     --packed-folder "${FOLDER}" \

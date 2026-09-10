@@ -37,7 +37,7 @@ export HPCVAULT="${HPCVAULT:-/home/vault/c107fa/c107fa12}"
 
 source ./scripts/env.sh
 
-CONDITIONS=(control longdoc logic_band25 nl_exact_band25 condensed_logic_band25)
+CONDITIONS=(control longdoc logic_band25 nl_exact_band25 condensed_logic_band25 nl_scrambled_band25)  # index 5 = scrambled-derivation control (2026-09-10)
 RUN_DIR_TAGS=(
   qwen25_7b_longwin_control_p0_2p5b_s8192
   qwen25_7b_longwin_longdoc_p10_2p5b_s8192

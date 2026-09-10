@@ -19,12 +19,40 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
+import re
 import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+
+
+_PROOF_RE = re.compile(r"(<proof>\n)(.*?)(\n</proof>)", re.S)
+
+
+def scramble_proof(text: str, rng: random.Random) -> str:
+    """Shuffle the derivation lines inside <proof>...</proof>, nothing else.
+
+    The scrambled-derivation control keeps every token of the document (same
+    premises, same vocabulary, same length, same conclusion and answer) but
+    destroys the one thing a derivation adds over its premises: the order in
+    which facts follow from each other. If this arm transfers as well as the
+    ordered one, the ProofWriter gain comes from surface statistics; if it
+    does not, it comes from valid deduction.
+    """
+    m = _PROOF_RE.search(text)
+    if not m:
+        raise ValueError("no <proof> block to scramble")
+    lines = m.group(2).split("\n")
+    if len(lines) < 2:
+        return text
+    shuffled = list(lines)
+    rng.shuffle(shuffled)
+    if shuffled == lines:  # a two-line proof can shuffle onto itself
+        shuffled.reverse()
+    return text[: m.start(2)] + "\n".join(shuffled) + text[m.end(2):]
 
 
 def stats(lens, window):
@@ -55,7 +83,8 @@ def main() -> None:
     ap.add_argument("--band", type=int, default=25)
     ap.add_argument("--seed", type=int, default=20260830, help="TaskConfig seed (rendering)")
     ap.add_argument("--window", type=int, default=8192)
-    ap.add_argument("--renderings", default="logic,nl_exact,condensed_logic")
+    ap.add_argument("--renderings", default="logic,nl_exact,condensed_logic",
+                    help="comma list of logic, nl_exact, condensed_logic, nl_scrambled (nl_exact with the proof lines shuffled)")
     args = ap.parse_args()
 
     import pyarrow.parquet as pq
@@ -84,6 +113,16 @@ def main() -> None:
         for name in renderings
         if name != "condensed_logic"
     }
+    if "nl_scrambled" in renderings:
+        cfgs["nl_scrambled"] = TaskConfig(
+            template=TemplateName("nl_exact"),
+            prefill=PrefillMode.NONE,
+            distractor_ratio=0.0,
+            train_steps=StepRange(1, args.band),
+            val_steps=StepRange(1, args.band),
+            seed=args.seed,
+        )
+    scramble_rng = random.Random(args.seed + 1)
 
     handles = {name: (out_root / f"{name}_band{args.band}.jsonl").open("w", encoding="utf-8") for name in renderings}
     lens = {name: [] for name in renderings}
@@ -106,6 +145,8 @@ def main() -> None:
             else:
                 s = task_sample_from_materialized_row(row, cfg=cfgs[name])
                 text = s.prompt + s.target
+                if name == "nl_scrambled":
+                    text = scramble_proof(text, scramble_rng)
             handles[name].write(json.dumps({"text": text, "depth": depth}) + "\n")
             batch_texts[name].append(text)
             if len(batch_texts[name]) >= 512:

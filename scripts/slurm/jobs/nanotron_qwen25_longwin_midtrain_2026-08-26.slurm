@@ -48,7 +48,7 @@ export HPCVAULT="${HPCVAULT:-/home/vault/c107fa/c107fa12}"
 
 source ./scripts/env.sh
 
-CONDITION="${CONDITION:?set CONDITION=control|longdoc|logic_band25|nl_exact_band25|condensed_logic_band25}"
+CONDITION="${CONDITION:?set CONDITION=control|longdoc|logic_band25|nl_exact_band25|condensed_logic_band25|nl_scrambled_band25}"
 AUDIT_DIR="${AUDIT_DIR:-analysis/longwin_midtrain_prep_20260826}"
 PACK_ROOT="${PACK_ROOT:-${WORK}/synthetic-RLVL/nanosets_longwin_20260826}"
 
@@ -80,6 +80,12 @@ case "${CONDITION}" in
     MIX_TAG=p10
     DOCPACK_FOLDER="${PACK_ROOT}/condensed_logic_band25"
     AUDIT_JSON="${AUDIT_DIR}/audit_docpack_condensed_logic_band25.json"
+    ;;
+  nl_scrambled_band25)
+    GRID_IDX=7  # nl_exact p10 grid row; same rendering with shuffled proof lines
+    MIX_TAG=p10
+    DOCPACK_FOLDER="${PACK_ROOT}/nl_scrambled_band25"
+    AUDIT_JSON="${AUDIT_DIR}/audit_docpack_nl_scrambled_band25.json"
     ;;
   *)
     echo "Unknown CONDITION=${CONDITION}" >&2
