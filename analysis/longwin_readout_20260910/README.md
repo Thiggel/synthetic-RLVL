@@ -102,3 +102,35 @@ the LongBench contexts. Those bundles are quarantined under
 and the suite was resubmitted at 32768 (jobs listed in the session log).
 Rule: every gruenau suite must pass this check on seed 3407 before any of its
 numbers, including the base-model ones, enter the paper.
+
+## 6. Scrambled-derivation control (alex, submitted 2026-09-10 ~22:40)
+
+Rendering `nl_scrambled` in `scripts/data/build_longwin_trace_jsonls.py`:
+the controlled-English document with the lines of each `<proof>` block
+shuffled (seeded), premises, conclusion and answer untouched, so length,
+vocabulary and token statistics are identical to `nl_exact_band25` and only
+the deductive order is destroyed. Chain: build 4212870 (72k parquet of
+2026-08-26, packs `nanosets_longwin_20260826/nl_scrambled_band25`) -> audit
+4212871 (`LONGWIN_AUDIT_ARMS=nl_scrambled_band25`, template sft_nl_exact) ->
+midtrain passes 4212872-74 (`q25_longwin_scr`, singleton, 10 percent
+replacement, same wrapper as the accepted five arms, CONDITION
+`nl_scrambled_band25`). Post-SFT wrapper index 5 is wired; eval wrappers take
+the arm name. Pre-registered prediction: if the ProofWriter negated/false gain
+survives scrambling, it is surface structure (a decision-rule change induced
+by any derivation-shaped text); if it drops to LongDoc's level, it requires
+valid deductive order. Everything on alex waits behind the 24-GPU cap held by
+the p30 arms.
+
+## 7. H100 divergence isolated to the H100 node (smoke 1988, gruenau9)
+
+Same script, same venv (torch 2.9.0+cu128), same converted base and formal
+mixture, 2x A100 with FSDP CPU offload, window 4096, per-step logging: six
+optimizer steps at lr 5e-6 give losses 0.73, 0.84, 0.78, 0.80, 0.88, 0.77
+with grad norms 1.7-4.6. The gruenau11 H100 run exploded at step 3 (loss
+1.3e8) at the same learning rate. So the recipe and the gruenau software
+stack are fine on A100; the fault is specific to the H100 node or its
+driver/kernels, and gruenau11 is currently DOWN anyway. Offload runs at
+515 s/step (about 4.7 days for 781 steps), so the notation SFT cannot be
+run on gruenau9 this way; it needs gruenau11 back (and then a smoke there
+first) or alex GPUs once the p30 arms release the cap. The alex notation
+array 4208280 is queued for exactly that.

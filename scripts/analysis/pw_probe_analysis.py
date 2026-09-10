@@ -76,7 +76,7 @@ def mc(kind, seed):
         # margin of True over False, log-likelihood, length-normalised not needed (one token each)
         pos, neg, pos_n, neg_n, pos_p, neg_p, pt = [], [], [], [], [], [], 0
         for r in rows:
-            ll = [x[0] for x in r["filtered_resps"]]
+            ll = [float(x[0]) for x in r["filtered_resps"]]
             margin = ll[0] - ll[1]
             gold = str(r["target"]) if isinstance(r["target"], str) else r["target"]
             g = LABELS[int(gold)] if str(gold).isdigit() else str(gold).lower()
