@@ -1,0 +1,33 @@
+# FOLIO validation split, materialised 2026-09-10 from tasksource/folio.
+# Human-written first-order-logic premises with a three-way label, used as a
+# held-out external deduction benchmark alongside ProofWriter. Prompt and
+# scoring mirror synthrlvl_deduction_pw_*; the third label is "uncertain".
+tag:
+  - synthrlvl_deduction_graded
+task: synthrlvl_folio
+dataset_path: json
+dataset_kwargs:
+  data_files:
+    test: /vol/home-vol2/ml/laitenbf/rlvl_data/datasets/folio_eval_20260910/folio_validation.jsonl
+test_split: test
+output_type: generate_until
+doc_to_text: !function utils.doc_to_text_folio
+doc_to_target: "{{answer}}"
+process_results: !function utils.process_folio
+generation_kwargs:
+  max_gen_toks: 16
+  until:
+    - "\n"
+  do_sample: false
+  temperature: 0.0
+repeats: 1
+num_fewshot: 0
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+  - metric: extracted_nonempty
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0

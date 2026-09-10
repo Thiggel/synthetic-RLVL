@@ -75,10 +75,21 @@ def _normalize_model_config(save_path: Path, *, rope_theta: float) -> None:
     """Keep Transformers 5 checkpoints readable by the Transformers 4 eval env."""
     config_path = save_path / "config.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
+    # Transformers 5 nests the value under rope_parameters; Transformers 4
+    # writes it flat. Alex converts under 5 and gruenau under 4, so accept
+    # either serialisation and check the value itself, which is the property
+    # that actually matters: a wrong rope_theta silently invalidates every
+    # downstream generation.
     rope_parameters = config.get("rope_parameters")
-    if not isinstance(rope_parameters, dict):
-        raise RuntimeError("converted config is missing Transformers 5 rope_parameters")
-    serialized_theta = rope_parameters.get("rope_theta")
+    if isinstance(rope_parameters, dict):
+        serialized_theta = rope_parameters.get("rope_theta")
+    elif "rope_theta" in config:
+        serialized_theta = config["rope_theta"]
+    else:
+        raise RuntimeError(
+            "converted config carries no rope metadata in either the "
+            "Transformers 5 (rope_parameters) or Transformers 4 (rope_theta) form"
+        )
     if serialized_theta is None or float(serialized_theta) != float(rope_theta):
         raise RuntimeError(
             f"converted rope_parameters.rope_theta={serialized_theta!r}, expected {rope_theta}"

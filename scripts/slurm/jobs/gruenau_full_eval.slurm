@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+#SBATCH --job-name=gru_full_eval
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:rtxa6000:1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=10:00:00
+#SBATCH --output=logs/%x_%A_%a.out
+#SBATCH --error=logs/%x_%A_%a.err
+
+# One evaluation entry point for every checkpoint kind and suite, run on
+# gruenau because alex sits at its account GPU cap.
+#
+#   KIND=it     the instruction-tuned checkpoints, the ones the paper reports.
+#               Prompts go through the chat template.
+#   KIND=base   the midtrained checkpoints before any instruction tuning. These
+#               have never been evaluated. No chat template is applied, because
+#               a base model has not been taught one; numbers are therefore not
+#               comparable to the instruction-tuned table and are reported
+#               separately. The point is to see whether the notation survives
+#               midtraining and is only washed out later.
+#
+#   SUITE=deduction   ProofWriter d0-d5 and BranchProof-CoT d5-d25
+#   SUITE=folio_gpqa  FOLIO and GPQA-Diamond
+#   SUITE=standard    GSM8K, MATH-500, BBH, MMLU, ARC, HellaSwag, WinoGrande,
+#                     PIQA, LogiQA
+#   SUITE=multihop    HotpotQA, 2Wiki, MuSiQue, standard and tagged
+#
+# ARM selects the condition. Everything fails closed on a missing checkpoint.
+
+set -euo pipefail
+cd "${SLURM_SUBMIT_DIR:-$PWD}"
+mkdir -p logs
+
+ROOT=/vol/home-vol2/ml/laitenbf
+VENV="${ROOT}/.venv_rlvl_gruenau_eval"
+DATA="${ROOT}/rlvl_data"
+export PATH="${VENV}/bin:${PATH}"
+export VIRTUAL_ENV="${VENV}"
+export HF_HOME="${HF_HOME:-${DATA}/hf_home}"
+export HPCVAULT="${DATA}"
+export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
+export TOKENIZERS_PARALLELISM=false
+hash -r 2>/dev/null || true
+
+KIND="${KIND:?set KIND=it or base}"
+ARM="${ARM:?set ARM}"
+SUITE="${SUITE:?set SUITE}"
+SEED="${SEED:-3407}"
+
+case "${SUITE}" in
+  deduction)
+    TASKS="synthrlvl_deduction_pw_d0,synthrlvl_deduction_pw_d1,synthrlvl_deduction_pw_d2,synthrlvl_deduction_pw_d3,synthrlvl_deduction_pw_d5,synthrlvl_deduction_bp_cot_d5,synthrlvl_deduction_bp_cot_d10,synthrlvl_deduction_bp_cot_d15,synthrlvl_deduction_bp_cot_d20,synthrlvl_deduction_bp_cot_d25" ;;
+  folio_gpqa) TASKS="synthrlvl_folio,synthrlvl_gpqa_diamond" ;;
+  standard)   TASKS="gsm8k,hendrycks_math500,bbh,mmlu,arc_challenge,hellaswag,winogrande,piqa,agieval_logiqa_en" ;;
+  multihop)   TASKS="synthrlvl_longbench_hotpotqa_standard,synthrlvl_longbench_hotpotqa_tagged,synthrlvl_longbench_2wikimqa_standard,synthrlvl_longbench_2wikimqa_tagged,synthrlvl_longbench_musique_standard,synthrlvl_longbench_musique_tagged" ;;
+  *) echo "unknown SUITE=${SUITE}" >&2; exit 2 ;;
+esac
+
+if [[ "${SEED}" == "3407" ]]; then SUF=""; else SUF="_seed${SEED}"; fi
+if [[ "${KIND}" == "it" ]]; then
+  RUN_NAME="qwen25_7b_longwin_${ARM}_2p5b_dolci_100k_lr5em6${SUF}"
+  CKPT="${DATA}/post_sft_alex/${RUN_NAME}/final"
+  CHAT_ARGS=(--apply-chat-template)
+else
+  RUN_NAME="qwen25_7b_longwin_${ARM}_2p5b_base"
+  CKPT="${DATA}/hf_midtrain/qwen25_7b_longwin_${ARM}_2p5b_hf"
+  CHAT_ARGS=()   # a base model has no chat template
+fi
+OUT_DIR="${DATA}/lm_eval_results/gruenau_${KIND}_${SUITE}_20260910${SUF}/${RUN_NAME}"
+
+test -s "${CKPT}/config.json" || { echo "missing checkpoint ${CKPT}" >&2; exit 2; }
+[ "$(ls "${CKPT}"/*.safetensors 2>/dev/null | wc -l)" -ge 1 ] || { echo "no shards in ${CKPT}" >&2; exit 2; }
+if [[ -s "${OUT_DIR}/.complete" ]]; then echo "already done: ${OUT_DIR}"; exit 0; fi
+
+# These GPUs are shareable (the partition advertises MPS), so a neighbouring
+# job can already hold most of the card when we start. vllm refuses to launch
+# if the requested fraction is not free, which killed six jobs outright. Wait
+# for room rather than dying, then size the fraction to what is actually free.
+NEED_GIB="${NEED_GIB:-26}"
+for attempt in $(seq 1 60); do
+  free_mib=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -1)
+  total_mib=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
+  free_gib=$(( free_mib / 1024 ))
+  if [ "${free_gib}" -ge "${NEED_GIB}" ]; then break; fi
+  echo "waiting for GPU memory: ${free_gib} GiB free, need ${NEED_GIB} (attempt ${attempt}/60)"
+  sleep 120
+done
+if [ "${free_gib}" -lt "${NEED_GIB}" ]; then
+  echo "gave up waiting: only ${free_gib} GiB free" >&2; exit 3
+fi
+# leave a small margin below what is free so a neighbour growing slightly does
+# not abort us
+GPU_UTIL="${GPU_UTIL:-$(python3 -c "print(round(min(0.70, (${free_mib}-3072)/${total_mib}), 3))")}"
+echo "GPU has ${free_gib} GiB free; using gpu_memory_utilization=${GPU_UTIL}"
+
+nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
+echo "kind=${KIND} arm=${ARM} suite=${SUITE} seed=${SEED}"
+echo "ckpt=${CKPT}"
+
+python scripts/validate_lm_eval_tasks.py --include-path lm_eval_tasks/synthrlvl_ood --tasks "${TASKS}"
+
+python scripts/evaluate_lm_eval.py \
+  --checkpoint "${CKPT}" \
+  --model vllm \
+  --tasks "${TASKS}" \
+  --include-path lm_eval_tasks/synthrlvl_ood \
+  --output-path "${OUT_DIR}" \
+  --batch-size auto \
+  --dtype bfloat16 \
+  --gpu-memory-utilization "${GPU_UTIL}" \
+  --model-arg "max_model_len=8192" \
+  --trust-remote-code \
+  --confirm-run-unsafe-code \
+  "${CHAT_ARGS[@]}" \
+  --log-samples
+
+touch "${OUT_DIR}/.complete"
+echo "done kind=${KIND} arm=${ARM} suite=${SUITE}"
