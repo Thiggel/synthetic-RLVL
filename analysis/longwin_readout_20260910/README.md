@@ -189,3 +189,24 @@ So the ProofWriter effect is specific to the answer-only regime: it is a
 change in the direct-answer decision rule, and a written chain replaces
 that rule with whatever the chain concludes. This is the honest framing for
 the paper, alongside the base-model discrimination gain of section 8.
+
+## 10. Perturbation probes (answer-only prompt; seed 3407 / 3408)
+
+Flip (claim polarity toggled, theory unchanged): fraction of decidable items
+answered identically under both polarities, i.e. negation-blind:
+Control .376 / .376, LongDoc .376 / .380, Formal .285 / .280 (English pending).
+On the 785 negated/false items, the positive version is answered correctly by
+every arm (Control .68, Formal .68), so the arms differ only on the negated
+version: Control says "true" to both, Formal says "true"/"false".
+
+Ablate (the proof's premises removed, claim unchanged, gold unknown): the
+arms' answers do depend on the premises. On the negated/false items Formal's
+P(false) falls from .53 to .27 once the supporting facts are gone (Control
+.35 -> .20, LongDoc .36 -> .19); overall 44 percent of Formal's answers
+change under ablation vs 42 percent for Control. So the extra "false" is not
+a closed-world default applied blindly; it is conditioned on the premises
+that make the negated claim false. No arm answers "unknown" (.19-.24).
+
+Taken together with sections 8 and 9: the derivation arms make the
+direct-answer decision premise-grounded and negation-aware; they do not add
+depth-scaling deduction, and the effect is bypassed when a chain is written.

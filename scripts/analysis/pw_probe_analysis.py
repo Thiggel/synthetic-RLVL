@@ -125,6 +125,10 @@ def pert(kind, seed):
     for arm in ARMS:
         d = run_dir(kind, "deduction_pert", arm, seed)
         o = run_dir(kind, "deduction", arm, seed)
+        if kind == "it" and not o:  # alex ran the same items; its per-item samples are mirrored
+            suf = "" if seed == 3407 else "_seed%d" % seed
+            cand = "%s/alex_mirror/qwen25_longwin_graded_deduction_20260906%s/qwen25_7b_longwin_%s_2p5b_dolci_100k_lr5em6%s" % (D, suf, arm, suf)
+            o = cand if os.path.isdir(cand) else None
         if not d or not o:
             continue
         orig = {}
@@ -145,10 +149,15 @@ def pert(kind, seed):
         else:
             facc = changed = same = float("nan")
         if ab:
+            ab_changed = sum(pred(r) != orig.get(r["doc"]["source_id"], "?") for r in ab) / len(ab)
+            sub = [r for r in ab if r["doc"]["orig_answer"] == "false" and negated(r["doc"]["orig_question"])]
+            still_false = sum(pred(r) == "false" for r in sub) / max(1, len(sub))
+            was_false = sum(orig.get(r["doc"]["source_id"]) == "false" for r in sub) / max(1, len(sub))
             c = Counter(pred(r) for r in ab)
             aacc = sum(r["exact_match"] for r in ab) / len(ab)
             n = len(ab)
-            print("%-10s | %13.3f %9.3f %9.3f | %14.3f %9.3f %9.3f %9.3f" % (SHORT[arm], facc, changed, same, aacc, c["false"] / n, c["true"] / n, c["unknown"] / n))
+            print("%-10s | %13.3f %9.3f %9.3f | %14.3f %9.3f %9.3f %9.3f   changed %.3f; negated/false items: P(false) %.3f before -> %.3f after ablation" % (
+                SHORT[arm], facc, changed, same, aacc, c["false"] / n, c["true"] / n, c["unknown"] / n, ab_changed, was_false, still_false))
         else:
             print("%-10s | %13.3f %9.3f %9.3f | (no ablate yet)" % (SHORT[arm], facc, changed, same))
         # the cell that carries the gain: originally negated & gold false -> flipped to positive & gold true
