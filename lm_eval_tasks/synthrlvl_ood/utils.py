@@ -274,6 +274,59 @@ def process_deduction_bp_cot(doc: dict, results: list[str]) -> dict[str, float]:
     }
 
 
+# --- ProofWriter probes, 2026-09-10 ------------------------------------------
+# The item-level analysis (scripts/analysis/proofwriter_error_analysis.py) put
+# the entire ProofWriter gain in the negated-claim/gold-false cell, flat across
+# depth. Two probes separate "better discrimination" from "a moved threshold":
+#   pw_cot: let the model derive before answering, so the derivation (or its
+#           absence) is visible and the contradiction can be checked;
+#   pw_mc:  score True/False/Unknown by log-likelihood so a threshold-free AUC
+#           between gold-true and gold-false items can be computed from the
+#           stored per-choice likelihoods.
+
+_PW_COT_ANSWER_RE = re.compile(r"answer\s*[:\-]?\s*\**\s*(true|false|unknown)", re.IGNORECASE)
+
+
+def doc_to_text_deduction_pw_cot(doc: dict) -> str:
+    return (
+        f"{str(doc['context']).strip()}\n\n"
+        f"Question: {str(doc['question']).strip()}\n"
+        "Based only on the statements above, is the claim true, false, or unknown? "
+        "Reason step by step from the statements, then give the final answer on its "
+        "own last line in the form \"Answer: True\", \"Answer: False\" or \"Answer: Unknown\"."
+    )
+
+
+def process_deduction_pw_cot(doc: dict, results: list[str]) -> dict[str, float]:
+    raw = str(results[0]) if results else ""
+    marked = _PW_COT_ANSWER_RE.findall(raw)
+    if marked:
+        pred = marked[-1].lower()
+        tag_found = 1.0
+    else:
+        tail = _TFU_RE.findall(raw)
+        pred = tail[-1].lower() if tail else ""
+        tag_found = 0.0
+    gold = str(doc["answer"]).strip().lower()
+    return {
+        "exact_match": float(bool(pred) and pred == gold),
+        "tag_found": tag_found,
+        "extracted_nonempty": float(bool(pred)),
+        "response_words": float(len(raw.split())),
+    }
+
+
+_PW_CHOICES = ["True", "False", "Unknown"]
+
+
+def doc_to_choice_deduction_pw(doc: dict) -> list[str]:
+    return list(_PW_CHOICES)
+
+
+def doc_to_target_deduction_pw_mc(doc: dict) -> int:
+    return [c.lower() for c in _PW_CHOICES].index(str(doc["answer"]).strip().lower())
+
+
 # --- GPQA-Diamond (four-way multiple choice), 2026-09-10 -------------------
 # Revised 2026-09-10: an 8-token cap truncated roughly 30 percent of responses
 # mid-explanation, before any letter was emitted, which scored as an extraction

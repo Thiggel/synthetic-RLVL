@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import random
 import shutil
@@ -15,13 +16,48 @@ import torch
 import wandb
 from datasets import Dataset, DatasetDict, load_dataset, load_from_disk
 from peft import LoraConfig, get_peft_model
-from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments, set_seed
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    Trainer,
+    TrainerCallback,
+    TrainingArguments,
+    set_seed,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from train_sft import make_sft_data_collator
+
+
+class DivergenceGuard(TrainerCallback):
+    """Fail closed on a non-finite or exploding training loss.
+
+    A run that diverges still "completes": the Trainer keeps stepping on NaN
+    gradients, writes a final/ full of NaN weights and exits 0. The 2026-09-10
+    gruenau notation run did exactly that (loss 1.3e8 at step 3, then 0.0 with
+    grad_norm nan for 778 more steps). Raising here stops the run at the first
+    bad step so the failure is visible and the GPU-hours are not spent.
+    """
+
+    def __init__(self, max_loss: float = 50.0):
+        self.max_loss = float(max_loss)
+
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        if not logs or "loss" not in logs:
+            return
+        loss = float(logs["loss"])
+        grad_norm = logs.get("grad_norm")
+        bad = not math.isfinite(loss) or loss > self.max_loss
+        if grad_norm is not None and not math.isfinite(float(grad_norm)):
+            bad = True
+        if bad:
+            raise RuntimeError(
+                f"training diverged at global step {state.global_step}: "
+                f"loss={loss} grad_norm={grad_norm}"
+            )
 
 
 def _first_user_assistant(messages: list[dict[str, Any]]) -> tuple[str, str] | None:
@@ -454,6 +490,7 @@ def main() -> None:
         eval_dataset=eval_ds,
         tokenizer=tokenizer,
         data_collator=make_sft_data_collator(tokenizer),
+        callbacks=[DivergenceGuard()],
     )
     resume_checkpoint = _resolve_resume_checkpoint(output_dir, args.resume_from_checkpoint)
     if resume_checkpoint is not None:

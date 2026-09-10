@@ -1,0 +1,26 @@
+# Log-likelihood probe of synthrlvl_deduction_pw_d2, 2026-09-10: same prompt as the
+# generative task, but True/False/Unknown are scored as continuations so the
+# stored per-choice likelihoods give a threshold-free discrimination measure.
+tag:
+  - synthrlvl_deduction_pw_mc
+task: synthrlvl_deduction_pw_mc_d2
+dataset_path: json
+dataset_kwargs:
+  data_files:
+    test: /home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/graded_deduction_eval_20260826/proofwriter_owa_d2.jsonl
+test_split: test
+output_type: multiple_choice
+doc_to_text: !function utils.doc_to_text_deduction_pw
+doc_to_choice: !function utils.doc_to_choice_deduction_pw
+doc_to_target: !function utils.doc_to_target_deduction_pw_mc
+target_delimiter: " "
+num_fewshot: 0
+metric_list:
+  - metric: acc
+    aggregation: mean
+    higher_is_better: true
+  - metric: acc_norm
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0

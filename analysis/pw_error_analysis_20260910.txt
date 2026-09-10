@@ -1,0 +1,246 @@
+====================================================================================================
+SEED 3407   n=2500 items, 2500 with metadata
+====================================================================================================
+
+Accuracy by ProofWriter strategy
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+inv-proof (gold false)   897     0.409     0.426     0.574     0.705     0.545    +0.295    7.7e-77
+inv-random (gold unknown)   112     0.080     0.062     0.071     0.062     0.062    -0.018        0.5
+inv-rconc (gold unknown)   314     0.003     0.000     0.000     0.000     0.003    -0.003          1
+proof (gold true)        856     0.732     0.727     0.697     0.715     0.672    -0.018      0.036
+random (gold unknown)    162     0.302     0.265     0.253     0.210     0.222    -0.093    6.1e-05
+rconc (gold unknown)     159     0.025     0.031     0.038     0.006     0.013    -0.019       0.25
+
+Decidable items by inference depth and gold label
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+depth 0, gold false      131     0.550     0.656     0.763     0.847     0.756    +0.298    3.6e-12
+depth 0, gold true        95     0.958     0.979     0.958     0.968     0.926    +0.011          1
+depth 1, gold false      122     0.467     0.459     0.631     0.746     0.582    +0.279    1.2e-10
+depth 1, gold true       133     0.774     0.767     0.752     0.767     0.752    -0.008          1
+depth 2, gold false      190     0.405     0.432     0.542     0.726     0.516    +0.321    1.4e-17
+depth 2, gold true       192     0.740     0.719     0.729     0.745     0.682    +0.005          1
+depth 3, gold false      214     0.402     0.411     0.575     0.706     0.542    +0.304    5.4e-20
+depth 3, gold true       199     0.683     0.698     0.638     0.673     0.623    -0.010       0.75
+depth 5, gold false      240     0.312     0.292     0.467     0.588     0.438    +0.275    4.7e-19
+depth 5, gold true       237     0.654     0.633     0.586     0.595     0.557    -0.059     0.0026
+
+Decidable items by theory family and question polarity
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+AttNeg, negated question   222     0.446     0.437     0.523     0.613     0.514    +0.167    1.5e-10
+AttNeg, positive question   225     0.800     0.769     0.760     0.791     0.729    -0.009        0.8
+AttNoneg, negated question   219     0.420     0.361     0.516     0.689     0.479    +0.269    3.5e-18
+AttNoneg, positive question   234     0.795     0.799     0.774     0.799     0.756    +0.004          1
+RelNeg, negated question   198     0.313     0.389     0.556     0.692     0.525    +0.379      1e-21
+RelNeg, positive question   218     0.697     0.697     0.688     0.679     0.665    -0.018       0.42
+RelNoneg, negated question   213     0.380     0.451     0.653     0.803     0.596    +0.423    1.6e-27
+RelNoneg, positive question   224     0.634     0.638     0.589     0.607     0.571    -0.027       0.11
+
+Decidable items by proof length (QLen, number of proof steps)
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+proof length 1           226     0.721     0.792     0.845     0.898     0.827    +0.177      2e-11
+proof length 2           210     0.652     0.638     0.700     0.771     0.686    +0.119      6e-08
+proof length 3           256     0.574     0.574     0.645     0.711     0.598    +0.137    7.9e-08
+proof length 4           277     0.534     0.542     0.610     0.733     0.585    +0.199    1.5e-12
+proof length 5           180     0.506     0.522     0.589     0.683     0.578    +0.178    4.1e-09
+proof length 6           159     0.547     0.560     0.610     0.642     0.541    +0.094    0.00073
+proof length 7            98     0.571     0.531     0.592     0.622     0.571    +0.051       0.38
+proof length 8            95     0.432     0.421     0.484     0.568     0.453    +0.137     0.0023
+proof length 9            78     0.487     0.500     0.526     0.628     0.487    +0.141     0.0074
+proof length 10           51     0.412     0.353     0.471     0.588     0.471    +0.176      0.012
+proof length 11           41     0.537     0.488     0.537     0.610     0.537    +0.073       0.38
+proof length 12           26     0.346     0.346     0.346     0.385     0.385    +0.038          1
+proof length 13           24     0.667     0.667     0.750     0.792     0.750    +0.125       0.25
+proof length 14            6     0.333     0.333     0.333     0.333     0.333    +0.000          1
+proof length 15            9     0.778     0.667     0.778     0.778     0.778    +0.000          1
+proof length 16            5     0.200     0.200     0.400     0.600     0.200    +0.400        0.5
+proof length 17            5     0.600     0.600     0.600     0.600     0.600    +0.000          1
+proof length 18            5     0.800     0.800     0.800     1.000     0.800    +0.200          1
+proof length 21            2     0.500     0.500     0.500     0.500     0.000    +0.000          1
+
+All items by theory size
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+1 rules in theory         90     0.522     0.544     0.567     0.578     0.533    +0.056       0.12
+2 rules in theory        162     0.488     0.488     0.512     0.537     0.475    +0.049      0.039
+3 rules in theory        259     0.402     0.440     0.456     0.490     0.436    +0.089    3.4e-05
+5 rules in theory         22     0.364     0.364     0.500     0.500     0.500    +0.136       0.25
+6 rules in theory        555     0.438     0.443     0.477     0.521     0.458    +0.083    3.2e-10
+7 rules in theory        117     0.427     0.444     0.436     0.521     0.462    +0.094      0.013
+8 rules in theory        811     0.404     0.401     0.450     0.498     0.438    +0.094    2.4e-13
+9 rules in theory        484     0.409     0.384     0.461     0.527     0.409    +0.118    1.9e-09
+
+THE 2x2: question polarity x gold label (decidable items). A 'negated -> false' heuristic gains on negated/false and LOSES on negated/true
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+negated question, gold false   785     0.345     0.363     0.531     0.680     0.494    +0.335    1.3e-79
+negated question, gold true    67     0.940     0.955     0.910     0.910     0.925    -0.030        0.5
+positive question, gold false   112     0.857     0.866     0.875     0.875     0.902    +0.018       0.69
+positive question, gold true   789     0.715     0.707     0.679     0.698     0.650    -0.016      0.066
+
+Negated questions by depth and gold
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+d0 negated, gold false   118     0.525     0.644     0.754     0.856     0.746    +0.331    3.6e-12
+d0 negated, gold true      7     1.000     1.000     1.000     1.000     1.000    +0.000          1
+d1 negated, gold false   110     0.427     0.409     0.600     0.727     0.545    +0.300    2.3e-10
+d1 negated, gold true      5     0.800     0.800     0.600     0.600     0.800    -0.200          1
+d2 negated, gold false   163     0.337     0.362     0.497     0.712     0.454    +0.374    8.7e-19
+d2 negated, gold true     14     1.000     1.000     1.000     1.000     1.000    +0.000          1
+d3 negated, gold false   186     0.328     0.344     0.527     0.677     0.489    +0.349    5.4e-20
+d3 negated, gold true     15     1.000     1.000     0.933     0.933     0.933    -0.067          1
+d5 negated, gold false   208     0.221     0.197     0.399     0.534     0.361    +0.312    5.4e-20
+d5 negated, gold true     26     0.885     0.923     0.885     0.885     0.885    +0.000          1
+
+Positive questions by depth and gold
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+d0 positive, gold false    13     0.769     0.769     0.846     0.769     0.846    +0.000          1
+d0 positive, gold true    88     0.955     0.977     0.955     0.966     0.920    +0.011          1
+d1 positive, gold false    12     0.833     0.917     0.917     0.917     0.917    +0.083          1
+d1 positive, gold true   128     0.773     0.766     0.758     0.773     0.750    +0.000          1
+d2 positive, gold false    27     0.815     0.852     0.815     0.815     0.889    +0.000          1
+d2 positive, gold true   178     0.719     0.697     0.708     0.725     0.657    +0.006          1
+d3 positive, gold false    28     0.893     0.857     0.893     0.893     0.893    +0.000          1
+d3 positive, gold true   184     0.658     0.674     0.614     0.652     0.598    -0.005          1
+d5 positive, gold false    32     0.906     0.906     0.906     0.938     0.938    +0.031          1
+d5 positive, gold true   211     0.626     0.597     0.550     0.559     0.517    -0.066     0.0026
+
+English vs Control flips on decidable items, by strategy x depth
+strategy        depth   gained     lost      net
+proof               0        2        1       +1
+proof               1        0        1       -1
+proof               2        6        5       +1
+proof               3        4        6       -2
+proof               5        3       17      -14
+inv-proof           0       39        0      +39
+inv-proof           1       34        0      +34
+inv-proof           2       62        1      +61
+inv-proof           3       65        0      +65
+inv-proof           5       67        1      +66
+
+Prediction distribution on gold-Unknown items (strategies rconc/random)
+Control    false=236 true=448 unknown=63
+LongDoc    false=244 true=448 unknown=55
+Formal     false=311 true=381 unknown=55
+English    false=374 true=331 unknown=42
+Condensed  false=317 true=384 unknown=46
+
+====================================================================================================
+SEED 3408   n=2500 items, 2500 with metadata
+====================================================================================================
+
+Accuracy by ProofWriter strategy
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+inv-proof (gold false)   897     0.414     0.419     0.582     0.702     0.559    +0.289      1e-73
+inv-random (gold unknown)   112     0.089     0.071     0.062     0.062     0.045    -0.027       0.25
+inv-rconc (gold unknown)   314     0.003     0.000     0.000     0.000     0.000    -0.003          1
+proof (gold true)        856     0.715     0.723     0.694     0.716     0.645    +0.001          1
+random (gold unknown)    162     0.346     0.247     0.241     0.210     0.204    -0.136      3e-06
+rconc (gold unknown)     159     0.031     0.044     0.025     0.006     0.013    -0.025       0.12
+
+Decidable items by inference depth and gold label
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+depth 0, gold false      131     0.573     0.656     0.786     0.847     0.748    +0.275    2.9e-11
+depth 0, gold true        95     0.958     0.979     0.958     0.958     0.926    +0.000          1
+depth 1, gold false      122     0.484     0.459     0.648     0.779     0.607    +0.295    2.9e-11
+depth 1, gold true       133     0.767     0.759     0.752     0.767     0.737    +0.000          1
+depth 2, gold false      190     0.411     0.416     0.553     0.726     0.553    +0.316    2.7e-17
+depth 2, gold true       192     0.719     0.714     0.719     0.740     0.646    +0.021       0.29
+depth 3, gold false      214     0.388     0.402     0.579     0.701     0.565    +0.313    1.4e-20
+depth 3, gold true       199     0.673     0.693     0.633     0.678     0.613    +0.005          1
+depth 5, gold false      240     0.317     0.287     0.463     0.567     0.429    +0.250    2.3e-16
+depth 5, gold true       237     0.620     0.633     0.586     0.603     0.506    -0.017       0.45
+
+Decidable items by theory family and question polarity
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+AttNeg, negated question   222     0.455     0.428     0.541     0.613     0.527    +0.158    5.5e-10
+AttNeg, positive question   225     0.778     0.778     0.769     0.796     0.716    +0.018       0.48
+AttNoneg, negated question   219     0.425     0.365     0.511     0.680     0.484    +0.256    2.8e-17
+AttNoneg, positive question   234     0.769     0.786     0.761     0.799     0.714    +0.030      0.039
+RelNeg, negated question   198     0.318     0.369     0.571     0.692     0.525    +0.374      2e-20
+RelNeg, positive question   218     0.702     0.697     0.679     0.693     0.642    -0.009       0.77
+RelNoneg, negated question   213     0.371     0.446     0.662     0.793     0.634    +0.423    1.6e-27
+RelNoneg, positive question   224     0.621     0.629     0.585     0.603     0.549    -0.018       0.22
+
+Decidable items by proof length (QLen, number of proof steps)
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+proof length 1           226     0.735     0.792     0.858     0.894     0.823    +0.159    1.5e-09
+proof length 2           210     0.657     0.633     0.705     0.786     0.676    +0.129    1.5e-08
+proof length 3           256     0.566     0.570     0.648     0.723     0.609    +0.156    4.6e-10
+proof length 4           277     0.527     0.534     0.610     0.718     0.588    +0.191    1.7e-12
+proof length 5           180     0.500     0.506     0.594     0.678     0.578    +0.178    4.1e-09
+proof length 6           159     0.535     0.547     0.610     0.642     0.541    +0.107    0.00049
+proof length 7            98     0.531     0.520     0.571     0.633     0.571    +0.102      0.031
+proof length 8            95     0.411     0.421     0.463     0.589     0.432    +0.179    1.5e-05
+proof length 9            78     0.487     0.500     0.526     0.615     0.474    +0.128     0.0063
+proof length 10           51     0.373     0.353     0.490     0.569     0.392    +0.196      0.002
+proof length 11           41     0.537     0.488     0.537     0.634     0.537    +0.098       0.12
+proof length 12           26     0.346     0.385     0.346     0.346     0.346    +0.000          1
+proof length 13           24     0.667     0.667     0.792     0.750     0.625    +0.083       0.62
+proof length 14            6     0.333     0.333     0.333     0.333     0.333    +0.000          1
+proof length 15            9     0.778     0.667     0.778     0.778     0.667    +0.000          1
+proof length 16            5     0.200     0.200     0.400     0.600     0.200    +0.400        0.5
+proof length 17            5     0.600     0.600     0.600     0.600     0.600    +0.000          1
+proof length 18            5     0.800     0.800     0.800     0.800     0.800    +0.000          1
+proof length 21            2     0.500     0.500     0.500     0.500     0.000    +0.000          1
+
+All items by theory size
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+1 rules in theory         90     0.544     0.544     0.556     0.567     0.522    +0.022       0.75
+2 rules in theory        162     0.500     0.475     0.506     0.531     0.481    +0.031       0.23
+3 rules in theory        259     0.409     0.432     0.452     0.502     0.440    +0.093    1.9e-05
+5 rules in theory         22     0.364     0.364     0.500     0.500     0.500    +0.136       0.25
+6 rules in theory        555     0.438     0.440     0.486     0.515     0.447    +0.077    4.2e-09
+7 rules in theory        117     0.436     0.444     0.427     0.530     0.444    +0.094      0.013
+8 rules in theory        811     0.404     0.401     0.451     0.497     0.429    +0.092    3.2e-12
+9 rules in theory        484     0.390     0.378     0.455     0.529     0.403    +0.138    5.9e-14
+
+THE 2x2: question polarity x gold label (decidable items). A 'negated -> false' heuristic gains on negated/false and LOSES on negated/true
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+negated question, gold false   785     0.348     0.357     0.540     0.676     0.510    +0.329    4.3e-78
+negated question, gold true    67     0.940     0.940     0.925     0.896     0.925    -0.045       0.25
+positive question, gold false   112     0.875     0.857     0.875     0.884     0.902    +0.009          1
+positive question, gold true   789     0.696     0.705     0.674     0.701     0.621    +0.005       0.63
+
+Negated questions by depth and gold
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+d0 negated, gold false   118     0.551     0.644     0.780     0.847     0.737    +0.297    5.8e-11
+d0 negated, gold true      7     1.000     1.000     1.000     1.000     1.000    +0.000          1
+d1 negated, gold false   110     0.445     0.409     0.618     0.764     0.573    +0.318    5.8e-11
+d1 negated, gold true      5     0.800     0.800     0.600     0.600     0.800    -0.200          1
+d2 negated, gold false   163     0.337     0.344     0.509     0.706     0.497    +0.368    1.7e-18
+d2 negated, gold true     14     1.000     1.000     1.000     1.000     1.000    +0.000          1
+d3 negated, gold false   186     0.312     0.333     0.532     0.672     0.516    +0.360    1.4e-20
+d3 negated, gold true     15     1.000     1.000     1.000     0.933     0.933    -0.067          1
+d5 negated, gold false   208     0.221     0.197     0.394     0.514     0.351    +0.293    8.7e-19
+d5 negated, gold true     26     0.885     0.885     0.885     0.846     0.885    -0.038          1
+
+Positive questions by depth and gold
+group                      n   Control   LongDoc    Formal   English Condensed   Eng-Ctl          p
+d0 positive, gold false    13     0.769     0.769     0.846     0.846     0.846    +0.077          1
+d0 positive, gold true    88     0.955     0.977     0.955     0.955     0.920    +0.000          1
+d1 positive, gold false    12     0.833     0.917     0.917     0.917     0.917    +0.083          1
+d1 positive, gold true   128     0.766     0.758     0.758     0.773     0.734    +0.008          1
+d2 positive, gold false    27     0.852     0.852     0.815     0.852     0.889    +0.000          1
+d2 positive, gold true   178     0.697     0.691     0.697     0.719     0.618    +0.022       0.29
+d3 positive, gold false    28     0.893     0.857     0.893     0.893     0.893    +0.000          1
+d3 positive, gold true   184     0.647     0.668     0.603     0.658     0.587    +0.011       0.75
+d5 positive, gold false    32     0.938     0.875     0.906     0.906     0.938    -0.031          1
+d5 positive, gold true   211     0.588     0.602     0.550     0.573     0.460    -0.014       0.61
+
+English vs Control flips on decidable items, by strategy x depth
+strategy        depth   gained     lost      net
+proof               0        2        2       +0
+proof               1        1        1       +0
+proof               2        6        2       +4
+proof               3        6        5       +1
+proof               5        6       10       -4
+inv-proof           0       36        0      +36
+inv-proof           1       36        0      +36
+inv-proof           2       61        1      +60
+inv-proof           3       67        0      +67
+inv-proof           5       62        2      +60
+
+Prediction distribution on gold-Unknown items (strategies rconc/random)
+Control    false=237 true=438 unknown=72
+LongDoc    false=238 true=454 unknown=55
+Formal     false=322 true=375 unknown=50
+English    false=378 true=327 unknown=42
+Condensed  false=347 true=360 unknown=40
+
