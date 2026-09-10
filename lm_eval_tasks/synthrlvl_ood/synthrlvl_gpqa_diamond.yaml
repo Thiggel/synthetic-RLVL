@@ -1,0 +1,33 @@
+# GPQA-Diamond, materialised 2026-09-10 from the fingertap mirror because the
+# canonical repository is gated. Four-way multiple choice, 198 items, chance
+# 25 percent. Used to check that the derivation mixtures do not damage hard
+# scientific reasoning; absolute numbers are not comparable to published GPQA.
+task: synthrlvl_gpqa_diamond
+dataset_path: json
+dataset_kwargs:
+  data_files:
+    test: /vol/home-vol2/ml/laitenbf/rlvl_data/datasets/gpqa_diamond_20260910/gpqa_diamond.jsonl
+test_split: test
+output_type: generate_until
+doc_to_text: !function utils.doc_to_text_gpqa
+doc_to_target: "{{answer}}"
+process_results: !function utils.process_gpqa
+generation_kwargs:
+  max_gen_toks: 4096
+  until: []
+  do_sample: false
+  temperature: 0.0
+repeats: 1
+num_fewshot: 0
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+  - metric: extracted_nonempty
+    aggregation: mean
+    higher_is_better: true
+  - metric: answer_marker_found
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0

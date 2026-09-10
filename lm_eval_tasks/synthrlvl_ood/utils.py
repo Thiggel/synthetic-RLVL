@@ -274,29 +274,36 @@ def process_deduction_bp_cot(doc: dict, results: list[str]) -> dict[str, float]:
     }
 
 
-# --- FOLIO (human-written first-order logic), 2026-09-10 -------------------
-# Same prompt shape as the ProofWriter task so the two are comparable; FOLIO's
-# third label is "uncertain", not ProofWriter's "unknown".
+# --- GPQA-Diamond (four-way multiple choice), 2026-09-10 -------------------
+# Revised 2026-09-10: an 8-token cap truncated roughly 30 percent of responses
+# mid-explanation, before any letter was emitted, which scored as an extraction
+# failure and depressed every arm. The prompt now invites working and asks for
+# a final "Answer: X", and extraction prefers the last such marker, falling back
+# to the last standalone letter.
 
-_FOLIO_LABEL_RE = re.compile(r"\b(true|false|uncertain)\b", re.IGNORECASE)
+_GPQA_MARKED_RE = re.compile(r"(?:answer|final answer)\s*[:\-]?\s*\(?([A-D])\)?\b", re.IGNORECASE)
+_GPQA_LETTER_RE = re.compile(r"\b([A-D])\b")
 
 
-def doc_to_text_folio(doc: dict) -> str:
+def doc_to_text_gpqa(doc: dict) -> str:
     return (
-        f"{str(doc['context']).strip()}\n\n"
-        f"Question: {str(doc['question']).strip()}\n"
-        "Based only on the statements above, is the claim true, false, or uncertain? "
-        "Answer with exactly one word: True, False, or Uncertain.\n"
-        "Answer:"
+        f"{str(doc['question']).strip()}\n\n"
+        "Work through the options briefly, then end with your final choice on "
+        "its own line in the form 'Answer: X', where X is A, B, C or D.\n"
     )
 
 
-def process_folio(doc: dict, results: list[str]) -> dict[str, float]:
+def process_gpqa(doc: dict, results: list[str]) -> dict[str, float]:
     raw = str(results[0]) if results else ""
-    match = _FOLIO_LABEL_RE.search(raw)
-    pred = match.group(1).lower() if match else ""
-    gold = str(doc["answer"]).strip().lower()
+    marked = _GPQA_MARKED_RE.findall(raw)
+    if marked:
+        pred = marked[-1].upper()
+    else:
+        loose = _GPQA_LETTER_RE.findall(raw.upper())
+        pred = loose[-1] if loose else ""
+    gold = str(doc["answer"]).strip().upper()
     return {
         "exact_match": float(bool(pred) and pred == gold),
         "extracted_nonempty": float(bool(pred)),
+        "answer_marker_found": float(bool(marked)),
     }
