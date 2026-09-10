@@ -24,6 +24,8 @@
 #   SUITE=standard    GSM8K, MATH-500, BBH, MMLU, ARC, HellaSwag, WinoGrande,
 #                     PIQA, LogiQA
 #   SUITE=multihop    HotpotQA, 2Wiki, MuSiQue, standard and tagged
+#   SUITE=deduction_cot  ProofWriter d0-d5 with a derive-then-answer prompt
+#   SUITE=deduction_mc   ProofWriter d0-d5 scored by choice log-likelihood
 #
 # ARM selects the condition. Everything fails closed on a missing checkpoint.
 
@@ -51,6 +53,8 @@ case "${SUITE}" in
   deduction)
     TASKS="synthrlvl_deduction_pw_d0,synthrlvl_deduction_pw_d1,synthrlvl_deduction_pw_d2,synthrlvl_deduction_pw_d3,synthrlvl_deduction_pw_d5,synthrlvl_deduction_bp_cot_d5,synthrlvl_deduction_bp_cot_d10,synthrlvl_deduction_bp_cot_d15,synthrlvl_deduction_bp_cot_d20,synthrlvl_deduction_bp_cot_d25" ;;
   folio_gpqa) TASKS="synthrlvl_folio,synthrlvl_gpqa_diamond" ;;
+  deduction_cot) TASKS="synthrlvl_deduction_pw_cot_d0,synthrlvl_deduction_pw_cot_d1,synthrlvl_deduction_pw_cot_d2,synthrlvl_deduction_pw_cot_d3,synthrlvl_deduction_pw_cot_d5" ;;
+  deduction_mc)  TASKS="synthrlvl_deduction_pw_mc_d0,synthrlvl_deduction_pw_mc_d1,synthrlvl_deduction_pw_mc_d2,synthrlvl_deduction_pw_mc_d3,synthrlvl_deduction_pw_mc_d5" ;;
   standard)   TASKS="gsm8k,hendrycks_math500,bbh,mmlu,arc_challenge,hellaswag,winogrande,piqa,agieval_logiqa_en" ;;
   multihop)   TASKS="synthrlvl_longbench_hotpotqa_standard,synthrlvl_longbench_hotpotqa_tagged,synthrlvl_longbench_2wikimqa_standard,synthrlvl_longbench_2wikimqa_tagged,synthrlvl_longbench_musique_standard,synthrlvl_longbench_musique_tagged" ;;
   *) echo "unknown SUITE=${SUITE}" >&2; exit 2 ;;
@@ -70,7 +74,8 @@ OUT_DIR="${DATA}/lm_eval_results/gruenau_${KIND}_${SUITE}_20260910${SUF}/${RUN_N
 
 test -s "${CKPT}/config.json" || { echo "missing checkpoint ${CKPT}" >&2; exit 2; }
 [ "$(ls "${CKPT}"/*.safetensors 2>/dev/null | wc -l)" -ge 1 ] || { echo "no shards in ${CKPT}" >&2; exit 2; }
-if [[ -s "${OUT_DIR}/.complete" ]]; then echo "already done: ${OUT_DIR}"; exit 0; fi
+# .complete is an empty marker, so test for existence, not size
+if [[ -e "${OUT_DIR}/.complete" ]]; then echo "already done: ${OUT_DIR}"; exit 0; fi
 
 # These GPUs are shareable (the partition advertises MPS), so a neighbouring
 # job can already hold most of the card when we start. vllm refuses to launch
@@ -78,8 +83,11 @@ if [[ -s "${OUT_DIR}/.complete" ]]; then echo "already done: ${OUT_DIR}"; exit 0
 # for room rather than dying, then size the fraction to what is actually free.
 NEED_GIB="${NEED_GIB:-26}"
 for attempt in $(seq 1 60); do
-  free_mib=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -1)
-  total_mib=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
+  # nvidia-smi ignores CUDA_VISIBLE_DEVICES, so ask about the allocated card
+  # explicitly; the first card on the node is usually somebody else's.
+  GPU_ID="${CUDA_VISIBLE_DEVICES%%,*}"; GPU_ID="${GPU_ID:-0}"
+  free_mib=$(nvidia-smi -i "${GPU_ID}" --query-gpu=memory.free --format=csv,noheader,nounits | head -1)
+  total_mib=$(nvidia-smi -i "${GPU_ID}" --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
   free_gib=$(( free_mib / 1024 ))
   if [ "${free_gib}" -ge "${NEED_GIB}" ]; then break; fi
   echo "waiting for GPU memory: ${free_gib} GiB free, need ${NEED_GIB} (attempt ${attempt}/60)"
@@ -97,13 +105,20 @@ nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 echo "kind=${KIND} arm=${ARM} suite=${SUITE} seed=${SEED}"
 echo "ckpt=${CKPT}"
 
-python scripts/validate_lm_eval_tasks.py --include-path lm_eval_tasks/synthrlvl_ood --tasks "${TASKS}"
+# The task yamls hardcode alex's vault path for their data files. Rewrite them
+# into a scratch include directory so the same yamls serve both clusters.
+TASK_DIR="${SLURM_TMPDIR:-/tmp}/synthrlvl_ood_${SLURM_JOB_ID}"
+rm -rf "${TASK_DIR}"; cp -r lm_eval_tasks/synthrlvl_ood "${TASK_DIR}"
+sed -i "s#/home/vault/c107fa/c107fa12/synthetic-RLVL#${DATA}#g" "${TASK_DIR}"/*.yaml
+grep -l "/home/vault" "${TASK_DIR}"/*.yaml && { echo "unrewritten vault path" >&2; exit 2; }
+
+python scripts/validate_lm_eval_tasks.py --include-path "${TASK_DIR}" --tasks "${TASKS}"
 
 python scripts/evaluate_lm_eval.py \
   --checkpoint "${CKPT}" \
   --model vllm \
   --tasks "${TASKS}" \
-  --include-path lm_eval_tasks/synthrlvl_ood \
+  --include-path "${TASK_DIR}" \
   --output-path "${OUT_DIR}" \
   --batch-size auto \
   --dtype bfloat16 \
