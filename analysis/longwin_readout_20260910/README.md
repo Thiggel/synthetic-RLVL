@@ -210,3 +210,13 @@ that make the negated claim false. No arm answers "unknown" (.19-.24).
 Taken together with sections 8 and 9: the derivation arms make the
 direct-answer decision premise-grounded and negation-aware; they do not add
 depth-scaling deduction, and the effect is bypassed when a chain is written.
+
+English and Condensed (seed 3407 / 3408): negation-blind rate English .242 /
+.250, Condensed .289 / -; ablation P(false) on negated/false items English
+.67 -> .46 / .68 -> .46, Condensed .49 -> .29. English keeps the largest
+residual "false" after the premises are gone (.46 vs Formal .27, Control
+.20), so the arm with the biggest ProofWriter gain is also the one whose
+extra "false" is least premise-conditioned: about two thirds of its gain
+over Control on this cell survives ablation. English's gain is therefore
+part premise-grounded, part a shifted default toward "false" for negated
+claims; Formal's smaller gain is more premise-grounded.
