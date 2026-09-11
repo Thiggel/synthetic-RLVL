@@ -510,3 +510,12 @@ and the English scaffold is the one that survives contact with arithmetic.
 Measured next: full GSM8K test (1,319), ProofWriter d0-d5 (2,500) and
 FOLIO (203) in the document format, greedy, for the two bases and the two
 notation-SFT models (`scripts/analysis/native_format_eval.py`).
+
+Multihop for the notation-SFT models (seed 3407, 32k context): standard
+prompt flat (HotpotQA .551 / .553 vs Control .557; 2Wiki .378 / .373;
+MuSiQue .285 / .307). Tagged prompt: Ctl + formal traces is the best model
+on all three (2Wiki .305, HotpotQA .410, MuSiQue .195 vs Control .040 /
+.280 / .180) while Ctl + English traces collapses on two (HotpotQA .110,
+MuSiQue .040). Same asymmetry as the mixdepth campaign: English traces
+make the elicited scaffold brittle under greedy decoding, formal traces do
+not, even though English traces transfer better to the in-format CoT task.
