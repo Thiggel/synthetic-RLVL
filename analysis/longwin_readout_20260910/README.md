@@ -472,3 +472,8 @@ effect likewise appears from traces at either stage. What is left that is
 specific to midtraining: the base-model discrimination gain (section 8), the
 FOLIO edge of the Formal arm, and any dose or scrambled-control effect still
 in flight. Section 15's sentence "only midtraining gives that" is withdrawn.
+
+Depth 25, 12k budget, notation-SFT models on the control midtrain: Ctl +
+English traces .995 correct / .995 every line valid; Ctl + formal traces
+.980 / .990 (51 lines each). Same level as the midtrained bases (English
+.985, Formal 1.000).
