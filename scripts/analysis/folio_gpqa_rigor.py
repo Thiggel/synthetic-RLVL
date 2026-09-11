@@ -18,11 +18,13 @@ import re
 from collections import Counter
 
 ARMS = ["control", "longdoc", "logic_band25", "nl_exact_band25", "condensed_logic_band25",
-        "control+sftlogic", "control+sftnl_exact", "logic_band25+sftlogic", "nl_exact_band25+sftnl_exact"]
+        "control+sftlogic", "control+sftnl_exact", "logic_band25+sftlogic", "nl_exact_band25+sftnl_exact",
+        "logic_band25+modecond", "nl_exact_band25+modecond"]
 SHORT = {"control": "Control", "longdoc": "LongDoc", "logic_band25": "Formal",
          "nl_exact_band25": "English", "condensed_logic_band25": "Condensed",
          "control+sftlogic": "Ctl+FSFT", "control+sftnl_exact": "Ctl+ESFT",
-         "logic_band25+sftlogic": "Frm+FSFT", "nl_exact_band25+sftnl_exact": "Eng+ESFT"}
+         "logic_band25+sftlogic": "Frm+FSFT", "nl_exact_band25+sftnl_exact": "Eng+ESFT",
+         "logic_band25+modecond": "Frm+MC", "nl_exact_band25+modecond": "Eng+MC"}
 FOLIO_LABELS = ["true", "false", "uncertain"]
 
 
@@ -33,6 +35,8 @@ def find_samples(roots, arm, seed, task):
             return None
         base, mix = arm.split("+")
         fs = sorted(glob.glob("%s/qwen25_7b_longwin_%s_2p5b_%s_100k_lr5em6/*/samples_%s_*.jsonl" % (roots[0], base, mix, task)))
+        if not fs:
+            fs = sorted(glob.glob("%s/qwen25_7b_longwin_%s_2p5b_%s_100k_lr5em6*/*/samples_%s_*.jsonl" % (roots[0], base, mix, task)))
         return fs[-1] if fs else None
     for root in roots:
         # the 16:43 run under qwen25_longwin_folio_gpqa_20260910 predates the

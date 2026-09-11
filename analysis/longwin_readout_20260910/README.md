@@ -686,3 +686,24 @@ block terminates (it has a closing tag and a fixed grammar), an open prose
 chain does not. This is the cleanest statement of the notation contrast in
 the real-model half of the paper, and it points the opposite way to
 ProofWriter, where English leads.
+
+## 28. The mode-conditioned model obeys the notation switch perfectly
+
+One model, trained on 90k Dolci plus 5k formal and 5k English derivations
+whose prompts carry a switch naming the notation (alex 4208268, Formal
+midtrain base). Prompted with the training switches verbatim on the graded
+BranchProof items (200 per depth):
+
+| switch | depth | correct | every proof line valid | emits `<formal>` | emits `<think>` |
+|---|---|---|---|---|---|
+| formal | 5 / 15 / 25 | 1.000 / 1.000 / .995 | 1.000 / 1.000 / .995 | 1.00 | .00 |
+| English | 5 / 15 / 25 | 1.000 / 1.000 / 1.000 | 1.000 / 1.000 / 1.000 | .00 | 1.00 |
+
+Notation obedience is exact: the switch never leaks, and both branches are
+checker-valid to depth 25. Its FOLIO score is the best of every model in the
+campaign (.611 vs control .557, McNemar p = .043, bootstrap [.005, .103])
+and GPQA is flat (.354). So the brittleness the August mixdepth campaign
+found in unconditioned trace blending is an artefact of blending WITHOUT a
+switch: with one, a single chat model answers in prose by default, produces
+either notation on demand, and loses nothing on general benchmarks. This is
+the deployment form of the whole result and belongs in the paper.
