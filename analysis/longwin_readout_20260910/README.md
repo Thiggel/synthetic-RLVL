@@ -339,3 +339,11 @@ to be reported with the caveat that it exceeds the 8,192 midtrain window.
 - Scrambled-derivation chain resubmitted after a renderer bug (nl_scrambled
   was passed to the TemplateName enum): build 4213748 -> audit 4213749 ->
   midtrain passes 4213750-52 (`q25_longwin_scr`).
+
+Formal on FOLIO (both seeds, gruenau): .606 / .606, +.049 (16/6, p = .053)
+and +.054 (15/4, p = .019) over Control; GPQA .333 / .313, -.015 / -.025
+(n.s.). Formal is therefore the arm with the most consistent FOLIO gain
+(English +.034 / +.034, LongDoc +.010 / +.030), the opposite ordering to
+ProofWriter. Pooled over seeds the FOLIO ordering is Formal > English >
+LongDoc > Control, with Formal's gain twice LongDoc's; still small, but it is
+the one out-of-family signal where the formal notation leads.
