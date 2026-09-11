@@ -532,3 +532,34 @@ the 12k budget. Complete native-format table (checker-valid and correct):
 | Ctl + formal SFT traces | 1.000 | 1.000 | .990 | .995 | .980 |
 | Ctl + English SFT traces | 1.000 | 1.000 | 1.000 | 1.000 | .995 |
 | any arm + plain Dolci SFT | no derivation written | | | | |
+
+## 22. Document-format evaluation of real benchmarks (full sets, greedy, 3,000 tokens)
+
+`scripts/analysis/native_format_eval.py`: GSM8K test (1,319), ProofWriter
+d0-d5 (2,500), FOLIO (203) rendered as midtraining documents. Accuracy,
+with (derivation written, answer tag reached):
+
+| task | Control base | English base | Ctl + formal SFT traces | Ctl + English SFT traces |
+|---|---|---|---|---|
+| GSM8K | .386 (.00, .75) | .637 (.93, .83) | .669 (.00, 1.00) | .539 (.98, .70) |
+| ProofWriter d0 | .430 (.00, .57) | .286 (1.00, .59) | .504 (.84, 1.00) | .550 (1.00, .97) |
+| ProofWriter d2 | .214 (.00, .56) | .400 (1.00, .58) | .622 (.98, .99) | .566 (1.00, .96) |
+| ProofWriter d3 | .150 (.00, .52) | .400 (1.00, .60) | .660 (.99, .99) | .536 (1.00, .96) |
+| ProofWriter d5 | .082 (.00, .62) | .366 (1.00, .49) | .744 (.99, .99) | .510 (1.00, .94) |
+| FOLIO | .335 (.00, .39) | .424 (1.00, .74) | .557 (.19, .99) | .557 (1.00, .94) |
+| PW two-class accuracy given an extracted answer | .158 | .794 | .822 | .687 |
+
+Formal base pending (job 2060). Reading: (1) the English base applies its
+scaffold to everything and reaches .637 on GSM8K from a prompt it never saw
+(its 8-shot standard score is .826), and .794 two-class on ProofWriter when
+it finishes; its weakness is termination (answer tag on 49-62 percent of
+ProofWriter items within 3,000 tokens). (2) The formal-trace SFT model,
+when it writes a formal derivation, is the strongest ProofWriter model we
+have: .744 at d5 with the answer tag on 99 percent, two-class .822, gold-
+false .871, gold-true .761; but it is closed-world (unknown .06) and loses
+the negated/true cell (.51). On GSM8K it drops the scaffold and answers in
+prose (.669). (3) English SFT traces write long GSM8K derivations (623
+words) that terminate less often (.70) and score lower (.539). So in the
+one format that elicits the derivation, formal derivations plus a checker
+would be the deployment story; and on ProofWriter the formal derivation
+beats every chat-prompt arm by 15-20 points at depth 3-5.
