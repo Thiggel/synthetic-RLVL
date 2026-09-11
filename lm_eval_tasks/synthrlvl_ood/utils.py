@@ -359,6 +359,33 @@ def process_deduction_bp_native(doc: dict, results: list[str]) -> dict[str, floa
     }
 
 
+# --- Mode-conditioned prompts, 2026-09-11 -----------------------------------
+# The mode-conditioned mixture prefixes a derivation example with an
+# instruction naming the notation and leaves Dolci examples untouched, so the
+# model answers in prose by default and derives only when asked. These two
+# doc_to_text functions reproduce the two switches verbatim on the graded
+# BranchProof items; process_deduction_bp_native scores them.
+
+_SWITCH_FORMAL = (
+    "Answer with a formal derivation: declare the constants and predicates, "
+    "list the premises, then give numbered proof lines with their rule "
+    "justifications, and finish with the answer field.\n\n"
+)
+_SWITCH_ENGLISH = (
+    "Answer with a step-by-step explanation: work through the premises one "
+    "inference at a time in plain sentences, and finish with the answer "
+    "field.\n\n"
+)
+
+
+def doc_to_text_bp_switch_formal(doc: dict) -> str:
+    return _SWITCH_FORMAL + doc_to_text_deduction_bp_native(doc)
+
+
+def doc_to_text_bp_switch_english(doc: dict) -> str:
+    return _SWITCH_ENGLISH + doc_to_text_deduction_bp_native(doc)
+
+
 # --- GPQA-Diamond (four-way multiple choice), 2026-09-10 -------------------
 # Revised 2026-09-10: an 8-token cap truncated roughly 30 percent of responses
 # mid-explanation, before any letter was emitted, which scored as an extraction
