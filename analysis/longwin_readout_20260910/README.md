@@ -707,3 +707,14 @@ found in unconditioned trace blending is an artefact of blending WITHOUT a
 switch: with one, a single chat model answers in prose by default, produces
 either notation on demand, and loses nothing on general benchmarks. This is
 the deployment form of the whole result and belongs in the paper.
+
+A qualification to section 27. The Formal mode-conditioned model is BELOW
+control on tagged multihop (HotpotQA .240 vs .280, MuSiQue .065 vs .180,
+2Wiki .225 vs .040), unlike the unconditioned formal models. The tagged
+prompt carries no notation switch, so the model answers in its default
+prose mode, and it inherits the prose models' termination problem rather
+than the formal models' robustness. The robustness follows the notation
+that is actually elicited, not the notation the model was trained to be
+able to produce. Reported alongside the switch result: conditioning buys
+controllability and costs the incidental robustness that unconditioned
+formal training gave under tag prompting.
