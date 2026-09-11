@@ -477,3 +477,11 @@ Depth 25, 12k budget, notation-SFT models on the control midtrain: Ctl +
 English traces .995 correct / .995 every line valid; Ctl + formal traces
 .980 / .990 (51 lines each). Same level as the midtrained bases (English
 .985, Formal 1.000).
+
+Standard suite for the notation-SFT models (seed 3407): GSM8K .788 / .784,
+BBH .689 / .691, MMLU .687 / .692, LogiQA acc_norm .367 / .367, ARC .549 /
+.561, WinoGrande .690 / .681 (formal / English traces). So the replicated
+LogiQA loss (-1.4 to -1.7 for the derivation midtrains, both seeds) is
+specific to derivation MIDTRAINING; traces at instruction-tuning time cost
+nothing on LogiQA. WinoGrande is 1 to 2 points lower for the SFT-trace
+models, within its ~1.3-point standard error.
