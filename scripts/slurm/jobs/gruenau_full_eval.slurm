@@ -80,7 +80,13 @@ else
   MAX_MODEL_LEN="${MAX_MODEL_LEN:-8192}"
 fi
 if [[ "${SEED}" == "3407" ]]; then SUF=""; else SUF="_seed${SEED}"; fi
-if [[ "${KIND}" == "it" ]]; then
+if [[ -n "${CKPT_OVERRIDE:-}" ]]; then
+  # any instruction-tuned checkpoint copied from alex (notation SFT, p30
+  # post-SFT): RUN_NAME_OVERRIDE names the output directory, chat template on
+  RUN_NAME="${RUN_NAME_OVERRIDE:?set RUN_NAME_OVERRIDE with CKPT_OVERRIDE}"
+  CKPT="${CKPT_OVERRIDE}"
+  CHAT_ARGS=(--apply-chat-template)
+elif [[ "${KIND}" == "it" ]]; then
   RUN_NAME="qwen25_7b_longwin_${ARM}_2p5b_dolci_100k_lr5em6${SUF}"
   CKPT="${DATA}/post_sft_alex/${RUN_NAME}/final"
   CHAT_ARGS=(--apply-chat-template)
