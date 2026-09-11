@@ -625,3 +625,31 @@ in-format BranchProof-CoT, and adding them on top of English midtraining
 gives only .620 / .305, i.e. prior midtraining SUPPRESSES the in-format
 near-transfer that the traces alone produce. Stacking is not additive and
 can be subtractive.
+
+## 26. The checker dividend does not transfer to GSM8K
+
+`scripts/analysis/checkers.py:check_gsm8k` verifies every `a op b = c` line
+of a document-format GSM8K derivation. Applied to the greedy runs (1,319
+items each):
+
+| model | items with arithmetic lines | all lines check out | accuracy overall | accuracy when the arithmetic checks out | when it does not |
+|---|---|---|---|---|---|
+| Control base | .23 | .68 | .386 | .798 | .810 |
+| English base | .48 | .66 | .637 | .817 | .784 |
+| Ctl + formal SFT traces | .55 | .66 | .669 | .816 | .762 |
+| Ctl + English SFT traces | .52 | .61 | .539 | .798 | .714 |
+
+Arithmetic validity separates right from wrong answers by 3 to 8 points,
+against 99 points on BranchProof (valid derivation implies correct answer
+.99). Two reasons: only half the derivations state their arithmetic as
+checkable equations, and a wrong GSM8K answer usually comes from a wrong
+plan with correct arithmetic, which a step checker cannot see. So the
+verifier dividend is a property of domains where the checker is complete
+with respect to the task, not of derivation writing in general. State this
+as the boundary of the verifiability claim.
+
+The ProofWriter English-derivation checker in the same module is NOT usable:
+it parses 23-36 percent of the model's proof lines and its own closure
+agrees with the gold label on as few as 4 of 40 items at depth 5. Its
+rejections measure the parser, not the model. Do not report parse@k on
+ProofWriter until it handles the relational and quantified surface forms.
