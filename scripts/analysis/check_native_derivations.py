@@ -145,6 +145,7 @@ def main():
                 if a.kind != "it":
                     continue
                 name = "qwen25_7b_longwin_%s_2p5b_%s_100k_lr5em6" % (base, mix)
+                formal = mix == "sftlogic"
             else:
                 formal = "logic" in arm
                 name = "qwen25_7b_longwin_%s_2p5b_%s" % (arm, "base" if a.kind == "base" else "dolci_100k_lr5em6")

@@ -605,3 +605,23 @@ at the level of the plain-Dolci formal arm everywhere else: no additive
 effect. The ceiling is set by whichever stage last supplied derivations, not
 by their sum. Same for the probes (pooled AUC .714, negation-blind and
 ablation rows within noise of the plain formal arm).
+
+## 25. Both matched-notation pairs: no stacking, in either notation
+
+Seed 3407, chat prompting:
+
+| model | PW d3 | PW d5 | BP-CoT d5 | BP-CoT d25 | FOLIO |
+|---|---|---|---|---|---|
+| MT-Formal + plain Dolci | .500 | .506 | .285 | .185 | .606 |
+| Ctl + formal SFT traces | .558 | .546 | .475 | .260 | .581 |
+| MT-Formal + formal SFT traces | .536 | .522 | .285 | .205 | .606 |
+| MT-English + plain Dolci | .570 | .570 | .515 | .295 | .591 |
+| Ctl + English SFT traces | .524 | .526 | .995 | .870 | .542 |
+| MT-English + English SFT traces | .562 | .562 | .620 | .305 | (pending) |
+
+Neither pair exceeds the better of its two single-stage parents on any cell.
+The English pair is the sharper case: SFT traces alone give .995 / .870 on
+in-format BranchProof-CoT, and adding them on top of English midtraining
+gives only .620 / .305, i.e. prior midtraining SUPPRESSES the in-format
+near-transfer that the traces alone produce. Stacking is not additive and
+can be subtractive.
