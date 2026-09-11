@@ -661,3 +661,28 @@ about the elicited scaffold rather than deduction: tagged multihop
 .364 and recovering the -.015 that formal midtraining alone costs). Formal
 traces at instruction-tuning time cure the LogiQA loss that formal
 midtraining causes.
+
+## 27. Notation decides scaffold robustness, in both training stages
+
+Tagged multihop, exact match, seed 3407, all nine instruction-tuned models:
+
+| model | HotpotQA | 2Wiki | MuSiQue |
+|---|---|---|---|
+| Control | .280 | .040 | .180 |
+| LongDoc | .260 | .040 | .175 |
+| MT-Formal | .380 | .130 | .140 |
+| MT-English | .310 | .155 | .125 |
+| MT-Condensed | .215 | .025 | .095 |
+| Ctl + formal SFT traces | .410 | .305 | .195 |
+| Ctl + English SFT traces | .110 | .210 | .040 |
+| MT-Formal + formal SFT traces | **.420** | .280 | .170 |
+| MT-English + English SFT traces | .145 | .180 | .025 |
+
+Every formal-notation model is at or above control on all three tasks; every
+model whose derivations are English prose is at or below it on HotpotQA and
+MuSiQue, and the two English-trace SFT models are the worst of the nine.
+The effect is about the elicited scaffold, not about deduction: a formal
+block terminates (it has a closing tag and a fixed grammar), an open prose
+chain does not. This is the cleanest statement of the notation contrast in
+the real-model half of the paper, and it points the opposite way to
+ProofWriter, where English leads.

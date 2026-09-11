@@ -32,13 +32,13 @@
 | deduction_pw_mc_d5 | acc_norm | 0.416 | 0.354 | 0.388 |
 
 ### base / deduction_native / seed 3407   (midtrained base, no chat template; separate table)
-| task | metric | Control | English |
-|---|---|---|---|
-| deduction_bp_native_d10 | exact_match | 0.000 | 1.000 |
-| deduction_bp_native_d15 | exact_match | 0.000 | 1.000 |
-| deduction_bp_native_d20 | exact_match | 0.000 | 1.000 |
-| deduction_bp_native_d25 | exact_match | 0.000 | 0.000 |
-| deduction_bp_native_d5 | exact_match | 0.000 | 1.000 |
+| task | metric | Control | Formal | English |
+|---|---|---|---|---|
+| deduction_bp_native_d10 | exact_match | 0.000 | 1.000 | 1.000 |
+| deduction_bp_native_d15 | exact_match | 0.000 | 1.000 | 1.000 |
+| deduction_bp_native_d20 | exact_match | 0.000 | 0.995 | 1.000 |
+| deduction_bp_native_d25 | exact_match | 0.000 | 0.240 | 0.000 |
+| deduction_bp_native_d5 | exact_match | 0.000 | 0.990 | 1.000 |
 
 ### base / deduction_native_long / seed 3407   (midtrained base, no chat template; separate table)
 | task | metric | Formal | English |
@@ -75,27 +75,27 @@
 | winogrande | acc | 0.734 | 0.731 |
 
 ### it / deduction / seed 3407
-| task | metric | Control | LongDoc | Formal | English | Condensed |
-|---|---|---|---|---|---|---|
-| deduction_bp_cot_d10 | exact_match | 0.040 | 0.115 | 0.175 | 0.360 | 0.290 |
-| deduction_bp_cot_d15 | exact_match | 0.100 | 0.135 | 0.245 | 0.335 | 0.200 |
-| deduction_bp_cot_d20 | exact_match | 0.100 | 0.185 | 0.195 | 0.260 | 0.210 |
-| deduction_bp_cot_d25 | exact_match | 0.070 | 0.115 | 0.185 | 0.310 | 0.220 |
-| deduction_bp_cot_d5 | exact_match | 0.045 | 0.080 | 0.285 | 0.515 | 0.295 |
-| deduction_pw_d0 | exact_match | 0.442 | 0.448 | 0.476 | 0.486 | 0.456 |
-| deduction_pw_d1 | exact_match | 0.328 | 0.320 | 0.362 | 0.388 | 0.352 |
-| deduction_pw_d2 | exact_match | 0.436 | 0.438 | 0.496 | 0.554 | 0.462 |
-| deduction_pw_d3 | exact_match | 0.444 | 0.446 | 0.500 | 0.570 | 0.482 |
-| deduction_pw_d5 | exact_match | 0.452 | 0.434 | 0.506 | 0.570 | 0.464 |
+| task | metric | Control | LongDoc | Formal | English | Condensed | Ctl+FormalSFT | Ctl+EnglishSFT | Formal+FormalSFT | English+EnglishSFT |
+|---|---|---|---|---|---|---|---|---|---|---|
+| deduction_bp_cot_d10 | exact_match | 0.040 | 0.115 | 0.830 | 0.360 | 0.290 | 0.430 | 0.960 | 0.230 | 0.370 |
+| deduction_bp_cot_d15 | exact_match | 0.100 | 0.135 | 0.765 | 0.335 | 0.200 | 0.215 | 0.955 | 0.250 | 0.285 |
+| deduction_bp_cot_d20 | exact_match | 0.100 | 0.185 | 0.780 | 0.260 | 0.210 | 0.230 | 0.900 | 0.215 | 0.195 |
+| deduction_bp_cot_d25 | exact_match | 0.070 | 0.115 | 0.745 | 0.310 | 0.220 | 0.260 | 0.870 | 0.205 | 0.305 |
+| deduction_bp_cot_d5 | exact_match | 0.045 | 0.080 | 0.985 | 0.515 | 0.295 | 0.475 | 0.995 | 0.285 | 0.620 |
+| deduction_pw_d0 | exact_match | 0.442 | 0.448 | 0.488 | 0.486 | 0.456 | 0.550 | 0.510 | 0.496 | 0.492 |
+| deduction_pw_d1 | exact_match | 0.328 | 0.320 | 0.380 | 0.388 | 0.352 | 0.380 | 0.378 | 0.386 | 0.392 |
+| deduction_pw_d2 | exact_match | 0.436 | 0.438 | 0.524 | 0.554 | 0.462 | 0.550 | 0.526 | 0.520 | 0.546 |
+| deduction_pw_d3 | exact_match | 0.444 | 0.446 | 0.524 | 0.570 | 0.482 | 0.558 | 0.524 | 0.536 | 0.562 |
+| deduction_pw_d5 | exact_match | 0.452 | 0.434 | 0.528 | 0.570 | 0.464 | 0.546 | 0.526 | 0.522 | 0.562 |
 
 ### it / deduction_cot / seed 3407
-| task | metric | Control | LongDoc | Formal | English | Condensed |
-|---|---|---|---|---|---|---|
-| deduction_pw_cot_d0 | exact_match | 0.516 | 0.654 | 0.464 | 0.548 | 0.562 |
-| deduction_pw_cot_d1 | exact_match | 0.420 | 0.496 | 0.394 | 0.464 | 0.520 |
-| deduction_pw_cot_d2 | exact_match | 0.516 | 0.588 | 0.442 | 0.510 | 0.504 |
-| deduction_pw_cot_d3 | exact_match | 0.470 | 0.540 | 0.494 | 0.526 | 0.498 |
-| deduction_pw_cot_d5 | exact_match | 0.480 | 0.514 | 0.474 | 0.488 | 0.532 |
+| task | metric | Control | LongDoc | Formal | English | Condensed | Ctl+FormalSFT | Ctl+EnglishSFT | Formal+FormalSFT | English+EnglishSFT |
+|---|---|---|---|---|---|---|---|---|---|---|
+| deduction_pw_cot_d0 | exact_match | 0.516 | 0.654 | 0.464 | 0.548 | 0.562 | 0.518 | 0.388 | 0.472 | 0.468 |
+| deduction_pw_cot_d1 | exact_match | 0.420 | 0.496 | 0.394 | 0.464 | 0.520 | 0.446 | 0.358 | 0.420 | 0.424 |
+| deduction_pw_cot_d2 | exact_match | 0.516 | 0.588 | 0.442 | 0.510 | 0.504 | 0.484 | 0.386 | 0.502 | 0.496 |
+| deduction_pw_cot_d3 | exact_match | 0.470 | 0.540 | 0.494 | 0.526 | 0.498 | 0.468 | 0.422 | 0.436 | 0.486 |
+| deduction_pw_cot_d5 | exact_match | 0.480 | 0.514 | 0.474 | 0.488 | 0.532 | 0.446 | 0.420 | 0.476 | 0.442 |
 
 ### it / deduction_cot / seed 3408
 | task | metric | Control | LongDoc | Formal | English | Condensed |
@@ -107,13 +107,13 @@
 | deduction_pw_cot_d5 | exact_match | 0.464 | 0.496 | 0.488 | 0.512 | 0.472 |
 
 ### it / deduction_mc / seed 3407
-| task | metric | Control | LongDoc | Formal | English | Condensed |
-|---|---|---|---|---|---|---|
-| deduction_pw_mc_d0 | acc_norm | 0.564 | 0.548 | 0.662 | 0.674 | 0.538 |
-| deduction_pw_mc_d1 | acc_norm | 0.380 | 0.378 | 0.482 | 0.506 | 0.390 |
-| deduction_pw_mc_d2 | acc_norm | 0.470 | 0.480 | 0.496 | 0.464 | 0.494 |
-| deduction_pw_mc_d3 | acc_norm | 0.476 | 0.472 | 0.448 | 0.448 | 0.500 |
-| deduction_pw_mc_d5 | acc_norm | 0.436 | 0.442 | 0.416 | 0.384 | 0.456 |
+| task | metric | Control | LongDoc | Formal | English | Condensed | Ctl+FormalSFT | Ctl+EnglishSFT | Formal+FormalSFT | English+EnglishSFT |
+|---|---|---|---|---|---|---|---|---|---|---|
+| deduction_pw_mc_d0 | acc_norm | 0.564 | 0.548 | 0.662 | 0.674 | 0.538 | 0.654 | 0.618 | 0.704 | 0.682 |
+| deduction_pw_mc_d1 | acc_norm | 0.380 | 0.378 | 0.482 | 0.506 | 0.390 | 0.428 | 0.456 | 0.528 | 0.544 |
+| deduction_pw_mc_d2 | acc_norm | 0.470 | 0.480 | 0.496 | 0.464 | 0.494 | 0.536 | 0.520 | 0.430 | 0.464 |
+| deduction_pw_mc_d3 | acc_norm | 0.476 | 0.472 | 0.448 | 0.448 | 0.500 | 0.558 | 0.526 | 0.410 | 0.412 |
+| deduction_pw_mc_d5 | acc_norm | 0.436 | 0.442 | 0.416 | 0.384 | 0.456 | 0.558 | 0.480 | 0.334 | 0.344 |
 
 ### it / deduction_mc / seed 3408
 | task | metric | Control | LongDoc | Formal | English | Condensed |
@@ -125,19 +125,24 @@
 | deduction_pw_mc_d5 | acc_norm | 0.408 | 0.452 | 0.470 | 0.434 | 0.448 |
 
 ### it / deduction_native / seed 3407
-| task | metric | Control | LongDoc | Formal | English | Condensed |
-|---|---|---|---|---|---|---|
-| deduction_bp_native_d10 | exact_match | 0.000 | 0.000 | 0.000 | 0.230 | 0.000 |
-| deduction_bp_native_d15 | exact_match | 0.000 | 0.000 | 0.000 | 0.235 | 0.000 |
-| deduction_bp_native_d20 | exact_match | 0.000 | 0.000 | 0.000 | 0.255 | 0.000 |
-| deduction_bp_native_d25 | exact_match | 0.000 | 0.000 | 0.010 | 0.000 | 0.000 |
-| deduction_bp_native_d5 | exact_match | 0.000 | 0.000 | 0.000 | 0.240 | 0.070 |
+| task | metric | Control | LongDoc | Formal | English | Condensed | Ctl+FormalSFT | Ctl+EnglishSFT | Formal+FormalSFT | English+EnglishSFT |
+|---|---|---|---|---|---|---|---|---|---|---|
+| deduction_bp_native_d10 | exact_match | 0.000 | 0.000 | 0.000 | 0.230 | 0.000 | 1.000 | 1.000 | 1.000 | 1.000 |
+| deduction_bp_native_d15 | exact_match | 0.000 | 0.000 | 0.000 | 0.235 | 0.000 | 0.990 | 1.000 | 1.000 | 1.000 |
+| deduction_bp_native_d20 | exact_match | 0.000 | 0.000 | 0.000 | 0.255 | 0.000 | 0.995 | 1.000 | 1.000 | 1.000 |
+| deduction_bp_native_d25 | exact_match | 0.000 | 0.000 | 0.010 | 0.000 | 0.000 | 0.165 | 0.250 | 0.210 | 0.265 |
+| deduction_bp_native_d5 | exact_match | 0.000 | 0.000 | 0.000 | 0.240 | 0.070 | 1.000 | 1.000 | 1.000 | 1.000 |
+
+### it / deduction_native_long / seed 3407
+| task | metric | Ctl+FormalSFT | Ctl+EnglishSFT | Formal+FormalSFT | English+EnglishSFT |
+|---|---|---|---|---|---|
+| deduction_bp_native_long_d25 | exact_match | 0.980 | 0.995 | 1.000 | 1.000 |
 
 ### it / deduction_pert / seed 3407
-| task | metric | Control | LongDoc | Formal | English | Condensed |
-|---|---|---|---|---|---|---|
-| deduction_pw_ablate | exact_match | 0.214 | 0.195 | 0.219 | 0.182 | 0.179 |
-| deduction_pw_flip | exact_match | 0.562 | 0.558 | 0.630 | 0.712 | 0.596 |
+| task | metric | Control | LongDoc | Formal | English | Condensed | Ctl+FormalSFT | Ctl+EnglishSFT | Formal+FormalSFT | English+EnglishSFT |
+|---|---|---|---|---|---|---|---|---|---|---|
+| deduction_pw_ablate | exact_match | 0.214 | 0.195 | 0.219 | 0.182 | 0.179 | 0.274 | 0.265 | 0.219 | 0.213 |
+| deduction_pw_flip | exact_match | 0.562 | 0.558 | 0.630 | 0.712 | 0.596 | 0.691 | 0.639 | 0.674 | 0.711 |
 
 ### it / deduction_pert / seed 3408
 | task | metric | Control | LongDoc | Formal | English | Condensed |
@@ -146,10 +151,10 @@
 | deduction_pw_flip | exact_match | 0.554 | 0.560 | 0.634 | 0.711 | 0.604 |
 
 ### it / folio_gpqa / seed 3407
-| task | metric | Control | LongDoc | Formal | English | Condensed |
-|---|---|---|---|---|---|---|
-| folio | exact_match | 0.557 | 0.567 | 0.606 | 0.591 | 0.591 |
-| gpqa_diamond | exact_match | 0.348 | 0.308 | 0.333 | 0.278 | 0.354 |
+| task | metric | Control | LongDoc | Formal | English | Condensed | Ctl+FormalSFT | Ctl+EnglishSFT | Formal+FormalSFT | English+EnglishSFT |
+|---|---|---|---|---|---|---|---|---|---|---|
+| folio | exact_match | 0.557 | 0.567 | 0.606 | 0.591 | 0.591 | 0.581 | 0.542 | 0.606 | 0.591 |
+| gpqa_diamond | exact_match | 0.348 | 0.308 | 0.333 | 0.278 | 0.354 | 0.359 | 0.343 | 0.359 | 0.338 |
 
 ### it / folio_gpqa / seed 3408
 | task | metric | Control | LongDoc | Formal | English | Condensed |
@@ -158,26 +163,35 @@
 | gpqa_diamond | exact_match | 0.338 | 0.374 | 0.313 | 0.318 | 0.308 |
 
 ### it / multihop / seed 3407
-| task | metric | Control | LongDoc | Formal | English | Condensed |
-|---|---|---|---|---|---|---|
-| longbench_2wikimqa_standard | qa_f1_score | 0.389 | 0.353 | 0.364 | 0.382 | 0.343 |
-| longbench_2wikimqa_tagged | exact_match | 0.040 | 0.040 | 0.130 | 0.155 | 0.025 |
-| longbench_hotpotqa_standard | qa_f1_score | 0.557 | 0.576 | 0.571 | 0.559 | 0.570 |
-| longbench_hotpotqa_tagged | exact_match | 0.280 | 0.260 | 0.380 | 0.310 | 0.215 |
-| longbench_musique_standard | qa_f1_score | 0.299 | 0.302 | 0.273 | 0.272 | 0.268 |
-| longbench_musique_tagged | exact_match | 0.180 | 0.175 | 0.140 | 0.125 | 0.095 |
+| task | metric | Control | LongDoc | Formal | English | Condensed | Ctl+FormalSFT | Ctl+EnglishSFT | Formal+FormalSFT | English+EnglishSFT |
+|---|---|---|---|---|---|---|---|---|---|---|
+| longbench_2wikimqa_standard | qa_f1_score | 0.389 | 0.353 | 0.364 | 0.382 | 0.343 | 0.378 | 0.373 | 0.381 | 0.382 |
+| longbench_2wikimqa_tagged | exact_match | 0.040 | 0.040 | 0.130 | 0.155 | 0.025 | 0.305 | 0.210 | 0.280 | 0.180 |
+| longbench_hotpotqa_standard | qa_f1_score | 0.557 | 0.576 | 0.571 | 0.559 | 0.570 | 0.551 | 0.553 | 0.562 | 0.553 |
+| longbench_hotpotqa_tagged | exact_match | 0.280 | 0.260 | 0.380 | 0.310 | 0.215 | 0.410 | 0.110 | 0.420 | 0.145 |
+| longbench_musique_standard | qa_f1_score | 0.299 | 0.302 | 0.273 | 0.272 | 0.268 | 0.285 | 0.307 | 0.256 | 0.272 |
+| longbench_musique_tagged | exact_match | 0.180 | 0.175 | 0.140 | 0.125 | 0.095 | 0.195 | 0.040 | 0.170 | 0.025 |
 
 ### it / standard / seed 3407
-| task | metric | Control | LongDoc | Formal | English |
-|---|---|---|---|---|---|
-| agieval_logiqa_en | acc_norm | 0.364 | 0.363 | 0.350 | 0.347 |
-| arc_challenge | acc_norm | 0.550 | 0.568 | 0.574 | 0.540 |
-| bbh | exact_match | 0.677 | 0.681 | 0.683 | 0.682 |
-| gsm8k | exact_match | 0.787 | 0.786 | 0.788 | 0.789 |
-| hellaswag | acc_norm | 0.734 | 0.741 | 0.730 | 0.731 |
-| hendrycks_math500 | exact_match | 0.000 | 0.002 | 0.002 | 0.000 |
-| mmlu | acc | 0.697 | 0.695 | 0.691 | 0.692 |
-| piqa | acc_norm | 0.800 | 0.805 | 0.797 | 0.801 |
-| winogrande | acc | 0.698 | 0.703 | 0.700 | 0.704 |
+| task | metric | Control | LongDoc | Formal | English | Ctl+FormalSFT | Ctl+EnglishSFT | Formal+FormalSFT | English+EnglishSFT |
+|---|---|---|---|---|---|---|---|---|---|
+| agieval_logiqa_en | acc_norm | 0.364 | 0.363 | 0.350 | 0.347 | 0.367 | 0.367 | 0.373 | 0.366 |
+| arc_challenge | acc_norm | 0.550 | 0.568 | 0.574 | 0.540 | 0.549 | 0.561 | 0.560 | 0.543 |
+| bbh | exact_match | 0.677 | 0.681 | 0.683 | 0.682 | 0.689 | 0.691 | 0.693 | 0.683 |
+| gsm8k | exact_match | 0.787 | 0.786 | 0.788 | 0.789 | 0.788 | 0.784 | 0.785 | 0.788 |
+| hellaswag | acc_norm | 0.734 | 0.741 | 0.730 | 0.731 | 0.734 | 0.731 | 0.732 | 0.731 |
+| hendrycks_math500 | exact_match | 0.000 | 0.002 | 0.002 | 0.000 | 0.002 | 0.002 | 0.000 | 0.000 |
+| mmlu | acc | 0.697 | 0.695 | 0.691 | 0.692 | 0.687 | 0.692 | 0.689 | 0.689 |
+| piqa | acc_norm | 0.800 | 0.805 | 0.797 | 0.801 | 0.804 | 0.804 | 0.803 | 0.799 |
+| winogrande | acc | 0.698 | 0.703 | 0.700 | 0.704 | 0.690 | 0.681 | 0.693 | 0.702 |
+
+### it / switch_formal / seed 3407
+| task | metric | Formal |
+|---|---|---|
+| deduction_bp_switch_formal_d10 | exact_match | 1.000 |
+| deduction_bp_switch_formal_d15 | exact_match | 1.000 |
+| deduction_bp_switch_formal_d20 | exact_match | 1.000 |
+| deduction_bp_switch_formal_d25 | exact_match | 0.995 |
+| deduction_bp_switch_formal_d5 | exact_match | 1.000 |
 
 * = bundle not yet marked complete
