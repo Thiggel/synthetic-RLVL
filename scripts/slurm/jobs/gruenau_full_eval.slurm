@@ -26,6 +26,7 @@
 #   SUITE=multihop    HotpotQA, 2Wiki, MuSiQue, standard and tagged
 #   SUITE=deduction_cot  ProofWriter d0-d5 with a derive-then-answer prompt
 #   SUITE=deduction_mc   ProofWriter d0-d5 scored by choice log-likelihood
+#   SUITE=deduction_native BranchProof d5-d25 in the midtraining document format
 #   SUITE=deduction_pert ProofWriter decidable items with the claim polarity
 #                        flipped, and with the proof's premises removed
 #
@@ -56,6 +57,8 @@ case "${SUITE}" in
     TASKS="synthrlvl_deduction_pw_d0,synthrlvl_deduction_pw_d1,synthrlvl_deduction_pw_d2,synthrlvl_deduction_pw_d3,synthrlvl_deduction_pw_d5,synthrlvl_deduction_bp_cot_d5,synthrlvl_deduction_bp_cot_d10,synthrlvl_deduction_bp_cot_d15,synthrlvl_deduction_bp_cot_d20,synthrlvl_deduction_bp_cot_d25" ;;
   folio_gpqa) TASKS="synthrlvl_folio,synthrlvl_gpqa_diamond" ;;
   deduction_cot) TASKS="synthrlvl_deduction_pw_cot_d0,synthrlvl_deduction_pw_cot_d1,synthrlvl_deduction_pw_cot_d2,synthrlvl_deduction_pw_cot_d3,synthrlvl_deduction_pw_cot_d5" ;;
+  deduction_native) TASKS="synthrlvl_deduction_bp_native_d5,synthrlvl_deduction_bp_native_d10,synthrlvl_deduction_bp_native_d15,synthrlvl_deduction_bp_native_d20,synthrlvl_deduction_bp_native_d25" ;;
+  deduction_native_long) TASKS="synthrlvl_deduction_bp_native_long_d25"; MAX_MODEL_LEN="${MAX_MODEL_LEN:-16384}"; NEED_GIB="${NEED_GIB:-34}" ;;
   deduction_pert) TASKS="synthrlvl_deduction_pw_flip,synthrlvl_deduction_pw_ablate" ;;
   deduction_mc)  TASKS="synthrlvl_deduction_pw_mc_d0,synthrlvl_deduction_pw_mc_d1,synthrlvl_deduction_pw_mc_d2,synthrlvl_deduction_pw_mc_d3,synthrlvl_deduction_pw_mc_d5" ;;
   standard)   TASKS="gsm8k,hendrycks_math500,bbh,mmlu,arc_challenge,hellaswag,winogrande,piqa,agieval_logiqa_en" ;;
@@ -94,24 +97,18 @@ if [[ -e "${OUT_DIR}/.complete" ]]; then echo "already done: ${OUT_DIR}"; exit 0
 # if the requested fraction is not free, which killed six jobs outright. Wait
 # for room rather than dying, then size the fraction to what is actually free.
 NEED_GIB="${NEED_GIB:-26}"
-for attempt in $(seq 1 60); do
-  # nvidia-smi ignores CUDA_VISIBLE_DEVICES, so ask about the allocated card
-  # explicitly; the first card on the node is usually somebody else's.
-  GPU_ID="${CUDA_VISIBLE_DEVICES%%,*}"; GPU_ID="${GPU_ID:-0}"
-  free_mib=$(nvidia-smi -i "${GPU_ID}" --query-gpu=memory.free --format=csv,noheader,nounits | head -1)
-  total_mib=$(nvidia-smi -i "${GPU_ID}" --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
-  free_gib=$(( free_mib / 1024 ))
-  if [ "${free_gib}" -ge "${NEED_GIB}" ]; then break; fi
-  echo "waiting for GPU memory: ${free_gib} GiB free, need ${NEED_GIB} (attempt ${attempt}/60)"
-  sleep 120
-done
-if [ "${free_gib}" -lt "${NEED_GIB}" ]; then
-  echo "gave up waiting: only ${free_gib} GiB free" >&2; exit 3
-fi
-# leave a small margin below what is free so a neighbour growing slightly does
-# not abort us
-GPU_UTIL="${GPU_UTIL:-$(python3 -c "print(round(min(0.70, (${free_mib}-3072)/${total_mib}), 3))")}"
-echo "GPU has ${free_gib} GiB free; using gpu_memory_utilization=${GPU_UTIL}"
+wait_for_gpu() {
+  for attempt in $(seq 1 60); do
+    GPU_ID="${CUDA_VISIBLE_DEVICES%%,*}"; GPU_ID="${GPU_ID:-0}"
+    free_mib=$(nvidia-smi -i "${GPU_ID}" --query-gpu=memory.free --format=csv,noheader,nounits | head -1)
+    total_mib=$(nvidia-smi -i "${GPU_ID}" --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
+    free_gib=$(( free_mib / 1024 ))
+    if [ "${free_gib}" -ge "${NEED_GIB}" ]; then return 0; fi
+    echo "waiting for GPU memory: ${free_gib} GiB free, need ${NEED_GIB} (attempt ${attempt}/60)"
+    sleep 120
+  done
+  echo "gave up waiting: only ${free_gib} GiB free" >&2; return 3
+}
 
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 echo "kind=${KIND} arm=${ARM} suite=${SUITE} seed=${SEED}"
@@ -126,20 +123,34 @@ grep -l "/home/vault" "${TASK_DIR}"/*.yaml && { echo "unrewritten vault path" >&
 
 python scripts/validate_lm_eval_tasks.py --include-path "${TASK_DIR}" --tasks "${TASKS}"
 
-python scripts/evaluate_lm_eval.py \
-  --checkpoint "${CKPT}" \
-  --model vllm \
-  --tasks "${TASKS}" \
-  --include-path "${TASK_DIR}" \
-  --output-path "${OUT_DIR}" \
-  --batch-size auto \
-  --dtype bfloat16 \
-  --gpu-memory-utilization "${GPU_UTIL}" \
-  --model-arg "max_model_len=${MAX_MODEL_LEN}" \
-  --trust-remote-code \
-  --confirm-run-unsafe-code \
-  "${CHAT_ARGS[@]}" \
-  --log-samples
+# A neighbour can grab memory between the check and vLLM's own check, which
+# then refuses to start ("Free memory on device ... is less than desired").
+# Re-measure and retry a few times instead of dying on the race.
+ok=0
+for round in 1 2 3 4 5; do
+  wait_for_gpu || exit 3
+  # leave a small margin below what is free so a neighbour growing slightly does
+  # not abort us
+  GPU_UTIL="${GPU_UTIL_OVERRIDE:-$(python3 -c "print(round(min(0.70, (${free_mib}-4096)/${total_mib}), 3))")}"
+  echo "round ${round}: GPU has ${free_gib} GiB free; using gpu_memory_utilization=${GPU_UTIL}"
+  if python scripts/evaluate_lm_eval.py \
+    --checkpoint "${CKPT}" \
+    --model vllm \
+    --tasks "${TASKS}" \
+    --include-path "${TASK_DIR}" \
+    --output-path "${OUT_DIR}" \
+    --batch-size auto \
+    --dtype bfloat16 \
+    --gpu-memory-utilization "${GPU_UTIL}" \
+    --model-arg "max_model_len=${MAX_MODEL_LEN}" \
+    --trust-remote-code \
+    --confirm-run-unsafe-code \
+    "${CHAT_ARGS[@]}" \
+    --log-samples; then ok=1; break; fi
+  echo "evaluation attempt ${round} failed; retrying after 180 s" >&2
+  sleep 180
+done
+[ "${ok}" = 1 ] || { echo "evaluation failed after 5 attempts" >&2; exit 4; }
 
 touch "${OUT_DIR}/.complete"
 echo "done kind=${KIND} arm=${ARM} suite=${SUITE}"

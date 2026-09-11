@@ -46,6 +46,10 @@ def load(path, task):
         pred = (r["filtered_resps"][0] or "").strip().lower()
         if task == "synthrlvl_folio":
             pred = next((l for l in FOLIO_LABELS if pred.startswith(l)), pred)
+        else:  # GPQA: same extraction as the task's process_gpqa
+            marked = re.findall(r"(?:answer|final answer)\s*[:\-]?\s*\**\s*\(?([a-d])\)?\b", pred)
+            loose = re.findall(r"\b([a-d])\b", pred)
+            pred = marked[-1] if marked else (loose[-1] if loose else "")
         neg = bool(re.search(r"\b(not|no|never|neither|nor)\b", str(r["doc"].get("question", "")), re.I))
         rows[r["doc_id"]] = (gold, pred, float(r["exact_match"]), neg)
     return rows

@@ -327,6 +327,38 @@ def doc_to_target_deduction_pw_mc(doc: dict) -> int:
     return [c.lower() for c in _PW_CHOICES].index(str(doc["answer"]).strip().lower())
 
 
+# --- BranchProof in the midtraining document format, 2026-09-11 -------------
+# The graded BranchProof items prompt the model as a chat question. A
+# midtrained base was never taught that format; its training documents look
+# like "<question>\n1. fact\n2. rule ...\nWhich state applies to cN?\n</question>\n\n"
+# followed by a <formal> or <think> derivation and an <answer> block. This task
+# prompts the base exactly that way so that (a) whether it still writes a
+# derivation and (b) whether that derivation checks are measurable.
+
+_NATIVE_ANSWER_RE = re.compile(r"<answer>\s*(.*?)\s*(?:</answer>|$)", re.DOTALL)
+
+
+def doc_to_text_deduction_bp_native(doc: dict) -> str:
+    lines = [l.strip() for l in str(doc["context"]).strip().splitlines() if l.strip()]
+    numbered = "\n".join(f"{i + 1}. {l}" for i, l in enumerate(lines))
+    return f"<question>\n{numbered}\n{str(doc['question']).strip()}\n</question>\n\n"
+
+
+def process_deduction_bp_native(doc: dict, results: list[str]) -> dict[str, float]:
+    raw = str(results[0]) if results else ""
+    m = _NATIVE_ANSWER_RE.search(raw)
+    pred = normalize_answer(m.group(1).strip().split("\n")[0]) if m else ""
+    gold = normalize_answer(str(doc["answer"]))
+    return {
+        "exact_match": float(bool(pred) and pred == gold),
+        "answer_tag": float(m is not None),
+        "formal_block": float("<formal>" in raw),
+        "think_block": float("<think>" in raw),
+        "proof_block": float("<proof>" in raw),
+        "response_words": float(len(raw.split())),
+    }
+
+
 # --- GPQA-Diamond (four-way multiple choice), 2026-09-10 -------------------
 # Revised 2026-09-10: an 8-token cap truncated roughly 30 percent of responses
 # mid-explanation, before any letter was emitted, which scored as an extraction

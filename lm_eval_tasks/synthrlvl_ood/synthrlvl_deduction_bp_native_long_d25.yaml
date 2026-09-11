@@ -1,0 +1,46 @@
+# BranchProof d25 in the midtraining document format with a 12,000-token budget
+# (2026-09-11): the English base restates its ~3.4k-token premises before the
+# proof, so a depth-25 derivation needs ~8k tokens and the 4,600 budget cut
+# 98.5 percent of them. Run with MAX_MODEL_LEN=16384 (beyond the 8,192 midtrain
+# window; Qwen2.5 RoPE supports it, and this is stated when reported).
+tag:
+  - synthrlvl_deduction_bp_native_long
+task: synthrlvl_deduction_bp_native_long_d25
+dataset_path: json
+dataset_kwargs:
+  data_files:
+    test: /home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/graded_deduction_eval_20260826/branchproof_nl_d25.jsonl
+test_split: test
+output_type: generate_until
+doc_to_text: !function utils.doc_to_text_deduction_bp_native
+doc_to_target: "{{answer}}"
+process_results: !function utils.process_deduction_bp_native
+generation_kwargs:
+  max_gen_toks: 12000
+  until:
+    - "</answer>"
+  do_sample: false
+  temperature: 0.0
+repeats: 1
+num_fewshot: 0
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+  - metric: answer_tag
+    aggregation: mean
+    higher_is_better: true
+  - metric: formal_block
+    aggregation: mean
+    higher_is_better: true
+  - metric: think_block
+    aggregation: mean
+    higher_is_better: true
+  - metric: proof_block
+    aggregation: mean
+    higher_is_better: true
+  - metric: response_words
+    aggregation: mean
+    higher_is_better: false
+metadata:
+  version: 1.0
