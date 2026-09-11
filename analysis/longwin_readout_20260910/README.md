@@ -445,3 +445,11 @@ calibration, no more than instruction-tuning traces; for the base model's
 own derivation ability (section 15), yes, and only midtraining gives that.
 The matched-notation runs (derivation base + same-notation SFT, tasks 2/3)
 will show whether the two stack.
+
+ProofWriter CoT for the notation-SFT models: Ctl+Formal traces .472
+(marker .78, loop 9 percent), Ctl+English traces .395 (marker .64, loop 18
+percent, 352 words); conditional on a terminated chain both sit at
+.60-.62 like every other arm. The English-trace SFT model is the most
+brittle under an open-ended chain (the mixdepth scaffold-brittleness
+pattern), while being by far the best at in-format BranchProof-CoT. Under a
+written chain, nothing separates the arms except termination.
