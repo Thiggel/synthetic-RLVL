@@ -136,10 +136,18 @@ def main():
     ap.add_argument("--kind", default="base")
     ap.add_argument("--suites", nargs="+", default=["deduction_native", "deduction_native_long"])
     a = ap.parse_args()
-    for arm in ["control", "logic_band25", "nl_exact_band25", "longdoc", "condensed_logic_band25"]:
-        formal = "logic" in arm
+    for arm in ["control", "logic_band25", "nl_exact_band25", "longdoc", "condensed_logic_band25",
+                "control+sftlogic", "control+sftnl_exact", "logic_band25+sftlogic", "nl_exact_band25+sftnl_exact"]:
         for suite in a.suites:
-            name = "qwen25_7b_longwin_%s_2p5b_%s" % (arm, "base" if a.kind == "base" else "dolci_100k_lr5em6")
+            if "+" in arm:  # notation SFT runs copied from alex; the mixture decides the notation
+                base, mix = arm.split("+")
+                formal = mix == "sftlogic"
+                if a.kind != "it":
+                    continue
+                name = "qwen25_7b_longwin_%s_2p5b_%s_100k_lr5em6" % (base, mix)
+            else:
+                formal = "logic" in arm
+                name = "qwen25_7b_longwin_%s_2p5b_%s" % (arm, "base" if a.kind == "base" else "dolci_100k_lr5em6")
             root = "%s/gruenau_%s_%s_20260910/%s" % (D, a.kind, suite, name)
             if not os.path.exists(root + "/.complete"):
                 continue
