@@ -2,7 +2,11 @@
 #SBATCH --job-name=gru_notation_sft
 #SBATCH --partition=gpu-staff
 #SBATCH --gres=gpu:h100nvl:4
-#SBATCH --cpus-per-task=32
+#SBATCH --cpus-per-task=64
+#SBATCH --mem-per-cpu=8G
+# 64 x 8G = 512G host memory: the final full-state-dict save gathers the
+# model on the host and was OOM-killed at the partition default of 2G/CPU
+# (smoke 2046 trained 12 clean steps and died in the save).
 #SBATCH --time=2-00:00:00
 #SBATCH --array=0-3%1
 #SBATCH --output=logs/%x_%A_%a.out
