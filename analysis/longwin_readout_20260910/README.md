@@ -414,3 +414,34 @@ correct answer, n=200 per cell):
 | Control | .000 | .000 | .000 | .000 | .000 |
 | Formal | .990 | 1.000 | 1.000 | .995 | 1.000 |
 | English | 1.000 | 1.000 | 1.000 | 1.000 | .985 |
+
+## 19. Notation SFT on the control base (alex array 4208280, tasks 0/1; evaluated on gruenau)
+
+Control midtrain base + Dolci with 10k band-25 traces replacing 10 percent
+of the instruction mixture (formal or English), seed 3407, no derivation
+midtraining. Compared with the derivation-midtrained arms (+ plain Dolci):
+
+| model | PW d3 | PW d5 | BP-CoT d5 | BP-CoT d25 | MC AUC pooled | MC AUC within-neg | negation-blind | FOLIO |
+|---|---|---|---|---|---|---|---|---|
+| Control | .444 | .452 | .045 | .070 | .662 | .872 | .395 | .552 |
+| English midtrain | .570 | .570 | .515 | .310 | .770 | .898 | .242 | .601 |
+| Formal midtrain | .500 | .506 | .285 | .185 | .711 | .889 | .285 | .606 |
+| Ctl + English SFT traces | .524 | .526 | **.995** | **.870** | .739 | .876 | (pending) | (pending) |
+| Ctl + Formal SFT traces | .558 | .546 | .475 | .260 | .746 | .864 | **.181** | .581 |
+
+Three consequences. (1) The answer-only ProofWriter gain is reproduced by
+10k traces at instruction-tuning time (+.09 to +.11 at d3-d5) without any
+derivation midtraining, and the formal traces do it as well as English
+ones; this is the offset-removal component (pooled AUC up, within-polarity
+AUC unchanged at .86). (2) What midtraining adds beyond that is the small
+within-polarity discrimination gain (English midtrain .898 vs .876) and the
+FOLIO edge (.60 vs .58). (3) Near transfer to BranchProof-CoT is dominated
+by the SFT-time English traces (.995 at d5, .870 at d25, versus .515/.310
+for the midtrained English arm), and formal SFT traces transfer far less to
+the chat CoT format (.475/.260), reproducing the mixdepth finding that
+prose beats formal at instruction-tuning time. So for "does midtraining on
+derivations matter", the honest answer from this pair is: for ProofWriter
+calibration, no more than instruction-tuning traces; for the base model's
+own derivation ability (section 15), yes, and only midtraining gives that.
+The matched-notation runs (derivation base + same-notation SFT, tasks 2/3)
+will show whether the two stack.
