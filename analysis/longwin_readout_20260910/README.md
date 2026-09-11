@@ -485,3 +485,28 @@ LogiQA loss (-1.4 to -1.7 for the derivation midtrains, both seeds) is
 specific to derivation MIDTRAINING; traces at instruction-tuning time cost
 nothing on LogiQA. WinoGrande is 1 to 2 points lower for the SFT-trace
 models, within its ~1.3-point standard error.
+
+## 21. The derivation scaffold generalises to other content (qualitative, then measured)
+
+`scripts/analysis/native_format_transfer_probe.py` wraps GSM8K, ProofWriter
+d3 and FOLIO items in the exact midtraining document format. Greedy
+continuations (6 items each):
+
+- English base: writes `<think><premises>..<proof>..<conclusion>` on all 18
+  items and an `<answer>` on 14. On GSM8K the proof is a numbered arithmetic
+  chain ("6. 3 + 4 = 7 ... 11. 9 * 2 = 18", answer 18, correct). On
+  ProofWriter it restates the theory as premises and chains; on FOLIO it
+  does the same in prose.
+- Formal base: opens `<formal>` on all 18 items. On ProofWriter it produces a
+  faithful first-order formalisation (constants, predicates incl. negated
+  ones, premises like `H(r,d) -> D(d)`, `->E` steps), on FOLIO a plausible
+  but loose one, on GSM8K a nonsensical predicate soup (arithmetic does not
+  fit its grammar).
+- Control base + formal SFT traces: GSM8K answered in plain prose inside
+  `<answer>`; ProofWriter and FOLIO formalised as the Formal base does.
+
+So the document format elicits the trained scaffold on arbitrary content,
+and the English scaffold is the one that survives contact with arithmetic.
+Measured next: full GSM8K test (1,319), ProofWriter d0-d5 (2,500) and
+FOLIO (203) in the document format, greedy, for the two bases and the two
+notation-SFT models (`scripts/analysis/native_format_eval.py`).
