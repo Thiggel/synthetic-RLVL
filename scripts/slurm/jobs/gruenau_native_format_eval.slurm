@@ -13,5 +13,13 @@ ROOT=/vol/home-vol2/ml/laitenbf
 export PATH="${ROOT}/.venv_rlvl_gruenau_eval/bin:${PATH}"
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1 TOKENIZERS_PARALLELISM=false HF_HOME="${ROOT}/rlvl_data/hf_home"
 GPU_ID="${CUDA_VISIBLE_DEVICES%%,*}"
-for attempt in $(seq 1 30); do free=$(nvidia-smi -i "${GPU_ID:-0}" --query-gpu=memory.free --format=csv,noheader,nounits | head -1); [ $((free/1024)) -ge 32 ] && break; sleep 120; done
-python scripts/analysis/native_format_eval.py --checkpoint "${MODEL_DIR:?}" --out "${ROOT}/rlvl_data/native_eval_20260911/${OUT_NAME:?}"
+# shared cards: wait for room, size the fraction to what is free, retry the race
+for round in 1 2 3 4 5; do
+  for attempt in $(seq 1 30); do free=$(nvidia-smi -i "${GPU_ID:-0}" --query-gpu=memory.free --format=csv,noheader,nounits | head -1); [ $((free/1024)) -ge 30 ] && break; echo "waiting: $((free/1024)) GiB free"; sleep 120; done
+  total=$(nvidia-smi -i "${GPU_ID:-0}" --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
+  export GPU_UTIL=$(python3 -c "print(round(min(0.65, ($free-4096)/$total),3))")
+  echo "round ${round}: ${free} MiB free, gpu_memory_utilization=${GPU_UTIL}"
+  if python scripts/analysis/native_format_eval.py --checkpoint "${MODEL_DIR:?}" --out "${ROOT}/rlvl_data/native_eval_20260911/${OUT_NAME:?}"; then exit 0; fi
+  echo "attempt ${round} failed; retrying" >&2; sleep 180
+done
+exit 4
