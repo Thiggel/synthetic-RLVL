@@ -396,3 +396,21 @@ logic/condensed pass 2).
    causal questions and are in flight.
 4. Costs: LogiQA -2 to -3 replicated; GPQA, GSM8K, MATH, MMLU, multihop flat
    in both the base and instruction-tuned tables.
+
+Formal base, native format, 4,600-token budget (job 2019): correct
+.990 / 1.000 / 1.000 / .995 at d5/d10/d15/d20, every line checker-valid
+1.000 / 1.000 / 1.000 / .995, conclusion derivable likewise, 11/21/31/41
+proof lines. The d25 row of the 4,600-budget runs is VOID for both bases:
+native-format prompts at depth 25 exceed 8,192 - 4,600 tokens, so lm-eval
+left-truncated the context (the checker then rejects the first proof line,
+valid_prefix .001, and the answer is right only 24 percent). The 12,000-token
+run at max_model_len 16,384 (section 15) is the depth-25 measurement.
+
+Final native-format table (midtrained bases, checker-valid derivation AND
+correct answer, n=200 per cell):
+
+| base | d5 | d10 | d15 | d20 | d25 (16k window) |
+|---|---|---|---|---|---|
+| Control | .000 | .000 | .000 | .000 | .000 |
+| Formal | .990 | 1.000 | 1.000 | .995 | 1.000 |
+| English | 1.000 | 1.000 | 1.000 | 1.000 | .985 |
