@@ -718,3 +718,22 @@ that is actually elicited, not the notation the model was trained to be
 able to produce. Reported alongside the switch result: conditioning buys
 controllability and costs the incidental robustness that unconditioned
 formal training gave under tag prompting.
+
+Both mode-conditioned models obey the switch regardless of what their
+midtrain contained (200 items per cell, checker as above):
+
+| midtrain | switch | d5 | d15 | d25 | notation leakage |
+|---|---|---|---|---|---|
+| Formal | formal | 1.000 / 1.000 | 1.000 / 1.000 | .995 / .995 | none |
+| Formal | English | 1.000 / 1.000 | 1.000 / 1.000 | 1.000 / 1.000 | none |
+| English | English | 1.000 / 1.000 | 1.000 / 1.000 | .995 / .995 | none |
+| English | formal | 1.000 / 1.000 | .990 / 1.000 | .985 / .990 | none |
+
+(correct / every proof line valid). The cross cells are the interesting
+ones: a model midtrained only on English prose writes checker-valid FORMAL
+derivations to depth 25 after 5k switched examples, and vice versa. So the
+notation is not fixed by midtraining; 5k conditioned examples at
+instruction-tuning time install either notation on either base, with no
+measurable cost to the other. Combined with section 24 (no stacking) the
+picture is that midtraining sets the deductive competence and the
+instruction mixture sets the interface.
