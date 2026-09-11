@@ -519,3 +519,16 @@ on all three (2Wiki .305, HotpotQA .410, MuSiQue .195 vs Control .040 /
 MuSiQue .040). Same asymmetry as the mixdepth campaign: English traces
 make the elicited scaffold brittle under greedy decoding, formal traces do
 not, even though English traces transfer better to the in-format CoT task.
+
+Ctl + formal SFT traces, native format: correct 1.000 / 1.000 / .990 / .995
+at d5-d20 (every line valid 1.000 / 1.000 / .995 / .995), .980 at d25 with
+the 12k budget. Complete native-format table (checker-valid and correct):
+
+| model | d5 | d10 | d15 | d20 | d25 |
+|---|---|---|---|---|---|
+| Control base | .000 | .000 | .000 | .000 | .000 |
+| Formal base | .990 | 1.000 | 1.000 | .995 | 1.000 |
+| English base | 1.000 | 1.000 | 1.000 | 1.000 | .985 |
+| Ctl + formal SFT traces | 1.000 | 1.000 | .990 | .995 | .980 |
+| Ctl + English SFT traces | 1.000 | 1.000 | 1.000 | 1.000 | .995 |
+| any arm + plain Dolci SFT | no derivation written | | | | |
