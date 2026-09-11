@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=longwin_env_smoke
-#SBATCH --partition=a100mig
-#SBATCH --gres=gpu:a100small:1
+#SBATCH --partition=a40,a100
+#SBATCH --gres=gpu:1
 #SBATCH --exclude=a0531,a0532,a0533,a0934
 #SBATCH --cpus-per-task=4
 #SBATCH --time=00:30:00
@@ -25,6 +25,12 @@
 # Passing this does NOT validate throughput or memory at full 8-GPU scale; it
 # validates that the rebuilt env can import, load, mask, and step.
 
+# Runs on a FULL GPU, not a100mig. The smoke model is deliberately tiny
+# (hidden 128, 2 layers) but the vocabulary is the real one, so the logits
+# tensor is micro_batch x SEQ_LEN x 152064: at seq 8192 that is ~4.6 GiB in
+# bf16 and cannot fit the 9.75 GiB a100small MIG slice (job 4113750 OOMed
+# there allocating exactly 4.64 GiB). This is a property of the 8192 window,
+# not of the model, so the smoke needs a 40-80 GB card.
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-$PWD}"
 mkdir -p logs
