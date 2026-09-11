@@ -325,3 +325,17 @@ replaces the marker-count argument. Depth 25 needs a longer budget because
 the English rendering restates the ~3.4k-token premises: rerun as
 `deduction_native_long` (12,000 tokens, max_model_len 16,384, jobs 2015/2016),
 to be reported with the caveat that it exceeds the 8,192 midtrain window.
+
+## 16. Alex state at 2026-09-11 ~04:30
+
+- 30-percent sweep: `nl_exact_band25_p30` reached 2385 (`2p5b` alias
+  present); logic and condensed stopped at 2250 at the walltime, pass 2
+  pending on priority. Post-SFT for the finished English arm submitted as
+  4213747 (`qwen25_longwin_p30_post_sft_2026-09-09.slurm --array=1`).
+- The unconditioned notation SFT array 4208280 is RUNNING on alex a100
+  (tasks 0 and 1 since ~00:20, loss 0.50-0.52, learning rate in the decay
+  phase, healthy), so the notation contrast will come from alex, not from
+  the failed gruenau11 run.
+- Scrambled-derivation chain resubmitted after a renderer bug (nl_scrambled
+  was passed to the TemplateName enum): build 4213748 -> audit 4213749 ->
+  midtrain passes 4213750-52 (`q25_longwin_scr`).
