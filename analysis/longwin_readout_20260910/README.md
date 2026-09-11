@@ -563,3 +563,28 @@ words) that terminate less often (.70) and score lower (.539). So in the
 one format that elicits the derivation, formal derivations plus a checker
 would be the deployment story; and on ProofWriter the formal derivation
 beats every chat-prompt arm by 15-20 points at depth 3-5.
+
+## 23. Sampled derivations with checker selection (parse@k), first model
+
+`scripts/analysis/sample_native_derivations.py` (n=16, T=0.8, top-p .95,
+16k window, 9,000 tokens) + `native_passk_analysis.py`. parse@k = answer of
+the first of k samples whose derivation the checker accepts in full, no
+gold used. Ctl + formal SFT traces:
+
+| depth | greedy | pass@1 / @4 / @16 | maj@1 / @4 / @16 | parse@1 / @4 / @16 | valid samples | acc given valid |
+|---|---|---|---|---|---|---|
+| 5 | 1.000 | .995 / 1.000 / 1.000 | .995 / .995 / 1.000 | .995 / .995 / .995 | .917 | .999 |
+| 10 | .995 | .995 / 1.000 / 1.000 | .995 / .995 / 1.000 | .995 / .995 / .995 | .682 | .998 |
+| 15 | .990 | 1.000 / 1.000 / 1.000 | 1.000 / 1.000 / .995 | .995 / 1.000 / 1.000 | .728 | .998 |
+| 20 | .400 | .995 / 1.000 / 1.000 | .995 / .995 / .985 | .990 / .995 / .995 | .618 | .991 |
+| 25 | .910 | .985 / 1.000 / 1.000 | .985 / .990 / .990 | .980 / .990 / .990 | .630 | .992 |
+
+Two facts. A checker-valid derivation implies the right answer (.99+), so
+parse@1 equals pass@16 and the checker is a near-perfect gold-free
+selector. And for this SFT model the decision to derive at all is a
+first-token coin flip: only 62-92 percent of samples open with `<formal>`
+(the rest jump straight to `<answer>`), and greedy at d20 derives on 22
+percent of items (accuracy .400), whereas the two midtrained bases and the
+English-trace SFT model open with a derivation on 100 percent of greedy and
+sampled outputs. Formal traces at SFT time are a less firmly anchored
+scaffold than English ones; sampling plus the checker removes the problem.
