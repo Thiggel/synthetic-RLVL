@@ -31,7 +31,7 @@ def headline(m):
 
 tables = defaultdict(dict)  # (kind, suite, seed) -> arm -> task -> (metric, value)
 for f in glob.glob(D + "/gruenau_*/*/*/results_*.json"):
-    m = re.search(r"gruenau_(it|base)_([a-z_]+)_20260910(_seed(\d+))?/qwen25_7b_longwin_([a-z_0-9]+?)_2p5b(_sft([a-z_]+?)_100k)?", f)
+    m = re.search(r"gruenau_(it|base)_([a-z_]+)_20260910(_seed(\d+))?/qwen25_7b_longwin_([a-z_0-9]+?)_2p5b(?:_2p5b)?(_sft([a-z_]+?)_100k)?", f)
     if not m:
         continue
     kind, suite, seed, arm = m.group(1), m.group(2), m.group(4) or "3407", m.group(5)

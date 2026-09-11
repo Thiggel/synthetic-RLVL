@@ -588,3 +588,20 @@ percent of items (accuracy .400), whereas the two midtrained bases and the
 English-trace SFT model open with a derivation on 100 percent of greedy and
 sampled outputs. Formal traces at SFT time are a less firmly anchored
 scaffold than English ones; sampling plus the checker removes the problem.
+
+## 24. Matched-notation SFT: midtraining and SFT traces do NOT stack
+
+Formal midtrain + formal SFT traces (alex 4208280_2), seed 3407, against
+the two single-stage models:
+
+| model | PW d3 / d5 | BP-CoT d5 / d25 | MC AUC pooled / within-neg | CoT acc | FOLIO |
+|---|---|---|---|---|---|
+| Formal midtrain + plain Dolci | .500 / .506 | .285 / .185 | .711 / .889 | .454 | .606 |
+| Control midtrain + formal SFT traces | .558 / .546 | .475 / .260 | .746 / .864 | .472 | .581 |
+| Formal midtrain + formal SFT traces | .536 / .522 | .285 / .205 | .714 / .884 | .461 | (pending) |
+
+The stacked model sits between the two single-stage ones on ProofWriter and
+at the level of the plain-Dolci formal arm everywhere else: no additive
+effect. The ceiling is set by whichever stage last supplied derivations, not
+by their sum. Same for the probes (pooled AUC .714, negation-blind and
+ablation rows within noise of the plain formal arm).
