@@ -220,3 +220,19 @@ extra "false" is least premise-conditioned: about two thirds of its gain
 over Control on this cell survives ablation. English's gain is therefore
 part premise-grounded, part a shifted default toward "false" for negated
 claims; Formal's smaller gain is more premise-grounded.
+
+## 11. GPQA-Diamond at 4,096 tokens (seed 3407, n=198) and FOLIO rerun noise
+
+GPQA (fresh, the void 8-token run discarded): Control .348, LongDoc .308
+(p = .35), English .278 (22 gained / 36 lost, McNemar p = .087, bootstrap
+[-.146, .000]). Formal and Condensed pending, seed 3408 pending. A 7-point
+drop on 198 items is borderline and must be replicated before it is called
+a cost, but it is in the same direction as the replicated LogiQA loss and
+should be reported with it if seed 3408 agrees.
+
+FOLIO rerun on gruenau for Control and English (same checkpoints as the
+16:43 alex-side numbers): English minus Control is now +.034 (13/6,
+p = .17) against +.049 (14/4, p = .031) before. Three items of vLLM batching
+nondeterminism move FOLIO across the .05 line, so FOLIO cannot carry a
+significance claim on its own at n=203; report it as directionally
+consistent and pool both seeds.
