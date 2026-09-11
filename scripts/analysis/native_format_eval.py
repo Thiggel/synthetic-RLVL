@@ -64,7 +64,9 @@ def main():
     if a.limit:
         items = [it for src in sorted({i["source"] for i in items}) for it in [i for i in items if i["source"] == src][: a.limit]]
     from vllm import LLM, SamplingParams
-    llm = LLM(model=a.checkpoint, dtype="bfloat16", max_model_len=8192, gpu_memory_utilization=float(os.environ.get("GPU_UTIL", "0.6")), trust_remote_code=True)
+    llm = LLM(model=a.checkpoint, dtype="bfloat16", max_model_len=8192,
+              gpu_memory_utilization=float(os.environ.get("GPU_UTIL", "0.6")),
+              swap_space=2, enforce_eager=True, trust_remote_code=True)
     outs = llm.generate([it["prompt"] for it in items], SamplingParams(temperature=0.0, max_tokens=3000, stop=["</answer>"]))
     Path(a.out).mkdir(parents=True, exist_ok=True)
     agg = {}
