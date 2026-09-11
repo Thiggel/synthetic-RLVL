@@ -99,7 +99,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=os.path.expanduser(
         "~/rlvl_data/lm_eval_results/alex_mirror/qwen25_longwin_graded_deduction_20260906"))
-    ap.add_argument("--meta", default=os.path.expanduser("~/rlvl_data/datasets/pw_qmeta.jsonl"))
+    ap.add_argument("--meta", default=("/vol/tmp2/laitenbf/rlvl_data/datasets/pw_qmeta.jsonl"))
     args = ap.parse_args()
     meta = load_meta(args.meta)
     for seed in (3407, 3408):

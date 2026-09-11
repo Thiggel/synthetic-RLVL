@@ -7,7 +7,7 @@ task: synthrlvl_deduction_bp_native_d35
 dataset_path: json
 dataset_kwargs:
   data_files:
-    test: /home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/deep_branchproof_20260911/branchproof_nl_d35.jsonl
+    test: /vol/tmp2/laitenbf/rlvl_data/datasets/deep_branchproof_20260911/branchproof_nl_d35.jsonl
 test_split: test
 output_type: generate_until
 doc_to_text: !function utils.doc_to_text_deduction_bp_native

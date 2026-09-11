@@ -15,7 +15,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "lm_eval_tasks", "synthrlvl_ood"))
 import utils  # noqa: E402
 
-D = os.path.expanduser("~/rlvl_data/lm_eval_results/gruenau_base_multihop_20260910")
+D = ("/vol/tmp2/laitenbf/rlvl_data/lm_eval_results/gruenau_base_multihop_20260910")
 for arm in ["control", "logic_band25", "nl_exact_band25"]:
     row = []
     for task in ["hotpotqa", "2wikimqa", "musique"]:

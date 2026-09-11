@@ -106,8 +106,8 @@ def balanced(rows, labels):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--roots", nargs="+", default=[
-        os.path.expanduser("~/rlvl_data/lm_eval_results/gruenau_it_folio_gpqa_20260910"),
-        os.path.expanduser("~/rlvl_data/lm_eval_results/qwen25_longwin_folio_gpqa_20260910"),
+        ("/vol/tmp2/laitenbf/rlvl_data/lm_eval_results/gruenau_it_folio_gpqa_20260910"),
+        ("/vol/tmp2/laitenbf/rlvl_data/lm_eval_results/qwen25_longwin_folio_gpqa_20260910"),
     ])
     ap.add_argument("--seeds", nargs="+", type=int, default=[3407, 3408])
     args = ap.parse_args()

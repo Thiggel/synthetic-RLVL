@@ -16,7 +16,7 @@ def main():
     ap.add_argument("--depths", nargs="+", type=int, default=[30, 35, 40, 45])
     ap.add_argument("--per-depth", type=int, default=200)
     ap.add_argument("--seed", type=int, default=20260911)
-    ap.add_argument("--out", default="/vol/home-vol2/ml/laitenbf/rlvl_data/datasets/deep_branchproof_20260911")
+    ap.add_argument("--out", default="/vol/tmp2/laitenbf/rlvl_data/datasets/deep_branchproof_20260911")
     a = ap.parse_args()
     import sys
     sys.path.insert(0, ".")

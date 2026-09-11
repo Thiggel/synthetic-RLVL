@@ -45,7 +45,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--limit", type=int, default=0)
     a = ap.parse_args()
-    D = os.path.expanduser("~/rlvl_data/datasets")
+    D = ("/vol/tmp2/laitenbf/rlvl_data/datasets")
     items = []
     from datasets import load_dataset
     for r in load_dataset("gsm8k", "main", split="test"):

@@ -31,7 +31,7 @@ set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-$PWD}"
 mkdir -p logs
 
-ROOT=/vol/home-vol2/ml/laitenbf
+ROOT=/vol/tmp2/laitenbf
 VENV="${ROOT}/.venv_rlvl_gruenau_eval"
 DATA="${ROOT}/rlvl_data"
 export PATH="${VENV}/bin:${PATH}"

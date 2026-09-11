@@ -40,7 +40,7 @@ mkdir -p logs
 # after a FileNotFoundError. Kill our own process group on the way out.
 trap 'kill -- -$$ 2>/dev/null || true' EXIT
 
-ROOT=/vol/home-vol2/ml/laitenbf
+ROOT=/vol/tmp2/laitenbf
 VENV="${ROOT}/.venv_rlvl_gruenau_eval"
 DATA="${ROOT}/rlvl_data"
 export PATH="${VENV}/bin:${PATH}"
@@ -131,7 +131,9 @@ echo "ckpt=${CKPT}"
 # into a scratch include directory so the same yamls serve both clusters.
 TASK_DIR="${SLURM_TMPDIR:-/tmp}/synthrlvl_ood_${SLURM_JOB_ID}"
 rm -rf "${TASK_DIR}"; cp -r lm_eval_tasks/synthrlvl_ood "${TASK_DIR}"
-sed -i "s#/home/vault/c107fa/c107fa12/synthetic-RLVL#${DATA}#g" "${TASK_DIR}"/*.yaml
+# the task yamls now carry scratch-volume paths; rewrite any alex vault path
+# that survives in an older file, then fail closed if one is left
+sed -i "s#/home/vault/c107fa/c107fa12/synthetic-RLVL/datasets#${DATA}/datasets#g; s#/home/vault/c107fa/c107fa12/synthetic-RLVL#${DATA}#g" "${TASK_DIR}"/*.yaml
 grep -l "/home/vault" "${TASK_DIR}"/*.yaml && { echo "unrewritten vault path" >&2; exit 2; }
 
 python scripts/validate_lm_eval_tasks.py --include-path "${TASK_DIR}" --tasks "${TASKS}"

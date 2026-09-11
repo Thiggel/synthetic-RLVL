@@ -22,7 +22,7 @@ import utils  # noqa: E402
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", required=True)
-    ap.add_argument("--data-root", default=os.path.expanduser("~/rlvl_data/datasets/graded_deduction_eval_20260826"))
+    ap.add_argument("--data-root", default=("/vol/tmp2/laitenbf/rlvl_data/datasets/graded_deduction_eval_20260826"))
     ap.add_argument("--depths", nargs="+", type=int, default=[5, 10, 15, 20, 25])
     ap.add_argument("--n", type=int, default=16)
     ap.add_argument("--temperature", type=float, default=0.8)

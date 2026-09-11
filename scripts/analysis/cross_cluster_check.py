@@ -11,7 +11,7 @@ import glob
 import json
 import os
 
-D = os.path.expanduser("~/rlvl_data/lm_eval_results")
+D = ("/vol/tmp2/laitenbf/rlvl_data/lm_eval_results")
 ARMS = ["control", "longdoc", "logic_band25", "nl_exact_band25", "condensed_logic_band25"]
 PAIRS = [  # (alex root, gruenau root)
     ("alex_mirror/qwen25_longwin_downstream_20260907", "gruenau_it_standard_20260910"),

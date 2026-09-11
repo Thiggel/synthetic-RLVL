@@ -36,7 +36,7 @@ def answer_of(text):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
-    ap.add_argument("--data", default="/vol/home-vol2/ml/laitenbf/rlvl_data/datasets/deep_branchproof_20260911")
+    ap.add_argument("--data", default="/vol/tmp2/laitenbf/rlvl_data/datasets/deep_branchproof_20260911")
     ap.add_argument("--depths", nargs="+", type=int, default=[30, 35])
     ap.add_argument("--reward", choices=["correct", "valid", "both"], required=True)
     ap.add_argument("--formal", action="store_true", help="completions are formal notation")

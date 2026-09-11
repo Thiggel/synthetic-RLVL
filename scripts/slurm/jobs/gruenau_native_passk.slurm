@@ -11,7 +11,7 @@
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-$PWD}"
 trap 'kill -- -$$ 2>/dev/null || true' EXIT
-ROOT=/vol/home-vol2/ml/laitenbf
+ROOT=/vol/tmp2/laitenbf
 export PATH="${ROOT}/.venv_rlvl_gruenau_eval/bin:${PATH}"
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1 TOKENIZERS_PARALLELISM=false HF_HOME="${ROOT}/rlvl_data/hf_home"
 MODEL_DIR="${MODEL_DIR:?}"; OUT_NAME="${OUT_NAME:?}"

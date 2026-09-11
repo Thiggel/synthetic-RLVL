@@ -50,9 +50,9 @@ def affirm(q: str) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--eval-root", default="/vol/home-vol2/ml/laitenbf/rlvl_data/datasets/graded_deduction_eval_20260826")
-    ap.add_argument("--theory", default="/vol/home-vol2/ml/laitenbf/rlvl_data/datasets/pw_theory.jsonl")
-    ap.add_argument("--out", default="/vol/home-vol2/ml/laitenbf/rlvl_data/datasets/proofwriter_perturbations_20260910")
+    ap.add_argument("--eval-root", default="/vol/tmp2/laitenbf/rlvl_data/datasets/graded_deduction_eval_20260826")
+    ap.add_argument("--theory", default="/vol/tmp2/laitenbf/rlvl_data/datasets/pw_theory.jsonl")
+    ap.add_argument("--out", default="/vol/tmp2/laitenbf/rlvl_data/datasets/proofwriter_perturbations_20260910")
     args = ap.parse_args()
     theory = {}
     for line in open(args.theory):

@@ -13,7 +13,7 @@
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-$PWD}"
 trap 'kill -- -$$ 2>/dev/null || true' EXIT
-ROOT=/vol/home-vol2/ml/laitenbf
+ROOT=/vol/tmp2/laitenbf
 export PATH="${ROOT}/.venv_rlvl_gruenau/bin:${PATH}"
 export VIRTUAL_ENV="${ROOT}/.venv_rlvl_gruenau"
 export HF_HOME="${ROOT}/rlvl_data/hf_home"

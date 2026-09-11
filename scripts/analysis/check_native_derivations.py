@@ -18,7 +18,7 @@ import os
 import re
 from collections import defaultdict
 
-D = os.path.expanduser("~/rlvl_data/lm_eval_results")
+D = ("/vol/tmp2/laitenbf/rlvl_data/lm_eval_results")
 FACT = re.compile(r"^(c\d+) is (\w+)\.?$")
 RULE = re.compile(r"^If (c\d+) is (\w+)(?: and (c\d+) is (\w+))?, then (c\d+) is (\w+)\.?$")
 FOL_FACT = re.compile(r"^([A-Za-z]\w*)\((c\d+)\)")

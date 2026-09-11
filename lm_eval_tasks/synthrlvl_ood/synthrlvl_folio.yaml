@@ -8,7 +8,7 @@ task: synthrlvl_folio
 dataset_path: json
 dataset_kwargs:
   data_files:
-    test: /home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/folio_eval_20260910/folio_validation.jsonl
+    test: /vol/tmp2/laitenbf/rlvl_data/datasets/folio_eval_20260910/folio_validation.jsonl
 test_split: test
 output_type: generate_until
 doc_to_text: !function utils.doc_to_text_folio

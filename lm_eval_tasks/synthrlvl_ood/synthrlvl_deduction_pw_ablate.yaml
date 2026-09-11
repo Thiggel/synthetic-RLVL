@@ -8,7 +8,7 @@ task: synthrlvl_deduction_pw_ablate
 dataset_path: json
 dataset_kwargs:
   data_files:
-    test: /home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/proofwriter_perturbations_20260910/pw_ablate.jsonl
+    test: /vol/tmp2/laitenbf/rlvl_data/datasets/proofwriter_perturbations_20260910/pw_ablate.jsonl
 test_split: test
 output_type: generate_until
 doc_to_text: !function utils.doc_to_text_deduction_pw

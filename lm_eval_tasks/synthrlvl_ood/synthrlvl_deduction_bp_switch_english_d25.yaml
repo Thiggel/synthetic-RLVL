@@ -7,7 +7,7 @@ task: synthrlvl_deduction_bp_switch_english_d25
 dataset_path: json
 dataset_kwargs:
   data_files:
-    test: /home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/graded_deduction_eval_20260826/branchproof_nl_d25.jsonl
+    test: /vol/tmp2/laitenbf/rlvl_data/datasets/graded_deduction_eval_20260826/branchproof_nl_d25.jsonl
 test_split: test
 output_type: generate_until
 doc_to_text: !function utils.doc_to_text_bp_switch_english

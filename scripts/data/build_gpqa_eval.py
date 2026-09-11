@@ -17,7 +17,7 @@ import re
 import sys
 from collections import Counter
 
-VAULT = os.environ.get("HPCVAULT", "/vol/home-vol2/ml/laitenbf/rlvl_data")
+VAULT = os.environ.get("HPCVAULT", "/vol/tmp2/laitenbf/rlvl_data")
 OUT_DIR = pathlib.Path(VAULT) / "datasets" / "gpqa_diamond_20260910"
 OPTION_RE = re.compile(r"(?m)^\s*([A-D])[.)]\s")
 

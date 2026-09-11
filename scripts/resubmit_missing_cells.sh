@@ -4,7 +4,7 @@
 # while the home volume was full never started and left no logs.
 set -uo pipefail
 cd "$(dirname "$0")/.."
-D=/vol/home-vol2/ml/laitenbf/rlvl_data
+D=/vol/tmp2/laitenbf/rlvl_data
 R=$D/lm_eval_results
 sub(){
   local kind=$1 arm=$2 suite=$3 seed=$4 ckpt=${5:-} run=${6:-}

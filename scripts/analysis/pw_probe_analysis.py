@@ -18,7 +18,7 @@ import os
 import re
 from collections import Counter, defaultdict
 
-D = os.path.expanduser("~/rlvl_data/lm_eval_results")
+D = ("/vol/tmp2/laitenbf/rlvl_data/lm_eval_results")
 ARMS = ["control", "longdoc", "logic_band25", "nl_exact_band25", "condensed_logic_band25",
         "control+sftlogic", "control+sftnl_exact", "logic_band25+sftlogic", "nl_exact_band25+sftnl_exact"]
 SHORT = {"control": "Control", "longdoc": "LongDoc", "logic_band25": "Formal",
