@@ -19,16 +19,25 @@ import re
 from collections import Counter, defaultdict
 
 D = os.path.expanduser("~/rlvl_data/lm_eval_results")
-ARMS = ["control", "longdoc", "logic_band25", "nl_exact_band25", "condensed_logic_band25"]
+ARMS = ["control", "longdoc", "logic_band25", "nl_exact_band25", "condensed_logic_band25",
+        "control+sftlogic", "control+sftnl_exact", "logic_band25+sftlogic", "nl_exact_band25+sftnl_exact"]
 SHORT = {"control": "Control", "longdoc": "LongDoc", "logic_band25": "Formal",
-         "nl_exact_band25": "English", "condensed_logic_band25": "Condensed"}
+         "nl_exact_band25": "English", "condensed_logic_band25": "Condensed",
+         "control+sftlogic": "Ctl+FSFT", "control+sftnl_exact": "Ctl+ESFT",
+         "logic_band25+sftlogic": "Frm+FSFT", "nl_exact_band25+sftnl_exact": "Eng+ESFT"}
 LABELS = ["true", "false", "unknown"]
 DEPTHS = [0, 1, 2, 3, 5]
 
 
 def run_dir(kind, suite, arm, seed):
     suf = "" if seed == 3407 else "_seed%d" % seed
-    name = "qwen25_7b_longwin_%s_2p5b_%s" % (arm, "base" if kind == "base" else "dolci_100k_lr5em6" + suf)
+    if "+" in arm:  # notation SFT run copied from alex (seed 3407 only)
+        base, mix = arm.split("+")
+        if kind != "it" or seed != 3407:
+            return None
+        name = "qwen25_7b_longwin_%s_2p5b_%s_100k_lr5em6" % (base, mix)
+    else:
+        name = "qwen25_7b_longwin_%s_2p5b_%s" % (arm, "base" if kind == "base" else "dolci_100k_lr5em6" + suf)
     d = "%s/gruenau_%s_%s_20260910%s/%s" % (D, kind, suite, suf, name)
     return d if os.path.exists(d + "/.complete") else None
 

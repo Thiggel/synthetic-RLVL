@@ -13,9 +13,12 @@ import re
 from collections import defaultdict
 
 D = os.path.expanduser("~/rlvl_data/lm_eval_results")
-ARMS = ["control", "longdoc", "logic_band25", "nl_exact_band25", "condensed_logic_band25"]
+ARMS = ["control", "longdoc", "logic_band25", "nl_exact_band25", "condensed_logic_band25",
+        "control+sftlogic", "control+sftnl_exact", "logic_band25+sftlogic", "nl_exact_band25+sftnl_exact"]
 SHORT = {"control": "Control", "longdoc": "LongDoc", "logic_band25": "Formal",
-         "nl_exact_band25": "English", "condensed_logic_band25": "Condensed"}
+         "nl_exact_band25": "English", "condensed_logic_band25": "Condensed",
+         "control+sftlogic": "Ctl+FormalSFT", "control+sftnl_exact": "Ctl+EnglishSFT",
+         "logic_band25+sftlogic": "Formal+FormalSFT", "nl_exact_band25+sftnl_exact": "English+EnglishSFT"}
 HEAD = ["exact_match,none", "exact_match,strict-match", "exact_match,get-answer", "exact_match,flexible-extract", "acc_norm,none", "acc,none", "qa_f1_score,none", "score,none"]
 
 
@@ -28,10 +31,12 @@ def headline(m):
 
 tables = defaultdict(dict)  # (kind, suite, seed) -> arm -> task -> (metric, value)
 for f in glob.glob(D + "/gruenau_*/*/*/results_*.json"):
-    m = re.search(r"gruenau_(it|base)_([a-z_]+)_20260910(_seed(\d+))?/qwen25_7b_longwin_([a-z_0-9]+?)_2p5b", f)
+    m = re.search(r"gruenau_(it|base)_([a-z_]+)_20260910(_seed(\d+))?/qwen25_7b_longwin_([a-z_0-9]+?)_2p5b(_sft([a-z_]+?)_100k)?", f)
     if not m:
         continue
     kind, suite, seed, arm = m.group(1), m.group(2), m.group(4) or "3407", m.group(5)
+    if m.group(7):
+        arm = arm + "+sft" + m.group(7)
     done = os.path.exists(os.path.dirname(os.path.dirname(f)) + "/.complete")
     res = json.load(open(f))["results"]
     for task, mm in res.items():
