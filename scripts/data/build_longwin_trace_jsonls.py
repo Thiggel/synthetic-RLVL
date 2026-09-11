@@ -111,7 +111,7 @@ def main() -> None:
             seed=args.seed,
         )
         for name in renderings
-        if name != "condensed_logic"
+        if name not in ("condensed_logic", "nl_scrambled")
     }
     if "nl_scrambled" in renderings:
         cfgs["nl_scrambled"] = TaskConfig(
