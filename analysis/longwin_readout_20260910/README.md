@@ -653,3 +653,11 @@ it parses 23-36 percent of the model's proof lines and its own closure
 agrees with the gold label on as few as 4 of 40 items at depth 5. Its
 rejections measure the parser, not the model. Do not report parse@k on
 ProofWriter until it handles the relational and quantified surface forms.
+
+Two places where the stacked Formal model is the best of all nine, both
+about the elicited scaffold rather than deduction: tagged multihop
+(HotpotQA .420, 2Wiki .280, MuSiQue .170, against Control .280 / .040 /
+.180 and MT-Formal .380 / .130 / .140) and LogiQA (.373, above Control's
+.364 and recovering the -.015 that formal midtraining alone costs). Formal
+traces at instruction-tuning time cure the LogiQA loss that formal
+midtraining causes.
