@@ -291,3 +291,37 @@ Formal .568, English .568; 2Wiki .349 / .357 / .362; MuSiQue .306 / .273 /
 derivation arms are level with or slightly above control on multihop QA;
 nothing is damaged before instruction tuning either. Report the base table
 with the first-line rescoring and say why.
+
+## 15. THE MISSING LINK: the midtrained English base writes checker-valid derivations
+
+Native document format (`synthrlvl_deduction_bp_native_d*`, generation until
+</answer>, 4,600 tokens), midtrained bases, no chat template:
+
+| base | d5 | d10 | d15 | d20 | d25 (4.6k budget) |
+|---|---|---|---|---|---|
+| Control | .000 (no derivation; answers "north" 189/200) | .000 | .000 | .000 | .000 |
+| English | **1.000** | **1.000** | **1.000** | **1.000** | .000 (98.5% cut before </answer>) |
+| Formal | pending (job 2006) | | | | |
+
+`scripts/analysis/check_native_derivations.py` re-derives every proof line
+by forward chaining over the item's own facts and rules (Horn fragment:
+"cK is X" is valid iff it is a premise or the head of a rule whose
+antecedents are already established). English base, 200 items per depth:
+has_proof 1.000, every line valid 1.000, valid prefix 1.000, conclusion
+derivable 1.000, conclusion equals last proof line 1.000, answer correct
+1.000, at d5/d10/d15/d20; mean proof length 11/21/31/41 lines, i.e. exactly
+2 lines per depth step plus the seed facts, with 5-18 percent of lines
+restating premises (the trained rendering does that too).
+
+Contamination: none of the 600 evaluated theories (d5/d15/d25) appears in
+the 72,000 midtrain documents (full-context match 0; 77 share a three-rule
+prefix, which the small rule vocabulary makes unavoidable).
+
+Instruction-tuned English under the same format: answer tag 99 percent, no
+derivation block at all, 23-25 percent correct. So the derivation ability
+is fully present after midtraining and fully removed by Dolci instruction
+tuning, which is the strongest real-model statement in the paper and
+replaces the marker-count argument. Depth 25 needs a longer budget because
+the English rendering restates the ~3.4k-token premises: rerun as
+`deduction_native_long` (12,000 tokens, max_model_len 16,384, jobs 2015/2016),
+to be reported with the caveat that it exceeds the 8,192 midtrain window.

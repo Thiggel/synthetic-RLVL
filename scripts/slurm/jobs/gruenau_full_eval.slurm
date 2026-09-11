@@ -58,6 +58,7 @@ case "${SUITE}" in
   folio_gpqa) TASKS="synthrlvl_folio,synthrlvl_gpqa_diamond" ;;
   deduction_cot) TASKS="synthrlvl_deduction_pw_cot_d0,synthrlvl_deduction_pw_cot_d1,synthrlvl_deduction_pw_cot_d2,synthrlvl_deduction_pw_cot_d3,synthrlvl_deduction_pw_cot_d5" ;;
   deduction_native) TASKS="synthrlvl_deduction_bp_native_d5,synthrlvl_deduction_bp_native_d10,synthrlvl_deduction_bp_native_d15,synthrlvl_deduction_bp_native_d20,synthrlvl_deduction_bp_native_d25" ;;
+  deduction_native_long) TASKS="synthrlvl_deduction_bp_native_long_d25"; MAX_MODEL_LEN="${MAX_MODEL_LEN:-16384}"; NEED_GIB="${NEED_GIB:-34}" ;;
   deduction_pert) TASKS="synthrlvl_deduction_pw_flip,synthrlvl_deduction_pw_ablate" ;;
   deduction_mc)  TASKS="synthrlvl_deduction_pw_mc_d0,synthrlvl_deduction_pw_mc_d1,synthrlvl_deduction_pw_mc_d2,synthrlvl_deduction_pw_mc_d3,synthrlvl_deduction_pw_mc_d5" ;;
   standard)   TASKS="gsm8k,hendrycks_math500,bbh,mmlu,arc_challenge,hellaswag,winogrande,piqa,agieval_logiqa_en" ;;
