@@ -347,3 +347,18 @@ and +.054 (15/4, p = .019) over Control; GPQA .333 / .313, -.015 / -.025
 ProofWriter. Pooled over seeds the FOLIO ordering is Formal > English >
 LongDoc > Control, with Formal's gain twice LongDoc's; still small, but it is
 the one out-of-family signal where the formal notation leads.
+
+Depth 25 with the 12,000-token budget (max_model_len 16,384, i.e. beyond the
+8,192 midtrain window), 200 items each, checker as above:
+
+| base | correct | derivation present | every line valid | conclusion derivable | proof lines | words |
+|---|---|---|---|---|---|---|
+| Formal | **1.000** | 1.000 | .995 | 1.000 | 51 | 1,159 |
+| English | .985 | 1.000 | .985 | .985 | 51 | 2,172 |
+
+Both midtrained bases produce 51-line, checker-valid derivations at depth 25
+in their own notation; the formal base is perfect and about half the length.
+This is the real-model analogue of the synthetic depth-25 crossover (formal
+edge at maximal depth), on n=200 the +.015 is suggestive only. The formal
+lines are checked by mapping "P(cK) ; rule" through the model's own
+<predicates> block back to "cK is X".
