@@ -35,6 +35,10 @@
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-$PWD}"
 mkdir -p logs
+# vLLM's EngineCore is a spawned child that can outlive a crashed parent and
+# keep the job (and the GPU) alive for hours: jobs 1909/1910 sat seven hours
+# after a FileNotFoundError. Kill our own process group on the way out.
+trap 'kill -- -$$ 2>/dev/null || true' EXIT
 
 ROOT=/vol/home-vol2/ml/laitenbf
 VENV="${ROOT}/.venv_rlvl_gruenau_eval"
