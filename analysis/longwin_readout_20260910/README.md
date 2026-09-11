@@ -246,3 +246,18 @@ safety check and nothing more. (b) FOLIO: English is +.034 in both seeds
 but LongDoc is +.030 at seed 3408 and +.010 at 3407, so FOLIO does not
 separate derivations from long documents; report the pooled English gain
 (+.034 / +.034) as directionally consistent, not as evidence of transfer.
+
+## 12. Midtrained bases under the chat-style prompts, and the native-format probe
+
+Base models with the chat-style graded prompts (no template): ProofWriter
+Control .36/.34/.51/.51/.58 vs Formal .49/.36/.48/.48/.49 at d0/1/2/3/5;
+BranchProof-CoT Formal .10/.12/.06/.06/.04 vs Control .04/.03/.03/.02/.04,
+and 0 of 200 Formal-base responses at d15 contain a <formal>, <premises> or
+FOL line: the base drifts into unrelated pretraining-style text. So the
+chat-style prompt cannot tell whether the notation survived midtraining. New
+suite `deduction_native` (jobs 2005-2012): BranchProof d5-d25 rendered as the
+training document ("<question>\n1. ...\nWhich state applies to cN?\n</question>\n\n"),
+generation until </answer>, 4,600 tokens, metrics exact_match, answer_tag,
+formal_block, think_block, proof_block. Run on the three bases and, for
+contrast, the five instruction-tuned arms. Stored generations feed
+`synthrlvl.metrics.OutputEvaluator` for the checker result.
