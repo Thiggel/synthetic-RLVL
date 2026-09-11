@@ -453,3 +453,22 @@ percent, 352 words); conditional on a terminated chain both sit at
 brittle under an open-ended chain (the mixdepth scaffold-brittleness
 pattern), while being by far the best at in-format BranchProof-CoT. Under a
 written chain, nothing separates the arms except termination.
+
+## 20. Correction to sections 15 and 19: SFT-time traces also restore derivation writing
+
+Control midtrain + Dolci with 10k English traces, prompted in the native
+document format: has_proof 1.000, every line checker-valid 1.000, correct
+1.000 at d5/d10/d15/d20 (d25 at the 4.6k budget is void as before; the
+12k-budget run is submitted). So checker-valid derivation writing is a
+property of whichever training stage last contained derivations, not of
+midtraining as such: derivation midtraining gives it to the base, Dolci-only
+instruction tuning erases it, and instruction tuning that keeps 10 percent
+traces gives it (back) to a base that never saw a derivation. The claim to
+make is therefore: (a) program-generated derivations teach a 7B model to
+write checker-valid derivations to depth 25 at either stage, with zero
+teacher involvement and zero contamination; (b) whether they are retained is
+decided by the instruction-tuning mixture; (c) the ProofWriter calibration
+effect likewise appears from traces at either stage. What is left that is
+specific to midtraining: the base-model discrimination gain (section 8), the
+FOLIO edge of the Formal arm, and any dose or scrambled-control effect still
+in flight. Section 15's sentence "only midtraining gives that" is withdrawn.
