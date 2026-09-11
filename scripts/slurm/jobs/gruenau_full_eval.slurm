@@ -38,7 +38,6 @@ mkdir -p logs
 # vLLM's EngineCore is a spawned child that can outlive a crashed parent and
 # keep the job (and the GPU) alive for hours: jobs 1909/1910 sat seven hours
 # after a FileNotFoundError. Kill our own process group on the way out.
-trap 'kill -- -$$ 2>/dev/null || true' EXIT
 
 ROOT=/vol/tmp2/laitenbf
 VENV="${ROOT}/.venv_rlvl_gruenau_eval"
@@ -104,6 +103,20 @@ test -s "${CKPT}/config.json" || { echo "missing checkpoint ${CKPT}" >&2; exit 2
 [ "$(ls "${CKPT}"/*.safetensors 2>/dev/null | wc -l)" -ge 1 ] || { echo "no shards in ${CKPT}" >&2; exit 2; }
 # .complete is an empty marker, so test for existence, not size
 if [[ -e "${OUT_DIR}/.complete" ]]; then echo "already done: ${OUT_DIR}"; exit 0; fi
+# Claim the cell so two jobs for the same cell cannot write the same output
+# directory at once (mkdir is atomic). A claim older than 12 h is stale and is
+# taken over; a finished cell is caught by the .complete test above.
+mkdir -p "$(dirname "${OUT_DIR}")"
+CLAIM="${OUT_DIR}.claim"
+if ! mkdir "${CLAIM}" 2>/dev/null; then
+  if [[ -n "$(find "${CLAIM}" -maxdepth 0 -mmin +720 2>/dev/null)" ]]; then
+    echo "taking over a stale claim on ${OUT_DIR}"
+    touch "${CLAIM}"
+  else
+    echo "another job holds ${OUT_DIR}; exiting"; exit 0
+  fi
+fi
+trap 'rmdir "${CLAIM}" 2>/dev/null || true; kill -- -$$ 2>/dev/null || true' EXIT
 
 # These GPUs are shareable (the partition advertises MPS), so a neighbouring
 # job can already hold most of the card when we start. vllm refuses to launch
