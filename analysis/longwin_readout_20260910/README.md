@@ -236,3 +236,13 @@ p = .17) against +.049 (14/4, p = .031) before. Three items of vLLM batching
 nondeterminism move FOLIO across the .05 line, so FOLIO cannot carry a
 significance claim on its own at n=203; report it as directionally
 consistent and pool both seeds.
+
+Seed 3408 (n=203 / 198): FOLIO Control .552, LongDoc .581 (+.030, p = .24),
+English .586 (+.034, p = .12), Condensed .581 (+.030, p = .21); GPQA Control
+.338, LongDoc .374 (+.035), English .318 (-.020, p = .67), Condensed .308
+(-.030, p = .47). Verdicts: (a) the seed-3407 English GPQA drop does not
+replicate; GPQA is flat within noise for every arm, so it is the intended
+safety check and nothing more. (b) FOLIO: English is +.034 in both seeds
+but LongDoc is +.030 at seed 3408 and +.010 at 3407, so FOLIO does not
+separate derivations from long documents; report the pooled English gain
+(+.034 / +.034) as directionally consistent, not as evidence of transfer.
