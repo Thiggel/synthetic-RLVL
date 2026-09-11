@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=gru_notation_sft
+#SBATCH --job-name=gru_modecond_sft
 #SBATCH --partition=gpu-staff
 #SBATCH --gres=gpu:h100nvl:4
 #SBATCH --cpus-per-task=32
 #SBATCH --time=2-00:00:00
-#SBATCH --array=0-3%1
+#SBATCH --array=0-2%1
 #SBATCH --output=logs/%x_%A_%a.out
 #SBATCH --error=logs/%x_%A_%a.err
 
-# Unconditioned per-notation instruction tuning, run on gruenau.
+# Mode-conditioned instruction tuning on gruenau11 (2026-09-11), the twin of
+# alex's qwen25_longwin_modecond_sft_2026-09-10.slurm which is stuck behind
+# the 24-GPU cap. Mixture: 90k Dolci + 5k formal + 5k English derivations
+# whose prompts carry a notation switch. Bases: control, Formal, English
+# midtrains. Submitted afterok the gruenau11 divergence smoke (job 2046).
 #
 # Why here: alex sits at its account-wide 24-GPU cap, held entirely by the
 # three 30-percent midtrain arms, so every instruction-tuning and evaluation
@@ -63,20 +67,19 @@ export WANDB_MODE="${WANDB_MODE:-offline}"
 export WANDB_DIR="${DATA}/wandb"
 hash -r 2>/dev/null || true
 
-BASES=(control control logic_band25 nl_exact_band25)
-MIXTURES=(logic nl_exact logic nl_exact)
+BASES=(control logic_band25 nl_exact_band25)
+MIXTURES=(modecond modecond modecond)
 IDX="${SLURM_ARRAY_TASK_ID}"
 BASE="${BASES[$IDX]}"
 MIXTURE="${MIXTURES[$IDX]}"
 SEED="${SEED:-3407}"
 
 declare -A MIX_DIR=(
-  [logic]="${DATA}/datasets/reasoning_mixture_20260821/dolci_bp_logic_band25_p10"
-  [nl_exact]="${DATA}/datasets/reasoning_mixture_20260821/dolci_bp_nl_exact_band25_p10"
+  [modecond]="${DATA}/datasets/mode_conditioned_mixture_20260910/dolci_bp_modecond_band25"
 )
 MODEL="${DATA}/hf_midtrain/qwen25_7b_longwin_${BASE}_2p5b_hf"
-RUN_NAME="qwen25_7b_longwin_${BASE}_2p5b_sft${MIXTURE}_100k_lr5em6_seed${SEED}${SMOKE:+_smoke}"
-OUT_DIR="${DATA}/post_sft_notation/${RUN_NAME}"
+RUN_NAME="qwen25_7b_longwin_${BASE}_2p5b_modecond_100k_lr5em6_seed${SEED}${SMOKE:+_smoke}"
+OUT_DIR="${DATA}/post_sft_modecond/${RUN_NAME}"
 
 # fail closed on both inputs before spending a GPU-hour
 test -s "${MODEL}/config.json" || { echo "missing converted base: ${MODEL}" >&2; exit 2; }
