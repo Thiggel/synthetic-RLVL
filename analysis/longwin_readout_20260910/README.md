@@ -261,3 +261,18 @@ generation until </answer>, 4,600 tokens, metrics exact_match, answer_tag,
 formal_block, think_block, proof_block. Run on the three bases and, for
 contrast, the five instruction-tuned arms. Stored generations feed
 `synthrlvl.metrics.OutputEvaluator` for the checker result.
+
+## 13. The ProofWriter gain does not exist before instruction tuning
+
+Midtrained bases, answer-only prompt, no chat template (d0/d1/d2/d3/d5):
+Control .362/.342/.508/.506/.576, Formal .490/.356/.476/.484/.494, English
+.440/.350/.490/.504/.530. Apart from depth 0 the derivation bases are at or
+below the control base; base negation-blind rates are equal (Control .404,
+Formal .406). Together with section 8 (Control's pooled AUC falls .755 ->
+.662 through Dolci SFT while the derivation arms hold theirs) the mechanism
+is an interaction: Dolci instruction tuning makes the control negation-blind
+on direct answers, and prior derivation midtraining immunises against that.
+The paper should say "derivation midtraining protects deductive
+calibration through instruction tuning", not "derivation midtraining
+teaches ProofWriter". The base-model discrimination advantage in the MC
+probe (+.05/.06 within polarity) is the one thing that is present before SFT.
