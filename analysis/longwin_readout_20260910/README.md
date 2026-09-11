@@ -276,3 +276,18 @@ The paper should say "derivation midtraining protects deductive
 calibration through instruction tuning", not "derivation midtraining
 teaches ProofWriter". The base-model discrimination advantage in the MC
 probe (+.05/.06 within polarity) is the one thing that is present before SFT.
+
+## 14. Midtrained bases on multihop QA (no chat template)
+
+The stock standard-prompt F1 for the derivation bases reads ~0 (Formal .002,
+English .016 on HotpotQA) against Control .542. That is termination, not
+ability: a base has no end-of-turn token, and the derivation bases keep
+writing "Question: ... Answer: ..." continuations after a correct first
+line, while the control base happens to stop. Scoring the first non-empty
+line (`scripts/analysis/base_multihop_firstline.py`): HotpotQA Control .542,
+Formal .568, English .568; 2Wiki .349 / .357 / .362; MuSiQue .306 / .273 /
+.269. Tagged prompt (stock scorer, EM): HotpotQA .395 / .460 / .435, 2Wiki
+.240 / .275 / .265, MuSiQue .125 / .150 / .150. So at the base stage the
+derivation arms are level with or slightly above control on multihop QA;
+nothing is damaged before instruction tuning either. Report the base table
+with the first-line rescoring and say why.
