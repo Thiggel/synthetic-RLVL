@@ -1,0 +1,82 @@
+
+== MC log-likelihood probe, it, seed 3407 ==
+arm             acc acc_norm  AUC_t/f  AUC_neg  AUC_pos pred_true
+Control       0.424    0.465    0.662    0.872    0.860    0.638
+LongDoc       0.418    0.464    0.663    0.876    0.867    0.635
+Formal        0.466    0.501    0.711    0.889    0.868    0.545
+English       0.514    0.495    0.770    0.898    0.873    0.484
+Condensed     0.443    0.476    0.664    0.890    0.855    0.546
+
+== CoT probe, it, seed 3407 ==
+arm            acc      tag  acc|tag    words   loop neg/false  neg/true pos/false  pos/true
+Control      0.480    0.822    0.584      231  0.072     0.504     0.716     0.607     0.630
+LongDoc      0.558    0.894    0.617      219  0.060     0.589     0.761     0.696     0.667
+Formal       0.454    0.758    0.596      266  0.084     0.506     0.672     0.589     0.579
+English      0.507    0.813    0.620      261  0.080     0.552     0.776     0.634     0.620
+Condensed    0.523    0.864    0.600      213  0.051     0.543     0.731     0.634     0.664
+
+== Perturbation probes, it, seed 3407 ==
+arm        | flip:    acc    answer  consist. | ablate:    acc   ->false    ->true     ->unk
+           |       (vs new gold) changed  (same answer to both polarities)
+Control    |         0.562     0.605     0.395 |          0.214     0.270     0.516     0.214   changed 0.402; negated/false items: P(false) 0.335 before -> 0.201 after ablation
+             negated/false items after the flip (now positive/true): acc 0.698, n=785; their original acc 0.338
+LongDoc    |         0.558     0.620     0.380 |          0.195     0.292     0.512     0.195   changed 0.414; negated/false items: P(false) 0.351 before -> 0.186 after ablation
+             negated/false items after the flip (now positive/true): acc 0.697, n=785; their original acc 0.352
+Formal     |         0.630     0.715     0.285 |          0.219     0.336     0.445     0.219   changed 0.447; negated/false items: P(false) 0.533 before -> 0.274 after ablation
+             negated/false items after the flip (now positive/true): acc 0.678, n=785; their original acc 0.535
+English    |         0.712     0.758     0.242 |          0.182     0.438     0.380     0.182   changed 0.427; negated/false items: P(false) 0.672 before -> 0.464 after ablation
+             negated/false items after the flip (now positive/true): acc 0.699, n=785; their original acc 0.673
+Condensed  |         0.596     0.707     0.293 |          0.179     0.375     0.446     0.179   changed 0.429; negated/false items: P(false) 0.492 before -> 0.292 after ablation
+             negated/false items after the flip (now positive/true): acc 0.642, n=785; their original acc 0.493
+
+== MC log-likelihood probe, it, seed 3408 ==
+arm             acc acc_norm  AUC_t/f  AUC_neg  AUC_pos pred_true
+Control       0.428    0.462    0.654    0.869    0.858    0.628
+LongDoc       0.418    0.465    0.664    0.877    0.867    0.638
+Formal        0.467    0.514    0.707    0.889    0.868    0.535
+English       0.513    0.508    0.766    0.896    0.870    0.479
+Condensed     0.437    0.471    0.653    0.885    0.855    0.527
+
+== CoT probe, it, seed 3408 ==
+arm            acc      tag  acc|tag    words   loop neg/false  neg/true pos/false  pos/true
+Control      0.484    0.828    0.580      234  0.071     0.502     0.776     0.598     0.615
+LongDoc      0.549    0.905    0.603      218  0.054     0.575     0.776     0.670     0.650
+Formal       0.454    0.753    0.599      272  0.086     0.508     0.687     0.554     0.573
+English      0.525    0.818    0.634      262  0.081     0.557     0.776     0.616     0.650
+Condensed    0.496    0.822    0.598      243  0.067     0.522     0.716     0.616     0.610
+
+== Perturbation probes, it, seed 3408 ==
+arm        | flip:    acc    answer  consist. | ablate:    acc   ->false    ->true     ->unk
+           |       (vs new gold) changed  (same answer to both polarities)
+Control    |         0.554     0.624     0.376 |          0.240     0.264     0.496     0.240   changed 0.417; negated/false items: P(false) 0.347 before -> 0.201 after ablation
+             negated/false items after the flip (now positive/true): acc 0.680, n=785; their original acc 0.348
+LongDoc    |         0.560     0.620     0.380 |          0.201     0.286     0.513     0.201   changed 0.420; negated/false items: P(false) 0.356 before -> 0.185 after ablation
+             negated/false items after the flip (now positive/true): acc 0.701, n=785; their original acc 0.357
+Formal     |         0.634     0.720     0.280 |          0.210     0.346     0.443     0.210   changed 0.443; negated/false items: P(false) 0.539 before -> 0.279 after ablation
+             negated/false items after the flip (now positive/true): acc 0.676, n=785; their original acc 0.540
+English    |         0.711     0.750     0.250 |          0.178     0.442     0.380     0.178   changed 0.427; negated/false items: P(false) 0.676 before -> 0.463 after ablation
+             negated/false items after the flip (now positive/true): acc 0.696, n=785; their original acc 0.676
+Condensed  |         0.604     0.719     0.281 |          0.187     0.395     0.418     0.187   changed 0.432; negated/false items: P(false) 0.509 before -> 0.308 after ablation
+             negated/false items after the flip (now positive/true): acc 0.628, n=785; their original acc 0.510
+
+== MC log-likelihood probe, base, seed 3407 ==
+arm             acc acc_norm  AUC_t/f  AUC_neg  AUC_pos pred_true
+Control       0.460    0.489    0.755    0.818    0.821    0.592
+Formal        0.460    0.502    0.733    0.870    0.847    0.588
+English       0.462    0.512    0.782    0.875    0.856    0.640
+
+== CoT probe, base, seed 3407 ==
+arm            acc      tag  acc|tag    words   loop neg/false  neg/true pos/false  pos/true
+Control      0.389    0.406    0.443      232  0.038     0.545     0.134     0.509     0.146
+Formal       0.361    0.896    0.375      283  0.430     0.154     0.463     0.214     0.203
+English      0.317    0.974    0.315      483  0.835     0.084     0.134     0.045     0.155
+
+== Perturbation probes, base, seed 3407 ==
+arm        | flip:    acc    answer  consist. | ablate:    acc   ->false    ->true     ->unk
+           |       (vs new gold) changed  (same answer to both polarities)
+Control    |         0.639     0.596     0.404 |          0.115     0.285     0.600     0.115   changed 0.314; negated/false items: P(false) 0.492 before -> 0.297 after ablation
+             negated/false items after the flip (now positive/true): acc 0.771, n=785; their original acc 0.493
+Formal     |         0.585     0.594     0.406 |          0.246     0.203     0.551     0.246   changed 0.401; negated/false items: P(false) 0.456 before -> 0.183 after ablation
+             negated/false items after the flip (now positive/true): acc 0.712, n=785; their original acc 0.455
+English    |         0.618     0.536     0.464 |          0.164     0.191     0.644     0.164   changed 0.342; negated/false items: P(false) 0.438 before -> 0.174 after ablation
+             negated/false items after the flip (now positive/true): acc 0.801, n=785; their original acc 0.438

@@ -362,3 +362,37 @@ This is the real-model analogue of the synthetic depth-25 crossover (formal
 edge at maximal depth), on n=200 the +.015 is suggestive only. The formal
 lines are checked by mapping "P(cK) ; rule" through the model's own
 <predicates> block back to "cK is X".
+
+## 17. Final cross-cluster check and file index
+
+533 overlapping cells between alex and gruenau (standard, multihop at 32768,
+deduction; five arms, seed 3407): mean |diff| .0027, max .050 on one
+200-item BBH subtask. Every gruenau number used above passes this check.
+
+Outputs in this directory: `gruenau_matrix_tables.md` (every suite x kind x
+seed), `pw_probes.txt` (MC / CoT / perturbation), `folio_gpqa_rigor.txt`,
+`native_derivation_check.txt`, `cross_cluster_check.txt`, `pw_error_analysis`
+in `analysis/pw_error_analysis_20260910.txt`. Still pending when written:
+Formal base native d5-d20 (job 2019); the alex chains (p30 English post-SFT
+4213747, notation SFT 4208280, scrambled midtrain 4213750-52, p30
+logic/condensed pass 2).
+
+## 18. What the paper should now say (proposed)
+
+1. Program-generated derivations as 10 percent of a 2.5B-token midtrain
+   give a base model that writes checker-valid derivations to depth 25 in
+   the trained notation (Formal 200/200, English 197/200), with zero
+   contamination; the control base writes none. Dolci instruction tuning
+   removes the behaviour completely. This replaces the marker-count claim.
+2. After instruction tuning, the ProofWriter gain is real, replicated,
+   prior-invariant, and confined to negated claims whose positive form is
+   derivable; it is flat in depth, absent before instruction tuning, and
+   is best described as protection of deductive calibration through
+   instruction tuning (Control's true/false AUC .755 -> .662 through SFT;
+   derivation arms hold theirs). Under a written chain the arms converge.
+3. Notation: English leads on ProofWriter and sampled BranchProof after SFT;
+   Formal leads on FOLIO (+.05 both seeds) and at depth 25 in the base.
+   The dose test (p30) and the scrambled control decide the remaining
+   causal questions and are in flight.
+4. Costs: LogiQA -2 to -3 replicated; GPQA, GSM8K, MATH, MMLU, multihop flat
+   in both the base and instruction-tuned tables.

@@ -1,0 +1,106 @@
+==========================================================================================
+synthrlvl_folio  seed 3407  (n=203)
+==========================================================================================
+arm            acc  balanced    n_extr  pred distribution
+Control      0.557     0.549       203  false=42 true=84 uncertain=77
+LongDoc      0.567     0.560       203  false=44 true=76 uncertain=83
+Formal       0.606     0.600       203  false=50 true=86 uncertain=67
+English      0.591     0.585       203  false=48 true=84 uncertain=71
+Condensed    0.591     0.587       203  false=55 true=86 uncertain=62
+
+Paired against Control
+arm          gained     lost    McNemar p          acc diff [95% CI]
+LongDoc           9        7        0.804       0.010 [-0.030, 0.049]
+Formal           16        6       0.0525       0.049 [0.005, 0.094]
+English          13        6        0.167       0.034 [-0.005, 0.074]
+Condensed        15        8         0.21       0.034 [-0.010, 0.079]
+Eng-Form          4        7        0.549      -0.015 [-0.044, 0.015]   (English vs Formal)
+
+Question polarity x gold label (the ProofWriter gain lives in negated/false)
+cell                           n   Control   LongDoc    Formal   English Condensed
+negated, gold true            25     0.840     0.800     0.880     0.840     0.880
+negated, gold false           24     0.458     0.500     0.500     0.583     0.583
+negated, gold uncertain        8     0.500     0.500     0.500     0.625     0.250
+positive, gold true           47     0.681     0.617     0.702     0.702     0.681
+positive, gold false          38     0.368     0.395     0.500     0.421     0.500
+positive, gold uncertain      61     0.508     0.574     0.541     0.508     0.508
+
+Per-gold-class accuracy
+arm              true      false  uncertain
+Control    0.736( 72) 0.403( 62) 0.507( 69)
+LongDoc    0.681( 72) 0.435( 62) 0.565( 69)
+Formal     0.764( 72) 0.500( 62) 0.536( 69)
+English    0.750( 72) 0.484( 62) 0.522( 69)
+Condensed  0.750( 72) 0.532( 62) 0.478( 69)
+
+==========================================================================================
+synthrlvl_folio  seed 3408  (n=203)
+==========================================================================================
+arm            acc  balanced    n_extr  pred distribution
+Control      0.552     0.546       203  false=46 true=89 uncertain=68
+LongDoc      0.581     0.575       203  false=44 true=78 uncertain=81
+Formal       0.606     0.600       203  false=50 true=83 uncertain=70
+English      0.586     0.581       203  false=50 true=82 uncertain=71
+Condensed    0.581     0.577       203  false=54 true=84 uncertain=65
+
+Paired against Control
+arm          gained     lost    McNemar p          acc diff [95% CI]
+LongDoc          12        6        0.238       0.030 [-0.010, 0.069]
+Formal           15        4       0.0192       0.054 [0.015, 0.099]
+English          11        4        0.118       0.034 [0.000, 0.069]
+Condensed        11        5         0.21       0.030 [-0.010, 0.069]
+Eng-Form          5        9        0.424      -0.020 [-0.054, 0.015]   (English vs Formal)
+
+Question polarity x gold label (the ProofWriter gain lives in negated/false)
+cell                           n   Control   LongDoc    Formal   English Condensed
+negated, gold true            25     0.840     0.800     0.840     0.840     0.880
+negated, gold false           24     0.542     0.500     0.500     0.625     0.583
+negated, gold uncertain        8     0.375     0.625     0.500     0.500     0.375
+positive, gold true           47     0.681     0.638     0.723     0.681     0.660
+positive, gold false          38     0.395     0.421     0.500     0.421     0.474
+positive, gold uncertain      61     0.459     0.574     0.541     0.508     0.492
+
+Per-gold-class accuracy
+arm              true      false  uncertain
+Control    0.736( 72) 0.452( 62) 0.449( 69)
+LongDoc    0.694( 72) 0.452( 62) 0.580( 69)
+Formal     0.764( 72) 0.500( 62) 0.536( 69)
+English    0.736( 72) 0.500( 62) 0.507( 69)
+Condensed  0.736( 72) 0.516( 62) 0.478( 69)
+
+==========================================================================================
+synthrlvl_gpqa_diamond  seed 3407  (n=198)
+==========================================================================================
+arm            acc  balanced    n_extr  pred distribution
+Control      0.348     0.332       196  =2 a=73 b=54 c=40 d=29
+LongDoc      0.308     0.296       196  =2 a=74 b=56 c=38 d=28
+Formal       0.333     0.328       198  a=54 b=57 c=47 d=40
+English      0.278     0.273       198  a=58 b=55 c=50 d=35
+Condensed    0.354     0.341       197  =1 a=58 b=54 c=53 d=32
+
+Paired against Control
+arm          gained     lost    McNemar p          acc diff [95% CI]
+LongDoc          24       32         0.35      -0.040 [-0.116, 0.030]
+Formal           25       28        0.784      -0.015 [-0.086, 0.056]
+English          22       36       0.0869      -0.071 [-0.146, 0.000]
+Condensed        28       27            1       0.005 [-0.066, 0.076]
+Eng-Form         18       29        0.144      -0.056 [-0.121, 0.010]   (English vs Formal)
+
+==========================================================================================
+synthrlvl_gpqa_diamond  seed 3408  (n=198)
+==========================================================================================
+arm            acc  balanced    n_extr  pred distribution
+Control      0.338     0.328       196  =2 a=62 b=56 c=49 d=29
+LongDoc      0.374     0.370       197  =1 a=62 b=48 c=44 d=43
+Formal       0.313     0.307       196  =2 a=62 b=52 c=45 d=37
+English      0.318     0.312       198  a=59 b=53 c=50 d=36
+Condensed    0.308     0.300       197  =1 a=62 b=56 c=44 d=35
+
+Paired against Control
+arm          gained     lost    McNemar p          acc diff [95% CI]
+LongDoc          35       28         0.45       0.035 [-0.045, 0.111]
+Formal           19       24        0.542      -0.025 [-0.091, 0.040]
+English          22       26        0.665      -0.020 [-0.091, 0.051]
+Condensed        21       27        0.471      -0.030 [-0.096, 0.035]
+Eng-Form         22       21            1       0.005 [-0.056, 0.071]   (English vs Formal)
+

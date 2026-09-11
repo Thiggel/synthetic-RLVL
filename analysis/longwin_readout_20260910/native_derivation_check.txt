@@ -1,0 +1,12 @@
+base       control                d10  n=200  has_proof 0.000  all_valid 0.000  valid_prefix 0.000  concl_derivable 0.000  concl=last 0.000  redundant 0.00  lines 0  correct 0.000
+base       control                d15  n=200  has_proof 0.000  all_valid 0.000  valid_prefix 0.000  concl_derivable 0.000  concl=last 0.000  redundant 0.00  lines 0  correct 0.000
+base       control                d20  n=200  has_proof 0.000  all_valid 0.000  valid_prefix 0.000  concl_derivable 0.000  concl=last 0.000  redundant 0.00  lines 0  correct 0.000
+base       control                d25  n=200  has_proof 0.000  all_valid 0.000  valid_prefix 0.000  concl_derivable 0.000  concl=last 0.000  redundant 0.00  lines 0  correct 0.000
+base       control                d5   n=200  has_proof 0.000  all_valid 0.000  valid_prefix 0.000  concl_derivable 0.000  concl=last 0.000  redundant 0.00  lines 0  correct 0.000
+base       logic_band25           d25  n=200  has_proof 1.000  all_valid 0.995  valid_prefix 0.998  concl_derivable 1.000  concl=last 1.000  redundant 0.04  lines 51  correct 1.000
+base       nl_exact_band25        d10  n=200  has_proof 1.000  all_valid 1.000  valid_prefix 1.000  concl_derivable 1.000  concl=last 1.000  redundant 0.10  lines 21  correct 1.000
+base       nl_exact_band25        d15  n=200  has_proof 1.000  all_valid 1.000  valid_prefix 1.000  concl_derivable 1.000  concl=last 1.000  redundant 0.06  lines 31  correct 1.000
+base       nl_exact_band25        d20  n=200  has_proof 1.000  all_valid 1.000  valid_prefix 1.000  concl_derivable 1.000  concl=last 1.000  redundant 0.05  lines 41  correct 1.000
+base       nl_exact_band25        d25  n=200  has_proof 0.005  all_valid 0.000  valid_prefix 0.000  concl_derivable 0.000  concl=last 0.000  redundant 0.00  lines 1  correct 0.000
+base       nl_exact_band25        d5   n=200  has_proof 1.000  all_valid 1.000  valid_prefix 1.000  concl_derivable 1.000  concl=last 1.000  redundant 0.18  lines 11  correct 1.000
+base       nl_exact_band25        d25  n=200  has_proof 1.000  all_valid 0.985  valid_prefix 0.990  concl_derivable 0.985  concl=last 1.000  redundant 0.04  lines 51  correct 0.985
