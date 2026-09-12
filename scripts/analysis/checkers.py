@@ -48,8 +48,8 @@ def check_gsm8k(text):
 # Facts:      "The bear is big." / "Anne is not quiet." / "The dog chases the bear."
 # Rules:      "If X then Y", "All A, B things are C", "Rough things are round",
 #             "Furry, round things are smart", "If someone is rough then they ..."
-_ATTR = re.compile(r"^(?:the\s+)?(\w[\w\s]*?)\s+is\s+(not\s+)?(\w+)$", re.I)
-_REL = re.compile(r"^(?:the\s+)?(\w[\w\s]*?)\s+(?:(does not)\s+)?(\w+?)s?\s+(?:the\s+)?(\w[\w\s]*?)$", re.I)
+_ATTR = re.compile(r"^(?:the\s+)?(\?x|\w[\w\s]*?)\s+(?:is|are)\s+(not\s+)?(\w+)$", re.I)
+_REL = re.compile(r"^(?:the\s+)?(\?x|\w[\w\s]*?)\s+(?:(does not|do not)\s+)?(\w+?)s?\s+(?:the\s+)?(\?x|\w[\w\s]*?)$", re.I)
 VARS = {"someone", "something", "things", "people", "they", "it"}
 
 
@@ -90,8 +90,10 @@ def parse_theory(context):
                 if lit:
                     lits.append(lit)
             chead = cons.strip()
-            if chead.split()[0] in ("they", "it", "then"):
+            if chead.split() and chead.split()[0].lower() in ("they", "it", "then", "someone", "something"):
                 chead = re.sub(r"^\w+", "?x", chead)
+            elif subj == "?x" and not re.match(r"^(the\s+)?\w+\s+(is|are|does|do)\b", chead, re.I):
+                pass
             head = _lit(chead)
             if head and lits:
                 rules.append((lits, head))
