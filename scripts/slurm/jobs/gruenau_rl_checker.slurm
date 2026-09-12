@@ -20,7 +20,7 @@ export HF_HOME="${ROOT}/rlvl_data/hf_home"
 export TOKENIZERS_PARALLELISM=false WANDB_MODE=offline
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
-OUT="${ROOT}/rlvl_data/rl_checker_20260911/${OUT_NAME:?}"
+OUT="${ROOT}/rlvl_data/rl_checker_20260912/${OUT_NAME:?}"
 [ -s "${OUT}/final/adapter_model.safetensors" ] && { echo "already done"; exit 0; }
 GPU_ID="${CUDA_VISIBLE_DEVICES%%,*}"
 for attempt in $(seq 1 60); do
@@ -28,7 +28,7 @@ for attempt in $(seq 1 60); do
   [ $((free/1024)) -ge 70 ] && break; echo "waiting: $((free/1024)) GiB free"; sleep 180
 done
 nvidia-smi --query-gpu=name,memory.free --format=csv,noheader
-python scripts/rl_checker_grpo.py --model "${MODEL_DIR:?}" --reward "${REWARD:?}" \
+python scripts/rl_checker_grpo.py --model "${MODEL_DIR:?}" --reward "${REWARD:?}" --task "${TASK:-branchproof}" \
   --output-dir "${OUT}" --max-steps "${MAX_STEPS:-300}" \
   --num-generations "${NUM_GEN:-8}" --per-device-batch-size "${PDBS:-8}" --grad-accum "${GA:-2}" \
   --max-completion-length "${MAXCOMP:-9000}" --vllm-gpu-memory-utilization "${VLLMUTIL:-0.30}" \

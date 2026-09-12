@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """GRPO with a program checker as the reward, LoRA, one GPU.
 
+Two task families:
+  branchproof  synthetic items, exact forward-chaining checker;
+  gsm8k        ordinary reinforcement-learning-with-verifiable-rewards data,
+               where "validity" is the weaker but still gold-free property
+               that the written derivation parses and its arithmetic holds.
+
 Three reward arms, selected with --reward:
 
   correct   1 if the <answer> matches gold, else 0. The standard baseline;
@@ -23,7 +29,27 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "analysis"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "lm_eval_tasks", "synthrlvl_ood"))
 from check_native_derivations import check  # noqa: E402
+from checkers import check_gsm8k  # noqa: E402
 import utils  # noqa: E402
+
+NUM = re.compile(r"-?\d[\d,]*\.?\d*")
+
+
+def gsm8k_prompt(question):
+    """The midtraining document format, which is what makes these models
+    write a derivation at all."""
+    sents = re.split(r"(?<=[.?!])\s+", question.strip())
+    body = sents[:-1] or sents
+    q = sents[-1] if len(sents) > 1 else "What is the answer?"
+    numbered = "\n".join(f"{i + 1}. {l.strip()}" for i, l in enumerate(body) if l.strip())
+    return f"<question>\n{numbered}\n{q.strip()}\n</question>\n\n"
+
+
+def gsm8k_answer(text):
+    m = ANS.search(text)
+    src = m.group(1) if m else text[-300:]
+    nums = NUM.findall(src.replace("$", ""))
+    return nums[-1].replace(",", "").rstrip(".") if nums else ""
 
 ANS = re.compile(r"<answer>\s*(.*?)\s*(?:</answer>|$)", re.DOTALL)
 
@@ -36,6 +62,7 @@ def answer_of(text):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
+    ap.add_argument("--task", choices=["branchproof", "gsm8k"], default="branchproof")
     ap.add_argument("--data", default="/vol/tmp2/laitenbf/rlvl_data/datasets/deep_branchproof_20260911")
     ap.add_argument("--depths", nargs="+", type=int, default=[30, 35])
     ap.add_argument("--reward", choices=["correct", "valid", "both"], required=True)
@@ -61,10 +88,16 @@ def main():
     from trl import GRPOConfig, GRPOTrainer
 
     rows = []
-    for d in a.depths:
-        for line in open(f"{a.data}/branchproof_nl_d{d}.jsonl"):
-            r = json.loads(line)
-            rows.append(dict(prompt=utils.doc_to_text_deduction_bp_native(r), doc=json.dumps(r)))
+    if a.task == "gsm8k":
+        from datasets import load_dataset
+        for r in load_dataset("gsm8k", "main", split="train"):
+            gold = r["answer"].split("####")[-1].strip().replace(",", "")
+            rows.append(dict(prompt=gsm8k_prompt(r["question"]), doc=json.dumps({"answer": gold})))
+    else:
+        for d in a.depths:
+            for line in open(f"{a.data}/branchproof_nl_d{d}.jsonl"):
+                r = json.loads(line)
+                rows.append(dict(prompt=utils.doc_to_text_deduction_bp_native(r), doc=json.dumps(r)))
     rng = __import__("random").Random(a.seed)
     rng.shuffle(rows)
     hold, train = rows[: a.eval_holdout], rows[a.eval_holdout:]
@@ -78,9 +111,16 @@ def main():
         out = []
         for text, dj in zip(completions, doc):
             item = json.loads(dj)
-            res = check(item, text + "</answer>", a.formal)
-            valid = float(res["all_valid"] > 0 and res["conclusion_matches_last"] > 0)
-            corr = float(answer_of(text) == utils.normalize_answer(item["answer"]))
+            if a.task == "gsm8k":
+                res = check_gsm8k(text)
+                res = dict(has_proof=float(res["n_steps"] > 0), all_valid=res["all_valid"],
+                           conclusion_matches_last=1.0)
+                valid = float(res["all_valid"] > 0 and res["has_proof"] > 0)
+                corr = float(gsm8k_answer(text) == str(item["answer"]))
+            else:
+                res = check(item, text + "</answer>", a.formal)
+                valid = float(res["all_valid"] > 0 and res["conclusion_matches_last"] > 0)
+                corr = float(answer_of(text) == utils.normalize_answer(item["answer"]))
             stats["n"] += 1
             stats["correct"] += corr
             stats["valid"] += valid
