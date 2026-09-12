@@ -8,6 +8,8 @@ cd "$(dirname "$0")/../.."
 source ./scripts/env.sh
 export PATH="${HPCVAULT}/.venv_rlvl_posttrain/bin:${PATH}"
 export HF_HOME="${HPCVAULT}/.cache/huggingface"
+# the builder imports the project package from the checkout
+export PYTHONPATH="${PWD}:${PYTHONPATH:-}"
 D="${HPCVAULT}/synthetic-RLVL/datasets/dolci_no_tools_single_turn_100k_seed3407_20260803"
 B="${HPCVAULT}/synthetic-RLVL/datasets/branchproof_unique_v2_20260710"
 O="${HPCVAULT}/synthetic-RLVL/datasets/dose_sweep_20260912"
