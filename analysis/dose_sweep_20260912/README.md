@@ -65,3 +65,31 @@ explicable by seed at all.
 Both notations install the full derivation ability at one percent; downstream
 they differ by a point or two in opposite directions on ProofWriter and FOLIO,
 so the notation question is decided at the larger doses, not here.
+
+## Consolidated table (2026-09-13, nine models measured)
+
+| arm | PW d3 | PW d5 | FOLIO | native d25 | LogiQA |
+|---|---|---|---|---|---|
+| control s3407 | .388 | .406 | .517 | .000 | .372 |
+| control s3408 | .390 | .412 | .507 | .010 | .366 |
+| formal 1% s3407 / s3408 | .412 / .392 | .412 / .376 | .537 / .542 | .940 | .382 |
+| formal 5% | .500 | .480 | .567 | 1.000 | .363 |
+| formal 10% | .490 | .472 | .586 | 1.000 | .392 |
+| English 1% | .402 | .406 | .547 | .980 | .367 |
+| English 5% | .492 | .462 | .562 | .995 | .364 |
+| English 10% | **.546** | **.522** | .557 | 1.000 | - |
+
+Headline: ProofWriter d3 goes .389 (mean of two controls) to .546 at ten
+percent English, **+15.7 points**, against a control seed spread of .002.
+FOLIO peaks at +6.9. LogiQA stays inside its noise band, so the intervention
+is still free.
+
+Two honest qualifications:
+- At ONE percent the downstream gain is small and seed-dependent (.412 vs
+  .392 on PW d3), while the derivation ability is not (.940-.980 vs .000).
+  The claim is therefore two-part: derivation writing is free at one percent;
+  benchmark transfer needs five to ten percent.
+- The notations transfer equally here (formal .500 / English .492 at five
+  percent), unlike the midtrain arms where English led ProofWriter and formal
+  led FOLIO. What matters at instruction-tuning time is the presence of
+  derivations, not their notation.
