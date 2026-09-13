@@ -93,3 +93,21 @@ Two honest qualifications:
   percent), unlike the midtrain arms where English led ProofWriter and formal
   led FOLIO. What matters at instruction-tuning time is the presence of
   derivations, not their notation.
+
+## Two-seed replication (2026-09-14)
+
+| arm | PW d3 (s3407 / s3408) | FOLIO | native d25 |
+|---|---|---|---|
+| control | .388 / .390 | .517 / .507 | .000 / .010 |
+| formal 1% | .412 / .392 | .537 / .542 | .940 / .930 |
+| formal 5% | .500 / .494 | .567 / .581 | 1.000 / .990 |
+| English 1% | .402 / .404 | .547 / .532 | .980 / .980 |
+
+At five percent the ProofWriter gain is +11.2 and +10.4 points in the two
+seeds, against a control spread of .002; FOLIO is +5.0 and +7.4. Derivation
+writing is .93-1.00 in every dosed arm and .00-.01 in both controls.
+
+The one percent point is the honest weak spot: +2.4 and +0.2 on PW d3, i.e.
+inside noise in one seed. Derivation ability at one percent is not in doubt.
+So the paper should say: one percent buys a model that writes checkable
+proofs; five to ten percent buys about ten points of deduction accuracy.
