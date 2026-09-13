@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:a100:4
 #SBATCH --constraint=a100_80
 #SBATCH --cpus-per-task=64
-#SBATCH --time=12:00:00
+#SBATCH --time=24:00:00
 #SBATCH --exclude=a0531,a0532,a0533,a0934
 #SBATCH --array=0-26%6
 #SBATCH --output=logs/%x_%A_%a.out
@@ -63,7 +63,7 @@ python -m torch.distributed.run --standalone --nproc_per_node=4 \
   --max-steps -1 --num-train-epochs 1 --lr 5e-6 \
   --warmup-steps 0 --warmup-ratio 0.03 \
   --per-device-batch-size 2 --per-device-eval-batch-size 1 --grad-accum 16 \
-  --eval-steps 250 --save-steps 100000 --save-total-limit 1 \
+  --eval-steps 2000 --save-steps 200 --save-total-limit 1 \
   --format-mode chat --single-turn-only --no-wrap-answer-tags \
   --full-parameter --fsdp "full_shard auto_wrap" \
   --fsdp-transformer-layer-cls-to-wrap Qwen2DecoderLayer \
