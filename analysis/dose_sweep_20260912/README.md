@@ -36,3 +36,32 @@ does not appear.
 
 Still running: the 25 percent formal arm, every English arm, and seeds 3408
 and 3409. No number above should be quoted without its seed replicate.
+
+## The noise floor (two controls)
+
+| task | control seed 3407 | control seed 3408 | spread |
+|---|---|---|---|
+| ProofWriter d0 | .504 | .512 | .008 |
+| ProofWriter d1 | .312 | .310 | .002 |
+| ProofWriter d2 | .388 | .392 | .004 |
+| ProofWriter d3 | .388 | .390 | .002 |
+| ProofWriter d5 | .406 | .412 | .006 |
+| native derivation d25 | .000 | .010 | .010 |
+
+Seed-to-seed variation in the control is under one point on every ProofWriter
+depth, so the +11.2 points at five percent is an order of magnitude above the
+floor, and the derivation result (.000-.010 against .940-1.000) is not
+explicable by seed at all.
+
+## Notation at matched dose, one percent, seed 3407
+
+| measure | control | formal | English |
+|---|---|---|---|
+| ProofWriter d0 | .504 | .556 | .514 |
+| ProofWriter d3 | .388 | .412 | .402 |
+| FOLIO | .517 | .537 | .547 |
+| native derivation d25 | .000 | .940 | .980 |
+
+Both notations install the full derivation ability at one percent; downstream
+they differ by a point or two in opposite directions on ProofWriter and FOLIO,
+so the notation question is decided at the larger doses, not here.
