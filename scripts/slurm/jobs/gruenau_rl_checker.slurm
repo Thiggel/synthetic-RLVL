@@ -22,11 +22,15 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
 OUT="${ROOT}/rlvl_data/rl_checker_20260912/${OUT_NAME:?}"
 [ -s "${OUT}/final/adapter_model.safetensors" ] && { echo "already done"; exit 0; }
-GPU_ID="${CUDA_VISIBLE_DEVICES%%,*}"
+# Under this scheduler nvidia-smi inside the job still lists every card on the
+# node, and CUDA_VISIBLE_DEVICES does not always name the one we were given, so
+# wait on the largest free card rather than on a guessed index.
 for attempt in $(seq 1 60); do
-  free=$(nvidia-smi -i "${GPU_ID:-0}" --query-gpu=memory.free --format=csv,noheader,nounits | head -1)
-  [ $((free/1024)) -ge 60 ] && break; echo "waiting: $((free/1024)) GiB free"; sleep 180
+  free=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | sort -n | tail -1)
+  [ $((free/1024)) -ge 60 ] && break
+  echo "waiting: largest free card has $((free/1024)) GiB"; sleep 180
 done
+[ $((free/1024)) -ge 60 ] || { echo "no card with 60 GiB free" >&2; exit 3; }
 nvidia-smi --query-gpu=name,memory.free --format=csv,noheader
 python scripts/rl_checker_grpo.py --model "${MODEL_DIR:?}" --reward "${REWARD:?}" --task "${TASK:-mixture}" \
   --output-dir "${OUT}" --max-steps "${MAX_STEPS:-300}" \
