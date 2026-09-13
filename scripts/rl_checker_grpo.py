@@ -29,7 +29,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "analysis"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "lm_eval_tasks", "synthrlvl_ood"))
 from check_native_derivations import check  # noqa: E402
-from checkers import check_gsm8k  # noqa: E402
+from checkers import check_gsm8k, check_proofwriter  # noqa: E402
 import utils  # noqa: E402
 
 NUM = re.compile(r"-?\d[\d,]*\.?\d*")
@@ -62,7 +62,8 @@ def answer_of(text):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
-    ap.add_argument("--task", choices=["branchproof", "gsm8k"], default="branchproof")
+    ap.add_argument("--task", choices=["branchproof", "gsm8k", "mixture"], default="branchproof")
+    ap.add_argument("--mixture", default="/vol/tmp2/laitenbf/rlvl_data/datasets/rlvr_mixture_20260912/train.jsonl")
     ap.add_argument("--data", default="/vol/tmp2/laitenbf/rlvl_data/datasets/deep_branchproof_20260911")
     ap.add_argument("--depths", nargs="+", type=int, default=[30, 35])
     ap.add_argument("--reward", choices=["correct", "valid", "both"], required=True)
@@ -88,7 +89,16 @@ def main():
     from trl import GRPOConfig, GRPOTrainer
 
     rows = []
-    if a.task == "gsm8k":
+    if a.task == "mixture":
+        # reasoning plus mathematics: knights and knaves, ProofWriter, and the
+        # OLMo verifiable-reward mathematics, each with its own checker
+        for line in open(a.mixture):
+            r = json.loads(line)
+            p = r["prompt"]
+            if r["kind"] == "kk":  # the puzzle text already ends with the question
+                p = p.replace("\nWho is a knight and who is a knave?\n</question>", "\n</question>")
+            rows.append(dict(prompt=p, doc=json.dumps(r)))
+    elif a.task == "gsm8k":
         from datasets import load_dataset
         for r in load_dataset("gsm8k", "main", split="train"):
             gold = r["answer"].split("####")[-1].strip().replace(",", "")
@@ -111,7 +121,29 @@ def main():
         out = []
         for text, dj in zip(completions, doc):
             item = json.loads(dj)
-            if a.task == "gsm8k":
+            if a.task == "mixture":
+                kind = item["kind"]
+                if kind == "math":
+                    c = check_gsm8k(text)
+                    valid = float(c["all_valid"] > 0 and c["n_steps"] > 0)
+                    corr = float(gsm8k_answer(text) == str(item["answer"]))
+                    res = dict(has_proof=float(c["n_steps"] > 0))
+                elif kind == "pw":
+                    c = check_proofwriter(item["context"], text + "</answer>")
+                    valid = float(c["all_valid"] > 0 and c["has_proof"] > 0)
+                    corr = float(answer_of(text) == utils.normalize_answer(item["answer"]))
+                    res = dict(has_proof=c["has_proof"])
+                else:  # knights and knaves: the answer names each inhabitant
+                    said = answer_of(text)
+                    gold = utils.normalize_answer(item["answer"])
+                    corr = float(said == gold)
+                    # gold-free check: every named person is assigned exactly once
+                    names = [n.lower() for n in item.get("names", [])]
+                    ok = bool(names) and all(
+                        len(re.findall(r"\b%s\b" % re.escape(n), text.lower())) >= 1 for n in names)
+                    valid = float(ok and ("<proof>" in text or "assume" in text.lower()))
+                    res = dict(has_proof=float("<proof>" in text))
+            elif a.task == "gsm8k":
                 res = check_gsm8k(text)
                 res = dict(has_proof=float(res["n_steps"] > 0), all_valid=res["all_valid"],
                            conclusion_matches_last=1.0)
