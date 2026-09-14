@@ -111,3 +111,28 @@ The one percent point is the honest weak spot: +2.4 and +0.2 on PW d3, i.e.
 inside noise in one seed. Derivation ability at one percent is not in doubt.
 So the paper should say: one percent buys a model that writes checkable
 proofs; five to ten percent buys about ten points of deduction accuracy.
+
+## Three-seed result (2026-09-14), formal notation
+
+| share | PW d3 (3 seeds) | mean | FOLIO | mean | native d25 | PW with chain-of-thought | mean |
+|---|---|---|---|---|---|---|---|
+| 0 | .388 / .390 / .402 | .393 | .517 / .507 / .517 | .514 | .000 / .010 / .000 | .412 / .390 / .394 | .399 |
+| 1 | .412 / .392 / .410 | .405 | .537 / .542 / .512 | .530 | .940 / .930 / .925 | .382 / .326 / .470 | .393 |
+| 5 | .500 / .494 / .506 | **.500** | .567 / .581 / .586 | **.578** | 1.000 / .990 / .990 | .460 / .454 / .446 | .453 |
+| 10 | .490 / .482 | .486 | .586 / .562 | .574 | 1.000 / .985 | .504 / .484 | .494 |
+
+Answer-only ProofWriter d3: +10.7 points at five percent, every dosed seed
+above every control seed with no overlap. FOLIO: +6.4. Derivation writing:
+.000 -> .93 at one percent.
+
+### Correction to an earlier claim
+I previously wrote that the advantage vanishes when the model reasons aloud.
+That was read off the MIDTRAIN arms, where it does. On the instruction-tuning
+sweep it does not: under chain-of-thought prompting the control averages .399
+while five and ten percent reach .453 and .494, so five to nine points survive.
+The one percent arm is at the control's level under chain-of-thought, which is
+consistent with the two-threshold story: one percent buys the derivation
+format, five percent buys deduction accuracy in both prompting regimes.
+
+General benchmarks stay flat in every arm: GSM8K .757-.771, MMLU .698-.704,
+LogiQA .363-.392, GPQA .288-.369 with seed noise exceeding all arm differences.
