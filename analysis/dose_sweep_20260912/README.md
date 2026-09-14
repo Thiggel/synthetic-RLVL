@@ -168,3 +168,17 @@ first run used a chain-of-thought prompt, which produces prose and no proof
 block, so validity read zero for every model; and the checker parsed only
 English, so the formal arms read zero afterwards. Both were parser artefacts,
 not model properties.
+
+## English notation, three seeds at one percent and two at higher doses
+
+| share | PW d3 by seed | mean | vs control |
+|---|---|---|---|
+| 0 | .388 / .390 / .402 | .393 | - |
+| 1 | .402 / .404 / .402 | .403 | +1.0 |
+| 5 | .492 / .488 | .490 | +9.7 |
+| 10 | .546 / .528 | **.537** | **+14.4** |
+
+The English arm keeps climbing from five to ten percent where the formal arm
+saturates (.500 -> .486), so the strongest single configuration is ten percent
+English: ProofWriter d3 .393 -> .537, replicated, with derivation ability at
+.98-1.00 and every general benchmark flat.
