@@ -136,3 +136,35 @@ format, five percent buys deduction accuracy in both prompting regimes.
 
 General benchmarks stay flat in every arm: GSM8K .757-.771, MMLU .698-.704,
 LogiQA .363-.392, GPQA .288-.369 with seed noise exceeding all arm differences.
+
+## Sampled ProofWriter with checker selection (2026-09-14)
+
+16 samples, temperature 0.8, document-format prompt (the only prompt that
+elicits a proof block); rescored from the stored generations with the
+notation-aware checker. parse@k answers with the first sample whose
+derivation the checker accepts, using no gold.
+
+| model | d | pass@1 | maj@4 | parse@1 | parse@4 | valid frac | acc given valid |
+|---|---|---|---|---|---|---|---|
+| control | 2 / 3 / 5 | .475 / .480 / .335 | .450 / .490 / .350 | .000 | .000 | .000 | - |
+| formal 5% | 2 / 3 / 5 | .585 / .580 / .620 | .630 / .645 / .720 | .145 / .185 / .130 | .305 / .315 / .245 | .32 / .31 / .28 | .585 / .615 / .534 |
+| English 10% | 2 / 3 | .570 / .585 | .600 / .640 | .230 / .235 | .405 / .385 | .37 / .36 | .686 / .606 |
+
+Three findings:
+1. Sampled accuracy: dosed arms beat the control by 10-28 points, the gap
+   widening with depth (d5: .620 vs .335).
+2. Only dosed arms emit anything checkable: 28-37 percent of samples carry a
+   proof block the checker accepts; the control emits none in 600 items.
+3. **Checker selection does NOT beat majority voting here.** Accuracy given a
+   valid derivation is .53-.69, against .99 on the synthetic task, so parse@4
+   trails maj@4. The reason is structural: ProofWriter's open-world "unknown"
+   requires showing a fact is NOT derivable, which a forward chain never
+   demonstrates, so the checker certifies sound-but-incomplete reasoning.
+   State this as the boundary of the verifiability claim: a cheap checker pays
+   only where it is complete with respect to the task.
+
+Two of my own errors on the way here, both fixed and worth remembering: the
+first run used a chain-of-thought prompt, which produces prose and no proof
+block, so validity read zero for every model; and the checker parsed only
+English, so the formal arms read zero afterwards. Both were parser artefacts,
+not model properties.
