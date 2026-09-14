@@ -141,9 +141,64 @@ def closure(facts, rules, max_iter=40):
     return known
 
 
-def check_proofwriter(context, text):
-    """Each <proof> line must be a premise or follow from what is established."""
+# --- formal-notation ProofWriter output ------------------------------------
+# A formal-notation model answers ProofWriter with a <formal> block: constants,
+# a predicate legend, FOL premises and proof lines like "C(c)". Map those back
+# to the English literals the theory parser produces, using the model's own
+# legend, so the same checker judges both notations.
+_FOL_LINE = re.compile(r"^([A-Za-z]\w*)\(([^)]+)\)")
+_LEGEND = re.compile(r"^\s*([A-Za-z]\w*?)\s*(?:x|\(x\))?\s*[:=]\s*(.+?)\s*$")
+
+
+def _fol_legend(text):
+    """predicate symbol -> attribute word; constant symbol -> entity name."""
+    preds, consts = {}, {}
+    for tag, store in (("predicates", preds), ("constants", consts)):
+        m = re.search(r"<%s>\n?(.*?)\n?</%s>" % (tag, tag), text, re.S)
+        if not m:
+            continue
+        for line in m.group(1).splitlines():
+            g = _LEGEND.match(line.strip())
+            if not g:
+                continue
+            rhs = g.group(2).strip().rstrip(".")
+            rhs = re.sub(r"^x\s+", "", rhs, flags=re.I)
+            rhs = re.sub(r"^is\s+", "", rhs, flags=re.I)
+            rhs = re.sub(r"^the\s+", "", rhs, flags=re.I)
+            sym = g.group(1)
+            if tag == "predicates":
+                sym = sym[:-1] if sym.endswith("x") and len(sym) > 1 else sym
+                # a relational legend such as "needs the rabbit" becomes the
+                # verb|object key the theory parser uses
+                m2 = re.match(r"^(\w+?)s?\s+(?:the\s+)?(\w[\w\s]*)$", rhs)
+                rhs = ("%s|%s" % (m2.group(1), m2.group(2).strip())) if m2 else rhs
+            store[sym] = rhs.lower()
+    return preds, consts
+
+
+def _fol_to_lit(line, preds, consts):
+    m = _FOL_LINE.match(line.strip().lstrip("~"))
+    if not m:
+        return None
+    neg = line.strip().startswith("~")
+    pred = preds.get(m.group(1))
+    ent = m.group(2).split(",")[0].strip()
+    ent = consts.get(ent, ent).lower()
+    if pred is None:
+        return None
+    return (ent, pred, not neg)
+
+
+def check_proofwriter(context, text, formal=None):
+    """Each <proof> line must be a premise or follow from what is established.
+
+    Handles both notations: English proof lines directly, and formal ones by
+    translating through the model's own constant and predicate legend.
+    """
     facts, rules = parse_theory(context)
+    if formal is None:
+        formal = "<formal>" in text or "<predicates>" in text
+    preds, consts = _fol_legend(text) if formal else ({}, {})
     m = re.search(r"<proof>\n?(.*?)\n?</proof>", text, re.S)
     if not m:
         return dict(has_proof=0.0, n_lines=0, all_valid=0.0, valid_prefix=0.0, parsed_frac=0.0)
@@ -155,7 +210,7 @@ def check_proofwriter(context, text):
         if not s:
             continue
         lines += 1
-        lit = _lit(s.rstrip("."))
+        lit = _fol_to_lit(s, preds, consts) if formal else _lit(s.rstrip("."))
         if lit is None:
             if first_bad is None:
                 first_bad = lines - 1
