@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Sampled ProofWriter with checker selection: pass@k, maj@k and parse@k.
 
+The prompt is the midtraining DOCUMENT format, not a chat chain-of-thought
+request: only the document format makes these models emit a <proof> block,
+and a derivation has to exist in a fixed shape before a checker can accept
+it. A first version used the chain-of-thought prompt and measured validity
+near zero, which was the prompt's fault, not the model's.
+
 parse@k answers with the first of k samples whose written derivation the
 forward-chaining checker accepts against the item's own theory. No gold is
 used in the selection, so this measures what a deployed system could do.
@@ -36,7 +42,7 @@ def main():
     ap.add_argument("--n", type=int, default=16)
     ap.add_argument("--limit", type=int, default=200)
     ap.add_argument("--temperature", type=float, default=0.8)
-    ap.add_argument("--max-tokens", type=int, default=1024)
+    ap.add_argument("--max-tokens", type=int, default=1600)
     ap.add_argument("--seed", type=int, default=20260914)
     a = ap.parse_args()
     root = os.environ.get("PW_ROOT", "/home/vault/c107fa/c107fa12/synthetic-RLVL/datasets/graded_deduction_eval_20260826")
@@ -48,11 +54,14 @@ def main():
     summary = {}
     for d in a.depths:
         items = [json.loads(l) for l in open(f"{root}/proofwriter_owa_d{d}.jsonl")][: a.limit]
-        prompts = [tok.apply_chat_template(
-            [{"role": "user", "content": utils.doc_to_text_deduction_pw_cot(it)}],
-            tokenize=False, add_generation_prompt=True) for it in items]
+        def doc_prompt(it):
+            sents = re.split(r"(?<=\.)\s+", it["context"].strip())
+            numbered = "\n".join(f"{i + 1}. {l.strip()}" for i, l in enumerate(sents) if l.strip())
+            q = "Is the following claim true, false, or unknown: " + it["question"].strip()
+            return f"<question>\n{numbered}\n{q}\n</question>\n\n"
+        prompts = [doc_prompt(it) for it in items]
         sp = SamplingParams(n=a.n, temperature=a.temperature, top_p=0.95,
-                            max_tokens=a.max_tokens, seed=a.seed)
+                            max_tokens=a.max_tokens, seed=a.seed, stop=["</answer>"])
         gen = llm.generate(prompts, sp)
         rows, agg = [], Counter()
         for it, g in zip(items, gen):
@@ -60,7 +69,8 @@ def main():
             ans = [answer_of(t) for t in texts]
             val = [check_proofwriter(it["context"], t)["all_valid"] > 0 for t in texts]
             gold = it["answer"].lower()
-            rows.append(dict(doc=it, answers=ans, valid=val, gold=gold))
+            rows.append(dict(doc=it, answers=ans, valid=val, gold=gold,
+                             texts=[t[:2000] for t in texts[:4]]))
             for k in (1, 4, 16):
                 agg[f"pass@{k}"] += any(x == gold for x in ans[:k])
                 c = Counter(x for x in ans[:k] if x)
