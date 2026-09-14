@@ -38,6 +38,7 @@ case "${SUITE}" in
   folio_gpqa) TASKS="synthrlvl_folio,synthrlvl_gpqa_diamond"; MML=8192 ;;
   standard) TASKS="gsm8k,bbh,mmlu,arc_challenge,agieval_logiqa_en,hellaswag,winogrande,piqa"; MML=8192 ;;
   native) TASKS="synthrlvl_deduction_bp_native_d5,synthrlvl_deduction_bp_native_d15,synthrlvl_deduction_bp_native_d25"; MML=16384 ;;
+  cot) TASKS="synthrlvl_deduction_pw_cot_d0,synthrlvl_deduction_pw_cot_d1,synthrlvl_deduction_pw_cot_d2,synthrlvl_deduction_pw_cot_d3,synthrlvl_deduction_pw_cot_d5"; MML=8192 ;;
   *) echo "unknown suite"; exit 2 ;;
 esac
 
