@@ -31,6 +31,7 @@ test -s "${CKPT}/config.json" || { echo "missing ${CKPT}" >&2; exit 2; }
 mkdir -p "$(dirname "${OUT}")"
 CLAIM="${OUT}.claim"
 mkdir "${CLAIM}" 2>/dev/null || { echo "claimed by another job"; exit 0; }
+rm -f "${OUT}.queued"
 trap 'rmdir "${CLAIM}" 2>/dev/null || true' EXIT
 
 case "${SUITE}" in
