@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#SBATCH --job-name=q25_pw_parsek
+#SBATCH --partition=a40
+#SBATCH --gres=gpu:a40:1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=08:00:00
+#SBATCH --exclude=a0531,a0532,a0533,a0934
+#SBATCH --output=logs/%x_%A_%a.out
+#SBATCH --error=logs/%x_%A_%a.err
+#
+# Evaluate one dose-sweep model where it was trained. RUN_NAME selects it and
+# SUITE selects what to measure; the four suites that carry the paper's claims
+# come first so a seed can be read before the sweep finishes.
+set -euo pipefail
+cd "${SLURM_SUBMIT_DIR:-$PWD}"
+mkdir -p logs
+export WORK="${WORK:-/home/atuin/c107fa/c107fa12}"
+export HPCVAULT="${HPCVAULT:-/home/vault/c107fa/c107fa12}"
+source ./scripts/env.sh
+VENV_PATH="${VENV_PATH:-${HPCVAULT}/.venv_rlvl_posttrain}"
+export VIRTUAL_ENV="${VENV_PATH}"; export PATH="${VENV_PATH}/bin:${PATH}"
+export HF_HOME="${HF_HOME:-${HPCVAULT}/.cache/huggingface}"
+export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1 TOKENIZERS_PARALLELISM=false
+hash -r 2>/dev/null || true
+
+RUN_NAME="${RUN_NAME:?}"
+CKPT="${WORK}/synthetic-RLVL/post_sft_dose_20260912/${RUN_NAME}/final"
+OUT="${HPCVAULT}/synthetic-RLVL/lm_eval_results/dose_parsek_20260914/${RUN_NAME}"
+test -s "${CKPT}/config.json" || { echo "missing ${CKPT}" >&2; exit 2; }
+[ -s "${OUT}/summary.json" ] && { echo "already done"; exit 0; }
+mkdir -p "$(dirname "${OUT}")"
+python scripts/analysis/sample_pw_parsek.py --checkpoint "${CKPT}" --out "${OUT}" \
+  --n "${NSAMP:-16}" --limit "${LIMIT:-200}"
+echo "done ${RUN_NAME} parse@k"
