@@ -42,6 +42,7 @@ case "${SUITE}" in
   multihop) TASKS="synthrlvl_longbench_hotpotqa_standard,synthrlvl_longbench_2wikimqa_standard,synthrlvl_longbench_musique_standard,synthrlvl_longbench_hotpotqa_tagged,synthrlvl_longbench_2wikimqa_tagged,synthrlvl_longbench_musique_tagged"; MML=32768 ;;
   bbh_nochat) TASKS="bbh"; MML=8192 ;;
   code_nochat) TASKS="humaneval,mbpp"; MML=8192 ;;
+  ruler_nochat) TASKS="niah_single_1,niah_multivalue,niah_multiquery,ruler_vt,ruler_cwe"; MML=8192 ;;
   cot) TASKS="synthrlvl_deduction_pw_cot_d0,synthrlvl_deduction_pw_cot_d1,synthrlvl_deduction_pw_cot_d2,synthrlvl_deduction_pw_cot_d3,synthrlvl_deduction_pw_cot_d5"; MML=8192 ;;
   *) echo "unknown suite"; exit 2 ;;
 esac
@@ -49,12 +50,16 @@ esac
 TASK_DIR="${TMPDIR:-/tmp}/synthrlvl_ood_${SLURM_JOB_ID}"
 rm -rf "${TASK_DIR}"; cp -r lm_eval_tasks/synthrlvl_ood "${TASK_DIR}"
 sed -i "s#/vol/tmp2/laitenbf/rlvl_data/datasets#${HPCVAULT}/synthetic-RLVL/datasets#g" "${TASK_DIR}"/*.yaml
-python scripts/validate_lm_eval_tasks.py --include-path "${TASK_DIR}" --tasks "${TASKS}"
+# The RULER tasks build their haystack with the model's own tokenizer, so they
+# cannot be validated without a model in hand.
+if [ "${SUITE}" != "ruler_nochat" ]; then
+  python scripts/validate_lm_eval_tasks.py --include-path "${TASK_DIR}" --tasks "${TASKS}"
+fi
 CHAT_FLAG="--apply-chat-template"
 # BIG-Bench Hard and the code suites are completion-style, with few-shot blocks
 # and stop markers that a chat template would wrap and break, so these run
 # without it.
-case "${SUITE}" in bbh_nochat|code_nochat) CHAT_FLAG="" ;; esac
+case "${SUITE}" in bbh_nochat|code_nochat|ruler_nochat) CHAT_FLAG="" ;; esac
 python scripts/evaluate_lm_eval.py --checkpoint "${CKPT}" --model vllm --tasks "${TASKS}" \
   --include-path "${TASK_DIR}" --output-path "${OUT}" --batch-size auto --dtype bfloat16 \
   --gpu-memory-utilization 0.85 --model-arg "max_model_len=${MML}" \
