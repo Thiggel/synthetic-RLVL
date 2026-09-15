@@ -57,19 +57,30 @@ echo "run=${RUN_NAME} base=${BASE} wrap=${WRAP} mixture=${MIX}"
 TEMPLATE_ARGS=()
 if [[ "${TEMPLATE}" != "none" ]]; then TEMPLATE_ARGS=(--chat-template "${TEMPLATE}"); fi
 
+# SMOKE_STEPS runs a few optimizer steps so that a configuration error surfaces
+# in minutes instead of after a night of training. It writes to its own output
+# directory and never touches the real one.
+SMOKE_ARGS=()
+if [[ -n "${SMOKE_STEPS:-}" ]]; then
+  SMOKE_ARGS=(--max-steps "${SMOKE_STEPS}" --train-samples 256 --eval-samples 8)
+  OUT_DIR="${R}/post_sft_family_smoke/${RUN_NAME}"
+  rm -rf "${OUT_DIR}"
+fi
+
 python -m torch.distributed.run --standalone --nproc_per_node=4 \
   scripts/train_instruction_sft.py \
   --model "${BASE}" --prepared-dataset "${MIX}" \
   --train-split train --eval-split eval \
   --run-name "${RUN_NAME}" --output-dir "${OUT_DIR}" --seed "${SEED}" \
-  --train-samples 100000 --eval-samples 2048 \
+  --train-samples 100000 --eval-samples 2048 --max-steps -1 \
   --max-length 8192 --max-truncated-frac 0.005 \
-  --max-steps -1 --num-train-epochs 1 --lr 5e-6 \
+  --num-train-epochs 1 --lr 5e-6 \
+  "${SMOKE_ARGS[@]+"${SMOKE_ARGS[@]}"}" \
   --warmup-steps 0 --warmup-ratio 0.03 \
   --per-device-batch-size 2 --per-device-eval-batch-size 1 --grad-accum 16 \
   --eval-steps 2000 --save-steps 500 --save-total-limit 1 \
   --format-mode chat --single-turn-only --no-wrap-answer-tags \
-  "${TEMPLATE_ARGS[@]}" \
+  "${TEMPLATE_ARGS[@]+"${TEMPLATE_ARGS[@]}"}" \
   --full-parameter --fsdp "full_shard auto_wrap" \
   --fsdp-transformer-layer-cls-to-wrap "${WRAP}" \
   --gradient-checkpointing --bf16 --report-to none \
