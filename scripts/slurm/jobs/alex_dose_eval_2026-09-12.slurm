@@ -21,6 +21,10 @@ VENV_PATH="${VENV_PATH:-${HPCVAULT}/.venv_rlvl_posttrain}"
 export VIRTUAL_ENV="${VENV_PATH}"; export PATH="${VENV_PATH}/bin:${PATH}"
 export HF_HOME="${HF_HOME:-${HPCVAULT}/.cache/huggingface}"
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1 TOKENIZERS_PARALLELISM=false
+# HumanEval and MBPP execute the code the model writes, which the harness
+# refuses to do until this is set. The nodes run the suite in their own job
+# sandbox and the generated programs are small and self-contained.
+export HF_ALLOW_CODE_EVAL=1
 hash -r 2>/dev/null || true
 
 RUN_NAME="${RUN_NAME:?}"; SUITE="${SUITE:?}"
@@ -42,7 +46,10 @@ case "${SUITE}" in
   multihop) TASKS="synthrlvl_longbench_hotpotqa_standard,synthrlvl_longbench_2wikimqa_standard,synthrlvl_longbench_musique_standard,synthrlvl_longbench_hotpotqa_tagged,synthrlvl_longbench_2wikimqa_tagged,synthrlvl_longbench_musique_tagged"; MML=32768 ;;
   bbh_nochat) TASKS="bbh"; MML=8192 ;;
   code_nochat) TASKS="humaneval,mbpp"; MML=8192 ;;
-  ruler_nochat) TASKS="niah_single_1,niah_multivalue,niah_multiquery,ruler_vt,ruler_cwe"; MML=8192 ;;
+  ruler_nochat) TASKS="niah_single_1,niah_multivalue,niah_multiquery,ruler_vt,ruler_cwe"; MML=34816
+    # At 4,096 tokens this model is at ceiling on three of the five tasks, so
+    # the haystack has to be long enough for the control to fail somewhere.
+    EXTRA_ARGS=(--metadata '{"max_seq_lengths":[16384,32768]}') ;;
   cot) TASKS="synthrlvl_deduction_pw_cot_d0,synthrlvl_deduction_pw_cot_d1,synthrlvl_deduction_pw_cot_d2,synthrlvl_deduction_pw_cot_d3,synthrlvl_deduction_pw_cot_d5"; MML=8192 ;;
   *) echo "unknown suite"; exit 2 ;;
 esac
@@ -55,6 +62,7 @@ sed -i "s#/vol/tmp2/laitenbf/rlvl_data/datasets#${HPCVAULT}/synthetic-RLVL/datas
 if [ "${SUITE}" != "ruler_nochat" ]; then
   python scripts/validate_lm_eval_tasks.py --include-path "${TASK_DIR}" --tasks "${TASKS}"
 fi
+EXTRA_ARGS=()
 CHAT_FLAG="--apply-chat-template"
 # BIG-Bench Hard and the code suites are completion-style, with few-shot blocks
 # and stop markers that a chat template would wrap and break, so these run
@@ -63,5 +71,6 @@ case "${SUITE}" in bbh_nochat|code_nochat|ruler_nochat) CHAT_FLAG="" ;; esac
 python scripts/evaluate_lm_eval.py --checkpoint "${CKPT}" --model vllm --tasks "${TASKS}" \
   --include-path "${TASK_DIR}" --output-path "${OUT}" --batch-size auto --dtype bfloat16 \
   --gpu-memory-utilization 0.85 --model-arg "max_model_len=${MML}" \
-  --trust-remote-code --confirm-run-unsafe-code ${CHAT_FLAG} --log-samples
+  --trust-remote-code --confirm-run-unsafe-code ${CHAT_FLAG} --log-samples \
+  "${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}"
 touch "${OUT}/.complete"; echo "done ${RUN_NAME} ${SUITE}"

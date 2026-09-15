@@ -91,6 +91,14 @@ def main() -> None:
     parser.add_argument("--wandb-group", default=None)
     parser.add_argument("--trust-remote-code", action="store_true")
     parser.add_argument("--confirm-run-unsafe-code", action="store_true")
+    parser.add_argument(
+        "--metadata",
+        default=None,
+        help=(
+            "JSON passed through to lm-eval --metadata. The RULER tasks read "
+            "max_seq_lengths from it to decide how long a haystack to build."
+        ),
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -145,6 +153,8 @@ def main() -> None:
         cmd.append("--trust_remote_code")
     if args.confirm_run_unsafe_code:
         cmd.append("--confirm_run_unsafe_code")
+    if args.metadata:
+        cmd += ["--metadata", args.metadata]
     wandb_args: list[str] = []
     if args.wandb_project:
         wandb_args.append(f"project={args.wandb_project}")
