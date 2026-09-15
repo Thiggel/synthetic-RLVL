@@ -12,7 +12,10 @@ generation_kwargs:
   max_gen_toks: 4096
   temperature: 1
   do_sample: false
-  until: []
+  until:
+    - "<|im_end|>"
+    - "</s>"
+    - "\n"
 repeats: 1
 metric_list:
   - metric: score
