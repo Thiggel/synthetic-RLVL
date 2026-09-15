@@ -6,7 +6,7 @@ W="${WORK:-/home/atuin/c107fa/c107fa12}"; V="${HPCVAULT:-/home/vault/c107fa/c107
 n=0
 for d in "$W"/synthetic-RLVL/post_sft_dose_20260912/*/; do
   run=$(basename "$d"); [ -s "$d/final/config.json" ] || continue
-  for s in deduction folio_gpqa native standard cot; do
+  for s in deduction folio_gpqa native standard cot multihop; do
     base="$V/synthetic-RLVL/lm_eval_results/dose_sweep_20260912/$s/$run"
     [ -e "$base/.complete" ] && continue
     # do not resubmit a cell that is already queued or running: the marker is
