@@ -28,8 +28,12 @@ export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
 source "${R}/.venv/bin/activate"
 
 RUN_NAME="${RUN_NAME:?}"; SUITE="${SUITE:?}"
-CKPT="${R}/post_sft_family_20260915/${RUN_NAME}/final"
-OUT="${R}/lm_eval_results/family_20260915/${SUITE}/${RUN_NAME}"
+# STUDY selects which training directory the checkpoint comes from and which
+# results tree it is written to, so one script serves every study on this
+# cluster.
+STUDY="${STUDY:-family_20260915}"
+CKPT="${R}/post_sft_${STUDY}/${RUN_NAME}/final"
+OUT="${R}/lm_eval_results/${STUDY}/${SUITE}/${RUN_NAME}"
 test -s "${CKPT}/config.json" || { echo "missing ${CKPT}" >&2; exit 2; }
 [ -e "${OUT}/.complete" ] && { echo "already done"; exit 0; }
 mkdir -p "$(dirname "${OUT}")"
