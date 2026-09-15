@@ -306,6 +306,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lora-dropout", type=float, default=0.05)
     parser.add_argument("--format-mode", choices=["chat", "tagged"], default="tagged")
     parser.add_argument(
+        "--chat-template",
+        default=None,
+        help=(
+            "Chat template to install on a tokenizer that does not ship one. "
+            "Pass 'plain' for a minimal role-prefixed format, or a path to a "
+            "Jinja file. "
+            "The template is written into the saved checkpoint so that "
+            "evaluation applies the same format."
+        ),
+    )
+    parser.add_argument(
         "--lora-target-modules",
         nargs="+",
         default=["q_proj", "k_proj", "v_proj", "o_proj", "up_proj", "down_proj", "gate_proj"],
@@ -330,6 +341,17 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+# A minimal turn format for base models that ship no template. It introduces no
+# new vocabulary, so the embedding matrix does not have to be resized, and it
+# ends every turn with the model's own end-of-sequence token.
+PLAIN_TEMPLATE = (
+    "{% for message in messages %}"
+    "{{ message['role'] + ':\n' + message['content'] + eos_token + '\n' }}"
+    "{% endfor %}"
+    "{% if add_generation_prompt %}{{ 'assistant:\n' }}{% endif %}"
+)
+
+
 def main() -> None:
     args = parse_args()
     set_seed(int(args.seed))
@@ -337,6 +359,11 @@ def main() -> None:
 
     output_dir = Path(args.output_dir or Path(os.environ.get("WORK", os.environ["HOME"])) / "synthetic-RLVL" / "runs" / args.run_name)
     tokenizer = AutoTokenizer.from_pretrained(args.model)
+    if args.chat_template:
+        if args.chat_template == "plain":
+            tokenizer.chat_template = PLAIN_TEMPLATE
+        else:
+            tokenizer.chat_template = Path(args.chat_template).read_text()
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
