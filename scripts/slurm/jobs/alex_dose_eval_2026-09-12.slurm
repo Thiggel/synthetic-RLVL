@@ -38,6 +38,7 @@ mkdir "${CLAIM}" 2>/dev/null || { echo "claimed by another job"; exit 0; }
 rm -f "${OUT}.queued"
 trap 'rmdir "${CLAIM}" 2>/dev/null || true' EXIT
 
+EXTRA_ARGS=()
 case "${SUITE}" in
   deduction) TASKS="synthrlvl_deduction_pw_d0,synthrlvl_deduction_pw_d1,synthrlvl_deduction_pw_d2,synthrlvl_deduction_pw_d3,synthrlvl_deduction_pw_d5,synthrlvl_deduction_bp_cot_d5,synthrlvl_deduction_bp_cot_d15,synthrlvl_deduction_bp_cot_d25"; MML=8192 ;;
   folio_gpqa) TASKS="synthrlvl_folio,synthrlvl_gpqa_diamond"; MML=8192 ;;
@@ -62,7 +63,6 @@ sed -i "s#/vol/tmp2/laitenbf/rlvl_data/datasets#${HPCVAULT}/synthetic-RLVL/datas
 if [ "${SUITE}" != "ruler_nochat" ]; then
   python scripts/validate_lm_eval_tasks.py --include-path "${TASK_DIR}" --tasks "${TASKS}"
 fi
-EXTRA_ARGS=()
 CHAT_FLAG="--apply-chat-template"
 # BIG-Bench Hard and the code suites are completion-style, with few-shot blocks
 # and stop markers that a chat template would wrap and break, so these run
