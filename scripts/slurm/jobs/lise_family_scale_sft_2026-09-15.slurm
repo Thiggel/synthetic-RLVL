@@ -54,9 +54,17 @@ RUN_NAME="${TAG}_${COND}_seed${SEED}"
 MIX="${R}/datasets/dose_sweep_20260912/${MIX_NAME}"
 OUT_DIR="${R}/post_sft_family_20260915/${RUN_NAME}"
 
+# Offline mode refuses the hub API call that a repository id triggers, so the
+# job resolves the id to the snapshot the login node downloaded and passes the
+# path instead.
+CACHE_DIR="${HF_HOME}/hub/models--${BASE//\//--}"
+BASE_PATH=$(ls -d "${CACHE_DIR}"/snapshots/*/ 2>/dev/null | head -1)
+test -n "${BASE_PATH}" || { echo "no cached snapshot for ${BASE} under ${CACHE_DIR}" >&2; exit 2; }
+test -s "${BASE_PATH}/config.json" || { echo "incomplete snapshot ${BASE_PATH}" >&2; exit 2; }
+
 test -d "${MIX}" || { echo "missing mixture ${MIX}" >&2; exit 2; }
 [[ -s "${OUT_DIR}/final/config.json" ]] && { echo "already done ${RUN_NAME}"; exit 0; }
-echo "run=${RUN_NAME} base=${BASE} wrap=${WRAP} mixture=${MIX}"
+echo "run=${RUN_NAME} base=${BASE} path=${BASE_PATH} wrap=${WRAP} mixture=${MIX}"
 
 TEMPLATE_ARGS=()
 if [[ "${TEMPLATE}" != "none" ]]; then TEMPLATE_ARGS=(--chat-template "${TEMPLATE}"); fi
@@ -73,7 +81,7 @@ fi
 
 python -m torch.distributed.run --standalone --nproc_per_node=4 \
   scripts/train_instruction_sft.py \
-  --model "${BASE}" --prepared-dataset "${MIX}" \
+  --model "${BASE_PATH}" --prepared-dataset "${MIX}" \
   --train-split train --eval-split eval \
   --run-name "${RUN_NAME}" --output-dir "${OUT_DIR}" --seed "${SEED}" \
   --train-samples 100000 --eval-samples 2048 --max-steps -1 \
