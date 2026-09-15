@@ -41,6 +41,7 @@ case "${SUITE}" in
   native) TASKS="synthrlvl_deduction_bp_native_d5,synthrlvl_deduction_bp_native_d15,synthrlvl_deduction_bp_native_d25"; MML=16384 ;;
   multihop) TASKS="synthrlvl_longbench_hotpotqa_standard,synthrlvl_longbench_2wikimqa_standard,synthrlvl_longbench_musique_standard,synthrlvl_longbench_hotpotqa_tagged,synthrlvl_longbench_2wikimqa_tagged,synthrlvl_longbench_musique_tagged"; MML=32768 ;;
   bbh_nochat) TASKS="bbh"; MML=8192 ;;
+  code_nochat) TASKS="humaneval,mbpp"; MML=8192 ;;
   cot) TASKS="synthrlvl_deduction_pw_cot_d0,synthrlvl_deduction_pw_cot_d1,synthrlvl_deduction_pw_cot_d2,synthrlvl_deduction_pw_cot_d3,synthrlvl_deduction_pw_cot_d5"; MML=8192 ;;
   *) echo "unknown suite"; exit 2 ;;
 esac
@@ -50,10 +51,10 @@ rm -rf "${TASK_DIR}"; cp -r lm_eval_tasks/synthrlvl_ood "${TASK_DIR}"
 sed -i "s#/vol/tmp2/laitenbf/rlvl_data/datasets#${HPCVAULT}/synthetic-RLVL/datasets#g" "${TASK_DIR}"/*.yaml
 python scripts/validate_lm_eval_tasks.py --include-path "${TASK_DIR}" --tasks "${TASKS}"
 CHAT_FLAG="--apply-chat-template"
-# BIG-Bench Hard ships as a chain-of-thought few-shot suite whose answer
-# extractor reads a plain continuation. The chat template wraps every shot and
-# the extractor then matches nothing, so this one suite runs without it.
-if [ "${SUITE}" = "bbh_nochat" ]; then CHAT_FLAG=""; fi
+# BIG-Bench Hard and the code suites are completion-style, with few-shot blocks
+# and stop markers that a chat template would wrap and break, so these run
+# without it.
+case "${SUITE}" in bbh_nochat|code_nochat) CHAT_FLAG="" ;; esac
 python scripts/evaluate_lm_eval.py --checkpoint "${CKPT}" --model vllm --tasks "${TASKS}" \
   --include-path "${TASK_DIR}" --output-path "${OUT}" --batch-size auto --dtype bfloat16 \
   --gpu-memory-utilization 0.85 --model-arg "max_model_len=${MML}" \
