@@ -34,3 +34,38 @@ be chosen against the target model's measured answer distribution.
 Open: one seed per cell, a second Llama seed is training, and the OLMo arms
 will test the prediction that a well-calibrated control gains little, since its
 control carries an excess of only 8.6 points.
+
+## Update, 2026-09-16: the rule covers seven arms and three families
+
+ProofWriter depth 3, 500 items, one seed per cell. Worst excess is the largest
+gap between the model's answer distribution and the gold distribution, which is
+42.8 percent false, 39.8 true, 17.4 unknown.
+
+| model | arm | worst excess | accuracy |
+|---|---|---|---|
+| Qwen2.5-7B | control | true +23.5 | 39.3 |
+| Qwen2.5-7B | formal 5% | true +0.2 | 50.0 |
+| Qwen2.5-3B | control | true +52.2 | 38.4 |
+| Qwen2.5-3B | formal 5% | true +52.0 | 41.8 |
+| Llama-3.1-8B | control | unknown +26.8 | 37.6 |
+| Llama-3.1-8B | formal 5% | unknown +48.0 | 29.4 |
+| Llama-3.1-8B | English 10% | true +5.4 | 49.2 |
+| OLMo-2-7B | control | true +8.6 | 44.4 |
+| OLMo-2-7B | formal 5% | unknown +46.2 | 34.8 |
+
+Accuracy falls as miscalibration rises, with no exception across three families
+and two scales. OLMo is the case that refutes the simpler reading. We predicted
+a small gain because its control is the best calibrated of the four, and it
+lost 9.6 points, because a well-calibrated model has nothing to gain and a
+great deal to lose when the injected data carries a distribution of its own.
+
+The derivation-writing ability is unaffected by any of this. Every treated arm
+writes proofs a checker accepts, 96.0 to 100 percent at chain length 25,
+against essentially zero for every control, including the arms whose accuracy
+fell.
+
+What the paper should claim. A tiny quantity of program-generated data reliably
+installs checkable derivation writing in every family and scale we measured.
+Benchmark accuracy is a separate matter that follows the answer distribution,
+so it has to be diagnosed per model and per benchmark before the data is
+chosen, and the formal rendering helped only Qwen.
