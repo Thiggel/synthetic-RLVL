@@ -53,3 +53,11 @@ Formal notation, ProofWriter d3: 1% .405, 5% .500, 10% .486, 25% .516
 (seed 3407). Flat from five percent upward, matching the midtraining dose
 test where 10 and 30 percent were indistinguishable. The practical
 recommendation is five percent; a quarter of the mixture buys nothing more.
+
+## Dose keeps helping where prompting might substitute
+
+Answer-only ProofWriter d3 saturates above five percent, but chain-of-thought
+accuracy does not: control .399, five percent .453, ten percent .494,
+twenty-five percent .558 (formal, seed 3407). So in the regime where a
+well-prompted baseline is the natural objection, more synthetic derivation
+data still helps, and the gap over the control widens to sixteen points.
