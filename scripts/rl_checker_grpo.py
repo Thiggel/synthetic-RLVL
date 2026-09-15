@@ -30,6 +30,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "analysis"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "lm_eval_tasks", "synthrlvl_ood"))
 from check_native_derivations import check  # noqa: E402
 from checkers import check_gsm8k, check_proofwriter  # noqa: E402
+from grounded_checker import check_grounded_logic  # noqa: E402
 import utils  # noqa: E402
 
 NUM = re.compile(r"-?\d[\d,]*\.?\d*")
@@ -59,6 +60,29 @@ def answer_of(text):
     return utils.normalize_answer(m.group(1).strip().split("\n")[0]) if m else ""
 
 
+# Appended to every prompt when a grounded logic block is requested. The block
+# is scored by `grounded_checker`, which pays only when the premises quote the
+# prompt, the steps cite established lines, and the final line carries the same
+# answer the model states in words.
+LOGIC_BLOCK_INSTRUCTION = """
+
+Reason in ordinary language first. Then write a logic block that derives your
+answer, in exactly this form:
+
+<logic>
+p1: "a span copied verbatim from the question" |- Claim(a)
+p2: "another span copied verbatim" |- Claim(a) -> Other(b)
+s1: p1,p2 |- Other(b) [mp]
+s2: 12 * 3 = 36 [arith]
+concl: s1
+</logic>
+
+Every premise must quote the question word for word. Every step must cite the
+lines it follows from and name a rule among mp, mt, and_i, and_e, or_e, subst,
+arith and def. The line named by concl must state your final answer. Put the
+answer itself in <answer> tags after the block."""
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
@@ -66,7 +90,15 @@ def main():
     ap.add_argument("--mixture", default="/vol/tmp2/laitenbf/rlvl_data/datasets/rlvr_mixture_20260912/train.jsonl")
     ap.add_argument("--data", default="/vol/tmp2/laitenbf/rlvl_data/datasets/deep_branchproof_20260911")
     ap.add_argument("--depths", nargs="+", type=int, default=[30, 35])
-    ap.add_argument("--reward", choices=["correct", "valid", "both"], required=True)
+    ap.add_argument("--reward", choices=["correct", "valid", "both", "grounded"], required=True)
+    ap.add_argument(
+        "--logic-block",
+        action="store_true",
+        help=(
+            "Ask for a grounded logic block after the reasoning and score it "
+            "with the grounded checker. Required by --reward grounded."
+        ),
+    )
     ap.add_argument("--formal", action="store_true", help="completions are formal notation")
     ap.add_argument("--output-dir", required=True)
     ap.add_argument("--max-steps", type=int, default=300)
@@ -89,6 +121,8 @@ def main():
     from trl import GRPOConfig, GRPOTrainer
 
     rows = []
+    if a.reward == "grounded" and not a.logic_block:
+        a.logic_block = True
     if a.task == "mixture":
         # reasoning plus mathematics: knights and knaves, ProofWriter, and the
         # OLMo verifiable-reward mathematics, each with its own checker
@@ -97,6 +131,8 @@ def main():
             p = r["prompt"]
             if r["kind"] == "kk":  # the puzzle text already ends with the question
                 p = p.replace("\nWho is a knight and who is a knave?\n</question>", "\n</question>")
+            if a.logic_block:
+                p = p + LOGIC_BLOCK_INSTRUCTION
             rows.append(dict(prompt=p, doc=json.dumps(r)))
     elif a.task == "gsm8k":
         from datasets import load_dataset
@@ -115,7 +151,7 @@ def main():
     os.makedirs(a.output_dir, exist_ok=True)
     json.dump(hold, open(os.path.join(a.output_dir, "holdout.json"), "w"))
 
-    stats = dict(n=0, correct=0.0, valid=0.0, both=0.0, has_proof=0.0)
+    stats = dict(n=0, correct=0.0, valid=0.0, both=0.0, has_proof=0.0, grounded=0.0)
 
     def reward_fn(completions, doc, **kwargs):
         out = []
@@ -153,12 +189,18 @@ def main():
                 res = check(item, text + "</answer>", a.formal)
                 valid = float(res["all_valid"] > 0 and res["conclusion_matches_last"] > 0)
                 corr = float(answer_of(text) == utils.normalize_answer(item["answer"]))
+            if a.reward == "grounded":
+                stated = answer_of(text) if item.get("kind") != "math" else (gsm8k_answer(text) or "")
+                g = check_grounded_logic(item.get("prompt", ""), text, stated)
+                valid = float(g.valid)
+                stats["grounded"] += valid
             stats["n"] += 1
             stats["correct"] += corr
             stats["valid"] += valid
             stats["both"] += corr * valid
             stats["has_proof"] += res["has_proof"]
-            out.append({"correct": corr, "valid": valid, "both": corr * valid}[a.reward])
+            out.append({"correct": corr, "valid": valid, "both": corr * valid,
+                        "grounded": corr * valid}[a.reward])
         if stats["n"] and stats["n"] % (a.num_generations * 16) < a.num_generations:
             n = stats["n"]
             print(f"[rollouts {n}] correct {stats['correct']/n:.3f} valid {stats['valid']/n:.3f} "
