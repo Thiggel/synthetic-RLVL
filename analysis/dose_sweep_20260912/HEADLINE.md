@@ -46,3 +46,10 @@ GPQA .288-.369 with seed noise exceeding every arm difference.
   answer .99 of the time.
 - Under chain-of-thought prompting the advantage shrinks but survives:
   control .399, five percent .453, ten percent .494.
+
+## Saturation confirmed at 25 percent
+
+Formal notation, ProofWriter d3: 1% .405, 5% .500, 10% .486, 25% .516
+(seed 3407). Flat from five percent upward, matching the midtraining dose
+test where 10 and 30 percent were indistinguishable. The practical
+recommendation is five percent; a quarter of the mixture buys nothing more.
