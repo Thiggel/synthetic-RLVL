@@ -31,7 +31,7 @@ export WORK="${WORK:-/home/atuin/c107fa/c107fa12}"
 export HPCVAULT="${HPCVAULT:-/home/vault/c107fa/c107fa12}"
 source ./scripts/env.sh
 
-CONDITIONS=(control longdoc logic_band25 nl_exact_band25 condensed_logic_band25)
+CONDITIONS=(control longdoc logic_band25 nl_exact_band25 condensed_logic_band25 nl_scrambled_band25)  # index 5 is the shuffled-order control
 CONDITION="${CONDITIONS[$SLURM_ARRAY_TASK_ID]}"
 # Seed replication (2026-09-08): SEED=3407 keeps the original names; any other
 # seed appends _seed<SEED> to the checkpoint name and to every output root.
