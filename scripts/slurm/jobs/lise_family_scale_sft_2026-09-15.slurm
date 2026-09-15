@@ -27,6 +27,10 @@ mkdir -p logs
 R=/scratch/usr/bemflait/synthetic-RLVL
 export HF_HOME="${R}/.cache/huggingface"
 export HF_HUB_ENABLE_HF_TRANSFER=1
+# Compute nodes have no route to the internet, so every weight and dataset is
+# fetched on the login node first and read from the cache here.
+export HF_HUB_OFFLINE=1
+export HF_DATASETS_OFFLINE=1
 export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
 export TOKENIZERS_PARALLELISM=false
 export OMP_NUM_THREADS=8

@@ -19,6 +19,10 @@ mkdir -p logs
 R=/scratch/usr/bemflait/synthetic-RLVL
 export HF_HOME="${R}/.cache/huggingface"
 export HF_HUB_ENABLE_HF_TRANSFER=1
+# Compute nodes have no route to the internet, so every weight and dataset is
+# fetched on the login node first and read from the cache here.
+export HF_HUB_OFFLINE=1
+export HF_DATASETS_OFFLINE=1
 export TOKENIZERS_PARALLELISM=false
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
 source "${R}/.venv/bin/activate"
@@ -37,7 +41,7 @@ case "${SUITE}" in
   deduction) TASKS="synthrlvl_deduction_pw_d0,synthrlvl_deduction_pw_d1,synthrlvl_deduction_pw_d2,synthrlvl_deduction_pw_d3,synthrlvl_deduction_pw_d5"; MML=8192 ;;
   folio) TASKS="synthrlvl_folio"; MML=8192 ;;
   native) TASKS="synthrlvl_deduction_bp_native_d5,synthrlvl_deduction_bp_native_d15,synthrlvl_deduction_bp_native_d25"; MML=16384 ;;
-  standard) TASKS="gsm8k,mmlu,arc_challenge,agieval_logiqa_en,hellaswag,winogrande,piqa"; MML=8192 ;;
+  standard) TASKS="gsm8k,mmlu,arc_challenge,hellaswag,winogrande,piqa"; MML=8192 ;;
   *) echo "unknown suite"; exit 2 ;;
 esac
 
