@@ -44,6 +44,7 @@ RUN_DIR_TAGS=(
   qwen25_7b_longwin_logic_band25_p10_2p5b_s8192
   qwen25_7b_longwin_nl_exact_band25_p10_2p5b_s8192
   qwen25_7b_longwin_condensed_logic_band25_p10_2p5b_s8192
+  qwen25_7b_longwin_nl_scrambled_band25_p10_2p5b_s8192
 )
 IDX="${SLURM_ARRAY_TASK_ID}"
 CONDITION="${CONDITIONS[$IDX]}"
