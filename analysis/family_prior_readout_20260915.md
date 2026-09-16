@@ -117,3 +117,28 @@ percent and dependable at one percent, where both seeds exceed 93 percent. At
 there is no threshold to report below 1,000, only a lottery. An earlier reading
 of seed 3407 alone suggested a smooth ramp from 100 documents, which the second
 seed does not support.
+
+## The broad suite on other families, 2026-09-16
+
+Llama-3.1-8B, mean of two seeds, and Qwen2.5-3B, one seed.
+
+| model | arm | derivations | PW d3 | FOLIO | GPQA | HotpotQA | 2Wiki |
+|---|---|---|---|---|---|---|---|
+| Llama-3.1-8B | control | 0.0 | 33.3 | 51.2 | 24.8 | 53.1 | 39.8 |
+| Llama-3.1-8B | formal 5% | 99.5 | 36.3 | 48.6 | 25.8 | 54.5 | 39.5 |
+| Llama-3.1-8B | English 10% | 100.0 | 48.8 | 48.3 | 26.3 | 52.8 | 40.0 |
+| Qwen2.5-3B | control | 0.0 | 38.4 | 40.4 | 30.8 | 44.7 | 33.4 |
+| Qwen2.5-3B | formal 5% | 96.0 | 41.8 | 39.4 | 27.3 | 43.2 | 34.3 |
+| Qwen2.5-3B | English 10% | 100.0 | 41.8 | 42.9 | 28.3 | 41.1 | 34.9 |
+
+Outside Qwen2.5-7B only two effects replicate, the derivation-writing
+capability and the ProofWriter gain. FOLIO loses about three points on Llama in
+both treated arms, GPQA moves inside its noise, and the multi-hop datasets do
+not move. The broader transfer measured on the 7B model, which includes FOLIO,
+BIG-Bench Hard chain subtasks and GPQA quantitative items, is so far specific
+to that model.
+
+Llama's control varies by 8.6 points across seeds on ProofWriter against 1.4
+for the Qwen control in the main sweep, so single-seed comparisons on that
+model are not usable, and an earlier single-seed reading of a loss under the
+formal rendering did not survive the second seed.
