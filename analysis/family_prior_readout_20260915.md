@@ -95,3 +95,23 @@ Caveat: the Tulu-trained models are verbose and do not reliably stop after a
 short answer, so their accuracy is scored on partly degenerate text. The
 first-word distribution is unambiguous and the within-corpus comparison is
 sound, but the cross-corpus accuracy comparison is not like for like.
+
+## Below one percent the behaviour is unreliable, not merely weaker
+
+Derivations a checker accepts at chain length 25, two seeds.
+
+| documents | share | seed 3407 | seed 3408 |
+|---|---|---|---|
+| 100 | 0.1% | 29.0 | 0.0 |
+| 200 | 0.2% | 50.5 | 3.0 |
+| 500 | 0.5% | 84.5 | pending |
+| 1,000 | 1% | 93.2 | 93.9 |
+
+The two seeds disagree by 29 and 47 points below 500 documents and agree within
+a point at 1,000. ProofWriter accuracy in the same arms differs by about ten
+points between seeds, against a control seed spread of 1.4 in the main sweep.
+
+So the correct claim is that the ability is unreliable below roughly 500
+documents and dependable from 1,000, and a single seed in this regime will
+mislead. An earlier reading of seed 3407 alone suggested a smooth ramp from 100
+documents, which the second seed does not support.
