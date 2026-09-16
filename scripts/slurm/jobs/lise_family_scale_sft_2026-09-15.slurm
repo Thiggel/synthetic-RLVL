@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=64
 #SBATCH --time=24:00:00
-#SBATCH --array=0-11%4
+#SBATCH --array=0-20%4
 #SBATCH --output=logs/%x_%A_%a.out
 #SBATCH --error=logs/%x_%A_%a.err
 #
@@ -41,6 +41,12 @@ MODELS=(
   "allenai/OLMo-2-1124-7B Olmo2DecoderLayer olmo2_7b plain"
   "Qwen/Qwen2.5-3B Qwen2DecoderLayer qwen25_3b none"
   "Qwen/Qwen2.5-14B Qwen2DecoderLayer qwen25_14b none"
+  # indices 12-14 and 15-17 add a larger dense model and two mixtures of
+  # experts, so the scale axis reaches 32B and the architecture axis covers
+  # sparse models. All of these are base models, as every model here is.
+  "Qwen/Qwen2.5-32B Qwen2DecoderLayer qwen25_32b none"
+  "Qwen/Qwen3-30B-A3B-Base Qwen3MoeDecoderLayer qwen3_30b_moe none"
+  "allenai/OLMoE-1B-7B-0924 OlmoeDecoderLayer olmoe_1b7b plain"
 )
 CONDITIONS=("control control" "logic_p05 logic_p05" "nl_exact_p10 nl_exact_p10")
 
