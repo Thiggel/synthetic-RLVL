@@ -312,11 +312,16 @@ the deduction corpus causes on long-context word counting.
 |---|---|---|---|---|
 | instruction data only | 0.3 | 39.3 | 41.2 | 51.4 |
 | 5 percent derivations in instruction data | 99.3 | 50.0 | 48.9 | 57.8 |
-| derivations only, no instruction data | 100.0 | 0.0 | 0.0 | 0.0 |
+| derivations only, formal, no instruction data | 100.0 | 0.0 | 0.0 | 0.0 |
+| derivations only, English, no instruction data | 100.0 | 0.0 | 0.0 | 0.0 |
 
 The zero is a format collapse, not a scoring artefact. Asked a ProofWriter
 question the model emits the single token `<formal>` and stops, because the
 only document shape it has produced begins that way.
+
+Both renderings collapse identically, so this is not a quirk of symbolic
+markup. The English rendering is ordinary sentences and still leaves the model
+unable to answer a plain question.
 
 So the two ingredients are each useless alone for this purpose. The
 derivations supply the procedure and the instruction mixture supplies the
