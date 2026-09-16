@@ -28,8 +28,12 @@ export HF_ALLOW_CODE_EVAL=1
 hash -r 2>/dev/null || true
 
 RUN_NAME="${RUN_NAME:?}"; SUITE="${SUITE:?}"
-CKPT="${WORK}/synthetic-RLVL/post_sft_dose_20260912/${RUN_NAME}/final"
-OUT="${HPCVAULT}/synthetic-RLVL/lm_eval_results/dose_sweep_20260912/${SUITE}/${RUN_NAME}"
+# STUDY names the training directory the checkpoint comes from and the results
+# tree it is written to, so the later studies reuse this job unchanged.
+STUDY="${STUDY:-dose_20260912}"
+RESULTS="${RESULTS:-dose_sweep_20260912}"
+CKPT="${WORK}/synthetic-RLVL/post_sft_${STUDY}/${RUN_NAME}/final"
+OUT="${HPCVAULT}/synthetic-RLVL/lm_eval_results/${RESULTS}/${SUITE}/${RUN_NAME}"
 test -s "${CKPT}/config.json" || { echo "missing ${CKPT}" >&2; exit 2; }
 [ -e "${OUT}/.complete" ] && { echo "already done"; exit 0; }
 mkdir -p "$(dirname "${OUT}")"

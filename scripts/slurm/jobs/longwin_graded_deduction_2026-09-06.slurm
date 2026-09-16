@@ -60,13 +60,20 @@ TASKS="synthrlvl_deduction_pw_d0,synthrlvl_deduction_pw_d1,synthrlvl_deduction_p
 
 # Fail closed: never evaluate a checkpoint that is missing or half-written.
 test -s "${CHECKPOINT}/config.json"
-python scripts/validate_lm_eval_tasks.py --include-path lm_eval_tasks/synthrlvl_ood --tasks "${TASKS}"
+# The task files carry absolute dataset paths from the machine they were
+# written on, so they are copied out and rewritten for this cluster before the
+# harness reads them.
+TASK_DIR="${TMPDIR:-/tmp}/synthrlvl_ood_${SLURM_JOB_ID}"
+rm -rf "${TASK_DIR}"; cp -r lm_eval_tasks/synthrlvl_ood "${TASK_DIR}"
+sed -i "s#/vol/tmp2/laitenbf/rlvl_data/datasets#${HPCVAULT}/synthetic-RLVL/datasets#g" "${TASK_DIR}"/*.yaml
+
+python scripts/validate_lm_eval_tasks.py --include-path "${TASK_DIR}" --tasks "${TASKS}"
 
 python scripts/evaluate_lm_eval.py \
   --checkpoint "${CHECKPOINT}" \
   --model vllm \
   --tasks "${TASKS}" \
-  --include-path lm_eval_tasks/synthrlvl_ood \
+  --include-path "${TASK_DIR}" \
   --output-path "${OUT_DIR}" \
   --batch-size auto \
   --dtype bfloat16 \
