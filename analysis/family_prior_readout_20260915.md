@@ -79,8 +79,10 @@ differs. ProofWriter depth 3, 500 items, one seed.
 |---|---|---|---|---|
 | Dolci | control | true .73 | true +23.5 | 39.3 |
 | Dolci | plus 5% formal | true .50 | true +0.2 | 50.0 |
-| Tulu 3 | control | false .82 | false +39.6 | 53.8 |
-| Tulu 3 | plus 5% formal | false .71 | false +28.6 | 55.6 |
+| Tulu 3 | control, 2 seeds | false .82 | false +39.6 | 53.6 |
+| Tulu 3 | plus 5% formal, seed 3407 | false .71 | false +28.6 | 55.6 |
+| Tulu 3 | plus 5% formal, seed 3409 | false .70 | false +27.0 | 57.2 |
+| Tulu 3 | plus 5% formal, seed 3408 | as control | -- | 51.0 |
 
 The two corpora install opposite priors on the same base model, which is the
 paper's causal claim shown by intervention instead of inferred from one corpus.
@@ -90,6 +92,13 @@ both, by 10.7 and 1.8 points.
 
 Neither control writes a derivation a checker accepts, 0.3 percent and 0.0, in
 line with every control measured across three model families.
+
+Three treated seeds: two reach 99 percent on derivations and pull the negative
+prior back by 11 to 13 points with accuracy rising, and the third learns
+nothing and behaves like a control. Five percent is therefore at the
+reliability threshold on this corpus where it is comfortably above it on ours,
+which is itself worth reporting, since the required share depends on the
+instruction corpus.
 
 Caveat: the Tulu-trained models are verbose and do not reliably stop after a
 short answer, so their accuracy is scored on partly degenerate text. The
