@@ -53,6 +53,19 @@ case "${SUITE}" in
   *) echo "unknown suite"; exit 2 ;;
 esac
 
+# A model cannot be evaluated past its own positional limit. OLMo-2 stops at
+# 4,096 tokens, and asking vLLM for more produces an out-of-bounds index in the
+# sampling kernel rather than an error, so the request is clamped here.
+MODEL_MAX=$(python - "${CKPT}/config.json" <<'PYEOF'
+import json, sys
+print(json.load(open(sys.argv[1])).get("max_position_embeddings", 0) or 0)
+PYEOF
+)
+if [ "${MODEL_MAX}" -gt 0 ] && [ "${MML}" -gt "${MODEL_MAX}" ]; then
+  echo "clamping max_model_len ${MML} to the model limit ${MODEL_MAX}"
+  MML="${MODEL_MAX}"
+fi
+
 TASK_DIR="${TMPDIR:-/tmp}/synthrlvl_ood_${SLURM_JOB_ID}"
 rm -rf "${TASK_DIR}"; cp -r lm_eval_tasks/synthrlvl_ood "${TASK_DIR}"
 sed -i "s#/vol/tmp2/laitenbf/rlvl_data/datasets#${R}/datasets#g" "${TASK_DIR}"/*.yaml
