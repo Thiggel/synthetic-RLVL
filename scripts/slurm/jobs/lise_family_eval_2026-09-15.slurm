@@ -62,6 +62,15 @@ print(json.load(open(sys.argv[1])).get("max_position_embeddings", 0) or 0)
 PYEOF
 )
 if [ "${MODEL_MAX}" -gt 0 ] && [ "${MML}" -gt "${MODEL_MAX}" ]; then
+  # Multi-hop question answering supplies passages that fill the window, so a
+  # clamp would silently truncate the evidence and the score would measure the
+  # truncation. That suite is skipped instead. The other suites have short
+  # prompts and only lose the deepest chains, so clamping is safe there.
+  if [ "${SUITE}" = "multihop" ]; then
+    echo "skipping ${SUITE}: needs ${MML} tokens, model supports ${MODEL_MAX}"
+    rmdir "${CLAIM}" 2>/dev/null || true
+    exit 0
+  fi
   echo "clamping max_model_len ${MML} to the model limit ${MODEL_MAX}"
   MML="${MODEL_MAX}"
 fi
