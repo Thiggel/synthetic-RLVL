@@ -192,3 +192,27 @@ The capability claim is therefore near-universal rather than universal. Three
 of four families reach essentially 100 percent at every depth from five or ten
 percent of the mixture, the fourth reaches a quarter, and no control in any
 family or corpus writes a single accepted derivation.
+
+## Chain length: the procedure needs depth, the calibration does not
+
+Training on band 5 means every training proof has five hops. Band 25 is the
+main sweep. Formal rendering, five percent share, one seed so far.
+
+| training band | deriv chain 5 | deriv chain 15 | deriv chain 25 | PW d3 | FOLIO |
+|---|---|---|---|---|---|
+| 5 | 100.0 | 13.0 | 10.5 | 46.4 | 58.1 |
+| 25 | 99.8 | 100.0 | 99.3 | 50.0 | 57.8 |
+
+A shallow curriculum does not generalise upward. Trained at five hops the model
+writes accepted derivations on every five-hop problem and almost none at
+fifteen or twenty-five, where the band 25 arm holds above 99 percent at every
+depth and extends to chain 45, about twice its training depth.
+
+Benchmark accuracy does not need the depth. The band 5 arms reach 46.4 and 49.0
+on ProofWriter depth 3 and 58.1 on FOLIO, comparable to the band 25 arms, which
+separates the two effects once more. The inference procedure requires
+derivations at least as deep as the target, and the answer-prior correction
+does not.
+
+Practical consequence: generate at the depth the model has to reach, since
+depth is cheap for a program and cannot be recovered afterwards.
