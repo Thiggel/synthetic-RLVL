@@ -216,3 +216,36 @@ does not.
 
 Practical consequence: generate at the depth the model has to reach, since
 depth is cheap for a program and cannot be recovered afterwards.
+
+## The recipe does not transfer to arbitrary chain-structured tasks
+
+Four new generators, program tracing, reachability with balanced negatives,
+temporal ordering and unit propagation, mixed at five percent in the formal
+rendering, one seed. Each targets a task the deduction corpus leaves flat.
+
+| benchmark | control | deduction 5% | new corpora 5% |
+|---|---|---|---|
+| temporal sequences | 74.4 | 72.0 | 70.4 |
+| date understanding | 70.8 | 72.0 | 68.8 |
+| multistep arithmetic | 88.0 | 90.4 | 88.4 |
+| HumanEval | 66.8 | 67.1 | 61.6 |
+| MBPP | 65.2 | 64.8 | 65.0 |
+| BBH chain group | 60.9 | 68.5 | 64.9 |
+| FOLIO | 51.4 | 57.8 | 53.2 |
+| GPQA | 31.8 | 33.8 | 31.3 |
+
+Every targeted prediction fails. Temporal ordering was the sharpest one, since
+the generator matches the subtask structure and the subtask is flat under
+deduction data, and it falls 4 points. Program tracing was aimed at coding and
+HumanEval falls 5.2. Unit propagation was aimed at multistep arithmetic, which
+does not move.
+
+The new corpora do lift the chain group, 60.9 to 64.9, but by less than the
+deduction corpus does at 68.5, on subtasks the deduction corpus was not built
+for either.
+
+So matching the latent structure of a generator to a target task is not
+sufficient to improve that task. The natural extrapolation from the earlier
+results, that a capability can be engineered by writing the right generator, is
+not supported. Open: one seed, one share, one rendering, and RULER variable
+tracking is still pending.
