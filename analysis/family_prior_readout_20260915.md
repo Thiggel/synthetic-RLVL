@@ -395,3 +395,18 @@ things.
 Variable tracking does not move under either corpus, including the one with a
 program-tracing generator built for that structure, so the last targeted
 prediction fails alongside temporal ordering, arithmetic and coding.
+
+## The scale axis within Qwen2.5, ProofWriter depth 3
+
+| size | control | formal 5% | English 10% |
+|---|---|---|---|
+| 3B | 38.2 +- 0.4 (2) | 42.1 +- 0.6 (2) | 41.8 (1) |
+| 7B | 39.3 (3) | 50.0 (3) | 53.2 (3) |
+| 14B | 33.0 (1) | 39.2 (1) | 43.6 (1) |
+
+The English rendering is ahead of the formal one at every size, and ahead on
+every family measured, by 3.4 to 15.5 points over the respective control. There
+is no monotone trend in the size of the gain, which peaks at 7B.
+
+At 14B the English arm also gains 4.5 points on GPQA-Diamond where the formal
+arm gains 0.5, and loses 3.0 on FOLIO where the formal arm is flat.
