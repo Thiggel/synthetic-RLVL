@@ -89,7 +89,7 @@ python -m torch.distributed.run --standalone --nproc_per_node=4 \
   --num-train-epochs 1 --lr 5e-6 \
   "${SMOKE_ARGS[@]+"${SMOKE_ARGS[@]}"}" \
   --warmup-steps 0 --warmup-ratio 0.03 \
-  --per-device-batch-size 2 --per-device-eval-batch-size 1 --grad-accum 16 \
+  --per-device-batch-size "${PDBS:-2}" --per-device-eval-batch-size 1 --grad-accum "${GA:-16}" \
   --eval-steps 2000 --save-steps 500 --save-total-limit 1 \
   --format-mode chat --single-turn-only --no-wrap-answer-tags \
   "${TEMPLATE_ARGS[@]+"${TEMPLATE_ARGS[@]}"}" \
