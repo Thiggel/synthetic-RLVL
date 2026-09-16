@@ -168,3 +168,27 @@ The subtask localisation on Qwen2.5-7B remains correct as an account of what
 changed in that model. It is not evidence that the intervention transfers to
 general benchmarks in general, and the paper should present it as a repaired
 deficit rather than as transfer.
+
+## Derivation writing by chain length, 2026-09-16
+
+Fraction of the generator's own problems where a checker accepts the written
+proof and the answer is correct.
+
+| model | arm | chain 5 | chain 15 | chain 25 |
+|---|---|---|---|---|
+| Llama-3.1-8B | formal 5% | 100.0 | 100.0 | 99.0 |
+| Llama-3.1-8B | English 10% | 100.0 | 100.0 | 100.0 |
+| Qwen2.5-3B | formal 5% | 99.5 | 99.5 | 96.0 |
+| Qwen2.5-3B | English 10% | 100.0 | 100.0 | 100.0 |
+| OLMo-2-7B | formal 5% | 24.5 | 27.5 | 0.5 |
+| OLMo-2-7B | English 10% | 20.0 | 25.5 | 19.5 |
+| every control, every family | | 0.0 | 0.0 | 0.0 |
+
+OLMo is weak at chain 5 as well, where the prompt fits its 4,096-token window
+comfortably, so its context limit does not explain the gap. It learns the
+behaviour partially where the other three families learn it almost perfectly.
+
+The capability claim is therefore near-universal rather than universal. Three
+of four families reach essentially 100 percent at every depth from five or ten
+percent of the mixture, the fourth reaches a quarter, and no control in any
+family or corpus writes a single accepted derivation.
