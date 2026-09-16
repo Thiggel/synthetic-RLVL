@@ -258,16 +258,18 @@ seed 3407, five percent share for formal and ten for English.
 | training band | notation | chain 5 | chain 15 | chain 25 |
 |---|---|---|---|---|
 | 5 | formal | 100.0, 99.5 | 13.0, 13.5 | 10.5, 13.0 |
-| 5 | English | 100.0 | 86.0 | 51.5 |
+| 5 | English | 100.0, 100.0 | 86.0, 85.0 | 51.5, 58.5 |
 | 15 | formal | 100.0, 100.0 | 100.0, 100.0 | 50.5, 39.5 |
-| 15 | English | 100.0 | 99.5 | 99.0 |
+| 15 | English | 100.0, 100.0 | 99.5, 100.0 | 99.0, 100.0 |
 | 25 | formal | 99.8 | 100.0 | 99.3 |
 
-The formal arms have two seeds each at bands 5 and 15, listed in order. They
+Every cell has two seeds, listed in order. They
 agree to within half a point at the training depth and within three points
 beyond it, so the collapse past the training band belongs to the rendering
-rather than to a seed. ProofWriter depth 3 sits at 46 to 48 and FOLIO at 56 to
-58 across every band and seed.
+rather than to a seed. ProofWriter depth 3 sits at 46 to 51 and FOLIO at 54 to 58 across every band,
+notation and seed, against a control of 39.3 and 51.4. The accuracy gains are
+therefore indifferent to training depth and to rendering, where the procedure
+depends on both.
 
 At both shallow bands the English rendering carries the procedure far past the
 depth it was trained on and the formal rendering does not. Trained at fifteen
