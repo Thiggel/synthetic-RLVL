@@ -344,3 +344,26 @@ nothing measurable on Llama given its variance, and harms OLMo.
 Recommendation for the paper: the English rendering is the default, and the
 formal rendering is conditional on the model and should be checked with the
 answer-prior diagnostic before use.
+
+## The zero-control claim needs a scale qualifier
+
+Qwen2.5-14B, control, derivations a checker accepts.
+
+| chain | accepted |
+|---|---|
+| 5 | 0.0 |
+| 15 | 2.5 |
+| 25 | 7.5 |
+
+Unlike every control at 3B, 7B and 8B, which score exactly zero at every depth
+across four families and two instruction corpora, the 14B control produces a
+few accepted items, and the rate rises with chain length rather than falling.
+Reading the samples explains it. The model answers in ordinary prose with a
+numbered step-by-step explanation, solves the chain correctly and states the
+right answer, and the checker accepts that. Longer problems make it more likely
+to lay the reasoning out explicitly, hence the rise with depth.
+
+So the claim should read that no instruction-tuned control below 14B writes a
+derivation a checker accepts, and that at 14B a control occasionally reaches an
+accepted answer by reasoning aloud instead. The trained format is still absent
+from every control.
