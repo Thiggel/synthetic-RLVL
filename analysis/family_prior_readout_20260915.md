@@ -249,3 +249,29 @@ sufficient to improve that task. The natural extrapolation from the earlier
 results, that a capability can be engineered by writing the right generator, is
 not supported. Open: one seed, one share, one rendering, and RULER variable
 tracking is still pending.
+
+## English extrapolates beyond its training depth, formal does not
+
+Fraction of the generator's own problems where a checker accepts the proof,
+seed 3407, five percent share for formal and ten for English.
+
+| training band | notation | chain 5 | chain 15 | chain 25 |
+|---|---|---|---|---|
+| 5 | formal | 100.0 | 13.0 | 10.5 |
+| 5 | English | 100.0 | 86.0 | 51.5 |
+| 15 | formal | 100.0 | 100.0 | 50.5 |
+| 15 | English | 100.0 | 99.5 | 99.0 |
+| 25 | formal | 99.8 | 100.0 | 99.3 |
+
+At both shallow bands the English rendering carries the procedure far past the
+depth it was trained on and the formal rendering does not. Trained at fifteen
+hops English holds 99.0 at twenty-five where formal drops to 50.5, and trained
+at five hops English holds 86.0 at fifteen where formal collapses to 13.0.
+
+Practical reading: if only shallow proofs can be generated, use the English
+rendering. If the generator can reach the target depth, either works.
+
+This is a different question from the controlled study on the generator alone,
+which compared accuracy at a fixed evaluation depth and found formal
+supervision ahead at the deepest band. Performance at the training depth and
+extrapolation beyond it have to be reported separately.
