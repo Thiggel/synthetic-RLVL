@@ -322,3 +322,25 @@ So the two ingredients are each useless alone for this purpose. The
 derivations supply the procedure and the instruction mixture supplies the
 ability to respond to an arbitrary prompt. The replacement design is not a
 convenience, it is the only configuration in which the capability is usable.
+
+## Two-seed cross-family summary, ProofWriter depth 3
+
+| model | control | formal 5% | English 10% |
+|---|---|---|---|
+| Qwen2.5-7B | 39.3 (3 seeds, spread 1.4) | 50.0 (3) | 53.2 (3) |
+| Qwen2.5-3B | 38.2 +- 0.4 (2) | 42.1 +- 0.6 (2) | 41.8 (1) |
+| Llama-3.1-8B | 33.3 +- 8.6 (2) | 36.3 +- 13.8 (2) | 48.8 +- 0.8 (2) |
+| OLMo-2-7B | 45.8 +- 2.8 (2) | 33.6 +- 2.4 (2) | 57.2 (1) |
+
+The OLMo loss under the formal rendering replicates, 12.2 points below its
+control with seed spreads of 2.4 and 2.8, so it is not the single-seed artefact
+that the apparent Llama loss turned out to be.
+
+The English rendering helps every model where it has been measured, by 3.4 to
+15.5 points, and is the most stable arm in the study, with Llama's two seeds
+agreeing to 0.8 points. The formal rendering helps Qwen at both scales, does
+nothing measurable on Llama given its variance, and harms OLMo.
+
+Recommendation for the paper: the English rendering is the default, and the
+formal rendering is conditional on the model and should be checked with the
+answer-prior diagnostic before use.
