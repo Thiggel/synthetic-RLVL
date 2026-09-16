@@ -69,3 +69,29 @@ installs checkable derivation writing in every family and scale we measured.
 Benchmark accuracy is a separate matter that follows the answer distribution,
 so it has to be diagnosed per model and per benchmark before the data is
 chosen, and the formal rendering helped only Qwen.
+
+## The instruction corpus installs the prior, shown by manipulation
+
+Same base model, same recipe, same hyperparameters, only the instruction corpus
+differs. ProofWriter depth 3, 500 items, one seed.
+
+| corpus | condition | answer distribution | worst excess | accuracy |
+|---|---|---|---|---|
+| Dolci | control | true .73 | true +23.5 | 39.3 |
+| Dolci | plus 5% formal | true .50 | true +0.2 | 50.0 |
+| Tulu 3 | control | false .82 | false +39.6 | 53.8 |
+| Tulu 3 | plus 5% formal | false .71 | false +28.6 | 55.6 |
+
+The two corpora install opposite priors on the same base model, which is the
+paper's causal claim shown by intervention instead of inferred from one corpus.
+The same five percent of derivations moves both toward the label distribution,
+by 23 points of excess on one corpus and 11 on the other, and accuracy rises in
+both, by 10.7 and 1.8 points.
+
+Neither control writes a derivation a checker accepts, 0.3 percent and 0.0, in
+line with every control measured across three model families.
+
+Caveat: the Tulu-trained models are verbose and do not reliably stop after a
+short answer, so their accuracy is scored on partly degenerate text. The
+first-word distribution is unambiguous and the within-corpus comparison is
+sound, but the cross-corpus accuracy comparison is not like for like.
