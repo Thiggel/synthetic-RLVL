@@ -104,14 +104,16 @@ Derivations a checker accepts at chain length 25, two seeds.
 |---|---|---|---|
 | 100 | 0.1% | 29.0 | 0.0 |
 | 200 | 0.2% | 50.5 | 3.0 |
-| 500 | 0.5% | 84.5 | pending |
+| 500 | 0.5% | 84.5 | 0.0 |
 | 1,000 | 1% | 93.2 | 93.9 |
 
 The two seeds disagree by 29 and 47 points below 500 documents and agree within
 a point at 1,000. ProofWriter accuracy in the same arms differs by about ten
 points between seeds, against a control seed spread of 1.4 in the main sweep.
 
-So the correct claim is that the ability is unreliable below roughly 500
-documents and dependable from 1,000, and a single seed in this regime will
-mislead. An earlier reading of seed 3407 alone suggested a smooth ramp from 100
-documents, which the second seed does not support.
+So the correct claim is that the ability is unreliable at every share below one
+percent and dependable at one percent, where both seeds exceed 93 percent. At
+500 documents one seed reaches 84.5 percent and the other writes nothing, so
+there is no threshold to report below 1,000, only a lottery. An earlier reading
+of seed 3407 alone suggested a smooth ramp from 100 documents, which the second
+seed does not support.
