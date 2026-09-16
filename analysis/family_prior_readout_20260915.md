@@ -367,3 +367,24 @@ So the claim should read that no instruction-tuned control below 14B writes a
 derivation a checker accepts, and that at 14B a control occasionally reaches an
 accepted answer by reasoning aloud instead. The trained format is still absent
 from every control.
+
+## Long context: the aggregation damage belongs to the deduction corpus
+
+RULER at 16,384 and 32,768 tokens, mean of the two lengths.
+
+| task | control | deduction 5% | new corpora 5% |
+|---|---|---|---|
+| single needle | 100.0 | 100.0 | 100.0 |
+| multi-query needle | 99.4 | 99.2 | 99.2 |
+| multi-value needle | 92.0 | 91.9 | 87.9 |
+| variable tracking | 97.0 | 97.3 | 97.1 |
+| common word extraction | 58.5 | 47.2 | 56.4 |
+
+Common word extraction is an aggregation task and the deduction corpus costs it
+11.3 points where the new corpora cost 2.1, which matches their advantage on
+object counting in BIG-Bench Hard. Different synthetic corpora damage different
+things.
+
+Variable tracking does not move under either corpus, including the one with a
+program-tracing generator built for that structure, so the last targeted
+prediction fails alongside temporal ordering, arithmetic and coding.
