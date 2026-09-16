@@ -275,3 +275,27 @@ This is a different question from the controlled study on the generator alone,
 which compared accuracy at a fixed evaluation depth and found formal
 supervision ahead at the deepest band. Performance at the training depth and
 extrapolation beyond it have to be reported separately.
+
+## Both new-corpus renderings agree, and deduction data wins on their own targets
+
+| metric | control | deduction F5 | deduction E10 | new formal | new English |
+|---|---|---|---|---|---|
+| BBH macro (27) | 64.5 | 67.4 | 66.9 | 66.3 | 65.9 |
+| BBH chain (8) | 60.9 | 68.5 | 66.2 | 64.9 | 64.3 |
+| temporal sequences | 74.4 | 72.0 | 75.2 | 70.4 | 69.2 |
+| multistep arithmetic | 88.0 | 90.4 | 90.0 | 88.4 | 89.2 |
+| object counting | 83.2 | 80.4 | 80.4 | 85.2 | 84.8 |
+| HumanEval | 66.8 | 67.1 | 69.5 | 61.6 | pending |
+
+Temporal ordering had a generator built for it and falls 4 to 5 points in both
+new arms, while the deduction English arm raises it to 75.2. Unit propagation
+had a generator built for it and multistep arithmetic does not respond. Program
+tracing had a generator built for it and HumanEval falls 5.2.
+
+Deduction data therefore outperforms purpose-built data on the tasks the
+purpose-built data targets. The two renderings of the new corpora agree with
+each other, so this is not a one-off.
+
+The exception is aggregation, where the new corpora gain 2 points on object
+counting and the deduction corpus loses 2.8, consistent with the 11-point loss
+the deduction corpus causes on long-context word counting.
