@@ -305,3 +305,20 @@ each other, so this is not a one-off.
 The exception is aggregation, where the new corpora gain 2 points on object
 counting and the deduction corpus loses 2.8, consistent with the 11-point loss
 the deduction corpus causes on long-context word counting.
+
+## Without instruction data the model cannot answer a question
+
+| trained on | deriv chain 25 | PW d3 | PW d5 | FOLIO |
+|---|---|---|---|---|
+| instruction data only | 0.3 | 39.3 | 41.2 | 51.4 |
+| 5 percent derivations in instruction data | 99.3 | 50.0 | 48.9 | 57.8 |
+| derivations only, no instruction data | 100.0 | 0.0 | 0.0 | 0.0 |
+
+The zero is a format collapse, not a scoring artefact. Asked a ProofWriter
+question the model emits the single token `<formal>` and stops, because the
+only document shape it has produced begins that way.
+
+So the two ingredients are each useless alone for this purpose. The
+derivations supply the procedure and the instruction mixture supplies the
+ability to respond to an arbitrary prompt. The replacement design is not a
+convenience, it is the only configuration in which the capability is usable.
