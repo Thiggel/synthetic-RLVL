@@ -142,3 +142,29 @@ Llama's control varies by 8.6 points across seeds on ProofWriter against 1.4
 for the Qwen control in the main sweep, so single-seed comparisons on that
 model are not usable, and an earlier single-seed reading of a loss under the
 formal rendering did not survive the second seed.
+
+## BIG-Bench Hard does not transfer outside Qwen2.5-7B, 2026-09-16
+
+Mean over available seeds, one for OLMo and Qwen2.5-3B and two for Llama.
+
+| model | arm | macro | chain (8) | other (19) | web of lies |
+|---|---|---|---|---|---|
+| Qwen2.5-7B | control | 65.0 | 62.2 | 66.1 | 85.5 |
+| Qwen2.5-7B | formal 10% | 67.7 | 68.9 | 67.2 | 97.6 |
+| Llama-3.1-8B | control | 68.9 | 67.4 | 69.5 | 99.8 |
+| Llama-3.1-8B | English 10% | 69.2 | 69.2 | 69.2 | 100.0 |
+| OLMo-2-7B | control | 50.5 | 41.9 | 54.1 | 89.6 |
+| OLMo-2-7B | English 10% | 50.7 | 43.6 | 53.7 | 90.0 |
+| Qwen2.5-3B | control | 51.7 | 40.6 | 56.4 | 99.6 |
+| Qwen2.5-3B | English 10% | 51.9 | 40.6 | 56.7 | 98.8 |
+
+Web of lies is already saturated in three of the four controls, at 99.8, 99.6
+and 89.6, against 85.5 for Qwen2.5-7B. The twelve-point gain on that subtask
+exists because that model was unusually weak there, and no other model has room
+to move. Outside the 7B the chain group changes by at most 1.8 points and the
+macro by at most 0.9.
+
+The subtask localisation on Qwen2.5-7B remains correct as an account of what
+changed in that model. It is not evidence that the intervention transfers to
+general benchmarks in general, and the paper should present it as a repaired
+deficit rather than as transfer.
