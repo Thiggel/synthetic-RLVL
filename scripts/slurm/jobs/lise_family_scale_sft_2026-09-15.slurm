@@ -85,7 +85,22 @@ if [[ -n "${SMOKE_STEPS:-}" ]]; then
   rm -rf "${OUT_DIR}"
 fi
 
-python -m torch.distributed.run --standalone --nproc_per_node=4 \
+# A 30B model does not fit on one node at full parameter, so the launcher
+# switches to a rendezvous across nodes when more than one is allocated.
+GPUS_PER_NODE="${GPUS_PER_NODE:-4}"
+if [ "${SLURM_NNODES:-1}" -gt 1 ]; then
+  MASTER_ADDR=$(scontrol show hostnames "${SLURM_JOB_NODELIST}" | head -1)
+  export MASTER_ADDR
+  LAUNCH=(srun --ntasks-per-node=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-64}"
+          torchrun --nnodes="${SLURM_NNODES}" --nproc_per_node="${GPUS_PER_NODE}"
+          --rdzv_id="${SLURM_JOB_ID}" --rdzv_backend=c10d
+          --rdzv_endpoint="${MASTER_ADDR}:29500")
+  echo "multi-node launch across ${SLURM_NNODES} nodes, master ${MASTER_ADDR}"
+else
+  LAUNCH=(python -m torch.distributed.run --standalone --nproc_per_node="${GPUS_PER_NODE}")
+fi
+
+"${LAUNCH[@]}" \
   scripts/train_instruction_sft.py \
   --model "${BASE_PATH}" --prepared-dataset "${MIX}" \
   --train-split train --eval-split eval \
