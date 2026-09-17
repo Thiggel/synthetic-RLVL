@@ -19,12 +19,15 @@ from __future__ import annotations
 import argparse
 import json
 import random
+import sys
 from pathlib import Path
 
 from datasets import Dataset, DatasetDict, load_from_disk
 
-from scripts.data.build_mode_conditioned_mixture import ENGLISH_PREFIX, FORMAL_PREFIX
-from scripts.data.build_reasoning_mixture_sft import BANDS, render_traces
+# the sibling builders are plain scripts, so they are imported by directory
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_mode_conditioned_mixture import ENGLISH_PREFIX, FORMAL_PREFIX  # noqa: E402
+from build_reasoning_mixture_sft import BANDS, render_traces  # noqa: E402
 
 
 def main() -> None:
