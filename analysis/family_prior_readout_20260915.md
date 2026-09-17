@@ -419,3 +419,26 @@ is no monotone trend in the size of the gain, which peaks at 7B.
 
 At 14B the English arm also gains 4.5 points on GPQA-Diamond where the formal
 arm gains 0.5, and loses 3.0 on FOLIO where the formal arm is flat.
+
+## A mixture of experts behaves like the dense models
+
+OLMoE-1B-7B, 64 experts, one billion active parameters, one seed.
+
+| arm | predicted false | true | unknown | worst excess | PW d3 | FOLIO | GPQA |
+|---|---|---|---|---|---|---|---|
+| control | .308 | .686 | .006 | true +28.8 | 59.6 | 39.4 | 26.8 |
+| formal 5% | .000 | .852 | .148 | true +45.4 | 33.4 | 37.4 | 22.2 |
+
+The control produces a genuine three-way distribution and its 59.6 is the
+highest control score in the study, from a model with one billion active
+parameters. Its derivation cell is 0.0 at every depth, like every other
+control.
+
+The treated arm stops producing "false" altogether, its excess rises from 28.8
+to 45.4 points and accuracy falls 26.2, the largest single degradation we have
+measured. Sparsity therefore does not change the mechanism, only how far the
+injected distribution pulls the model.
+
+Across the study the formal rendering at five percent moves the answer
+distribution toward the labels on two models, Qwen2.5-7B and Qwen2.5-3B, and
+away from them on three, Llama-3.1-8B, OLMo-2-7B and OLMoE.
