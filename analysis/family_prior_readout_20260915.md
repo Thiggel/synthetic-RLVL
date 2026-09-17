@@ -442,3 +442,25 @@ injected distribution pulls the model.
 Across the study the formal rendering at five percent moves the answer
 distribution toward the labels on two models, Qwen2.5-7B and Qwen2.5-3B, and
 away from them on three, Llama-3.1-8B, OLMo-2-7B and OLMoE.
+
+## OLMoE: neither rendering installs the procedure, both harm accuracy
+
+OLMoE-1B-7B, one seed, all three arms complete.
+
+| arm | deriv chain 5 | chain 15 | chain 25 | PW d3 | FOLIO | GPQA | worst excess |
+|---|---|---|---|---|---|---|---|
+| control | 0.0 | 0.0 | 0.0 | 59.6 | 39.4 | 26.8 | true +28.8 |
+| formal 5% | 4.5 | 1.5 | 0.0 | 33.4 | 37.4 | 22.2 | true +45.4 |
+| English 10% | 0.0 | 3.0 | 1.5 | 26.6 | 36.0 | 20.7 | unknown +47.8 |
+
+This is the first model on which the English rendering does not help, and the
+first on which neither rendering installs the derivation procedure. The two
+arms fail in opposite directions on the prior, formal removing "false" and
+English collapsing onto "unknown", and both lose 26 to 33 points.
+
+Consequences for the paper's claims. "The English rendering helps every model"
+becomes "every dense model measured", five of five. "The procedure is present
+in five of six" becomes fully present in four dense models, partial on OLMo-2,
+and absent on the sparse model. One seed, and OLMoE's sharded training was
+several times slower than a dense model of its active size, so a training
+pathology specific to sparse routing under FSDP is not excluded.
