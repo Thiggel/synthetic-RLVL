@@ -442,7 +442,10 @@ def main() -> None:
         return
 
     model_kwargs = {"torch_dtype": torch.bfloat16 if bool(args.bf16) else torch.float16}
-    if not bool(args.full_parameter):
+    # A LoRA run without FSDP spreads the frozen base over the visible devices.
+    # Under FSDP every rank loads the full model and the wrapper shards it, so
+    # a device map would fight the sharding and is left out.
+    if not bool(args.full_parameter) and not args.fsdp:
         model_kwargs["device_map"] = "auto"
     model = AutoModelForCausalLM.from_pretrained(args.model, **model_kwargs)
     if bool(args.gradient_checkpointing):
