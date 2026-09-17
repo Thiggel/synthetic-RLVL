@@ -26,10 +26,28 @@ def main() -> None:
     ap.add_argument("--eval", type=int, default=2048)
     ap.add_argument("--max-chars", type=int, default=24000)
     ap.add_argument("--seed", type=int, default=3407)
+    ap.add_argument("--tokenizer", default="Qwen/Qwen2.5-7B",
+                    help="used only to drop examples the chat template cannot round-trip")
     args = ap.parse_args()
 
+    from transformers import AutoTokenizer
+    tok = AutoTokenizer.from_pretrained(args.tokenizer)
+
+    def round_trips(prompt: str, target: str) -> bool:
+        """The trainer masks the prompt by prefix, so an example is only usable
+        when the full rendering starts with the prompt rendering."""
+        try:
+            head = tok.apply_chat_template([{"role": "user", "content": prompt}],
+                                           tokenize=True, add_generation_prompt=True)
+            full = tok.apply_chat_template([{"role": "user", "content": prompt},
+                                            {"role": "assistant", "content": target}],
+                                           tokenize=True)
+        except Exception:
+            return False
+        return len(full) > len(head) and full[: len(head)] == head
+
     raw = load_dataset(args.dataset, split="train").shuffle(seed=args.seed)
-    rows, sources = [], {}
+    rows, sources, dropped = [], {}, [0]
     need = args.train + args.eval
     for item in raw:
         messages = item.get("messages") or []
@@ -38,10 +56,14 @@ def main() -> None:
         user, assistant = messages
         if user.get("role") != "user" or assistant.get("role") != "assistant":
             continue
-        prompt, target = user.get("content", ""), assistant.get("content", "")
+        prompt = (user.get("content") or "").strip()
+        target = (assistant.get("content") or "").strip()
         if not prompt or not target:
             continue
         if len(prompt) + len(target) > args.max_chars:
+            continue
+        if not round_trips(prompt, target):
+            dropped[0] += 1
             continue
         rows.append({"prompt": prompt, "target": target})
         src = item.get("source", "unknown")
@@ -56,7 +78,7 @@ def main() -> None:
         "train": Dataset.from_list(rows[: args.train]),
         "eval": Dataset.from_list(rows[args.train:need]),
     }).save_to_disk(str(args.out))
-    meta = dict(dataset=args.dataset, train=args.train, eval=args.eval,
+    meta = dict(dataset=args.dataset, train=args.train, eval=args.eval, dropped=dropped[0],
                 seed=args.seed, max_chars=args.max_chars,
                 sources=dict(sorted(sources.items(), key=lambda kv: -kv[1])[:15]))
     (args.out / "corpus_manifest.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
