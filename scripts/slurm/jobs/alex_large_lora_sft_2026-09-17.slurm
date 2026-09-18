@@ -60,8 +60,9 @@ test -d "${MIX}" || { echo "missing mixture ${MIX}" >&2; exit 2; }
 # The compute nodes reach the hub, so the weights are fetched here on first
 # use. A lock keeps two array tasks from downloading the same model at once.
 mkdir -p "${HF_HOME}/locks"
-( flock 9; hf download "${BASE}" --quiet ) 9>"${HF_HOME}/locks/${BASE//\//--}.lock"
-BASE_PATH=$(ls -d "${HF_HOME}/hub/models--${BASE//\//--}"/snapshots/*/ | head -1)
+# The hf CLI entry point carries the shebang of the venv's old location, so
+# the download goes through the interpreter on PATH instead.
+BASE_PATH=$( ( flock 9; python -c "from huggingface_hub import snapshot_download; print(snapshot_download('${BASE}'))" ) 9>"${HF_HOME}/locks/${BASE//\//--}.lock" | tail -1 )
 test -s "${BASE_PATH}/config.json" || { echo "incomplete snapshot ${BASE_PATH}" >&2; exit 2; }
 echo "run=${RUN_NAME} base=${BASE_PATH} wrap=${WRAP} mixture=${MIX}"
 
