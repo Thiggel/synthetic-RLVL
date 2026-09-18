@@ -111,7 +111,7 @@ fi
   "${SMOKE_ARGS[@]+"${SMOKE_ARGS[@]}"}" \
   --warmup-steps 0 --warmup-ratio 0.03 \
   --per-device-batch-size "${PDBS:-2}" --per-device-eval-batch-size 1 --grad-accum "${GA:-16}" \
-  --eval-steps 2000 --save-steps 500 --save-total-limit 1 \
+  --eval-steps 2000 --save-steps "${SAVE_STEPS:-500}" --save-total-limit 1 \
   --format-mode chat --single-turn-only --no-wrap-answer-tags \
   "${TEMPLATE_ARGS[@]+"${TEMPLATE_ARGS[@]}"}" \
   --full-parameter --fsdp "full_shard auto_wrap" \
