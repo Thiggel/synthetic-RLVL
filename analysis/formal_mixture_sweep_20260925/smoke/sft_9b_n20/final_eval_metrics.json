@@ -1,0 +1,9 @@
+{
+  "eval_loss": 0.5832356810569763,
+  "eval_runtime": 2.4142,
+  "eval_samples_per_second": 12.841,
+  "eval_steps_per_second": 6.628,
+  "epoch": 0.25625625625625625,
+  "step": 4,
+  "note": "last in-training eval; no post-train evaluate under FSDP"
+}

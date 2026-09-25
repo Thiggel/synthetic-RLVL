@@ -1,8 +1,48 @@
 # Running Experiments
 
-Last updated: 2026-08-12 07:56 CEST.
+Last updated: 2026-09-25 10:05 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Formal mixture sweep 2026-09-25: built, smoke-tested, not submitted
+
+Nothing is running. The sweep is ready to submit with `scripts/submit_formal_mixture_sweep.sh`, which submits 26 training jobs and 26 dependent eval jobs:
+- 0.8B and 2B at X=0,5,...,50
+- 9B at X=0,10,25,50
+
+Use `--dry-run` to preview it.
+
+- **Models** (under HF_HOME=/vol/tmp2/laitenbf): Qwen/Qwen3.5-0.8B-Base `dc7cdfe2`, 2B-Base `b1485b2f`, 9B-Base `68c46c4b`.
+- **Training venv**: `.venv_rlvl_tf5` has torch 2.9.0+cu128, transformers 5.17.0, fla 0.5.2, tilelang 0.1.14 and causal-conv1d 1.7.0.
+- **Eval venv**: `.venv_rlvl_vllm` has vllm 0.30.0 and torch 2.13.0+cu130.
+- **Evaluator sanity** (new pool, all 2000 test problems, `analysis/formal_mixture_sweep_20260925/evaluator_sanity/`):
+  - The gold proofs score valid, grammatical, answer, given precision and given recall all at 1.0. Faithful is 0.912, and every family scores 1.0 except tools at 0.19: tool observations are not givens from the prompt.
+  - Each corruption is caught by the metric it targets:
+    - quote and formula corruptions drop faithful to 0
+    - syntax drops grammatical to 0
+    - rule drops grammatical to 0.08
+    - ans and cite drop valid to about 0
+    - answer drops answer accuracy to 0
+    - truncate drops grammatical, valid and answer accuracy
+- **Tokenization audit** of p50 with the 9B tokenizer (`tokenization_audit_p50.json`):
+  - chat-template mismatch is 0/500 rows (the prompt is rendered with `enable_thinking=False`)
+  - no rlvlgen rows are truncated (max 3788 tokens)
+  - 94 Dolci rows lose all their loss tokens at 4096 tokens and are dropped
+  - the result content and `</result>\n` are masked; `<result>` is kept in the loss
+- **Smoke train, 0.8B** (job 6589, 2k rows at p25, 16 steps): 2 H100 NVL at 6.3 s/step. eval_loss went 1.068 to 1.067, and the checkpoint loads in vLLM.
+- **Smoke eval, 0.8B, 100 problems** (job 6594, old pool): faithful, grammatical and valid are all 0, and answer accuracy is 0.01. The model still writes natural language ("Yes, Harry can fly. Here is the formal reasoning: ..."). This is expected after 16 steps, and the base model also scores 0. Artifacts are in `analysis/formal_mixture_sweep_20260925/smoke/`.
+- **Smoke train, 9B** (job 6597, FSDP full_shard on 2 GPUs, per-device batch 1, gradient checkpointing): about 33 s/step, and each checkpoint save takes about 4 min and 143 GB. The post-train `evaluate()`/`save_model()` under FSDP hung in job 6595, so the trainer now promotes the final checkpoint's consolidated `model.safetensors` to `final/`. The final weights are fp32 (34 GB) because FSDP keeps fp32 master weights; eval loads them as bf16.
+- **Smoke eval, 9B, 20 problems** (job 6599, 16 steps): all formal metrics are 0 and strict answer accuracy is 0. The model answers in a Dolci-style `<answer>\nYes\n</answer>` block, with no `Answer:` line. Every 9B eval requests all of gruenau11 and runs on the freest card, because job 6598 was handed an occupied H100 PCIe card that Slurm labels h100nvl (8 GB free).
+- **Lenient answer accuracy**: `eval_formal_vllm.py` now also reports `answer_acc_lenient`, which is secondary; strict `answer_acc` stays primary. It takes the `Answer:` line, else the last `<answer>...</answer>`, else `\boxed{}`, and compares after normalization, using the first word for yes/no references. Without it, the X=0 cells, which never see the `Answer:` format, would score about 0 by construction. Gold and corrupt sanity results are unchanged at 1.0 and 0.0. On the smoke evals, lenient scores are 9B 0.55 (n=20), 0.8B SFT 0.14 and 0.8B base 0.08 (n=100). The 9B smoke output has been deleted; its summary and generations are in `smoke/sft_9b_n20/`.
+- **Estimated cost** (781 steps per run):
+
+  | Model | Time per run | Runs | GPU-hours |
+  | --- | --- | --- | --- |
+  | 0.8B | about 1.4 h | 11 | about 31 |
+  | 2B | about 2.3 h | 11 | about 51 |
+  | 9B | about 7.2 h | 4 | about 58 |
+
+  That totals about 140 H100 GPU-hours, or about 70 h of wall time serialized on the 2 usable GPUs. Walltime limits are set to 4 h, 6 h and 16 h. The full 2000-problem eval takes about 70 min on an L40 (9B runs on an H100).
 
 ## Docpack Rerun: Midtrains Done, SFT Chain Rebuilt (2026-08-18, later)
 

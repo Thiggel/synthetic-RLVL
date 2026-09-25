@@ -26,6 +26,15 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 
 ## Current Scientific State
 
+### 2026-09-25 formal-CoT SFT mixture sweep: built and smoke-tested, NOT submitted
+
+Pipeline for Dolci-Instruct-SFT-No-Tools 100k (seed 3407) with X% of rows replaced by rlvlgen formal proofs, lr 5e-6, global batch 128, 1 epoch, on Qwen3.5-{0.8B,2B,9B}-Base (gruenau gpu-staff).
+- Data: `scripts/data/build_formal_mixture_sft.py` calls the rlvlgen CLI (`PYTHONPATH=RLVL-next/gen:RLVL-next/rlvl/python`). Pool `/vol/tmp2/laitenbf/rlvl_data/datasets/formal_mixture_20260925/pool/` (50k train, 2k test). Regenerated on 2026-09-25 after the generator change: pruned unused givens, `distractor` role, merged duplicates, and no unrelated tools hops. `pool_manifest.json` sha256 `e7c66e03…2f732a`, train `07264b52…11b6c9`, test `d5f24b16…9d25f8`. Mixtures `mixtures/dolci_rlvlgen_p00..p50` were rebuilt from it; the smoke mixture `smoke2k_p25` still uses the old pool.
+- Train: `scripts/train_formal_mixture_sft.py` in `.venv_rlvl_tf5`, launched by `scripts/slurm/jobs/gruenau_formal_mix_train_2026-09-25.slurm`. Eval: `scripts/eval_formal_vllm.py` in `.venv_rlvl_vllm`, launched by `..._eval_2026-09-25.slurm`. Submit: `scripts/submit_formal_mixture_sweep.sh [--dry-run]`.
+- Caveats: only 2 of the 4 gruenau11 H100s are usable, because two H100 PCIe cards are held outside Slurm by another user. The training script picks free GPUs itself. fla needs `CUDA_HOME=/usr/local/cuda-13.2`, which is set in the scripts. The 9B run uses FSDP and promotes its last checkpoint to `final/` (fp32, 34 GB).
+- Metrics: faithful (with given precision and recall), grammatical, valid, and strict `answer_acc` (the `Answer:` line) as primary. Secondary `answer_acc_lenient` also accepts `<answer>...</answer>` and `\boxed{}`, because Dolci-style outputs (the X=0 cells, and the 9B smoke) never write an `Answer:` line.
+- Smoke results and estimates are in `docs/running_experiments.md`.
+
 ### 2026-08-12 07:56 CEST oversight: formal recovery past 4k restart gate
 
 - Formal recovery `3964802` remains finite on verified eight-A100-80GB node

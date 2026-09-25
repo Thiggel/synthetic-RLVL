@@ -4054,3 +4054,24 @@ seed-3407 sampled downstream readouts 4203334 (multihop) and 4203335 (standard).
 seed-3408 post-SFT finals were verified present first. With the readouts off a100, the nice on
 the condensed p30 chain was lifted (4203206-4203208 to Nice=0), so all three 30-percent midtrain
 chains now compete equally for the project GPU budget instead of two.
+
+## 2026-09-25 — Formal-CoT SFT mixture sweep built and smoke-tested; not submitted
+
+Built the Dolci + rlvlgen replacement-mixture SFT pipeline for Qwen3.5-{0.8B,2B,9B}-Base on gruenau:
+- the builder calls the rlvlgen CLI
+- the full-FT trainer masks tool results
+- the vLLM evaluator scores faithful premises with given precision and recall, grammaticality (strict=False), and validity (strict), with answer accuracy separate
+- sweep SLURM scripts with dependent evals
+
+The evaluator sanity check passes on gold proofs and on eight corruption kinds. The 0.8B and 9B smoke runs train, save and load. The 16-step 0.8B smoke still scores 0 on the formal metrics, which is expected undertraining. The pool was regenerated after the rlvlgen change (manifest `e7c66e03…`).
+
+Fixes made while smoke-testing:
+- fla's Hopper backward needs tilelang plus CUDA 13.2 nvcc
+- per-device batch is capped at 2 (1 for 9B) because the 248k-vocab logits limit memory
+- the 9B template needed `enable_thinking=False`
+- vLLM memory retry, because other users' processes sit on the L40s outside Slurm
+- under FSDP, the final checkpoint is promoted instead of hanging in `save_model`
+- 9B evals take the whole gruenau11 node and run on the freest card, because Slurm labels the occupied H100 PCIe cards h100nvl
+- the 9B smoke answers in `<answer>...</answer>` blocks (Dolci style), so the evaluator now adds a secondary `answer_acc_lenient` (Answer:, then `<answer>`, then `\boxed{}`, normalized); strict `answer_acc` stays primary. The 9B n=20 smoke scores lenient 0.55 and strict 0.
+
+Estimated cost is about 140 H100-h. Details are in `docs/running_experiments.md`.

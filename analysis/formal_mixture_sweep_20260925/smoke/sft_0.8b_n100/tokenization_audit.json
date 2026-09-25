@@ -1,0 +1,50 @@
+{
+  "per_source": {
+    "dolci": {
+      "rows": 1497,
+      "tokens": 875970,
+      "mean_len": 585.1503006012024,
+      "max_len": 4096,
+      "loss_tokens": 545991,
+      "masked_tool_tokens": 0
+    },
+    "rlvlgen": {
+      "rows": 500,
+      "tokens": 180477,
+      "mean_len": 360.954,
+      "max_len": 2619,
+      "loss_tokens": 142949,
+      "masked_tool_tokens": 2459
+    }
+  },
+  "tools_example_spans": [
+    {
+      "loss": false,
+      "text": "<|im_start|>user\n<formal>\nUse the search tool to find what you need. Ostmere has 270,524 inhabitants. How many people live in Varton and Arlund together?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "loss": true,
+      "text": "<proof>\ngoal population(varton) + population(arlund) = ?\n1 do search(\"population of Varton\")\n<result>"
+    },
+    {
+      "loss": false,
+      "text": "About 299,073 people live in Varton.</result>\n"
+    },
+    {
+      "loss": true,
+      "text": "2 population(varton) = 299073 ; obs \"About 299,073 people live in Varton\"\n3 do search(\"Arlund population\")\n<result>"
+    },
+    {
+      "loss": false,
+      "text": "The population of Arlund is 252,886.</result>\n"
+    },
+    {
+      "loss": true,
+      "text": "4 population(arlund) = 252886 ; obs \"The population of Arlund is 252,886\"\n5 population(varton) + population(arlund) = population(varton) + population(arlund) ; refl\n6 population(varton) + population(arlund) = 299073 + 252886 ; subst 2 4 5\n7 population(varton) + population(arlund) = 551959 ; calc 6\nans 551959 ; 7\n</proof>\nAnswer: 551959<|im_end|>\n"
+    }
+  ],
+  "model": "/vol/tmp2/laitenbf/hub/models--Qwen--Qwen3.5-0.8B-Base/snapshots/dc7cdfe2ee4154fa7e30f5b51ca41bfa40174e68",
+  "prepared_dataset": "/vol/tmp2/laitenbf/rlvl_data/datasets/formal_mixture_20260925/mixtures/smoke2k_p25",
+  "train_rows": 1997,
+  "eval_rows": 197
+}

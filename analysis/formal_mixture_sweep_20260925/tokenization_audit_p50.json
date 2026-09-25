@@ -1,0 +1,50 @@
+{
+  "per_source": {
+    "dolci": {
+      "rows": 49906,
+      "tokens": 30558127,
+      "mean_len": 612.313689736705,
+      "max_len": 4096,
+      "loss_tokens": 18978500,
+      "masked_tool_tokens": 0
+    },
+    "rlvlgen": {
+      "rows": 50000,
+      "tokens": 17223468,
+      "mean_len": 344.46936,
+      "max_len": 3788,
+      "loss_tokens": 13488231,
+      "masked_tool_tokens": 184197
+    }
+  },
+  "tools_example_spans": [
+    {
+      "loss": false,
+      "text": "<|im_start|>user\n<formal>\nUse the search tool to find what you need. Cormere has 121,068 inhabitants. Was Varwick founded before Fenmere?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "loss": true,
+      "text": "<proof>\ngoal founded(varwick) < founded(fenmere) ?\n1 do search(\"Varwick founded\")\n<result>"
+    },
+    {
+      "loss": false,
+      "text": "Varwick was founded in 1030.</result>\n"
+    },
+    {
+      "loss": true,
+      "text": "2 founded(varwick) = 1030 ; obs \"Varwick was founded in 1030\"\n3 do search(\"Fenmere founded\")\n<result>"
+    },
+    {
+      "loss": false,
+      "text": "Fenmere was established in 1082.</result>\n"
+    },
+    {
+      "loss": true,
+      "text": "4 founded(fenmere) = 1082 ; obs \"Fenmere was established in 1082\"\n5 1030 < 1082 ; calc\n6 founded(varwick) < founded(fenmere) ; subst 2 4 5\nans yes ; 6\n</proof>\nAnswer: yes<|im_end|>\n"
+    }
+  ],
+  "model": "/vol/tmp2/laitenbf/hub/models--Qwen--Qwen3.5-9B-Base/snapshots/68c46c4b3498877f3ef123c856ecfde50c39f404",
+  "prepared_dataset": "/vol/tmp2/laitenbf/rlvl_data/datasets/formal_mixture_20260925/mixtures/dolci_rlvlgen_p50",
+  "train_rows": 99906,
+  "eval_rows": 2043
+}

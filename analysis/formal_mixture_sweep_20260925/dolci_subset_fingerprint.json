@@ -1,0 +1,6 @@
+{
+  "train_rows": 100000,
+  "eval_rows": 2046,
+  "train_fingerprint": "1dd3a5a19853073b61d54ddfdba40f11bc00dd148dd76e6f8672ce6d0ee0b4e3",
+  "eval_fingerprint": "11b3b5061fb26d056e9e933a116ffed949dab2dc36d2f60c0a0ba8f9439a4d82"
+}
