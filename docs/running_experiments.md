@@ -1,16 +1,41 @@
 # Running Experiments
 
-Last updated: 2026-09-25 10:05 CEST.
+Last updated: 2026-09-25 18:10 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Formal mixture sweep 2026-09-25: built, smoke-tested, not submitted
+## Formal mixture sweep 2026-09-25: running (lane layout)
 
-Nothing is running. Submission was blocked by the agent's permission guard (shared-cluster mutation) and needs the user to run it or approve it. The sweep is ready to submit with `scripts/submit_formal_mixture_sweep.sh`, which submits 26 training jobs and 26 dependent eval jobs:
-- 0.8B and 2B at X=0,5,...,50
-- 9B at X=0,10,25,50
+User rule: laitenbf must leave about 2 actually-free GPUs on every node. Other users hold cards outside Slurm (gruenau11 H100 0/2/3, gruenau12 L40 0/6), and Slurm allocates them first-fit, so the job scripts detect free cards themselves:
+- **Train script** waits, polling every 5 min for up to 6 h, until a free card exists. It then trains on the free subset of its allocation, keeping the global batch at 128 via gradient accumulation.
+- **Eval script** retries likewise.
+- **Truncation cap** is now `--max-truncated-frac 0.01`, because Dolci-only truncation is 0.52% at 4096 tokens; truncated rlvlgen rows still fail closed.
 
-Use `--dry-run` to preview it.
+Submitted with `scripts/submit_formal_mixture_sweep_lanes.sh`, which records job IDs in `analysis/formal_mixture_sweep_20260925/submitted_jobs.txt`. Lanes are serial and chained with afterany; evals depend afterok on their training job:
+
+| Lane | Node | GPUs | Work | Job IDs |
+|---|---|---|---|---|
+| A | gruenau7 | 2 × A6000 | 2B training: p0, 50, 10, 30, 40, 20 | 6693, 6701, 6709, 6717, 6725, 6733 |
+| B | gruenau8 | 2 × A6000 | 2B training: p25, 5, 15, 35, 45 | 6695, 6703, 6711, 6719, 6727 |
+| C | gruenau12 | 2 × L40 | 0.8B training: p0, 10, 30, 40, 20 | 6697, 6705, 6713, 6721, 6729 |
+| D | gruenau12 | 2 × L40 | 0.8B training: p25, 5, 15, 35, 45 | 6699, 6707, 6715, 6723, 6731 |
+| E1, E2 | gruenau12 | 1 × L40 each | evals | IDs in `submitted_jobs.txt` |
+
+- **Per-device batch:** 1, with gradient checkpointing.
+- **Step times:** 2B takes about 35–50 s/step on 2 A6000 (smoke job 6692), so about 9 h per run; 0.8B takes about 14.5 s/step on 2 L40, about 3.2 h per run.
+- **Job 6699 (0.8B p25)** was handed busy card 6, so it trains on 1 L40 with accum 128, at about double the time.
+- **9B is deferred:** gruenau11 has only 1 free H100.
+- **First submission** (jobs 6624–6675) was cancelled: jobs exited on busy GPUs and the afterany chain cascaded.
+- **0.8B p50 is done** (jobs 6658 and 6659), measured on 2000 unseen test problems:
+
+  | Metric | Value |
+  |---|---|
+  | faithful | 0.628 |
+  | grammatical | 0.861 |
+  | valid | 0.4455 |
+  | answer_acc | 0.753 |
+
+### Pipeline details (from the build/smoke phase)
 
 - **Models** (under HF_HOME=/vol/tmp2/laitenbf): Qwen/Qwen3.5-0.8B-Base `dc7cdfe2`, 2B-Base `b1485b2f`, 9B-Base `68c46c4b`.
 - **Training venv**: `.venv_rlvl_tf5` has torch 2.9.0+cu128, transformers 5.17.0, fla 0.5.2, tilelang 0.1.14 and causal-conv1d 1.7.0.

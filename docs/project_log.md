@@ -2,6 +2,20 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-09-25
+
+- 18:10 CEST: The formal-CoT mixture sweep is running under the user rule of about 2 free GPUs per node. Details are in `docs/running_experiments.md`.
+  - **Layout:** 2B runs on gruenau7 and gruenau8 (2 × A6000 each); 0.8B and the evals run on gruenau12 (at most 6 L40); 9B is deferred because gruenau11 is busy.
+  - **Why the first submission failed:** jobs 6624–6675 exited when handed occupied GPUs, and the afterany chain cascaded. The scripts now wait for free cards and train on the free subset.
+  - **First result, 0.8B at p50** (2000 unseen problems):
+
+    | Metric | Value |
+    |---|---|
+    | faithful | 0.628 |
+    | grammatical | 0.861 |
+    | valid | 0.446 |
+    | answer | 0.753 |
+
 ## 2026-08-12
 
 - 07:56 CEST: Formal recovery `3964802` remains finite through `4231/4770`

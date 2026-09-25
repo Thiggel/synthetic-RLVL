@@ -62,10 +62,12 @@ MIN_GPU_MEM="${MIN_GPU_MEM:-0.3}"
 GPU_IDX=$(nvidia-smi --query-gpu=index,memory.free --format=csv,noheader,nounits | sort -t, -k2 -nr | head -1 | cut -d, -f1)
 export CUDA_VISIBLE_DEVICES="${GPU_IDX}"
 echo "using GPU ${GPU_IDX}"
-for attempt in 1 2 3 4; do
+# Low memory waits (up to ~6 h, 5 min apart); a failed eval run is retried 4 times.
+attempt=0; polls=0
+while (( attempt < 4 && polls < 72 )); do
   read -r FREE TOTAL < <(nvidia-smi --query-gpu=memory.free,memory.total --format=csv,noheader,nounits -i "${GPU_IDX}" | tr -d ',')
   GPU_MEM=$(python -c "print(round(min(0.85, (${FREE} - 4096) / ${TOTAL}), 3))")
-  echo "attempt ${attempt}: gpu free ${FREE}/${TOTAL} MiB -> --gpu-mem ${GPU_MEM}"
+  echo "attempt $((attempt + 1)): gpu free ${FREE}/${TOTAL} MiB -> --gpu-mem ${GPU_MEM}"
   if python -c "import sys; sys.exit(0 if ${GPU_MEM} >= ${MIN_GPU_MEM} else 1)"; then
     if python scripts/eval_formal_vllm.py \
         --gpu-mem "${GPU_MEM}" \
@@ -77,10 +79,11 @@ for attempt in 1 2 3 4; do
         ${LIMIT:+--limit "${LIMIT}"}; then
       echo "done ${OUT_DIR}"; exit 0
     fi
+    attempt=$(( attempt + 1 )); sleep 60
   else
-    echo "too little free GPU memory (< ${MIN_GPU_MEM})" >&2
+    echo "too little free GPU memory (< ${MIN_GPU_MEM}); waiting" >&2
+    polls=$(( polls + 1 )); sleep 300
   fi
-  sleep 60
 done
-echo "eval failed after 4 attempts" >&2
+echo "eval failed (${attempt} failed runs, ${polls} low-memory waits)" >&2
 exit 3

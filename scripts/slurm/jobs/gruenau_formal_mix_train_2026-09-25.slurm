@@ -79,9 +79,19 @@ fi
 # long-running vLLM server (~72 GB each, seen 2026-09-25), and Slurm hands them
 # out anyway. Train only on the allocated GPUs that are actually free.
 MIN_FREE_MIB="${MIN_FREE_MIB:-60000}"
-FREE_IDX=$(nvidia-smi --query-gpu=index,memory.free --format=csv,noheader,nounits \
-  | awk -F', ' -v m="${MIN_FREE_MIB}" '$2 >= m {print $1}' | paste -sd, -)
-[[ -n "${FREE_IDX}" ]] || { echo "no allocated GPU has ${MIN_FREE_MIB} MiB free" >&2; nvidia-smi; exit 3; }
+# If none is free, wait (the held cards are busy anyway) instead of failing:
+# a quick failure would let the next job of a serial lane start and fail too.
+WAIT_MAX_S="${WAIT_MAX_S:-21600}"; waited=0
+while :; do
+  FREE_IDX=$(nvidia-smi --query-gpu=index,memory.free --format=csv,noheader,nounits \
+    | awk -F', ' -v m="${MIN_FREE_MIB}" '$2 >= m {print $1}' | paste -sd, -)
+  [[ -n "${FREE_IDX}" ]] && break
+  if (( waited >= WAIT_MAX_S )); then
+    echo "no allocated GPU has ${MIN_FREE_MIB} MiB free after ${waited}s" >&2; nvidia-smi; exit 3
+  fi
+  echo "no allocated GPU has ${MIN_FREE_MIB} MiB free; waiting (${waited}s)" >&2
+  sleep 300; waited=$(( waited + 300 ))
+done
 export CUDA_VISIBLE_DEVICES="${FREE_IDX}"
 NGPU=$(awk -F, '{print NF}' <<<"${FREE_IDX}")
 echo "usable GPUs: ${FREE_IDX}"
@@ -120,6 +130,7 @@ python -m torch.distributed.run --standalone --nproc_per_node="${NGPU}" \
   --eval-steps "${EVAL_STEPS:-250}" \
   --save-steps "${SAVE_STEPS:-250}" \
   --audit-output "${OUT_DIR}/tokenization_audit.json" \
+  --max-truncated-frac "${MAX_TRUNCATED_FRAC:-0.01}" \
   --report-to "${REPORT_TO:-none}" \
   "${EXTRA[@]}"
 
