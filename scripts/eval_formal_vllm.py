@@ -13,15 +13,18 @@ Parsing: the proof is the text between "<proof>\\n" and "</proof>" (to the end
 if unclosed), the answer is the last "Answer:" line.
 
 Metrics, per example and aggregated overall and per family:
-  faithful   every line matching ^(\\S+) (.*) ; given "(.*)"$ has its quote inside
-             one sentence's text and its formula, normalized with rlvl.normalize,
-             equal to one of that same sentence's normalized forms; and at least
-             one given exists.
+  faithful   judged on `given` lines only: every line matching
+             ^(\\S+) (.*) ; given "(.*)"$ has its quote inside one sentence's
+             text and its formula, normalized with rlvl.normalize, equal to one of
+             that same sentence's normalized forms. Tool observations (obs/do +
+             <result>) are not prompt givens and are ignored. A proof must contain
+             at least one given when the reference proof has one; when it has
+             none (most `tools` proofs), a proof without givens is faithful.
              given_precision = faithful givens / givens (micro),
              given_recall    = gold-proof given formulas matched by a faithful
                                predicted given / gold given formulas (micro).
              faithful_on_given_refs restricts `faithful` to examples whose
-             reference proof has a given (most `tools` proofs use only obs lines).
+             reference proof has a given.
   grammatical  rlvl.check(prompt, proof, strict=False) has no fatal parse error.
   valid        rlvl.check(prompt, proof, expected=answer, strict=True, tools=...)["ok"].
   answer_acc   the Answer: line equals the reference answer (after strip).
@@ -143,7 +146,7 @@ def score(rec: dict, generation: str) -> dict:
     strict = rlvl.check(rec["prompt"], proof, expected=rec["answer"], strict=True, **cfg)
     fatal = loose.get("fatal") or {}
     row.update(
-        n_givens=len(gs), n_faithful=sum(ok), faithful=bool(gs) and all(ok),
+        n_givens=len(gs), n_faithful=sum(ok), faithful=all(ok) and (bool(gs) or not gold_forms),
         gold_recalled=len(gold_forms & faithful_forms),
         grammatical=fatal.get("code") != "parse",
         valid=bool(strict["ok"]),

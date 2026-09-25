@@ -6,7 +6,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 
 ## Formal mixture sweep 2026-09-25: built, smoke-tested, not submitted
 
-Nothing is running. The sweep is ready to submit with `scripts/submit_formal_mixture_sweep.sh`, which submits 26 training jobs and 26 dependent eval jobs:
+Nothing is running. Submission was blocked by the agent's permission guard (shared-cluster mutation) and needs the user to run it or approve it. The sweep is ready to submit with `scripts/submit_formal_mixture_sweep.sh`, which submits 26 training jobs and 26 dependent eval jobs:
 - 0.8B and 2B at X=0,5,...,50
 - 9B at X=0,10,25,50
 
@@ -15,8 +15,9 @@ Use `--dry-run` to preview it.
 - **Models** (under HF_HOME=/vol/tmp2/laitenbf): Qwen/Qwen3.5-0.8B-Base `dc7cdfe2`, 2B-Base `b1485b2f`, 9B-Base `68c46c4b`.
 - **Training venv**: `.venv_rlvl_tf5` has torch 2.9.0+cu128, transformers 5.17.0, fla 0.5.2, tilelang 0.1.14 and causal-conv1d 1.7.0.
 - **Eval venv**: `.venv_rlvl_vllm` has vllm 0.30.0 and torch 2.13.0+cu130.
+- **Pool** (15 families, including space, change and laws): manifest sha256 `da4ff83be3b6a933c44ecfad729d57716c5c6ab5f51f492ffdfb3315e83ae803`.
 - **Evaluator sanity** (new pool, all 2000 test problems, `analysis/formal_mixture_sweep_20260925/evaluator_sanity/`):
-  - The gold proofs score valid, grammatical, answer, given precision and given recall all at 1.0. Faithful is 0.912, and every family scores 1.0 except tools at 0.19: tool observations are not givens from the prompt.
+  - Gold proofs score 1.0 on every metric, overall and in all 15 families: faithful, given precision and recall, grammatical, valid, and both answer metrics. Faithful now ignores tool observations and needs a given only when the reference proof has one; before this fix, tools scored 0.19.
   - Each corruption is caught by the metric it targets:
     - quote and formula corruptions drop faithful to 0
     - syntax drops grammatical to 0
@@ -26,7 +27,7 @@ Use `--dry-run` to preview it.
     - truncate drops grammatical, valid and answer accuracy
 - **Tokenization audit** of p50 with the 9B tokenizer (`tokenization_audit_p50.json`):
   - chat-template mismatch is 0/500 rows (the prompt is rendered with `enable_thinking=False`)
-  - no rlvlgen rows are truncated (max 3788 tokens)
+  - no rlvlgen rows are truncated (max 3698 tokens)
   - 94 Dolci rows lose all their loss tokens at 4096 tokens and are dropped
   - the result content and `</result>\n` are masked; `<result>` is kept in the loss
 - **Smoke train, 0.8B** (job 6589, 2k rows at p25, 16 steps): 2 H100 NVL at 6.3 s/step. eval_loss went 1.068 to 1.067, and the checkpoint loads in vLLM.

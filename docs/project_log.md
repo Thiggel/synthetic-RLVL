@@ -4075,3 +4075,5 @@ Fixes made while smoke-testing:
 - the 9B smoke answers in `<answer>...</answer>` blocks (Dolci style), so the evaluator now adds a secondary `answer_acc_lenient` (Answer:, then `<answer>`, then `\boxed{}`, normalized); strict `answer_acc` stays primary. The 9B n=20 smoke scores lenient 0.55 and strict 0.
 
 Estimated cost is about 140 H100-h. Details are in `docs/running_experiments.md`.
+
+Later the same day, the pool was regenerated for the 15-family generator, which adds space, change and laws (manifest `da4ff83b…`), and the mixtures were rebuilt. Faithfulness is now judged on `given` lines only, so gold scores 1.0 on every metric in every family (tools was 0.19). Added `scripts/analysis/analyze_formal_mixture_sweep.py` to produce the per-X CSVs and curves; it needs matplotlib, which neither venv has. Submitting the sweep was blocked by the agent permission guard, so it is left to the user.

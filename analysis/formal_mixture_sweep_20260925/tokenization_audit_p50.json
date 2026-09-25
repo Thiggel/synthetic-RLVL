@@ -10,37 +10,29 @@
     },
     "rlvlgen": {
       "rows": 50000,
-      "tokens": 17223468,
-      "mean_len": 344.46936,
-      "max_len": 3788,
-      "loss_tokens": 13488231,
-      "masked_tool_tokens": 184197
+      "tokens": 16846324,
+      "mean_len": 336.92648,
+      "max_len": 3698,
+      "loss_tokens": 13117066,
+      "masked_tool_tokens": 159848
     }
   },
   "tools_example_spans": [
     {
       "loss": false,
-      "text": "<|im_start|>user\n<formal>\nUse the search tool to find what you need. Cormere has 121,068 inhabitants. Was Varwick founded before Fenmere?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+      "text": "<|im_start|>user\n<formal>\nYou can use search(query) to look up facts. Brisdal has 397,600 inhabitants. Ardal has 194,514 inhabitants. Does Kalford have more inhabitants than Brisdal?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
     },
     {
       "loss": true,
-      "text": "<proof>\ngoal founded(varwick) < founded(fenmere) ?\n1 do search(\"Varwick founded\")\n<result>"
+      "text": "<proof>\ngoal population(kalford) > population(brisdal) ?\n1 do search(\"population of Kalford\")\n<result>"
     },
     {
       "loss": false,
-      "text": "Varwick was founded in 1030.</result>\n"
+      "text": "The population of Kalford is 127,812.</result>\n"
     },
     {
       "loss": true,
-      "text": "2 founded(varwick) = 1030 ; obs \"Varwick was founded in 1030\"\n3 do search(\"Fenmere founded\")\n<result>"
-    },
-    {
-      "loss": false,
-      "text": "Fenmere was established in 1082.</result>\n"
-    },
-    {
-      "loss": true,
-      "text": "4 founded(fenmere) = 1082 ; obs \"Fenmere was established in 1082\"\n5 1030 < 1082 ; calc\n6 founded(varwick) < founded(fenmere) ; subst 2 4 5\nans yes ; 6\n</proof>\nAnswer: yes<|im_end|>\n"
+      "text": "2 population(kalford) = 127812 ; obs \"The population of Kalford is 127,812\"\n3 population(brisdal) = 397600 ; given \"Brisdal has 397,600 inhabitants\"\n4 ~127812 > 397600 ; calc\n5 ~population(kalford) > population(brisdal) ; subst 2 3 4\nans no ; 5\n</proof>\nAnswer: no<|im_end|>\n"
     }
   ],
   "model": "/vol/tmp2/laitenbf/hub/models--Qwen--Qwen3.5-9B-Base/snapshots/68c46c4b3498877f3ef123c856ecfde50c39f404",
