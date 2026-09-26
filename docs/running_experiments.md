@@ -1,8 +1,32 @@
 # Running Experiments
 
-Last updated: 2026-09-25 18:10 CEST.
+Last updated: 2026-09-26 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
+
+## Formal mixture downstream benchmarks 2026-09-26: running (guppi lanes)
+
+Every sweep checkpoint (0.8B and 2B at X=0..50 step 5; X=0 is the pure-Dolci baseline) gets the "Lead into Gold" downstream suite:
+- PW d0/d1/d2/d3/d5 (there is no d4) and PW CoT
+- FOLIO, GPQA-Diamond, GPQA-quant (73-item regex subset)
+- BBH 3-shot no-chat (all, chain-8, web of lies)
+- LongBench HotpotQA, 2Wiki and MuSiQue (F1 after the first newline)
+- GSM8K, MMLU, ARC-C, LogiQA, HellaSwag, PIQA, WinoGrande, HumanEval, MBPP
+
+Setup:
+- Job script: `scripts/slurm/jobs/gruenau_formal_mix_bench_2026-09-26.slurm`.
+- Venv: `.venv_rlvl_lmeval35` (lm_eval 0.4.11 on vllm 0.30, plus ray). Its `lm_eval/models/vllm_causallms.py` is patched locally: `resolve_hf_chat_template` is optional and `swap_space` is dropped.
+- Environment: `CUDA_HOME=/usr/local/cuda-13.2`, `VLLM_USE_FLASHINFER_SAMPLER=0`.
+- Prompts carry no `<formal>` tag.
+- Results go to `rlvl_data/lm_eval_results/formal_mix_20260926/<suite>/<run>`.
+- Aggregate with `scripts/analysis/formal_mix_bench_table.py`, which writes to `analysis/formal_mixture_sweep_20260925/bench/`.
+
+Submission:
+- Submitted with `scripts/submit_formal_mix_bench_lanes.sh --smoke`.
+- Uses 6 serial 1-GPU lanes on the idle gpu-wbiml RTX 3090 nodes: guppi5 ×2, guppi8 ×2 (4 cards each), guppi6 ×1, guppi7 ×1 (3 cards each). That leaves 2 free cards per node.
+- Smoke job 6806 (LIMIT=10, 0.8B p00) gates lane jobs 6807–6828. Their IDs are in `submitted_jobs.txt`.
+- Cells still training wait afterok on their training job.
+- 9B bench: `--models 9b --lanes gruenau12:1`, jobs 6845 (p0), 6846 (p10), 6847 (p25), 6848 (p50), each afterok on its 9B training job.
 
 ## Formal mixture sweep 2026-09-25: running (lane layout)
 
@@ -24,7 +48,12 @@ Submitted with `scripts/submit_formal_mixture_sweep_lanes.sh`, which records job
 - **Per-device batch:** 1, with gradient checkpointing.
 - **Step times:** 2B takes about 35–50 s/step on 2 A6000 (smoke job 6692), so about 9 h per run; 0.8B takes about 14.5 s/step on 2 L40, about 3.2 h per run.
 - **Job 6699 (0.8B p25)** was handed busy card 6, so it trains on 1 L40 with accum 128, at about double the time.
-- **9B is deferred:** gruenau11 has only 1 free H100.
+- **9B lane H (gruenau11, 2 × H100 PCIe 80 GB, FSDP):**
+  - First attempts OOMed (jobs 6789/6791/6793/6795, with evals 6790/…/6796 killed via dependency). FSDP full_shard state is about 72 GB/card, and the 4096 × 248k logits in cross-entropy pushed usage past 80 GB.
+  - liger-kernel 0.8.3 fused linear cross-entropy alone (`--liger-flce`) still OOMed (test job 6804): fp32 weights + grads + Adam state are about 150 GB, which 2 × 80 GB cannot hold under FSDP.
+  - Fix: DeepSpeed ZeRO-2 with the AdamW optimizer offloaded to CPU (DeepSpeedCPUAdam, the same AdamW math with fp32 master weights on the host; `configs/deepspeed/zero2_offload_optim.json`, default for 9B in the train slurm), plus liger FLCE. deepspeed 0.19.7 was installed into `.venv_rlvl_tf5` with uv. The slurm sets `DS_SKIP_CUDA_CHECK=1` (torch cu12.8 vs CUDA_HOME 13.2 needed by fla; CPU Adam is a CPU kernel) and a per-node `TORCH_EXTENSIONS_DIR`.
+  - Test job 6831 (6 steps, after 6830 failed the CUDA check): about 46 GB/card at per-device batch 2 × accum 32, about 77 s/step, so about 17 h per run; `final/` is bf16, 17 GB.
+  - Lane H2 (`--gres=gpu:h100nvl:2 --cpus-per-task=56 --mem-per-cpu=8G`; gpu-staff MaxMemPerCPU is 8G), chained afterany: train p0 6837, p50 6839, p25 6841, p10 6843; formal evals on gruenau12 L40 6838, 6840, 6842, 6844; benchmarks 6845–6848 (gruenau12 L40 lane).
 - **First submission** (jobs 6624–6675) was cancelled: jobs exited on busy GPUs and the afterany chain cascaded.
 - **0.8B p50 is done** (jobs 6658 and 6659), measured on 2000 unseen test problems:
 

@@ -4091,3 +4091,24 @@ Fixes made while smoke-testing:
 Estimated cost is about 140 H100-h. Details are in `docs/running_experiments.md`.
 
 Later the same day, the pool was regenerated for the 15-family generator, which adds space, change and laws (manifest `da4ff83b…`), and the mixtures were rebuilt. Faithfulness is now judged on `given` lines only, so gold scores 1.0 on every metric in every family (tools was 0.19). Added `scripts/analysis/analyze_formal_mixture_sweep.py` to produce the per-X CSVs and curves; it needs matplotlib, which neither venv has. Submitting the sweep was blocked by the agent permission guard, so it is left to the user.
+
+## 2026-09-26 — Sweep submitted; 9B OOM fix; downstream benchmark lanes
+
+The lane sweep (0.8B and 2B, X=0..50) has been running since 2026-09-25 18:05, and the first submission was cancelled.
+
+9B lane H on gruenau11 (2 × H100 PCIe 80 GB) OOMed at step 2 in cross-entropy, at 73.7 GB allocated:
+- FSDP full_shard holds about 72 GB/card of fp32 weights, gradients and Adam state.
+- The 248k-vocab logits no longer fit on top of that.
+- First try: `--liger-flce` (liger-kernel 0.8.3 fused linear cross-entropy, installed with no dependencies). Memory test 6804 still OOMed: fp32 weights, grads and Adam state are about 150 GB in total, more than 2 × 80 GB can shard.
+- Fix: DeepSpeed ZeRO-2 with the AdamW optimizer offloaded to CPU (DeepSpeedCPUAdam: same AdamW update, fp32 master weights on the host), plus liger FLCE. New `--deepspeed` flag in the trainer and `configs/deepspeed/zero2_offload_optim.json`; both are defaults for 9B in the train slurm. deepspeed 0.19.7 installed into `.venv_rlvl_tf5`. Test 6830 failed DeepSpeed's CUDA version check (torch cu12.8 vs CUDA_HOME 13.2), so the slurm sets `DS_SKIP_CUDA_CHECK=1`. Test 6831 passed: about 46 GB/card, about 77 s/step (about 17 h/run), bf16 `final/` of 17 GB.
+- Lane H2 submitted: train 6837 (p0), 6839 (p50), 6841 (p25), 6843 (p10); formal evals 6838–6844 (even); benchmarks 6845–6848. gpu-staff caps MaxMemPerCPU at 8G, so the jobs request 56 CPUs × 8G.
+
+Downstream benchmarks of the "Lead into Gold" paper now run for every checkpoint:
+- Job script: `gruenau_formal_mix_bench_2026-09-26.slurm`.
+- Venv: `.venv_rlvl_lmeval35` with ray, plus a local lm_eval vllm patch.
+- Lanes: 6 single-GPU lanes on the idle guppi RTX 3090 nodes, leaving 2 free cards per node, submitted with `scripts/submit_formal_mix_bench_lanes.sh`.
+- Changes from the paper's suite:
+  - ProofWriter has no d4, so d0–3 and d5 are used.
+  - The old-format BranchProof tasks are dropped.
+  - Prompts carry no `<formal>` tag.
+- Aggregator: `scripts/analysis/formal_mix_bench_table.py`.

@@ -170,7 +170,10 @@ def parse_args():
     ap.add_argument("--save-total-limit", type=int, default=1)
     ap.add_argument("--fsdp", default=None, help='e.g. "full_shard auto_wrap"; omit for DDP')
     ap.add_argument("--fsdp-layer-cls", default="Qwen3_5DecoderLayer")
+    ap.add_argument("--deepspeed", default=None, help="DeepSpeed config json (9B: ZeRO-2 + CPU AdamW offload)")
     ap.add_argument("--gradient-checkpointing", action="store_true")
+    ap.add_argument("--liger-flce", action="store_true",
+                    help="liger fused linear cross-entropy: same loss, never materialises the 248k-vocab logits")
     ap.add_argument("--num-proc", type=int, default=8)
     ap.add_argument("--report-to", default="none")
     ap.add_argument("--resume-from-checkpoint", default="auto")
@@ -222,6 +225,11 @@ def main():
     train_ds, eval_ds = train_ds.remove_columns(drop), eval_ds.remove_columns(drop)
 
     model = AutoModelForCausalLM.from_pretrained(args.model, dtype=torch.bfloat16)
+    if args.liger_flce:
+        # Only the loss is swapped (RMSNorm / SwiGLU kernels stay HF's), so the
+        # recipe is unchanged; 9B FSDP on 2 x 80 GB otherwise OOMs on the logits.
+        from liger_kernel.transformers import apply_liger_kernel_to_qwen3_5
+        apply_liger_kernel_to_qwen3_5(fused_linear_cross_entropy=True, rms_norm=False, swiglu=False, model=model)
     if args.gradient_checkpointing:
         model.config.use_cache = False
 
@@ -238,7 +246,7 @@ def main():
         num_train_epochs=args.num_train_epochs,
         warmup_steps=args.warmup_ratio,  # transformers v5: a float in [0,1) is a ratio of total steps
         lr_scheduler_type="linear",
-        optim="adamw_torch_fused",
+        optim="adamw_torch_fused",  # with --deepspeed the config's AdamW (DeepSpeedCPUAdam) is used
         logging_steps=args.logging_steps,
         eval_strategy="steps",
         eval_steps=args.eval_steps,
@@ -254,6 +262,7 @@ def main():
         fsdp=args.fsdp or "",
         fsdp_config={"transformer_layer_cls_to_wrap": [args.fsdp_layer_cls], "use_orig_params": True,
                      "limit_all_gathers": True, "sync_module_states": True} if args.fsdp else None,
+        deepspeed=args.deepspeed,
         ddp_timeout=1800,
         dataloader_num_workers=2,
     )

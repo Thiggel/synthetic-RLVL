@@ -37,6 +37,10 @@ export HF_HOME="${ROOT}"
 export HF_HUB_OFFLINE=1
 export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
 export TOKENIZERS_PARALLELISM=false
+# DeepSpeedCPUAdam is JIT-built per node on first use. It is a CPU kernel, so
+# skip DeepSpeed's torch-CUDA (12.8) vs CUDA_HOME (13.2, needed by fla) check.
+export DS_SKIP_CUDA_CHECK=1
+export TORCH_EXTENSIONS_DIR="${TORCH_EXTENSIONS_DIR:-${ROOT}/torch_extensions/$(hostname -s)}"
 # fla 0.5.2 refuses the gated-delta backward on Hopper with Triton 3.5 (wrong
 # results, fla #640) and routes it to tilelang, which JIT-compiles with nvcc.
 # gruenau11 has no /usr/local/cuda symlink, and CUDA 12.x nvcc rejects the
@@ -55,13 +59,20 @@ declare -A SNAP=(
   [9b]="${ROOT}/hub/models--Qwen--Qwen3.5-9B-Base/snapshots/68c46c4b3498877f3ef123c856ecfde50c39f404"
 )
 # 9B does not fit replicated (DDP) with Adam states on 94 GB; shard it.
-declare -A DEF_FSDP=([0.8b]="" [2b]="" [9b]="full_shard auto_wrap")
+# 9B: fp32 master weights + grads + AdamW state are ~150 GB, which does not fit
+# FSDP-sharded on the 2 usable 80 GB H100s (jobs 6789/6804 OOM at the first
+# optimizer step). DeepSpeed ZeRO-2 keeps bf16 weights/grads on the GPUs and
+# the fp32 master weights + AdamW (DeepSpeedCPUAdam) in host RAM; same math.
+declare -A DEF_FSDP=([0.8b]="" [2b]="" [9b]="")
+declare -A DEF_DS=([0.8b]="" [2b]="" [9b]="configs/deepspeed/zero2_offload_optim.json")
 # Per-device batch is bounded by the 248k-vocab logits at a 4096-token row
 # (~23 GiB per row incl. fp32 CE): measured peaks on one H100 NVL with a full
 # 4096-token microbatch are 0.8B x2 = 50.7 GiB, 2B x2 = 64.5 GiB; 0.8B x4 OOMs
 # even with gradient checkpointing.
-declare -A DEF_PDB=([0.8b]=2 [2b]=2 [9b]=1)
+declare -A DEF_PDB=([0.8b]=2 [2b]=2 [9b]=2)
 declare -A DEF_GC=([0.8b]=0 [2b]=0 [9b]=1)
+# 9B: liger fused linear CE so the 4096 x 248k logits are never materialised.
+declare -A DEF_LIGER=([0.8b]=0 [2b]=0 [9b]=1)
 MODEL="${SNAP[$MODEL_KEY]}"
 MIX_DIR="${DATA}/datasets/formal_mixture_20260925/mixtures/${MIX}"
 SEED="${SEED:-3407}"
@@ -81,15 +92,18 @@ fi
 MIN_FREE_MIB="${MIN_FREE_MIB:-60000}"
 # If none is free, wait (the held cards are busy anyway) instead of failing:
 # a quick failure would let the next job of a serial lane start and fail too.
+# MIN_NGPU: 9B needs both cards.
+declare -A DEF_MIN_NGPU=([0.8b]=1 [2b]=1 [9b]=2)
+MIN_NGPU="${MIN_NGPU:-${DEF_MIN_NGPU[$MODEL_KEY]}}"
 WAIT_MAX_S="${WAIT_MAX_S:-21600}"; waited=0
 while :; do
   FREE_IDX=$(nvidia-smi --query-gpu=index,memory.free --format=csv,noheader,nounits \
     | awk -F', ' -v m="${MIN_FREE_MIB}" '$2 >= m {print $1}' | paste -sd, -)
-  [[ -n "${FREE_IDX}" ]] && break
+  [[ -n "${FREE_IDX}" ]] && (( $(awk -F, '{print NF}' <<<"${FREE_IDX}") >= MIN_NGPU )) && break
   if (( waited >= WAIT_MAX_S )); then
     echo "no allocated GPU has ${MIN_FREE_MIB} MiB free after ${waited}s" >&2; nvidia-smi; exit 3
   fi
-  echo "no allocated GPU has ${MIN_FREE_MIB} MiB free; waiting (${waited}s)" >&2
+  echo "fewer than ${MIN_NGPU} allocated GPUs have ${MIN_FREE_MIB} MiB free; waiting (${waited}s)" >&2
   sleep 300; waited=$(( waited + 300 ))
 done
 export CUDA_VISIBLE_DEVICES="${FREE_IDX}"
@@ -108,8 +122,11 @@ nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv,noheader
 
 EXTRA=()
 [[ -n "${FSDP}" ]] && EXTRA+=(--fsdp "${FSDP}")
+DS_CONFIG="${DS_CONFIG-${DEF_DS[$MODEL_KEY]}}"
+[[ -n "${DS_CONFIG}" ]] && EXTRA+=(--deepspeed "${DS_CONFIG}")
 [[ "${GRAD_CKPT:-${DEF_GC[$MODEL_KEY]}}" == 1 ]] && EXTRA+=(--gradient-checkpointing)
 [[ -n "${EVAL_ROWS:-}" ]] && EXTRA+=(--eval-rows "${EVAL_ROWS}")
+[[ "${LIGER_FLCE:-${DEF_LIGER[$MODEL_KEY]}}" == 1 ]] && EXTRA+=(--liger-flce)
 echo "extra args: ${EXTRA[*]:-}"
 
 mkdir -p "${OUT_DIR}"

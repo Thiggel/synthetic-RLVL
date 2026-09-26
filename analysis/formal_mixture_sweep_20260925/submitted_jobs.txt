@@ -47,3 +47,46 @@
 0.8b p20: lane C train 6729 eval 6730
 0.8b p45: lane D train 6731 eval 6732
 2b p20: lane A train 6733 eval 6734
+
+# 9B lane 2026-09-26 (gruenau11 2 x H100 NVL, MIN_NGPU=2, MIN_FREE_MIB=75000; eval lane E3 on gruenau12 L40:1)
+9b p0: lane H train 6789 eval 6790
+9b p50: lane H train 6791 eval 6792
+9b p25: lane H train 6793 eval 6794
+9b p10: lane H train 6795 eval 6796
+# bench lanes 2026-09-26 (scripts/submit_formal_mix_bench_lanes.sh --smoke; guppi5x2 guppi8x2 guppi6 guppi7, RTX3090)
+smoke 0.8b p00: 6806
+0.8b p0: lane 0 (guppi5) bench 6807
+0.8b p5: lane 1 (guppi5) bench 6808
+0.8b p10: lane 2 (guppi8) bench 6809
+0.8b p15: lane 3 (guppi8) bench 6810
+0.8b p25: lane 4 (guppi6) bench 6811
+0.8b p30: lane 5 (guppi7) bench 6812
+0.8b p35: lane 0 (guppi5) bench 6813
+0.8b p40: lane 1 (guppi5) bench 6814
+0.8b p50: lane 2 (guppi8) bench 6815
+2b p0: lane 3 (guppi8) bench 6816
+2b p5: lane 4 (guppi6) bench 6817
+2b p10: lane 5 (guppi7) bench 6818
+2b p15: lane 0 (guppi5) bench 6819
+2b p25: lane 1 (guppi5) bench 6820
+2b p50: lane 2 (guppi8) bench 6821
+0.8b p20: lane 3 (guppi8) bench 6822 after train 6729
+0.8b p45: lane 4 (guppi6) bench 6823 after train 6731
+2b p20: lane 5 (guppi7) bench 6824 after train 6733
+2b p30: lane 0 (guppi5) bench 6825 after train 6717
+2b p35: lane 1 (guppi5) bench 6826 after train 6719
+2b p40: lane 2 (guppi8) bench 6827 after train 6725
+2b p45: lane 3 (guppi8) bench 6828 after train 6727
+9b liger FLCE memory test: 6804 (gruenau11)
+9b deepspeed ZeRO-2 offload test: 6830 (gruenau11); liger-only test 6804 OOMed at step 2
+# 9B lane H2 2026-09-26 (DeepSpeed ZeRO-2 + CPU AdamW offload, liger FLCE; gruenau11 2 x H100, PDB 2 x accum 32; eval lane E3 gruenau12 L40:1)
+9b p0: lane H2 train 6837 eval 6838
+9b p50: lane H2 train 6839 eval 6840
+9b p25: lane H2 train 6841 eval 6842
+9b p10: lane H2 train 6843 eval 6844
+9b deepspeed test (DS_SKIP_CUDA_CHECK=1) passed: 6831 (~77 s/step, ~46 GB/card, final bf16 17 GB)
+# bench 9B lane 2026-09-26 (--models 9b --lanes gruenau12:1)
+9b p0: lane 0 (gruenau12) bench 6845 after train 6837
+9b p10: lane 0 (gruenau12) bench 6846 after train 6843
+9b p25: lane 0 (gruenau12) bench 6847 after train 6841
+9b p50: lane 0 (gruenau12) bench 6848 after train 6839
