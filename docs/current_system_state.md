@@ -4,6 +4,12 @@ Last updated: 2026-08-11 19:55 CEST.
 
 This is the short operational handoff. Historical detail was preserved verbatim in `docs/operational_history_2026-05-29.md`.
 
+## Formal mixture sweep (2026-09-25/26)
+
+- **Training:** Qwen3.5-Base 0.8B/2B at X=0..50 and 9B at X=0,10,25,50 are trained on Dolci with X% generated formal-CoT data.
+- **Evals:** in-domain faithful/grammatical/valid; untagged lm-eval downstream suite; format-tagged downstream eval (`eval_formal_bench_vllm.py`).
+- **Live state:** `docs/running_experiments.md`.
+
 ## Where To Look
 
 | Need | File |

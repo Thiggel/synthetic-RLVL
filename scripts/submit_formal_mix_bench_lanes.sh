@@ -11,24 +11,29 @@
 # lane jobs chain with afterany. With --smoke, a LIMIT=10 run of all suites
 # (results study formal_mix_smoke) gates the first job of every lane.
 # Finished suites (.complete) are skipped by the job script.
+# --tagged submits the format-tagged eval (gruenau_formal_mix_tagged_2026-09-26.slurm,
+# job names fmix_tag_<m>_p<x>) instead; --chain "<id> ..." makes lane i start
+# after job i (afterany), to append to lanes that are already busy.
 #
-# Usage: scripts/submit_formal_mix_bench_lanes.sh [--dry-run] [--smoke]
-#          [--models "0.8b 2b"] [--lanes "guppi5:2 guppi8:2 guppi6:1 guppi7:1"]
+# Usage: scripts/submit_formal_mix_bench_lanes.sh [--dry-run] [--smoke] [--tagged]
+#          [--models "0.8b 2b"] [--lanes "guppi5:2 guppi8:2 guppi6:1 guppi7:1"] [--chain "<ids>"]
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-DRY=0; SMOKE=0; MODELS="0.8b 2b"; LANES="guppi5:2 guppi8:2 guppi6:1 guppi7:1"
+DRY=0; SMOKE=0; MODELS="0.8b 2b"; LANES="guppi5:2 guppi8:2 guppi6:1 guppi7:1"; CHAIN=""
+BENCH=scripts/slurm/jobs/gruenau_formal_mix_bench_2026-09-26.slurm; PREFIX=fmix_bench
 while (( $# )); do
   case "$1" in
     --dry-run) DRY=1 ;;
     --smoke) SMOKE=1 ;;
     --models) MODELS=$2; shift ;;
     --lanes) LANES=$2; shift ;;
+    --chain) CHAIN=$2; shift ;;
+    --tagged) BENCH=scripts/slurm/jobs/gruenau_formal_mix_tagged_2026-09-26.slurm; PREFIX=fmix_tag ;;
     *) echo "unknown arg $1" >&2; exit 2 ;;
   esac
   shift
 done
-BENCH=scripts/slurm/jobs/gruenau_formal_mix_bench_2026-09-26.slurm
 OUT_ROOT=/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925
 declare -A XS=([0.8b]="0 5 10 15 20 25 30 35 40 45 50" [2b]="0 5 10 15 20 25 30 35 40 45 50" [9b]="0 10 25 50")
 
@@ -49,13 +54,14 @@ for spec in ${LANES}; do
   for _ in $(seq 1 "${spec#*:}"); do LANE_NODES+=("${spec%%:*}"); done
 done
 declare -A PREV=()
+i=0; for c in ${CHAIN}; do PREV[$i]=$c; i=$((i + 1)); done
 
 SMOKE_ID=""
 if (( SMOKE )); then
   m0=${MODELS%% *}
   r=$(res "${LANE_NODES[0]}"); r="${r%% --export=*}"
-  SMOKE_ID=$(sub --job-name="fmix_bench_smoke_${m0}" ${r} \
-    --export=ALL,MIN_FREE_MIB=20000,RUN_NAME="qwen35_${m0}_dolci_rlvlgen_p00_lr5em6_seed3407",LIMIT=10,RESULTS=formal_mix_smoke \
+  SMOKE_ID=$(sub --job-name="${PREFIX}_smoke_${m0}" ${r} \
+    --export=ALL,MIN_FREE_MIB=20000,RUN_NAME="qwen35_${m0}_dolci_rlvlgen_p00_lr5em6_seed3407",LIMIT=10,PER_BENCH_LIMIT=5,RESULTS=formal_mix_smoke \
     "$BENCH")
   echo "smoke ${m0} p00: ${SMOKE_ID}"
 fi
@@ -87,8 +93,8 @@ for cell in "${ready[@]}" "${later[@]}"; do
   # res() may carry its own --export; merge RUN_NAME into it
   if [[ "${r}" == *--export=ALL,* ]]; then r="${r/--export=ALL,/--export=ALL,RUN_NAME=${run},}"
   else r="${r} --export=ALL,RUN_NAME=${run}"; fi
-  j=$(sub --job-name="fmix_bench_${m}_p${x}" ${r} "${depflag[@]}" "$BENCH")
+  j=$(sub --job-name="${PREFIX}_${m}_p${x}" ${r} "${depflag[@]}" "$BENCH")
   PREV[$lane]=$j
-  echo "${m} p${x}: lane ${lane} (${node}) bench ${j}${tj:+ after train ${tj}}"
+  echo "${m} p${x}: lane ${lane} (${node}) ${PREFIX} ${j}${tj:+ after train ${tj}}"
 done
 exit 0

@@ -2,6 +2,12 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-09-26
+
+- The format-tagged benchmark eval (`scripts/eval_formal_bench_vllm.py` on 9524 fixed items) is built and passes offline unit tests.
+  - **Purpose:** measure how much of each benchmark the model answers fully in the system (grammatical, valid, grounded, in-system correct).
+  - **Status:** submission waits for the Slurm controller (slurm-master-24 DOWN). Details are in `docs/running_experiments.md`.
+
 ## 2026-09-25
 
 - 18:10 CEST: The formal-CoT mixture sweep is running under the user rule of about 2 free GPUs per node. Details are in `docs/running_experiments.md`.

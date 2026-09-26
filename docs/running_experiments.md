@@ -4,6 +4,31 @@ Last updated: 2026-09-26 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
+## Formal mixture format-tagged benchmarks 2026-09-26: prepared, submission pending (Slurm controller down)
+
+The lm-eval suite below asks without the `<formal>` tag, so it only measures transfer. This eval asks every benchmark item with the tag and checks the proof, to measure how much of each benchmark the model can do fully in the system.
+
+Setup:
+- **Items:** `rlvl_data/datasets/formal_bench_tagged_20260926/test.jsonl`, 9524 fixed items built by `scripts/build_formal_bench_tagged.py`.
+  - PW d0/1/2/3/5 and FOLIO, asked as "... Is it true that <claim>?"
+  - BBH, 27 tasks x 100, zero-shot
+  - GPQA-Diamond, split quant/rest
+  - ARC-C, LogiQA, MMLU (1000 seeded), GSM8K (500)
+  - LongBench HotpotQA, 2Wiki and MuSiQue (F1)
+  - HellaSwag, PIQA, WinoGrande and code are left out: none has an in-system formulation.
+- **`system_answerable`:** marks items whose reference answer is yes/no or a number. Unknown/uncertain labels and letter or text answers cannot be the `ans` of a proof.
+- **Eval script:** `scripts/eval_formal_bench_vllm.py` (`.venv_rlvl_vllm`). It reuses the generation loop of `eval_formal_vllm.py`, then runs `rlvl.check` without a reference answer. Metrics:
+  - has_proof
+  - grammatical (no parse fatal)
+  - valid (strict ok)
+  - grounded (at least one `given` and no quote error)
+  - correct (Answer line)
+  - in_system (valid and the proof's own `ans` is right)
+  - valid_wrong (a checked proof of the wrong answer, meaning an unfaithful formalization)
+- **Job script:** `scripts/slurm/jobs/gruenau_formal_mix_tagged_2026-09-26.slurm`. It writes `<run>/formal_bench_tagged/`, and `formal_bench_tagged_n<N>` for smoke runs.
+- **Submission:** `scripts/submit_formal_mix_bench_lanes.sh --tagged --chain "<last job per lane>"` appends the jobs to the busy bench lanes, so the per-node GPU count stays the same. For 9B: `--models 9b --lanes gruenau12:1 --chain <last 9b bench job>`.
+- **Aggregation:** `scripts/analysis/formal_mix_tagged_table.py` writes to `analysis/formal_mixture_sweep_20260925/tagged/`.
+
 ## Formal mixture downstream benchmarks 2026-09-26: running (guppi lanes)
 
 Every sweep checkpoint (0.8B and 2B at X=0..50 step 5; X=0 is the pure-Dolci baseline) gets the "Lead into Gold" downstream suite:
