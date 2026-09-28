@@ -9,7 +9,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - **Training:** Qwen3.5-Base 0.8B/2B at X=0..50 and 9B at X=0,10,25,50 are trained on Dolci with X% generated formal-CoT data.
 - **Evals:** in-domain faithful/grammatical/valid; untagged lm-eval downstream suite; format-tagged downstream eval (`eval_formal_bench_vllm.py`).
 - **Live state:** `docs/running_experiments.md`.
-- **Stage 2 (2026-09-28):** the gate failed (in_system ≈ 0.3% on the Dolci-RL prompts). An expert-iteration bootstrap is running, and so are GRPO pilots 6940–6943 (G5 dense `lines`, G3 gvc, G1, G0; 2B). GRPO code: `scripts/grpo_formal.py` + `.venv_rlvl_grpo`. Plan: `docs/research_plan.md`.
+- **Stage 2 (2026-09-28):** the gate failed (in_system ≈ 0.3% on the Dolci-RL prompts). An expert-iteration bootstrap is running, and so are GRPO pilots 6942/6947–6949 (G1, G5 dense `lines`, G3 gvc, G0; 2B). GRPO code: `scripts/grpo_formal.py` + `.venv_rlvl_grpo`. Plan: `docs/research_plan.md`.
 
 ## Where To Look
 

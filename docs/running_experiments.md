@@ -13,7 +13,7 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - **EI collection round 1:** 6938 (2B p50, gruenau12). 8 samples per prompt at T=1 on 1,500 RL training prompts each from math, wordprob and yesno. Output: `<run>/ei_collect_r1/samples.jsonl`. Done: 57 in-system samples on 26 prompts (0.2%), too few.
 - **EI round 1b, prefix-resampling search:** 6946 (resubmit of 6939, which ran pre-fix code; 2B p50, gruenau12, `scripts/slurm/jobs/ei_prefix_search.slurm`). Resamples continuations from the checked prefix before the first failing line, for 3 rounds. Output: `<run>/ei_search_r1/{samples.jsonl,stats.json}`.
 - **GRPO pilots, dense rewards (submitted 2026-09-28):** 200 steps, 32 prompts × 8 samples, math/wordprob/yesno (DAPO dropped), `scripts/slurm/jobs/grpo_formal.slurm`, output `rlvl_data/grpo_formal_20260928/<RUN_NAME>/`.
-  - 6940 G5 `lines` (2B p50, gruenau12 L40); 6941 G3 `gvc` (2B p50, gruenau9 A100); 6942 G1 `correct` (2B p50, gruenau10 A100); 6943 G0 `correct` no tag (2B p0, gruenau7 A6000).
+  - 6940/6941/6943 OOMed in the fp32 logits upcast (per-device batch 8); resubmitted with `--per-device-batch 2` (same effective batch): 6947 G5 `lines` (2B p50, gruenau12 L40); 6948 G3 `gvc` (2B p50, gruenau9 A100); 6942 G1 `correct` (2B p50, gruenau10 A100); 6949 G0 `correct` no tag (2B p0, gruenau7 A6000).
   - Question: does a dense line-credit reward (user suggestion, hardened) raise grammatical/valid rates before EI yields enough proofs?
 - **Next:** `build_ei_mixture.py --samples ei_collect_r1/samples.jsonl ei_search_r1/samples.jsonl` → continue SFT from 2B p50 (`INIT_MODEL`, `MIX_DIR`, `RUN_NAME` on the train slurm) → re-run the gate.
 
