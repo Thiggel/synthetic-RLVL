@@ -134,4 +134,5 @@ smoke 0.8b p00: 6806
 6960 grpo_2b_G1b_correct (2B p50, correct) gruenau10
 6961 grpo_2b_G3b_gvc gruenau9 -- FAILED: same foreign process (OOM)
 6962 grpo_2b_G0b_correct (2B p0 no-tag, correct) gruenau8 after 6727
-6963 grpo_2b_G5G3 (G5 lines + G3 gvc, 2B p50, balanced pool, batch 2; scripts/slurm/jobs/grpo_formal_multi.slurm, gres l40:3 on gruenau12, uses the 2 freest GPUs) 
+6963 grpo_2b_G5G3 (G5 lines + G3 gvc, 2B p50, balanced pool, batch 2; scripts/slurm/jobs/grpo_formal_multi.slurm, gres l40:3 on gruenau12, uses the 2 freest GPUs)  -- FAILED step 2: OOM in fp32 logits (L40 44 GiB, batch 2)
+6964 grpo_2b_G5G3 resubmit of 6963 with --per-device-batch 1 --vllm-mem 0.25 (gruenau12)
