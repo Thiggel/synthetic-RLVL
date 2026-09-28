@@ -1,0 +1,79 @@
+# Stage 1 interim report: formal-mixture sweep (2026-09-28)
+
+Plan: `docs/research_plan.md`, Stage 1.
+
+**Setup:**
+- **Models:** Qwen3.5-Base 0.8B and 2B.
+- **Data:** SFT on Dolci-100k, with X% replaced by rlvlgen formal proofs (tag `<formal>`).
+- **9B:** p0 is trained; p50, p25 and p10 are training on gruenau11. They will be added later.
+
+## 1. In-domain: unseen generator problems (n=2000 per cell)
+
+![in-domain curves](figures/stage1_indomain_curves.png)
+
+| model | X | faithful | grammatical | valid | answer acc | Dolci loss |
+|---|---|---|---|---|---|---|
+| 0.8B | 0 | .000 | .000 | .000 | .000 | 1.016 |
+| 0.8B | 10 | .232 | .483 | .071 | .501 | 1.018 |
+| 0.8B | 25 | .422 | .708 | .213 | .629 | 1.055* |
+| 0.8B | 50 | .628 | .861 | .446 | .753 | 1.028 |
+| 2B | 0 | .000 | .000 | .000 | .005 | .868 |
+| 2B | 10 | .414 | .662 | .252 | .718 | .870 |
+| 2B | 25 | .666 | .845 | .470 | .808 | .873 |
+| 2B | 50 | .827 | .931 | .675 | .874 | .879 |
+
+\*The 0.8B p25 run trained on 1 GPU with grad-accum 128 (a busy-card fallback), so its loss is not directly comparable.
+
+**Findings:**
+- All four skills rise monotonically with X and have not saturated at 50%. The 2B model learns about 1.5–2× more per percent than the 0.8B.
+- Faithful translation (prompt → premises) is the bottleneck: 2B p50 is 83% faithful but 93% grammatical.
+- The cost on held-out Dolci loss is small (+0.011 for 2B at 50%).
+
+## 2. Transfer without the tag (untagged lm-eval suite, "Lead into Gold" protocol)
+
+![trade-off](figures/stage1_tradeoff.png)
+
+![delta heatmap](figures/stage1_bench_delta_heatmap.png)
+
+**2B:**
+- The mixture is essentially free on general benchmarks: the mean Δ stays within ±0.4 points up to 50%.
+- On the reasoning set the gain grows with X, reaching +1.1 points at 50%. The main driver is ProofWriter with CoT: +17 (d3) and +14 (d5) at 50%.
+
+**Costs for 2B:**
+- BBH logical_deduction_five_objects falls by 16 points at 50% and by 10 at 25%.
+- Direct-answer ProofWriter falls by 2–4 points.
+- The likely cause is that ordering and constraint puzzles are not a family in the generator, while the model's reasoning style shifts toward formal chains. This is a generator coverage gap to fix.
+
+**0.8B:** the small model pays a capacity cost.
+- GSM8K drops by up to 11 points at 50%; MMLU by 1–4 points.
+- The general mean Δ is −1.9 at 50%, and there is no PW CoT gain.
+
+**BBH web_of_lies** is 100% for every model and X. The chain-of-thought answers are genuinely correct and the targets are balanced, so this is not a scoring bug; the task is saturated or contaminated for Qwen3.5 and carries no signal.
+
+**Tentative best X (plan criterion: max in-system rate with ≤ 2 points general loss):**
+- **2B:** 50%. General Δ is −0.4, so the criterion does not bind yet. Test >50% only if the tagged eval confirms the trend.
+- **0.8B:** 25–35%, where the general Δ is about −0.6 to −1.0. At 40–50% the GSM8K loss is too large.
+
+## 3. Tagged eval on real benchmarks (the Stage-2 gate)
+
+This eval asks each benchmark item with `<formal>` and checks the proof. Smoke test 6899 (0.8B p50, 5 items per benchmark, n=210):
+
+| metric | all | system-answerable |
+|---|---|---|
+| has proof | .91 | 1.00 |
+| grammatical | .20 | .38 |
+| valid | .03 | .06 |
+| in-system correct | .02 | .06 |
+
+ProofWriter: 68% grammatical, 20% valid, 16% in-system.
+
+**Observations:**
+- **HotpotQA and MuSiQue:** the model skips the proof and answers directly on the long LongBench contexts. The generator has no long-context retrieval problems.
+- **Unfaithful premise translation:** for example, "The tiger chases the dog" was formalised as `sees(tiger, dog)`. The checker's quote grounding only tests substring presence, not whether the formula matches the quote.
+
+**Implication for Stage 2:** at 0.8B the in-system rate on real problems is far below the in-domain rate. The full runs (jobs 6900–6925, all X, 0.8B/2B/9B) will show whether 2B and 9B at high X clear the gate. If they don't, the planned remedy is generator families closer to the RL data (math word problems, ordering puzzles, long-context retrieval) before GRPO.
+
+## Pending
+- Full tagged eval for all checkpoints.
+- 9B results.
+- 2B p20, p30, p35, p40 and p45 (training, evals and benches are running).

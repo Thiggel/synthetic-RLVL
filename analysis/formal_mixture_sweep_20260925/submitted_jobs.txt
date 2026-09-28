@@ -90,3 +90,31 @@ smoke 0.8b p00: 6806
 9b p10: lane 0 (gruenau12) bench 6846 after train 6843
 9b p25: lane 0 (gruenau12) bench 6847 after train 6841
 9b p50: lane 0 (gruenau12) bench 6848 after train 6839
+# 2026-09-28 tagged evals 0.8b/2b (lanes guppi6:1[after 6823] guppi8:2 guppi7:1); smoke 6899
+0.8b p0: lane 0 (guppi6) fmix_tag 6900
+0.8b p5: lane 1 (guppi8) fmix_tag 6901
+0.8b p10: lane 2 (guppi8) fmix_tag 6902
+0.8b p15: lane 3 (guppi7) fmix_tag 6903
+0.8b p20: lane 0 (guppi6) fmix_tag 6904
+0.8b p25: lane 1 (guppi8) fmix_tag 6905
+0.8b p30: lane 2 (guppi8) fmix_tag 6906
+0.8b p35: lane 3 (guppi7) fmix_tag 6907
+0.8b p40: lane 0 (guppi6) fmix_tag 6908
+0.8b p45: lane 1 (guppi8) fmix_tag 6909
+0.8b p50: lane 2 (guppi8) fmix_tag 6910
+2b p0: lane 3 (guppi7) fmix_tag 6911
+2b p5: lane 0 (guppi6) fmix_tag 6912
+2b p10: lane 1 (guppi8) fmix_tag 6913
+2b p15: lane 2 (guppi8) fmix_tag 6914
+2b p25: lane 3 (guppi7) fmix_tag 6915
+2b p30: lane 0 (guppi6) fmix_tag 6916
+2b p35: lane 1 (guppi8) fmix_tag 6917
+2b p50: lane 2 (guppi8) fmix_tag 6918
+2b p20: lane 3 (guppi7) fmix_tag 6919 after train 6733
+2b p40: lane 0 (guppi6) fmix_tag 6920 after train 6725
+2b p45: lane 1 (guppi8) fmix_tag 6921 after train 6727
+# 2026-09-28 tagged evals 9b (lane gruenau12:1 after 6838)
+9b p0: lane 0 (gruenau12) fmix_tag 6922
+9b p10: lane 0 (gruenau12) fmix_tag 6923 after train 6843
+9b p25: lane 0 (gruenau12) fmix_tag 6924 after train 6841
+9b p50: lane 0 (gruenau12) fmix_tag 6925 after train 6839

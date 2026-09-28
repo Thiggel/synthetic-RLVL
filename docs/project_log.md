@@ -2,6 +2,16 @@
 
 Short dated notes for useful operational events, cleanup decisions, results updates, and handoff changes. Keep this concise; move bulky history to experiment-specific docs or archives.
 
+## 2026-09-28
+
+- **Research plan:** `docs/research_plan.md` records the binding 3-stage plan (mix sweep → GRPO reward arms → AlphaZero).
+- **Queue repair:** after the Slurm controller outage, held jobs that had already finished were cancelled and stale dependencies cleared. Sweep chains are running again.
+- **Tagged benchmark eval:** smoke test 6899 passed; full runs submitted (6900–6925).
+  - First signal (0.8B p50, n=5 per benchmark): in-system reasoning on real benchmarks is rare. Valid is 3% overall and 16% in_system on ProofWriter.
+  - This matters for the Stage-2 gate.
+- **Report:** `reports/2026-09-28_stage1_interim.md`.
+- **Tooling:** matplotlib installed in `.venv_rlvl_vllm`; in-domain curves regenerated.
+
 ## 2026-09-26
 
 - The format-tagged benchmark eval (`scripts/eval_formal_bench_vllm.py` on 9524 fixed items) is built and passes offline unit tests.

@@ -1,10 +1,19 @@
 # Running Experiments
 
-Last updated: 2026-09-26 CEST.
+Last updated: 2026-09-28 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
-## Formal mixture format-tagged benchmarks 2026-09-26: prepared, submission pending (Slurm controller down)
+## Formal mixture format-tagged benchmarks 2026-09-26: running (submitted 2026-09-28)
+
+- **Smoke test 6899** (0.8B p50, 5 items per benchmark, guppi8): OK. Overall: valid 3%, in_system 2%, grammatical 20%.
+  - ProofWriter: grammatical 68%.
+  - HotpotQA and MuSiQue: the model answers directly with no proof on the long contexts.
+- **0.8B/2B lanes:** guppi6 (after 6823), guppi8 ×2, guppi7. Jobs 6900–6921; checkpoints still training wait afterok on their training job.
+- **9B lane:** gruenau12 ×1 after 6838, jobs 6922–6925.
+- **Queue cleanup 2026-09-28:** the Slurm controller restore had left finished jobs held (launch_failed_requeued_held).
+  - Cancelled 6717/6719/6731/6837 (training outputs verified) and 6819–6822 (benches `.complete`).
+  - Cleared the stale dependencies of 6718/6732/6823/6825/6826/6838/6845.
 
 The lm-eval suite below asks without the `<formal>` tag, so it only measures transfer. This eval asks every benchmark item with the tag and checks the proof, to measure how much of each benchmark the model can do fully in the system.
 
