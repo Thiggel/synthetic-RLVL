@@ -1,46 +1,74 @@
 {
  "G1 correct (p50)": {
-  "steps": 110,
-  "correct": 0.458205,
-  "grammatical": 0.0046875,
+  "steps": 199,
+  "correct": 0.48027,
+  "grammatical": 0.006445299999999999,
   "valid": 0.0,
   "in_system": 0.0,
-  "lines": 9.155e-06,
+  "lines": 0.0,
   "n_ok": 0.0,
-  "completion length": 911.325,
-  "reward std (primary)": 0.49559499999999995
+  "circular": 0.0,
+  "completion length": 1170.99,
+  "reward std (primary)": 0.49444999999999995
  },
  "G5 lines (p50)": {
-  "steps": 43,
-  "correct": 0.18671500000000002,
-  "grammatical": 0.24823499999999998,
-  "valid": 0.014648600000000001,
-  "in_system": 0.0087891,
-  "lines": 0.055518,
-  "n_ok": 0.49784999999999996,
-  "completion length": 395.65,
-  "reward std (primary)": 0.093082
+  "steps": 100,
+  "correct": 0.16914,
+  "grammatical": 0.404115,
+  "valid": 0.0066396,
+  "in_system": 0.0050777,
+  "lines": 0.17268999999999998,
+  "n_ok": 4.048,
+  "circular": 0.0,
+  "completion length": 1471.45,
+  "reward std (primary)": 0.12169
  },
  "G3 gvc (p50)": {
-  "steps": 36,
-  "correct": 0.259965,
-  "grammatical": 0.100396,
-  "valid": 0.0085939,
-  "in_system": 0.0054686,
-  "lines": 0.02488385,
-  "n_ok": 0.239452,
-  "completion length": 576.4100000000001,
-  "reward std (primary)": 0.19697499999999998
+  "steps": 49,
+  "correct": 0.318955,
+  "grammatical": 0.1554685,
+  "valid": 0.011132699999999999,
+  "in_system": 0.0085937,
+  "lines": 0.02858305,
+  "n_ok": 0.25058400000000003,
+  "circular": 0.0,
+  "completion length": 628.165,
+  "reward std (primary)": 0.22035
  },
  "G0 correct (p0, no tag)": {
-  "steps": 41,
-  "correct": 0.34355,
+  "steps": 87,
+  "correct": 0.45996,
   "grammatical": 0.0,
   "valid": 0.0,
   "in_system": 0.0,
   "lines": 0.0,
   "n_ok": 0.0,
-  "completion length": 791.45,
-  "reward std (primary)": 0.47000000000000003
+  "circular": 0.0,
+  "completion length": 1095.34,
+  "reward std (primary)": 0.49460499999999996
+ },
+ "G5b lines, hardened (p50)": {
+  "steps": 25,
+  "correct": 0.182025,
+  "grammatical": 0.092573,
+  "valid": 0.0033201000000000003,
+  "in_system": 0.0019531,
+  "lines": 0.022638150000000003,
+  "n_ok": 0.22168099999999996,
+  "circular": 0.024218999999999997,
+  "completion length": 623.495,
+  "reward std (primary)": 0.0679
+ },
+ "G3b gvc, hardened (p50)": {
+  "steps": 32,
+  "correct": 0.25722,
+  "grammatical": 0.061137,
+  "valid": 0.0025388999999999998,
+  "in_system": 0.0015623999999999998,
+  "lines": 0.0182863,
+  "n_ok": 0.19413450000000002,
+  "circular": 0.0218749,
+  "completion length": 644.9350000000001,
+  "reward std (primary)": 0.17668999999999999
  }
 }

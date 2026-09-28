@@ -3,7 +3,7 @@
 
 docs/research_plan.md, Stage 2. One run = one arm:
   --arm correct          G0 (--no-tag, the X=0 policy) / G1 (tagged, the best-X policy)
-  --arm correct_x_valid  G2     --arm gvc  G3     --arm valid  G4     --arm lines  G5 (dense line credit)
+  --arm correct_x_valid  G2     --arm gvc  G3     --arm valid  G4     --arm lines  G5 (dense line credit)   --arm lines_fmt  G5c (+ format gate)
 Rewards: scripts/formal_rewards.py (the other components are logged with weight 0).
 
 Prompts: the checkable pool of scripts/build_rl_gate_set.py (math, DAPO, persona
@@ -65,7 +65,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
     ap.add_argument("--out-dir", required=True)
-    ap.add_argument("--arm", choices=["correct", "correct_x_valid", "gvc", "valid", "lines", "lines_raw"], required=True)
+    ap.add_argument("--arm", choices=["correct", "correct_x_valid", "gvc", "valid", "lines", "lines_fmt", "lines_raw"], required=True)
     ap.add_argument("--no-tag", action="store_true", help="prompt without <formal> (G0, G1-NL)")
     ap.add_argument("--benches", default="dolci_math,dolci_dapo,dolci_wordprob,dolci_yesno")
     ap.add_argument("--n-prompts", type=int, default=None)
