@@ -264,7 +264,7 @@ def generate(records, args) -> list[dict]:
         stop_ids.append(tok.eos_token_id)
     llm = LLM(model=args.model, tokenizer=args.model, dtype="bfloat16", seed=0,
               tensor_parallel_size=args.tp, max_model_len=args.max_model_len,
-              gpu_memory_utilization=args.gpu_mem, enable_prefix_caching=True, max_num_seqs=args.max_num_seqs,
+              gpu_memory_utilization=args.gpu_mem, enable_prefix_caching=True, max_num_seqs=getattr(args, "max_num_seqs", 256),
               limit_mm_per_prompt={"image": 0, "video": 0} if args.no_mm else None)
     states = []
     for rec in records:
