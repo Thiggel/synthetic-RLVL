@@ -19,7 +19,7 @@ RUNS = Path("/vol/tmp2/laitenbf/rlvl_data/grpo_formal_20260928")
 ARMS = {
     "G1 correct (p50)": ("2b_p50_G1_correct_bal", "grpo_2b_G1b_correct_6960.out"),
     "G5 lines (p50)": ("2b_p50_G5_lines_bal", "grpo_2b_G5G3_6964_lines.log"),
-    "G3 gvc (p50)": ("2b_p50_G3_gvc_bal", "grpo_2b_G5G3_6964_gvc.log"),
+    "G3 gvc (p50)": ("2b_p50_G3_gvc_bal", "grpo_2b_G3c_gvc_6965.out"),
     "G0 correct (p0, no tag)": ("2b_p0_G0_correct_bal", "grpo_2b_G0b_correct_6962.out"),
 }
 COMP = ["correct", "grammatical", "valid", "in_system", "lines", "n_ok"]
