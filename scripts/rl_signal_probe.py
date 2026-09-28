@@ -31,7 +31,7 @@ from formal_chat_format import render_prompt  # noqa: E402
 from formal_rewards import components  # noqa: E402
 
 ARMS = {"correct": lambda c: c["correct"], "correct_x_valid": lambda c: c["correct"] * c["valid"],
-        "gvc": lambda c: (c["grammatical"] + c["valid"] + c["correct"]) / 3, "valid": lambda c: c["valid"]}
+        "gvc": lambda c: (c["grammatical"] + c["valid"] + c["correct"]) / 3, "valid": lambda c: c["valid"], "lines": lambda c: c["lines"]}
 COMP = ["has_proof", "grammatical", "valid", "correct", "in_system"]
 
 

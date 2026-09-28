@@ -16,9 +16,18 @@ Components (all 0/1):
 Arms (the primary reward; the other components are logged with weight 0):
   G0/G1 correct            G2 correct_x_valid        G3 gvc = (grammatical + valid + correct) / 3
   G4 valid
+  G5 lines   dense line credit, the user's "(#grammatical lines + #valid lines) * (1 + correct)"
+             hardened against padding (see line_stats):
+             ((g + v) / 2 + valid) * (1 + correct) / 4  in [0, 1]
+             g, v = min(1, n / LINE_CAP) for the parsed / checking derived (non-given)
+             lines that the conclusion depends on. The valid bonus keeps a complete valid proof above
+             any partial one.
+  lines_raw  the literal formula on the same line counts, (n_parsed + n_ok) * (1 + correct),
+             for comparison only (rewards length)
 """
 from __future__ import annotations
 
+import re
 import sys
 from collections import OrderedDict
 from pathlib import Path
@@ -28,6 +37,66 @@ from eval_formal_bench_vllm import match, score  # noqa: E402
 
 _CACHE: OrderedDict = OrderedDict()
 _CACHE_MAX = 65536
+LINE_CAP = 8
+_STEP = re.compile(r"^\s*(\d+(?:\.\d+)*)\s+(.*?)\s*;\s*(.*)$")
+_ANS = re.compile(r"^\s*ans\b.*;\s*(\d+(?:\.\d+)*)\s*$")
+_LABEL = re.compile(r"^\d+(?:\.\d+)*$")
+
+
+def line_stats(prompt: str, completion: str) -> dict:
+    """Line counts for the dense arm, restricted to the lines the conclusion depends on.
+
+    Root = the line cited by `ans`, else the last step line. Ancestors follow the
+    label citations after the rule name (quotes excluded). Counting only ancestors
+    (distinct formulas) gives no credit for padding: repeated `given` lines, or free
+    `calc`/`refl` lines that cite nothing the conclusion uses.
+      n_steps    step lines in the proof text
+      n_parsed   ancestor lines the parser reached (before a parse error)
+      n_ok       derived ancestor lines (rule != given) that check (rlvl strict per-line ok);
+                 `given` lines always check (grounding is a substring test), so counting
+                 them would pay for citing premises from one bogus final line
+    """
+    import rlvl
+    zero = {"n_steps": 0, "n_parsed": 0, "n_ok": 0}
+    s = completion.find("<proof>\n")
+    if s < 0:
+        return zero
+    e = completion.find("</proof>", s)
+    body = completion[s + len("<proof>\n"): e if e >= 0 else len(completion)]
+    cites, formula, order, root = {}, {}, [], None
+    for ln in body.split("\n"):
+        m = _ANS.match(ln)
+        if m:
+            root = m.group(1)
+            break
+        m = _STEP.match(ln)
+        if m:
+            lab, f, just = m.groups()
+            just = just.split('"', 1)[0].split()
+            cites[lab] = [t for t in just[1:] if _LABEL.match(t)]
+            formula[lab] = f
+            order.append(lab)
+    if not order:
+        return zero
+    root = root if root in cites else order[-1]
+    anc, stack = set(), [root]
+    while stack:
+        x = stack.pop()
+        if x in anc or x not in cites:
+            continue
+        anc.add(x)
+        stack += cites[x]
+    try:
+        rep = rlvl.check(prompt, body, strict=True)
+    except Exception:
+        return {**zero, "n_steps": len(order)}
+    parsed, ok = {}, {}
+    for r in rep.get("lines") or []:
+        if r.get("kind") == "step" and r.get("label") in anc:
+            f = formula.get(r["label"])
+            parsed[f] = True
+            ok[f] = ok.get(f, False) or bool(r.get("ok") and r.get("rule") != "given")
+    return {"n_steps": len(order), "n_parsed": len(parsed), "n_ok": sum(ok.values())}
 
 
 def components(rec: dict, completion: str) -> dict:
@@ -42,13 +111,20 @@ def components(rec: dict, completion: str) -> dict:
                "pred_answer": None, "has_proof": False, "error": f"crash: {e!r}"}
     agree = True
     if row.get("pred_answer") is not None and row.get("sys_answer") is not None:
-        agree = match(str(row["sys_answer"]), {**rec, "gold": _gold_like(rec, row["pred_answer"])}) == 1.0
+        try:  # an unparseable Answer: line ("nan" gold) disagrees
+            agree = match(str(row["sys_answer"]), {**rec, "gold": _gold_like(rec, row["pred_answer"])}) == 1.0
+        except Exception:
+            agree = False
     valid = bool(row["valid"] and row["grounded"] and row.get("sys_answer") is not None and agree)
     in_sys = bool(valid and rec.get("system_answerable")
                   and match(str(row["sys_answer"]), rec) == 1.0)
+    ls = line_stats(rec["prompt"], completion)
     out = {"correct": float(bool(row["correct"])), "grammatical": float(bool(row["grammatical"])),
            "valid": float(valid), "in_system": float(in_sys), "has_proof": float(bool(row["has_proof"])),
-           "valid_strict": float(bool(row["valid"]))}
+           "valid_strict": float(bool(row["valid"])), **{k: float(v) for k, v in ls.items()}}
+    g, v = min(1.0, ls["n_parsed"] / LINE_CAP), min(1.0, ls["n_ok"] / LINE_CAP)
+    out["lines"] = ((g + v) / 2 + valid) * (1 + out["correct"]) / 4
+    out["lines_raw"] = (ls["n_parsed"] + ls["n_ok"]) * (1 + out["correct"])
     _CACHE[key] = out
     if len(_CACHE) > _CACHE_MAX:
         _CACHE.popitem(last=False)
@@ -97,8 +173,10 @@ def make_reward(name: str):
     return fn
 
 
-ARMS = {"correct": "correct", "correct_x_valid": "correct_x_valid", "gvc": "gvc", "valid": "valid"}
-LOGGED = ["correct", "valid", "grammatical", "in_system", "has_proof", "valid_strict"]
+ARMS = {"correct": "correct", "correct_x_valid": "correct_x_valid", "gvc": "gvc", "valid": "valid",
+        "lines": "lines", "lines_raw": "lines_raw"}
+LOGGED = ["correct", "valid", "grammatical", "in_system", "has_proof", "valid_strict", "lines", "n_parsed", "n_ok",
+          "n_steps"]
 
 
 def reward_funcs(arm: str):
