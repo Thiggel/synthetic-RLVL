@@ -21,6 +21,8 @@ Plan: `docs/research_plan.md`, Stage 1.
 | 2B | 10 | .414 | .662 | .252 | .718 | .870 |
 | 2B | 25 | .666 | .845 | .470 | .808 | .873 |
 | 2B | 50 | .827 | .931 | .675 | .874 | .879 |
+| 9B | 0 | .000 | .000 | .000 | .001 | – |
+| 9B | 50 | .999 | .999 | .983 | .992 | – |
 
 \*The 0.8B p25 run trained on 1 GPU with grad-accum 128 (a busy-card fallback), so its loss is not directly comparable.
 
@@ -28,6 +30,7 @@ Plan: `docs/research_plan.md`, Stage 1.
 - All four skills rise monotonically with X and have not saturated at 50%. The 2B model learns about 1.5–2× more per percent than the 0.8B.
 - Faithful translation (prompt → premises) is the bottleneck: 2B p50 is 83% faithful but 93% grammatical.
 - The cost on held-out Dolci loss is small (+0.011 for 2B at 50%).
+- *Update 22:55:* **9B p50 almost solves the in-domain task.** It is 99.9% faithful, 98.3% valid and 99.2% correct on the answer; 2B p50 is at 83% / 68% / 87%. The faithfulness bottleneck is a capacity limit that 9B removes. The figure now draws the full 0.8B and 2B curves (X = 0, 5, ..., 50) and the 9B points; 9B p25 and p10 are still training.
 
 ## 2. Transfer without the tag (untagged lm-eval suite, "Lead into Gold" protocol)
 
@@ -76,4 +79,4 @@ ProofWriter: 68% grammatical, 20% valid, 16% in-system.
 ## Pending
 - Full tagged eval for all checkpoints.
 - 9B results.
-- 2B p20, p30, p35, p40 and p45 (training, evals and benches are running).
+- 2B untagged benches and tagged evals for the last cells (p20 6824/6919 are running). The in-domain eval of every 2B cell is done.

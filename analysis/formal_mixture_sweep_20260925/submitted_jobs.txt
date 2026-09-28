@@ -158,3 +158,5 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7019 fmix_eval_9b_p50 resubmit (6840 failed: Mamba cache blocks 219 < 256 on shared L40), gruenau12 l40:1, MAX_NUM_SEQS=128
 7020 grpo_2b_G6_frachard resubmit, gruenau9 a10080gb:1, partition gpu, 8 CPUs, 60G, MIN_FREE_MIB=60000 (7013 left no output)
 7021 grpo_G6g resubmit, gruenau10 a10080gb:1 -> guard exit 3 (13.1 GB free: shared GPU)
+7025 grpo_G6g resubmit, gruenau10 a10080gb:1, partition gpu, 8 CPUs, 60G, MIN_FREE_MIB=60000 (GPU0 clean at 22:48)
+7026 grpo_gate (scripts/slurm/jobs/grpo_gate_ckpts.slurm) gruenau12 l40:1: G0@100 G3b@50 G5c@50 G3b@100 G6@50
