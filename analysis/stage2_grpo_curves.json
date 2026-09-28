@@ -1,46 +1,46 @@
 {
  "G1 correct (p50)": {
-  "steps": 83,
-  "correct": 0.45038999999999996,
-  "grammatical": 0.0005859000000000001,
+  "steps": 110,
+  "correct": 0.458205,
+  "grammatical": 0.0046875,
   "valid": 0.0,
   "in_system": 0.0,
-  "lines": 4.883e-05,
-  "n_ok": 0.0001953,
-  "completion length": 827.25,
-  "reward std (primary)": 0.49205499999999996
+  "lines": 9.155e-06,
+  "n_ok": 0.0,
+  "completion length": 911.325,
+  "reward std (primary)": 0.49559499999999995
  },
  "G5 lines (p50)": {
-  "steps": 30,
-  "correct": 0.167775,
-  "grammatical": 0.11757549999999999,
-  "valid": 0.006836,
-  "in_system": 0.0039061,
-  "lines": 0.02828675,
-  "n_ok": 0.280671,
-  "completion length": 568.165,
-  "reward std (primary)": 0.0762335
+  "steps": 43,
+  "correct": 0.18671500000000002,
+  "grammatical": 0.24823499999999998,
+  "valid": 0.014648600000000001,
+  "in_system": 0.0087891,
+  "lines": 0.055518,
+  "n_ok": 0.49784999999999996,
+  "completion length": 395.65,
+  "reward std (primary)": 0.093082
  },
  "G3 gvc (p50)": {
-  "steps": 22,
-  "correct": 0.213285,
-  "grammatical": 0.0597665,
-  "valid": 0.0039062,
-  "in_system": 0.0021484,
-  "lines": 0.01787665,
-  "n_ok": 0.18399,
-  "completion length": 538.1949999999999,
-  "reward std (primary)": 0.17015
+  "steps": 36,
+  "correct": 0.259965,
+  "grammatical": 0.100396,
+  "valid": 0.0085939,
+  "in_system": 0.0054686,
+  "lines": 0.02488385,
+  "n_ok": 0.239452,
+  "completion length": 576.4100000000001,
+  "reward std (primary)": 0.19697499999999998
  },
  "G0 correct (p0, no tag)": {
-  "steps": 27,
-  "correct": 0.24708000000000002,
+  "steps": 41,
+  "correct": 0.34355,
   "grammatical": 0.0,
   "valid": 0.0,
   "in_system": 0.0,
   "lines": 0.0,
   "n_ok": 0.0,
-  "completion length": 591.2,
-  "reward std (primary)": 0.425735
+  "completion length": 791.45,
+  "reward std (primary)": 0.47000000000000003
  }
 }
