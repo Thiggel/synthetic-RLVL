@@ -121,3 +121,7 @@ smoke 0.8b p00: 6806
 6926 6927 6928 6929 6930 6931 6932 6933
 6935 rl_probe_2b_p50 (failed: gpu mem) 6936 rl_probe_0.8b_p50 6937 rl_probe_2b_p50 6938 ei_collect_2b_r1
 6939 ei_search_2b_r1 (prefix-resampling EI collection, gruenau12)
+6940 grpo_2b_G5_lines pilot (2B p50, arm lines) gruenau12
+6941 grpo_2b_G3_gvc pilot (2B p50) gruenau9
+6942 grpo_2b_G1_correct pilot (2B p50) gruenau10
+6943 grpo_2b_G0_correct pilot (2B p0, no tag) gruenau7

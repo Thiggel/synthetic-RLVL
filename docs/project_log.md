@@ -18,6 +18,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   - Remedy: expert-iteration SFT on in-system samples (`scripts/rl_signal_probe.py --source train`, `scripts/data/build_ei_mixture.py`).
   - Sampling probes: 6936/6937. EI collection round 1: 6938 (2B p50).
 - **Scoring:** a loose `**Answer:**` / "the answer is" fallback was added to `eval_formal_bench_vllm.py`, and finished runs were re-scored (`scripts/rescore_formal_bench.py`).
+- **Dense reward arm G5 `lines`** (user suggestion "(#grammatical lines + #valid lines) * (1 + correctness)"), hardened in `scripts/formal_rewards.py`: counts only lines the conclusion depends on (distinct formulas); valid credit only for derived, non-`given` lines; capped at 8 lines; plus a validity bonus. `lines_raw` keeps the literal formula. Offline on the gate outputs (`scripts/analysis/reward_offline_eval.py`): nonzero on 13% of 2B p50 outputs; valid proofs average .53, invalid ones .014. The top invalid outputs are honest near misses.
+- **Fix:** an unparseable Answer: line no longer crashes `formal_rewards.components` (ans/Answer agreement → False).
+- **GRPO pilots 6940–6943** (2B; G5 lines, G3 gvc, G1 correct, G0 no-tag correct), 200 steps each.
 - **GRPO stack:** `.venv_rlvl_grpo` (TRL 1.14 + vLLM 0.30 colocate), `scripts/grpo_formal.py`, `scripts/formal_rewards.py`. Smoke job 6934 passed.
 
 ## 2026-09-26

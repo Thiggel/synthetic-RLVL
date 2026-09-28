@@ -59,6 +59,7 @@ Standing constraints:
 | G2 | P-mix, formal | (2) correctness × validity (1 only if both are true) |
 | G3 | P-mix, formal | (3) grammaticality + validity + correctness |
 | G4 | P-mix, formal | (4) validity only, without correctness |
+| G5 *(user 2026-09-28)* | P-mix, formal | dense line credit, "(#grammatical lines + #valid lines) × (1 + correctness)", hardened against padding (`formal_rewards.py`, arm `lines`) |
 | G1-NL *(impl, optional)* | P-mix, no tag | correctness only. Separates "mixture SFT" from "reasoning in the format". |
 
 **User hypothesis:**
@@ -159,3 +160,6 @@ Every finding, including negative results, goes into a report with figures, not 
   - The Stage-2 RL subset drops DAPO. Sampling probe: `scripts/rl_signal_probe.py`.
   - Answer extraction now accepts `**Answer:** x` / `the answer is x`, and finished runs were re-scored. This matters for the G0 correctness reward on natural-language outputs.
   - GRPO infrastructure is ready: `.venv_rlvl_grpo` (TRL 1.14), `scripts/grpo_formal.py`, `scripts/formal_rewards.py`, `scripts/slurm/jobs/grpo_formal.slurm`. Smoke job 6934 ran end to end with zero reward variance. The venv lacks causal_conv1d, so the conv kernel is slow.
+- 2026-09-28: **G5 added** (user: "if it only works partially, then perhaps it will start working if we use RL rewards that reward grammaticality + validity + correctness or even (#grammatical-lines + #valid-lines) * (1 + correctness)").
+  - Hardened version: counts only the distinct lines the conclusion depends on; `given` lines earn no validity credit; capped at 8; validity bonus. So `((g+v)/2 + valid)(1+correct)/4`. The literal formula is kept as `lines_raw`.
+  - The gate has not passed, but GRPO pilots G0/G1/G3/G5 on 2B (6940–6943, 200 steps) run in parallel with EI. They test whether the dense arms give signal before EI does. G2/G4 wait: only 1% of groups have signal.
