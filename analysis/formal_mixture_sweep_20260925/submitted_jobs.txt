@@ -130,7 +130,8 @@ smoke 0.8b p00: 6806
 6942/6949 cancelled (6949 put gruenau7 over the 2-GPU cap; both on the 96%-math pool)
 # 2026-09-28 balanced-pool GRPO pilots (--max-per-bench 1200: math 1200 / wordprob 1200 / yesno 491; 200 steps)
 6955-6958 cancelled: sbatch --export split EXTRA_ARGS at the commas in --benches (pool = dolci_math only); resubmitted with shell-exported env
-6959 grpo_2b_G5b_lines (2B p50, lines) gruenau9
+6959 grpo_2b_G5b_lines (2B p50, lines) gruenau9 -- FAILED: foreign non-Slurm process (ahlersep) took 49 GB of GPU0 (vLLM: no memory for cache blocks)
 6960 grpo_2b_G1b_correct (2B p50, correct) gruenau10
-6961 grpo_2b_G3b_gvc (2B p50, gvc) gruenau9 after 6959
+6961 grpo_2b_G3b_gvc gruenau9 -- FAILED: same foreign process (OOM)
 6962 grpo_2b_G0b_correct (2B p0 no-tag, correct) gruenau8 after 6727
+6963 grpo_2b_G5G3 (G5 lines + G3 gvc, 2B p50, balanced pool, batch 2; scripts/slurm/jobs/grpo_formal_multi.slurm, gres l40:3 on gruenau12, uses the 2 freest GPUs) 

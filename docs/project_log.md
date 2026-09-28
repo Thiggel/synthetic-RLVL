@@ -4150,3 +4150,4 @@ Downstream benchmarks of the "Lead into Gold" paper now run for every checkpoint
   - Pilots 6942/6949 were cancelled; 6949 also put gruenau7 over the 2-GPU cap.
   - Resubmitted on 1,200/1,200/491 prompts: 6959 G5, 6960 G1, 6961 G3, 6962 G0.
   - Pitfall: `sbatch --export=...,EXTRA_ARGS="--benches a,b"` splits at commas (6955–6958 cancelled). Export the variables in the shell and use `--export=ALL`.
+- 12:25: 6959 (G5) and 6961 (G3) on gruenau9 died when another user started a non-Slurm process on the allocated A100. New `scripts/slurm/jobs/grpo_formal_multi.slurm` allocates 3 L40s on gruenau12 (cap 5) and runs several single-GPU arms on the freest devices. Resubmitted G5 + G3 as 6963. `grpo_formal.slurm` now counts GPUs from `CUDA_VISIBLE_DEVICES`.

@@ -9,7 +9,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - **Training:** Qwen3.5-Base 0.8B/2B at X=0..50 and 9B at X=0,10,25,50 are trained on Dolci with X% generated formal-CoT data.
 - **Evals:** in-domain faithful/grammatical/valid; untagged lm-eval downstream suite; format-tagged downstream eval (`eval_formal_bench_vllm.py`).
 - **Live state:** `docs/running_experiments.md`.
-- **Stage 2 (2026-09-28):** the gate failed (in_system ≈ 0.3% on the Dolci-RL prompts). The expert-iteration collection is done: prefix resampling solved 50 of 3,191 prompts, giving 77 proofs; the SFT is deferred. The GRPO pilots were restarted on a balanced prompt pool (`--max-per-bench 1200`) as 6959–6962 (G5 dense `lines`, G1, G3 gvc, G0; 2B). GRPO code: `scripts/grpo_formal.py` + `.venv_rlvl_grpo`. Plan: `docs/research_plan.md`.
+- **Stage 2 (2026-09-28):** the gate failed (in_system ≈ 0.3% on the Dolci-RL prompts). The expert-iteration collection is done: prefix resampling solved 50 of 3,191 prompts, giving 77 proofs; the SFT is deferred. The GRPO pilots were restarted on a balanced prompt pool (`--max-per-bench 1200`) as 6960 (G1), 6962 (G0) and 6963 (G5 dense `lines` + G3 gvc, one job on gruenau12); 2B. GRPO code: `scripts/grpo_formal.py` + `.venv_rlvl_grpo`. Plan: `docs/research_plan.md`.
 
 ## Where To Look
 

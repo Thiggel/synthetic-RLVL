@@ -32,8 +32,11 @@ hash -r 2>/dev/null || true
 MODEL="${ROOT}/rlvl_data/formal_mixture_sft_20260925/${POLICY:?}/final"
 OUT="${ROOT}/rlvl_data/grpo_formal_20260928/${RUN_NAME:?}"
 mkdir -p "${OUT}"
-NGPU=$(nvidia-smi -L | wc -l)
-nvidia-smi --query-gpu=name,memory.total,memory.free --format=csv,noheader
+# CUDA_VISIBLE_DEVICES (set by Slurm, or by grpo_formal_multi.slurm) wins over nvidia-smi -L
+export CUDA_DEVICE_ORDER=PCI_BUS_ID
+if [[ -n "${CUDA_VISIBLE_DEVICES:-}" ]]; then NGPU=$(tr ',' '\n' <<< "${CUDA_VISIBLE_DEVICES}" | wc -l)
+else NGPU=$(nvidia-smi -L | wc -l); fi
+nvidia-smi -i "${CUDA_VISIBLE_DEVICES:-0}" --query-gpu=index,name,memory.total,memory.free --format=csv,noheader
 echo "policy=${POLICY} arm=${ARM:?} ngpu=${NGPU} out=${OUT}"
 ACC=(--num_processes "${NGPU}" --mixed_precision bf16)
 if (( NGPU > 1 )); then ACC+=(--use_deepspeed --zero_stage 2); fi
