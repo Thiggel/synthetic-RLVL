@@ -146,3 +146,7 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 6978 grpo_2b_G3b_gvc_hard (2B p50, gvc, hardened valid, batch 1, vllm-mem 0.25) gruenau12 L40, partition gpu-staff
 6977 cancelled 2026-09-28 19:45 at step ~27 (replaced by 7000)
 7000 grpo_2b_G5c_linesfmt (2B p50, lines_fmt = lines x format_ok, tautologies excluded, batch 1, vllm-mem 0.25) gruenau8 A6000, partition gpu
+7006 grpo_2b_G6_frachard (2B p50, frac_hard, Dolci math/wordprob/yesno, batch 1, vllm-mem 0.25) gruenau12 L40, partition gpu-staff
+7007 grpo_2b_G6g_frachard_gen (2B p50, frac_hard, + gen pool-train items with exact faithfulness) submitted to gruenau10, moved to gruenau9 A100 (gruenau10 CPUs full), partition gpu -> FAILED at vLLM start (foreign process on the gruenau9 GPU)
+7008 grpo_2b_G6g_frachard_gen resubmit, gruenau10, cancelled (100G needs 13 CPUs, 8 free)
+7009 grpo_2b_G6g_frachard_gen resubmit, gruenau10 a10080gb:1, 8 CPUs, 60G, partition gpu

@@ -279,6 +279,146 @@
    }
   }
  },
+ "G1 correct @150": {
+  "all": {
+   "has_proof": 0.29894736842105263,
+   "grammatical": 0.0,
+   "format_ok": 0.08526315789473685,
+   "valid_eval": 0.0,
+   "circular": 0.0,
+   "n_taut": 0.0,
+   "valid": 0.0,
+   "in_system": 0.0,
+   "correct": 0.39789473684210525
+  },
+  "per_bench": {
+   "dolci_math": {
+    "has_proof": 0.0033333333333333335,
+    "grammatical": 0.0,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.24333333333333335
+   },
+   "dolci_dapo": {
+    "has_proof": 0.0,
+    "grammatical": 0.0,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.20666666666666667
+   },
+   "dolci_wordprob": {
+    "has_proof": 0.125,
+    "grammatical": 0.0,
+    "format_ok": 0.075,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.6
+   },
+   "dolci_yesno": {
+    "has_proof": 0.85,
+    "grammatical": 0.0,
+    "format_ok": 0.09,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.745
+   },
+   "dolci_knowledge": {
+    "has_proof": 0.88,
+    "grammatical": 0.0,
+    "format_ok": 0.48,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.05
+   }
+  }
+ },
+ "G1 correct final": {
+  "all": {
+   "has_proof": 0.27473684210526317,
+   "grammatical": 0.01263157894736842,
+   "format_ok": 0.0,
+   "valid_eval": 0.0,
+   "circular": 0.0,
+   "n_taut": 0.0,
+   "valid": 0.0,
+   "in_system": 0.0,
+   "correct": 0.41368421052631577
+  },
+  "per_bench": {
+   "dolci_math": {
+    "has_proof": 0.0033333333333333335,
+    "grammatical": 0.0,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.27666666666666667
+   },
+   "dolci_dapo": {
+    "has_proof": 0.0,
+    "grammatical": 0.0,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.22666666666666666
+   },
+   "dolci_wordprob": {
+    "has_proof": 0.105,
+    "grammatical": 0.005,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.665
+   },
+   "dolci_yesno": {
+    "has_proof": 0.83,
+    "grammatical": 0.015,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.69
+   },
+   "dolci_knowledge": {
+    "has_proof": 0.73,
+    "grammatical": 0.08,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.05
+   }
+  }
+ },
  "G5 lines @50": {
   "all": {
    "has_proof": 0.9989473684210526,
@@ -344,6 +484,76 @@
     "circular": 0.39,
     "n_taut": 0.03,
     "valid": 0.05,
+    "in_system": 0.0,
+    "correct": 0.0
+   }
+  }
+ },
+ "G5 lines @100": {
+  "all": {
+   "has_proof": 0.9989473684210526,
+   "grammatical": 0.4726315789473684,
+   "format_ok": 0.0,
+   "valid_eval": 0.005263157894736842,
+   "circular": 0.17789473684210527,
+   "n_taut": 0.2231578947368421,
+   "valid": 0.002105263157894737,
+   "in_system": 0.0010526315789473684,
+   "correct": 0.14421052631578948
+  },
+  "per_bench": {
+   "dolci_math": {
+    "has_proof": 1.0,
+    "grammatical": 0.35333333333333333,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.15333333333333332,
+    "n_taut": 0.20666666666666667,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.02666666666666667
+   },
+   "dolci_dapo": {
+    "has_proof": 1.0,
+    "grammatical": 0.31333333333333335,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.12666666666666668,
+    "n_taut": 0.30666666666666664,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.02666666666666667
+   },
+   "dolci_wordprob": {
+    "has_proof": 1.0,
+    "grammatical": 0.58,
+    "format_ok": 0.0,
+    "valid_eval": 0.01,
+    "circular": 0.145,
+    "n_taut": 0.105,
+    "valid": 0.01,
+    "in_system": 0.005,
+    "correct": 0.225
+   },
+   "dolci_yesno": {
+    "has_proof": 0.995,
+    "grammatical": 0.62,
+    "format_ok": 0.0,
+    "valid_eval": 0.015,
+    "circular": 0.275,
+    "n_taut": 0.265,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.4
+   },
+   "dolci_knowledge": {
+    "has_proof": 1.0,
+    "grammatical": 0.56,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.2,
+    "n_taut": 0.3,
+    "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.0
    }

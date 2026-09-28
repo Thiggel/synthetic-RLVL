@@ -4,6 +4,9 @@
 docs/research_plan.md, Stage 2. One run = one arm:
   --arm correct          G0 (--no-tag, the X=0 policy) / G1 (tagged, the best-X policy)
   --arm correct_x_valid  G2     --arm gvc  G3     --arm valid  G4     --arm lines  G5 (dense line credit)   --arm lines_fmt  G5c (+ format gate)
+  --arm frac   the user's "%grammatical lines + %valid lines + correct"
+  --arm frac_hard  G6: frac with the line credit gated on premises (numeric check; exact faithfulness on
+                   --benches gen items), format and no circular given; G6g adds gen to the benches
 Rewards: scripts/formal_rewards.py (the other components are logged with weight 0).
 
 Prompts: the checkable pool of scripts/build_rl_gate_set.py (math, DAPO, persona
@@ -31,12 +34,25 @@ from build_rl_gate_set import OUT as GATE_DIR, classify  # noqa: E402
 from formal_chat_format import render_prompt  # noqa: E402
 from formal_rewards import reward_funcs  # noqa: E402
 
+GEN_POOL = Path("/vol/tmp2/laitenbf/rlvl_data/datasets/formal_mixture_20260925/pool/train.jsonl")
+
 
 def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], max_per_bench: int | None = None):
     from datasets import Dataset, load_dataset
+    rows = []
+    if "gen" in benches:  # generator items carry their gold sentences: frac_hard then checks exact faithfulness
+        import re
+        for i, ln in enumerate(open(GEN_POOL)):
+            r = json.loads(ln)
+            a = r["answer"]
+            t = "yesno" if a in ("yes", "no") else "number" if re.fullmatch(r"-?\d+(/\d+)?", a) else None
+            if t is None or r.get("tools"):  # no tool loop in GRPO
+                continue
+            rows.append({"prompt": render_prompt(tok, f"<formal>\n{r['prompt']}" if tag else r["prompt"]),
+                         "raw_prompt": r["prompt"], "id": f"gen/{r['family']}/{i}", "bench": "gen", "gold": a,
+                         "answer_type": t, "system_answerable": True, "sentences_json": json.dumps(r["sentences"])})
     held = set(json.loads((GATE_DIR / "heldout_rows.json").read_text()))
     ds = load_dataset("allenai/Dolci-Instruct-RL", split="train")
-    rows = []
     for i, r in enumerate(ds):
         p = r["prompt"]
         if i in held or not p.startswith("user: ") or "\nassistant:" in p:
@@ -47,7 +63,8 @@ def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], 
         b, t, g, a = c
         q = p.removeprefix("user: ").strip()
         rows.append({"prompt": render_prompt(tok, f"<formal>\n{q}" if tag else q), "raw_prompt": q,
-                     "id": f"{b}/{i}", "bench": b, "gold": g, "answer_type": t, "system_answerable": a})
+                     "id": f"{b}/{i}", "bench": b, "gold": g, "answer_type": t, "system_answerable": a,
+                     "sentences_json": ""})
     random.Random(seed).shuffle(rows)
     if max_per_bench:  # dolci_math is 96% of the pool and mostly outside the system; balance it
         seen, kept = {}, []
@@ -65,9 +82,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
     ap.add_argument("--out-dir", required=True)
-    ap.add_argument("--arm", choices=["correct", "correct_x_valid", "gvc", "valid", "lines", "lines_fmt", "lines_raw"], required=True)
+    ap.add_argument("--arm", choices=["correct", "correct_x_valid", "gvc", "valid", "lines", "lines_fmt", "lines_raw", "frac", "frac_hard"], required=True)
     ap.add_argument("--no-tag", action="store_true", help="prompt without <formal> (G0, G1-NL)")
-    ap.add_argument("--benches", default="dolci_math,dolci_dapo,dolci_wordprob,dolci_yesno")
+    ap.add_argument("--benches", default="dolci_math,dolci_dapo,dolci_wordprob,dolci_yesno",
+                    help="also: gen = formal_mixture generator pool train (yes/no + numeric, no tools)")
     ap.add_argument("--n-prompts", type=int, default=None)
     ap.add_argument("--max-per-bench", type=int, default=None,
                     help="cap prompts per subset (pool: math 43.5k, wordprob 1.2k, yesno 0.5k)")

@@ -33,13 +33,16 @@ Arms (the primary reward; the other components are logged with weight 0):
 """
 from __future__ import annotations
 
+import json
 import re
 import sys
+from fractions import Fraction
 from collections import OrderedDict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from eval_formal_bench_vllm import match, score  # noqa: E402
+from eval_formal_vllm import extract, faithful_given, givens  # noqa: E402
 
 _CACHE: OrderedDict = OrderedDict()
 _CACHE_MAX = 65536
@@ -63,6 +66,46 @@ def tautology(f: str) -> bool:
                 lhs, rhs = f[:i], f[m.end():]
                 return m.group() != "!=" and "".join(lhs.split()) == "".join(rhs.split()) != ""
     return False
+
+
+_NUM = re.compile(r"(?<![\w.])(\d+(?:\.\d+)?)(?:\s*/\s*(\d+))?")
+_WORDS = {"zero": 0, "none": 0, "no": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
+          "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15,
+          "sixteen": 16, "seventeen": 17, "eighteen": 18, "nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40,
+          "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90, "hundred": 100, "thousand": 1000,
+          "million": 10**6, "dozen": 12, "half": Fraction(1, 2), "quarter": Fraction(1, 4), "twice": 2, "double": 2,
+          "triple": 3, "thrice": 3, "first": 1, "second": 2, "third": 3, "fourth": 4, "fifth": 5, "sixth": 6,
+          "seventh": 7, "eighth": 8, "ninth": 9, "tenth": 10, "once": 1, "pair": 2, "single": 1}
+FREE_NUMBERS = {Fraction(0), Fraction(1)}
+
+
+def _numbers(text: str, quote: bool) -> set:
+    """Numeric values in a formula, or (quote=True) every value a quote can state: digits, decimals,
+    fractions, percentages (25% -> 25 and 1/4), number words (half, dozen, third -> 1/3 and 3)."""
+    t = re.sub(r"(?<=\d),(?=\d{3}\b)", "", text)
+    out = set()
+    for m in _NUM.finditer(t):
+        a, b = m.groups()
+        try:
+            v = Fraction(a) / Fraction(b) if b else Fraction(a)
+        except (ValueError, ZeroDivisionError):
+            continue
+        out.add(v)
+        if quote:
+            out |= {Fraction(a)} | ({Fraction(b)} if b else set()) | {v / 100}
+    if quote:
+        for w in re.findall(r"[a-z]+", t.lower()):
+            if w in _WORDS:
+                v = Fraction(_WORDS[w])
+                out |= {v, 1 / v} if v else {v}
+    return out
+
+
+def premise_numbers_ok(formula: str, quote: str) -> bool:
+    """Every number in a `given` formula is stated (by value) in its quote. A cheap partial
+    premise check: it rejects `x = 42 ; given "<any sentence>"` (a guessed answer smuggled in as
+    a premise), not wrong relations between stated quantities."""
+    return _numbers(formula, False) <= _numbers(quote, True) | FREE_NUMBERS
 
 
 def format_ok(completion: str) -> bool:
@@ -89,13 +132,14 @@ def line_stats(prompt: str, completion: str) -> dict:
                  count toward neither n_parsed nor n_ok (late G5 chained them for line credit)
     """
     import rlvl
-    zero = {"n_steps": 0, "n_parsed": 0, "n_ok": 0, "circular": 0, "n_taut": 0}
+    zero = {"n_steps": 0, "n_parsed": 0, "n_ok": 0, "circular": 0, "n_taut": 0, "frac_parsed": 0.0,
+            "frac_ok": 0.0, "n_prem_bad": 0}
     s = completion.find("<proof>\n")
     if s < 0:
         return zero
     e = completion.find("</proof>", s)
     body = completion[s + len("<proof>\n"): e if e >= 0 else len(completion)]
-    cites, formula, rule, order, root = {}, {}, {}, [], None
+    cites, formula, rule, quote, order, root = {}, {}, {}, {}, [], None
     for ln in body.split("\n"):
         m = _ANS.match(ln)
         if m:
@@ -104,6 +148,8 @@ def line_stats(prompt: str, completion: str) -> dict:
         m = _STEP.match(ln)
         if m:
             lab, f, just = m.groups()
+            q = re.search(r'"([^"]*)"', just)
+            quote[lab] = q.group(1) if q else ""
             just = just.split('"', 1)[0].split()
             cites[lab] = [t for t in just[1:] if _LABEL.match(t)]
             rule[lab] = just[0] if just else ""
@@ -134,8 +180,14 @@ def line_stats(prompt: str, completion: str) -> dict:
             ok[f] = ok.get(f, False) or bool(r.get("ok") and r.get("rule") != "given")
     norm = lambda f: "".join(f.split())
     circ = any(rule[x] == "given" and norm(formula[x]) == norm(formula[root]) for x in anc)
+    # fractions over the distinct ancestor formulas: parsed / all, checked derived / derived (tautologies
+    # count in the denominator only). No length incentive; the minimum is a 2-line proof.
+    anc_f = {formula[x] for x in anc}
+    der_f = {formula[x] for x in anc if rule[x] != "given"}
+    prem_bad = sum(not premise_numbers_ok(formula[x], quote[x]) for x in anc if rule[x] == "given")
     return {"n_steps": len(order), "n_parsed": len(parsed), "n_ok": sum(ok.values()), "circular": int(circ),
-            "n_taut": len(taut)}
+            "n_taut": len(taut), "frac_parsed": len(parsed) / len(anc_f),
+            "frac_ok": sum(ok.values()) / len(der_f) if der_f else 0.0, "n_prem_bad": prem_bad}
 
 
 def components(rec: dict, completion: str) -> dict:
@@ -157,6 +209,7 @@ def components(rec: dict, completion: str) -> dict:
     ls = line_stats(rec["prompt"], completion)
     valid = bool(row["valid"] and row["grounded"] and row.get("sys_answer") is not None and agree
                  and ls["n_ok"] >= 1 and not ls["circular"])
+    valid_prem = valid and ls["n_prem_bad"] == 0
     in_sys = bool(valid and rec.get("system_answerable")
                   and match(str(row["sys_answer"]), rec) == 1.0)
     out = {"correct": float(bool(row["correct"])), "grammatical": float(bool(row["grammatical"])),
@@ -166,6 +219,19 @@ def components(rec: dict, completion: str) -> dict:
     g, v = min(1.0, ls["n_parsed"] / LINE_CAP), min(1.0, ls["n_ok"] / LINE_CAP)
     out["lines"] = ((g + v) / 2 + valid) * (1 + out["correct"]) / 4
     out["lines_fmt"] = out["lines"] * out["format_ok"]
+    out["valid_prem"] = float(valid_prem)
+    # the user's "%valid lines + %grammatical lines + correct", as is and hardened
+    out["frac"] = (ls["frac_parsed"] + ls["frac_ok"] + out["correct"]) / 3
+    # premise check: exact faithfulness (every `given` is a gold form of the quoted sentence) on generator
+    # items, which carry their sentences; the numeric check elsewhere (Dolci has no gold formalization)
+    if rec.get("sentences_json"):
+        sents, proof = json.loads(rec["sentences_json"]), extract(completion)["proof"] or ""
+        prem = float(all(faithful_given(f, q, sents) for _, f, q in givens(proof)))
+    else:
+        prem = float(ls["n_prem_bad"] == 0)
+    out["prem_ok"] = prem
+    out["frac_hard"] = ((ls["frac_parsed"] + ls["frac_ok"]) * prem * out["format_ok"] * (1 - ls["circular"])
+                        + out["correct"]) / 3
     out["lines_raw"] = (ls["n_parsed"] + ls["n_ok"]) * (1 + out["correct"])
     _CACHE[key] = out
     if len(_CACHE) > _CACHE_MAX:
@@ -190,7 +256,8 @@ def _gold_like(rec: dict, pred: str) -> str:
 def _records(kwargs, n):
     keys = ("id", "gold", "answer_type", "system_answerable", "raw_prompt")
     return [{"id": kwargs["id"][i], "gold": kwargs["gold"][i], "answer_type": kwargs["answer_type"][i],
-             "system_answerable": kwargs["system_answerable"][i], "prompt": kwargs["raw_prompt"][i]}
+             "system_answerable": kwargs["system_answerable"][i], "prompt": kwargs["raw_prompt"][i],
+             "sentences_json": (kwargs.get("sentences_json") or [""] * n)[i]}
             for i in range(n)] if all(k in kwargs for k in keys) else None
 
 
@@ -216,9 +283,10 @@ def make_reward(name: str):
 
 
 ARMS = {"correct": "correct", "correct_x_valid": "correct_x_valid", "gvc": "gvc", "valid": "valid",
-        "lines": "lines", "lines_fmt": "lines_fmt", "lines_raw": "lines_raw"}
+        "lines": "lines", "lines_fmt": "lines_fmt", "lines_raw": "lines_raw",
+        "frac": "frac", "frac_hard": "frac_hard"}
 LOGGED = ["correct", "valid", "grammatical", "in_system", "has_proof", "valid_strict", "lines", "n_parsed", "n_ok",
-          "n_steps", "circular", "n_taut", "format_ok"]
+          "n_steps", "circular", "n_taut", "format_ok", "valid_prem", "frac_parsed", "frac_ok", "n_prem_bad", "prem_ok", "frac"]
 
 
 def reward_funcs(arm: str):
