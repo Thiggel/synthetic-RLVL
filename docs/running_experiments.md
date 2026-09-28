@@ -4,6 +4,15 @@ Last updated: 2026-09-28 CEST.
 
 This file is the live Slurm dashboard. Historical details live in `docs/operational_history_2026-05-29.md`; planned-but-not-running work lives in `docs/experiment_backlog.md`.
 
+## Stage-2 gate + expert-iteration bootstrap 2026-09-28: running
+
+- **Greedy gate** (`TEST_JSONL=.../rl_gate_dolci_instruct_20260928/test.jsonl OUT_NAME=rl_gate_dolci`):
+  - Done: 0.8B p0/p25/p50, 2B p25/p50, 9B p0.
+  - Pending: 6928 (2B p0), 6933 (9B p50, afterok 6839).
+- **Sampling probe** (`scripts/slurm/jobs/rl_signal_probe.slurm`, gruenau12 L40): 6936 (0.8B p50), 6937 (2B p50). K=16 samples at T=0.6/1.0, 100 items per subset.
+- **EI collection round 1:** 6938 (2B p50, gruenau12). 8 samples per prompt at T=1 on 1,500 RL training prompts each from math, wordprob and yesno. Output: `<run>/ei_collect_r1/samples.jsonl`.
+- **Next:** `build_ei_mixture.py` → continue SFT from 2B p50 (`INIT_MODEL`, `MIX_DIR`, `RUN_NAME` on the train slurm) → re-run the gate.
+
 ## Formal mixture format-tagged benchmarks 2026-09-26: running (submitted 2026-09-28)
 
 - **Smoke test 6899** (0.8B p50, 5 items per benchmark, guppi8): OK. Overall: valid 3%, in_system 2%, grammatical 20%.

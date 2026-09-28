@@ -17,7 +17,9 @@
 # .venv_rlvl_vllm). The untagged counterpart is gruenau_formal_mix_bench_2026-09-26.slurm.
 #
 # Required env: RUN_NAME (dir under OUT_ROOT). Optional: PER_BENCH_LIMIT (smoke;
-# writes formal_bench_tagged_n<N>), BENCHES, MIN_FREE_MIB, MAX_NEW_TOKENS.
+# writes formal_bench_tagged_n<N>), BENCHES, MIN_FREE_MIB, MAX_NEW_TOKENS,
+# TEST_JSONL + OUT_NAME (another item file, e.g. the Stage-2 gate set from
+# scripts/build_rl_gate_set.py, written to ${RUN_NAME}/${OUT_NAME}).
 # Output: ${OUT_ROOT}/${RUN_NAME}/formal_bench_tagged/{summary.json,generations.jsonl}.
 
 set -euo pipefail
@@ -43,7 +45,7 @@ hash -r 2>/dev/null || true
 RUN_NAME="${RUN_NAME:?}"
 MODEL="${OUT_ROOT}/${RUN_NAME}/final"
 test -s "${MODEL}/config.json" || { echo "missing checkpoint ${MODEL}" >&2; exit 2; }
-OUT_DIR="${OUT_ROOT}/${RUN_NAME}/formal_bench_tagged${PER_BENCH_LIMIT:+_n${PER_BENCH_LIMIT}}"
+OUT_DIR="${OUT_ROOT}/${RUN_NAME}/${OUT_NAME:-formal_bench_tagged}${PER_BENCH_LIMIT:+_n${PER_BENCH_LIMIT}}"
 if [[ -s "${OUT_DIR}/summary.json" ]]; then echo "exists: ${OUT_DIR}/summary.json"; exit 0; fi
 
 # Other users hold cards outside Slurm; wait until ours is really free.
@@ -61,7 +63,7 @@ for round in 1 2 3; do
   echo "round ${round}: gpu_mem=${UTIL}"
   if python scripts/eval_formal_bench_vllm.py --model "${MODEL}" --out-dir "${OUT_DIR}" --no-mm \
       --gpu-mem "${UTIL}" --max-new-tokens "${MAX_NEW_TOKENS:-2048}" --max-model-len 32768 \
-      ${PER_BENCH_LIMIT:+--per-bench-limit "${PER_BENCH_LIMIT}"} ${BENCHES:+--benches "${BENCHES}"}; then
+      ${PER_BENCH_LIMIT:+--per-bench-limit "${PER_BENCH_LIMIT}"} ${BENCHES:+--benches "${BENCHES}"} ${TEST_JSONL:+--test-jsonl "${TEST_JSONL}"}; then
     echo "done ${RUN_NAME}"; exit 0
   fi
   echo "attempt ${round} failed; retrying in 120 s" >&2; sleep 120

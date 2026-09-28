@@ -22,7 +22,9 @@
 #
 # Required env: MODEL_KEY (0.8b | 2b | 9b), MIX (mixture dir name, e.g.
 # dolci_rlvlgen_p25 or smoke2k_p25). Optional: PER_DEVICE_BATCH, FSDP,
-# GRAD_CKPT=1, MAX_STEPS, EVAL_ROWS, RUN_TAG, OUT_ROOT.
+# GRAD_CKPT=1, MAX_STEPS, EVAL_ROWS, RUN_TAG, OUT_ROOT; INIT_MODEL (continue from a
+# checkpoint, e.g. expert-iteration SFT from a p50 final/), MIX_DIR (any prepared
+# DatasetDict, e.g. scripts/data/build_ei_mixture.py output), RUN_NAME.
 
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-$PWD}"
@@ -73,10 +75,10 @@ declare -A DEF_PDB=([0.8b]=2 [2b]=2 [9b]=2)
 declare -A DEF_GC=([0.8b]=0 [2b]=0 [9b]=1)
 # 9B: liger fused linear CE so the 4096 x 248k logits are never materialised.
 declare -A DEF_LIGER=([0.8b]=0 [2b]=0 [9b]=1)
-MODEL="${SNAP[$MODEL_KEY]}"
-MIX_DIR="${DATA}/datasets/formal_mixture_20260925/mixtures/${MIX}"
+MODEL="${INIT_MODEL:-${SNAP[$MODEL_KEY]}}"
+MIX_DIR="${MIX_DIR:-${DATA}/datasets/formal_mixture_20260925/mixtures/${MIX}}"
 SEED="${SEED:-3407}"
-RUN_NAME="qwen35_${MODEL_KEY}_${MIX}_lr5em6_seed${SEED}${RUN_TAG:-}"
+RUN_NAME="${RUN_NAME:-qwen35_${MODEL_KEY}_${MIX}_lr5em6_seed${SEED}${RUN_TAG:-}}"
 OUT_ROOT="${OUT_ROOT:-${DATA}/formal_mixture_sft_20260925}"
 OUT_DIR="${OUT_ROOT}/${RUN_NAME}"
 

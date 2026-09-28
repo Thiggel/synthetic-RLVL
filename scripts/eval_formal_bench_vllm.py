@@ -17,7 +17,8 @@ Per item (the proof is the text between "<proof>\\n" and "</proof>"):
                 faithfulness signal available without gold formalizations
   uses_know     the proof cites background knowledge (`know`) lines
   correct       the final answer matches the reference: the Answer: line, else
-                the proof's `ans` value, else <answer>/\\boxed{}; yes/no is
+                the proof's `ans` value, else <answer>/\\boxed{}, else a loose
+                "**Answer:** x" / "the answer is x" line; yes/no is
                 matched against true/false, letters with or without
                 parentheses, numbers numerically; span items (multi-hop) score
                 token F1 of the Answer: line (as in LongBench) and count as
@@ -55,6 +56,8 @@ from eval_formal_vllm import ANSWER_TAG_RE, BOXED_RE, extract, generate  # noqa:
 from utils import normalize_answer, qa_f1_score  # noqa: E402
 
 YN = {"yes": "yes", "no": "no", "true": "yes", "false": "no", "valid": "yes", "invalid": "no"}
+LOOSE_ANSWER_RE = re.compile(r"(?im)(?:^[#*\s]*(?:final\s+)?answer[*\s]*:[*\s]*|\b(?:the\s+)?(?:final\s+)?answer\s+is[:\s]*)"
+                             r"\**\s*([^\n*]+?)\s*\**\s*$")
 METRICS = ["has_proof", "grammatical", "valid", "grounded", "uses_know", "leak", "correct", "ans_correct",
            "valid_correct", "in_system", "valid_wrong"]
 
@@ -125,6 +128,9 @@ def score(rec: dict, generation: str) -> dict:
     if cand is None:
         tags, boxed = ANSWER_TAG_RE.findall(generation), BOXED_RE.findall(generation)
         cand = tags[-1] if tags else (boxed[-1] if boxed else None)
+    if cand is None:  # natural-language answers (untagged / X=0 policies): "**Answer:** 1", "the answer is 1"
+        nl = LOOSE_ANSWER_RE.findall(generation)
+        cand = nl[-1] if nl else None
     s = match(cand, rec)
     row["f1" if rec["answer_type"] == "span" else "score"] = s
     row["correct"] = s >= 0.5

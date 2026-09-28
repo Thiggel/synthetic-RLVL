@@ -9,6 +9,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 - **Training:** Qwen3.5-Base 0.8B/2B at X=0..50 and 9B at X=0,10,25,50 are trained on Dolci with X% generated formal-CoT data.
 - **Evals:** in-domain faithful/grammatical/valid; untagged lm-eval downstream suite; format-tagged downstream eval (`eval_formal_bench_vllm.py`).
 - **Live state:** `docs/running_experiments.md`.
+- **Stage 2 (2026-09-28):** the gate failed (in_system ≈ 0.3% on the Dolci-RL prompts). An expert-iteration bootstrap is running. GRPO code: `scripts/grpo_formal.py` + `.venv_rlvl_grpo`. Plan: `docs/research_plan.md`.
 
 ## Where To Look
 
@@ -18,7 +19,7 @@ This is the short operational handoff. Historical detail was preserved verbatim 
 | Planned future experiments | `docs/experiment_backlog.md` |
 | Short dated operational log | `docs/project_log.md` |
 | Full preserved operational history | `docs/operational_history_2026-05-29.md` |
-| Active research plan | `docs/formal_logic_cot_research_plan_2026-05-19.md` |
+| Active research plan | `docs/research_plan.md` (binding, 2026-09-28); older: `docs/formal_logic_cot_research_plan_2026-05-19.md` |
 | ICLR five-week execution plan | `docs/iclr_2027_execution_plan_2026-08-04.md` |
 | HFSA implementation/eval plan | `docs/hfsa_depth_scaling_plan_2026-05-19.md` |
 | Dataset materialization details | `docs/materialized_dataset.md` |

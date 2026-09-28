@@ -153,3 +153,9 @@ Every finding, including negative results, goes into a report with figures, not 
 
 ## Change log
 - 2026-09-28: plan written.
+- 2026-09-28: **Stage-2 gate failed.** Greedy tagged in_system on the Dolci-RL gate set (`scripts/build_rl_gate_set.py`, 950 held-out prompts) is 0.2–0.3% for 0.8B p25/p50 and 2B p25/p50 (`reports/2026-09-28_stage2_gate.md`).
+  - Causes: most math/DAPO problems are outside the system (goal-line notation); prose justifications; bad `subst` citations.
+  - Remedy chosen: expert iteration (rejection-sampling SFT on the policy's own in-system proofs for RL training prompts, plus replay of the p50 mixture), repeated until the gate passes. Generator families for word problems are the fallback.
+  - The Stage-2 RL subset drops DAPO. Sampling probe: `scripts/rl_signal_probe.py`.
+  - Answer extraction now accepts `**Answer:** x` / `the answer is x`, and finished runs were re-scored. This matters for the G0 correctness reward on natural-language outputs.
+  - GRPO infrastructure is ready: `.venv_rlvl_grpo` (TRL 1.14), `scripts/grpo_formal.py`, `scripts/formal_rewards.py`, `scripts/slurm/jobs/grpo_formal.slurm`. Smoke job 6934 ran end to end with zero reward variance. The venv lacks causal_conv1d, so the conv kernel is slow.

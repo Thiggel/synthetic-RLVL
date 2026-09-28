@@ -11,6 +11,11 @@ Short dated notes for useful operational events, cleanup decisions, results upda
   - This matters for the Stage-2 gate.
 - **Report:** `reports/2026-09-28_stage1_interim.md`.
 - **Tooling:** matplotlib installed in `.venv_rlvl_vllm`; in-domain curves regenerated.
+- **Stage-2 gate failed:** greedy in_system on 950 held-out Dolci-RL prompts is 0.2–0.3% (0.8B/2B p25/p50). Report: `reports/2026-09-28_stage2_gate.md`.
+  - Remedy: expert-iteration SFT on in-system samples (`scripts/rl_signal_probe.py --source train`, `scripts/data/build_ei_mixture.py`).
+  - Sampling probes: 6936/6937. EI collection round 1: 6938 (2B p50).
+- **Scoring:** a loose `**Answer:**` / "the answer is" fallback was added to `eval_formal_bench_vllm.py`, and finished runs were re-scored (`scripts/rescore_formal_bench.py`).
+- **GRPO stack:** `.venv_rlvl_grpo` (TRL 1.14 + vLLM 0.30 colocate), `scripts/grpo_formal.py`, `scripts/formal_rewards.py`. Smoke job 6934 passed.
 
 ## 2026-09-26
 
