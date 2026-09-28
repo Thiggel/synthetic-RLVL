@@ -7,11 +7,12 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 ## Stage-2 gate + expert-iteration bootstrap 2026-09-28: running
 
 - **Greedy gate** (`TEST_JSONL=.../rl_gate_dolci_instruct_20260928/test.jsonl OUT_NAME=rl_gate_dolci`):
-  - Done: 0.8B p0/p25/p50, 2B p25/p50, 9B p0.
-  - Pending: 6928 (2B p0), 6933 (9B p50, afterok 6839).
+  - Done: 0.8B p0/p25/p50, 2B p0/p25/p50, 9B p0.
+  - Pending: 6933 (9B p50, afterok 6839).
 - **Sampling probe** (`scripts/slurm/jobs/rl_signal_probe.slurm`, gruenau12 L40): 6936 (0.8B p50), 6937 (2B p50). K=16 samples at T=0.6/1.0, 100 items per subset.
-- **EI collection round 1:** 6938 (2B p50, gruenau12). 8 samples per prompt at T=1 on 1,500 RL training prompts each from math, wordprob and yesno. Output: `<run>/ei_collect_r1/samples.jsonl`.
-- **Next:** `build_ei_mixture.py` → continue SFT from 2B p50 (`INIT_MODEL`, `MIX_DIR`, `RUN_NAME` on the train slurm) → re-run the gate.
+- **EI collection round 1:** 6938 (2B p50, gruenau12). 8 samples per prompt at T=1 on 1,500 RL training prompts each from math, wordprob and yesno. Output: `<run>/ei_collect_r1/samples.jsonl`. Done: 57 in-system samples on 26 prompts (0.2%), too few.
+- **EI round 1b, prefix-resampling search:** 6939 (2B p50, gruenau12, `scripts/slurm/jobs/ei_prefix_search.slurm`). Resamples continuations from the checked prefix before the first failing line, for 3 rounds. Output: `<run>/ei_search_r1/{samples.jsonl,stats.json}`.
+- **Next:** `build_ei_mixture.py --samples ei_collect_r1/samples.jsonl ei_search_r1/samples.jsonl` → continue SFT from 2B p50 (`INIT_MODEL`, `MIX_DIR`, `RUN_NAME` on the train slurm) → re-run the gate.
 
 ## Formal mixture format-tagged benchmarks 2026-09-26: running (submitted 2026-09-28)
 

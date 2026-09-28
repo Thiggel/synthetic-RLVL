@@ -12,6 +12,9 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - **Report:** `reports/2026-09-28_stage1_interim.md`.
 - **Tooling:** matplotlib installed in `.venv_rlvl_vllm`; in-domain curves regenerated.
 - **Stage-2 gate failed:** greedy in_system on 950 held-out Dolci-RL prompts is 0.2–0.3% (0.8B/2B p25/p50). Report: `reports/2026-09-28_stage2_gate.md`.
+- **EI round 1 (whole-proof rejection sampling, 6938) is too sparse:** 57 in-system samples out of 25,528 (26 prompts). pass@8 in_system is 2.1% on wordprob, 0.2% on yesno and 0 on math. Only 1% of GRPO groups have a non-constant validity reward.
+- **Checker-guided prefix resampling (6939):** resamples from the verified prefix before the first failing line. `scripts/ei_prefix_search.py`.
+- **2B p0 gate:** correct .203, below 2B p50 at .222. At 0.8B the order is reversed.
   - Remedy: expert-iteration SFT on in-system samples (`scripts/rl_signal_probe.py --source train`, `scripts/data/build_ei_mixture.py`).
   - Sampling probes: 6936/6937. EI collection round 1: 6938 (2B p50).
 - **Scoring:** a loose `**Answer:**` / "the answer is" fallback was added to `eval_formal_bench_vllm.py`, and finished runs were re-scored (`scripts/rescore_formal_bench.py`).
