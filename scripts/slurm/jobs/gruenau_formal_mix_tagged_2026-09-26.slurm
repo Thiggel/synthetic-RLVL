@@ -19,7 +19,9 @@
 # Required env: RUN_NAME (dir under OUT_ROOT). Optional: PER_BENCH_LIMIT (smoke;
 # writes formal_bench_tagged_n<N>), BENCHES, MIN_FREE_MIB, MAX_NEW_TOKENS,
 # TEST_JSONL + OUT_NAME (another item file, e.g. the Stage-2 gate set from
-# scripts/build_rl_gate_set.py, written to ${RUN_NAME}/${OUT_NAME}).
+# scripts/build_rl_gate_set.py, written to ${RUN_NAME}/${OUT_NAME}), OUT_ROOT + CKPT
+# (a GRPO checkpoint: OUT_ROOT=rlvl_data/grpo_formal_20260928 CKPT=checkpoint-50; the
+# output goes inside the checkpoint dir).
 # Output: ${OUT_ROOT}/${RUN_NAME}/formal_bench_tagged/{summary.json,generations.jsonl}.
 
 set -euo pipefail
@@ -28,7 +30,7 @@ mkdir -p logs
 
 ROOT=/vol/tmp2/laitenbf
 VENV="${ROOT}/.venv_rlvl_vllm"
-OUT_ROOT="${ROOT}/rlvl_data/formal_mixture_sft_20260925"
+OUT_ROOT="${OUT_ROOT:-${ROOT}/rlvl_data/formal_mixture_sft_20260925}"
 export PATH="${VENV}/bin:${PATH}"
 export VIRTUAL_ENV="${VENV}"
 export HF_HOME="${ROOT}"
@@ -43,9 +45,9 @@ export PYTHONPATH=/vol/home-vol2/ml/laitenbf/RLVL-next/gen:/vol/home-vol2/ml/lai
 hash -r 2>/dev/null || true
 
 RUN_NAME="${RUN_NAME:?}"
-MODEL="${OUT_ROOT}/${RUN_NAME}/final"
+MODEL="${OUT_ROOT}/${RUN_NAME}/${CKPT:-final}"
 test -s "${MODEL}/config.json" || { echo "missing checkpoint ${MODEL}" >&2; exit 2; }
-OUT_DIR="${OUT_ROOT}/${RUN_NAME}/${OUT_NAME:-formal_bench_tagged}${PER_BENCH_LIMIT:+_n${PER_BENCH_LIMIT}}"
+OUT_DIR="${OUT_ROOT}/${RUN_NAME}/${CKPT:+${CKPT}/}${OUT_NAME:-formal_bench_tagged}${PER_BENCH_LIMIT:+_n${PER_BENCH_LIMIT}}"
 if [[ -s "${OUT_DIR}/summary.json" ]]; then echo "exists: ${OUT_DIR}/summary.json"; exit 0; fi
 
 # Other users hold cards outside Slurm; wait until ours is really free.
