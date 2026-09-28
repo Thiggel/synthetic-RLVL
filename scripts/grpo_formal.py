@@ -32,7 +32,7 @@ from formal_chat_format import render_prompt  # noqa: E402
 from formal_rewards import reward_funcs  # noqa: E402
 
 
-def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str]):
+def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], max_per_bench: int | None = None):
     from datasets import Dataset, load_dataset
     held = set(json.loads((GATE_DIR / "heldout_rows.json").read_text()))
     ds = load_dataset("allenai/Dolci-Instruct-RL", split="train")
@@ -49,6 +49,13 @@ def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str]):
         rows.append({"prompt": render_prompt(tok, f"<formal>\n{q}" if tag else q), "raw_prompt": q,
                      "id": f"{b}/{i}", "bench": b, "gold": g, "answer_type": t, "system_answerable": a})
     random.Random(seed).shuffle(rows)
+    if max_per_bench:  # dolci_math is 96% of the pool and mostly outside the system; balance it
+        seen, kept = {}, []
+        for r in rows:
+            seen[r["bench"]] = seen.get(r["bench"], 0) + 1
+            if seen[r["bench"]] <= max_per_bench:
+                kept.append(r)
+        rows = kept
     if n:
         rows = rows[:n]
     return Dataset.from_list(rows)
@@ -62,6 +69,8 @@ def main():
     ap.add_argument("--no-tag", action="store_true", help="prompt without <formal> (G0, G1-NL)")
     ap.add_argument("--benches", default="dolci_math,dolci_dapo,dolci_wordprob,dolci_yesno")
     ap.add_argument("--n-prompts", type=int, default=None)
+    ap.add_argument("--max-per-bench", type=int, default=None,
+                    help="cap prompts per subset (pool: math 43.5k, wordprob 1.2k, yesno 0.5k)")
     ap.add_argument("--max-steps", type=int, default=500)
     ap.add_argument("--lr", type=float, default=1e-6)
     ap.add_argument("--beta", type=float, default=0.0)
@@ -80,7 +89,8 @@ def main():
     from trl import GRPOConfig, GRPOTrainer
 
     tok = AutoTokenizer.from_pretrained(args.model)
-    train = build_dataset(tok, not args.no_tag, args.n_prompts, args.seed, args.benches.split(","))
+    train = build_dataset(tok, not args.no_tag, args.n_prompts, args.seed, args.benches.split(","),
+                          args.max_per_bench)
     world = int(os.environ.get("WORLD_SIZE", "1"))
     completions_per_step = args.prompts_per_step * args.num_generations
     grad_accum = max(1, completions_per_step // (args.per_device_batch * world))
@@ -96,6 +106,8 @@ def main():
         log_completions=True, num_completions_to_print=2, lr_scheduler_type="constant_with_warmup",
         warmup_steps=10,
     )
+    import collections
+    print(json.dumps({"benches": collections.Counter(train["bench"])}), flush=True)
     print(json.dumps({"arm": args.arm, "tag": not args.no_tag, "n_prompts": len(train), "grad_accum": grad_accum,
                       "world": world, "rewards": [f.__name__ for f in funcs]}), flush=True)
     trainer = GRPOTrainer(model=args.model, reward_funcs=funcs, args=cfg, train_dataset=train,

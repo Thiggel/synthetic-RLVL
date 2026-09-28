@@ -4140,3 +4140,13 @@ Downstream benchmarks of the "Lead into Gold" paper now run for every checkpoint
   - The old-format BranchProof tasks are dropped.
   - Prompts carry no `<formal>` tag.
 - Aggregator: `scripts/analysis/formal_mix_bench_table.py`.
+
+## 2026-09-28 ~12:00: Stage 2 pilots rebalanced; prefix search result
+- **Prefix search (6946, 2B p50).** Resampling continuations from checker-verified proof prefixes gives 0.7% valid samples, against 0.29% for whole-proof sampling (2.4×). Over 3 rounds it lifts the solved prompts from 26 to 50 (41 word problems, 9 yes/no, 0 math).
+  - The EI set `formal_ei_20260928/2b_r1` has 77 proofs from 51 prompts. The SFT is deferred.
+  - Figure: `reports/figures/stage2_prefix_search.png`.
+- **2B p50 sampling probe (6945).** At T = 0.6, the share of groups with signal is correct .60, gvc .63, lines .24, valid .025.
+- **GRPO pool fix.** The default pool is 96% dolci_math, which is almost outside the formal system. New `grpo_formal.py --max-per-bench`.
+  - Pilots 6942/6949 were cancelled; 6949 also put gruenau7 over the 2-GPU cap.
+  - Resubmitted on 1,200/1,200/491 prompts: 6959 G5, 6960 G1, 6961 G3, 6962 G0.
+  - Pitfall: `sbatch --export=...,EXTRA_ARGS="--benches a,b"` splits at commas (6955–6958 cancelled). Export the variables in the shell and use `--export=ALL`.

@@ -13,6 +13,8 @@
 # .venv_rlvl_grpo. One process per GPU via accelerate (DeepSpeed ZeRO-2 if >1).
 # Required env: POLICY (SFT run dir name under the formal-mixture sweep), ARM, RUN_NAME.
 # Optional: NO_TAG=1, EXTRA_ARGS (passed to grpo_formal.py).
+# Export the variables in the shell and submit with --export=ALL: `sbatch --export=ALL,EXTRA_ARGS="--benches a,b"`
+# splits at the comma and silently drops everything after it.
 # Output: rlvl_data/grpo_formal_20260928/${RUN_NAME}/
 
 set -euo pipefail
