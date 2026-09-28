@@ -160,3 +160,9 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7021 grpo_G6g resubmit, gruenau10 a10080gb:1 -> guard exit 3 (13.1 GB free: shared GPU)
 7025 grpo_G6g resubmit, gruenau10 a10080gb:1, partition gpu, 8 CPUs, 60G, MIN_FREE_MIB=60000 (GPU0 clean at 22:48)
 7026 grpo_gate (scripts/slurm/jobs/grpo_gate_ckpts.slurm) gruenau12 l40:1: G0@100 G3b@50 G5c@50 G3b@100 G6@50
+7026 -> gates G0@100 G3b@50 G5c@50 G3b@100 FAILED (AttributeError max_num_seqs in eval_formal_bench_vllm; fixed bc4276f); still waits for G6@50
+6919 fmix_tag_2b_p20, 6921 fmix_tag_2b_p45 -> FAILED (same AttributeError); 6920 fmix_tag_2b_p40 cancelled (stuck on a shared guppi6 GPU)
+7032 fmix_tag_2b_p20 resubmit, guppi8 rtx3090:1, MIN_FREE_MIB=20000
+7033 fmix_tag_2b_p40 resubmit, guppi8 rtx3090:1, MIN_FREE_MIB=20000
+7034 fmix_tag_2b_p45 resubmit, guppi5 rtx3090:1, MIN_FREE_MIB=20000
+7035 grpo_gate gruenau12 l40:1: G0@100 G3b@50 G5c@50 G3b@100 G5c@100 G0 final
