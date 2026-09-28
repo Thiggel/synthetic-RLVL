@@ -20,7 +20,8 @@ Short dated notes for useful operational events, cleanup decisions, results upda
 - **Scoring:** a loose `**Answer:**` / "the answer is" fallback was added to `eval_formal_bench_vllm.py`, and finished runs were re-scored (`scripts/rescore_formal_bench.py`).
 - **Dense reward arm G5 `lines`** (user suggestion "(#grammatical lines + #valid lines) * (1 + correctness)"), hardened in `scripts/formal_rewards.py`: counts only lines the conclusion depends on (distinct formulas); valid credit only for derived, non-`given` lines; capped at 8 lines; plus a validity bonus. `lines_raw` keeps the literal formula. Offline on the gate outputs (`scripts/analysis/reward_offline_eval.py`): nonzero on 13% of 2B p50 outputs; valid proofs average .53, invalid ones .014. The top invalid outputs are honest near misses.
 - **Fix:** an unparseable Answer: line no longer crashes `formal_rewards.components` (ans/Answer agreement → False).
-- **GRPO pilots 6940–6943** (2B; G5 lines, G3 gvc, G1 correct, G0 no-tag correct), 200 steps each.
+- **GRPO pilots** (2B, 200 steps): 6942 G1 correct; G5 lines, G3 gvc and G0 no-tag OOMed at per-device batch 8 (6940/6941/6943) and were resubmitted with batch 2 as 6947/6948/6949.
+- **Probe 0.8B p50 (6944):** group signal at T=0.6 is correct .47, gvc .535, lines .385, valid .022; pass@16 valid 2%.
 - **GRPO stack:** `.venv_rlvl_grpo` (TRL 1.14 + vLLM 0.30 colocate), `scripts/grpo_formal.py`, `scripts/formal_rewards.py`. Smoke job 6934 passed.
 
 ## 2026-09-26
