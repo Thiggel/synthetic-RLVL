@@ -141,3 +141,6 @@ smoke 0.8b p00: 6806
 6966 grpo_2b_G3d_gvc_fallback: same arm on gruenau10 A100, runs only if 6965 fails (afterany:6960,afternotok:6965)
 6966 cancelled: 6965 healthy (step 5, 280 s/it)
 srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-100, G0 ckpt-50)
+6965 died at step 49 (rlvl PanicException on a quote starting with '…'; no checkpoint)
+6977 grpo_2b_G5b_lines_hard (2B p50, lines, hardened valid, batch 1, vllm-mem 0.25) gruenau8 A6000, partition gpu
+6978 grpo_2b_G3b_gvc_hard (2B p50, gvc, hardened valid, batch 1, vllm-mem 0.25) gruenau12 L40, partition gpu-staff

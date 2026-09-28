@@ -12,6 +12,10 @@ Components (all 0/1):
                Answer: line (or there is no Answer: line). Grounding and answer
                agreement close the hacks seen in the 2026-09 RL runs (valid but
                irrelevant proofs; proofs that conclude a marker, not the answer).
+               It also needs >= 1 checked derived (non-given) line the conclusion
+               depends on, and the conclusion must not restate a `given` formula: G5 at
+               step 50 won 29 of its 33 in-system gate proofs on yes/no items by quoting the
+               claim as a `given` and answering `ans yes` (2026-09-28 17:30).
   in_system    valid AND the proof's `ans` equals the reference
 Arms (the primary reward; the other components are logged with weight 0):
   G0/G1 correct            G2 correct_x_valid        G3 gvc = (grammatical + valid + correct) / 3
@@ -55,15 +59,16 @@ def line_stats(prompt: str, completion: str) -> dict:
       n_ok       derived ancestor lines (rule != given) that check (rlvl strict per-line ok);
                  `given` lines always check (grounding is a substring test), so counting
                  them would pay for citing premises from one bogus final line
+      circular   1 if the conclusion's formula is the formula of an ancestor `given` line
     """
     import rlvl
-    zero = {"n_steps": 0, "n_parsed": 0, "n_ok": 0}
+    zero = {"n_steps": 0, "n_parsed": 0, "n_ok": 0, "circular": 0}
     s = completion.find("<proof>\n")
     if s < 0:
         return zero
     e = completion.find("</proof>", s)
     body = completion[s + len("<proof>\n"): e if e >= 0 else len(completion)]
-    cites, formula, order, root = {}, {}, [], None
+    cites, formula, rule, order, root = {}, {}, {}, [], None
     for ln in body.split("\n"):
         m = _ANS.match(ln)
         if m:
@@ -74,6 +79,7 @@ def line_stats(prompt: str, completion: str) -> dict:
             lab, f, just = m.groups()
             just = just.split('"', 1)[0].split()
             cites[lab] = [t for t in just[1:] if _LABEL.match(t)]
+            rule[lab] = just[0] if just else ""
             formula[lab] = f
             order.append(lab)
     if not order:
@@ -88,7 +94,7 @@ def line_stats(prompt: str, completion: str) -> dict:
         stack += cites[x]
     try:
         rep = rlvl.check(prompt, body, strict=True)
-    except Exception:
+    except BaseException:  # pyo3 PanicException is not an Exception
         return {**zero, "n_steps": len(order)}
     parsed, ok = {}, {}
     for r in rep.get("lines") or []:
@@ -96,7 +102,9 @@ def line_stats(prompt: str, completion: str) -> dict:
             f = formula.get(r["label"])
             parsed[f] = True
             ok[f] = ok.get(f, False) or bool(r.get("ok") and r.get("rule") != "given")
-    return {"n_steps": len(order), "n_parsed": len(parsed), "n_ok": sum(ok.values())}
+    norm = lambda f: "".join(f.split())
+    circ = any(rule[x] == "given" and norm(formula[x]) == norm(formula[root]) for x in anc)
+    return {"n_steps": len(order), "n_parsed": len(parsed), "n_ok": sum(ok.values()), "circular": int(circ)}
 
 
 def components(rec: dict, completion: str) -> dict:
@@ -106,7 +114,7 @@ def components(rec: dict, completion: str) -> dict:
         return hit
     try:
         row = score(rec, completion)
-    except Exception as e:  # a checker crash must not kill the run; count it as an invalid proof
+    except BaseException as e:  # a checker crash (incl. a Rust panic, a BaseException) must not kill the run
         row = {"correct": False, "grammatical": False, "valid": False, "grounded": False, "sys_answer": None,
                "pred_answer": None, "has_proof": False, "error": f"crash: {e!r}"}
     agree = True
@@ -115,10 +123,11 @@ def components(rec: dict, completion: str) -> dict:
             agree = match(str(row["sys_answer"]), {**rec, "gold": _gold_like(rec, row["pred_answer"])}) == 1.0
         except Exception:
             agree = False
-    valid = bool(row["valid"] and row["grounded"] and row.get("sys_answer") is not None and agree)
+    ls = line_stats(rec["prompt"], completion)
+    valid = bool(row["valid"] and row["grounded"] and row.get("sys_answer") is not None and agree
+                 and ls["n_ok"] >= 1 and not ls["circular"])
     in_sys = bool(valid and rec.get("system_answerable")
                   and match(str(row["sys_answer"]), rec) == 1.0)
-    ls = line_stats(rec["prompt"], completion)
     out = {"correct": float(bool(row["correct"])), "grammatical": float(bool(row["grammatical"])),
            "valid": float(valid), "in_system": float(in_sys), "has_proof": float(bool(row["has_proof"])),
            "valid_strict": float(bool(row["valid"])), **{k: float(v) for k, v in ls.items()}}
@@ -176,7 +185,7 @@ def make_reward(name: str):
 ARMS = {"correct": "correct", "correct_x_valid": "correct_x_valid", "gvc": "gvc", "valid": "valid",
         "lines": "lines", "lines_raw": "lines_raw"}
 LOGGED = ["correct", "valid", "grammatical", "in_system", "has_proof", "valid_strict", "lines", "n_parsed", "n_ok",
-          "n_steps"]
+          "n_steps", "circular"]
 
 
 def reward_funcs(arm: str):

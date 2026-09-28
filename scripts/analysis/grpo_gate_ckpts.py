@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+"""Held-out gate (rl_gate_dolci, 950 items, greedy) of the Stage-2 GRPO checkpoints.
+
+Reads <run>/<ckpt>/rl_gate_dolci/generations.jsonl (scripts/slurm/jobs/grpo_gate_ckpts_in_6964.sh)
+and rescores every generation with scripts/formal_rewards.components, i.e. with the hardened
+Stage-2 validity (>= 1 checked derived line under the conclusion, no circular `given`).
+The eval's own `valid` (rlvl strict ok + grounded) is reported as valid_eval next to it.
+Writes analysis/stage2_gate_ckpts.json and reports/figures/stage2_gate_ckpts.png.
+Run with .venv_rlvl_grpo and PYTHONPATH=RLVL-next/gen:RLVL-next/rlvl/python.
+"""
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO / "scripts"))
+from formal_rewards import components  # noqa: E402
+
+DATA = Path("/vol/tmp2/laitenbf/rlvl_data")
+SFT = DATA / "formal_mixture_sft_20260925"
+GRPO = DATA / "grpo_formal_20260928"
+TEST = DATA / "datasets/rl_gate_dolci_instruct_20260928/test.jsonl"
+MODELS = [
+    ("SFT p0", SFT / "qwen35_2b_dolci_rlvlgen_p00_lr5em6_seed3407"),
+    ("SFT p50", SFT / "qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407"),
+    ("G0 correct (p0) @50", GRPO / "2b_p0_G0_correct_bal/checkpoint-50"),
+    ("G1 correct @100", GRPO / "2b_p50_G1_correct_bal/checkpoint-100"),
+    ("G5 lines @50", GRPO / "2b_p50_G5_lines_bal/checkpoint-50"),
+]
+KEYS = ["has_proof", "grammatical", "valid_eval", "circular", "valid", "in_system", "correct"]
+
+
+def main():
+    test = {json.loads(ln)["id"]: json.loads(ln) for ln in open(TEST)}
+    res = {}
+    for name, d in MODELS:
+        f = d / "rl_gate_dolci/generations.jsonl"
+        if not f.exists():
+            continue
+        tot, per = {k: 0.0 for k in KEYS}, {}
+        for ln in open(f):
+            g = json.loads(ln)
+            c = components(test[g["id"]], g["generation"])
+            c["valid_eval"] = float(bool(g["valid"]))
+            b = per.setdefault(g["bench"], {k: 0.0 for k in KEYS + ["n"]})
+            for k in KEYS:
+                tot[k] += c[k]
+                b[k] += c[k]
+            b["n"] += 1
+        n = sum(b["n"] for b in per.values())
+        res[name] = {"all": {k: v / n for k, v in tot.items()},
+                     "per_bench": {bn: {k: v / b["n"] for k, v in b.items() if k != "n"} for bn, b in per.items()}}
+        print(name, {k: round(v, 3) for k, v in res[name]["all"].items()})
+    (REPO / "analysis/stage2_gate_ckpts.json").write_text(json.dumps(res, indent=1))
+
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    show = [("grammatical", "grammatical"), ("valid_eval", "valid (eval: strict ok + grounded)"),
+            ("valid", "valid (hardened)"), ("in_system", "in-system (hardened)"), ("correct", "correct")]
+    fig, ax = plt.subplots(figsize=(11, 4.2))
+    w = 0.8 / len(res)
+    for i, (name, r) in enumerate(res.items()):
+        xs = [j + (i - (len(res) - 1) / 2) * w for j in range(len(show))]
+        ys = [r["all"][k] for k, _ in show]
+        bars = ax.bar(xs, ys, w, label=name)
+        for x, y in zip(xs, ys):
+            ax.text(x, y + 0.01, f"{y:.2f}" if y >= 0.01 else f"{y:.3f}", ha="center", fontsize=6.5, rotation=90)
+    ax.set_xticks(range(len(show)), [lbl for _, lbl in show], fontsize=9)
+    ax.set_ylim(0, 1.05)
+    ax.set_ylabel("fraction of 950 held-out items (greedy)")
+    ax.set_title("Stage-2 gate on GRPO checkpoints (2B): the valid gain of G5 is mostly circular `given` proofs")
+    ax.legend(fontsize=8, ncol=5, loc="upper right")
+    fig.tight_layout()
+    out = REPO / "reports/figures/stage2_gate_ckpts.png"
+    fig.savefig(out, dpi=150)
+    print(out)
+
+
+if __name__ == "__main__":
+    main()
