@@ -27,9 +27,15 @@ MODELS = [
     ("SFT p50", SFT / "qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407"),
     ("G0 correct (p0) @50", GRPO / "2b_p0_G0_correct_bal/checkpoint-50"),
     ("G1 correct @100", GRPO / "2b_p50_G1_correct_bal/checkpoint-100"),
+    ("G1 correct @150", GRPO / "2b_p50_G1_correct_bal/checkpoint-150"),
+    ("G1 correct final", GRPO / "2b_p50_G1_correct_bal/final"),
     ("G5 lines @50", GRPO / "2b_p50_G5_lines_bal/checkpoint-50"),
+    ("G5 lines @100", GRPO / "2b_p50_G5_lines_bal/checkpoint-100"),
+    ("G3b gvc hardened @50", GRPO / "2b_p50_G3b_gvc_hard/checkpoint-50"),
+    ("G5c lines x format @50", GRPO / "2b_p50_G5c_linesfmt/checkpoint-50"),
+    ("G5c lines x format @100", GRPO / "2b_p50_G5c_linesfmt/checkpoint-100"),
 ]
-KEYS = ["has_proof", "grammatical", "valid_eval", "circular", "valid", "in_system", "correct"]
+KEYS = ["has_proof", "grammatical", "format_ok", "valid_eval", "circular", "n_taut", "valid", "in_system", "correct"]
 
 
 def main():
@@ -58,9 +64,9 @@ def main():
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    show = [("grammatical", "grammatical"), ("valid_eval", "valid (eval: strict ok + grounded)"),
+    show = [("grammatical", "grammatical"), ("format_ok", "format ok"), ("valid_eval", "valid (eval: strict ok + grounded)"),
             ("valid", "valid (hardened)"), ("in_system", "in-system (hardened)"), ("correct", "correct")]
-    fig, ax = plt.subplots(figsize=(11, 4.2))
+    fig, ax = plt.subplots(figsize=(14, 4.6))
     w = 0.8 / len(res)
     for i, (name, r) in enumerate(res.items()):
         xs = [j + (i - (len(res) - 1) / 2) * w for j in range(len(show))]
@@ -72,7 +78,7 @@ def main():
     ax.set_ylim(0, 1.05)
     ax.set_ylabel("fraction of 950 held-out items (greedy)")
     ax.set_title("Stage-2 gate on GRPO checkpoints (2B): the valid gain of G5 is mostly circular `given` proofs")
-    ax.legend(fontsize=8, ncol=5, loc="upper right")
+    ax.legend(fontsize=7, ncol=4, loc="upper right")
     fig.tight_layout()
     out = REPO / "reports/figures/stage2_gate_ckpts.png"
     fig.savefig(out, dpi=150)
