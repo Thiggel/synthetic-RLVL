@@ -9,9 +9,9 @@ This file is the live Slurm dashboard. Historical details live in `docs/operatio
 - **Greedy gate** (`TEST_JSONL=.../rl_gate_dolci_instruct_20260928/test.jsonl OUT_NAME=rl_gate_dolci`):
   - Done: 0.8B p0/p25/p50, 2B p0/p25/p50, 9B p0.
   - Pending: 6933 (9B p50, afterok 6839).
-- **Sampling probe** (`scripts/slurm/jobs/rl_signal_probe.slurm`, gruenau12 L40): 6936 (0.8B p50), 6937 (2B p50). K=16 samples at T=0.6/1.0, 100 items per subset.
+- **Sampling probe** (`scripts/slurm/jobs/rl_signal_probe.slurm`, gruenau12 L40): 6944 (0.8B p50), 6945 (2B p50); 6936/6937 crashed on the nan Answer bug and were resubmitted. K=16 samples at T=0.6/1.0, 100 items per subset.
 - **EI collection round 1:** 6938 (2B p50, gruenau12). 8 samples per prompt at T=1 on 1,500 RL training prompts each from math, wordprob and yesno. Output: `<run>/ei_collect_r1/samples.jsonl`. Done: 57 in-system samples on 26 prompts (0.2%), too few.
-- **EI round 1b, prefix-resampling search:** 6939 (2B p50, gruenau12, `scripts/slurm/jobs/ei_prefix_search.slurm`). Resamples continuations from the checked prefix before the first failing line, for 3 rounds. Output: `<run>/ei_search_r1/{samples.jsonl,stats.json}`.
+- **EI round 1b, prefix-resampling search:** 6946 (resubmit of 6939, which ran pre-fix code; 2B p50, gruenau12, `scripts/slurm/jobs/ei_prefix_search.slurm`). Resamples continuations from the checked prefix before the first failing line, for 3 rounds. Output: `<run>/ei_search_r1/{samples.jsonl,stats.json}`.
 - **GRPO pilots, dense rewards (submitted 2026-09-28):** 200 steps, 32 prompts × 8 samples, math/wordprob/yesno (DAPO dropped), `scripts/slurm/jobs/grpo_formal.slurm`, output `rlvl_data/grpo_formal_20260928/<RUN_NAME>/`.
   - 6940 G5 `lines` (2B p50, gruenau12 L40); 6941 G3 `gvc` (2B p50, gruenau9 A100); 6942 G1 `correct` (2B p50, gruenau10 A100); 6943 G0 `correct` no tag (2B p0, gruenau7 A6000).
   - Question: does a dense line-credit reward (user suggestion, hardened) raise grammatical/valid rates before EI yields enough proofs?

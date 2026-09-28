@@ -125,3 +125,4 @@ smoke 0.8b p00: 6806
 6941 grpo_2b_G3_gvc pilot (2B p50) gruenau9
 6942 grpo_2b_G1_correct pilot (2B p50) gruenau10
 6943 grpo_2b_G0_correct pilot (2B p0, no tag) gruenau7
+6936/6937/6939 cancelled: crash/pre-fix code (nan in ans/Answer agreement); resubmitted as 6944 6945 6946
