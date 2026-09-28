@@ -139,3 +139,4 @@ smoke 0.8b p00: 6806
 6964: G5 lines running (gruenau12); its G3 arm died at vLLM start-up (only 6 GB free on its second GPU: foreign processes, and Slurm GPU IDX order != nvidia-smi order)
 6965 grpo_2b_G3c_gvc (2B p50, gvc, batch 1, vllm-mem 0.25) gruenau8 A6000
 6966 grpo_2b_G3d_gvc_fallback: same arm on gruenau10 A100, runs only if 6965 fails (afterany:6960,afternotok:6965)
+6966 cancelled: 6965 healthy (step 5, 280 s/it)

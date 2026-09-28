@@ -1,13 +1,46 @@
 {
  "G1 correct (p50)": {
-  "steps": 24,
-  "correct": 0.24122500000000002,
-  "grammatical": 0.038478899999999996,
-  "valid": 0.0029296,
-  "in_system": 0.0023436999999999998,
-  "lines": 0.012954299999999998,
-  "n_ok": 0.12714350000000002,
-  "completion length": 534.88,
-  "reward std (primary)": 0.42181499999999994
+  "steps": 49,
+  "correct": 0.38201999999999997,
+  "grammatical": 0.0007812,
+  "valid": 0.0,
+  "in_system": 0.0,
+  "lines": 0.00013733700000000002,
+  "n_ok": 0.0009766,
+  "completion length": 834.9399999999999,
+  "reward std (primary)": 0.48251999999999995
+ },
+ "G5 lines (p50)": {
+  "steps": 14,
+  "correct": 0.18025714285714287,
+  "grammatical": 0.047714285714285716,
+  "valid": 0.0025112857142857146,
+  "in_system": 0.0025112857142857146,
+  "lines": 0.014843714285714285,
+  "n_ok": 0.15569642857142857,
+  "completion length": 578.2642857142857,
+  "reward std (primary)": 0.05701821428571429
+ },
+ "G3 gvc (p50)": {
+  "steps": 5,
+  "correct": 0.14454,
+  "grammatical": 0.020312,
+  "valid": 0.0,
+  "in_system": 0.0,
+  "lines": 0.005713,
+  "n_ok": 0.07108600000000001,
+  "completion length": 538.86,
+  "reward std (primary)": 0.12722
+ },
+ "G0 correct (p0, no tag)": {
+  "steps": 8,
+  "correct": 0.178225,
+  "grammatical": 0.0,
+  "valid": 0.0,
+  "in_system": 0.0,
+  "lines": 0.0,
+  "n_ok": 0.0,
+  "completion length": 471.5625,
+  "reward std (primary)": 0.3776375
  }
 }
