@@ -150,3 +150,7 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7007 grpo_2b_G6g_frachard_gen (2B p50, frac_hard, + gen pool-train items with exact faithfulness) submitted to gruenau10, moved to gruenau9 A100 (gruenau10 CPUs full), partition gpu -> FAILED at vLLM start (foreign process on the gruenau9 GPU)
 7008 grpo_2b_G6g_frachard_gen resubmit, gruenau10, cancelled (100G needs 13 CPUs, 8 free)
 7009 grpo_2b_G6g_frachard_gen resubmit, gruenau10 a10080gb:1, 8 CPUs, 60G, partition gpu
+7006 -> FAILED step 0 CUDA OOM (L40 shared with hallepat non-Slurm evals)
+7009 -> FAILED at vLLM start (gruenau10 GPU0 shared)
+6964 grpo_2b_G5G3 cancelled at G5 step 116 (hacked arm; over the gruenau12 cap)
+7013 grpo_2b_G6_frachard resubmit, gruenau12 l40:1, partition gpu-staff, MIN_FREE_MIB=44000

@@ -37,6 +37,9 @@ export CUDA_DEVICE_ORDER=PCI_BUS_ID
 if [[ -n "${CUDA_VISIBLE_DEVICES:-}" ]]; then NGPU=$(tr ',' '\n' <<< "${CUDA_VISIBLE_DEVICES}" | wc -l)
 else NGPU=$(nvidia-smi -L | wc -l); fi
 nvidia-smi -i "${CUDA_VISIBLE_DEVICES:-0}" --query-gpu=index,name,memory.total,memory.free --format=csv,noheader
+# Fail fast when a process outside Slurm already holds the GPU (gruenau9/10/12, 2026-09-28)
+FREE_MIB=$(nvidia-smi -i "${CUDA_VISIBLE_DEVICES:-0}" --query-gpu=memory.free --format=csv,noheader,nounits | sort -n | head -1)
+if (( FREE_MIB < ${MIN_FREE_MIB:-0} )); then echo "only ${FREE_MIB} MiB free < MIN_FREE_MIB=${MIN_FREE_MIB}: GPU shared with a foreign process" >&2; exit 3; fi
 echo "policy=${POLICY} arm=${ARM:?} ngpu=${NGPU} out=${OUT}"
 ACC=(--num_processes "${NGPU}" --mixed_precision bf16)
 if (( NGPU > 1 )); then ACC+=(--use_deepspeed --zero_stage 2); fi
