@@ -166,3 +166,4 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7033 fmix_tag_2b_p40 resubmit, guppi8 rtx3090:1, MIN_FREE_MIB=20000
 7034 fmix_tag_2b_p45 resubmit, guppi5 rtx3090:1, MIN_FREE_MIB=20000
 7035 grpo_gate gruenau12 l40:1: G0@100 G3b@50 G5c@50 G3b@100 G5c@100 G0 final
+7043 grpo_gate gruenau12 l40:1: G6g@50 G0@150 G6@100 G6g@100

@@ -80,3 +80,15 @@ ProofWriter: 68% grammatical, 20% valid, 16% in-system.
 - Full tagged eval for all checkpoints.
 - 9B results.
 - 2B untagged benches and tagged evals for the last cells (p20 6824/6919 are running). The in-domain eval of every 2B cell is done.
+
+## Update 01:35 (2026-09-29): 2B tagged benchmarks complete (p0–p50)
+
+With 2B p20, p40 and p45 in (7032–7034), all 11 fractions of the 2B tagged sweep are done. Tables are in `analysis/formal_mixture_sweep_20260925/tagged/tagged_2b.md` and curves in `tagged/tagged_curves.png` (`scripts/analysis/formal_mix_tagged_table.py`). All numbers are % of items with the `<formal>` tag, as grammatical / valid / correct / in-system.
+
+| subset | p0 | p5 | p10 | p20 | p30 | p40 | p50 |
+|---|---|---|---|---|---|---|---|
+| deduction, all (2703) | 0/0/27/0 | 29/6/29/5 | 44/9/34/7 | 53/11/40/9 | 59/13/40/10 | 61/15/41/11 | 63/15/42/11 |
+| answerable overall (3187) | 0/0/34/0 | 22/4/38/4 | 35/7/43/6 | 43/9/48/9 | 48/11/49/9 | 48/11/51/10 | 52/12/52/10 |
+| GSM8K (500) | 0/0/42/0 | 12/1/38/1 | 26/3/34/1 | 34/5/34/4 | 40/5/35/3 | 44/4/38/3 | 51/6/37/4 |
+
+On deduction, grammaticality, validity and correctness all rise with X and flatten beyond about 30%. Tagged GSM8K accuracy drops 4–8 points at every X > 0, and only 4–6% of its proofs are valid. The tagged math proofs mostly fail the checker, and forcing the format costs math accuracy.
