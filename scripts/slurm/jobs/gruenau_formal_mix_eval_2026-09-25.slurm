@@ -71,6 +71,7 @@ while (( attempt < 4 && polls < 72 )); do
   if python -c "import sys; sys.exit(0 if ${GPU_MEM} >= ${MIN_GPU_MEM} else 1)"; then
     if python scripts/eval_formal_vllm.py \
         --gpu-mem "${GPU_MEM}" \
+        --max-num-seqs "${MAX_NUM_SEQS:-256}" \
         --test-jsonl "${TEST}" \
         --model "${MODEL}" \
         --out-dir "${OUT_DIR}" \

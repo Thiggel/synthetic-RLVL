@@ -264,7 +264,7 @@ def generate(records, args) -> list[dict]:
         stop_ids.append(tok.eos_token_id)
     llm = LLM(model=args.model, tokenizer=args.model, dtype="bfloat16", seed=0,
               tensor_parallel_size=args.tp, max_model_len=args.max_model_len,
-              gpu_memory_utilization=args.gpu_mem, enable_prefix_caching=True,
+              gpu_memory_utilization=args.gpu_mem, enable_prefix_caching=True, max_num_seqs=args.max_num_seqs,
               limit_mm_per_prompt={"image": 0, "video": 0} if args.no_mm else None)
     states = []
     for rec in records:
@@ -320,6 +320,7 @@ def main():
     ap.add_argument("--max-model-len", type=int, default=8192)
     ap.add_argument("--tp", type=int, default=1)
     ap.add_argument("--gpu-mem", type=float, default=0.85)
+    ap.add_argument("--max-num-seqs", type=int, default=256, help="lower it on a shared GPU: hybrid (Mamba) models need one cache block per sequence")
     ap.add_argument("--no-mm", action="store_true", help="disable image/video inputs (VLM checkpoints)")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()

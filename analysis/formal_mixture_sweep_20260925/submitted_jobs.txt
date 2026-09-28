@@ -82,6 +82,7 @@ smoke 0.8b p00: 6806
 # 9B lane H2 2026-09-26 (DeepSpeed ZeRO-2 + CPU AdamW offload, liger FLCE; gruenau11 2 x H100, PDB 2 x accum 32; eval lane E3 gruenau12 L40:1)
 9b p0: lane H2 train 6837 eval 6838
 9b p50: lane H2 train 6839 eval 6840
+9b p50 eval resubmitted 2026-09-28 21:45: 7019 (6840 failed: Mamba cache blocks 219 < max_num_seqs 256 on a shared L40; MAX_NUM_SEQS=128)
 9b p25: lane H2 train 6841 eval 6842
 9b p10: lane H2 train 6843 eval 6844
 9b deepspeed test (DS_SKIP_CUDA_CHECK=1) passed: 6831 (~77 s/step, ~46 GB/card, final bf16 17 GB)
@@ -154,3 +155,6 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7009 -> FAILED at vLLM start (gruenau10 GPU0 shared)
 6964 grpo_2b_G5G3 cancelled at G5 step 116 (hacked arm; over the gruenau12 cap)
 7013 grpo_2b_G6_frachard resubmit, gruenau12 l40:1, partition gpu-staff, MIN_FREE_MIB=44000
+7019 fmix_eval_9b_p50 resubmit (6840 failed: Mamba cache blocks 219 < 256 on shared L40), gruenau12 l40:1, MAX_NUM_SEQS=128
+7020 grpo_2b_G6_frachard resubmit, gruenau9 a10080gb:1, partition gpu, 8 CPUs, 60G, MIN_FREE_MIB=60000 (7013 left no output)
+7021 grpo_G6g resubmit, gruenau10 a10080gb:1 -> guard exit 3 (13.1 GB free: shared GPU)
