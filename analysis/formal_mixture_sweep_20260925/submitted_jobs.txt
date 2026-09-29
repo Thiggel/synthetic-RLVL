@@ -202,3 +202,5 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7133 FAILED: CUDA OOM at step 0 (a foreign 55 GB process landed on its gruenau9 A100 after the free-memory guard) -> 7148 zero2_offload_optim.json, MIN_FREE_MIB=40000; chain 7137 re-pointed (2026-09-29)
 7160 gate_G7_final rl_gate_dolci G7@150 G7 final G7g@150 G7g final, gruenau10 A100 afterany 7079 (2026-09-29)
 2026-09-29 18:45 gruenau12 cap fix: 6844 6846 6923 requeued; 6844 6846 6847 6848 6923 6924 6925 moved to gruenau11 gres h100nvl:1 (lanes 6844>6846>6847>6848, 6923>6924>6925)
+7167 grpo_G8 2b p50+lc_fp32m arm cvf gen+Dolci gruenau9 A100 (2026-09-29)
+7168 gate_G8 rl_gate_dolci G8@100 G8 final, gruenau9 afterany 7167 (2026-09-29)
