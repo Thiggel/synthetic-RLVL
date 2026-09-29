@@ -20,7 +20,8 @@ POOL = DATA / "datasets/formal_mixture_20260925/pool"
 GRPO = DATA / "grpo_formal_20260928"
 RUNS = {"G6g frac_hard + gen": "2b_p50_G6g_frachard_gen", "G6h frac_hard hardened + gen": "2b_p50_G6h_frachard_hardened",
         "G6i G6h + restatement fix": "2b_p50_G6i_frachard_restate", "G7 cvf (correct x valid x prem_ok)": "2b_p50_G7_cvf",
-        "G7g cvf, gen prompts only": "2b_p50_G7g_cvf_genonly"}
+        "G7g cvf, gen prompts only": "2b_p50_G7g_cvf_genonly",
+        "G8 cvf, lemma-catalog fp32 base": "2b_lcfp32m_G8_cvf", "G9 cvf, x3@781 fp32 base": "2b_x3at781_G9_cvf"}
 BLOCK = 10
 
 
