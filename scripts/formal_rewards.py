@@ -183,16 +183,20 @@ def line_stats(prompt: str, completion: str) -> dict:
     # a block line (`contra`, `cases`, ...) checks only if every line of its body was parsed and checks:
     # rlvl marks the header ok even when its body is wrong or cut by a parse error (G6 @80-95 hack)
     body_ok = lambda lab: all(y in steps and steps[y].get("ok") for y in anc if y.startswith(lab + "."))
+    norm = lambda f: "".join(f.split())
     for lab, r in steps.items():
         f = formula.get(lab)
         # premise-free arithmetic (`4 + 1 = 5 ; calc`, citing nothing) is free padding, like `a = a` (G6 @93)
         ground = rule.get(lab) == "calc" and not cites.get(lab) and not re.search(r"[A-Za-z_]", f or "")
-        if rule.get(lab) not in TRUST and (tautology(f) or ground):
+        # a line restating a formula it cites derives nothing: rlvl accepts `3 cos=2 ; subst 2 1` locally
+        # although lines 1-2 (`cos=2 ; calc`) fail (G6 @150: one such shell on 72% of gate items)
+        restate = any(norm(formula.get(c, "")) == norm(f or "") for c in cites.get(lab, []))
+        if rule.get(lab) not in TRUST and (tautology(f) or ground or restate):
             taut.add(f)
             continue
         parsed[f] = True
-        ok[f] = ok.get(f, False) or bool(r.get("ok") and r.get("rule") not in TRUST and body_ok(lab))
-    norm = lambda f: "".join(f.split())
+        if rule.get(lab) not in TRUST:  # a derived formula checks only if every line deriving it checks
+            ok[f] = ok.get(f, True) and bool(r.get("ok") and body_ok(lab))
     circ = any(rule[x] in TRUST and norm(formula[x]) == norm(formula[root]) for x in anc)
     # fractions over the distinct ancestor formulas: parsed / all, checked derived / derived (tautologies
     # count in the denominator only). No length incentive; the minimum is a 2-line proof.

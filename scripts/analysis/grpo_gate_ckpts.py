@@ -36,12 +36,18 @@ MODELS = [
     ("G5 lines @100", GRPO / "2b_p50_G5_lines_bal/checkpoint-100"),
     ("G3b gvc hardened @50", GRPO / "2b_p50_G3b_gvc_hard/checkpoint-50"),
     ("G3b gvc hardened @100", GRPO / "2b_p50_G3b_gvc_hard/checkpoint-100"),
+    ("G3b gvc hardened @150", GRPO / "2b_p50_G3b_gvc_hard/checkpoint-150"),
+    ("G3b gvc hardened final", GRPO / "2b_p50_G3b_gvc_hard/final"),
     ("G5c lines x format @50", GRPO / "2b_p50_G5c_linesfmt/checkpoint-50"),
     ("G5c lines x format @100", GRPO / "2b_p50_G5c_linesfmt/checkpoint-100"),
     ("G6 frac_hard @50", GRPO / "2b_p50_G6_frachard/checkpoint-50"),
     ("G6 frac_hard @100", GRPO / "2b_p50_G6_frachard/checkpoint-100"),
+    ("G6 frac_hard @150", GRPO / "2b_p50_G6_frachard/checkpoint-150"),
+    ("G6 frac_hard final", GRPO / "2b_p50_G6_frachard/final"),
     ("G6g frac_hard + gen @50", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-50"),
     ("G6g frac_hard + gen @100", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-100"),
+    ("G6g frac_hard + gen @150", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-150"),
+    ("G6g frac_hard + gen final", GRPO / "2b_p50_G6g_frachard_gen/final"),
 ]
 KEYS = ["has_proof", "grammatical", "format_ok", "valid_eval", "circular", "n_taut", "valid", "in_system", "correct"]
 
