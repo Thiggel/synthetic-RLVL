@@ -100,3 +100,24 @@ In-domain (2000 unseen generator problems): 9B p10 faithful .976 / grammatical .
 ## Update 2026-09-29 ~20:20 — 9B tagged p10 / p25 / p50
 
 Tagged overall (grammatical / valid / correct-on-answerable / in-system, %): p10 37 / 12 / – / 9, p25 33 / 12 / – / 11, p50 33 / 12 / – / 11; ProofWriter valid 34 → 40 → 40, FOLIO 21 → 18 → 19, BBH 3 → 2 → 2. At 9B, transfer of valid proofs to benchmarks saturates at the 10–25% mixture; more formal data beyond 25% buys nothing tagged. Table: `analysis/formal_mixture_sweep_20260925/tagged/tagged_9b.md`; figures regenerated.
+
+## Update 2026-09-29 ~21:10 — 9B untagged benchmarks complete (p0 / p10 / p25 / p50)
+
+9B is the only size trained with fp32 master weights throughout (ZeRO-2), so these are the clean Stage-1 numbers. Accuracy (%), delta vs the pure-Dolci p0 in brackets (full table: `analysis/formal_mixture_sweep_20260925/bench/`, figures `stage1_bench_delta_heatmap.png`, `stage1_tradeoff.png`):
+
+| benchmark | p0 | p10 | p25 | p50 |
+|---|---:|---:|---:|---:|
+| ProofWriter CoT d0–d5 (mean) | 54.4 | 63.6 (+9.2) | 65.7 (+11.3) | 60.7 (+6.3) |
+| ProofWriter direct d0–d5 (mean) | 50.3 | 49.2 (-1.1) | 51.6 (+1.4) | 46.5 (-3.8) |
+| FOLIO | 65.0 | 67.0 | 66.5 | 64.0 |
+| BBH (all) | 84.4 | 84.4 | 83.8 | 84.2 |
+| BBH formal_fallacies | 72.8 | 66.0 (-6.8) | 68.4 (-4.4) | 61.6 (-11.2) |
+| GPQA-Diamond (n=198, SE ~3.5) | 45.5 | 50.0 | 50.5 | 50.0 |
+| MuSiQue | 46.0 | 44.9 | 43.8 | 41.0 (-5.0) |
+| GSM8K / MMLU / ARC-C | 87.0 / 78.0 / 60.9 | 86.2 / 77.8 / 60.4 | 86.3 / 77.8 / 61.8 | 86.4 / 77.8 / 61.1 |
+| HumanEval / MBPP | 65.2 / 63.4 | 67.1 / 64.2 | 69.5 / 64.4 | 67.7 / 64.2 |
+
+- Untagged general capability is preserved at every X (GSM8K, MMLU, ARC, HellaSwag, PIQA, code all within ±2).
+- Multi-step deductive reasoning in natural-language CoT improves (ProofWriter CoT +9–11 at p10/p25, largest at depth 2–3), peaking at p25 and falling back at p50.
+- Costs grow with X: BBH formal_fallacies (-7 to -11) and MuSiQue (-5 at p50).
+- Stage-1 recommendation at 9B: X = 25% (best CoT transfer, in-domain valid .963, tagged validity already at its plateau, no general-benchmark cost). Single seed; GPQA/FOLIO deltas are within noise.
