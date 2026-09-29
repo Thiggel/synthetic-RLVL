@@ -12,7 +12,7 @@
 # rewards (scripts/formal_rewards.py), TRL 1.14 + vLLM 0.30 colocate in
 # .venv_rlvl_grpo. One process per GPU via accelerate (DeepSpeed ZeRO-2 if >1).
 # Required env: POLICY (SFT run dir name under the formal-mixture sweep), ARM, RUN_NAME.
-# Optional: NO_TAG=1, EXTRA_ARGS (passed to grpo_formal.py).
+# Optional: NO_TAG=1, EXTRA_ARGS (passed to grpo_formal.py), POLICY_CKPT (checkpoint dir under POLICY, default final).
 # Export the variables in the shell and submit with --export=ALL: `sbatch --export=ALL,EXTRA_ARGS="--benches a,b"`
 # splits at the comma and silently drops everything after it.
 # Output: rlvl_data/grpo_formal_20260928/${RUN_NAME}/
@@ -29,7 +29,7 @@ export VLLM_USE_FLASHINFER_SAMPLER=0 TRITON_CACHE_DIR=/tmp/laitenbf_triton_${SLU
 export PYTHONPATH=/vol/home-vol2/ml/laitenbf/RLVL-next/gen:/vol/home-vol2/ml/laitenbf/RLVL-next/rlvl/python
 hash -r 2>/dev/null || true
 
-MODEL="${ROOT}/rlvl_data/formal_mixture_sft_20260925/${POLICY:?}/final"
+MODEL="${ROOT}/rlvl_data/formal_mixture_sft_20260925/${POLICY:?}/${POLICY_CKPT:-final}"
 OUT="${ROOT}/rlvl_data/grpo_formal_20260928/${RUN_NAME:?}"
 mkdir -p "${OUT}"
 # CUDA_VISIBLE_DEVICES (set by Slurm, or by grpo_formal_multi.slurm) wins over nvidia-smi -L

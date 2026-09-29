@@ -209,3 +209,5 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7215 -> qwen35_2b_dolci_rlvlgen_p10_lr5em6_seed3407_fp32m: eval=7216 gate=7221 bench=7222 tagged=7223 (sequential, 1 GPU, gruenau11) (2026-09-29)
 7217 -> qwen35_2b_dolci_rlvlgen_p25_lr5em6_seed3407_fp32m: eval=7218 gate=7224 bench=7225 tagged=7226 (sequential, 1 GPU, gruenau11) (2026-09-29)
 7333 7334 fmix_eval_x3_781/gate_x3_781 checkpoint-781, sequential on gruenau8 (2026-09-29)
+7365 grpo_G9 2b p50_x3@781 (fp32 master) arm cvf gen+Dolci (G7 recipe), gruenau10 A100 (2026-09-29)
+7366 gate_G9 rl_gate_dolci G9@100 G9 final, gruenau10 afterany 7365 (2026-09-29)
