@@ -92,3 +92,7 @@ With 2B p20, p40 and p45 in (7032–7034), all 11 fractions of the 2B tagged swe
 | GSM8K (500) | 0/0/42/0 | 12/1/38/1 | 26/3/34/1 | 34/5/34/4 | 40/5/35/3 | 44/4/38/3 | 51/6/37/4 |
 
 On deduction, grammaticality, validity and correctness all rise with X and flatten beyond about 30%. Tagged GSM8K accuracy drops 4–8 points at every X > 0, and only 4–6% of its proofs are valid. The tagged math proofs mostly fail the checker, and forcing the format costs math accuracy.
+
+## Update 2026-09-29 ~19:15 — 9B p10 (eval 6844, tagged 6923 on gruenau11)
+
+In-domain (2000 unseen generator problems): 9B p10 faithful .976 / grammatical .997 / valid .944 / answer .979; p25 .963 valid, p50 .983 — at 9B, 10k generator rows (10% of 100k) already give 94% valid proofs, and Dolci eval loss is flat across X (.650 / .651 / .653 / .658). Tagged benchmarks (grammatical / valid / correct / in-system, %): overall 37 / 12 / 0 / 9; ProofWriter 77 / 34 / 55 / 32; FOLIO 66 / 21 / 54 / 15; BBH 25 / 3 / 52 / 1; GSM8K 82 / 12 / 77 / 10; GPQA 1 / 0 / 43 / 0. p25/p50 tagged and all 9B untagged benches are running (gruenau11 lanes). Figures regenerated: `stage1_indomain_curves.png`, `stage1_tradeoff.png`, `stage1_bench_delta_heatmap.png`, `sft_scale_curve.png`, `analysis/formal_mixture_sweep_20260925/tagged/tagged_curves.png`.
