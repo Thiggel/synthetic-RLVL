@@ -171,3 +171,4 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7051 grpo_G6h resubmit, gruenau7 rtxa6000:1, partition gpu, 8 CPU / 60G, MIN_FREE_MIB=44000 (7050 guard exit 3: gruenau12 L40 had 26 GB free)
 7059 grpo_G6h resubmit with G6g's full args (--max-per-bench 1200 --max-steps 200 --save-steps 50 --per-device-batch 1 --vllm-mem 0.25); 7051 OOMed at default batch 8 (args omitted)
 7059 guard exit 3 (42.5 GB free, foreign llama-server/train.py on gruenau7). 7060 resubmit, MIN_FREE_MIB=40000
+7068 grpo_gate150: gate (rl_gate_dolci) of G6@150, G6g@150, G3b@150; gruenau8 A6000:1, partition gpu
