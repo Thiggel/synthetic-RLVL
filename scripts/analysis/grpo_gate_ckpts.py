@@ -27,6 +27,7 @@ MODELS = [
     ("SFT p50", SFT / "qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407"),
     ("G0 correct (p0) @50", GRPO / "2b_p0_G0_correct_bal/checkpoint-50"),
     ("G0 correct (p0) @100", GRPO / "2b_p0_G0_correct_bal/checkpoint-100"),
+    ("G0 correct (p0) @150", GRPO / "2b_p0_G0_correct_bal/checkpoint-150"),
     ("G1 correct @100", GRPO / "2b_p50_G1_correct_bal/checkpoint-100"),
     ("G1 correct @150", GRPO / "2b_p50_G1_correct_bal/checkpoint-150"),
     ("G1 correct final", GRPO / "2b_p50_G1_correct_bal/final"),
@@ -37,6 +38,9 @@ MODELS = [
     ("G5c lines x format @50", GRPO / "2b_p50_G5c_linesfmt/checkpoint-50"),
     ("G5c lines x format @100", GRPO / "2b_p50_G5c_linesfmt/checkpoint-100"),
     ("G6 frac_hard @50", GRPO / "2b_p50_G6_frachard/checkpoint-50"),
+    ("G6 frac_hard @100", GRPO / "2b_p50_G6_frachard/checkpoint-100"),
+    ("G6g frac_hard + gen @50", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-50"),
+    ("G6g frac_hard + gen @100", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-100"),
 ]
 KEYS = ["has_proof", "grammatical", "format_ok", "valid_eval", "circular", "n_taut", "valid", "in_system", "correct"]
 

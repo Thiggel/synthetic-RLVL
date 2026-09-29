@@ -101,6 +101,13 @@ def _numbers(text: str, quote: bool) -> set:
     return out
 
 
+# rules whose line rlvl accepts without deriving it: they earn no checked-line credit, count as
+# premises for circularity, and are not tautology-exempt (G6 @90: `cuts = 6 ; know`, then `subst`)
+TRUST = {"given", "know", "def", "obs", "assume"}
+# unit constants background `know` lines may use without the prompt stating them (days = weeks * 7, ...)
+UNIT_CONSTANTS = " 7 12 24 60 100 1000"
+
+
 def premise_numbers_ok(formula: str, quote: str) -> bool:
     """Every number in a `given` formula is stated (by value) in its quote. A cheap partial
     premise check: it rejects `x = 42 ; given "<any sentence>"` (a guessed answer smuggled in as
@@ -130,6 +137,8 @@ def line_stats(prompt: str, completion: str) -> dict:
       circular   1 if the conclusion's formula is the formula of an ancestor `given` line
       n_taut     ancestor derived lines that are tautologies (`child = child ; subst 2 3`); they
                  count toward neither n_parsed nor n_ok (late G5 chained them for line credit)
+    The body lines of a block (labels L.1, L.2, ... under L) are ancestors of L, and L checks only
+    if its whole body does.
     """
     import rlvl
     zero = {"n_steps": 0, "n_parsed": 0, "n_ok": 0, "circular": 0, "n_taut": 0, "frac_parsed": 0.0,
@@ -164,27 +173,36 @@ def line_stats(prompt: str, completion: str) -> dict:
         if x in anc or x not in cites:
             continue
         anc.add(x)
-        stack += cites[x]
+        stack += cites[x] + [y for y in order if y.startswith(x + ".")]  # a block's body is part of it
     try:
         rep = rlvl.check(prompt, body, strict=True)
     except BaseException:  # pyo3 PanicException is not an Exception
         return {**zero, "n_steps": len(order)}
     parsed, ok, taut = {}, {}, set()
-    for r in rep.get("lines") or []:
-        if r.get("kind") == "step" and r.get("label") in anc:
-            f = formula.get(r["label"])
-            if rule.get(r["label"]) != "given" and tautology(f):
-                taut.add(f)
-                continue
-            parsed[f] = True
-            ok[f] = ok.get(f, False) or bool(r.get("ok") and r.get("rule") != "given")
+    steps = {r["label"]: r for r in rep.get("lines") or [] if r.get("kind") == "step" and r.get("label") in anc}
+    # a block line (`contra`, `cases`, ...) checks only if every line of its body was parsed and checks:
+    # rlvl marks the header ok even when its body is wrong or cut by a parse error (G6 @80-95 hack)
+    body_ok = lambda lab: all(y in steps and steps[y].get("ok") for y in anc if y.startswith(lab + "."))
+    for lab, r in steps.items():
+        f = formula.get(lab)
+        # premise-free arithmetic (`4 + 1 = 5 ; calc`, citing nothing) is free padding, like `a = a` (G6 @93)
+        ground = rule.get(lab) == "calc" and not cites.get(lab) and not re.search(r"[A-Za-z_]", f or "")
+        if rule.get(lab) not in TRUST and (tautology(f) or ground):
+            taut.add(f)
+            continue
+        parsed[f] = True
+        ok[f] = ok.get(f, False) or bool(r.get("ok") and r.get("rule") not in TRUST and body_ok(lab))
     norm = lambda f: "".join(f.split())
-    circ = any(rule[x] == "given" and norm(formula[x]) == norm(formula[root]) for x in anc)
+    circ = any(rule[x] in TRUST and norm(formula[x]) == norm(formula[root]) for x in anc)
     # fractions over the distinct ancestor formulas: parsed / all, checked derived / derived (tautologies
     # count in the denominator only). No length incentive; the minimum is a 2-line proof.
     anc_f = {formula[x] for x in anc}
-    der_f = {formula[x] for x in anc if rule[x] != "given"}
-    prem_bad = sum(not premise_numbers_ok(formula[x], quote[x]) for x in anc if rule[x] == "given")
+    # trusted lines earn nothing; one rlvl rejects counts as a failed derived line (G6 @92:
+    # `girls = 3 / 5 * 500 ; def` smuggles a premise in). Quoted premises (given, obs) must state
+    # their numbers; unquoted ones (know, def) may use only numbers of the prompt.
+    der_f = {formula[x] for x in anc if rule[x] not in TRUST or not (x in steps and steps[x].get("ok"))}
+    prem_bad = sum(not premise_numbers_ok(formula[x], quote[x] if rule[x] in ("given", "obs") else prompt + UNIT_CONSTANTS)
+                   for x in anc if rule[x] in TRUST - {"assume"})
     return {"n_steps": len(order), "n_parsed": len(parsed), "n_ok": sum(ok.values()), "circular": int(circ),
             "n_taut": len(taut), "frac_parsed": len(parsed) / len(anc_f),
             "frac_ok": sum(ok.values()) / len(der_f) if der_f else 0.0, "n_prem_bad": prem_bad}
