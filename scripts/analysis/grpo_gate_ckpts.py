@@ -47,7 +47,8 @@ MODELS = [
     ("G6g frac_hard + gen @50", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-50"),
     ("G6g frac_hard + gen @100", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-100"),
     ("G6g frac_hard + gen @150", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-150"),
-    ("G6g frac_hard + gen final", GRPO / "2b_p50_G6g_frachard_gen/final"),    ("G6h frac_hard hardened @50", GRPO / "2b_p50_G6h_frachard_hardened/checkpoint-50"),
+    ("G6g frac_hard + gen final", GRPO / "2b_p50_G6g_frachard_gen/final"),
+    ("G6h frac_hard hardened @50", GRPO / "2b_p50_G6h_frachard_hardened/checkpoint-50"),
     ("G6h frac_hard hardened @100", GRPO / "2b_p50_G6h_frachard_hardened/checkpoint-100"),
     ("G6h frac_hard hardened @150", GRPO / "2b_p50_G6h_frachard_hardened/checkpoint-150"),
     ("G6i frac_hard restate @50", GRPO / "2b_p50_G6i_frachard_restate/checkpoint-50"),
@@ -63,6 +64,11 @@ MODELS = [
     ("G6i frac_hard restate final", GRPO / "2b_p50_G6i_frachard_restate/final"),
     ("G7 cvf final", GRPO / "2b_p50_G7_cvf/final"),
     ("G7g cvf gen-only final", GRPO / "2b_p50_G7g_cvf_genonly/final"),
+    ("SFT p50 + lemma catalog", SFT / "qwen35_2b_p50_cont_lc_lr5em6_seed3407/final"),
+    ("SFT p50 + control", SFT / "qwen35_2b_p50_cont_ct_lr5em6_seed3407/final"),
+    ("SFT p50 x3 @781", SFT / "qwen35_2b_dolci_rlvlgen_p50_x3_lr5em6_seed3407/checkpoint-781"),
+    ("SFT p50 x3 @1562", SFT / "qwen35_2b_dolci_rlvlgen_p50_x3_lr5em6_seed3407/checkpoint-1562"),
+    ("SFT p50 x3 final", SFT / "qwen35_2b_dolci_rlvlgen_p50_x3_lr5em6_seed3407/final"),
 ]
 KEYS = ["has_proof", "grammatical", "format_ok", "valid_eval", "circular", "n_taut", "valid", "in_system", "correct"]
 

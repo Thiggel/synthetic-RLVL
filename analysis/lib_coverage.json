@@ -168,6 +168,48 @@
     "top_nonexistent": [],
     "real_seen": 0
    }
+  },
+  "2B p50 + lemma catalog": {
+   "formal_eval": {
+    "cites": 3245,
+    "nonexistent": 437,
+    "real_unseen": 70,
+    "top_nonexistent": [
+     "event.univ_imp",
+     "event.sym",
+     "prob.inv_pr",
+     "rel.eq_or",
+     "logic.bear_st",
+     "space.above_trans",
+     "logic.iff_def",
+     "logic.simp",
+     "rel.ext",
+     "agent.infer",
+     "event.univ",
+     "logic.iff_self"
+    ],
+    "real_seen": 2738
+   },
+   "rl_gate_dolci": {
+    "cites": 2309,
+    "nonexistent": 1311,
+    "real_unseen": 201,
+    "top_nonexistent": [
+     "arith.mod_def",
+     "arith.lt_def",
+     "math.count_id",
+     "arith.sym",
+     "arith.num_digits",
+     "eq.ref",
+     "lib_and",
+     "arith.mul_def",
+     "arithassoc",
+     "arith.gcd_def",
+     "logic.trans",
+     "agent.role_def"
+    ],
+    "real_seen": 797
+   }
   }
  }
 }
