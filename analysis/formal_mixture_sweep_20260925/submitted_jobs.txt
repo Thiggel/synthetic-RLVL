@@ -167,3 +167,5 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7034 fmix_tag_2b_p45 resubmit, guppi5 rtx3090:1, MIN_FREE_MIB=20000
 7035 grpo_gate gruenau12 l40:1: G0@100 G3b@50 G5c@50 G3b@100 G5c@100 G0 final
 7043 grpo_gate gruenau12 l40:1: G6g@50 G0@150 G6@100 G6g@100
+7050 grpo_G6h gruenau12 l40:1, gpu-staff, 8 CPU / 60G, MIN_FREE_MIB=44000: 2b_p50_G6h_frachard_hardened (G6g config, line_stats hardened 45c128d)
+7051 grpo_G6h resubmit, gruenau7 rtxa6000:1, partition gpu, 8 CPU / 60G, MIN_FREE_MIB=44000 (7050 guard exit 3: gruenau12 L40 had 26 GB free)
