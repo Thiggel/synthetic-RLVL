@@ -70,6 +70,10 @@ MODELS = [
     ("SFT p50 x3 @781", SFT / "qwen35_2b_dolci_rlvlgen_p50_x3_lr5em6_seed3407/checkpoint-781"),
     ("SFT p50 x3 @1562", SFT / "qwen35_2b_dolci_rlvlgen_p50_x3_lr5em6_seed3407/checkpoint-1562"),
     ("SFT p50 x3 final", SFT / "qwen35_2b_dolci_rlvlgen_p50_x3_lr5em6_seed3407/final"),
+    ("G8 cvf (lc fp32m base) @100", GRPO / "2b_lcfp32m_G8_cvf/checkpoint-100"),
+    ("G8 cvf (lc fp32m base) final", GRPO / "2b_lcfp32m_G8_cvf/final"),
+    ("G9 cvf (x3@781 base) @100", GRPO / "2b_x3at781_G9_cvf/checkpoint-100"),
+    ("G9 cvf (x3@781 base) final", GRPO / "2b_x3at781_G9_cvf/final"),
 ]
 KEYS = ["has_proof", "grammatical", "format_ok", "valid_eval", "circular", "n_taut", "valid", "in_system", "correct"]
 
