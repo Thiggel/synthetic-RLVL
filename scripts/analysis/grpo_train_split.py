@@ -18,7 +18,8 @@ REPO = Path(__file__).resolve().parents[2]
 DATA = Path("/vol/tmp2/laitenbf/rlvl_data")
 POOL = DATA / "datasets/formal_mixture_20260925/pool"
 GRPO = DATA / "grpo_formal_20260928"
-RUNS = {"G6g frac_hard + gen": "2b_p50_G6g_frachard_gen", "G6h frac_hard hardened + gen": "2b_p50_G6h_frachard_hardened"}
+RUNS = {"G6g frac_hard + gen": "2b_p50_G6g_frachard_gen", "G6h frac_hard hardened + gen": "2b_p50_G6h_frachard_hardened",
+        "G6i G6h + restatement fix": "2b_p50_G6i_frachard_restate"}
 BLOCK = 10
 
 
@@ -44,7 +45,7 @@ def main():
     import matplotlib.pyplot as plt
     fig, axes = plt.subplots(1, 2, figsize=(13, 4.4), sharey=True)
     for ax, part in zip(axes, ("gen", "dolci")):
-        for (name, pts), c in zip(res.items(), ("tab:red", "tab:blue")):
+        for (name, pts), c in zip(res.items(), ("tab:red", "tab:blue", "tab:green")):
             xs = [x for x, _ in pts]
             ax.plot(xs, [d["reward"] for _, d in pts], "-", c=c, alpha=.45, label=f"{name}: reward (frac_hard, all items)")
             ax.plot(xs, [d[f"valid_{part}"] for _, d in pts], "-o", ms=3, c=c, label=f"{name}: valid")
