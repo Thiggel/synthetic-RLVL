@@ -179,3 +179,4 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7000 grpo_G5c CANCELLED (reward hacked) (2026-09-29)
 7088 fmix_2b_p50_x3 2b p50 x3 300k rows gruenau12 2xL40 (2026-09-29)
 7093 fmix_eval_9b_p25 resubmit (6842 failed: Mamba cache blocks 219 < 256 on shared L40), gruenau12 l40:1, MAX_NUM_SEQS=128 (2026-09-29)
+7098 grpo_gate G7@50 + G6i@50, gruenau8 A6000 (2026-09-29)
