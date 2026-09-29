@@ -204,3 +204,7 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 2026-09-29 18:45 gruenau12 cap fix: 6844 6846 6923 requeued; 6844 6846 6847 6848 6923 6924 6925 moved to gruenau11 gres h100nvl:1 (lanes 6844>6846>6847>6848, 6923>6924>6925)
 7167 grpo_G8 2b p50+lc_fp32m arm cvf gen+Dolci gruenau9 A100 (2026-09-29)
 7168 gate_G8 rl_gate_dolci G8@100 G8 final, gruenau9 afterany 7167 (2026-09-29)
+7215 fmix_2b_p10_fp32m 2b p10 rerun, ZeRO-2 fp32 master weights, gruenau11 1x H100 NVL (2026-09-29)
+7217 fmix_2b_p25_fp32m 2b p25 rerun, ZeRO-2 fp32 master weights, gruenau11 1x H100 NVL (2026-09-29)
+7215 -> qwen35_2b_dolci_rlvlgen_p10_lr5em6_seed3407_fp32m: eval=7216 gate=7221 bench=7222 tagged=7223 (sequential, 1 GPU, gruenau11) (2026-09-29)
+7217 -> qwen35_2b_dolci_rlvlgen_p25_lr5em6_seed3407_fp32m: eval=7218 gate=7224 bench=7225 tagged=7226 (sequential, 1 GPU, gruenau11) (2026-09-29)
