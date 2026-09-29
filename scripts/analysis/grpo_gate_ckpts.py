@@ -28,6 +28,7 @@ MODELS = [
     ("G0 correct (p0) @50", GRPO / "2b_p0_G0_correct_bal/checkpoint-50"),
     ("G0 correct (p0) @100", GRPO / "2b_p0_G0_correct_bal/checkpoint-100"),
     ("G0 correct (p0) @150", GRPO / "2b_p0_G0_correct_bal/checkpoint-150"),
+    ("G0 correct (p0) final", GRPO / "2b_p0_G0_correct_bal/final"),
     ("G1 correct @100", GRPO / "2b_p50_G1_correct_bal/checkpoint-100"),
     ("G1 correct @150", GRPO / "2b_p50_G1_correct_bal/checkpoint-150"),
     ("G1 correct final", GRPO / "2b_p50_G1_correct_bal/final"),
