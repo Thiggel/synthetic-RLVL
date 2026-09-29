@@ -121,3 +121,26 @@ Tagged overall (grammatical / valid / correct-on-answerable / in-system, %): p10
 - Multi-step deductive reasoning in natural-language CoT improves (ProofWriter CoT +9–11 at p10/p25, largest at depth 2–3), peaking at p25 and falling back at p50.
 - Costs grow with X: BBH formal_fallacies (-7 to -11) and MuSiQue (-5 at p50).
 - Stage-1 recommendation at 9B: X = 25% (best CoT transfer, in-domain valid .963, tagged validity already at its plateau, no general-benchmark cost). Single seed; GPQA/FOLIO deltas are within noise.
+
+## 2026-09-29 23:25: p50 x3, checkpoint-781 (first point of the longer SFT, ~50k generator rows)
+
+Run: `qwen35_2b_dolci_rlvlgen_p50_x3` (p50 recipe at 3x the rows, 2342 steps; ZeRO-2 with fp32 master weights, so it does not have the bf16 precision bug). Checkpoint-781 has seen ~50k generator rows, as many as the original p50 final. Its LR is not decayed yet (cosine over 2342 steps). Figure: `figures/sft_scale_curve.png`.
+
+In-domain (2000 unseen generator problems):
+
+| model | generator rows | faithful | grammatical | valid | answer acc |
+|---|---|---|---|---|---|
+| 2B p50 (bf16 DDP, crippled) | 50k | — | — | .675 | — |
+| **2B p50 x3 @781 (fp32 master)** | ~50k | .986 | .996 | **.942** | .976 |
+| 9B p10 | 10k | — | — | .944 | — |
+| 9B p50 | 50k | — | — | .983 | — |
+
+Dolci gate (`rl_gate_dolci`, answers must also be proven):
+
+| model | has_proof | grammatical | format_ok | valid_eval | valid | in-system | correct |
+|---|---|---|---|---|---|---|---|
+| SFT p50 | .399 | .082 | .328 | .008 | .004 | .002 | .222 |
+| SFT p50 + lemma catalog (fp32) | .598 | .189 | .484 | .011 | .007 | .003 | .224 |
+| **SFT p50 x3 @781** | .299 | .134 | .275 | .023 | .007 | .004 | .214 |
+
+**Reading.** With correct precision, the 2B model reaches 9B-level in-domain validity after the same 50k generator rows: .942 vs .675. So most of the earlier 2B/9B gap was the precision bug, not model size. Transfer to Dolci does not follow. valid_eval doubles (.008 → .023, the best SFT so far), but end-to-end valid stays at .007 and the model writes fewer proofs (has_proof .30). In-domain competence is now saturated at 2B. The remaining bottleneck is transfer to natural prompts. That is the Stage-2 GRPO / EI question, not a question of longer SFT. Checkpoints 1562 and final follow (the watcher submits their eval and gate automatically), and the corrected 2B p00/p10/p25/p50 reruns (7146/7215/7217/7147) give the matched mixture curve.
