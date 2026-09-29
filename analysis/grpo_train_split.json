@@ -183,33 +183,131 @@
    }
   ],
   [
-   138,
+   140,
+   {
+    "n": 2560.0,
+    "gen_share": 0.253125,
+    "reward": 0.7563151168287732,
+    "valid_gen": 0.0,
+    "grammatical_gen": 0.3395061728395062,
+    "correct_gen": 0.7932098765432098,
+    "valid_dolci": 0.0,
+    "grammatical_dolci": 0.18357740585774057,
+    "correct_dolci": 0.19351464435146443
+   }
+  ],
+  [
+   150,
+   {
+    "n": 2560.0,
+    "gen_share": 0.253125,
+    "reward": 0.7100694566615857,
+    "valid_gen": 0.0,
+    "grammatical_gen": 0.0,
+    "correct_gen": 0.6373456790123457,
+    "valid_dolci": 0.0,
+    "grammatical_dolci": 0.0041841004184100415,
+    "correct_dolci": 0.1961297071129707
+   }
+  ],
+  [
+   160,
+   {
+    "n": 2560.0,
+    "gen_share": 0.30625,
+    "reward": 0.7604817824205383,
+    "valid_gen": 0.0,
+    "grammatical_gen": 0.003826530612244898,
+    "correct_gen": 0.7448979591836735,
+    "valid_dolci": 0.0,
+    "grammatical_dolci": 0.028153153153153154,
+    "correct_dolci": 0.22466216216216217
+   }
+  ],
+  [
+   170,
+   {
+    "n": 2560.0,
+    "gen_share": 0.34375,
+    "reward": 0.7855468867695891,
+    "valid_gen": 0.0,
+    "grammatical_gen": 0.0,
+    "correct_gen": 0.7875,
+    "valid_dolci": 0.0,
+    "grammatical_dolci": 0.03214285714285714,
+    "correct_dolci": 0.20892857142857144
+   }
+  ],
+  [
+   180,
+   {
+    "n": 2560.0,
+    "gen_share": 0.290625,
+    "reward": 0.7766927208518609,
+    "valid_gen": 0.0,
+    "grammatical_gen": 0.005376344086021506,
+    "correct_gen": 0.7674731182795699,
+    "valid_dolci": 0.0,
+    "grammatical_dolci": 0.045704845814977975,
+    "correct_dolci": 0.20154185022026433
+   }
+  ],
+  [
+   190,
+   {
+    "n": 2560.0,
+    "gen_share": 0.278125,
+    "reward": 0.7882812614087016,
+    "valid_gen": 0.0,
+    "grammatical_gen": 0.0,
+    "correct_gen": 0.8300561797752809,
+    "valid_dolci": 0.0,
+    "grammatical_dolci": 0.005952380952380952,
+    "correct_dolci": 0.2532467532467532
+   }
+  ],
+  [
+   198,
    {
     "n": 2048.0,
-    "gen_share": 0.2421875,
-    "reward": 0.7524414192012046,
+    "gen_share": 0.296875,
+    "reward": 0.7907714954053517,
     "valid_gen": 0.0,
-    "grammatical_gen": 0.4213709677419355,
-    "correct_gen": 0.7842741935483871,
+    "grammatical_gen": 0.0,
+    "correct_gen": 0.8042763157894737,
     "valid_dolci": 0.0,
-    "grammatical_dolci": 0.19136597938144329,
-    "correct_dolci": 0.18878865979381443
+    "grammatical_dolci": 0.013888888888888888,
+    "correct_dolci": 0.27569444444444446
    }
   ]
  ],
  "G6h frac_hard hardened + gen": [
   [
-   5,
+   10,
    {
-    "n": 1280.0,
-    "gen_share": 0.34375,
-    "reward": 0.25721375010180053,
-    "valid_gen": 0.42272727272727273,
-    "grammatical_gen": 0.7477272727272727,
-    "correct_gen": 0.7727272727272727,
-    "valid_dolci": 0.002380952380952381,
-    "grammatical_dolci": 0.04523809523809524,
-    "correct_dolci": 0.15119047619047618
+    "n": 2560.0,
+    "gen_share": 0.278125,
+    "reward": 0.22747361038345842,
+    "valid_gen": 0.3904494382022472,
+    "grammatical_gen": 0.726123595505618,
+    "correct_gen": 0.797752808988764,
+    "valid_dolci": 0.00487012987012987,
+    "grammatical_dolci": 0.05032467532467533,
+    "correct_dolci": 0.1812770562770563
+   }
+  ],
+  [
+   19,
+   {
+    "n": 2304.0,
+    "gen_share": 0.2638888888888889,
+    "reward": 0.24479491316297855,
+    "valid_gen": 0.45394736842105265,
+    "grammatical_gen": 0.7648026315789473,
+    "correct_gen": 0.8289473684210527,
+    "valid_dolci": 0.009433962264150943,
+    "grammatical_dolci": 0.055424528301886794,
+    "correct_dolci": 0.2417452830188679
    }
   ]
  ]

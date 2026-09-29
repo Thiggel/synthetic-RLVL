@@ -295,6 +295,8 @@ def make_reward(name: str):
             comp = components(rec, _text(c))
             if name == "correct_x_valid":
                 out.append(comp["correct"] * comp["valid"])
+            elif name == "cvf":  # G7: correct x valid x faithful premises (bogus_mp is valid on 69% of items)
+                out.append(comp["correct"] * comp["valid"] * comp["prem_ok"])
             elif name == "gvc":
                 out.append((comp["grammatical"] + comp["valid"] + comp["correct"]) / 3.0)
             else:
@@ -306,7 +308,7 @@ def make_reward(name: str):
 
 ARMS = {"correct": "correct", "correct_x_valid": "correct_x_valid", "gvc": "gvc", "valid": "valid",
         "lines": "lines", "lines_fmt": "lines_fmt", "lines_raw": "lines_raw",
-        "frac": "frac", "frac_hard": "frac_hard"}
+        "frac": "frac", "frac_hard": "frac_hard", "cvf": "cvf"}
 LOGGED = ["correct", "valid", "grammatical", "in_system", "has_proof", "valid_strict", "lines", "n_parsed", "n_ok",
           "n_steps", "circular", "n_taut", "format_ok", "valid_prem", "frac_parsed", "frac_ok", "n_prem_bad", "prem_ok", "frac"]
 

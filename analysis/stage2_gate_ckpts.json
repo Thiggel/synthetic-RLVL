@@ -76,7 +76,7 @@
    "format_ok": 0.32842105263157895,
    "valid_eval": 0.008421052631578947,
    "circular": 0.05368421052631579,
-   "n_taut": 0.009473684210526316,
+   "n_taut": 0.024210526315789474,
    "valid": 0.004210526315789474,
    "in_system": 0.002105263157894737,
    "correct": 0.22210526315789475
@@ -110,7 +110,7 @@
     "format_ok": 0.48,
     "valid_eval": 0.015,
     "circular": 0.035,
-    "n_taut": 0.025,
+    "n_taut": 0.06,
     "valid": 0.015,
     "in_system": 0.01,
     "correct": 0.345
@@ -121,7 +121,7 @@
     "format_ok": 0.405,
     "valid_eval": 0.005,
     "circular": 0.085,
-    "n_taut": 0.015,
+    "n_taut": 0.03,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.385
@@ -132,7 +132,7 @@
     "format_ok": 0.86,
     "valid_eval": 0.03,
     "circular": 0.19,
-    "n_taut": 0.01,
+    "n_taut": 0.05,
     "valid": 0.01,
     "in_system": 0.0,
     "correct": 0.01
@@ -426,7 +426,7 @@
    "format_ok": 0.1705263157894737,
    "valid_eval": 0.0,
    "circular": 0.004210526315789474,
-   "n_taut": 0.0,
+   "n_taut": 0.0010526315789473684,
    "valid": 0.0,
    "in_system": 0.0,
    "correct": 0.36947368421052634
@@ -471,7 +471,7 @@
     "format_ok": 0.385,
     "valid_eval": 0.0,
     "circular": 0.015,
-    "n_taut": 0.0,
+    "n_taut": 0.005,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.695
@@ -636,7 +636,7 @@
    "format_ok": 0.7063157894736842,
    "valid_eval": 0.08105263157894736,
    "circular": 0.28526315789473683,
-   "n_taut": 0.04631578947368421,
+   "n_taut": 0.28421052631578947,
    "valid": 0.017894736842105262,
    "in_system": 0.004210526315789474,
    "correct": 0.18842105263157893
@@ -648,7 +648,7 @@
     "format_ok": 0.66,
     "valid_eval": 0.01,
     "circular": 0.20333333333333334,
-    "n_taut": 0.06333333333333334,
+    "n_taut": 0.30333333333333334,
     "valid": 0.006666666666666667,
     "in_system": 0.0,
     "correct": 0.06
@@ -659,7 +659,7 @@
     "format_ok": 0.5933333333333334,
     "valid_eval": 0.0,
     "circular": 0.22666666666666666,
-    "n_taut": 0.02,
+    "n_taut": 0.30666666666666664,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.03333333333333333
@@ -670,7 +670,7 @@
     "format_ok": 0.7,
     "valid_eval": 0.045,
     "circular": 0.145,
-    "n_taut": 0.06,
+    "n_taut": 0.385,
     "valid": 0.03,
     "in_system": 0.01,
     "correct": 0.215
@@ -681,7 +681,7 @@
     "format_ok": 0.77,
     "valid_eval": 0.265,
     "circular": 0.54,
-    "n_taut": 0.03,
+    "n_taut": 0.14,
     "valid": 0.02,
     "in_system": 0.01,
     "correct": 0.565
@@ -692,7 +692,7 @@
     "format_ok": 0.9,
     "valid_eval": 0.12,
     "circular": 0.39,
-    "n_taut": 0.04,
+    "n_taut": 0.28,
     "valid": 0.05,
     "in_system": 0.0,
     "correct": 0.0
@@ -706,7 +706,7 @@
    "format_ok": 0.0,
    "valid_eval": 0.005263157894736842,
    "circular": 0.17789473684210527,
-   "n_taut": 0.2294736842105263,
+   "n_taut": 1.3610526315789473,
    "valid": 0.002105263157894737,
    "in_system": 0.0010526315789473684,
    "correct": 0.14421052631578948
@@ -718,7 +718,7 @@
     "format_ok": 0.0,
     "valid_eval": 0.0,
     "circular": 0.15333333333333332,
-    "n_taut": 0.22,
+    "n_taut": 1.35,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.02666666666666667
@@ -729,7 +729,7 @@
     "format_ok": 0.0,
     "valid_eval": 0.0,
     "circular": 0.12666666666666668,
-    "n_taut": 0.32,
+    "n_taut": 1.5866666666666667,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.02666666666666667
@@ -740,7 +740,7 @@
     "format_ok": 0.0,
     "valid_eval": 0.01,
     "circular": 0.145,
-    "n_taut": 0.105,
+    "n_taut": 0.97,
     "valid": 0.01,
     "in_system": 0.005,
     "correct": 0.225
@@ -751,7 +751,7 @@
     "format_ok": 0.0,
     "valid_eval": 0.015,
     "circular": 0.275,
-    "n_taut": 0.265,
+    "n_taut": 1.4,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.4
@@ -762,7 +762,7 @@
     "format_ok": 0.0,
     "valid_eval": 0.0,
     "circular": 0.2,
-    "n_taut": 0.3,
+    "n_taut": 1.76,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.0
@@ -776,7 +776,7 @@
    "format_ok": 0.34421052631578947,
    "valid_eval": 0.034736842105263156,
    "circular": 0.17684210526315788,
-   "n_taut": 0.014736842105263158,
+   "n_taut": 0.02,
    "valid": 0.0010526315789473684,
    "in_system": 0.0010526315789473684,
    "correct": 0.3357894736842105
@@ -810,7 +810,7 @@
     "format_ok": 0.385,
     "valid_eval": 0.015,
     "circular": 0.055,
-    "n_taut": 0.025,
+    "n_taut": 0.03,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.495
@@ -821,7 +821,7 @@
     "format_ok": 0.79,
     "valid_eval": 0.12,
     "circular": 0.59,
-    "n_taut": 0.005,
+    "n_taut": 0.015,
     "valid": 0.005,
     "in_system": 0.005,
     "correct": 0.635
@@ -832,7 +832,7 @@
     "format_ok": 0.86,
     "valid_eval": 0.06,
     "circular": 0.38,
-    "n_taut": 0.08,
+    "n_taut": 0.1,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.02
@@ -846,7 +846,7 @@
    "format_ok": 0.05157894736842105,
    "valid_eval": 0.0,
    "circular": 0.9231578947368421,
-   "n_taut": 0.011578947368421053,
+   "n_taut": 0.01368421052631579,
    "valid": 0.0,
    "in_system": 0.0,
    "correct": 0.25894736842105265
@@ -880,7 +880,7 @@
     "format_ok": 0.015,
     "valid_eval": 0.0,
     "circular": 0.74,
-    "n_taut": 0.04,
+    "n_taut": 0.05,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.325
@@ -979,6 +979,76 @@
    }
   }
  },
+ "G3b gvc hardened final": {
+  "all": {
+   "has_proof": 1.0,
+   "grammatical": 1.0,
+   "format_ok": 0.0,
+   "valid_eval": 0.0,
+   "circular": 1.0,
+   "n_taut": 0.0,
+   "valid": 0.0,
+   "in_system": 0.0,
+   "correct": 0.36210526315789476
+  },
+  "per_bench": {
+   "dolci_math": {
+    "has_proof": 1.0,
+    "grammatical": 1.0,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 1.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.23333333333333334
+   },
+   "dolci_dapo": {
+    "has_proof": 1.0,
+    "grammatical": 1.0,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 1.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.19333333333333333
+   },
+   "dolci_wordprob": {
+    "has_proof": 1.0,
+    "grammatical": 1.0,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 1.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.62
+   },
+   "dolci_yesno": {
+    "has_proof": 1.0,
+    "grammatical": 1.0,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 1.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.6
+   },
+   "dolci_knowledge": {
+    "has_proof": 1.0,
+    "grammatical": 1.0,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 1.0,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.01
+   }
+  }
+ },
  "G5c lines x format @50": {
   "all": {
    "has_proof": 0.9989473684210526,
@@ -986,7 +1056,7 @@
    "format_ok": 0.8094736842105263,
    "valid_eval": 0.028421052631578948,
    "circular": 0.26842105263157895,
-   "n_taut": 0.04631578947368421,
+   "n_taut": 0.5547368421052632,
    "valid": 0.008421052631578947,
    "in_system": 0.002105263157894737,
    "correct": 0.16
@@ -998,7 +1068,7 @@
     "format_ok": 0.7633333333333333,
     "valid_eval": 0.0033333333333333335,
     "circular": 0.24666666666666667,
-    "n_taut": 0.07333333333333333,
+    "n_taut": 0.65,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.02
@@ -1009,7 +1079,7 @@
     "format_ok": 0.6533333333333333,
     "valid_eval": 0.0,
     "circular": 0.19333333333333333,
-    "n_taut": 0.05333333333333334,
+    "n_taut": 0.7666666666666667,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.013333333333333334
@@ -1020,7 +1090,7 @@
     "format_ok": 0.875,
     "valid_eval": 0.005,
     "circular": 0.15,
-    "n_taut": 0.035,
+    "n_taut": 0.52,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.14
@@ -1031,7 +1101,7 @@
     "format_ok": 0.88,
     "valid_eval": 0.1,
     "circular": 0.425,
-    "n_taut": 0.025,
+    "n_taut": 0.345,
     "valid": 0.02,
     "in_system": 0.01,
     "correct": 0.58
@@ -1042,7 +1112,7 @@
     "format_ok": 0.91,
     "valid_eval": 0.05,
     "circular": 0.37,
-    "n_taut": 0.02,
+    "n_taut": 0.44,
     "valid": 0.04,
     "in_system": 0.0,
     "correct": 0.0
@@ -1056,7 +1126,7 @@
    "format_ok": 0.5042105263157894,
    "valid_eval": 0.0,
    "circular": 0.19473684210526315,
-   "n_taut": 0.32105263157894737,
+   "n_taut": 2.6589473684210527,
    "valid": 0.0,
    "in_system": 0.0,
    "correct": 0.11263157894736842
@@ -1068,7 +1138,7 @@
     "format_ok": 0.41333333333333333,
     "valid_eval": 0.0,
     "circular": 0.18666666666666668,
-    "n_taut": 0.41,
+    "n_taut": 2.9233333333333333,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.04
@@ -1079,7 +1149,7 @@
     "format_ok": 0.4,
     "valid_eval": 0.0,
     "circular": 0.20666666666666667,
-    "n_taut": 0.2866666666666667,
+    "n_taut": 2.52,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.02666666666666667
@@ -1090,7 +1160,7 @@
     "format_ok": 0.67,
     "valid_eval": 0.0,
     "circular": 0.15,
-    "n_taut": 0.34,
+    "n_taut": 3.03,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.185
@@ -1101,7 +1171,7 @@
     "format_ok": 0.485,
     "valid_eval": 0.0,
     "circular": 0.27,
-    "n_taut": 0.25,
+    "n_taut": 2.12,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.265
@@ -1112,7 +1182,7 @@
     "format_ok": 0.64,
     "valid_eval": 0.0,
     "circular": 0.14,
-    "n_taut": 0.21,
+    "n_taut": 2.41,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.01
@@ -1126,7 +1196,7 @@
    "format_ok": 0.4368421052631579,
    "valid_eval": 0.008421052631578947,
    "circular": 0.0863157894736842,
-   "n_taut": 0.029473684210526315,
+   "n_taut": 0.061052631578947365,
    "valid": 0.0010526315789473684,
    "in_system": 0.0010526315789473684,
    "correct": 0.2905263157894737
@@ -1138,7 +1208,7 @@
     "format_ok": 0.18666666666666668,
     "valid_eval": 0.0033333333333333335,
     "circular": 0.02,
-    "n_taut": 0.043333333333333335,
+    "n_taut": 0.05333333333333334,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.15
@@ -1160,7 +1230,7 @@
     "format_ok": 0.56,
     "valid_eval": 0.0,
     "circular": 0.08,
-    "n_taut": 0.02,
+    "n_taut": 0.03,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.425
@@ -1171,7 +1241,7 @@
     "format_ok": 0.785,
     "valid_eval": 0.03,
     "circular": 0.15,
-    "n_taut": 0.02,
+    "n_taut": 0.1,
     "valid": 0.005,
     "in_system": 0.005,
     "correct": 0.595
@@ -1182,7 +1252,7 @@
     "format_ok": 0.86,
     "valid_eval": 0.01,
     "circular": 0.29,
-    "n_taut": 0.07,
+    "n_taut": 0.16,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.01
@@ -1196,7 +1266,7 @@
    "format_ok": 0.9557894736842105,
    "valid_eval": 0.0010526315789473684,
    "circular": 0.10736842105263159,
-   "n_taut": 0.05473684210526316,
+   "n_taut": 0.46421052631578946,
    "valid": 0.0010526315789473684,
    "in_system": 0.0,
    "correct": 0.23578947368421052
@@ -1208,7 +1278,7 @@
     "format_ok": 0.9233333333333333,
     "valid_eval": 0.0,
     "circular": 0.056666666666666664,
-    "n_taut": 0.09,
+    "n_taut": 0.5566666666666666,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.1
@@ -1219,7 +1289,7 @@
     "format_ok": 0.9666666666666667,
     "valid_eval": 0.0,
     "circular": 0.07333333333333333,
-    "n_taut": 0.10666666666666667,
+    "n_taut": 0.7533333333333333,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.02666666666666667
@@ -1230,7 +1300,7 @@
     "format_ok": 0.98,
     "valid_eval": 0.0,
     "circular": 0.055,
-    "n_taut": 0.02,
+    "n_taut": 0.34,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.285
@@ -1241,7 +1311,7 @@
     "format_ok": 0.96,
     "valid_eval": 0.005,
     "circular": 0.2,
-    "n_taut": 0.025,
+    "n_taut": 0.245,
     "valid": 0.005,
     "in_system": 0.0,
     "correct": 0.66
@@ -1252,7 +1322,7 @@
     "format_ok": 0.98,
     "valid_eval": 0.0,
     "circular": 0.23,
-    "n_taut": 0.0,
+    "n_taut": 0.44,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.01
@@ -1266,7 +1336,7 @@
    "format_ok": 0.9978947368421053,
    "valid_eval": 0.0,
    "circular": 0.0,
-   "n_taut": 0.0,
+   "n_taut": 1.0,
    "valid": 0.0,
    "in_system": 0.0,
    "correct": 0.22631578947368422
@@ -1278,7 +1348,7 @@
     "format_ok": 1.0,
     "valid_eval": 0.0,
     "circular": 0.0,
-    "n_taut": 0.0,
+    "n_taut": 1.0,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.08333333333333333
@@ -1289,7 +1359,7 @@
     "format_ok": 1.0,
     "valid_eval": 0.0,
     "circular": 0.0,
-    "n_taut": 0.0,
+    "n_taut": 1.0,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.03333333333333333
@@ -1300,7 +1370,7 @@
     "format_ok": 0.995,
     "valid_eval": 0.0,
     "circular": 0.0,
-    "n_taut": 0.0,
+    "n_taut": 1.0,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.21
@@ -1311,7 +1381,7 @@
     "format_ok": 0.995,
     "valid_eval": 0.0,
     "circular": 0.0,
-    "n_taut": 0.0,
+    "n_taut": 1.0,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.7
@@ -1322,7 +1392,77 @@
     "format_ok": 1.0,
     "valid_eval": 0.0,
     "circular": 0.0,
-    "n_taut": 0.0,
+    "n_taut": 1.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.03
+   }
+  }
+ },
+ "G6 frac_hard final": {
+  "all": {
+   "has_proof": 1.0,
+   "grammatical": 1.0,
+   "format_ok": 1.0,
+   "valid_eval": 0.0,
+   "circular": 0.0,
+   "n_taut": 1.0,
+   "valid": 0.0,
+   "in_system": 0.0,
+   "correct": 0.24736842105263157
+  },
+  "per_bench": {
+   "dolci_math": {
+    "has_proof": 1.0,
+    "grammatical": 1.0,
+    "format_ok": 1.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 1.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.11666666666666667
+   },
+   "dolci_dapo": {
+    "has_proof": 1.0,
+    "grammatical": 1.0,
+    "format_ok": 1.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 1.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.02666666666666667
+   },
+   "dolci_wordprob": {
+    "has_proof": 1.0,
+    "grammatical": 1.0,
+    "format_ok": 1.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 1.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.23
+   },
+   "dolci_yesno": {
+    "has_proof": 1.0,
+    "grammatical": 1.0,
+    "format_ok": 1.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 1.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.735
+   },
+   "dolci_knowledge": {
+    "has_proof": 1.0,
+    "grammatical": 1.0,
+    "format_ok": 1.0,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 1.0,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.03
@@ -1336,7 +1476,7 @@
    "format_ok": 0.5157894736842106,
    "valid_eval": 0.01368421052631579,
    "circular": 0.061052631578947365,
-   "n_taut": 0.01263157894736842,
+   "n_taut": 0.07052631578947369,
    "valid": 0.004210526315789474,
    "in_system": 0.002105263157894737,
    "correct": 0.2968421052631579
@@ -1348,7 +1488,7 @@
     "format_ok": 0.26666666666666666,
     "valid_eval": 0.0033333333333333335,
     "circular": 0.03,
-    "n_taut": 0.0033333333333333335,
+    "n_taut": 0.016666666666666666,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.12333333333333334
@@ -1370,7 +1510,7 @@
     "format_ok": 0.655,
     "valid_eval": 0.015,
     "circular": 0.045,
-    "n_taut": 0.02,
+    "n_taut": 0.205,
     "valid": 0.015,
     "in_system": 0.01,
     "correct": 0.425
@@ -1381,7 +1521,7 @@
     "format_ok": 0.87,
     "valid_eval": 0.03,
     "circular": 0.105,
-    "n_taut": 0.01,
+    "n_taut": 0.065,
     "valid": 0.005,
     "in_system": 0.0,
     "correct": 0.665
@@ -1392,7 +1532,7 @@
     "format_ok": 0.97,
     "valid_eval": 0.03,
     "circular": 0.19,
-    "n_taut": 0.04,
+    "n_taut": 0.07,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.01
@@ -1406,7 +1546,7 @@
    "format_ok": 0.9336842105263158,
    "valid_eval": 0.00631578947368421,
    "circular": 0.09263157894736843,
-   "n_taut": 0.01263157894736842,
+   "n_taut": 0.037894736842105266,
    "valid": 0.0,
    "in_system": 0.0,
    "correct": 0.23578947368421052
@@ -1418,7 +1558,7 @@
     "format_ok": 0.8933333333333333,
     "valid_eval": 0.0033333333333333335,
     "circular": 0.06,
-    "n_taut": 0.02666666666666667,
+    "n_taut": 0.056666666666666664,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.08
@@ -1429,7 +1569,7 @@
     "format_ok": 0.8666666666666667,
     "valid_eval": 0.0,
     "circular": 0.09333333333333334,
-    "n_taut": 0.02,
+    "n_taut": 0.04,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.02
@@ -1440,7 +1580,7 @@
     "format_ok": 0.96,
     "valid_eval": 0.0,
     "circular": 0.055,
-    "n_taut": 0.0,
+    "n_taut": 0.025,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.335
@@ -1451,7 +1591,7 @@
     "format_ok": 0.985,
     "valid_eval": 0.015,
     "circular": 0.065,
-    "n_taut": 0.0,
+    "n_taut": 0.01,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.65
@@ -1462,7 +1602,7 @@
     "format_ok": 1.0,
     "valid_eval": 0.02,
     "circular": 0.32,
-    "n_taut": 0.01,
+    "n_taut": 0.06,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.0
@@ -1476,7 +1616,7 @@
    "format_ok": 0.8189473684210526,
    "valid_eval": 0.0,
    "circular": 0.0010526315789473684,
-   "n_taut": 0.0,
+   "n_taut": 0.0010526315789473684,
    "valid": 0.0,
    "in_system": 0.0,
    "correct": 0.21157894736842106
@@ -1532,7 +1672,77 @@
     "format_ok": 0.84,
     "valid_eval": 0.0,
     "circular": 0.01,
-    "n_taut": 0.0,
+    "n_taut": 0.01,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.0
+   }
+  }
+ },
+ "G6g frac_hard + gen final": {
+  "all": {
+   "has_proof": 1.0,
+   "grammatical": 0.003157894736842105,
+   "format_ok": 0.9284210526315789,
+   "valid_eval": 0.0,
+   "circular": 0.0,
+   "n_taut": 0.02526315789473684,
+   "valid": 0.0,
+   "in_system": 0.0,
+   "correct": 0.2326315789473684
+  },
+  "per_bench": {
+   "dolci_math": {
+    "has_proof": 1.0,
+    "grammatical": 0.0,
+    "format_ok": 0.9166666666666666,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.013333333333333334,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.07666666666666666
+   },
+   "dolci_dapo": {
+    "has_proof": 1.0,
+    "grammatical": 0.0,
+    "format_ok": 0.8133333333333334,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.006666666666666667,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.05333333333333334
+   },
+   "dolci_wordprob": {
+    "has_proof": 1.0,
+    "grammatical": 0.005,
+    "format_ok": 0.95,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.03,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.27
+   },
+   "dolci_yesno": {
+    "has_proof": 1.0,
+    "grammatical": 0.01,
+    "format_ok": 0.985,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.02,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.68
+   },
+   "dolci_knowledge": {
+    "has_proof": 1.0,
+    "grammatical": 0.0,
+    "format_ok": 0.98,
+    "valid_eval": 0.0,
+    "circular": 0.0,
+    "n_taut": 0.09,
     "valid": 0.0,
     "in_system": 0.0,
     "correct": 0.0

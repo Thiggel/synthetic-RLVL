@@ -1,0 +1,173 @@
+{
+ "lib": {
+  "ab": {
+   "n": 1,
+   "seen": 1
+  },
+  "act": {
+   "n": 1,
+   "seen": 1
+  },
+  "agent": {
+   "n": 7,
+   "seen": 5
+  },
+  "arith": {
+   "n": 47,
+   "seen": 0
+  },
+  "eq": {
+   "n": 4,
+   "seen": 1
+  },
+  "event": {
+   "n": 4,
+   "seen": 4
+  },
+  "graph": {
+   "n": 6,
+   "seen": 3
+  },
+  "list": {
+   "n": 11,
+   "seen": 0
+  },
+  "logic": {
+   "n": 18,
+   "seen": 17
+  },
+  "modal": {
+   "n": 2,
+   "seen": 0
+  },
+  "order": {
+   "n": 4,
+   "seen": 3
+  },
+  "prob": {
+   "n": 6,
+   "seen": 5
+  },
+  "rel": {
+   "n": 9,
+   "seen": 2
+  },
+  "set": {
+   "n": 6,
+   "seen": 5
+  },
+  "sit": {
+   "n": 5,
+   "seen": 4
+  },
+  "space": {
+   "n": 5,
+   "seen": 5
+  }
+ },
+ "n_lemmas": 136,
+ "n_seen": 56,
+ "train_cites_nonexistent": 0,
+ "models": {
+  "2B p50 SFT": {
+   "formal_eval": {
+    "cites": 2832,
+    "nonexistent": 214,
+    "real_unseen": 14,
+    "top_nonexistent": [
+     "space.above_trans",
+     "event.no_suc",
+     "order.all",
+     "logic.not",
+     "term.func_left",
+     "logic.not_def",
+     "logic.imp_not",
+     "logic.not_or",
+     "logic.sym",
+     "set.simpl",
+     "logic.su",
+     "event.step"
+    ],
+    "real_seen": 2604
+   },
+   "formal_bench_tagged": {
+    "cites": 9349,
+    "nonexistent": 6671,
+    "real_unseen": 79,
+    "top_nonexistent": [
+     "logic.imp_not",
+     "logic.refl",
+     "space.step",
+     "logic.iff",
+     "logic.imp",
+     "logic.use",
+     "logic.iff_def",
+     "agent",
+     "space.see",
+     "agent.sees_as",
+     "rel.contra",
+     "logic.ass"
+    ],
+    "real_seen": 2599
+   },
+   "rl_gate_dolci": {
+    "cites": 611,
+    "nonexistent": 585,
+    "real_unseen": 0,
+    "top_nonexistent": [
+     "pollution_model",
+     "term.wre",
+     "term.refl",
+     "logic.iff_def",
+     "set.forall_def",
+     "pol.root_eq",
+     "graph.basic",
+     "algebra",
+     "set.ord_def",
+     "logic.iff_cond",
+     "tatal.subtract",
+     "ring.add_assoc"
+    ],
+    "real_seen": 26
+   }
+  },
+  "9B p50 SFT": {
+   "formal_eval": {
+    "cites": 2399,
+    "nonexistent": 0,
+    "real_unseen": 0,
+    "top_nonexistent": [],
+    "real_seen": 2399
+   },
+   "rl_gate_dolci": {
+    "cites": 1241,
+    "nonexistent": 1126,
+    "real_unseen": 0,
+    "top_nonexistent": [
+     "eq.pow",
+     "eq_mult",
+     "space.pos_cycle",
+     "eq.mul_both",
+     "geo.area_split",
+     "grid.same_color",
+     "calc",
+     "algebra.sub",
+     "geom.pythag",
+     "geom.point_in_circle",
+     "math.gcd_step",
+     "geometry.circumdef"
+    ],
+    "real_seen": 115
+   }
+  },
+  "2B G6 frac_hard final": {
+   "rl_gate_dolci": {
+    "cites": 0,
+    "nonexistent": 0,
+    "real_unseen": 0,
+    "top_nonexistent": [],
+    "real_seen": 0
+   }
+  }
+ }
+}

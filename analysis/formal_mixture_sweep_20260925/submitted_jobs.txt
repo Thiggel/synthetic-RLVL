@@ -174,3 +174,7 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7068 grpo_gate150: gate (rl_gate_dolci) of G6@150, G6g@150, G3b@150; gruenau8 A6000:1, partition gpu
 7077 grpo_gatefinal: gate of G6/G3b/G6g final; gruenau8 A6000:1, partition gpu
 7078 grpo_G6i: G6h config + restatement/AND fix (66676fa); gruenau9 a10080gb:1, partition gpu, 8 CPU / 60G, MIN_FREE_MIB=60000
+7079 grpo_G7 2b p50 arm cvf gen+Dolci gruenau10 (2026-09-29)
+7086 grpo_G7g 2b p50 arm cvf gen-only gruenau8 (2026-09-29)
+7000 grpo_G5c CANCELLED (reward hacked) (2026-09-29)
+7088 fmix_2b_p50_x3 2b p50 x3 300k rows gruenau12 2xL40 (2026-09-29)

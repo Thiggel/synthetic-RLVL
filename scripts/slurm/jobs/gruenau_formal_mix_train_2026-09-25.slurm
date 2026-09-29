@@ -108,11 +108,14 @@ while :; do
   echo "fewer than ${MIN_NGPU} allocated GPUs have ${MIN_FREE_MIB} MiB free; waiting (${waited}s)" >&2
   sleep 300; waited=$(( waited + 300 ))
 done
-export CUDA_VISIBLE_DEVICES="${FREE_IDX}"
-NGPU=$(awk -F, '{print NF}' <<<"${FREE_IDX}")
-echo "usable GPUs: ${FREE_IDX}"
 GLOBAL_BATCH="${GLOBAL_BATCH:-128}"
 PER_DEVICE_BATCH="${PER_DEVICE_BATCH:-${DEF_PDB[$MODEL_KEY]}}"
+# e.g. 3 of 5 allocated L40s free: keep the largest count that divides the global batch
+NGPU=$(awk -F, '{print NF}' <<<"${FREE_IDX}")
+while (( NGPU > 1 && GLOBAL_BATCH % (NGPU * PER_DEVICE_BATCH) != 0 )); do NGPU=$(( NGPU - 1 )); done
+FREE_IDX=$(cut -d, -f1-"${NGPU}" <<<"${FREE_IDX}")
+export CUDA_VISIBLE_DEVICES="${FREE_IDX}"
+echo "usable GPUs: ${FREE_IDX}"
 FSDP="${FSDP-${DEF_FSDP[$MODEL_KEY]}}"
 DENOM=$(( NGPU * PER_DEVICE_BATCH ))
 if (( GLOBAL_BATCH % DENOM != 0 )); then
@@ -148,6 +151,7 @@ python -m torch.distributed.run --standalone --nproc_per_node="${NGPU}" \
   --logging-steps "${LOGGING_STEPS:-5}" \
   --eval-steps "${EVAL_STEPS:-250}" \
   --save-steps "${SAVE_STEPS:-250}" \
+  --save-total-limit "${SAVE_TOTAL_LIMIT:-1}" \
   --audit-output "${OUT_DIR}/tokenization_audit.json" \
   --max-truncated-frac "${MAX_TRUNCATED_FRAC:-0.01}" \
   --report-to "${REPORT_TO:-none}" \

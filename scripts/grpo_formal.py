@@ -7,6 +7,7 @@ docs/research_plan.md, Stage 2. One run = one arm:
   --arm frac   the user's "%grammatical lines + %valid lines + correct"
   --arm frac_hard  G6: frac with the line credit gated on premises (numeric check; exact faithfulness on
                    --benches gen items), format and no circular given; G6g adds gen to the benches
+  --arm cvf  G7: correct x valid x faithful premises, all-or-nothing (no partial credit to hack)
 Rewards: scripts/formal_rewards.py (the other components are logged with weight 0).
 
 Prompts: the checkable pool of scripts/build_rl_gate_set.py (math, DAPO, persona
@@ -82,7 +83,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
     ap.add_argument("--out-dir", required=True)
-    ap.add_argument("--arm", choices=["correct", "correct_x_valid", "gvc", "valid", "lines", "lines_fmt", "lines_raw", "frac", "frac_hard"], required=True)
+    ap.add_argument("--arm", choices=["correct", "correct_x_valid", "gvc", "valid", "lines", "lines_fmt", "lines_raw", "frac", "frac_hard", "cvf"], required=True)
     ap.add_argument("--no-tag", action="store_true", help="prompt without <formal> (G0, G1-NL)")
     ap.add_argument("--benches", default="dolci_math,dolci_dapo,dolci_wordprob,dolci_yesno",
                     help="also: gen = formal_mixture generator pool train (yes/no + numeric, no tools)")
