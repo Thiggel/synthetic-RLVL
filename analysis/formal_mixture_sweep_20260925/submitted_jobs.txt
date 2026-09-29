@@ -199,3 +199,4 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7134 -> qwen35_2b_dolci_rlvlgen_p00_lr5em6_seed3407_fp32m: eval=7136 gate=7142 bench=7143 tagged=7144 (sequential, 1 GPU) (2026-09-29)
 7134 cancelled (GPU0 of gruenau7 held at ~11 GB by another user's non-Slurm job; 38 GB free < MIN_FREE_MIB 40000) -> 7146 same recipe, MIN_FREE_MIB=30000; chain 7136 re-pointed (2026-09-29)
 7145 cancelled (its L40 held at ~17 GB by another user's non-Slurm eval) -> 7147 zero2_offload_optim.json (CPU AdamW, same fp32-master math), MIN_FREE_MIB=22000; chain 7135 re-pointed (2026-09-29)
+7133 FAILED: CUDA OOM at step 0 (a foreign 55 GB process landed on its gruenau9 A100 after the free-memory guard) -> 7148 zero2_offload_optim.json, MIN_FREE_MIB=40000; chain 7137 re-pointed (2026-09-29)
