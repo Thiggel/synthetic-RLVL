@@ -109,6 +109,10 @@ def main() -> None:
     model_args = [f"pretrained={args.checkpoint}", f"dtype={args.dtype}", *args.model_arg]
     if args.model == "vllm":
         model_args.append(f"gpu_memory_utilization={args.gpu_memory_utilization}")
+        # hybrid Qwen3.5: vLLM needs one Mamba cache block per sequence; 256 (the default) can
+        # exceed the blocks left on a shared GPU (9B on L40: 219), which fails engine start
+        if not any(a.startswith("max_num_seqs=") for a in args.model_arg):
+            model_args.append("max_num_seqs=128")
 
     cmd = [
         sys.executable,

@@ -262,10 +262,22 @@ def generate(records, args) -> list[dict]:
     stop_ids = [tok.convert_tokens_to_ids("<|im_end|>")]
     if tok.eos_token_id is not None:
         stop_ids.append(tok.eos_token_id)
-    llm = LLM(model=args.model, tokenizer=args.model, dtype="bfloat16", seed=0,
-              tensor_parallel_size=args.tp, max_model_len=args.max_model_len,
-              gpu_memory_utilization=args.gpu_mem, enable_prefix_caching=True, max_num_seqs=getattr(args, "max_num_seqs", 256),
-              limit_mm_per_prompt={"image": 0, "video": 0} if args.no_mm else None)
+    # Qwen3.5 is hybrid: each decode sequence needs one Mamba cache block, and on a shared GPU
+    # (little free memory) there can be fewer blocks than max_num_seqs (9B on L40: 219 < 256,
+    # jobs 6840/6842), which fails engine start. Halve max_num_seqs and retry.
+    seqs = getattr(args, "max_num_seqs", 256)
+    while True:
+        try:
+            llm = LLM(model=args.model, tokenizer=args.model, dtype="bfloat16", seed=0,
+                      tensor_parallel_size=args.tp, max_model_len=args.max_model_len,
+                      gpu_memory_utilization=args.gpu_mem, enable_prefix_caching=True, max_num_seqs=seqs,
+                      limit_mm_per_prompt={"image": 0, "video": 0} if args.no_mm else None)
+            break
+        except (RuntimeError, ValueError) as e:
+            if seqs <= 32:
+                raise
+            print(f"LLM start failed with max_num_seqs={seqs} ({str(e)[:120]}); retrying with {seqs // 2}", flush=True)
+            seqs //= 2
     states = []
     for rec in records:
         user = f"{TAG_USER}\n{rec['prompt']}"
