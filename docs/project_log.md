@@ -4171,3 +4171,4 @@ Downstream benchmarks of the "Lead into Gold" paper now run for every checkpoint
 ## 2026-09-29 02:40 — frac_hard hardening (45c128d), G6h
 - Three loopholes found in G6 samples at steps 92–95: block headers ok with a broken body; trusted rules (`know`, `def`) used as unquoted premises; premise-free ground `calc` padding. All closed in `scripts/formal_rewards.line_stats`. Gold: 0 false premise rejections, frac_ok .976 → .946. Replay: G6 high-credit invalid samples 105 → 55, G6g 227 → 84; valid samples keep full credit. Details: reports/2026-09-28_stage2_gate.md, "Update 02:40".
 - Launched G6h (7051; 7050 hit the shared-GPU guard): G6g config with the hardened reward.
+- 03:45: gate @100: G6/G6g write a proof on ~every item (format ok ≥ .93) but hardened valid ≤ .001 and correct .236 (G0 .40). Dense line credit does not bridge to validity. G6h restarted as 7060 with G6g's exact args (7051 OOMed on default batch 8).
