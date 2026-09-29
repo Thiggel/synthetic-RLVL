@@ -1,0 +1,62 @@
+[
+  {
+    "label": "0.8B p50 sweep",
+    "init": "/vol/tmp2/laitenbf/hub/models--Qwen--Qwen3.5-0.8B-Base/snapshots/dc7cdfe2ee4154fa7e30f5b51ca41bfa40174e68",
+    "trained": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_0.8b_dolci_rlvlgen_p50_lr5em6_seed3407/final",
+    "optimizer": "DDP bf16",
+    "steps": 781,
+    "changed_frac": 0.06981787653382643,
+    "median_rel_delta": 0.0012563327327370644,
+    "n_tensors": 46
+  },
+  {
+    "label": "2B p00 sweep",
+    "init": "/vol/tmp2/laitenbf/hub/models--Qwen--Qwen3.5-2B-Base/snapshots/b1485b2fa6dfa1287294f269f5fb618e03d52d7c",
+    "trained": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_2b_dolci_rlvlgen_p00_lr5em6_seed3407/final",
+    "optimizer": "DDP bf16",
+    "steps": 781,
+    "changed_frac": 0.07810826416259789,
+    "median_rel_delta": 0.0014437679201364517,
+    "n_tensors": 46
+  },
+  {
+    "label": "2B p50 sweep",
+    "init": "/vol/tmp2/laitenbf/hub/models--Qwen--Qwen3.5-2B-Base/snapshots/b1485b2fa6dfa1287294f269f5fb618e03d52d7c",
+    "trained": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407/final",
+    "optimizer": "DDP bf16",
+    "steps": 781,
+    "changed_frac": 0.08540346313371315,
+    "median_rel_delta": 0.001589359831996262,
+    "n_tensors": 46
+  },
+  {
+    "label": "2B p50 + lc",
+    "init": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407/final",
+    "trained": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_2b_p50_cont_lc_lr5em6_seed3407/final",
+    "optimizer": "DDP bf16",
+    "steps": 157,
+    "changed_frac": 0.049565855195692586,
+    "median_rel_delta": 0.0005427660653367639,
+    "n_tensors": 46
+  },
+  {
+    "label": "2B p50 + ct",
+    "init": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407/final",
+    "trained": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_2b_p50_cont_ct_lr5em6_seed3407/final",
+    "optimizer": "ZeRO-2 fp32 master",
+    "steps": 157,
+    "changed_frac": 0.46785732250647594,
+    "median_rel_delta": 0.0025170098524540663,
+    "n_tensors": 46
+  },
+  {
+    "label": "9B p50 sweep",
+    "init": "/vol/tmp2/laitenbf/hub/models--Qwen--Qwen3.5-9B-Base/snapshots/68c46c4b3498877f3ef123c856ecfde50c39f404",
+    "trained": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_9b_dolci_rlvlgen_p50_lr5em6_seed3407/final",
+    "optimizer": "ZeRO-2 fp32 master",
+    "steps": 781,
+    "changed_frac": 0.6825244513783368,
+    "median_rel_delta": 0.004988527856767178,
+    "n_tensors": 61
+  }
+]

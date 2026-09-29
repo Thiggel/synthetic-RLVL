@@ -224,7 +224,14 @@ def main():
     drop = [c for c in train_ds.column_names if c not in ("input_ids", "labels")]
     train_ds, eval_ds = train_ds.remove_columns(drop), eval_ds.remove_columns(drop)
 
-    model = AutoModelForCausalLM.from_pretrained(args.model, dtype=torch.bfloat16)
+    # DDP (no --deepspeed / --fsdp) must load fp32: HF's bf16=True is autocast, and the optimizer
+    # steps the parameters in their own dtype. A bf16 parameter rounds away an AdamW update of
+    # ~lr = 5e-6 unless |w| < ~1e-3, so the 2026-09-25 0.8B/2B sweep (bf16 load, DDP) changed only
+    # ~8% of the 2B weights in 781 steps (9B ZeRO-2 with fp32 master weights: 68%). ZeRO-2 keeps its
+    # own fp32 master copy; FSDP upcasts, so both may load bf16.
+    dtype = torch.bfloat16 if (args.deepspeed or args.fsdp) else torch.float32
+    print(f"[precision] load dtype={dtype} (deepspeed={bool(args.deepspeed)} fsdp={bool(args.fsdp)})", flush=True)
+    model = AutoModelForCausalLM.from_pretrained(args.model, dtype=dtype)
     if args.liger_flce:
         # Only the loss is swapped (RMSNorm / SwiGLU kernels stay HF's), so the
         # recipe is unchanged; 9B FSDP on 2 x 80 GB otherwise OOMs on the logits.

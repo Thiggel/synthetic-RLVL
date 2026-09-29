@@ -210,6 +210,46 @@
     ],
     "real_seen": 797
    }
+  },
+  "2B p50 + control": {
+   "formal_eval": {
+    "cites": 2578,
+    "nonexistent": 10,
+    "real_unseen": 1,
+    "top_nonexistent": [
+     "prob.and_def",
+     "sit.state",
+     "logic.or_else",
+     "logic.and_left",
+     "logic.demorgan_iff",
+     "set.subset_univ",
+     "set.subset_sym",
+     "space.cycle_def",
+     "logic.imp_not",
+     "space.in_trans"
+    ],
+    "real_seen": 2567
+   },
+   "rl_gate_dolci": {
+    "cites": 379,
+    "nonexistent": 347,
+    "real_unseen": 0,
+    "top_nonexistent": [
+     "set.most_def",
+     "vector.sum_redu",
+     "trig.split_left",
+     "trig.split",
+     "eq_div",
+     "abs_def",
+     "accounting_def",
+     "sentiment",
+     "principle",
+     "logic.not_dne",
+     "graph.subset_prop",
+     "vector.sum_reindex"
+    ],
+    "real_seen": 32
+   }
   }
  }
 }
