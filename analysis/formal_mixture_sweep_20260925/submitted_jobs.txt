@@ -186,3 +186,4 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7103 fmix_2b_cont_ct 2b p50 final + 10k gen + 10k Dolci (control), gruenau7 2x A6000 zero2 (2026-09-29)
 7104 7105 fmix_eval_cont_lc/ct formal_eval gruenau12 (afterok) (2026-09-29)
 7106 7107 gate_cont_lc/ct rl_gate_dolci gruenau8 (afterok) (2026-09-29)
+7108 gate_G7_100 rl_gate_dolci G7@100 G7g@100 gruenau8 (afterany 7107) (2026-09-29)
