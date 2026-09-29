@@ -2239,6 +2239,76 @@
    }
   }
  },
+ "G7g cvf gen-only final": {
+  "all": {
+   "has_proof": 0.5894736842105263,
+   "grammatical": 0.12526315789473685,
+   "format_ok": 0.0,
+   "valid_eval": 0.014736842105263158,
+   "circular": 0.06,
+   "n_taut": 0.0431578947368421,
+   "valid": 0.008421052631578947,
+   "in_system": 0.007368421052631579,
+   "correct": 0.1431578947368421
+  },
+  "per_bench": {
+   "dolci_math": {
+    "has_proof": 0.5166666666666667,
+    "grammatical": 0.03666666666666667,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.03333333333333333,
+    "n_taut": 0.03666666666666667,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.09
+   },
+   "dolci_dapo": {
+    "has_proof": 0.22666666666666666,
+    "grammatical": 0.006666666666666667,
+    "format_ok": 0.0,
+    "valid_eval": 0.0,
+    "circular": 0.006666666666666667,
+    "n_taut": 0.0,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.08666666666666667
+   },
+   "dolci_wordprob": {
+    "has_proof": 0.645,
+    "grammatical": 0.275,
+    "format_ok": 0.0,
+    "valid_eval": 0.025,
+    "circular": 0.035,
+    "n_taut": 0.09,
+    "valid": 0.02,
+    "in_system": 0.02,
+    "correct": 0.285
+   },
+   "dolci_yesno": {
+    "has_proof": 0.725,
+    "grammatical": 0.18,
+    "format_ok": 0.0,
+    "valid_eval": 0.04,
+    "circular": 0.1,
+    "n_taut": 0.035,
+    "valid": 0.015,
+    "in_system": 0.015,
+    "correct": 0.19
+   },
+   "dolci_knowledge": {
+    "has_proof": 0.97,
+    "grammatical": 0.16,
+    "format_ok": 0.0,
+    "valid_eval": 0.01,
+    "circular": 0.19,
+    "n_taut": 0.05,
+    "valid": 0.01,
+    "in_system": 0.0,
+    "correct": 0.01
+   }
+  }
+ },
  "SFT p50 + lemma catalog (bf16 DDP)": {
   "all": {
    "has_proof": 0.5031578947368421,
