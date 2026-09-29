@@ -2239,7 +2239,7 @@
    }
   }
  },
- "SFT p50 + lemma catalog": {
+ "SFT p50 + lemma catalog (bf16 DDP)": {
   "all": {
    "has_proof": 0.5031578947368421,
    "grammatical": 0.12210526315789473,
@@ -2304,6 +2304,76 @@
     "circular": 0.09,
     "n_taut": 0.11,
     "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.01
+   }
+  }
+ },
+ "SFT p50 + lemma catalog (fp32 master)": {
+  "all": {
+   "has_proof": 0.5978947368421053,
+   "grammatical": 0.18947368421052632,
+   "format_ok": 0.4842105263157895,
+   "valid_eval": 0.010526315789473684,
+   "circular": 0.04631578947368421,
+   "n_taut": 0.06526315789473684,
+   "valid": 0.007368421052631579,
+   "in_system": 0.003157894736842105,
+   "correct": 0.22421052631578947
+  },
+  "per_bench": {
+   "dolci_math": {
+    "has_proof": 0.65,
+    "grammatical": 0.08333333333333333,
+    "format_ok": 0.47,
+    "valid_eval": 0.0,
+    "circular": 0.02666666666666667,
+    "n_taut": 0.023333333333333334,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.09666666666666666
+   },
+   "dolci_dapo": {
+    "has_proof": 0.22666666666666666,
+    "grammatical": 0.006666666666666667,
+    "format_ok": 0.12,
+    "valid_eval": 0.0,
+    "circular": 0.006666666666666667,
+    "n_taut": 0.02666666666666667,
+    "valid": 0.0,
+    "in_system": 0.0,
+    "correct": 0.08666666666666667
+   },
+   "dolci_wordprob": {
+    "has_proof": 0.665,
+    "grammatical": 0.365,
+    "format_ok": 0.61,
+    "valid_eval": 0.015,
+    "circular": 0.02,
+    "n_taut": 0.145,
+    "valid": 0.01,
+    "in_system": 0.01,
+    "correct": 0.405
+   },
+   "dolci_yesno": {
+    "has_proof": 0.54,
+    "grammatical": 0.205,
+    "format_ok": 0.46,
+    "valid_eval": 0.015,
+    "circular": 0.065,
+    "n_taut": 0.05,
+    "valid": 0.01,
+    "in_system": 0.005,
+    "correct": 0.445
+   },
+   "dolci_knowledge": {
+    "has_proof": 0.98,
+    "grammatical": 0.4,
+    "format_ok": 0.87,
+    "valid_eval": 0.04,
+    "circular": 0.18,
+    "n_taut": 0.12,
+    "valid": 0.03,
     "in_system": 0.0,
     "correct": 0.01
    }

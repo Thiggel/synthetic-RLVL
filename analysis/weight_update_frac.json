@@ -50,6 +50,16 @@
     "n_tensors": 46
   },
   {
+    "label": "2B p50 + lc fp32m",
+    "init": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407/final",
+    "trained": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407/final",
+    "optimizer": "ZeRO-2 fp32 master (offload)",
+    "steps": 157,
+    "changed_frac": 0.47872768958948253,
+    "median_rel_delta": 0.002729536732658744,
+    "n_tensors": 46
+  },
+  {
     "label": "9B p50 sweep",
     "init": "/vol/tmp2/laitenbf/hub/models--Qwen--Qwen3.5-9B-Base/snapshots/68c46c4b3498877f3ef123c856ecfde50c39f404",
     "trained": "/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925/qwen35_9b_dolci_rlvlgen_p50_lr5em6_seed3407/final",

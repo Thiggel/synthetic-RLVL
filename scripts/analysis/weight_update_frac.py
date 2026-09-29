@@ -31,6 +31,7 @@ PAIRS = [
     ("2B p50 sweep", BASE["2b"], P50, "DDP bf16", 781),
     ("2B p50 + lc", P50, S / "qwen35_2b_p50_cont_lc_lr5em6_seed3407/final", "DDP bf16", 157),
     ("2B p50 + ct", P50, S / "qwen35_2b_p50_cont_ct_lr5em6_seed3407/final", "ZeRO-2 fp32 master", 157),
+    ("2B p50 + lc fp32m", P50, S / "qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407/final", "ZeRO-2 fp32 master (offload)", 157),
     ("9B p50 sweep", BASE["9b"], S / "qwen35_9b_dolci_rlvlgen_p50_lr5em6_seed3407/final", "ZeRO-2 fp32 master", 781),
 ]
 

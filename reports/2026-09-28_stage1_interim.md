@@ -96,3 +96,7 @@ On deduction, grammaticality, validity and correctness all rise with X and flatt
 ## Update 2026-09-29 ~19:15 — 9B p10 (eval 6844, tagged 6923 on gruenau11)
 
 In-domain (2000 unseen generator problems): 9B p10 faithful .976 / grammatical .997 / valid .944 / answer .979; p25 .963 valid, p50 .983 — at 9B, 10k generator rows (10% of 100k) already give 94% valid proofs, and Dolci eval loss is flat across X (.650 / .651 / .653 / .658). Tagged benchmarks (grammatical / valid / correct / in-system, %): overall 37 / 12 / 0 / 9; ProofWriter 77 / 34 / 55 / 32; FOLIO 66 / 21 / 54 / 15; BBH 25 / 3 / 52 / 1; GSM8K 82 / 12 / 77 / 10; GPQA 1 / 0 / 43 / 0. p25/p50 tagged and all 9B untagged benches are running (gruenau11 lanes). Figures regenerated: `stage1_indomain_curves.png`, `stage1_tradeoff.png`, `stage1_bench_delta_heatmap.png`, `sft_scale_curve.png`, `analysis/formal_mixture_sweep_20260925/tagged/tagged_curves.png`.
+
+## Update 2026-09-29 ~20:20 — 9B tagged p10 / p25 / p50
+
+Tagged overall (grammatical / valid / correct-on-answerable / in-system, %): p10 37 / 12 / – / 9, p25 33 / 12 / – / 11, p50 33 / 12 / – / 11; ProofWriter valid 34 → 40 → 40, FOLIO 21 → 18 → 19, BBH 3 → 2 → 2. At 9B, transfer of valid proofs to benchmarks saturates at the 10–25% mixture; more formal data beyond 25% buys nothing tagged. Table: `analysis/formal_mixture_sweep_20260925/tagged/tagged_9b.md`; figures regenerated.

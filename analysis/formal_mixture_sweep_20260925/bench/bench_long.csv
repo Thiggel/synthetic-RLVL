@@ -332,6 +332,43 @@ model,x,benchmark,score
 0.8b,40,winogrande,57.77
 0.8b,40,humaneval,21.95
 0.8b,40,mbpp,23.00
+0.8b,45,PW d0,26.40
+0.8b,45,PW d1,24.40
+0.8b,45,PW d2,38.20
+0.8b,45,PW d3,43.00
+0.8b,45,PW d5,48.00
+0.8b,45,PW CoT d0,12.20
+0.8b,45,PW CoT d1,15.80
+0.8b,45,PW CoT d2,15.40
+0.8b,45,PW CoT d3,12.60
+0.8b,45,PW CoT d5,12.00
+0.8b,45,FOLIO,37.93
+0.8b,45,BBH (all),48.64
+0.8b,45,BBH chain-8,47.95
+0.8b,45,BBH other,48.93
+0.8b,45,BBH web_of_lies,100.00
+0.8b,45,BBH tracking_shuffled_objects_three_objects,36.40
+0.8b,45,BBH tracking_shuffled_objects_five_objects,22.40
+0.8b,45,BBH tracking_shuffled_objects_seven_objects,20.40
+0.8b,45,BBH logical_deduction_three_objects,70.00
+0.8b,45,BBH logical_deduction_five_objects,44.00
+0.8b,45,BBH logical_deduction_seven_objects,42.00
+0.8b,45,BBH formal_fallacies,48.40
+0.8b,45,HotpotQA,43.67
+0.8b,45,2WikiMQA,29.31
+0.8b,45,MuSiQue,19.94
+0.8b,45,GPQA-Diamond,29.80
+0.8b,45,GPQA-quant,26.03
+0.8b,45,GPQA-rest,32.00
+0.8b,45,gsm8k,36.01
+0.8b,45,mmlu,38.66
+0.8b,45,arc_challenge,39.08
+0.8b,45,agieval_logiqa_en,30.41
+0.8b,45,hellaswag,51.20
+0.8b,45,piqa,70.84
+0.8b,45,winogrande,57.70
+0.8b,45,humaneval,21.34
+0.8b,45,mbpp,23.00
 0.8b,50,PW d0,26.60
 0.8b,50,PW d1,24.40
 0.8b,50,PW d2,38.20
@@ -554,6 +591,154 @@ model,x,benchmark,score
 2b,25,winogrande,60.14
 2b,25,humaneval,34.76
 2b,25,mbpp,35.60
+2b,30,PW d0,42.80
+2b,30,PW d1,28.60
+2b,30,PW d2,40.80
+2b,30,PW d3,46.20
+2b,30,PW d5,47.00
+2b,30,PW CoT d0,49.20
+2b,30,PW CoT d1,42.60
+2b,30,PW CoT d2,44.00
+2b,30,PW CoT d3,42.00
+2b,30,PW CoT d5,41.20
+2b,30,FOLIO,44.83
+2b,30,BBH (all),64.76
+2b,30,BBH chain-8,63.95
+2b,30,BBH other,65.09
+2b,30,BBH web_of_lies,100.00
+2b,30,BBH tracking_shuffled_objects_three_objects,74.00
+2b,30,BBH tracking_shuffled_objects_five_objects,78.00
+2b,30,BBH tracking_shuffled_objects_seven_objects,73.20
+2b,30,BBH logical_deduction_three_objects,78.00
+2b,30,BBH logical_deduction_five_objects,38.00
+2b,30,BBH logical_deduction_seven_objects,23.20
+2b,30,BBH formal_fallacies,47.20
+2b,30,HotpotQA,46.57
+2b,30,2WikiMQA,33.56
+2b,30,MuSiQue,26.76
+2b,30,GPQA-Diamond,34.85
+2b,30,GPQA-quant,26.03
+2b,30,GPQA-rest,40.00
+2b,30,gsm8k,67.17
+2b,30,mmlu,59.41
+2b,30,arc_challenge,47.18
+2b,30,agieval_logiqa_en,35.79
+2b,30,hellaswag,61.09
+2b,30,piqa,75.14
+2b,30,winogrande,60.62
+2b,30,humaneval,33.54
+2b,30,mbpp,34.20
+2b,35,PW d0,39.00
+2b,35,PW d1,27.00
+2b,35,PW d2,40.00
+2b,35,PW d3,45.80
+2b,35,PW d5,48.00
+2b,35,PW CoT d0,48.40
+2b,35,PW CoT d1,42.20
+2b,35,PW CoT d2,46.40
+2b,35,PW CoT d3,45.20
+2b,35,PW CoT d5,42.40
+2b,35,FOLIO,43.84
+2b,35,BBH (all),65.40
+2b,35,BBH chain-8,64.90
+2b,35,BBH other,65.61
+2b,35,BBH web_of_lies,100.00
+2b,35,BBH tracking_shuffled_objects_three_objects,74.40
+2b,35,BBH tracking_shuffled_objects_five_objects,78.00
+2b,35,BBH tracking_shuffled_objects_seven_objects,75.60
+2b,35,BBH logical_deduction_three_objects,78.00
+2b,35,BBH logical_deduction_five_objects,37.20
+2b,35,BBH logical_deduction_seven_objects,25.20
+2b,35,BBH formal_fallacies,50.80
+2b,35,HotpotQA,46.52
+2b,35,2WikiMQA,33.04
+2b,35,MuSiQue,26.03
+2b,35,GPQA-Diamond,38.38
+2b,35,GPQA-quant,35.62
+2b,35,GPQA-rest,40.00
+2b,35,gsm8k,67.10
+2b,35,mmlu,59.21
+2b,35,arc_challenge,47.53
+2b,35,agieval_logiqa_en,34.72
+2b,35,hellaswag,61.09
+2b,35,piqa,75.14
+2b,35,winogrande,60.46
+2b,35,humaneval,33.54
+2b,35,mbpp,35.00
+2b,40,PW d0,36.00
+2b,40,PW d1,26.00
+2b,40,PW d2,39.40
+2b,40,PW d3,45.20
+2b,40,PW d5,48.40
+2b,40,PW CoT d0,47.80
+2b,40,PW CoT d1,42.60
+2b,40,PW CoT d2,47.80
+2b,40,PW CoT d3,47.80
+2b,40,PW CoT d5,44.20
+2b,40,FOLIO,43.35
+2b,40,BBH (all),64.60
+2b,40,BBH chain-8,63.15
+2b,40,BBH other,65.22
+2b,40,BBH web_of_lies,100.00
+2b,40,BBH tracking_shuffled_objects_three_objects,72.80
+2b,40,BBH tracking_shuffled_objects_five_objects,80.00
+2b,40,BBH tracking_shuffled_objects_seven_objects,74.00
+2b,40,BBH logical_deduction_three_objects,75.60
+2b,40,BBH logical_deduction_five_objects,31.60
+2b,40,BBH logical_deduction_seven_objects,23.60
+2b,40,BBH formal_fallacies,47.60
+2b,40,HotpotQA,45.23
+2b,40,2WikiMQA,34.57
+2b,40,MuSiQue,26.20
+2b,40,GPQA-Diamond,34.85
+2b,40,GPQA-quant,31.51
+2b,40,GPQA-rest,36.80
+2b,40,gsm8k,66.79
+2b,40,mmlu,59.17
+2b,40,arc_challenge,46.76
+2b,40,agieval_logiqa_en,35.18
+2b,40,hellaswag,61.22
+2b,40,piqa,75.14
+2b,40,winogrande,60.30
+2b,40,humaneval,34.15
+2b,40,mbpp,33.80
+2b,45,PW d0,33.00
+2b,45,PW d1,25.60
+2b,45,PW d2,38.80
+2b,45,PW d3,44.40
+2b,45,PW d5,48.60
+2b,45,PW CoT d0,52.20
+2b,45,PW CoT d1,42.20
+2b,45,PW CoT d2,45.40
+2b,45,PW CoT d3,46.60
+2b,45,PW CoT d5,44.00
+2b,45,FOLIO,42.86
+2b,45,BBH (all),64.41
+2b,45,BBH chain-8,63.40
+2b,45,BBH other,64.84
+2b,45,BBH web_of_lies,100.00
+2b,45,BBH tracking_shuffled_objects_three_objects,74.40
+2b,45,BBH tracking_shuffled_objects_five_objects,78.80
+2b,45,BBH tracking_shuffled_objects_seven_objects,73.60
+2b,45,BBH logical_deduction_three_objects,78.80
+2b,45,BBH logical_deduction_five_objects,29.60
+2b,45,BBH logical_deduction_seven_objects,20.00
+2b,45,BBH formal_fallacies,52.00
+2b,45,HotpotQA,46.57
+2b,45,2WikiMQA,34.72
+2b,45,MuSiQue,25.89
+2b,45,GPQA-Diamond,34.34
+2b,45,GPQA-quant,32.88
+2b,45,GPQA-rest,35.20
+2b,45,gsm8k,67.32
+2b,45,mmlu,59.15
+2b,45,arc_challenge,47.27
+2b,45,agieval_logiqa_en,33.33
+2b,45,hellaswag,61.10
+2b,45,piqa,75.19
+2b,45,winogrande,60.93
+2b,45,humaneval,35.37
+2b,45,mbpp,35.20
 2b,50,PW d0,33.00
 2b,50,PW d1,24.80
 2b,50,PW d2,38.80
@@ -591,3 +776,112 @@ model,x,benchmark,score
 2b,50,winogrande,61.01
 2b,50,humaneval,34.15
 2b,50,mbpp,33.80
+9b,0,PW d0,75.80
+9b,0,PW d1,49.80
+9b,0,PW d2,48.20
+9b,0,PW d3,45.00
+9b,0,PW d5,32.60
+9b,0,PW CoT d0,73.60
+9b,0,PW CoT d1,58.00
+9b,0,PW CoT d2,51.80
+9b,0,PW CoT d3,49.80
+9b,0,PW CoT d5,38.80
+9b,0,FOLIO,65.02
+9b,0,BBH (all),84.43
+9b,0,BBH chain-8,86.55
+9b,0,BBH other,83.54
+9b,0,BBH web_of_lies,100.00
+9b,0,BBH tracking_shuffled_objects_three_objects,100.00
+9b,0,BBH tracking_shuffled_objects_five_objects,99.60
+9b,0,BBH tracking_shuffled_objects_seven_objects,96.80
+9b,0,BBH logical_deduction_three_objects,97.60
+9b,0,BBH logical_deduction_five_objects,74.40
+9b,0,BBH logical_deduction_seven_objects,51.20
+9b,0,BBH formal_fallacies,72.80
+9b,0,HotpotQA,62.01
+9b,0,2WikiMQA,56.29
+9b,0,MuSiQue,45.96
+9b,0,GPQA-Diamond,45.45
+9b,0,GPQA-quant,42.47
+9b,0,GPQA-rest,47.20
+9b,0,gsm8k,86.96
+9b,0,mmlu,77.99
+9b,0,arc_challenge,60.92
+9b,0,agieval_logiqa_en,43.01
+9b,0,hellaswag,75.27
+9b,0,piqa,81.39
+9b,0,winogrande,71.98
+9b,0,humaneval,65.24
+9b,0,mbpp,63.40
+9b,10,PW d0,87.40
+9b,10,PW d1,59.60
+9b,10,PW d2,43.80
+9b,10,PW d3,37.20
+9b,10,PW d5,18.20
+9b,10,PW CoT d0,86.00
+9b,10,PW CoT d1,67.80
+9b,10,PW CoT d2,63.60
+9b,10,PW CoT d3,59.60
+9b,10,PW CoT d5,41.00
+9b,10,FOLIO,67.00
+9b,10,BBH (all),84.36
+9b,10,BBH chain-8,86.10
+9b,10,BBH other,83.63
+9b,10,BBH web_of_lies,100.00
+9b,10,BBH tracking_shuffled_objects_three_objects,100.00
+9b,10,BBH tracking_shuffled_objects_five_objects,99.60
+9b,10,BBH tracking_shuffled_objects_seven_objects,97.60
+9b,10,BBH logical_deduction_three_objects,97.20
+9b,10,BBH logical_deduction_five_objects,73.60
+9b,10,BBH logical_deduction_seven_objects,54.80
+9b,10,BBH formal_fallacies,66.00
+9b,10,HotpotQA,63.23
+9b,10,2WikiMQA,56.39
+9b,10,MuSiQue,44.95
+9b,10,GPQA-Diamond,50.00
+9b,10,GPQA-quant,42.47
+9b,10,GPQA-rest,54.40
+9b,10,gsm8k,86.20
+9b,10,mmlu,77.80
+9b,10,arc_challenge,60.41
+9b,10,agieval_logiqa_en,41.94
+9b,10,hellaswag,75.25
+9b,10,piqa,81.28
+9b,10,winogrande,72.61
+9b,10,humaneval,67.07
+9b,10,mbpp,64.20
+9b,25,PW d0,84.80
+9b,25,PW d1,52.20
+9b,25,PW d2,49.00
+9b,25,PW d3,43.00
+9b,25,PW d5,29.20
+9b,25,PW CoT d0,87.20
+9b,25,PW CoT d1,67.40
+9b,25,PW CoT d2,66.00
+9b,25,PW CoT d3,61.20
+9b,25,PW CoT d5,46.80
+9b,25,FOLIO,66.50
+9b,25,BBH (all),83.76
+9b,25,BBH chain-8,86.05
+9b,25,BBH other,82.79
+9b,25,BBH web_of_lies,100.00
+9b,25,BBH tracking_shuffled_objects_three_objects,99.60
+9b,25,BBH tracking_shuffled_objects_five_objects,98.80
+9b,25,BBH tracking_shuffled_objects_seven_objects,97.20
+9b,25,BBH logical_deduction_three_objects,97.20
+9b,25,BBH logical_deduction_five_objects,74.80
+9b,25,BBH logical_deduction_seven_objects,52.40
+9b,25,BBH formal_fallacies,68.40
+9b,25,HotpotQA,62.78
+9b,25,2WikiMQA,54.27
+9b,25,MuSiQue,43.81
+9b,25,GPQA-Diamond,50.51
+9b,25,GPQA-quant,46.58
+9b,25,GPQA-rest,52.80
+9b,25,gsm8k,86.28
+9b,25,mmlu,77.77
+9b,25,arc_challenge,61.77
+9b,25,agieval_logiqa_en,41.32
+9b,25,hellaswag,74.96
+9b,25,piqa,80.58
+9b,25,winogrande,72.61

@@ -139,6 +139,26 @@
     "top_nonexistent": [],
     "real_seen": 2399
    },
+   "formal_bench_tagged": {
+    "cites": 12553,
+    "nonexistent": 8477,
+    "real_unseen": 0,
+    "top_nonexistent": [
+     "agent.swap",
+     "order.trans",
+     "exchange.swap",
+     "logic.imp_not",
+     "logic.imp",
+     "dict.ord",
+     "date.add",
+     "move.left",
+     "order.before",
+     "event.swap",
+     "space.left_def",
+     "order.before_not"
+    ],
+    "real_seen": 4076
+   },
    "rl_gate_dolci": {
     "cites": 1241,
     "nonexistent": 1126,
@@ -169,7 +189,7 @@
     "real_seen": 0
    }
   },
-  "2B p50 + lemma catalog": {
+  "2B p50 + lemma catalog (bf16 DDP)": {
    "formal_eval": {
     "cites": 3245,
     "nonexistent": 437,
@@ -209,6 +229,48 @@
      "agent.role_def"
     ],
     "real_seen": 797
+   }
+  },
+  "2B p50 + lemma catalog (fp32 master)": {
+   "formal_eval": {
+    "cites": 2726,
+    "nonexistent": 58,
+    "real_unseen": 13,
+    "top_nonexistent": [
+     "set.mem_def",
+     "space.above_trans",
+     "rel.refl",
+     "rel.weaker_stronger",
+     "logic.ds",
+     "6",
+     "set.def",
+     "rel.asym",
+     "agent.infer",
+     "prob.demorgan_and",
+     "arith.dozen_def",
+     "logic.masq"
+    ],
+    "real_seen": 2655
+   },
+   "rl_gate_dolci": {
+    "cites": 1748,
+    "nonexistent": 773,
+    "real_unseen": 266,
+    "top_nonexistent": [
+     "person.birth",
+     "eq.refl",
+     "arith.gcd_def",
+     "motion.position",
+     "path.count",
+     "motion.time",
+     "arith.demote_div",
+     "cell.colour",
+     "arith.sub",
+     "arith.not_dne",
+     "graph.count",
+     "set.mem_def"
+    ],
+    "real_seen": 709
    }
   },
   "2B p50 + control": {

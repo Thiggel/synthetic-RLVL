@@ -30,7 +30,8 @@ MODELS = [("2B p50 SFT", SFT / "qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407"),
           ("9B p50 SFT", SFT / "qwen35_9b_dolci_rlvlgen_p50_lr5em6_seed3407"),
           ("2B G6 frac_hard final", GRPO / "2b_p50_G6_frachard/final"),
           # continued SFT from 2B p50 (scripts/data/build_lemma_continue.py): + lemma catalog vs control
-          ("2B p50 + lemma catalog", SFT / "qwen35_2b_p50_cont_lc_lr5em6_seed3407"),
+          ("2B p50 + lemma catalog (bf16 DDP)", SFT / "qwen35_2b_p50_cont_lc_lr5em6_seed3407"),
+          ("2B p50 + lemma catalog (fp32 master)", SFT / "qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407"),
           ("2B p50 + control", SFT / "qwen35_2b_p50_cont_ct_lr5em6_seed3407")]
 EVALS = [("formal_eval", "in-domain"), ("formal_bench_tagged", "tagged benchmarks"), ("rl_gate_dolci", "Dolci gate")]
 CITE = re.compile(r"; lib ([A-Za-z_0-9.]+)")
