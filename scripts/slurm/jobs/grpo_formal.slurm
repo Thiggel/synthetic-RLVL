@@ -43,5 +43,12 @@ if (( FREE_MIB < ${MIN_FREE_MIB:-0} )); then echo "only ${FREE_MIB} MiB free < M
 echo "policy=${POLICY} arm=${ARM:?} ngpu=${NGPU} out=${OUT}"
 ACC=(--num_processes "${NGPU}" --mixed_precision bf16)
 if (( NGPU > 1 )); then ACC+=(--use_deepspeed --zero_stage 2); fi
-accelerate launch "${ACC[@]}" scripts/grpo_formal.py --model "${MODEL}" --out-dir "${OUT}" --arm "${ARM}" \
-  ${NO_TAG:+--no-tag} ${EXTRA_ARGS:-}
+# vLLM's startup memory profile asserts when a foreign process frees GPU memory mid-profile (G9 7365,
+# 2026-09-29); that is transient, so retry once.
+ERRLOG="/tmp/laitenbf_grpo_${SLURM_JOB_ID:-0}.err"
+for attempt in 1 2; do
+  if accelerate launch "${ACC[@]}" scripts/grpo_formal.py --model "${MODEL}" --out-dir "${OUT}" --arm "${ARM}" \
+      ${NO_TAG:+--no-tag} ${EXTRA_ARGS:-} 2> >(tee "${ERRLOG}" >&2); then exit 0; fi
+  if (( attempt == 1 )) && grep -q "Error in memory profiling" "${ERRLOG}"; then
+    echo "vLLM memory-profiling race; retrying in 60 s" >&2; sleep 60; else exit 1; fi
+done
