@@ -47,7 +47,22 @@ MODELS = [
     ("G6g frac_hard + gen @50", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-50"),
     ("G6g frac_hard + gen @100", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-100"),
     ("G6g frac_hard + gen @150", GRPO / "2b_p50_G6g_frachard_gen/checkpoint-150"),
-    ("G6g frac_hard + gen final", GRPO / "2b_p50_G6g_frachard_gen/final"),
+    ("G6g frac_hard + gen final", GRPO / "2b_p50_G6g_frachard_gen/final"),    ("G6h frac_hard hardened @50", GRPO / "2b_p50_G6h_frachard_hardened/checkpoint-50"),
+    ("G6h frac_hard hardened @100", GRPO / "2b_p50_G6h_frachard_hardened/checkpoint-100"),
+    ("G6h frac_hard hardened @150", GRPO / "2b_p50_G6h_frachard_hardened/checkpoint-150"),
+    ("G6i frac_hard restate @50", GRPO / "2b_p50_G6i_frachard_restate/checkpoint-50"),
+    ("G6i frac_hard restate @100", GRPO / "2b_p50_G6i_frachard_restate/checkpoint-100"),
+    ("G6i frac_hard restate @150", GRPO / "2b_p50_G6i_frachard_restate/checkpoint-150"),
+    ("G7 cvf @50", GRPO / "2b_p50_G7_cvf/checkpoint-50"),
+    ("G7 cvf @100", GRPO / "2b_p50_G7_cvf/checkpoint-100"),
+    ("G7 cvf @150", GRPO / "2b_p50_G7_cvf/checkpoint-150"),
+    ("G7g cvf gen-only @50", GRPO / "2b_p50_G7g_cvf_genonly/checkpoint-50"),
+    ("G7g cvf gen-only @100", GRPO / "2b_p50_G7g_cvf_genonly/checkpoint-100"),
+    ("G7g cvf gen-only @150", GRPO / "2b_p50_G7g_cvf_genonly/checkpoint-150"),
+    ("G6h frac_hard hardened final", GRPO / "2b_p50_G6h_frachard_hardened/final"),
+    ("G6i frac_hard restate final", GRPO / "2b_p50_G6i_frachard_restate/final"),
+    ("G7 cvf final", GRPO / "2b_p50_G7_cvf/final"),
+    ("G7g cvf gen-only final", GRPO / "2b_p50_G7g_cvf_genonly/final"),
 ]
 KEYS = ["has_proof", "grammatical", "format_ok", "valid_eval", "circular", "n_taut", "valid", "in_system", "correct"]
 

@@ -28,7 +28,10 @@ SFT = DATA / "formal_mixture_sft_20260925"
 GRPO = DATA / "grpo_formal_20260928"
 MODELS = [("2B p50 SFT", SFT / "qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407"),
           ("9B p50 SFT", SFT / "qwen35_9b_dolci_rlvlgen_p50_lr5em6_seed3407"),
-          ("2B G6 frac_hard final", GRPO / "2b_p50_G6_frachard/final")]
+          ("2B G6 frac_hard final", GRPO / "2b_p50_G6_frachard/final"),
+          # continued SFT from 2B p50 (scripts/data/build_lemma_continue.py): + lemma catalog vs control
+          ("2B p50 + lemma catalog", SFT / "qwen35_2b_p50_cont_lc_lr5em6_seed3407"),
+          ("2B p50 + control", SFT / "qwen35_2b_p50_cont_ct_lr5em6_seed3407")]
 EVALS = [("formal_eval", "in-domain"), ("formal_bench_tagged", "tagged benchmarks"), ("rl_gate_dolci", "Dolci gate")]
 CITE = re.compile(r"; lib ([A-Za-z_0-9.]+)")
 
@@ -54,6 +57,8 @@ def main():
     for mname, d in MODELS:
         for ev, _ in EVALS:
             f = d / ev / "generations.jsonl"
+            if not f.exists():
+                f = d / "final" / ev / "generations.jsonl"   # grpo_gate_ckpts.slurm writes under <run>/final/
             if not f.exists():
                 continue
             c = collections.Counter()

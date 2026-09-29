@@ -267,17 +267,17 @@
    }
   ],
   [
-   198,
+   200,
    {
-    "n": 2048.0,
-    "gen_share": 0.296875,
-    "reward": 0.7907714954053517,
+    "n": 2560.0,
+    "gen_share": 0.309375,
+    "reward": 0.7895833443733864,
     "valid_gen": 0.0,
     "grammatical_gen": 0.0,
-    "correct_gen": 0.8042763157894737,
+    "correct_gen": 0.8080808080808081,
     "valid_dolci": 0.0,
-    "grammatical_dolci": 0.013888888888888888,
-    "correct_dolci": 0.27569444444444446
+    "grammatical_dolci": 0.011312217194570135,
+    "correct_dolci": 0.2652714932126697
    }
   ]
  ],
@@ -297,17 +297,345 @@
    }
   ],
   [
-   19,
+   20,
    {
-    "n": 2304.0,
-    "gen_share": 0.2638888888888889,
-    "reward": 0.24479491316297855,
-    "valid_gen": 0.45394736842105265,
-    "grammatical_gen": 0.7648026315789473,
-    "correct_gen": 0.8289473684210527,
-    "valid_dolci": 0.009433962264150943,
-    "grammatical_dolci": 0.055424528301886794,
-    "correct_dolci": 0.2417452830188679
+    "n": 2560.0,
+    "gen_share": 0.25625,
+    "reward": 0.24316407310871,
+    "valid_gen": 0.4405487804878049,
+    "grammatical_gen": 0.760670731707317,
+    "correct_gen": 0.8277439024390244,
+    "valid_dolci": 0.008403361344537815,
+    "grammatical_dolci": 0.05724789915966386,
+    "correct_dolci": 0.2494747899159664
+   }
+  ],
+  [
+   30,
+   {
+    "n": 2560.0,
+    "gen_share": 0.321875,
+    "reward": 0.2913700287208485,
+    "valid_gen": 0.39563106796116504,
+    "grammatical_gen": 0.7864077669902912,
+    "correct_gen": 0.8216019417475728,
+    "valid_dolci": 0.005184331797235023,
+    "grammatical_dolci": 0.08410138248847926,
+    "correct_dolci": 0.2701612903225806
+   }
+  ],
+  [
+   40,
+   {
+    "n": 2560.0,
+    "gen_share": 0.3,
+    "reward": 0.2640589402108162,
+    "valid_gen": 0.3671875,
+    "grammatical_gen": 0.7369791666666666,
+    "correct_gen": 0.8059895833333334,
+    "valid_dolci": 0.0033482142857142855,
+    "grammatical_dolci": 0.07645089285714286,
+    "correct_dolci": 0.27957589285714285
+   }
+  ],
+  [
+   50,
+   {
+    "n": 2560.0,
+    "gen_share": 0.290625,
+    "reward": 0.28511744544739487,
+    "valid_gen": 0.40591397849462363,
+    "grammatical_gen": 0.7580645161290323,
+    "correct_gen": 0.760752688172043,
+    "valid_dolci": 0.009361233480176211,
+    "grammatical_dolci": 0.1183920704845815,
+    "correct_dolci": 0.3303964757709251
+   }
+  ],
+  [
+   53,
+   {
+    "n": 768.0,
+    "gen_share": 0.3020833333333333,
+    "reward": 0.314089698624836,
+    "valid_gen": 0.3275862068965517,
+    "grammatical_gen": 0.7413793103448276,
+    "correct_gen": 0.8836206896551724,
+    "valid_dolci": 0.007462686567164179,
+    "grammatical_dolci": 0.16791044776119404,
+    "correct_dolci": 0.29850746268656714
+   }
+  ]
+ ],
+ "G6i G6h + restatement fix": [
+  [
+   10,
+   {
+    "n": 2560.0,
+    "gen_share": 0.278125,
+    "reward": 0.220248883693057,
+    "valid_gen": 0.3904494382022472,
+    "grammatical_gen": 0.7654494382022472,
+    "correct_gen": 0.776685393258427,
+    "valid_dolci": 0.003246753246753247,
+    "grammatical_dolci": 0.04599567099567099,
+    "correct_dolci": 0.1672077922077922
+   }
+  ],
+  [
+   20,
+   {
+    "n": 2560.0,
+    "gen_share": 0.25625,
+    "reward": 0.24578220592447905,
+    "valid_gen": 0.45884146341463417,
+    "grammatical_gen": 0.7896341463414634,
+    "correct_gen": 0.8246951219512195,
+    "valid_dolci": 0.006827731092436975,
+    "grammatical_dolci": 0.05777310924369748,
+    "correct_dolci": 0.25210084033613445
+   }
+  ],
+  [
+   30,
+   {
+    "n": 2560.0,
+    "gen_share": 0.321875,
+    "reward": 0.29306351476043346,
+    "valid_gen": 0.3871359223300971,
+    "grammatical_gen": 0.7985436893203883,
+    "correct_gen": 0.8179611650485437,
+    "valid_dolci": 0.009792626728110598,
+    "grammatical_dolci": 0.10023041474654378,
+    "correct_dolci": 0.28225806451612906
+   }
+  ],
+  [
+   40,
+   {
+    "n": 2560.0,
+    "gen_share": 0.3,
+    "reward": 0.27395657248125643,
+    "valid_gen": 0.3606770833333333,
+    "grammatical_gen": 0.7291666666666666,
+    "correct_gen": 0.8255208333333334,
+    "valid_dolci": 0.010044642857142858,
+    "grammatical_dolci": 0.10491071428571429,
+    "correct_dolci": 0.29185267857142855
+   }
+  ],
+  [
+   50,
+   {
+    "n": 2560.0,
+    "gen_share": 0.290625,
+    "reward": 0.28202972780163693,
+    "valid_gen": 0.26881720430107525,
+    "grammatical_gen": 0.7231182795698925,
+    "correct_gen": 0.7889784946236559,
+    "valid_dolci": 0.012665198237885462,
+    "grammatical_dolci": 0.1305066079295154,
+    "correct_dolci": 0.3303964757709251
+   }
+  ],
+  [
+   60,
+   {
+    "n": 2560.0,
+    "gen_share": 0.290625,
+    "reward": 0.2660248563035566,
+    "valid_gen": 0.12231182795698925,
+    "grammatical_gen": 0.4435483870967742,
+    "correct_gen": 0.7836021505376344,
+    "valid_dolci": 0.0011013215859030838,
+    "grammatical_dolci": 0.022026431718061675,
+    "correct_dolci": 0.31662995594713655
+   }
+  ],
+  [
+   70,
+   {
+    "n": 2560.0,
+    "gen_share": 0.303125,
+    "reward": 0.3227776739222463,
+    "valid_gen": 0.12628865979381443,
+    "grammatical_gen": 0.4806701030927835,
+    "correct_gen": 0.8041237113402062,
+    "valid_dolci": 0.0,
+    "grammatical_dolci": 0.044282511210762335,
+    "correct_dolci": 0.3542600896860987
+   }
+  ],
+  [
+   75,
+   {
+    "n": 1280.0,
+    "gen_share": 0.30625,
+    "reward": 0.3110814412633772,
+    "valid_gen": 0.08673469387755102,
+    "grammatical_gen": 0.5051020408163265,
+    "correct_gen": 0.7397959183673469,
+    "valid_dolci": 0.0,
+    "grammatical_dolci": 0.04391891891891892,
+    "correct_dolci": 0.33896396396396394
+   }
+  ]
+ ],
+ "G7 cvf (correct x valid x prem_ok)": [
+  [
+   10,
+   {
+    "n": 2560.0,
+    "gen_share": 0.278125,
+    "reward": 0.0953125,
+    "valid_gen": 0.3946629213483146,
+    "grammatical_gen": 0.7401685393258427,
+    "correct_gen": 0.7710674157303371,
+    "valid_dolci": 0.003246753246753247,
+    "grammatical_dolci": 0.044372294372294376,
+    "correct_dolci": 0.1764069264069264
+   }
+  ],
+  [
+   20,
+   {
+    "n": 2560.0,
+    "gen_share": 0.25625,
+    "reward": 0.108984375,
+    "valid_gen": 0.4740853658536585,
+    "grammatical_gen": 0.7560975609756098,
+    "correct_gen": 0.8216463414634146,
+    "valid_dolci": 0.006827731092436975,
+    "grammatical_dolci": 0.04884453781512605,
+    "correct_dolci": 0.21323529411764705
+   }
+  ],
+  [
+   30,
+   {
+    "n": 2560.0,
+    "gen_share": 0.321875,
+    "reward": 0.1390625,
+    "valid_gen": 0.4830097087378641,
+    "grammatical_gen": 0.8191747572815534,
+    "correct_gen": 0.8385922330097088,
+    "valid_dolci": 0.00576036866359447,
+    "grammatical_dolci": 0.059907834101382486,
+    "correct_dolci": 0.22580645161290322
+   }
+  ],
+  [
+   40,
+   {
+    "n": 2560.0,
+    "gen_share": 0.3,
+    "reward": 0.099609375,
+    "valid_gen": 0.41015625,
+    "grammatical_gen": 0.6393229166666666,
+    "correct_gen": 0.8072916666666666,
+    "valid_dolci": 0.007254464285714286,
+    "grammatical_dolci": 0.04241071428571429,
+    "correct_dolci": 0.20479910714285715
+   }
+  ],
+  [
+   50,
+   {
+    "n": 2560.0,
+    "gen_share": 0.290625,
+    "reward": 0.091015625,
+    "valid_gen": 0.40053763440860213,
+    "grammatical_gen": 0.6747311827956989,
+    "correct_gen": 0.7768817204301075,
+    "valid_dolci": 0.01762114537444934,
+    "grammatical_dolci": 0.06277533039647577,
+    "correct_dolci": 0.2626651982378855
+   }
+  ],
+  [
+   57,
+   {
+    "n": 1792.0,
+    "gen_share": 0.28125,
+    "reward": 0.09375,
+    "valid_gen": 0.3869047619047619,
+    "grammatical_gen": 0.6130952380952381,
+    "correct_gen": 0.8273809523809523,
+    "valid_dolci": 0.008540372670807454,
+    "grammatical_dolci": 0.07065217391304347,
+    "correct_dolci": 0.17701863354037267
+   }
+  ]
+ ],
+ "G7g cvf, gen prompts only": [
+  [
+   10,
+   {
+    "n": 2560.0,
+    "gen_share": 1.0,
+    "reward": 0.34453125,
+    "valid_gen": 0.402734375,
+    "grammatical_gen": 0.7453125,
+    "correct_gen": 0.788671875,
+    "valid_dolci": NaN,
+    "grammatical_dolci": NaN,
+    "correct_dolci": NaN
+   }
+  ],
+  [
+   20,
+   {
+    "n": 2560.0,
+    "gen_share": 1.0,
+    "reward": 0.389453125,
+    "valid_gen": 0.468359375,
+    "grammatical_gen": 0.77109375,
+    "correct_gen": 0.814453125,
+    "valid_dolci": NaN,
+    "grammatical_dolci": NaN,
+    "correct_dolci": NaN
+   }
+  ],
+  [
+   30,
+   {
+    "n": 2560.0,
+    "gen_share": 1.0,
+    "reward": 0.44140625,
+    "valid_gen": 0.500390625,
+    "grammatical_gen": 0.78515625,
+    "correct_gen": 0.821484375,
+    "valid_dolci": NaN,
+    "grammatical_dolci": NaN,
+    "correct_dolci": NaN
+   }
+  ],
+  [
+   40,
+   {
+    "n": 2560.0,
+    "gen_share": 1.0,
+    "reward": 0.475390625,
+    "valid_gen": 0.535546875,
+    "grammatical_gen": 0.8078125,
+    "correct_gen": 0.839453125,
+    "valid_dolci": NaN,
+    "grammatical_dolci": NaN,
+    "correct_dolci": NaN
+   }
+  ],
+  [
+   44,
+   {
+    "n": 1024.0,
+    "gen_share": 1.0,
+    "reward": 0.4697265625,
+    "valid_gen": 0.5244140625,
+    "grammatical_gen": 0.8125,
+    "correct_gen": 0.8125,
+    "valid_dolci": NaN,
+    "grammatical_dolci": NaN,
+    "correct_dolci": NaN
    }
   ]
  ]
