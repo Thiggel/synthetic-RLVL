@@ -43,7 +43,7 @@ hash -r 2>/dev/null || true
 MODEL="${CKPT}"
 [[ -s "${CKPT}/final/config.json" ]] && MODEL="${CKPT}/final"
 test -s "${MODEL}/config.json" || { echo "missing model: ${MODEL}" >&2; exit 2; }
-TEST="${ROOT}/rlvl_data/datasets/formal_mixture_20260925/pool/test.jsonl"
+TEST="${TEST:-${ROOT}/rlvl_data/datasets/formal_mixture_20260925/pool/test.jsonl}"  # TEST: another item file, e.g. formal_libext_20260930/pool/test_math.jsonl
 test -s "${TEST}" || { echo "missing test set: ${TEST}" >&2; exit 2; }
 OUT_DIR="${OUT_DIR:-${CKPT}/formal_eval${LIMIT:+_n${LIMIT}}}"
 if [[ -s "${OUT_DIR}/summary.json" ]]; then
