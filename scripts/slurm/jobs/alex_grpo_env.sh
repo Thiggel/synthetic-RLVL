@@ -15,7 +15,10 @@ ALEX_VAULT=/home/vault/c107fa/c107fa12
 export RLVL_DATA_ROOT="${RLVL_DATA_ROOT:-${ALEX_WORK}/rlvl_data}"
 ENV_TAR="${ENV_TAR:-${ALEX_VAULT}/rlvl_envs/rlvl_grpo_env_20260930.tar.zst}"
 CHECKER="${CHECKER:-${RLVL_DATA_ROOT}/RLVL-next_snapshot_20260930}"
-export TMPDIR="${TMPDIR:-/tmp/${USER}_${SLURM_JOB_ID:-$$}}"
+if [[ -z "${TMPDIR:-}" ]]; then  # Slurm on alex sets a job-specific TMPDIR (removed at job end); else own one
+  export TMPDIR="/tmp/${USER}_${SLURM_JOB_ID:-$$}"
+  trap 'rm -rf "${TMPDIR}"' EXIT
+fi
 mkdir -p "${TMPDIR}"
 ENV_DIR="${TMPDIR}/rlvl_grpo_env"
 if [[ ! -x "${ENV_DIR}/venv/bin/python" ]]; then
