@@ -267,3 +267,42 @@ Same run as above, 2/3 through its cosine schedule. Figure: `figures/sft_scale_c
 
 - In-domain, the model is close to saturated (valid .942 → .963).
 - On Dolci, doubling the generator data raises has_proof by 10 points, but valid rises only 0.6 points. So more SFT on the same generator distribution does not close the Dolci validity gap. That gap needs RL, or generator coverage of Dolci-style domains (the open question to the user on extending the lib).
+
+## 2026-09-30 14:20: Dolci gate sampled pass@k (does more SFT data help GRPO?)
+
+The user asked whether more SFT data makes the model know the lemmas better, and so helps RL, even when greedy validity barely moves. The greedy gate cannot answer that. GRPO samples 8 rollouts at T=1.0, so what matters is how many prompts produce at least one valid proof, and how many 8-rollout groups mix passes and fails. That mix is what gives a non-zero advantage.
+
+Setup: 950 Dolci gate items, 16 samples each at T=1.0 with max 2048 tokens, which matches the GRPO rollouts. The metrics are unbiased pass@k and mixed@8 = pass@8(pass) + pass@8(fail) − 1. Tool: `scripts/eval_formal_bench_vllm.py --n-samples 16 --temperature 1.0`. Table: `analysis/passk_ladder.md` (from `scripts/analysis/passk_ladder.py`).
+
+![pass@k ladder](figures/passk_ladder.png)
+
+| model (2B) | has_proof @1/@8/@16/mixed@8 | grammatical | valid | correct | valid∧correct |
+|---|---|---|---|---|---|
+| SFT x3 @781 (~50k gen rows) | .276/.391/.442/.206 | .090/.225/.261/.216 | .010/.044/.063/.044 | .176/.427/.511/.404 | .003/.013/.019/.013 |
+| SFT x3 @1562 (~100k) | .359/.493/.537/.225 | .118/.287/.333/.276 | .010/.047/.066/.047 | .183/.425/.501/.395 | .003/.015/.023/.015 |
+| SFT p50 + lemma catalog fp32m | .531/.725/.780/.370 | .107/.307/.371/.303 | .004/.026/.043/.026 | .186/.448/.527/.430 | .002/.013/.023/.013 |
+| GRPO G8 final (lc base, 200 steps) | .874/.957/.971/.217 | .141/.341/.405/.317 | .032/.096/.121/.094 | .220/.442/.524/.372 | .020/.055/.065/.053 |
+
+**valid@8 per bench:**
+
+| model | dapo | knowledge | math | wordprob | yesno |
+|---|---|---|---|---|---|
+| x3 @781 | 0 | .182 | .008 | .065 | .042 |
+| x3 @1562 | 0 | .199 | .003 | .056 | .061 |
+| lemma catalog | 0 | .061 | .005 | .029 | .055 |
+| G8 | 0 | .194 | .005 | .173 | .179 |
+
+**Findings**
+- **More SFT data raises has_proof and grammatical, but not valid.** From 50k to 100k rows, has_proof@8 goes .39 → .49 and grammatical@8 goes .23 → .29. valid@8 only goes .044 → .047, and the valid∧correct signal rate goes .013 → .015. On lemmas, the model cites real lib lemmas far more often (67 → 168 cites; see the x3@1562 section). Those extra cites do not become checkable proofs on Dolci. More data mainly makes the model try `<formal>` more often; it does not make it prove more.
+- **The lemma catalog raises attempts and lowers validity.** has_proof@8 is .73, but valid@8 drops to .026 (knowledge .18 → .06).
+- **GRPO is the only intervention that moves valid@k.** G8 doubles valid@k and roughly quadruples the valid∧correct signal (mixed@8 .013 → .053). Its has_proof is saturated at .96, but its has_proof mixed@8 is lower because nearly every group passes.
+- **The reward signal is sparse.** With the cvf reward, about 95% of Dolci prompts give all-zero groups at 8 rollouts, even after GRPO. dapo never produces a valid proof in 16 samples, and math almost never does (≤ .008). The lib has no lemmas for these domains (gcd/mod, geometry, motion).
+- **Where proofs are missing:** at x3@781, 98% of proof-less samples end with finish=stop, not length. On math, the model ignores `<formal>` and writes NL CoT.
+
+**Implications for Stage 2**
+- More SFT data is not the bottleneck. It may still help RL a little through has_proof, but validity is the binding constraint.
+- Candidate next steps:
+  - pass@k-filtered prompt sampling: drop prompts with valid@16 = 0 and upweight knowledge/wordprob/yesno.
+  - a denser curriculum reward (grammatical → valid → correct).
+  - extending the lib to the missing math domains (awaiting a decision from the user).
+- Pending: rows for p25 fp32m (~25k, job 7913) and x3 final (~150k, job 7915). They will complete the data-scale ladder.
