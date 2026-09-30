@@ -215,3 +215,7 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7413 gate_G9 G9@100 G9 final, gruenau10 afterany 7412 (2026-09-30)
 7499 gate_G8_100 early gate of G8 checkpoint-100 on gruenau7 (7168 skips it once gated) (2026-09-30)
 7648 gate_G9_100 early gate of G9 checkpoint-100 on gruenau11 (7413 skips it once gated) (2026-09-30)
+7789 fmix_0.8b_p00_fp32m 0.8b p00 rerun, ZeRO-2 fp32 master weights (0.8B sweep was bf16-rounded), gruenau11 1x H100 NVL (2026-09-30)
+7789 -> qwen35_0.8b_dolci_rlvlgen_p00_lr5em6_seed3407_fp32m: eval=7790 gate=7791 bench=7792 tagged=7793 (sequential, 1 GPU, gruenau11) (2026-09-30)
+7794 fmix_0.8b_p25_fp32m 0.8b p25 rerun, ZeRO-2 fp32 master weights (0.8B sweep was bf16-rounded), gruenau11 1x H100 NVL (2026-09-30)
+7794 -> qwen35_0.8b_dolci_rlvlgen_p25_lr5em6_seed3407_fp32m: eval=7795 gate=7796 bench=7797 tagged=7798 (sequential, 1 GPU, gruenau11) (2026-09-30)
