@@ -219,3 +219,6 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7789 -> qwen35_0.8b_dolci_rlvlgen_p00_lr5em6_seed3407_fp32m: eval=7790 gate=7791 bench=7792 tagged=7793 (sequential, 1 GPU, gruenau11) (2026-09-30)
 7794 fmix_0.8b_p25_fp32m 0.8b p25 rerun, ZeRO-2 fp32 master weights (0.8B sweep was bf16-rounded), gruenau11 1x H100 NVL (2026-09-30)
 7794 -> qwen35_0.8b_dolci_rlvlgen_p25_lr5em6_seed3407_fp32m: eval=7795 gate=7796 bench=7797 tagged=7798 (sequential, 1 GPU, gruenau11) (2026-09-30)
+7825 gate_G8_50_150 gate G8 checkpoint-50/150 (slope of the gate at 200 steps), gruenau7 (2026-09-30)
+7826 grpo_G10 G8 final continued +600 steps, identical recipe (does GRPO keep improving past 200 steps?), gruenau10 A100 afterany 7413 (2026-09-30)
+7827 gate_G10 G10 @200/@400/final (=G8+200/+400/+600), gruenau10 afterany 7826 (2026-09-30)

@@ -312,6 +312,106 @@
     ],
     "real_seen": 32
    }
+  },
+  "2B p50 x3 @781 SFT": {
+   "formal_eval": {
+    "cites": 2549,
+    "nonexistent": 45,
+    "real_unseen": 5,
+    "top_nonexistent": [
+     "logic.sym",
+     "logic.asym",
+     "space.above_trans",
+     "graph.asym"
+    ],
+    "real_seen": 2499
+   },
+   "rl_gate_dolci": {
+    "cites": 197,
+    "nonexistent": 130,
+    "real_unseen": 0,
+    "top_nonexistent": [
+     "logic.not_def",
+     "logic.not_0",
+     "eq.add",
+     "number.second_largest_factor",
+     "avg_def",
+     "math.gcd_def",
+     "order.trichotomy",
+     "calc.sum",
+     "number.factors_base",
+     "number.largest_factor",
+     "set.card_def",
+     "set.diff"
+    ],
+    "real_seen": 67
+   }
+  },
+  "2B G7 cvf final (p50 base)": {
+   "rl_gate_dolci": {
+    "cites": 948,
+    "nonexistent": 789,
+    "real_unseen": 0,
+    "top_nonexistent": [
+     "graph.col_equiv",
+     "psyc.help.1",
+     "formlib.base_def",
+     "logic.impol",
+     "graph.prop",
+     "person.different",
+     "number.digits.add",
+     "logic.demorgan",
+     "common_ground.def",
+     "logic.dl",
+     "logic.taut",
+     "prob.add"
+    ],
+    "real_seen": 159
+   }
+  },
+  "2B G8 cvf final (lemma-catalog base)": {
+   "rl_gate_dolci": {
+    "cites": 947,
+    "nonexistent": 571,
+    "real_unseen": 198,
+    "top_nonexistent": [
+     "list.digit",
+     "geom.rot_def",
+     "geom.dist_def",
+     "arith.sum_all",
+     "state.step",
+     "path.count",
+     "arith.gcd_def",
+     "geom.dist_center",
+     "geom.dist_sym",
+     "plane.area_part",
+     "rel.inv",
+     "arith.prod_def"
+    ],
+    "real_seen": 178
+   }
+  },
+  "2B G9 cvf @100 (x3 base)": {
+   "rl_gate_dolci": {
+    "cites": 279,
+    "nonexistent": 254,
+    "real_unseen": 0,
+    "top_nonexistent": [
+     "num.mod_div",
+     "set.iff_def",
+     "logic.not",
+     "logic.or",
+     "logic.ds",
+     "algorithm.gcd_def",
+     "eq.dist_sum",
+     "set.mem_def",
+     "avg_def",
+     "eq.num",
+     "language.definitions",
+     "sort"
+    ],
+    "real_seen": 25
+   }
   }
  }
 }
