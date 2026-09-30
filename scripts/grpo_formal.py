@@ -84,6 +84,44 @@ def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], 
     return Dataset.from_list(rows)
 
 
+def _ckpts(out_dir: str) -> list[Path]:
+    return sorted(Path(out_dir).glob("checkpoint-*"), key=lambda p: int(p.name.split("-")[1]))
+
+
+def _resumable(c: Path) -> bool:
+    return (c / "trainer_state.json").is_file() and (any(c.glob("global_step*")) or (c / "optimizer.pt").is_file())
+
+
+def _prune_optimizer_state(out_dir: str, keep_every: int = 0, keep_full: int = 2) -> None:
+    """Long runs (--resumable) save often for resume granularity. The newest keep_full checkpoints stay complete
+    (the newest may be half-written when the walltime kills a job during a save). Older ones lose the optimizer /
+    DeepSpeed state (~6x the weights); their weights are kept only at multiples of keep_every (gate evals)."""
+    import shutil
+    for c in _ckpts(out_dir)[:-keep_full]:
+        if keep_every and int(c.name.split("-")[1]) % keep_every:
+            shutil.rmtree(c, ignore_errors=True)
+            continue
+        for f in list(c.glob("global_step*")) + [c / "optimizer.pt", c / "scheduler.pt"]:
+            if f.is_dir():
+                shutil.rmtree(f, ignore_errors=True)
+            elif f.exists():
+                f.unlink()
+
+
+def _callback_base():
+    from transformers import TrainerCallback
+    return TrainerCallback
+
+
+class PruneOptimizerState(_callback_base()):
+    def __init__(self, keep_every: int):
+        self.keep_every = keep_every
+
+    def on_save(self, args, state, control, **kwargs):
+        if state.is_world_process_zero:
+            _prune_optimizer_state(args.output_dir, self.keep_every)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
@@ -111,6 +149,11 @@ def main():
                     help="scripts/rl_prompt_filter.py output: keep prompts with --filter-lo < rate < --filter-hi")
     ap.add_argument("--filter-lo", type=float, default=0.0)
     ap.add_argument("--filter-hi", type=float, default=1.0)
+    ap.add_argument("--resumable", action="store_true",
+                    help="long runs across walltime limits: save optimizer state, resume from the latest checkpoint "
+                         "in --out-dir, and keep optimizer state only in the newest checkpoints")
+    ap.add_argument("--keep-every", type=int, default=0,
+                    help="with --resumable: keep weights of older checkpoints only at multiples of this step")
     args = ap.parse_args()
 
     from transformers import AutoTokenizer
@@ -134,7 +177,7 @@ def main():
         temperature=args.temperature, mask_truncated_completions=True, reward_weights=weights,
         use_vllm=True, vllm_mode="colocate", vllm_gpu_memory_utilization=args.vllm_mem,
         vllm_enable_sleep_mode=True, bf16=True, gradient_checkpointing=True, logging_steps=1,
-        save_steps=args.save_steps, save_only_model=True, seed=args.seed, report_to=args.report_to,
+        save_steps=args.save_steps, save_only_model=not args.resumable, seed=args.seed, report_to=args.report_to,
         log_completions=True, num_completions_to_print=2, lr_scheduler_type="constant_with_warmup",
         warmup_steps=10,
     )
@@ -143,8 +186,11 @@ def main():
     print(json.dumps({"arm": args.arm, "tag": not args.no_tag, "n_prompts": len(train), "grad_accum": grad_accum,
                       "world": world, "rewards": [f.__name__ for f in funcs]}), flush=True)
     trainer = GRPOTrainer(model=args.model, reward_funcs=funcs, args=cfg, train_dataset=train,
-                          processing_class=tok)
-    trainer.train()
+                          processing_class=tok, callbacks=[PruneOptimizerState(args.keep_every)] if args.resumable else None)
+    resume = [c for c in _ckpts(args.out_dir) if _resumable(c)] if args.resumable else []
+    if resume:
+        print(f"resuming from {resume[-1]}", flush=True)
+    trainer.train(resume_from_checkpoint=str(resume[-1]) if resume else None)
     trainer.save_model(str(Path(args.out_dir) / "final"))
     json.dump(trainer.state.log_history, open(Path(args.out_dir) / "log_history.json", "w"))
 
