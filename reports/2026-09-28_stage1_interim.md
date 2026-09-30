@@ -144,3 +144,36 @@ Dolci gate (`rl_gate_dolci`, answers must also be proven):
 | **SFT p50 x3 @781** | .299 | .134 | .275 | .023 | .007 | .004 | .214 |
 
 **Reading.** With correct precision, the 2B model reaches 9B-level in-domain validity after the same 50k generator rows: .942 vs .675. So most of the earlier 2B/9B gap was the precision bug, not model size. Transfer to Dolci does not follow. valid_eval doubles (.008 → .023, the best SFT so far), but end-to-end valid stays at .007 and the model writes fewer proofs (has_proof .30). In-domain competence is now saturated at 2B. The remaining bottleneck is transfer to natural prompts. That is the Stage-2 GRPO / EI question, not a question of longer SFT. Checkpoints 1562 and final follow (the watcher submits their eval and gate automatically), and the corrected 2B p00/p10/p25/p50 reruns (7146/7215/7217/7147) give the matched mixture curve.
+
+## 2026-09-30 03:45: corrected 2B sweep, first points (p10, p25 with fp32 master weights)
+
+These rerun the 2B mixture sweep without the bf16 rounding bug (2dea2ee). Same data, lr and steps. In-domain rates are on 2000 unseen generator problems:
+
+| run | faithful | grammatical | valid | answer acc |
+|---|---|---|---|---|
+| p10 bf16-rounded | .414 | .662 | .252 | .718 |
+| **p10 fp32m** | **.923** | **.980** | **.845** | **.934** |
+| p25 bf16-rounded | .666 | .845 | .470 | .808 |
+| **p25 fp32m** | **.970** | **.994** | **.913** | **.964** |
+| p50 x3 @781 (fp32, same 50k gen rows as p50) | .986 | .996 | .942 | .976 |
+| 9B p10 / p25 | .976 / .990 | .998 / .998 | .944 / .963 | .979 / .989 |
+
+- The steep 2B "more formal data helps" slope in the original sweep was mostly an optimizer artefact.
+- With correct precision, 10k generator rows already give valid .85, and 25k give .91. 2B now sits just below 9B.
+
+![scale curve](figures/sft_scale_curve.png)
+
+Dolci gate (950 natural prompts, greedy; `scripts/analysis/grpo_gate_ckpts.py`):
+
+| model | has_proof | grammatical | format_ok | valid_eval | valid | correct |
+|---|---|---|---|---|---|---|
+| SFT p0 | .000 | .000 | .000 | .000 | .000 | .203 |
+| SFT p50 bf16-rounded | .399 | .082 | .328 | .008 | .004 | .222 |
+| SFT p10 fp32m | .597 | .173 | .498 | .026 | .005 | .206 |
+| SFT p25 fp32m | .402 | .171 | .360 | .021 | .008 | .206 |
+| SFT p50 x3 @781 | .299 | .134 | .275 | .023 | .007 | .214 |
+
+- Correct precision roughly doubles grammatical proofs on natural prompts, from .08 to .17.
+- Strict validity on natural prompts stays below 1% at every mixture ratio.
+- Answer correctness is unchanged versus pure instruction tuning (p0 .203). The formal mix costs no accuracy on the gate.
+- Benchmark and tagged results follow once 7222/7225 and 7223/7226 finish.

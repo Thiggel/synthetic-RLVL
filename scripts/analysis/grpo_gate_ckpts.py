@@ -25,6 +25,10 @@ TEST = DATA / "datasets/rl_gate_dolci_instruct_20260928/test.jsonl"
 MODELS = [
     ("SFT p0", SFT / "qwen35_2b_dolci_rlvlgen_p00_lr5em6_seed3407"),
     ("SFT p50", SFT / "qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407"),
+    ("SFT p00 fp32m", SFT / "qwen35_2b_dolci_rlvlgen_p00_lr5em6_seed3407_fp32m/final"),
+    ("SFT p10 fp32m", SFT / "qwen35_2b_dolci_rlvlgen_p10_lr5em6_seed3407_fp32m/final"),
+    ("SFT p25 fp32m", SFT / "qwen35_2b_dolci_rlvlgen_p25_lr5em6_seed3407_fp32m/final"),
+    ("SFT p50 fp32m", SFT / "qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407_fp32m/final"),
     ("G0 correct (p0) @50", GRPO / "2b_p0_G0_correct_bal/checkpoint-50"),
     ("G0 correct (p0) @100", GRPO / "2b_p0_G0_correct_bal/checkpoint-100"),
     ("G0 correct (p0) @150", GRPO / "2b_p0_G0_correct_bal/checkpoint-150"),

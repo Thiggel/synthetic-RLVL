@@ -7,6 +7,8 @@ Question (user, 2026-09-29): would a longer SFT (e.g. 10x) give a better base? T
   scaled p50      qwen35_2b_dolci_rlvlgen_p50_x3: p50 at 3x the rows (300k, 2344 steps); its
                   checkpoints at steps 781 / 1562 / final have seen ~50k / 100k / 150k generator rows
                   (rows are shuffled), always at a 50% share
+  fp32m reruns    qwen35_2b_dolci_rlvlgen_p<X>_..._fp32m: the 2B sweep again with fp32 master weights
+                  (the original 2B / 0.8B runs lost most AdamW updates to bf16 rounding, 2dea2ee)
 Reads formal_eval/summary.json (2000 unseen generator problems) of every run / checkpoint present
 and writes reports/figures/sft_scale_curve.png.
 """
@@ -25,11 +27,11 @@ COL = {"0.8b": "#4C78A8", "2b": "#F58518", "9b": "#54A24B"}
 SCALED = {"2b": ROOT / "qwen35_2b_dolci_rlvlgen_p50_x3_lr5em6_seed3407"}
 STEPS_PER_50K = 781
 
-sweep, scaled = {}, {}
-for f in ROOT.glob("qwen35_*_dolci_rlvlgen_p*_lr5em6_seed3407/formal_eval/summary.json"):
-    m = re.search(r"qwen35_([\d.]+b)_dolci_rlvlgen_p(\d+)_lr", str(f))
+sweep, scaled, fp32m = {}, {}, {}
+for f in ROOT.glob("qwen35_*_dolci_rlvlgen_p*_lr5em6_seed3407*/formal_eval/summary.json"):
+    m = re.search(r"qwen35_([\d.]+b)_dolci_rlvlgen_p(\d+)_lr5em6_seed3407(_fp32m)?/", str(f))
     if m and int(m[2]) > 0:
-        sweep.setdefault(m[1], {})[int(m[2]) * 1000] = json.load(open(f))["overall"]
+        (fp32m if m[3] else sweep).setdefault(m[1], {})[int(m[2]) * 1000] = json.load(open(f))["overall"]
 for size, run in SCALED.items():
     for f in run.glob("*/formal_eval/summary.json"):
         ck = f.parts[-3]
@@ -40,8 +42,13 @@ fig, axes = plt.subplots(1, len(MET), figsize=(4.2 * len(MET), 3.7), sharey=True
 for ax, (k, lbl) in zip(axes, MET):
     for size in sorted(sweep, key=lambda s: float(s[:-1])):
         xs = sorted(sweep[size])
-        ax.plot(xs, [sweep[size][x][k] for x in xs], "-o", ms=4, color=COL.get(size),
-                label=f"{size.upper()} sweep (100k rows, X% formal)")
+        crippled = " bf16-rounded" if size in ("0.8b", "2b") else ""
+        ax.plot(xs, [sweep[size][x][k] for x in xs], ":o" if crippled else "-o", ms=4, color=COL.get(size),
+                alpha=.5 if crippled else 1, label=f"{size.upper()} sweep (100k rows, X% formal){crippled}")
+    for size, pts in fp32m.items():
+        xs = sorted(pts)
+        ax.plot(xs, [pts[x][k] for x in xs], "-D", ms=5, color=COL.get(size),
+                label=f"{size.upper()} sweep, fp32 master (fixed)")
     for size, pts in scaled.items():
         xs = sorted(pts)
         ax.plot(xs, [pts[x][k] for x in xs], "--s", ms=6, color=COL.get(size), mfc="white",
@@ -52,11 +59,13 @@ for ax, (k, lbl) in zip(axes, MET):
     ax.set_xlabel("generator rows seen in SFT")
     ax.grid(alpha=.3)
 axes[0].set_ylabel("rate on 2000 unseen generator problems")
-axes[0].legend(fontsize=7)
+axes[2].legend(fontsize=7, loc="lower right")
 fig.suptitle("Does more SFT help? In-domain rates vs generator rows seen")
 fig.tight_layout()
 fig.savefig(FIG / "sft_scale_curve.png", dpi=140)
 for size in sweep:
     print(size, {x: round(v["valid"], 3) for x, v in sorted(sweep[size].items())})
+for size in fp32m:
+    print(size, "fp32m", {x: round(v["valid"], 3) for x, v in sorted(fp32m[size].items())})
 for size in scaled:
     print(size, "x3", {x: round(v["valid"], 3) for x, v in sorted(scaled[size].items())})
