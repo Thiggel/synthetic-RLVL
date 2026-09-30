@@ -412,6 +412,28 @@
     ],
     "real_seen": 25
    }
+  },
+  "2B G9 cvf final (x3 base)": {
+   "rl_gate_dolci": {
+    "cites": 140,
+    "nonexistent": 99,
+    "real_unseen": 3,
+    "top_nonexistent": [
+     "algorithm.gcd_def",
+     "set.card_def",
+     "set.ext_iff",
+     "set.mem_iff_elem",
+     "avg_def",
+     "agent.present",
+     "set.nonempty",
+     "set.closed",
+     "matrix.rank_def",
+     "grid.color_row",
+     "algorithm.gcd_step",
+     "set.mem_def"
+    ],
+    "real_seen": 38
+   }
   }
  }
 }

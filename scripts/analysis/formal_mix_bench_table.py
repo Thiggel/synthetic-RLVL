@@ -33,7 +33,7 @@ sys.path.insert(0, str(REPO / "lm_eval_tasks" / "synthrlvl_ood"))
 from utils import qa_f1_score  # noqa: E402
 
 RUN_RE = re.compile(r"qwen35_(?P<m>[0-9.]+b)_dolci_rlvlgen_p(?P<x>\d\d)_lr5em6_seed3407(?P<fp>_fp32m)?$")
-MODELS = ["0.8b", "2b", "2b-fp32m", "9b"]  # 2b-fp32m: the 2B sweep rerun with fp32 master weights (2dea2ee)
+MODELS = ["0.8b", "0.8b-fp32m", "2b", "2b-fp32m", "9b"]  # *-fp32m: the sweep rerun with fp32 master weights (2dea2ee)
 
 
 def model_key(m: re.Match) -> str:

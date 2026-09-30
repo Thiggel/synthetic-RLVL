@@ -406,6 +406,21 @@ model,x,benchmark,score
 0.8b,50,winogrande,58.09
 0.8b,50,humaneval,21.34
 0.8b,50,mbpp,23.80
+0.8b-fp32m,0,PW d0,39.80
+0.8b-fp32m,0,PW d1,38.60
+0.8b-fp32m,0,PW d2,57.80
+0.8b-fp32m,0,PW d3,59.40
+0.8b-fp32m,0,PW d5,63.00
+0.8b-fp32m,25,PW d0,39.40
+0.8b-fp32m,25,PW d1,32.00
+0.8b-fp32m,25,PW d2,46.80
+0.8b-fp32m,25,PW d3,48.80
+0.8b-fp32m,25,PW d5,53.20
+0.8b-fp32m,25,PW CoT d0,25.60
+0.8b-fp32m,25,PW CoT d1,25.20
+0.8b-fp32m,25,PW CoT d2,29.20
+0.8b-fp32m,25,PW CoT d3,31.80
+0.8b-fp32m,25,PW CoT d5,29.00
 2b,0,PW d0,39.60
 2b,0,PW d1,30.00
 2b,0,PW d2,42.60
@@ -776,6 +791,43 @@ model,x,benchmark,score
 2b,50,winogrande,61.01
 2b,50,humaneval,34.15
 2b,50,mbpp,33.80
+2b-fp32m,0,PW d0,54.40
+2b-fp32m,0,PW d1,38.60
+2b-fp32m,0,PW d2,52.80
+2b-fp32m,0,PW d3,56.00
+2b-fp32m,0,PW d5,54.60
+2b-fp32m,0,PW CoT d0,59.20
+2b-fp32m,0,PW CoT d1,47.20
+2b-fp32m,0,PW CoT d2,38.40
+2b-fp32m,0,PW CoT d3,33.80
+2b-fp32m,0,PW CoT d5,23.40
+2b-fp32m,0,FOLIO,44.33
+2b-fp32m,0,BBH (all),64.93
+2b-fp32m,0,BBH chain-8,63.75
+2b-fp32m,0,BBH other,65.42
+2b-fp32m,0,BBH web_of_lies,100.00
+2b-fp32m,0,BBH tracking_shuffled_objects_three_objects,65.20
+2b-fp32m,0,BBH tracking_shuffled_objects_five_objects,66.00
+2b-fp32m,0,BBH tracking_shuffled_objects_seven_objects,65.20
+2b-fp32m,0,BBH logical_deduction_three_objects,84.40
+2b-fp32m,0,BBH logical_deduction_five_objects,45.20
+2b-fp32m,0,BBH logical_deduction_seven_objects,30.00
+2b-fp32m,0,BBH formal_fallacies,54.00
+2b-fp32m,0,HotpotQA,49.03
+2b-fp32m,0,2WikiMQA,37.88
+2b-fp32m,0,MuSiQue,29.70
+2b-fp32m,0,GPQA-Diamond,32.32
+2b-fp32m,0,GPQA-quant,32.88
+2b-fp32m,0,GPQA-rest,32.00
+2b-fp32m,0,gsm8k,64.82
+2b-fp32m,0,mmlu,60.19
+2b-fp32m,0,arc_challenge,50.00
+2b-fp32m,0,agieval_logiqa_en,36.25
+2b-fp32m,0,hellaswag,62.05
+2b-fp32m,0,piqa,76.22
+2b-fp32m,0,winogrande,60.62
+2b-fp32m,0,humaneval,35.98
+2b-fp32m,0,mbpp,32.60
 2b-fp32m,10,PW d0,69.60
 2b-fp32m,10,PW d1,43.80
 2b-fp32m,10,PW d2,52.60

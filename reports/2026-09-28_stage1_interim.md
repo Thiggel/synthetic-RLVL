@@ -210,3 +210,25 @@ Format-tagged benchmarks (`tagged/tagged_2b-fp32m.md`). Cells are grammatical / 
 - The tagged valid-proof rate on deduction more than doubles, from 9–11% to 22–24%.
 - gsm8k (untagged) drops by about 4 points. This needs the fp32m p00 baseline before reading it as a cost.
 - Whether the ProofWriter / FOLIO gains come from the formal data, or partly from correct training in general, is also only settled against fp32m p00.
+
+## 2026-09-30 10:00: 2B fp32m sweep now has its matched 0% baseline
+
+The fp32m p00 run (pure Dolci, same fp32-master recipe) finished bench and tagged evals. This gives the fp32m 10%/25% runs a matched baseline; before this we compared against the bf16 p00. Full tables: `analysis/formal_mixture_sweep_20260925/bench/bench_2b-fp32m.md`, `tagged/tagged_2b-fp32m.md`; figures `bench/bench_curves.png`, `tagged/tagged_curves.png`.
+
+Untagged benchmarks, 2B fp32m (Δ vs fp32m 0%):
+
+| benchmark | 0% | 10% | 25% |
+|---|---:|---:|---:|
+| PW CoT d3 | 33.8 | 43.8 (+10.0) | 47.8 (+14.0) |
+| PW CoT d5 | 23.4 | 31.8 (+8.4) | 35.2 (+11.8) |
+| FOLIO | 44.3 | 50.2 (+5.9) | 50.7 (+6.4) |
+| GPQA-Diamond | 32.3 | 38.4 (+6.1) | 37.9 (+5.6) |
+| BBH (all) | 64.9 | 66.1 (+1.2) | 64.6 (-0.3) |
+| gsm8k | 64.8 | 62.7 (-2.1) | 63.6 (-1.2) |
+| mmlu | 60.2 | 60.5 (+0.3) | 59.8 (-0.4) |
+| humaneval | 36.0 | 37.8 (+1.8) | 39.6 (+3.7) |
+
+- **The gsm8k question is answered:** the earlier −4 came from comparing against the bf16 p00 (66.3). Against the matched fp32m p00 (64.8), the cost is −2.1 (10%) and −1.2 (25%), within about 1–2 SE on 1319 items (SE ≈ 1.3). It is small and not clearly real.
+- **The multi-step deduction gains are large and grow with depth:** PW CoT d3/d5 gain +10 to +14 points and FOLIO +6. Standard benchmarks (mmlu, arc, hellaswag, piqa, winogrande) move by at most 0.5.
+- **The bf16 2B sweep understated the mixture:** its FOLIO was −1 to −3 and GPQA flat. The fixed fp32m runs show FOLIO +6 and GPQA +6. The precision bug (2dea2ee) mostly erased what the formal data taught.
+- **Tagged:** the 0% model never produces `<formal>` (0 grammatical), as expected. At 10%/25%, deduction tagged-correct is 45/47 vs 28 for 0%, but tagged gsm8k-correct drops (69 → 41/44) and bbh multistep_arithmetic too. The formal mode is worse than free text for arithmetic word problems at 2B, so it should stay opt-in (tag) and not be a default.

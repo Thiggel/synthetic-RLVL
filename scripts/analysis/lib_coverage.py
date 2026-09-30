@@ -36,7 +36,8 @@ MODELS = [("2B p50 SFT", SFT / "qwen35_2b_dolci_rlvlgen_p50_lr5em6_seed3407"),
           ("2B p50 x3 @781 SFT", SFT / "qwen35_2b_dolci_rlvlgen_p50_x3_lr5em6_seed3407/checkpoint-781"),
           ("2B G7 cvf final (p50 base)", GRPO / "2b_p50_G7_cvf/final"),
           ("2B G8 cvf final (lemma-catalog base)", GRPO / "2b_lcfp32m_G8_cvf/final"),
-          ("2B G9 cvf @100 (x3 base)", GRPO / "2b_x3at781_G9_cvf/checkpoint-100")]
+          ("2B G9 cvf @100 (x3 base)", GRPO / "2b_x3at781_G9_cvf/checkpoint-100"),
+          ("2B G9 cvf final (x3 base)", GRPO / "2b_x3at781_G9_cvf/final")]
 EVALS = [("formal_eval", "in-domain"), ("formal_bench_tagged", "tagged benchmarks"), ("rl_gate_dolci", "Dolci gate")]
 CITE = re.compile(r"; lib ([A-Za-z_0-9.]+)")
 

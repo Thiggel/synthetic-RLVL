@@ -1,39 +1,39 @@
-| benchmark | 10% | 25% |
-|---|---:|---:|
-| PW d0 | 69.6 | 66.0 |
-| PW d1 | 43.8 | 44.2 |
-| PW d2 | 52.6 | 55.0 |
-| PW d3 | 52.2 | 58.6 |
-| PW d5 | 50.4 | 53.2 |
-| PW CoT d0 | 68.8 | 58.0 |
-| PW CoT d1 | 49.2 | 51.0 |
-| PW CoT d2 | 47.6 | 44.6 |
-| PW CoT d3 | 43.8 | 47.8 |
-| PW CoT d5 | 31.8 | 35.2 |
-| FOLIO | 50.2 | 50.7 |
-| BBH (all) | 66.1 | 64.6 |
-| BBH chain-8 | 66.2 | 63.7 |
-| BBH other | 66.0 | 65.0 |
-| BBH web_of_lies | 100.0 | 100.0 |
-| BBH tracking_shuffled_objects_three_objects | 71.2 | 64.8 |
-| BBH tracking_shuffled_objects_five_objects | 69.6 | 68.8 |
-| BBH tracking_shuffled_objects_seven_objects | 70.8 | 66.4 |
-| BBH logical_deduction_three_objects | 84.8 | 88.4 |
-| BBH logical_deduction_five_objects | 50.4 | 44.4 |
-| BBH logical_deduction_seven_objects | 28.8 | 26.0 |
-| BBH formal_fallacies | 53.6 | 50.8 |
-| HotpotQA | 49.4 | 49.4 |
-| 2WikiMQA | 37.9 | 38.0 |
-| MuSiQue | 28.3 | 29.7 |
-| GPQA-Diamond | 38.4 | 37.9 |
-| GPQA-quant | 49.3 | 39.7 |
-| GPQA-rest | 32.0 | 36.8 |
-| gsm8k | 62.7 | 63.6 |
-| mmlu | 60.5 | 59.8 |
-| arc_challenge | 49.7 | 49.6 |
-| agieval_logiqa_en | 36.3 | 36.9 |
-| hellaswag | 62.0 | 62.1 |
-| piqa | 75.7 | 75.7 |
-| winogrande | 61.2 | 60.8 |
-| humaneval | 37.8 | 39.6 |
-| mbpp | 34.4 | 34.8 |
+| benchmark | 0% | 10% | 25% |
+|---|---:|---:|---:|
+| PW d0 | 54.4 | 69.6 (+15.2) | 66.0 (+11.6) |
+| PW d1 | 38.6 | 43.8 (+5.2) | 44.2 (+5.6) |
+| PW d2 | 52.8 | 52.6 (-0.2) | 55.0 (+2.2) |
+| PW d3 | 56.0 | 52.2 (-3.8) | 58.6 (+2.6) |
+| PW d5 | 54.6 | 50.4 (-4.2) | 53.2 (-1.4) |
+| PW CoT d0 | 59.2 | 68.8 (+9.6) | 58.0 (-1.2) |
+| PW CoT d1 | 47.2 | 49.2 (+2.0) | 51.0 (+3.8) |
+| PW CoT d2 | 38.4 | 47.6 (+9.2) | 44.6 (+6.2) |
+| PW CoT d3 | 33.8 | 43.8 (+10.0) | 47.8 (+14.0) |
+| PW CoT d5 | 23.4 | 31.8 (+8.4) | 35.2 (+11.8) |
+| FOLIO | 44.3 | 50.2 (+5.9) | 50.7 (+6.4) |
+| BBH (all) | 64.9 | 66.1 (+1.2) | 64.6 (-0.3) |
+| BBH chain-8 | 63.8 | 66.2 (+2.4) | 63.7 (-0.0) |
+| BBH other | 65.4 | 66.0 (+0.6) | 65.0 (-0.4) |
+| BBH web_of_lies | 100.0 | 100.0 (+0.0) | 100.0 (+0.0) |
+| BBH tracking_shuffled_objects_three_objects | 65.2 | 71.2 (+6.0) | 64.8 (-0.4) |
+| BBH tracking_shuffled_objects_five_objects | 66.0 | 69.6 (+3.6) | 68.8 (+2.8) |
+| BBH tracking_shuffled_objects_seven_objects | 65.2 | 70.8 (+5.6) | 66.4 (+1.2) |
+| BBH logical_deduction_three_objects | 84.4 | 84.8 (+0.4) | 88.4 (+4.0) |
+| BBH logical_deduction_five_objects | 45.2 | 50.4 (+5.2) | 44.4 (-0.8) |
+| BBH logical_deduction_seven_objects | 30.0 | 28.8 (-1.2) | 26.0 (-4.0) |
+| BBH formal_fallacies | 54.0 | 53.6 (-0.4) | 50.8 (-3.2) |
+| HotpotQA | 49.0 | 49.4 (+0.4) | 49.4 (+0.4) |
+| 2WikiMQA | 37.9 | 37.9 (-0.0) | 38.0 (+0.1) |
+| MuSiQue | 29.7 | 28.3 (-1.4) | 29.7 (-0.0) |
+| GPQA-Diamond | 32.3 | 38.4 (+6.1) | 37.9 (+5.6) |
+| GPQA-quant | 32.9 | 49.3 (+16.4) | 39.7 (+6.8) |
+| GPQA-rest | 32.0 | 32.0 (+0.0) | 36.8 (+4.8) |
+| gsm8k | 64.8 | 62.7 (-2.1) | 63.6 (-1.2) |
+| mmlu | 60.2 | 60.5 (+0.3) | 59.8 (-0.4) |
+| arc_challenge | 50.0 | 49.7 (-0.3) | 49.6 (-0.4) |
+| agieval_logiqa_en | 36.3 | 36.3 (+0.0) | 36.9 (+0.6) |
+| hellaswag | 62.0 | 62.0 (-0.1) | 62.1 (+0.1) |
+| piqa | 76.2 | 75.7 (-0.5) | 75.7 (-0.5) |
+| winogrande | 60.6 | 61.2 (+0.6) | 60.8 (+0.2) |
+| humaneval | 36.0 | 37.8 (+1.8) | 39.6 (+3.7) |
+| mbpp | 32.6 | 34.4 (+1.8) | 34.8 (+2.2) |
