@@ -36,7 +36,7 @@ export TOKENIZERS_PARALLELISM=false
 export CUDA_HOME="${CUDA_HOME:-/usr/local/cuda-13.2}"
 export PATH="${CUDA_HOME}/bin:${PATH}"
 export VLLM_USE_FLASHINFER_SAMPLER=0
-export PYTHONPATH=/vol/home-vol2/ml/laitenbf/RLVL-next/gen:/vol/home-vol2/ml/laitenbf/RLVL-next/rlvl/python
+export PYTHONPATH="${RLVL_PYTHONPATH:-/vol/home-vol2/ml/laitenbf/RLVL-next/gen:/vol/home-vol2/ml/laitenbf/RLVL-next/rlvl/python}"  # RLVL_PYTHONPATH: frozen checker
 hash -r 2>/dev/null || true
 
 : "${CKPT:?set CKPT=<run dir or model dir>}"
