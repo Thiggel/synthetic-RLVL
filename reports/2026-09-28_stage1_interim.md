@@ -232,3 +232,26 @@ Untagged benchmarks, 2B fp32m (Δ vs fp32m 0%):
 - **The multi-step deduction gains are large and grow with depth:** PW CoT d3/d5 gain +10 to +14 points and FOLIO +6. Standard benchmarks (mmlu, arc, hellaswag, piqa, winogrande) move by at most 0.5.
 - **The bf16 2B sweep understated the mixture:** its FOLIO was −1 to −3 and GPQA flat. The fixed fp32m runs show FOLIO +6 and GPQA +6. The precision bug (2dea2ee) mostly erased what the formal data taught.
 - **Tagged:** the 0% model never produces `<formal>` (0 grammatical), as expected. At 10%/25%, deduction tagged-correct is 45/47 vs 28 for 0%, but tagged gsm8k-correct drops (69 → 41/44) and bbh multistep_arithmetic too. The formal mode is worse than free text for arithmetic word problems at 2B, so it should stay opt-in (tag) and not be a default.
+
+## 0.8B fp32m: matched 0% vs 25% (2026-09-30)
+
+The 0.8B pair was rerun with fp32 master weights (2dea2ee), so it has a matched 0% baseline like 2B fp32m.
+Tables: `analysis/formal_mixture_sweep_20260925/bench/bench_0.8b-fp32m.md`, `tagged/tagged_0.8b-fp32m.md`;
+figures: `bench/bench_curves.png`, `tagged/tagged_curves.png`.
+
+Untagged benchmarks, 25% minus 0% (accuracy points):
+
+| bench | Δ |
+|---|---:|
+| ProofWriter CoT d0–d5 | +11 to +15 |
+| ProofWriter non-CoT d1–d5 | −6.6 to −11 |
+| FOLIO | +2.5 |
+| GPQA-D | +4.0 |
+| gsm8k | −1.2 |
+| mmlu | −3.4 |
+| HotpotQA | −2.7 |
+
+- The CoT deduction gain has the same size as at 2B (+8 to +14). The costs are larger at 0.8B: at 2B, standard benchmarks moved by at most 0.5, while at 0.8B mmlu drops 3.4 and non-CoT ProofWriter drops 6 to 11. A plausible reading is that the smaller model has less spare capacity, so the formal format competes with direct answering.
+- Tagged (`<formal>` mode): ProofWriter correct goes from 24 to 44, and grammatical is 82% with 19% valid. gsm8k correct falls from 53 to 25 in formal mode. That is the same pattern as 2B, where formal mode helps deduction and hurts arithmetic word problems.
+- Dolci RL gate on the 25% final (950 items): has_proof .884, grammatical .174, valid .024, correct .151 (0% baseline: correct .139). The 2B models have the same bottleneck: the model almost always writes a proof but it rarely checks on out-of-distribution prompts.
+- In-domain (generator test split), the proofs are valid .834 at 25k synthetic rows (scale curve).

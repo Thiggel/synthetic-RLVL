@@ -411,6 +411,38 @@ model,x,benchmark,score
 0.8b-fp32m,0,PW d2,57.80
 0.8b-fp32m,0,PW d3,59.40
 0.8b-fp32m,0,PW d5,63.00
+0.8b-fp32m,0,PW CoT d0,11.00
+0.8b-fp32m,0,PW CoT d1,14.00
+0.8b-fp32m,0,PW CoT d2,17.40
+0.8b-fp32m,0,PW CoT d3,16.80
+0.8b-fp32m,0,PW CoT d5,16.40
+0.8b-fp32m,0,FOLIO,41.38
+0.8b-fp32m,0,BBH (all),48.35
+0.8b-fp32m,0,BBH chain-8,48.20
+0.8b-fp32m,0,BBH other,48.41
+0.8b-fp32m,0,BBH web_of_lies,100.00
+0.8b-fp32m,0,BBH tracking_shuffled_objects_three_objects,38.80
+0.8b-fp32m,0,BBH tracking_shuffled_objects_five_objects,24.00
+0.8b-fp32m,0,BBH tracking_shuffled_objects_seven_objects,20.40
+0.8b-fp32m,0,BBH logical_deduction_three_objects,63.20
+0.8b-fp32m,0,BBH logical_deduction_five_objects,45.60
+0.8b-fp32m,0,BBH logical_deduction_seven_objects,43.20
+0.8b-fp32m,0,BBH formal_fallacies,50.40
+0.8b-fp32m,0,HotpotQA,46.68
+0.8b-fp32m,0,2WikiMQA,32.45
+0.8b-fp32m,0,MuSiQue,22.16
+0.8b-fp32m,0,GPQA-Diamond,29.29
+0.8b-fp32m,0,GPQA-quant,24.66
+0.8b-fp32m,0,GPQA-rest,32.00
+0.8b-fp32m,0,gsm8k,44.20
+0.8b-fp32m,0,mmlu,47.41
+0.8b-fp32m,0,arc_challenge,40.36
+0.8b-fp32m,0,agieval_logiqa_en,33.49
+0.8b-fp32m,0,hellaswag,52.34
+0.8b-fp32m,0,piqa,72.03
+0.8b-fp32m,0,winogrande,55.88
+0.8b-fp32m,0,humaneval,21.95
+0.8b-fp32m,0,mbpp,26.60
 0.8b-fp32m,25,PW d0,39.40
 0.8b-fp32m,25,PW d1,32.00
 0.8b-fp32m,25,PW d2,46.80
@@ -421,6 +453,33 @@ model,x,benchmark,score
 0.8b-fp32m,25,PW CoT d2,29.20
 0.8b-fp32m,25,PW CoT d3,31.80
 0.8b-fp32m,25,PW CoT d5,29.00
+0.8b-fp32m,25,FOLIO,43.84
+0.8b-fp32m,25,BBH (all),48.62
+0.8b-fp32m,25,BBH chain-8,48.70
+0.8b-fp32m,25,BBH other,48.59
+0.8b-fp32m,25,BBH web_of_lies,100.00
+0.8b-fp32m,25,BBH tracking_shuffled_objects_three_objects,42.00
+0.8b-fp32m,25,BBH tracking_shuffled_objects_five_objects,23.60
+0.8b-fp32m,25,BBH tracking_shuffled_objects_seven_objects,22.80
+0.8b-fp32m,25,BBH logical_deduction_three_objects,68.00
+0.8b-fp32m,25,BBH logical_deduction_five_objects,43.20
+0.8b-fp32m,25,BBH logical_deduction_seven_objects,40.40
+0.8b-fp32m,25,BBH formal_fallacies,49.60
+0.8b-fp32m,25,HotpotQA,44.00
+0.8b-fp32m,25,2WikiMQA,31.97
+0.8b-fp32m,25,MuSiQue,24.62
+0.8b-fp32m,25,GPQA-Diamond,33.33
+0.8b-fp32m,25,GPQA-quant,27.40
+0.8b-fp32m,25,GPQA-rest,36.80
+0.8b-fp32m,25,gsm8k,42.99
+0.8b-fp32m,25,mmlu,44.05
+0.8b-fp32m,25,arc_challenge,40.70
+0.8b-fp32m,25,agieval_logiqa_en,33.18
+0.8b-fp32m,25,hellaswag,52.00
+0.8b-fp32m,25,piqa,71.22
+0.8b-fp32m,25,winogrande,57.06
+0.8b-fp32m,25,humaneval,23.17
+0.8b-fp32m,25,mbpp,24.80
 2b,0,PW d0,39.60
 2b,0,PW d1,30.00
 2b,0,PW d2,42.60
