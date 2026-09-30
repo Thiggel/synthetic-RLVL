@@ -228,3 +228,5 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7913 passk_sftA pass@16 (T=1.0) Dolci gate: x3@781, x3@1562, 2B p25 fp32m final -> rl_gate_dolci_k16, gruenau7 (2026-09-30)
 7914 passk_sftB pass@16 (T=1.0) Dolci gate: 2B p50 cont lc fp32m final (G8 base), G8 final, gruenau7 (2026-09-30)
 7915 passk_x3final pass@16 (T=1.0) Dolci gate: x3 final, afterok:7088, gruenau7 (2026-09-30)
+7930 rl_filter G8 final, cvf, n=16, T=1.0 on the GRPO train pool (gen/math/wordprob 3000 each + yesno), gruenau11; died at vLLM start (foreign 19 GB on the GPU) (2026-09-30)
+7931 rl_filter RESUBMIT of 7930 with --gpu-mem 0.55: per-prompt rate for G11 (prompt-filtered GRPO) + harvest of passing completions for self-distillation (2026-09-30)

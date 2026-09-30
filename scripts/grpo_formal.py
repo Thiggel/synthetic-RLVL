@@ -8,6 +8,8 @@ docs/research_plan.md, Stage 2. One run = one arm:
   --arm frac_hard  G6: frac with the line credit gated on premises (numeric check; exact faithfulness on
                    --benches gen items), format and no circular given; G6g adds gen to the benches
   --arm cvf  G7: correct x valid x faithful premises, all-or-nothing (no partial credit to hack)
+  --prompt-filter  G11: train only on prompts whose sampled reward rate (scripts/rl_prompt_filter.py) is in
+                   (lo, hi), i.e. prompts whose rollout groups are likely to have non-zero advantage
 Rewards: scripts/formal_rewards.py (the other components are logged with weight 0).
 
 Prompts: the checkable pool of scripts/build_rl_gate_set.py (math, DAPO, persona
@@ -38,7 +40,8 @@ from formal_rewards import reward_funcs  # noqa: E402
 GEN_POOL = Path("/vol/tmp2/laitenbf/rlvl_data/datasets/formal_mixture_20260925/pool/train.jsonl")
 
 
-def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], max_per_bench: int | None = None):
+def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], max_per_bench: int | None = None,
+                  keep_ids: set | None = None):
     from datasets import Dataset, load_dataset
     rows = []
     if "gen" in benches:  # generator items carry their gold sentences: frac_hard then checks exact faithfulness
@@ -66,6 +69,8 @@ def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], 
         rows.append({"prompt": render_prompt(tok, f"<formal>\n{q}" if tag else q), "raw_prompt": q,
                      "id": f"{b}/{i}", "bench": b, "gold": g, "answer_type": t, "system_answerable": a,
                      "sentences_json": ""})
+    if keep_ids is not None:  # --prompt-filter: only prompts whose sampled reward rate is in (lo, hi)
+        rows = [r for r in rows if r["id"] in keep_ids]
     random.Random(seed).shuffle(rows)
     if max_per_bench:  # dolci_math is 96% of the pool and mostly outside the system; balance it
         seen, kept = {}, []
@@ -102,14 +107,22 @@ def main():
     ap.add_argument("--save-steps", type=int, default=100)
     ap.add_argument("--seed", type=int, default=3407)
     ap.add_argument("--report-to", default="none")
+    ap.add_argument("--prompt-filter", default=None,
+                    help="scripts/rl_prompt_filter.py output: keep prompts with --filter-lo < rate < --filter-hi")
+    ap.add_argument("--filter-lo", type=float, default=0.0)
+    ap.add_argument("--filter-hi", type=float, default=1.0)
     args = ap.parse_args()
 
     from transformers import AutoTokenizer
     from trl import GRPOConfig, GRPOTrainer
 
     tok = AutoTokenizer.from_pretrained(args.model)
+    keep = None
+    if args.prompt_filter:
+        rates = json.loads(Path(args.prompt_filter).read_text())["rates"]
+        keep = {i for i, v in rates.items() if args.filter_lo < v["rate"] < args.filter_hi}
     train = build_dataset(tok, not args.no_tag, args.n_prompts, args.seed, args.benches.split(","),
-                          args.max_per_bench)
+                          args.max_per_bench, keep)
     world = int(os.environ.get("WORLD_SIZE", "1"))
     completions_per_step = args.prompts_per_step * args.num_generations
     grad_accum = max(1, completions_per_step // (args.per_device_batch * world))
