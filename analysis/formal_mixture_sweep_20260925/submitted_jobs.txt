@@ -214,3 +214,4 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7412 grpo_G9 resubmit (7365 died at vLLM memory profiling: a foreign process freed GPU memory mid-profile; 7366 cancelled) gruenau10 A100 (2026-09-30)
 7413 gate_G9 G9@100 G9 final, gruenau10 afterany 7412 (2026-09-30)
 7499 gate_G8_100 early gate of G8 checkpoint-100 on gruenau7 (7168 skips it once gated) (2026-09-30)
+7648 gate_G9_100 early gate of G9 checkpoint-100 on gruenau11 (7413 skips it once gated) (2026-09-30)
