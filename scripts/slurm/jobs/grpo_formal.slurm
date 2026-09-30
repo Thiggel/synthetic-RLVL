@@ -13,7 +13,7 @@
 # .venv_rlvl_grpo. One process per GPU via accelerate (DeepSpeed ZeRO-2 if >1).
 # Required env: POLICY (SFT run dir name under the formal-mixture sweep), ARM, RUN_NAME.
 # Optional: NO_TAG=1, EXTRA_ARGS (passed to grpo_formal.py), POLICY_CKPT (checkpoint dir under POLICY, default final),
-# RLVL_PYTHONPATH, STOP_MARGIN_MIN (with --resumable in EXTRA_ARGS).
+# RLVL_PYTHONPATH, STOP_MARGIN_MIN (with --resumable in EXTRA_ARGS), MIN_FREE_MIB + WAIT_FREE_MIN.
 # Export the variables in the shell and submit with --export=ALL: `sbatch --export=ALL,EXTRA_ARGS="--benches a,b"`
 # splits at the comma and silently drops everything after it.
 # Output: rlvl_data/grpo_formal_20260928/${RUN_NAME}/
@@ -42,7 +42,13 @@ if [[ -n "${CUDA_VISIBLE_DEVICES:-}" ]]; then NGPU=$(tr ',' '\n' <<< "${CUDA_VIS
 else NGPU=$(nvidia-smi -L | wc -l); fi
 nvidia-smi -i "${CUDA_VISIBLE_DEVICES:-0}" --query-gpu=index,name,memory.total,memory.free --format=csv,noheader
 # Fail fast when a process outside Slurm already holds the GPU (gruenau9/10/12, 2026-09-28)
-FREE_MIB=$(nvidia-smi -i "${CUDA_VISIBLE_DEVICES:-0}" --query-gpu=memory.free --format=csv,noheader,nounits | sort -n | head -1)
+# WAIT_FREE_MIN: first poll up to this many minutes for the memory to free up. In a singleton chain a fail-fast exit
+# lets the next link start on the same busy GPU a second later, so L1_cvf 7955-7958 all died within a minute (2026-09-30).
+free_mib() { nvidia-smi -i "${CUDA_VISIBLE_DEVICES:-0}" --query-gpu=memory.free --format=csv,noheader,nounits | sort -n | head -1; }
+FREE_MIB=$(free_mib)
+for (( waited = 0; FREE_MIB < ${MIN_FREE_MIB:-0} && waited < ${WAIT_FREE_MIN:-0}; waited += 5 )); do
+  echo "only ${FREE_MIB} MiB free; waiting (${waited}/${WAIT_FREE_MIN} min)" >&2; sleep 300; FREE_MIB=$(free_mib)
+done
 if (( FREE_MIB < ${MIN_FREE_MIB:-0} )); then echo "only ${FREE_MIB} MiB free < MIN_FREE_MIB=${MIN_FREE_MIB}: GPU shared with a foreign process" >&2; exit 3; fi
 # --resumable runs: checkpoint and stop STOP_MARGIN_MIN (default 30) before the walltime; the next chained job
 # (same --job-name, --dependency=singleton) resumes from it

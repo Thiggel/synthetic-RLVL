@@ -310,11 +310,28 @@ ARMS = {"correct": "correct", "correct_x_valid": "correct_x_valid", "gvc": "gvc"
         "lines": "lines", "lines_fmt": "lines_fmt", "lines_raw": "lines_raw",
         "frac": "frac", "frac_hard": "frac_hard", "cvf": "cvf"}
 LOGGED = ["correct", "valid", "grammatical", "in_system", "has_proof", "valid_strict", "lines", "n_parsed", "n_ok",
-          "n_steps", "circular", "n_taut", "format_ok", "valid_prem", "frac_parsed", "frac_ok", "n_prem_bad", "prem_ok", "frac"]
+          "n_steps", "circular", "n_taut", "format_ok", "valid_prem", "frac_parsed", "frac_ok", "n_prem_bad", "prem_ok", "frac",
+          "cvf"]
+# per-domain copies of the headline metrics (2026-09-30, L1 long study): the step mean mixes generator and Dolci
+# prompts, whose rates differ by ~20x; these return None off-domain, which TRL logs as a nanmean over the domain
+BY_BENCH = ["correct", "valid", "cvf", "has_proof", "grammatical"]
+BENCH_GROUPS = {"gen": lambda b: b == "gen", "dolci": lambda b: str(b).startswith("dolci")}
+
+
+def make_bench_reward(name: str, group: str):
+    base, keep = make_reward(name), BENCH_GROUPS[group]
+
+    def fn(prompts, completions, **kwargs):
+        benches = kwargs.get("bench") or [None] * len(completions)
+        vals = base(prompts, completions, **kwargs)
+        return [v if keep(b) else None for v, b in zip(vals, benches)]
+    fn.__name__ = f"{name}_{group}"
+    return fn
 
 
 def reward_funcs(arm: str):
-    """[primary, *logged components] and weights [1, 0, ...]."""
+    """[primary, *logged components, *per-domain components] and weights [1, 0, ...]."""
     primary = ARMS[arm]
-    names = [primary] + [n for n in LOGGED if n != primary]
-    return [make_reward(n) for n in names], [1.0] + [0.0] * (len(names) - 1)
+    funcs = [make_reward(n) for n in [primary] + [n for n in LOGGED if n != primary]]
+    funcs += [make_bench_reward(n, g) for g in BENCH_GROUPS for n in BY_BENCH]
+    return funcs, [1.0] + [0.0] * (len(funcs) - 1)
