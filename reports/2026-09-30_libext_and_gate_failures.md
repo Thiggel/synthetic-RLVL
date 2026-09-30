@@ -133,3 +133,26 @@ On the Dolci gate: 950 prompts, 16 samples at T=1.0, frozen checker (`analysis/p
 This confirms that dropping plain data-scale midtraining was right, and that the budget belongs with self-distillation (EI), the new lemma families and RL (the c/l/e/le arms and L1).
 
 **Data loss and fix.** `scripts/train_formal_mixture_sft.py` deleted every `checkpoint-*` dir when training ended. That included the x3 @781/@1562 gate outputs stored inside them. Their numbers survive in the committed tables (`analysis/passk_ladder.md`, `analysis/gate_error_breakdown.json`), and both analysis scripts now fall back to those records (`analysis/passk_ladder.json`). The cleanup now keeps any subdir of a checkpoint that holds a `summary.json`.
+
+## 5. Interim 2026-10-01 02:10: arm l (new lemma families), first of the four continued-SFT arms
+
+![libext arms](figures/libext_ei_arms.png)
+
+- Arm l is 7k new-family rows, 7k fresh generator rows and 6k Dolci rows, continued from the L1 base.
+- Scored with the new lemma library (jobs 8209 and 8211; `analysis/libext_ei_arms.md`, `scripts/analysis/libext_ei_arms.py`).
+
+| | base | l |
+|---|---:|---:|
+| gate greedy valid / valid·correct / correct | .011 / .003 / .224 | .027 / .009 / .163 |
+| gate T=1 valid per sample | .0043 | .0149 |
+| gate valid@16 / valid·correct@16 | .043 / .023 | .086 / .028 |
+| gate mixed@8 (valid) | .026 | .061 |
+| gen test valid (default families) | .808 | .867 |
+| new-family test valid | .010 | .952 |
+
+- Validity on real prompts rises ×2.5–3.5 on every Dolci source.
+  - Largest gains: math ×6 and knowledge ×4. Math is the source the new nt/alg/geom lemmas target.
+  - valid@16 doubles, and the share of prompts with a non-zero GRPO advantage under a validity reward (mixed@8) goes from .026 to .061.
+- Correctness drops: greedy .224 → .163, T=1 .186 → .151. valid·correct@16 rises only .023 → .028.
+- Not yet attributable. The control arm c (fresh generator rows instead of new families; job 8214, done ~06:30) will show how much of the gain, and of the correctness loss, comes from 20k more SFT rows at all.
+- For comparison, x3 (150k plain generator rows) reached valid@16 .076 from a different base (§4).
