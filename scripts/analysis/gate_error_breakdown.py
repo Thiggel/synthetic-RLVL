@@ -81,10 +81,13 @@ def parse_kind(msg: str) -> str:
 
 
 def main() -> None:
+    old = json.loads(OUT_JSON.read_text()) if OUT_JSON.is_file() else {}
     res = {}
     for name, d in MODELS:
         f = d / "rl_gate_dolci_k16/generations.jsonl"
-        if not f.is_file():
+        if not f.is_file():  # model dir gone (deleted checkpoint): keep the recorded breakdown
+            if name in old:
+                res[name] = old[name]
             continue
         rows = [json.loads(ln) for ln in open(f)]
         res[name] = {}

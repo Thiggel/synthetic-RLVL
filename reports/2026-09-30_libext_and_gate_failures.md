@@ -111,3 +111,25 @@ Setup:
    natural names ("total cost") that must be written as `total_cost`, and sums and lists could be spelled out
    with `alg.sum_formula`. Making the parser accept the common notations instead would be a language change and
    is out of scope for now.
+
+## 4. Update 2026-10-01 01:00: the x3 SFT finished (150k generator rows), and pass@k barely moves
+
+![passk ladder](figures/passk_ladder.png)
+
+On the Dolci gate: 950 prompts, 16 samples at T=1.0, frozen checker (`analysis/passk_ladder.md`, `scripts/analysis/passk_ladder.py`, job 8171).
+
+| SFT generator rows | has_proof@16 | valid@8 | valid@16 | valid·correct@16 |
+|---|---|---|---|---|
+| ~25k (p25 fp32m) | .629 | .041 | .059 | .022 |
+| ~50k (x3 @781) | .442 | .044 | .063 | .019 |
+| ~100k (x3 @1562) | .537 | .047 | .066 | .023 |
+| ~150k (x3 final) | .513 | .055 | .076 | .021 |
+| p50 + lemma catalog | .780 | .026 | .043 | .023 |
+| + GRPO G8 (200 steps cvf) | .971 | .096 | .121 | .065 |
+
+- Going from 25k to 150k generator rows adds +.017 valid@16 and nothing in valid·correct@16.
+- 200 GRPO steps add +.078 valid@16 and ×3 valid·correct@16.
+
+This confirms that dropping plain data-scale midtraining was right, and that the budget belongs with self-distillation (EI), the new lemma families and RL (the c/l/e/le arms and L1).
+
+**Data loss and fix.** `scripts/train_formal_mixture_sft.py` deleted every `checkpoint-*` dir when training ended. That included the x3 @781/@1562 gate outputs stored inside them. Their numbers survive in the committed tables (`analysis/passk_ladder.md`, `analysis/gate_error_breakdown.json`), and both analysis scripts now fall back to those records (`analysis/passk_ladder.json`). The cleanup now keeps any subdir of a checkpoint that holds a `summary.json`.

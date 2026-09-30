@@ -31,15 +31,28 @@ MODELS = [("SFT p25 fp32m (~25k gen rows)", SFT / "qwen35_2b_dolci_rlvlgen_p25_l
 METRICS = ["has_proof", "grammatical", "valid", "correct", "valid_correct"]
 REPO = Path(__file__).resolve().parents[2]
 OUT_MD = REPO / "analysis/passk_ladder.md"
+OUT_JSON = REPO / "analysis/passk_ladder.json"
 OUT_FIG = REPO / "reports/figures/passk_ladder"
 
 
 def main() -> None:
+    # Results of models whose dirs are gone (x3 @781/@1562: the SFT script deleted checkpoint dirs with their evals
+    # until 2026-10-01) come from the cache, or, if not cached, from the @1/@8/@16/mixed@8 cells of the last table.
+    cache = json.loads(OUT_JSON.read_text()) if OUT_JSON.is_file() else {}
+    if OUT_MD.is_file():
+        for ln in OUT_MD.read_text().splitlines():
+            cells = [c.strip() for c in ln.strip("|").split("|")]
+            if len(cells) == len(METRICS) + 1 and cells[0] not in cache and "/" in cells[1]:
+                cache[cells[0]] = {m: dict(zip(["@1", "@8", "@16", "mixed@8"], map(float, c.split(" / "))))
+                                   for m, c in zip(METRICS, cells[1:])}
     rows = []
     for name, d in MODELS:
         f = d / "rl_gate_dolci_k16/summary.json"
         if f.is_file():
-            rows.append((name, json.loads(f.read_text())["pass_at_k"]["overall"]))
+            cache[name] = json.loads(f.read_text())["pass_at_k"]["overall"]
+        if name in cache:
+            rows.append((name, cache[name]))
+    OUT_JSON.write_text(json.dumps(cache, indent=1) + "\n")
     lines = ["# Dolci gate, sampled pass@k (16 samples, T=1.0, 950 items)", "",
              "cells: @1 / @8 / @16 / mixed@8 (fraction of prompts with a non-zero GRPO advantage at 8 rollouts)", "",
              "| model | " + " | ".join(METRICS) + " |", "|---|" + "---|" * len(METRICS)]

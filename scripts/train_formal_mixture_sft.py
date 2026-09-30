@@ -313,8 +313,13 @@ def main():
     if trainer.is_world_process_zero():
         tokenizer.save_pretrained(str(final))
         (final / "final_eval_metrics.json").write_text(json.dumps(metrics, indent=2) + "\n")
-        for p in output_dir.glob("checkpoint-*"):
-            shutil.rmtree(p, ignore_errors=True)
+        for p in output_dir.glob("checkpoint-*"):  # keep eval outputs written into a checkpoint dir (summary.json)
+            evals = [f for f in p.iterdir() if f.is_dir() and any(f.rglob("summary.json"))]
+            for f in p.iterdir():
+                if f not in evals:
+                    shutil.rmtree(f, ignore_errors=True) if f.is_dir() else f.unlink(missing_ok=True)
+            if not evals:
+                shutil.rmtree(p, ignore_errors=True)
 
 
 if __name__ == "__main__":
