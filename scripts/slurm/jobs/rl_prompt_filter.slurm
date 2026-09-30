@@ -19,6 +19,6 @@ export PATH="${VENV}/bin:${PATH}" VIRTUAL_ENV="${VENV}"
 export HF_HOME="${ROOT}" HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1 TOKENIZERS_PARALLELISM=false
 export CUDA_HOME="${CUDA_HOME:-/usr/local/cuda-13.2}" PATH="${CUDA_HOME:-/usr/local/cuda-13.2}/bin:${PATH}"
 export VLLM_USE_FLASHINFER_SAMPLER=0 TRITON_CACHE_DIR=/tmp/laitenbf_triton_${SLURM_JOB_ID:-0}
-export PYTHONPATH=/vol/home-vol2/ml/laitenbf/RLVL-next/gen:/vol/home-vol2/ml/laitenbf/RLVL-next/rlvl/python
+export PYTHONPATH="${RLVL_PYTHONPATH:-/vol/home-vol2/ml/laitenbf/RLVL-next/gen:/vol/home-vol2/ml/laitenbf/RLVL-next/rlvl/python}"  # RLVL_PYTHONPATH: frozen checker
 nvidia-smi -i "${CUDA_VISIBLE_DEVICES:-0}" --query-gpu=index,name,memory.free --format=csv,noheader
 python scripts/rl_prompt_filter.py --model "${MODEL:?}" --out "${OUT:?}" ${FILTER_ARGS:-}

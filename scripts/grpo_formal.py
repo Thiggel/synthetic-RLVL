@@ -71,6 +71,16 @@ def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], 
         rows.append({"prompt": render_prompt(tok, f"<formal>\n{q}" if tag else q), "raw_prompt": q,
                      "id": f"{b}/{i}", "bench": b, "gold": g, "answer_type": t, "system_answerable": a,
                      "sentences_json": ""})
+    if "gsm8k_train" in benches:  # more word problems for EI/GRPO (the Dolci wordprob pool is 1.4k); the
+        import re  # gsm8k *test* split is a benchmark (build_formal_bench_tagged.py), never use it here
+        for i, r in enumerate(load_dataset("openai/gsm8k", "main", split="train")):
+            g = r["answer"].split("####")[-1].strip().replace(",", "")
+            if not re.fullmatch(r"-?\d+", g):
+                continue
+            q = r["question"].strip()
+            rows.append({"prompt": render_prompt(tok, f"<formal>\n{q}" if tag else q), "raw_prompt": q,
+                         "id": f"gsm8k_train/{i}", "bench": "gsm8k_train", "gold": g, "answer_type": "number",
+                         "system_answerable": True, "sentences_json": ""})
     if keep_ids is not None:  # --prompt-filter: only prompts whose sampled reward rate is in (lo, hi)
         rows = [r for r in rows if r["id"] in keep_ids]
     random.Random(seed).shuffle(rows)
