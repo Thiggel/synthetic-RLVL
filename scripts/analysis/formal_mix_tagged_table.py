@@ -16,8 +16,12 @@ import json
 import re
 from pathlib import Path
 
-RUN_RE = re.compile(r"qwen35_(?P<m>[0-9.]+b)_dolci_rlvlgen_p(?P<x>\d\d)_lr5em6_seed3407$")
-MODELS = ["0.8b", "2b", "9b"]
+RUN_RE = re.compile(r"qwen35_(?P<m>[0-9.]+b)_dolci_rlvlgen_p(?P<x>\d\d)_lr5em6_seed3407(?P<fp>_fp32m)?$")
+MODELS = ["0.8b", "2b", "2b-fp32m", "9b"]  # 2b-fp32m: the 2B sweep rerun with fp32 master weights (2dea2ee)
+
+
+def model_key(m: re.Match) -> str:
+    return m["m"] + ("-fp32m" if m["fp"] else "")
 SHOW = ["has_proof", "grammatical", "valid", "grounded", "correct", "valid_correct", "in_system", "valid_wrong"]
 ROWS = ["overall", "deduction", "pw_all", "pw_d0", "pw_d1", "pw_d2", "pw_d3", "pw_d5", "folio", "bbh",
         "bbh_web_of_lies", "bbh_formal_fallacies", "bbh_boolean_expressions", "bbh_navigate",
@@ -45,7 +49,7 @@ def main():
     for f in sorted(args.sweep_root.glob(f"*/{args.subdir}/summary.json")):
         m = RUN_RE.match(f.parent.parent.name)
         if m:
-            T[(m["m"], int(m["x"]))] = json.load(open(f))
+            T[(model_key(m), int(m["x"]))] = json.load(open(f))
     with open(args.out_dir / "tagged_long.csv", "w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["model", "x", "bench", "subset", "metric", "value", "n"])

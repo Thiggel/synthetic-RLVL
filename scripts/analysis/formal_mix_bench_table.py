@@ -32,8 +32,12 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "lm_eval_tasks" / "synthrlvl_ood"))
 from utils import qa_f1_score  # noqa: E402
 
-RUN_RE = re.compile(r"qwen35_(?P<m>[0-9.]+b)_dolci_rlvlgen_p(?P<x>\d\d)_lr5em6_seed3407$")
-MODELS = ["0.8b", "2b", "9b"]
+RUN_RE = re.compile(r"qwen35_(?P<m>[0-9.]+b)_dolci_rlvlgen_p(?P<x>\d\d)_lr5em6_seed3407(?P<fp>_fp32m)?$")
+MODELS = ["0.8b", "2b", "2b-fp32m", "9b"]  # 2b-fp32m: the 2B sweep rerun with fp32 master weights (2dea2ee)
+
+
+def model_key(m: re.Match) -> str:
+    return m["m"] + ("-fp32m" if m["fp"] else "")
 METRIC = {"gsm8k": "exact_match,strict-match", "mmlu": "acc,none", "arc_challenge": "acc_norm,none",
           "agieval_logiqa_en": "acc_norm,none", "hellaswag": "acc_norm,none", "piqa": "acc_norm,none",
           "winogrande": "acc,none", "humaneval": "pass@1,create_test", "mbpp": "pass_at_1,none"}
@@ -166,7 +170,7 @@ def main():
     T = collections.defaultdict(dict)  # (model, x) -> {bench: score}
     for run in sorted(runs):
         m = RUN_RE.match(run)
-        T[(m["m"], int(m["x"]))] = cell(args.results_root, run, args.include_incomplete)
+        T[(model_key(m), int(m["x"]))] = cell(args.results_root, run, args.include_incomplete)
     with open(args.out_dir / "bench_long.csv", "w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["model", "x", "benchmark", "score"])

@@ -177,3 +177,36 @@ Dolci gate (950 natural prompts, greedy; `scripts/analysis/grpo_gate_ckpts.py`):
 - Strict validity on natural prompts stays below 1% at every mixture ratio.
 - Answer correctness is unchanged versus pure instruction tuning (p0 .203). The formal mix costs no accuracy on the gate.
 - Benchmark and tagged results follow once 7222/7225 and 7223/7226 finish.
+
+## 2026-09-30 04:50: corrected 2B p10 / p25, benchmarks
+
+Untagged downstream benchmarks, run exactly as in the sweep (`analysis/formal_mixture_sweep_20260925/bench/bench_2b-fp32m.md`, `bench_curves.png`). The comparison is against the bf16-rounded runs at the same mix. The fp32m pure-instruction baseline (p00 fp32m, job 7146) is still training, so deltas against the proper baseline come later. The bf16-rounded p0 is a weakened baseline too.
+
+| benchmark | p0 bf16 | p10 bf16 | **p10 fp32m** | p25 bf16 | **p25 fp32m** |
+|---|---|---|---|---|---|
+| ProofWriter d0 / d3 / d5 | 39.6 / 48.8 / 50.6 | 40.0 / 46.2 / 47.8 | **69.6 / 52.2 / 50.4** | 36.6 / 46.0 / 48.4 | **66.0 / 58.6 / 53.2** |
+| FOLIO | 45.3 | 43.3 | **50.2** | 43.8 | **50.7** |
+| BBH all / chain-8 | 65.2 / 66.4 | 65.5 / 65.7 | 66.1 / 66.2 | 65.2 / 64.8 | 64.6 / 63.7 |
+| HotpotQA / 2Wiki / MuSiQue | 47.9 / 35.7 / 26.7 | 46.8 / 35.8 / 27.0 | **49.4 / 37.9 / 28.3** | 45.8 / 34.6 / 26.5 | **49.4 / 38.0 / 29.7** |
+| GPQA-Diamond / quant | 36.9 / 37.0 | 35.4 / 32.9 | 38.4 / 49.3 | 36.9 / 32.9 | 37.9 / 39.7 |
+| gsm8k | 66.3 | 67.9 | 62.7 | 67.6 | 63.6 |
+| mmlu / arc_c / hellaswag | 59.1 / 48.5 / 61.5 | 59.3 / 48.5 / 61.5 | 60.5 / 49.7 / 62.0 | 59.2 / 48.0 / 61.1 | 59.8 / 49.6 / 62.1 |
+| humaneval / mbpp | 34.8 / 34.6 | 34.8 / 35.6 | 37.8 / 34.4 | 34.8 / 35.6 | 39.6 / 34.8 |
+
+Format-tagged benchmarks (`tagged/tagged_2b-fp32m.md`). Cells are grammatical / valid / correct / in-system, in %:
+
+| subset | p10 bf16 | **p10 fp32m** | p25 bf16 | **p25 fp32m** |
+|---|---|---|---|---|
+| overall | 15 / 3 / 0 / 2 | **29 / 7 / 0 / 5** | 19 / 4 / 0 / 3 | **30 / 8 / 0 / 6** |
+| deduction | 44 / 9 / 34 / 7 | **78 / 22 / 45 / 18** | 55 / 11 / 40 / 9 | **78 / 24 / 47 / 20** |
+| FOLIO | 29 / 2 / 32 / 1 | **62 / 7 / 45 / 5** | 43 / 2 / 42 / 1 | **71 / 7 / 47 / 5** |
+| BBH | 4 / 0 / 27 / 0 | 13 / 1 / 30 / 0 | 6 / 0 / 28 / 0 | 15 / 1 / 32 / 1 |
+| gsm8k | 26 / 3 / 34 / 1 | **66 / 6 / 41 / 4** | 39 / 5 / 37 / 4 | **74 / 9 / 44 / 5** |
+
+- The precision fix makes the formal mix pay off downstream:
+  - ProofWriter d0 +30 points.
+  - FOLIO +5–7.
+  - Multi-hop QA +1.5–3.
+- The tagged valid-proof rate on deduction more than doubles, from 9–11% to 22–24%.
+- gsm8k (untagged) drops by about 4 points. This needs the fp32m p00 baseline before reading it as a cost.
+- Whether the ProofWriter / FOLIO gains come from the formal data, or partly from correct training in general, is also only settled against fp32m p00.
