@@ -156,7 +156,7 @@ These rerun the 2B mixture sweep without the bf16 rounding bug (2dea2ee). Same d
 | p25 bf16-rounded | .666 | .845 | .470 | .808 |
 | **p25 fp32m** | **.970** | **.994** | **.913** | **.964** |
 | p50 x3 @781 (fp32, same 50k gen rows as p50) | .986 | .996 | .942 | .976 |
-| 9B p10 / p25 | .976 / .990 | .998 / .998 | .944 / .963 | .979 / .989 |
+| 9B p10 / p25 | .976 / .992 | .997 / .997 | .944 / .963 | .979 / .989 |
 
 - The steep 2B "more formal data helps" slope in the original sweep was mostly an optimizer artefact.
 - With correct precision, 10k generator rows already give valid .85, and 25k give .91. 2B now sits just below 9B.
