@@ -1,0 +1,232 @@
+{
+ "SFT p25 fp32m": {
+  "in-domain Dolci (math, wordprob, yesno)": {
+   "n": 11200,
+   "stage": {
+    "no proof": 0.638125,
+    "parse": 0.25919642857142855,
+    "rule": 0.045535714285714284,
+    "quote": 0.023392857142857142,
+    "literal": 0.013928571428571429,
+    "other error": 0.010982142857142857,
+    "checked, not valid": 0.0008928571428571428,
+    "valid": 0.007946428571428571
+   },
+   "parse": {
+    "prose in formula": 0.005,
+    "malformed `; rule`": 0.08133928571428571,
+    "nested / case-split steps": 0.0019642857142857144,
+    "`?` placeholder": 0.007053571428571428,
+    "unsupported notation": 0.07446428571428572,
+    "juxtaposition": 0.04705357142857143,
+    "other parse": 0.04232142857142857
+   }
+  },
+  "all 950 gate prompts": {
+   "n": 15200,
+   "stage": {
+    "no proof": 0.6191447368421052,
+    "parse": 0.2780263157894737,
+    "rule": 0.03986842105263158,
+    "quote": 0.030526315789473683,
+    "literal": 0.011842105263157895,
+    "other error": 0.010855263157894738,
+    "checked, not valid": 0.0010526315789473684,
+    "valid": 0.008684210526315789
+   },
+   "parse": {
+    "prose in formula": 0.005986842105263158,
+    "malformed `; rule`": 0.08190789473684211,
+    "nested / case-split steps": 0.001973684210526316,
+    "`?` placeholder": 0.009407894736842105,
+    "unsupported notation": 0.07144736842105263,
+    "juxtaposition": 0.05855263157894737,
+    "other parse": 0.04875
+   }
+  }
+ },
+ "SFT x3 @781": {
+  "in-domain Dolci (math, wordprob, yesno)": {
+   "n": 11200,
+   "stage": {
+    "no proof": 0.7538392857142857,
+    "parse": 0.16339285714285715,
+    "rule": 0.03267857142857143,
+    "quote": 0.019464285714285715,
+    "literal": 0.013214285714285715,
+    "other error": 0.00875,
+    "checked, not valid": 0.0005357142857142857,
+    "valid": 0.008125
+   },
+   "parse": {
+    "prose in formula": 0.005803571428571429,
+    "malformed `; rule`": 0.054285714285714284,
+    "nested / case-split steps": 0.0016964285714285714,
+    "`?` placeholder": 0.005803571428571429,
+    "unsupported notation": 0.03589285714285714,
+    "juxtaposition": 0.031785714285714285,
+    "other parse": 0.028125
+   }
+  },
+  "all 950 gate prompts": {
+   "n": 15200,
+   "stage": {
+    "no proof": 0.7235526315789473,
+    "parse": 0.18671052631578947,
+    "rule": 0.02986842105263158,
+    "quote": 0.028289473684210528,
+    "literal": 0.010855263157894738,
+    "other error": 0.01006578947368421,
+    "checked, not valid": 0.0006578947368421052,
+    "valid": 0.01
+   },
+   "parse": {
+    "prose in formula": 0.007105263157894737,
+    "malformed `; rule`": 0.05868421052631579,
+    "nested / case-split steps": 0.0015131578947368421,
+    "`?` placeholder": 0.007368421052631579,
+    "unsupported notation": 0.036513157894736845,
+    "juxtaposition": 0.04276315789473684,
+    "other parse": 0.03276315789473684
+   }
+  }
+ },
+ "SFT x3 @1562": {
+  "in-domain Dolci (math, wordprob, yesno)": {
+   "n": 11200,
+   "stage": {
+    "no proof": 0.6648214285714286,
+    "parse": 0.23285714285714285,
+    "rule": 0.040803571428571425,
+    "quote": 0.025357142857142856,
+    "literal": 0.01660714285714286,
+    "other error": 0.010714285714285714,
+    "checked, not valid": 0.0008035714285714286,
+    "valid": 0.008035714285714285
+   },
+   "parse": {
+    "prose in formula": 0.007142857142857143,
+    "malformed `; rule`": 0.08678571428571429,
+    "nested / case-split steps": 0.0025,
+    "`?` placeholder": 0.007946428571428571,
+    "unsupported notation": 0.055625,
+    "juxtaposition": 0.03857142857142857,
+    "other parse": 0.03428571428571429
+   }
+  },
+  "all 950 gate prompts": {
+   "n": 15200,
+   "stage": {
+    "no proof": 0.6407236842105263,
+    "parse": 0.24098684210526317,
+    "rule": 0.03881578947368421,
+    "quote": 0.039473684210526314,
+    "literal": 0.014078947368421052,
+    "other error": 0.014407894736842106,
+    "checked, not valid": 0.0011842105263157896,
+    "valid": 0.010328947368421052
+   },
+   "parse": {
+    "prose in formula": 0.008157894736842105,
+    "malformed `; rule`": 0.08203947368421052,
+    "nested / case-split steps": 0.002105263157894737,
+    "`?` placeholder": 0.010592105263157894,
+    "unsupported notation": 0.05368421052631579,
+    "juxtaposition": 0.04697368421052631,
+    "other parse": 0.03743421052631579
+   }
+  }
+ },
+ "SFT p50 + lemma catalog": {
+  "in-domain Dolci (math, wordprob, yesno)": {
+   "n": 11200,
+   "stage": {
+    "no proof": 0.4541071428571429,
+    "parse": 0.4336607142857143,
+    "rule": 0.05875,
+    "quote": 0.02848214285714286,
+    "literal": 0.007946428571428571,
+    "other error": 0.012321428571428572,
+    "checked, not valid": 0.00035714285714285714,
+    "valid": 0.004375
+   },
+   "parse": {
+    "prose in formula": 0.016964285714285713,
+    "malformed `; rule`": 0.10901785714285714,
+    "nested / case-split steps": 0.002142857142857143,
+    "`?` placeholder": 0.011428571428571429,
+    "unsupported notation": 0.1367857142857143,
+    "juxtaposition": 0.08892857142857143,
+    "other parse": 0.06839285714285714
+   }
+  },
+  "all 950 gate prompts": {
+   "n": 15200,
+   "stage": {
+    "no proof": 0.46901315789473685,
+    "parse": 0.42414473684210524,
+    "rule": 0.05223684210526316,
+    "quote": 0.03118421052631579,
+    "literal": 0.007236842105263158,
+    "other error": 0.011447368421052631,
+    "checked, not valid": 0.0004605263157894737,
+    "valid": 0.0042763157894736845
+   },
+   "parse": {
+    "prose in formula": 0.01855263157894737,
+    "malformed `; rule`": 0.10210526315789474,
+    "nested / case-split steps": 0.0018421052631578947,
+    "`?` placeholder": 0.01125,
+    "unsupported notation": 0.13131578947368422,
+    "juxtaposition": 0.0925,
+    "other parse": 0.06657894736842106
+   }
+  }
+ },
+ "GRPO G8 final": {
+  "in-domain Dolci (math, wordprob, yesno)": {
+   "n": 11200,
+   "stage": {
+    "no proof": 0.1419642857142857,
+    "parse": 0.70125,
+    "rule": 0.05803571428571429,
+    "quote": 0.030714285714285715,
+    "literal": 0.014642857142857143,
+    "other error": 0.018125,
+    "checked, not valid": 8.928571428571429e-05,
+    "valid": 0.03517857142857143
+   },
+   "parse": {
+    "prose in formula": 0.04116071428571429,
+    "malformed `; rule`": 0.16767857142857143,
+    "nested / case-split steps": 0.0026785714285714286,
+    "`?` placeholder": 0.035625,
+    "unsupported notation": 0.21705357142857143,
+    "juxtaposition": 0.13535714285714287,
+    "other parse": 0.10169642857142858
+   }
+  },
+  "all 950 gate prompts": {
+   "n": 15200,
+   "stage": {
+    "no proof": 0.12611842105263157,
+    "parse": 0.7324342105263157,
+    "rule": 0.049078947368421055,
+    "quote": 0.031710526315789474,
+    "literal": 0.013026315789473684,
+    "other error": 0.015855263157894737,
+    "checked, not valid": 6.578947368421052e-05,
+    "valid": 0.031710526315789474
+   },
+   "parse": {
+    "prose in formula": 0.04302631578947368,
+    "malformed `; rule`": 0.16855263157894737,
+    "nested / case-split steps": 0.0026973684210526315,
+    "`?` placeholder": 0.03532894736842105,
+    "unsupported notation": 0.22394736842105264,
+    "juxtaposition": 0.15263157894736842,
+    "other parse": 0.10625
+   }
+  }
+ }
+}

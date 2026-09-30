@@ -241,3 +241,7 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7955-7958 FAILED within a minute: fail-fast MIN_FREE_MIB check, the allocated GPUs held foreign processes (gruenau10 A100 13 GB free, gruenau11 nvidia2 6 GB free: non-Slurm vLLM server); the singleton chain burned through (2026-09-30)
 7969-7973 grpo_L1_correct RESUBMIT: same study settings + --per-device-batch 4 --vllm-mem 0.25 (same effective batch 256, dapo loss is token-normalized over the global batch), MIN_FREE_MIB=56000 WAIT_FREE_MIN=240, 5x 2-day singleton chain gruenau11; logs per-domain rewards (correct/valid/cvf/has_proof/grammatical x gen/dolci) (2026-09-30)
 7974-7978 grpo_L1_cvf RESUBMIT: same settings, arm cvf, afterany:7888 (G10, frees the clean /dev/nvidia0) + singleton, gruenau11 (2026-09-30)
+8169 gate_G10 RESUBMIT of 7889 (+FORMAL_EVAL): frozen pre-libext checker (the live .so gained the nt/alg/comb/geom/rate lemmas at 17:50), gruenau12 L40 afterok 7888 (2026-09-30)
+8170 gate_G11 RESUBMIT of 7935 (+FORMAL_EVAL): frozen checker, gruenau12 L40 afterok 7951 (2026-09-30)
+8171 passk_x3final RESUBMIT of 7915 (was pinned to gruenau7, now down): frozen checker, gruenau12 L40 afterok 7088 (2026-09-30)
+8176 rl_filter_gsm8k RESUBMIT of 8144 (gruenau10 A100 held a 67 GB foreign process): gsm8k_train 7473 prompts x16, G8 final cvf, frozen checker, gruenau12 L40 --gpu-mem 0.6 (2026-09-30)

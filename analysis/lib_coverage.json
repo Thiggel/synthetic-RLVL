@@ -347,6 +347,38 @@
     "real_seen": 67
    }
   },
+  "2B p50 x3 @1562 SFT": {
+   "formal_eval": {
+    "cites": 2489,
+    "nonexistent": 2,
+    "real_unseen": 0,
+    "top_nonexistent": [
+     "graph.distinct",
+     "set.and"
+    ],
+    "real_seen": 2487
+   },
+   "rl_gate_dolci": {
+    "cites": 453,
+    "nonexistent": 285,
+    "real_unseen": 0,
+    "top_nonexistent": [
+     "count.increment",
+     "calc.sub",
+     "math.gcd_def",
+     "gcd.step4",
+     "count.add",
+     "set.sum_def",
+     "motion.density",
+     "prob.and_pr",
+     "calc",
+     "gcd.step1",
+     "geometry.cut_iff",
+     "logic.and"
+    ],
+    "real_seen": 168
+   }
+  },
   "2B G7 cvf final (p50 base)": {
    "rl_gate_dolci": {
     "cites": 948,
