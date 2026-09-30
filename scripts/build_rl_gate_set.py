@@ -23,12 +23,13 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import os
 import random
 import re
 from fractions import Fraction
 from pathlib import Path
 
-OUT = Path("/vol/tmp2/laitenbf/rlvl_data/datasets/rl_gate_dolci_instruct_20260928")
+OUT = Path(os.environ.get("RLVL_DATA_ROOT", "/vol/tmp2/laitenbf/rlvl_data")) / "datasets/rl_gate_dolci_instruct_20260928"
 YN = {"yes": "yes", "no": "no", "true": "yes", "false": "no"}
 
 

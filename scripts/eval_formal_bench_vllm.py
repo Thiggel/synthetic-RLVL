@@ -49,6 +49,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import os
 import re
 import sys
 import time
@@ -236,7 +237,8 @@ def fit_prompts(records, args):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--test-jsonl", default="/vol/tmp2/laitenbf/rlvl_data/datasets/formal_bench_tagged_20260926/test.jsonl")
+    ap.add_argument("--test-jsonl", default=os.path.join(os.environ.get("RLVL_DATA_ROOT", "/vol/tmp2/laitenbf/rlvl_data"),
+                                                          "datasets/formal_bench_tagged_20260926/test.jsonl"))
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--model", required=True)
     ap.add_argument("--per-bench-limit", type=int, default=None, help="first N items of every bench (smoke)")

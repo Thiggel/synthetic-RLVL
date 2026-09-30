@@ -19,7 +19,8 @@ as a raw string with the SFT chat rendering (formal_chat_format.render_prompt of
 the token boundaries of SFT and of the tagged eval; TRL does not re-template it.
 
 Environment: /vol/tmp2/laitenbf/.venv_rlvl_grpo (TRL 1.14, vLLM 0.30 colocate,
-transformers 5.17). Launch with accelerate (scripts/slurm/jobs/grpo_formal.slurm).
+transformers 5.17). Launch with accelerate (scripts/slurm/jobs/grpo_formal.slurm; on alex
+scripts/slurm/jobs/alex_grpo_formal.slurm, which sets RLVL_DATA_ROOT and --stop-at before the walltime).
 """
 from __future__ import annotations
 
@@ -37,7 +38,8 @@ from build_rl_gate_set import OUT as GATE_DIR, classify  # noqa: E402
 from formal_chat_format import render_prompt  # noqa: E402
 from formal_rewards import reward_funcs  # noqa: E402
 
-GEN_POOL = Path("/vol/tmp2/laitenbf/rlvl_data/datasets/formal_mixture_20260925/pool/train.jsonl")
+DATA_ROOT = Path(os.environ.get("RLVL_DATA_ROOT", "/vol/tmp2/laitenbf/rlvl_data"))
+GEN_POOL = DATA_ROOT / "datasets/formal_mixture_20260925/pool/train.jsonl"
 
 
 def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], max_per_bench: int | None = None,
@@ -122,6 +124,32 @@ class PruneOptimizerState(_callback_base()):
             _prune_optimizer_state(args.output_dir, self.keep_every)
 
 
+class StopAtDeadline(_callback_base()):
+    """Checkpoint and stop once the wall clock passes `stop_at` (unix time), e.g. before a Slurm walltime.
+
+    All ranks take the decision together (all-reduce), so they save the same step."""
+
+    def __init__(self, stop_at: float):
+        self.stop_at = stop_at
+
+    def on_step_end(self, args, state, control, **kwargs):
+        import time
+
+        import torch
+        import torch.distributed as dist
+        stop = time.time() > self.stop_at
+        if dist.is_available() and dist.is_initialized():
+            flag = torch.tensor([float(stop)], device="cuda" if torch.cuda.is_available() else "cpu")
+            dist.all_reduce(flag, op=dist.ReduceOp.MAX)
+            stop = bool(flag.item())
+        if stop:
+            if state.is_world_process_zero:
+                print(f"stop-at deadline reached at step {state.global_step}: saving and stopping", flush=True)
+            control.should_save = True
+            control.should_training_stop = True
+        return control
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
@@ -154,6 +182,9 @@ def main():
                          "in --out-dir, and keep optimizer state only in the newest checkpoints")
     ap.add_argument("--keep-every", type=int, default=0,
                     help="with --resumable: keep weights of older checkpoints only at multiples of this step")
+    ap.add_argument("--stop-at", type=float, default=None,
+                    help="unix time: save a checkpoint and stop after the first step past it (no final/); "
+                         "with --resumable the next job continues from there")
     args = ap.parse_args()
 
     from transformers import AutoTokenizer
@@ -185,14 +216,21 @@ def main():
     print(json.dumps({"benches": collections.Counter(train["bench"])}), flush=True)
     print(json.dumps({"arm": args.arm, "tag": not args.no_tag, "n_prompts": len(train), "grad_accum": grad_accum,
                       "world": world, "rewards": [f.__name__ for f in funcs]}), flush=True)
+    callbacks = [PruneOptimizerState(args.keep_every)] if args.resumable else []
+    if args.stop_at:
+        callbacks.append(StopAtDeadline(args.stop_at))
     trainer = GRPOTrainer(model=args.model, reward_funcs=funcs, args=cfg, train_dataset=train,
-                          processing_class=tok, callbacks=[PruneOptimizerState(args.keep_every)] if args.resumable else None)
+                          processing_class=tok, callbacks=callbacks or None)
     resume = [c for c in _ckpts(args.out_dir) if _resumable(c)] if args.resumable else []
     if resume:
         print(f"resuming from {resume[-1]}", flush=True)
     trainer.train(resume_from_checkpoint=str(resume[-1]) if resume else None)
-    trainer.save_model(str(Path(args.out_dir) / "final"))
-    json.dump(trainer.state.log_history, open(Path(args.out_dir) / "log_history.json", "w"))
+    if args.stop_at and trainer.state.global_step < args.max_steps:  # stopped at --stop-at: next job resumes
+        print(f"stopped at step {trainer.state.global_step} of {args.max_steps}; not saving final", flush=True)
+    else:
+        trainer.save_model(str(Path(args.out_dir) / "final"))
+    if trainer.accelerator.is_main_process:
+        json.dump(trainer.state.log_history, open(Path(args.out_dir) / "log_history.json", "w"))
 
 
 if __name__ == "__main__":
