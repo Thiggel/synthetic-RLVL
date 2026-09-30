@@ -1,0 +1,392 @@
+{
+ "correct only": {
+  "dolci": [
+   {
+    "step": 0,
+    "n": 3760,
+    "style": {
+     "<proof>": 0.660904255319149,
+     "<analysis>": 0.0,
+     "other, \\boxed": 0.10691489361702128,
+     "other": 0.2321808510638298
+    },
+    "correct": 0.18138297872340425,
+    "valid": 0.00026595744680851064,
+    "chars": 1200.5755319148936,
+    "proof_ans": 0.8796780684104628,
+    "proof_grammatical": 0.1283702213279678,
+    "proof_valid": 0.00040241448692152917
+   },
+   {
+    "step": 25,
+    "n": 3904,
+    "style": {
+     "<proof>": 0.9536372950819673,
+     "<analysis>": 0.0,
+     "other, \\boxed": 0.015881147540983607,
+     "other": 0.03048155737704918
+    },
+    "correct": 0.1880122950819672,
+    "valid": 0.0015368852459016393,
+    "chars": 1228.5414959016393,
+    "proof_ans": 0.7955949503088907,
+    "proof_grammatical": 0.0631211388665055,
+    "proof_valid": 0.0016116035455278
+   },
+   {
+    "step": 50,
+    "n": 3856,
+    "style": {
+     "<proof>": 0.9569502074688797,
+     "<analysis>": 0.0,
+     "other, \\boxed": 0.028786307053941907,
+     "other": 0.014263485477178423
+    },
+    "correct": 0.2821576763485477,
+    "valid": 0.00025933609958506224,
+    "chars": 1253.001296680498,
+    "proof_ans": 0.1932249322493225,
+    "proof_grammatical": 0.012466124661246613,
+    "proof_valid": 0.00027100271002710027
+   },
+   {
+    "step": 75,
+    "n": 3808,
+    "style": {
+     "<proof>": 0.7639180672268907,
+     "<analysis>": 0.0005252100840336134,
+     "other, \\boxed": 0.18644957983193278,
+     "other": 0.049107142857142856
+    },
+    "correct": 0.27337184873949577,
+    "valid": 0.0,
+    "chars": 1502.9818802521008,
+    "proof_ans": 0.01959436232382262,
+    "proof_grammatical": 0.0010312822275696115,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 100,
+    "n": 3752,
+    "style": {
+     "<proof>": 0.7857142857142857,
+     "<analysis>": 0.02318763326226013,
+     "other, \\boxed": 0.1292643923240938,
+     "other": 0.06183368869936034
+    },
+    "correct": 0.30650319829424305,
+    "valid": 0.0,
+    "chars": 1730.7723880597016,
+    "proof_ans": 0.0,
+    "proof_grammatical": 0.0,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 125,
+    "n": 3896,
+    "style": {
+     "<proof>": 0.09548254620123203,
+     "<analysis>": 0.44378850102669404,
+     "other, \\boxed": 0.31853182751540043,
+     "other": 0.14219712525667352
+    },
+    "correct": 0.3557494866529774,
+    "valid": 0.0,
+    "chars": 3432.5284907597534,
+    "proof_ans": 0.0,
+    "proof_grammatical": 0.0,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 150,
+    "n": 3984,
+    "style": {
+     "<proof>": 0.000502008032128514,
+     "<analysis>": 0.348644578313253,
+     "other, \\boxed": 0.41917670682730923,
+     "other": 0.23167670682730923
+    },
+    "correct": 0.366214859437751,
+    "valid": 0.0,
+    "chars": 3858.093624497992,
+    "proof_ans": 0.0,
+    "proof_grammatical": 0.0,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 175,
+    "n": 3976,
+    "style": {
+     "<proof>": 0.00025150905432595576,
+     "<analysis>": 0.352364185110664,
+     "other, \\boxed": 0.3501006036217304,
+     "other": 0.29728370221327965
+    },
+    "correct": 0.3299798792756539,
+    "valid": 0.0,
+    "chars": 4323.041750503018,
+    "proof_ans": 0.0,
+    "proof_grammatical": 0.0,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 200,
+    "n": 3976,
+    "style": {
+     "<proof>": 0.0,
+     "<analysis>": 0.2776659959758551,
+     "other, \\boxed": 0.5349597585513078,
+     "other": 0.18737424547283701
+    },
+    "correct": 0.3717303822937626,
+    "valid": 0.0,
+    "chars": 3513.2447183098593,
+    "proof_ans": null,
+    "proof_grammatical": null,
+    "proof_valid": null
+   },
+   {
+    "step": 225,
+    "n": 3888,
+    "style": {
+     "<proof>": 0.00051440329218107,
+     "<analysis>": 0.19032921810699588,
+     "other, \\boxed": 0.6057098765432098,
+     "other": 0.20344650205761317
+    },
+    "correct": 0.3786008230452675,
+    "valid": 0.0,
+    "chars": 3534.9056069958847,
+    "proof_ans": 0.0,
+    "proof_grammatical": 0.0,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 250,
+    "n": 3888,
+    "style": {
+     "<proof>": 0.00051440329218107,
+     "<analysis>": 0.13065843621399176,
+     "other, \\boxed": 0.6247427983539094,
+     "other": 0.2440843621399177
+    },
+    "correct": 0.3922325102880658,
+    "valid": 0.0,
+    "chars": 3451.854681069959,
+    "proof_ans": 0.0,
+    "proof_grammatical": 0.0,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 275,
+    "n": 3920,
+    "style": {
+     "<proof>": 0.0,
+     "<analysis>": 0.09948979591836735,
+     "other, \\boxed": 0.6788265306122448,
+     "other": 0.22168367346938775
+    },
+    "correct": 0.363265306122449,
+    "valid": 0.0,
+    "chars": 3558.22806122449,
+    "proof_ans": null,
+    "proof_grammatical": null,
+    "proof_valid": null
+   }
+  ],
+  "gen": [
+   {
+    "step": 0,
+    "n": 2384,
+    "style": {
+     "<proof>": 1.0,
+     "<analysis>": 0.0,
+     "other, \\boxed": 0.0,
+     "other": 0.0
+    },
+    "correct": 0.8649328859060402,
+    "valid": 0.6010906040268457,
+    "chars": 688.9102348993289,
+    "proof_ans": 0.9932885906040269,
+    "proof_grammatical": 0.8842281879194631,
+    "proof_valid": 0.6010906040268457
+   },
+   {
+    "step": 25,
+    "n": 2496,
+    "style": {
+     "<proof>": 1.0,
+     "<analysis>": 0.0,
+     "other, \\boxed": 0.0,
+     "other": 0.0
+    },
+    "correct": 0.8441506410256411,
+    "valid": 0.5296474358974359,
+    "chars": 749.1730769230769,
+    "proof_ans": 0.9871794871794872,
+    "proof_grammatical": 0.84375,
+    "proof_valid": 0.5296474358974359
+   },
+   {
+    "step": 50,
+    "n": 2544,
+    "style": {
+     "<proof>": 1.0,
+     "<analysis>": 0.0,
+     "other, \\boxed": 0.0,
+     "other": 0.0
+    },
+    "correct": 0.8852201257861635,
+    "valid": 0.4378930817610063,
+    "chars": 614.5530660377359,
+    "proof_ans": 0.9547955974842768,
+    "proof_grammatical": 0.7747641509433962,
+    "proof_valid": 0.4378930817610063
+   },
+   {
+    "step": 75,
+    "n": 2592,
+    "style": {
+     "<proof>": 0.9996141975308642,
+     "<analysis>": 0.0,
+     "other, \\boxed": 0.0,
+     "other": 0.00038580246913580245
+    },
+    "correct": 0.8900462962962963,
+    "valid": 0.21257716049382716,
+    "chars": 593.136574074074,
+    "proof_ans": 0.5824006175221922,
+    "proof_grammatical": 0.41566962562717097,
+    "proof_valid": 0.21265920494017754
+   },
+   {
+    "step": 100,
+    "n": 2648,
+    "style": {
+     "<proof>": 0.9928247734138973,
+     "<analysis>": 0.00037764350453172205,
+     "other, \\boxed": 0.0015105740181268882,
+     "other": 0.005287009063444109
+    },
+    "correct": 0.9033232628398792,
+    "valid": 0.0,
+    "chars": 874.4240936555891,
+    "proof_ans": 0.005705591479650057,
+    "proof_grammatical": 0.0,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 125,
+    "n": 2504,
+    "style": {
+     "<proof>": 0.2036741214057508,
+     "<analysis>": 0.7851437699680511,
+     "other, \\boxed": 0.0007987220447284345,
+     "other": 0.010383386581469648
+    },
+    "correct": 0.9253194888178914,
+    "valid": 0.0,
+    "chars": 1574.536341853035,
+    "proof_ans": 0.0,
+    "proof_grammatical": 0.0,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 150,
+    "n": 2416,
+    "style": {
+     "<proof>": 0.0008278145695364238,
+     "<analysis>": 0.9983443708609272,
+     "other, \\boxed": 0.0,
+     "other": 0.0008278145695364238
+    },
+    "correct": 0.9155629139072847,
+    "valid": 0.0,
+    "chars": 2043.5227649006622,
+    "proof_ans": 0.0,
+    "proof_grammatical": 0.0,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 175,
+    "n": 2424,
+    "style": {
+     "<proof>": 0.0,
+     "<analysis>": 0.9987623762376238,
+     "other, \\boxed": 0.0,
+     "other": 0.0012376237623762376
+    },
+    "correct": 0.9282178217821783,
+    "valid": 0.0,
+    "chars": 2730.361386138614,
+    "proof_ans": null,
+    "proof_grammatical": null,
+    "proof_valid": null
+   },
+   {
+    "step": 200,
+    "n": 2424,
+    "style": {
+     "<proof>": 0.00041254125412541255,
+     "<analysis>": 0.9962871287128713,
+     "other, \\boxed": 0.0012376237623762376,
+     "other": 0.0020627062706270625
+    },
+    "correct": 0.9236798679867987,
+    "valid": 0.0,
+    "chars": 2525.7186468646864,
+    "proof_ans": 0.0,
+    "proof_grammatical": 0.0,
+    "proof_valid": 0.0
+   },
+   {
+    "step": 225,
+    "n": 2512,
+    "style": {
+     "<proof>": 0.0,
+     "<analysis>": 0.8773885350318471,
+     "other, \\boxed": 0.12101910828025478,
+     "other": 0.0015923566878980893
+    },
+    "correct": 0.9195859872611465,
+    "valid": 0.0,
+    "chars": 2410.9709394904457,
+    "proof_ans": null,
+    "proof_grammatical": null,
+    "proof_valid": null
+   },
+   {
+    "step": 250,
+    "n": 2512,
+    "style": {
+     "<proof>": 0.0,
+     "<analysis>": 0.7846337579617835,
+     "other, \\boxed": 0.21337579617834396,
+     "other": 0.0019904458598726115
+    },
+    "correct": 0.9402866242038217,
+    "valid": 0.0,
+    "chars": 2027.4096337579617,
+    "proof_ans": null,
+    "proof_grammatical": null,
+    "proof_valid": null
+   },
+   {
+    "step": 275,
+    "n": 2480,
+    "style": {
+     "<proof>": 0.0,
+     "<analysis>": 0.7532258064516129,
+     "other, \\boxed": 0.24556451612903227,
+     "other": 0.0012096774193548388
+    },
+    "correct": 0.9455645161290323,
+    "valid": 0.0,
+    "chars": 2070.3548387096776,
+    "proof_ans": null,
+    "proof_grammatical": null,
+    "proof_valid": null
+   }
+  ]
+ }
+}

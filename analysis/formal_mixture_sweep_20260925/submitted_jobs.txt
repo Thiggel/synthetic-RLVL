@@ -251,3 +251,4 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 # lane A (afterany:8176): 8209 eval_base (fills formal_eval_math) -> 8210 sft_libext_l -> 8211 eval_libext_l -> 8212 sft_libext_le -> 8213 eval_libext_le
 # lane B (afterany:7088): 8214 sft_libext_c -> 8215 eval_libext_c -> 8216 sft_libext_e -> 8217 eval_libext_e
 # 8169 gate_G10 re-chained to afterok:7888,afterany:8171 (gruenau12 half cap)
+# 2026-09-30 22:45 8780 gate_L1_correct checkpoint-250 (frozen checker, gate+formal_eval), afterany:8169

@@ -79,7 +79,8 @@ def binned(s: np.ndarray, y: np.ndarray, w: int = BIN) -> tuple[np.ndarray, np.n
 
 
 def fit_exp(t: np.ndarray, y: np.ndarray) -> dict | None:
-    """Saturating exponential y = a - (a - y0) exp(-t/tau); linear in (a, y0) for fixed tau."""
+    """Saturating exponential y = a - (a - y0) exp(-t/tau); linear in (a, y0) for fixed tau. The asymptote of a
+    rate is kept in [0, 1] (a collapse to 0 would otherwise extrapolate to a negative rate)."""
     if len(t) < 6:
         return None
     best = None
@@ -87,6 +88,9 @@ def fit_exp(t: np.ndarray, y: np.ndarray) -> dict | None:
         e = np.exp(-t / tau)
         X = np.stack([1 - e, e], 1)
         coef, *_ = np.linalg.lstsq(X, y, rcond=None)
+        if not 0 <= coef[0] <= 1:
+            a = min(max(coef[0], 0.0), 1.0)
+            coef = np.array([a, float(e @ (y - a * (1 - e)) / max(float(e @ e), 1e-12))])
         sse = float(((X @ coef - y) ** 2).sum())
         if best is None or sse < best[0]:
             best = (sse, tau, *coef)
