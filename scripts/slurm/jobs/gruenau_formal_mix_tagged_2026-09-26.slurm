@@ -20,6 +20,7 @@
 # writes formal_bench_tagged_n<N>), BENCHES, MIN_FREE_MIB, MAX_NEW_TOKENS,
 # TEST_JSONL + OUT_NAME (another item file, e.g. the Stage-2 gate set from
 # scripts/build_rl_gate_set.py, written to ${RUN_NAME}/${OUT_NAME}), OUT_ROOT + CKPT
+# EVAL_ARGS (extra eval_formal_bench_vllm.py flags, e.g. "--n-samples 16 --temperature 1.0" for pass@k),
 # (a GRPO checkpoint: OUT_ROOT=rlvl_data/grpo_formal_20260928 CKPT=checkpoint-50; the
 # output goes inside the checkpoint dir).
 # Output: ${OUT_ROOT}/${RUN_NAME}/formal_bench_tagged/{summary.json,generations.jsonl}.
@@ -64,7 +65,7 @@ for round in 1 2 3; do
   UTIL=$(python3 -c "print(round(min(0.85, (${free_mib}-3072)/${total_mib}), 3))")
   echo "round ${round}: gpu_mem=${UTIL}"
   if python scripts/eval_formal_bench_vllm.py --model "${MODEL}" --out-dir "${OUT_DIR}" --no-mm \
-      --gpu-mem "${UTIL}" --max-new-tokens "${MAX_NEW_TOKENS:-2048}" --max-model-len 32768 \
+      --gpu-mem "${UTIL}" --max-new-tokens "${MAX_NEW_TOKENS:-2048}" --max-model-len 32768 ${EVAL_ARGS:-} \
       ${PER_BENCH_LIMIT:+--per-bench-limit "${PER_BENCH_LIMIT}"} ${BENCHES:+--benches "${BENCHES}"} ${TEST_JSONL:+--test-jsonl "${TEST_JSONL}"}; then
     echo "done ${RUN_NAME}"; exit 0
   fi

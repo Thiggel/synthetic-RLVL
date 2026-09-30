@@ -225,3 +225,6 @@ srun --overlap in 6964: grpo_gate_ckpts_in_6964.sh (gate on G5 ckpt-50, G1 ckpt-
 7888 grpo_G10 RESUBMIT on gruenau11 H100 (7826 OOM'd at vLLM wake_up step 4 on gruenau10, foreign GPU use), same recipe (2026-09-30)
 7889 gate_G10 G10 @200/@400/final, gruenau11 afterok 7888; 7827 cancelled (2026-09-30)
 7890 7891 fmix_eval_x3_1562/gate_x3_1562 checkpoint-1562, sequential; moved gruenau8→gruenau7 (8 fully allocated) (2026-09-30)
+7913 passk_sftA pass@16 (T=1.0) Dolci gate: x3@781, x3@1562, 2B p25 fp32m final -> rl_gate_dolci_k16, gruenau7 (2026-09-30)
+7914 passk_sftB pass@16 (T=1.0) Dolci gate: 2B p50 cont lc fp32m final (G8 base), G8 final, gruenau7 (2026-09-30)
+7915 passk_x3final pass@16 (T=1.0) Dolci gate: x3 final, afterok:7088, gruenau7 (2026-09-30)

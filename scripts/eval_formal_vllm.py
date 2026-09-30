@@ -295,7 +295,7 @@ def generate(records, args) -> list[dict]:
             s = states[i]
             ids = encode_continuation(tok, s["prompt_ids"], s["text"]) if s["text"] else s["prompt_ids"]
             prompts.append(TokensPrompt(prompt_token_ids=ids))
-            params.append(SamplingParams(temperature=0.0, max_tokens=max(1, args.max_new_tokens - s["gen_tokens"]),
+            params.append(SamplingParams(temperature=getattr(args, "temperature", 0.0), max_tokens=max(1, args.max_new_tokens - s["gen_tokens"]),
                                          stop=["<result>"], include_stop_str_in_output=True,
                                          stop_token_ids=stop_ids, skip_special_tokens=True))
         t0 = time.time()

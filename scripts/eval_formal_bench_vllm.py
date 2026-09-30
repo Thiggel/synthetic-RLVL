@@ -35,6 +35,14 @@ Per item (the proof is the text between "<proof>\\n" and "</proof>"):
 
 summary.json aggregates per bench, per group and overall, each over all items
 and over the system_answerable subset.
+
+--n-samples N --temperature T (e.g. 16 and 1.0, the GRPO rollout temperature) samples
+N completions per item instead of one greedy one. The aggregates above are then means
+over all samples (sampled @1). summary["pass_at_k"] adds, per bench and overall, the
+unbiased pass@k (Chen et al. 2021) of PASSK_METRICS for k = 1, 2, 4, ..., N and
+`mixed@8`: the fraction of items whose 8-sample group is neither all-pass nor all-fail,
+i.e. the prompts on which GRPO with 8 generations gets a non-zero advantage from that
+metric as a binary reward (expected value under the observed per-item pass rate).
 """
 from __future__ import annotations
 
@@ -58,6 +66,7 @@ from utils import normalize_answer, qa_f1_score  # noqa: E402
 YN = {"yes": "yes", "no": "no", "true": "yes", "false": "no", "valid": "yes", "invalid": "no"}
 LOOSE_ANSWER_RE = re.compile(r"(?im)(?:^[#*\s]*(?:final\s+)?answer[*\s]*:[*\s]*|\b(?:the\s+)?(?:final\s+)?answer\s+is[:\s]*)"
                              r"\**\s*([^\n*]+?)\s*\**\s*$")
+PASSK_METRICS = ["has_proof", "grammatical", "valid", "correct", "valid_correct", "in_system"]
 METRICS = ["has_proof", "grammatical", "valid", "grounded", "uses_know", "leak", "correct", "ans_correct",
            "valid_correct", "in_system", "valid_wrong"]
 
@@ -169,6 +178,46 @@ def aggregate(rows: list[dict]) -> dict:
             "per_bench": {b: two(v) for b, v in sorted(by_bench.items())}}
 
 
+def _pass_at_k(n: int, c: int, k: int) -> float:
+    """Unbiased pass@k: 1 - C(n-c, k) / C(n, k)."""
+    if n - c < k:
+        return 1.0
+    p = 1.0
+    for i in range(n - c + 1, n + 1):
+        p *= 1.0 - k / i
+    return 1.0 - p
+
+
+def _mixed(n: int, c: int, k: int) -> float:
+    """P(a k-subset drawn without replacement has both passes and fails)."""
+    # 1 - P(all fail) - P(all pass) = pass@k(c) + pass@k(n - c) - 1
+    return _pass_at_k(n, c, k) + _pass_at_k(n, n - c, k) - 1.0
+
+
+def pass_at_k(rows: list[dict], n: int) -> dict:
+    by_item = collections.defaultdict(list)
+    for r in rows:
+        by_item[(r["bench"], r["id"])].append(r)
+    ks = [k for k in (1, 2, 4, 8, 16, 32, 64) if k <= n]
+
+    def agg(items):
+        out = {"n_items": len(items)}
+        for m in PASSK_METRICS:
+            cs = [(len(v), sum(bool(r[m]) for r in v)) for v in items]
+            out[m] = {f"@{k}": sum(_pass_at_k(nn, c, k) for nn, c in cs) / len(cs) for k in ks}
+            if n >= 8:
+                out[m]["mixed@8"] = sum(_mixed(nn, c, 8) for nn, c in cs) / len(cs)
+        return out
+
+    by_bench = collections.defaultdict(list)
+    for (b, _), v in by_item.items():
+        by_bench[b].append(v)
+    items = list(by_item.values())
+    return {"n_samples": n, "overall": agg(items),
+            "answerable": agg([v for v in items if v[0]["system_answerable"]]),
+            "per_bench": {b: agg(v) for b, v in sorted(by_bench.items())}}
+
+
 def fit_prompts(records, args):
     """Cut the middle of prompts that would not leave room for generation (multi-hop contexts)."""
     from transformers import AutoTokenizer
@@ -198,7 +247,10 @@ def main():
     ap.add_argument("--tp", type=int, default=1)
     ap.add_argument("--gpu-mem", type=float, default=0.85)
     ap.add_argument("--no-mm", action="store_true", help="disable image/video inputs (VLM checkpoints)")
+    ap.add_argument("--n-samples", type=int, default=1, help="completions per item (pass@k); >1 needs --temperature > 0")
+    ap.add_argument("--temperature", type=float, default=0.0)
     args = ap.parse_args()
+    assert args.n_samples == 1 or args.temperature > 0, "--n-samples > 1 with greedy decoding repeats one completion"
 
     records = [json.loads(l) for l in open(args.test_jsonl)]
     if args.benches:
@@ -208,6 +260,7 @@ def main():
         seen = collections.Counter()
         records = [r for r in records if (seen.update([r["bench"]]) or seen[r["bench"]] <= args.per_bench_limit)]
     fit_prompts(records, args)
+    records = [dict(rec, sample=j) for rec in records for j in range(args.n_samples)]
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -216,13 +269,17 @@ def main():
     flat = []
     with open(out_dir / "generations.jsonl", "w") as f:
         for rec, s in zip(records, states):
-            r = {k: rec[k] for k in ("bench", "group", "id", "gold", "answer_type", "gold_label", "system_answerable")}
+            r = {k: rec[k] for k in ("bench", "group", "id", "gold", "answer_type", "gold_label", "system_answerable",
+                                     "sample")}
             r.update(score(rec, s["text"]), generation=s["text"], gen_tokens=s["gen_tokens"],
                      finish_reason=s["finish"], truncated=rec.get("truncated", False))
             flat.append(r)
             f.write(json.dumps(r, default=str) + "\n")
     summary = {"model": args.model, "test_jsonl": args.test_jsonl, "n": len(flat), "elapsed_s": elapsed,
-               "max_new_tokens": args.max_new_tokens, "per_bench_limit": args.per_bench_limit, **aggregate(flat)}
+               "max_new_tokens": args.max_new_tokens, "per_bench_limit": args.per_bench_limit,
+               "n_samples": args.n_samples, "temperature": args.temperature, **aggregate(flat)}
+    if args.n_samples > 1:
+        summary["pass_at_k"] = pass_at_k(flat, args.n_samples)
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(f"n={len(flat)} elapsed={elapsed:.0f}s")
     hdr = "  ".join(f"{k[:9]:>9s}" for k in METRICS)
@@ -230,6 +287,9 @@ def main():
     for b, v in summary["per_bench"].items():
         a = v["all"]
         print(f"{b:42s} {a['n']:5d}  " + "  ".join(f"{a[k]:9.3f}" for k in METRICS))
+    if args.n_samples > 1:
+        for m in PASSK_METRICS:
+            print(m, {k: round(v, 3) for k, v in summary["pass_at_k"]["overall"][m].items()})
 
 
 if __name__ == "__main__":
