@@ -255,3 +255,15 @@ Untagged benchmarks, 25% minus 0% (accuracy points):
 - Tagged (`<formal>` mode): ProofWriter correct goes from 24 to 44, and grammatical is 82% with 19% valid. gsm8k correct falls from 53 to 25 in formal mode. That is the same pattern as 2B, where formal mode helps deduction and hurts arithmetic word problems.
 - Dolci RL gate on the 25% final (950 items): has_proof .884, grammatical .174, valid .024, correct .151 (0% baseline: correct .139). The 2B models have the same bottleneck: the model almost always writes a proof but it rarely checks on out-of-distribution prompts.
 - In-domain (generator test split), the proofs are valid .834 at 25k synthetic rows (scale curve).
+
+## 2026-09-30 12:00: p50 x3, checkpoint-1562 (~100k generator rows)
+
+Same run as above, 2/3 through its cosine schedule. Figure: `figures/sft_scale_curve.png` (regenerated).
+
+| checkpoint | gen rows | in-domain faithful | valid | answer acc | gate has_proof | gate grammatical | gate valid | gate correct | gate valid∧correct |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| x3 @781 | ~50k | .986 | .942 | .976 | .299 | .134 | .023 | .214 | .006 |
+| x3 @1562 | ~100k | .996 | .963 | .984 | .401 | .148 | .029 | .224 | .008 |
+
+- In-domain, the model is close to saturated (valid .942 → .963).
+- On Dolci, doubling the generator data raises has_proof by 10 points, but valid rises only 0.6 points. So more SFT on the same generator distribution does not close the Dolci validity gap. That gap needs RL, or generator coverage of Dolci-style domains (the open question to the user on extending the lib).
