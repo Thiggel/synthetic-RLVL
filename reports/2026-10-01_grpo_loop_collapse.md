@@ -107,6 +107,14 @@ What to compare at matched steps (100, 250), G14 vs G13:
 - clean gate valid / valid·correct;
 - gen_test valid.
 
+Caveat on entropy: TRL averages entropy over the tokens in the loss. G14's entropy therefore also covers truncated completions, which G13's excludes, so entropy is not strictly comparable between the two. Truncation share, length, loop share and the gates are comparable.
+
+**Steps 1–15 (15:38).**
+- Truncation: G14 .175 → .152, G13 .172 → .177.
+- Mean length: G14 692 → 657, G13 689 → 714.
+- Zero-variance groups: G14 .29–.31, G13 .69–.72.
+- Early and within noise, but in the expected direction.
+
 Section 2 caps what this can fix: about a quarter of the cvf arm's generator loss. If G14 removes loops but the parse/rule drift remains, the next arm is a KL anchor (beta 0.02–0.04; GRPO currently runs with beta = 0).
 
 **GPU budget.** G14 replaces G12 on gruenau12. G12 is paused after checkpoint-150:
