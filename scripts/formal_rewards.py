@@ -28,6 +28,9 @@ Arms (the primary reward; the other components are logged with weight 0):
              lines that the conclusion depends on. The valid bonus keeps a complete valid proof above
              any partial one.
   lines_fmt  G5c: lines * format_ok (one </proof>, then only the Answer: line)
+  cvf_fmt    cvf * format_ok. cvf ignores what follows </proof>; under it G10 drifted from `Answer: 3` to
+             `Answer yes ; 3` (format_ok 0 on every rollout from step ~540, still rewarded) and then into
+             `</proof>\n<formal>\n<prompt copy>` loops (2026-10-01, reports/2026-09-28_stage2_gate.md)
   lines_raw  the literal formula on the same line counts, (n_parsed + n_ok) * (1 + correct),
              for comparison only (rewards length)
 """
@@ -297,6 +300,8 @@ def make_reward(name: str):
                 out.append(comp["correct"] * comp["valid"])
             elif name == "cvf":  # G7: correct x valid x faithful premises (bogus_mp is valid on 69% of items)
                 out.append(comp["correct"] * comp["valid"] * comp["prem_ok"])
+            elif name == "cvf_fmt":
+                out.append(comp["correct"] * comp["valid"] * comp["prem_ok"] * comp["format_ok"])
             elif name == "gvc":
                 out.append((comp["grammatical"] + comp["valid"] + comp["correct"]) / 3.0)
             else:
@@ -308,10 +313,10 @@ def make_reward(name: str):
 
 ARMS = {"correct": "correct", "correct_x_valid": "correct_x_valid", "gvc": "gvc", "valid": "valid",
         "lines": "lines", "lines_fmt": "lines_fmt", "lines_raw": "lines_raw",
-        "frac": "frac", "frac_hard": "frac_hard", "cvf": "cvf"}
+        "frac": "frac", "frac_hard": "frac_hard", "cvf": "cvf", "cvf_fmt": "cvf_fmt"}
 LOGGED = ["correct", "valid", "grammatical", "in_system", "has_proof", "valid_strict", "lines", "n_parsed", "n_ok",
           "n_steps", "circular", "n_taut", "format_ok", "valid_prem", "frac_parsed", "frac_ok", "n_prem_bad", "prem_ok", "frac",
-          "cvf"]
+          "cvf", "cvf_fmt"]
 # per-domain copies of the headline metrics (2026-09-30, L1 long study): the step mean mixes generator and Dolci
 # prompts, whose rates differ by ~20x; these return None off-domain, which TRL logs as a nanmean over the domain
 BY_BENCH = ["correct", "valid", "cvf", "has_proof", "grammatical"]

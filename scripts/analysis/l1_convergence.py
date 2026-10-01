@@ -2,6 +2,9 @@
 """L1 convergence study (user question, 2026-09-30): GRPO with the reward correct x valid x faithful premises
 (cvf) vs correctness only, both from the same SFT policy (p50 + lemma catalog, fp32 master, tagged), up to
 5000 steps. When does each arm converge in correctness and in validity, and at what value?
+The cvf arm switched to cvf_fmt = cvf x format_ok at step 51 (chain 9647, resumed from checkpoint-50):
+under plain cvf, G10 learned to drop or garble the `Answer:` line, which can only cost reward
+(reports/2026-09-28_stage2_gate.md, 2026-10-01). Steps 1-50 got identical rewards under both.
 
 Training curves: per-step reward components on the training prompts (T=1.0, 32 prompts x 8 rollouts),
 split by domain (gen = generator items, dolci = dolci_math/wordprob/yesno; formal_rewards.BENCH_GROUPS).
@@ -42,8 +45,8 @@ RUNS = DATA / "grpo_formal_20260928"
 BASE = DATA / "formal_mixture_sft_20260925/qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407"
 GATE_TEST = DATA / "datasets/rl_gate_dolci_instruct_20260928/test.jsonl"
 GEN_TEST = DATA / "datasets/formal_mixture_20260925/pool/test.jsonl"
-ARMS = {"correct only": "L1_correct", "correct x valid x faithful (cvf)": "L1_cvf"}
-COLORS = {"correct only": "C0", "correct x valid x faithful (cvf)": "C3"}
+ARMS = {"correct only": "L1_correct", "cvf (x format_ok from step 51)": "L1_cvf"}
+COLORS = {"correct only": "C0", "cvf (x format_ok from step 51)": "C3"}
 METRICS = ["correct", "valid", "cvf"]
 DOMAINS = {"gen": "generator prompts", "dolci": "Dolci prompts (math, wordprob, yesno)"}
 TRAIN_BENCHES = {"dolci_math", "dolci_wordprob", "dolci_yesno"}

@@ -8,6 +8,7 @@ docs/research_plan.md, Stage 2. One run = one arm:
   --arm frac_hard  G6: frac with the line credit gated on premises (numeric check; exact faithfulness on
                    --benches gen items), format and no circular given; G6g adds gen to the benches
   --arm cvf  G7: correct x valid x faithful premises, all-or-nothing (no partial credit to hack)
+  --arm cvf_fmt  cvf x format_ok (G10 drifted out of the Answer: format under cvf, then looped; L1_cvf from step 51)
   --prompt-filter  G11: train only on prompts whose sampled reward rate (scripts/rl_prompt_filter.py) is in
                    (lo, hi), i.e. prompts whose rollout groups are likely to have non-zero advantage
 Rewards: scripts/formal_rewards.py (the other components are logged with weight 0).
@@ -164,7 +165,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
     ap.add_argument("--out-dir", required=True)
-    ap.add_argument("--arm", choices=["correct", "correct_x_valid", "gvc", "valid", "lines", "lines_fmt", "lines_raw", "frac", "frac_hard", "cvf"], required=True)
+    ap.add_argument("--arm", choices=["correct", "correct_x_valid", "gvc", "valid", "lines", "lines_fmt", "lines_raw", "frac", "frac_hard", "cvf", "cvf_fmt"], required=True)
     ap.add_argument("--no-tag", action="store_true", help="prompt without <formal> (G0, G1-NL)")
     ap.add_argument("--benches", default="dolci_math,dolci_dapo,dolci_wordprob,dolci_yesno",
                     help="also: gen = formal_mixture generator pool train (yes/no + numeric, no tools)")

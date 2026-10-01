@@ -156,3 +156,29 @@ This confirms that dropping plain data-scale midtraining was right, and that the
 - Correctness drops: greedy .224 → .163, T=1 .186 → .151. valid·correct@16 rises only .023 → .028.
 - Not yet attributable. The control arm c (fresh generator rows instead of new families; job 8214, done ~06:30) will show how much of the gain, and of the correctness loss, comes from 20k more SFT rows at all.
 - For comparison, x3 (150k plain generator rows) reached valid@16 .076 from a different base (§4).
+
+## 6. 2026-10-01 06:30: control arm c is in. The validity gain comes from the new families, not from more SFT
+
+Same figure as §5 (`figures/libext_ei_arms.png`, now with c). Arm c = 14k fresh default-family generator rows + the same 6k Dolci rows, the same size as l. Jobs 8214 and 8215.
+
+| metric | base | c: +fresh gen | l: +new families | l / c |
+|---|---:|---:|---:|---:|
+| gate greedy valid | .0105 | .0147 | .0274 | 1.9× |
+| gate greedy valid·correct | .0032 | .0042 | .0095 | 2.3× |
+| gate greedy correct | .224 | .201 | .163 | |
+| gate T=1 valid / sample | .0043 | .0046 | .0149 | 3.2× |
+| gate T=1 correct / sample | .186 | .164 | .151 | |
+| gate valid@16 | .043 | .037 | .086 | 2.3× |
+| gate valid·correct@16 | .023 | .014 | .028 | 2.1× |
+| gate mixed@8 (valid) | .026 | .024 | .061 | 2.5× |
+| gen test valid | .808 | .911 | .867 | |
+| new-family test valid | .010 | .014 | .952 | |
+
+- **More SFT on the old distribution does not transfer.**
+  - c improves in-domain validity (gen test .81 → .91) but leaves gate validity flat: .0043 → .0046 per sample, and valid@16 .043 → .037.
+  - This confirms the §4 / 2026-09-30 finding with a matched control.
+- **The new lemma families do transfer.** l has 3.2× c's per-sample gate validity and 2.3× its valid@16, at the same SFT budget. The gain is not from the data volume; it is from lemma coverage that real prompts need (§3: >60% of failing lib cites named lemmas that did not exist).
+- **Correctness cost, split.** Greedy gate correct falls .224 → .201 from more SFT at all (c), then a further .201 → .163 from l. The T=1 losses are −.022 and −.013.
+  - The new families cost some correctness, probably because the model now attempts more formal answers on prompts it used to answer loosely.
+  - Even so, valid·correct@16 is highest for l (.028), and c lowers it (.014).
+- **Pending:** e (EI rows; SFT 8216 running, eval 8217) and le (both; SFT 8212 at 131/157, eval 8213). These decide whether self-distilled real-prompt proofs add on top of l. If le > l, then le is the next RL base, since a 2.5× higher mixed@8 means 2.5× more prompts with GRPO signal.

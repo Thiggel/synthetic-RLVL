@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
 
 RUNS = Path("/vol/tmp2/laitenbf/rlvl_data/grpo_formal_20260928")
-ARMS = {"correct only": RUNS / "L1_correct", "correct x valid x faithful (cvf)": RUNS / "L1_cvf"}
+ARMS = {"correct only": RUNS / "L1_correct", "cvf (x format_ok from step 51)": RUNS / "L1_cvf"}
 REPO = Path(__file__).resolve().parents[2]
 OUT_JSON = REPO / "analysis/l1_format_shift.json"
 OUT_FIG = REPO / "reports/figures/l1_format_shift"
