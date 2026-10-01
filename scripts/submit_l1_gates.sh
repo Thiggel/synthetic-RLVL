@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 # L1 convergence study (2026-09-30): held-out evals of the kept checkpoints (every 250 steps) of both arms,
 # the Dolci gate (950 items) and the in-domain generator test (2000 items), greedy, frozen pre-libext checker.
+# Also G13 (2026-10-01: GRPO from the libext le SFT arm), with the new-library checker snapshot.
 # Submits one grpo_gate_ckpts job per arm for the kept checkpoints missing either eval, unless one is queued.
 # Idempotent: rerun from each loop tick. DEP=<sbatch dependency> holds the job (the L40 cap on gruenau12 is 5).
 set -euo pipefail
 cd /vol/tmp2/laitenbf/synthetic-RLVL
 ROOT=/vol/tmp2/laitenbf/rlvl_data/grpo_formal_20260928
-S=/vol/tmp2/laitenbf/rlvl_data/checker_snapshot_pre_libext_20260930
-for arm in L1_correct L1_cvf; do
+OLD=/vol/tmp2/laitenbf/rlvl_data/checker_snapshot_pre_libext_20260930
+NEW=/vol/tmp2/laitenbf/rlvl_data/checker_snapshot_libext_20261001
+for spec in "L1_correct:${OLD}" "L1_cvf:${OLD}" "2b_le_G13_cvffmt:${NEW}"; do
+  arm=${spec%%:*} S=${spec#*:}
   if squeue -u laitenbf -h -n "gate_${arm}" | grep -q .; then echo "${arm}: gate job queued"; continue; fi
   todo=()
   for c in "${ROOT}/${arm}"/checkpoint-* "${ROOT}/${arm}/final"; do
