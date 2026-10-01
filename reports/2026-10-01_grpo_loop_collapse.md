@@ -97,6 +97,8 @@ G14 (run `2b_le_G14_cvffmt_overlong`; jobs 9825 → 9826 on gruenau12, started 1
 - In an otherwise all-zero group, the loop now gets a clearly negative advantage and its siblings a small positive one. Groups that used to carry no signal now do; this is DAPO-style overlong shaping.
 - Code: `scripts/formal_rewards.py`, `make_truncated` and `reward_funcs(arm, overlong_penalty, max_len)`; `scripts/grpo_formal.py`, `--no-mask-truncated` and `--overlong-penalty`. The defaults are unchanged, so the running L1 and G13 chains behave as before.
 
+**First step (14:50).** The reward is .225, i.e. cvf_fmt .293 − 0.5 × truncated share .137, so the penalty is active. Only .28 of groups have zero reward variance; G13 at step 1 had 0.62, so most groups now carry a learning signal.
+
 What to compare at matched steps (100, 250), G14 vs G13:
 - truncation share;
 - loop share;
