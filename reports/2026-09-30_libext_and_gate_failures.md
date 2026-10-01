@@ -182,3 +182,69 @@ Same figure as §5 (`figures/libext_ei_arms.png`, now with c). Arm c = 14k fresh
   - The new families cost some correctness, probably because the model now attempts more formal answers on prompts it used to answer loosely.
   - Even so, valid·correct@16 is highest for l (.028), and c lowers it (.014).
 - **Pending:** e (EI rows; SFT 8216 running, eval 8217) and le (both; SFT 8212 at 131/157, eval 8213). These decide whether self-distilled real-prompt proofs add on top of l. If le > l, then le is the next RL base, since a 2.5× higher mixed@8 means 2.5× more prompts with GRPO signal.
+
+## 7. 2026-10-01 08:30: le (new families + self-distilled real-prompt proofs) is the best arm by far. The gain is not from gate contamination
+
+Same figure as §5/§6 (`figures/libext_ei_arms.png`, now with le). The le arm is 4,457 EI rows + 7k new-family rows + 2.5k fresh generator rows + the same 6k Dolci rows (jobs 8212/8213). EI rows are G8 final's own checker-passing, correct proofs on Dolci wordprob/math and GSM8K-train prompts.
+
+| metric | base | c | l | le | le / l |
+|---|---:|---:|---:|---:|---:|
+| gate greedy valid | .0105 | .0147 | .0274 | **.0684** | 2.5× |
+| gate greedy valid·correct | .0032 | .0042 | .0095 | **.0379** | 4.0× |
+| gate greedy correct | .224 | .201 | .163 | .196 | |
+| gate T=1 valid / sample | .0043 | .0046 | .0149 | **.0420** | 2.8× |
+| gate T=1 valid·correct / sample | .0022 | .0016 | .0060 | **.0266** | 4.4× |
+| gate valid@16 | .043 | .037 | .086 | **.164** | 1.9× |
+| gate valid·correct@16 | .023 | .014 | .028 | **.079** | 2.8× |
+| gate mixed@8 (valid) | .026 | .024 | .061 | **.120** | 2.0× |
+| gen test valid | .808 | .911 | .867 | .823 | |
+| new-family test valid | .010 | .014 | .952 | .958 | |
+
+- **le has ~10× the base's per-sample gate validity and 12× its valid·correct.** This is from 20k SFT rows and no RL. It reaches about 40% of G10@500's greedy valid·correct (.107), which took 1,100 GRPO steps.
+- Per source (T=1 valid per sample): wordprob .020 → .127 (×6 over l), knowledge .039 → .061, yesno .018 → .024, math .008 → .011, dapo .0004 → .0017.
+  - The EI proofs are mostly word problems, and wordprob is where the gain lands.
+  - Math and dapo move little. The EI pool had almost no math proofs: 27 passing completions from 6 prompts, §1 harvest.
+- Correctness recovers part of l's loss: greedy .163 → .196 (base .224).
+- **The EI-to-gate overlap is negligible.**
+  - 0 shared ids and 1 exact text match.
+  - 5 of 1,759 EI prompts share a 12-gram with 7 gate items.
+  - On the 943 gate items with no shared 12-gram, le scores greedy valid .064, valid·correct .033, and T=1 valid .040. l scores .026, .009 and .014 there.
+
+### Gate contamination audit (all evals)
+
+The audit then widened from the EI rows to the full training-prompt pool that RL and EI draw from: Dolci train rows of all gate benches (held-out rows excluded), plus GSM8K train, 74,669 prompts. `scripts/analysis/gate_contamination.py` measures 12-gram coverage and ignores template 12-grams that occur in more than 50 prompts. The output is `analysis/gate_contamination.md` plus `contamination.json` next to the gate's `test.jsonl`.
+
+| gate bench | items | near-duplicate in pool (coverage ≥ .3) | ≥ .9 |
+|---|---:|---:|---:|
+| dolci_math | 300 | 128 | 82 |
+| dolci_dapo | 150 | 61 | 41 |
+| dolci_wordprob | 200 | 30 | 21 |
+| dolci_yesno | 200 | 18 | 2 |
+| dolci_knowledge | 100 | 0 | 0 |
+| all | 950 | 237 | 146 |
+
+- **Dolci-Instruct-RL repeats problems under other row indices** (reworded, re-spaced, or with an image link), so holding out by row index left 25% of the gate with a near-duplicate in the pool. The "OOD" dapo items have near-duplicates among the dolci_math pool rows. The closest rows: dolci_math 177, dolci_dapo 23, yesno 18, GSM8K train 16, wordprob 3.
+- **None of the conclusions depend on it.** `scripts/analysis/gate_clean_rescore.py` rescored all 70 gate evals on the 713 clean items (`analysis/gate_clean_rescore.md`, `figures/gate_clean_rescore.png`):
+  - Every model scores *lower* on the contaminated items, because they are mostly the hard math and dapo items. Example: L1 base correct is .261 on clean items and .114 on contaminated ones.
+  - Gains are similar or larger on the clean items:
+
+    | change | clean | contaminated |
+    |---|---|---|
+    | L1 correct-only @500, correct | +.199 | +.194 |
+    | G10@500 (cvf), valid | +.289 | +.148 |
+    | le, valid | +.067 | +.030 |
+
+  - There is no sign that training on near-duplicates inflated any gate number.
+  - From now on, report the clean-subset numbers alongside the full-gate ones.
+- **Prevention:** `grpo_formal.py --exclude-ids <contamination.json>` drops the 765 pool rows that cover a gate item ≥ .3: 654 dolci_math, 47 dapo, 44 yesno, 16 GSM8K, 4 wordprob. New RL runs use it, starting with G13. Already-running runs (L1, G11, G12) keep their pools so that their arms stay comparable.
+
+### Next: G13 = le final + GRPO (cvf_fmt)
+
+- le has 2× l's mixed@8 and 4.6× the base's, so far more gate-like prompts give GRPO a non-zero advantage. Following the decision rule in §6, it is the next RL base.
+- Config:
+  - G13 runs with L1's config: gen/dolci_math/wordprob/yesno, 3000 per bench, 1000 steps, saves every 50, keeps weights every 250.
+  - Reward cvf_fmt.
+  - `--exclude-ids` is on.
+  - Checker: the new-library snapshot `rlvl_data/checker_snapshot_libext_20261001` (md5 of `_rlvl.abi3.so` = 7320e07c…).
+- Jobs 9720 → 9721 on gruenau12, run `2b_le_G13_cvffmt`.
+- Comparison: L1_cvf (L1 base + cvf_fmt from step 51; frozen old checker) at matched steps. G13's checkpoint gates must use the new checker. L1_cvf's gates use the old checker, which changes 0 of 42,798 verdicts on old-library proofs (§2).

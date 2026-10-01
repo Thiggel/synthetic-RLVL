@@ -44,7 +44,7 @@ GEN_POOL = DATA_ROOT / "datasets/formal_mixture_20260925/pool/train.jsonl"
 
 
 def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], max_per_bench: int | None = None,
-                  keep_ids: set | None = None):
+                  keep_ids: set | None = None, exclude_ids: set | None = None):
     from datasets import Dataset, load_dataset
     rows = []
     if "gen" in benches:  # generator items carry their gold sentences: frac_hard then checks exact faithfulness
@@ -82,6 +82,8 @@ def build_dataset(tok, tag: bool, n: int | None, seed: int, benches: list[str], 
             rows.append({"prompt": render_prompt(tok, f"<formal>\n{q}" if tag else q), "raw_prompt": q,
                          "id": f"gsm8k_train/{i}", "bench": "gsm8k_train", "gold": g, "answer_type": "number",
                          "system_answerable": True, "sentences_json": ""})
+    if exclude_ids:  # --exclude-ids: near-duplicates of gate items (analysis/gate_contamination.py)
+        rows = [r for r in rows if r["id"] not in exclude_ids]
     if keep_ids is not None:  # --prompt-filter: only prompts whose sampled reward rate is in (lo, hi)
         rows = [r for r in rows if r["id"] in keep_ids]
     random.Random(seed).shuffle(rows)
@@ -193,6 +195,9 @@ def main():
                          "in --out-dir, and keep optimizer state only in the newest checkpoints")
     ap.add_argument("--keep-every", type=int, default=0,
                     help="with --resumable: keep weights of older checkpoints only at multiples of this step")
+    ap.add_argument("--exclude-ids", default=None,
+                    help="contamination.json (scripts/analysis/gate_contamination.py): drop its pool_exclude_ids, "
+                         "training prompts that near-duplicate a gate item")
     ap.add_argument("--stop-at", type=float, default=None,
                     help="unix time: save a checkpoint and stop after the first step past it (no final/); "
                          "with --resumable the next job continues from there")
@@ -206,8 +211,9 @@ def main():
     if args.prompt_filter:
         rates = json.loads(Path(args.prompt_filter).read_text())["rates"]
         keep = {i for i, v in rates.items() if args.filter_lo < v["rate"] < args.filter_hi}
+    exclude = set(json.loads(Path(args.exclude_ids).read_text())["pool_exclude_ids"]) if args.exclude_ids else None
     train = build_dataset(tok, not args.no_tag, args.n_prompts, args.seed, args.benches.split(","),
-                          args.max_per_bench, keep)
+                          args.max_per_bench, keep, exclude)
     world = int(os.environ.get("WORLD_SIZE", "1"))
     completions_per_step = args.prompts_per_step * args.num_generations
     grad_accum = max(1, completions_per_step // (args.per_device_batch * world))
