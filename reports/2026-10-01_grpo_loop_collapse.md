@@ -1,7 +1,7 @@
 # GRPO, 2026-10-01: L1 held-out gates, truncation masking and the G14 fix arm
 
 **Summary.**
-- Correct-only GRPO (L1_correct) plateaus at about .45 correct on the clean gate from step 500. Its validity stays at 0.
+- Correct-only GRPO (L1_correct): correctness on its own training prompts converged by step ~600, at .46 on Dolci and .95 on the generator. Held-out greedy correctness is still creeping up: .460 at step 500, .481 at step 1000 (paired z = 1.5). Validity has been 0 since step ~180.
 - The cvf arm (L1_cvf) at step 250 nearly triples clean-gate validity, .014 → .039. Correctness is flat (.261 → .269).
 - On held-out generator problems, though, L1_cvf *loses* 20 points of validity (.807 → .605).
 - About a quarter of that loss is length truncation, mostly repetition loops. TRL masks truncated completions out of the GRPO loss, so the loops are never penalised.
@@ -10,7 +10,7 @@
 
 All gate numbers use the **clean** gate subset: the 713 of 950 items with no near-duplicate in the training-prompt pool. They are greedy and scored by the frozen pre-libext checker.
 
-## 1. L1 held-out gates (steps 0–750)
+## 1. L1 held-out gates (steps 0–1000)
 
 | checkpoint | gate correct (clean) | gate valid (clean) | gate valid·correct (clean) | OOD correct (250) | gen_test correct | gen_test valid | gen_test cvf |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -18,6 +18,7 @@ All gate numbers use the **clean** gate subset: the 713 of 950 items with no nea
 | L1 correct @250 | .438 | 0 | 0 | .164 | .949 | 0 | 0 |
 | L1 correct @500 | **.460** | 0 | 0 | .180 | .968 | 0 | 0 |
 | L1 correct @750 | .446 | 0 | 0 | .164 | .951 | 0 | 0 |
+| L1 correct @1000 | **.481** | 0 | 0 | .184 | .949 | 0 | 0 |
 | L1 cvf @250 | .269 | **.039** | **.022** | .032 | .828 | .571 | .530 |
 | L1 cvf @500 | .309 | **.077** | **.055** | .044 | .792 | .484 | .459 |
 
@@ -28,7 +29,14 @@ Sources:
 
 ![held-out](figures/l1_convergence_heldout.png)
 
-**Correct only.** Held-out correctness rises .261 → .460 by step 500, then stalls (.446 at step 750). Training-prompt correctness also flattens: the fit gives a Dolci asymptote of .45 with t95 ≈ 540 steps. **Correctness looks converged from about step 500, at about .45 (clean gate) / .47 (Dolci training prompts) / .96 (generator).** The final call comes at step 1000, when the plateau test has enough steps. Validity converged to 0 by step ~180 (see the 2026-09-30 interim report).
+**Correct only.** Held-out correctness rises .261 → .460 by step 500, then stalls (.446 at step 750). Training-prompt correctness also flattens: the fit gives a Dolci asymptote of .45 with t95 ≈ 540 steps. **Correctness looks converged from about step 500, at about .45 (clean gate) / .47 (Dolci training prompts) / .96 (generator).** The final call comes at step 1000, when the plateau test has enough steps.
+
+**Update, correct @1000 (gate 9859, 18:35).**
+- *Training prompts:* converged. The plateau test (last 100 steps within the fit's noise band) fires for Dolci correct at .459 from step ~970 (fit asymptote .452, t95 ≈ 525). Generator correct plateaus at .953 from step ~630.
+- *Held-out, clean gate (greedy):* not flat yet. Correctness goes .438 → .460 → .446 → .481 at steps 250/500/750/1000.
+  - Paired over the 713 clean items: step 250 → 1000 = +4.3 pp (SE 1.5, z = 2.9); step 500 → 1000 = +2.1 pp (z = 1.5).
+  - So held-out correctness still gains about 1 pp per 250 steps. Training-prompt sampled correctness has stopped moving, so the most likely source is the greedy decode sharpening. OOD correctness (250 items) is .184, level with step 500.
+- *Answer so far, correctness reward:* correctness converges at ≈ .46 (Dolci, sampled) / .95 (generator) by step ~600, with a slow held-out tail (.48 at step 1000). Validity converges to exactly 0 by step ~180: the policy drops `<proof>` completely. The run continues toward 5000 steps to test for a late tail. Validity converged to 0 by step ~180 (see the 2026-09-30 interim report).
 
 **cvf.** By step 250, clean-gate validity has nearly tripled (.014 → .039) and valid·correct has grown fivefold (.004 → .022). Both are still tiny. Gate correctness is flat. On the generator, where the base model is already strong, every metric drops: valid .786 → .571, cvf .747 → .530. Training-prompt cvf on generator prompts falls too, .584 (first 25 steps) → .541 (last 100). So the arm is getting worse at its own reward on the prompts where it was good. Section 2 looks at why.
 
