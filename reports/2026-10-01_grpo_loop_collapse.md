@@ -140,3 +140,27 @@ Why G12: it is the weakest arm.
 - Entropy is .03.
 - Rollout cvf is flat (.239 → .254 over 144 steps).
 - At 200 s/step, the remaining 850 steps would need about 47 h.
+
+**Steps 1–125 (20:50): the fix works on its target, at no cost in reward.** Training rollouts, 25-step bins (`analysis/grpo_loop_collapse.json`):
+
+| steps | G13 truncated | G14 truncated | G13 length (tok) | G14 length (tok) | G13 loops | G14 loops | G13 rollout cvf | G14 rollout cvf | G13 zero-var | G14 zero-var |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1–25 | .165 | .106 | 687 | 557 | .125 | .096 | .228 | .221 | .73 | .42 |
+| 26–50 | .179 | .004 | 696 | 303 | .127 | .030 | .256 | .245 | .72 | .70 |
+| 51–75 | .146 | .002 | 641 | 269 | .121 | .023 | .299 | .291 | .76 | .72 |
+| 76–100 | .138 | .002 | 618 | 253 | .103 | .018 | .315 | .308 | .80 | .76 |
+| 101–125 | .175 | .001 | 691 | 252 | .124 | .014 | .270 | .286 | .81 | .80 |
+
+- **Truncation.** G14 stops hitting the 2048-token limit within about 30 steps: .106 → .001. G13 stays at .14–.18 throughout.
+- **Loops.** The loop share falls by a factor of 7 (.096 → .014). G13's stays at .10–.13.
+- **Length.** Completions get much shorter, 557 → 252 tokens, close to the SFT model's 260 on gen_test.
+- **Speed.** Steps are 38% faster: 127 s against G13's 204 s.
+- **Reward.** Training-rollout cvf tracks G13 within ±.015 in every bin, so the penalty took the loops away without costing reward.
+- **Zero-variance groups.** G14's early advantage (.42 vs .73) was transient. From step 50 both arms sit at .70–.80, because most groups are all-0 or all-1 on cvf.
+- **Entropy.** G14 .28 → .42; G13 .135 → .058. Truncation is now ~0 in G14, so masking no longer distorts the comparison. Length still confounds it, though: the boilerplate tokens of long completions have low entropy. Read it as "G14 is not collapsing", not as a quantitative gap.
+- **Still open.** Whether G14 improves *held-out* validity: the clean gate and gen_test at step 250, around 13:00 on 2026-10-02.
+
+**Side observation (L1 arms, same table in §3).**
+- L1_correct is now truncating 25% of its rollouts (from 4%), with a mean length of 1010 tokens, but only 1.3% of rollouts are loops. Its truncations are long natural-language reasoning, not loops. Because they are masked, they get no gradient.
+- L1_cvf's loop share keeps climbing, .047 → .182 by step 658, with 19% truncated.
+- Neither L1 arm was launched with the fix, and both keep running unchanged for comparability with the convergence question.
