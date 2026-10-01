@@ -19,6 +19,7 @@ All gate numbers use the **clean** gate subset: the 713 of 950 items with no nea
 | L1 correct @500 | **.460** | 0 | 0 | .180 | .968 | 0 | 0 |
 | L1 correct @750 | .446 | 0 | 0 | .164 | .951 | 0 | 0 |
 | L1 cvf @250 | .269 | **.039** | **.022** | .032 | .828 | .571 | .530 |
+| L1 cvf @500 | .309 | **.077** | **.055** | .044 | .792 | .484 | .459 |
 
 Sources:
 - `analysis/gate_clean_rescore.md` and `analysis/l1_convergence.json`.
@@ -30,6 +31,11 @@ Sources:
 **Correct only.** Held-out correctness rises .261 → .460 by step 500, then stalls (.446 at step 750). Training-prompt correctness also flattens: the fit gives a Dolci asymptote of .45 with t95 ≈ 540 steps. **Correctness looks converged from about step 500, at about .45 (clean gate) / .47 (Dolci training prompts) / .96 (generator).** The final call comes at step 1000, when the plateau test has enough steps. Validity converged to 0 by step ~180 (see the 2026-09-30 interim report).
 
 **cvf.** By step 250, clean-gate validity has nearly tripled (.014 → .039) and valid·correct has grown fivefold (.004 → .022). Both are still tiny. Gate correctness is flat. On the generator, where the base model is already strong, every metric drops: valid .786 → .571, cvf .747 → .530. Training-prompt cvf on generator prompts falls too, .584 (first 25 steps) → .541 (last 100). So the arm is getting worse at its own reward on the prompts where it was good. Section 2 looks at why.
+
+**Update, cvf @500 (gate 9858, 17:50).** The trade-off continues in both directions.
+- Clean-gate validity doubles again (.039 → .077), as does valid·correct (.022 → .055). Gate correctness rises a little too (.269 → .309).
+- Generator validity keeps falling: .571 → .484 (base .786).
+- The cvf arm is converting generator validity into Dolci validity, at roughly 1 point gained on the gate per 2 points lost on the generator. Neither side has plateaued.
 
 ## 2. Why the cvf arm loses generator validity
 
