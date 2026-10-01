@@ -248,3 +248,65 @@ The audit then widened from the EI rows to the full training-prompt pool that RL
   - Checker: the new-library snapshot `rlvl_data/checker_snapshot_libext_20261001` (md5 of `_rlvl.abi3.so` = 7320e07c…).
 - Jobs 9720 → 9721 on gruenau12, run `2b_le_G13_cvffmt`.
 - Comparison: L1_cvf (L1 base + cvf_fmt from step 51; frozen old checker) at matched steps. G13's checkpoint gates must use the new checker. L1_cvf's gates use the old checker, which changes 0 of 42,798 verdicts on old-library proofs (§2).
+
+## 8. 2026-10-01 13:00: full 2×2 (c / l / e / le). Self-distillation drives gate validity; the new families substitute for it rather than add to it
+
+Arm e (job 8217) finished, which completes the 2×2. All four arms continue the L1 base on 20k rows: the same 6k Dolci rows plus 14k formal rows. They differ only in what the 14k formal rows are:
+- **c:** 14k fresh generator rows.
+- **l:** 7k new-family rows plus 7k generator rows.
+- **e:** 4,457 self-distilled real-prompt proofs (EI) plus 9,543 generator rows.
+- **le:** EI plus 7k new-family rows plus 2,543 generator rows.
+
+Outputs: `scripts/analysis/libext_ei_arms.py` → `analysis/libext_ei_arms.{md,json}`, `figures/libext_ei_arms.png`.
+
+![libext 2x2](figures/libext_ei_arms.png)
+
+| metric | L1 base | c | l | e | le |
+|---|---:|---:|---:|---:|---:|
+| gate greedy valid (all / clean) | .011 / .014 | .015 / .020 | .027 / .032 | **.085 / .105** | .068 / .081 |
+| gate greedy valid·correct | .003 | .004 | .010 | **.046** | .038 |
+| gate greedy correct | .224 | .201 | .163 | .219 | .196 |
+| gate T=1 valid / sample (all / clean) | .004 / .006 | .005 / .006 | .015 / .018 | **.048 / .058** | .042 / .049 |
+| gate valid@16 | .043 | .037 | .086 | **.186** | .164 |
+| gate valid·correct@16 | .023 | .014 | .028 | **.094** | .079 |
+| gate mixed@8 (prompts GRPO can learn from) | .026 | .024 | .061 | **.139** | .120 |
+| generator test valid | .808 | **.911** | .867 | .891 | .823 |
+| new-family test valid | .010 | .014 | .952 | .256 | **.958** |
+
+Contrasts are paired bootstrap estimates over the gate prompts, 2,000 resamples, with 95% CIs:
+
+| contrast | greedy valid, clean 713 | T=1 valid / sample, clean 713 | T=1 valid·correct / sample, clean 713 |
+|---|---|---|---|
+| EI without new families (e − c) | **+.086** [.065, .108] | **+.052** [.042, .063] | **+.032** [.024, .041] |
+| EI with new families (le − l) | +.049 [.028, .070] | +.031 [.021, .041] | +.023 [.016, .032] |
+| new families without EI (l − c) | +.013 [−.003, .028] | +.012 [.008, .017] | +.005 [.002, .009] |
+| new families with EI (le − e) | −.024 [−.046, −.001] | −.009 [−.015, −.003] | −.004 [−.009, .002] |
+| interaction | −.037 [−.062, −.011] | −.021 [−.028, −.014] | −.009 [−.015, −.004] |
+
+**EI is the driver.**
+- Self-distilled proofs for real prompts multiply clean T=1 per-sample validity by about 10 (.006 → .058), and valid@16 by 5.
+- They do this without costing correctness (.219 vs .201 greedy) and with almost no loss on the generator test (.891 vs .911).
+- The §7 attribution ("le is the best arm") holds only against c and l. e is the best arm on every gate validity metric. On gate correctness, all arms are within .03 of the L1 base (.224), and e is closest (.219).
+
+**The new families are substitutes for EI, not complements.**
+- Without EI they help a little: +.012 T=1 valid on clean items, significant.
+- With EI they hurt a little: −.009, significant, and −.004 on valid·correct, not significant.
+- The interaction is significantly negative on all eight metrics.
+- They also cost generator-test validity (.891 → .823) and gate correctness (.219 → .196).
+- In le they replace 7k of e's 9.5k generator rows, so the arm sees fewer of the generator's proof styles.
+
+**Where le still wins:**
+- **New families:** .958 vs .256 on the new-family test. e gets rates (.951) from EI alone, but only .00–.13 on counting, geom, mathlemmas and numth.
+- **The two hardest benches:** T=1 valid on math is .011 vs .006, and on dapo .0017 vs .0004. EI rows come from GSM8K and wordprob, so they barely reach these benches; the number-theory and geometry lemmas do.
+- Where e wins: wordprob (equal, .129 vs .127), yesno (.054 vs .024) and knowledge (.068 vs .061).
+
+**Implications:**
+- **G13** (le + GRPO, running since 08:40) stays: le ≈ e on valid·correct and keeps the new-family skills. In hindsight, e would have been the stronger RL base on the gate. If G13's first gates (step 250, about 23:00) do not beat L1_cvf at matched steps, an e-based GRPO arm is next.
+- **The best data is the model's own verified proofs on real prompts.** The lever to push is EI quality and coverage, not more synthetic families. That suggests the AlphaZero-like loop from the research plan: RL → harvest verified proofs from the RL'd policy → SFT → RL.
+
+### Next: EI round 2 (teacher = an RL'd policy)
+
+EI round 1 harvested from G8 final, the L1 base after 1 GRPO epoch with cvf reward. Round 2 harvests from G12 checkpoint-100 (G10@500 + cvf_fmt, rollout cvf .25, format_ok .80), a much stronger prover on real prompts.
+
+- **Same recipe as e:** n=16, T=1, cvf_fmt filter, frozen old checker, gate-contaminated pool rows excluded, ≤ 4 shortest proofs per prompt, 7k cap, init = L1 base.
+- **Question:** does a stronger teacher give a better student, and by how much? If yes, iterate.
