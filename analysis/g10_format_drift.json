@@ -959,6 +959,66 @@
    "Answer x ; n": 0.0,
    "<formal> loop": 0.00078125,
    "other": 0.18125
+  },
+  {
+   "b": 150,
+   "cvf": 0.248046875,
+   "format_ok": 0.7953125,
+   "chars": 1037.91484375,
+   "cvf_unformatted": 0.0,
+   "Answer: x": 0.7953125,
+   "Answer: x ; n": 0.0,
+   "Answer x ; n": 0.0,
+   "<formal> loop": 0.0,
+   "other": 0.2046875
+  },
+  {
+   "b": 160,
+   "cvf": 0.190234375,
+   "format_ok": 0.808203125,
+   "chars": 1075.353515625,
+   "cvf_unformatted": 0.0,
+   "Answer: x": 0.808203125,
+   "Answer: x ; n": 0.0,
+   "Answer x ; n": 0.0,
+   "<formal> loop": 0.0,
+   "other": 0.191796875
+  },
+  {
+   "b": 170,
+   "cvf": 0.2234375,
+   "format_ok": 0.831640625,
+   "chars": 1146.57734375,
+   "cvf_unformatted": 0.0,
+   "Answer: x": 0.831640625,
+   "Answer: x ; n": 0.0,
+   "Answer x ; n": 0.0,
+   "<formal> loop": 0.0,
+   "other": 0.168359375
+  },
+  {
+   "b": 180,
+   "cvf": 0.226953125,
+   "format_ok": 0.823046875,
+   "chars": 1198.96953125,
+   "cvf_unformatted": 0.0,
+   "Answer: x": 0.822265625,
+   "Answer: x ; n": 0.00078125,
+   "Answer x ; n": 0.0,
+   "<formal> loop": 0.0,
+   "other": 0.176953125
+  },
+  {
+   "b": 190,
+   "cvf": 0.22265625,
+   "format_ok": 0.8560267857142857,
+   "chars": 1102.5814732142858,
+   "cvf_unformatted": 0.0,
+   "Answer: x": 0.8560267857142857,
+   "Answer: x ; n": 0.0,
+   "Answer x ; n": 0.0,
+   "<formal> loop": 0.0,
+   "other": 0.14397321428571427
   }
  ]
 }

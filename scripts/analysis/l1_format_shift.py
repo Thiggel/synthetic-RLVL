@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""What the L1 policies write, over GRPO steps (2026-09-30).
+"""What the L1 policies write, over GRPO steps (2026-09-30; G13 added 2026-10-01).
 
 Reads the per-step rollout logs <run>/completions/completions_*.parquet of each L1 arm (256 rollouts per step:
 32 prompts x 8, training prompts with training rewards) and bins them into 25-step buckets, split by prompt source
@@ -22,7 +22,8 @@ import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
 
 RUNS = Path("/vol/tmp2/laitenbf/rlvl_data/grpo_formal_20260928")
-ARMS = {"correct only": RUNS / "L1_correct", "cvf (x format_ok from step 51)": RUNS / "L1_cvf"}
+ARMS = {"correct only": RUNS / "L1_correct", "cvf (x format_ok from step 51)": RUNS / "L1_cvf",
+        "G13: le SFT + cvf_fmt (new lib)": RUNS / "2b_le_G13_cvffmt"}
 REPO = Path(__file__).resolve().parents[2]
 OUT_JSON = REPO / "analysis/l1_format_shift.json"
 OUT_FIG = REPO / "reports/figures/l1_format_shift"
