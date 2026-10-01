@@ -22,6 +22,10 @@ new-family items = formal_libext_20260930/pool/train_math_20000.jsonl (families 
 rates, counting; new lemma library). Fresh generator items = train rows 60000.. of the x3 pool (the base
 saw rows 0..54999). Dolci = dolci-ext-* rows 10000..15999 of dolci_rlvlgen_p50_x3 (the base saw 0..9999).
 eval = the p50 eval split. Evaluate under the NEW checker (the new families cite new lemmas).
+EI round 2 (2026-10-01): arm e2 = e with the harvest from a stronger, RL'd teacher (HARVEST2: G12 checkpoint-100,
+i.e. G10@500 + 100 cvf_fmt steps; same pool sizes, n=16, T=1, cvf reward, frozen checker, gate near-duplicates
+excluded). The 2x2 found EI drives gate validity (§8 of the report); e2 vs e asks whether a better teacher
+gives a better student.
 Writes <out-root>/<arm> (DatasetDict + mixture_manifest.json); existing arms are skipped. Run with .venv_rlvl_grpo.
 """
 from __future__ import annotations
@@ -46,6 +50,9 @@ SCALE = DS / "formal_mixture_scale_20260929"
 LIBEXT = DS / "formal_libext_20260930/pool/train_math_20000.jsonl"
 HARVEST = [DATA / "rl_filter_20260930/G8final_cvf_n16.json.passing.jsonl",
            DATA / "rl_filter_20260930/G8final_cvf_n16_gsm8k.json.passing.jsonl"]
+HARVEST2 = [DATA / "rl_filter_20261001/G12c100_cvf_n16_dolci.json.passing.jsonl",
+            DATA / "rl_filter_20261001/G12c100_cvf_n16_gsm8k.json.passing.jsonl"]
+EI_SRC = {"e": HARVEST, "le": HARVEST, "e2": HARVEST2}
 REAL = ("dolci_wordprob", "dolci_math", "gsm8k_train")
 INIT = "formal_mixture_sft_20260925/qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407/final"
 GIVEN = re.compile(r'(?m)^\d+ .*? ; given "(.*)"\s*$')
@@ -105,13 +112,17 @@ def main() -> None:
     from datasets import Dataset, DatasetDict, load_from_disk
 
     arms = args.arms.split(",")
-    ei, ei_stats = ([], {})
-    if {"e", "le"} & set(arms):
-        missing = [str(p) for p in HARVEST if not p.is_file()]
-        if missing:
-            raise SystemExit(f"missing harvest: {missing}")
-        ei, ei_stats = ei_rows(HARVEST, args.max_per_prompt, args.ei_repeat, args.n_ours - args.n_lib, args.seed)
-        print("EI", json.dumps(ei_stats), flush=True)
+    ei: dict[str, list[dict]] = {}
+    ei_stats: dict[str, dict] = {}
+    for arm in arms:
+        if arm in EI_SRC and not (args.out_root / arm).exists():
+            src = EI_SRC[arm]
+            missing = [str(p) for p in src if not p.is_file()]
+            if missing:
+                raise SystemExit(f"missing harvest: {missing}")
+            ei[arm], ei_stats[arm] = ei_rows(src, args.max_per_prompt, args.ei_repeat, args.n_ours - args.n_lib,
+                                             args.seed)
+            print("EI", arm, json.dumps(ei_stats[arm]), flush=True)
     lib = load_synth(LIBEXT, args.n_lib)
     pool = SCALE / "pool/train_155500.jsonl"
     gen = load_synth(pool, 60000 + args.n_ours)[60000:]
@@ -124,8 +135,9 @@ def main() -> None:
     n, k = args.n_ours, args.n_lib
     build = {"c": lambda: gen[:n],
              "l": lambda: lib + gen[:n - k],
-             "e": lambda: ei + gen[:n - len(ei)],
-             "le": lambda: ei + lib + gen[:n - k - len(ei)]}
+             "e": lambda: ei["e"] + gen[:n - len(ei["e"])],
+             "le": lambda: ei["le"] + lib + gen[:n - k - len(ei["le"])],
+             "e2": lambda: ei["e2"] + gen[:n - len(ei["e2"])]}
     for arm in arms:
         out = args.out_root / arm
         if out.exists():
@@ -143,8 +155,8 @@ def main() -> None:
                 "init": INIT, "args": {k_: str(v) for k_, v in vars(args).items()},
                 "pools": {"libext": str(LIBEXT), "libext_sha256": sha256(LIBEXT), "gen": f"{pool} rows 60000..",
                           "dolci": "dolci_rlvlgen_p50_x3 dolci-ext-* rows 10000..",
-                          "ei": [str(p) for p in HARVEST] if arm in ("e", "le") else None},
-                "ei_stats": ei_stats if arm in ("e", "le") else None,
+                          "ei": [str(p) for p in EI_SRC[arm]] if arm in EI_SRC else None},
+                "ei_stats": ei_stats.get(arm),
                 "design": __doc__.split("\n\n")[1]}
         (tmp / "mixture_manifest.json").write_text(json.dumps(meta, indent=2) + "\n")
         tmp.rename(out)

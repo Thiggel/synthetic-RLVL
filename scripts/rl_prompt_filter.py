@@ -40,13 +40,16 @@ def main():
     ap.add_argument("--max-completion-length", type=int, default=2048)
     ap.add_argument("--seed", type=int, default=3407)
     ap.add_argument("--gpu-mem", type=float, default=0.85)
+    ap.add_argument("--exclude-ids", default=None,
+                    help="contamination.json (scripts/analysis/gate_contamination.py): drop its pool_exclude_ids")
     args = ap.parse_args()
 
     from transformers import AutoTokenizer
     from vllm import LLM, SamplingParams
 
     tok = AutoTokenizer.from_pretrained(args.model)
-    ds = build_dataset(tok, True, None, args.seed, args.benches.split(","), args.max_per_bench)
+    exclude = set(json.loads(Path(args.exclude_ids).read_text())["pool_exclude_ids"]) if args.exclude_ids else None
+    ds = build_dataset(tok, True, None, args.seed, args.benches.split(","), args.max_per_bench, exclude_ids=exclude)
     print(json.dumps({"benches": collections.Counter(ds["bench"]), "n": args.n}), flush=True)
     llm = LLM(args.model, gpu_memory_utilization=args.gpu_mem, max_model_len=8192, seed=args.seed)
     sp = SamplingParams(n=args.n, temperature=args.temperature, max_tokens=args.max_completion_length,
@@ -75,7 +78,7 @@ def main():
         summ[v["bench"]]["all"] += 1
         summ[v["bench"]]["mixed" if 0 < v["k"] < args.n else "zero" if v["k"] == 0 else "full"] += 1
     print(json.dumps(summ), flush=True)
-    args.out.write_text(json.dumps({"model": args.model, "arm": args.arm, "n": args.n,
+    args.out.write_text(json.dumps({"model": args.model, "arm": args.arm, "n": args.n, "exclude_ids": args.exclude_ids,
                                     "temperature": args.temperature, "summary": summ, "rates": rates}) + "\n")
 
 
