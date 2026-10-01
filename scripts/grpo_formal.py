@@ -9,6 +9,8 @@ docs/research_plan.md, Stage 2. One run = one arm:
                    --benches gen items), format and no circular given; G6g adds gen to the benches
   --arm cvf  G7: correct x valid x faithful premises, all-or-nothing (no partial credit to hack)
   --arm cvf_fmt  cvf x format_ok (G10 drifted out of the Answer: format under cvf, then looped; L1_cvf from step 51)
+  --no-mask-truncated --overlong-penalty 0.5  G14: keep completions cut at the length limit in the loss and
+                   subtract 0.5 from their reward (TRL masks them by default; most are proof-line loops)
   --prompt-filter  G11: train only on prompts whose sampled reward rate (scripts/rl_prompt_filter.py) is in
                    (lo, hi), i.e. prompts whose rollout groups are likely to have non-zero advantage
 Rewards: scripts/formal_rewards.py (the other components are logged with weight 0).
@@ -182,6 +184,12 @@ def main():
     ap.add_argument("--per-device-batch", type=int, default=8, help="completions per device per micro-step")
     ap.add_argument("--max-completion-length", type=int, default=2048)
     ap.add_argument("--temperature", type=float, default=1.0)
+    ap.add_argument("--no-mask-truncated", action="store_true",
+                    help="keep completions cut at --max-completion-length in the loss (TRL masks them by default), so "
+                         "repetition loops that run into the length limit get their reward-0 negative advantage")
+    ap.add_argument("--overlong-penalty", type=float, default=0.0,
+                    help="subtract this from the reward of completions that reach --max-completion-length "
+                         "(only has a gradient with --no-mask-truncated)")
     ap.add_argument("--vllm-mem", type=float, default=0.35)
     ap.add_argument("--save-steps", type=int, default=100)
     ap.add_argument("--seed", type=int, default=3407)
@@ -202,6 +210,8 @@ def main():
                     help="unix time: save a checkpoint and stop after the first step past it (no final/); "
                          "with --resumable the next job continues from there")
     args = ap.parse_args()
+    if args.overlong_penalty and not args.no_mask_truncated:
+        ap.error("--overlong-penalty needs --no-mask-truncated (masked completions get no gradient)")
 
     from transformers import AutoTokenizer
     from trl import GRPOConfig, GRPOTrainer
@@ -217,12 +227,12 @@ def main():
     world = int(os.environ.get("WORLD_SIZE", "1"))
     completions_per_step = args.prompts_per_step * args.num_generations
     grad_accum = max(1, completions_per_step // (args.per_device_batch * world))
-    funcs, weights = reward_funcs(args.arm)
+    funcs, weights = reward_funcs(args.arm, args.overlong_penalty, args.max_completion_length)
     cfg = GRPOConfig(
         output_dir=args.out_dir, learning_rate=args.lr, beta=args.beta, max_steps=args.max_steps,
         num_generations=args.num_generations, per_device_train_batch_size=args.per_device_batch,
         gradient_accumulation_steps=grad_accum, max_completion_length=args.max_completion_length,
-        temperature=args.temperature, mask_truncated_completions=True, reward_weights=weights,
+        temperature=args.temperature, mask_truncated_completions=not args.no_mask_truncated, reward_weights=weights,
         use_vllm=True, vllm_mode="colocate", vllm_gpu_memory_utilization=args.vllm_mem,
         vllm_enable_sleep_mode=True, bf16=True, gradient_checkpointing=True, logging_steps=1,
         save_steps=args.save_steps, save_only_model=not args.resumable, seed=args.seed, report_to=args.report_to,

@@ -33,6 +33,10 @@ Arms (the primary reward; the other components are logged with weight 0):
              `</proof>\n<formal>\n<prompt copy>` loops (2026-10-01, reports/2026-09-28_stage2_gate.md)
   lines_raw  the literal formula on the same line counts, (n_parsed + n_ok) * (1 + correct),
              for comparison only (rewards length)
+Overlong penalty (grpo_formal.py --overlong-penalty p, with --no-mask-truncated; G14, 2026-10-01): an extra
+reward `truncated` (1 if the completion ran into --max-completion-length) with weight -p. 60-90% of truncated
+rollouts are renumbered proof-line loops (analysis/grpo_loop_collapse.md); they score 0 like every other failure,
+so in the common all-zero group they carried no gradient at all, and TRL masked them out of the loss anyway.
 """
 from __future__ import annotations
 
@@ -334,9 +338,19 @@ def make_bench_reward(name: str, group: str):
     return fn
 
 
-def reward_funcs(arm: str):
-    """[primary, *logged components, *per-domain components] and weights [1, 0, ...]."""
+def make_truncated(max_len: int):
+    def truncated(prompts, completions, completion_ids=None, **kwargs):
+        return [float(len(ids) >= max_len) for ids in completion_ids]
+    return truncated
+
+
+def reward_funcs(arm: str, overlong_penalty: float = 0.0, max_len: int | None = None):
+    """[primary, *logged components, *per-domain components(, truncated)] and weights [1, 0, ...(, -penalty)]."""
     primary = ARMS[arm]
     funcs = [make_reward(n) for n in [primary] + [n for n in LOGGED if n != primary]]
     funcs += [make_bench_reward(n, g) for g in BENCH_GROUPS for n in BY_BENCH]
-    return funcs, [1.0] + [0.0] * (len(funcs) - 1)
+    weights = [1.0] + [0.0] * (len(funcs) - 1)
+    if overlong_penalty:
+        funcs.append(make_truncated(max_len))
+        weights.append(-overlong_penalty)
+    return funcs, weights
