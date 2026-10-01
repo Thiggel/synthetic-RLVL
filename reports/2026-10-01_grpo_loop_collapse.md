@@ -158,7 +158,7 @@ Why G12: it is the weakest arm.
 - **Reward.** Training-rollout cvf tracks G13 within ±.015 in every bin, so the penalty took the loops away without costing reward.
 - **Zero-variance groups.** G14's early advantage (.42 vs .73) was transient. From step 50 both arms sit at .70–.80, because most groups are all-0 or all-1 on cvf.
 - **Entropy.** G14 .28 → .42; G13 .135 → .058. Truncation is now ~0 in G14, so masking no longer distorts the comparison. Length still confounds it, though: the boilerplate tokens of long completions have low entropy. Read it as "G14 is not collapsing", not as a quantitative gap.
-- **Still open.** Whether G14 improves *held-out* validity: the clean gate and gen_test at step 250, around 13:00 on 2026-10-02.
+- **Still open.** Whether G14 improves *held-out* validity: the clean gate and gen_test at step 250, around 01:00 on 2026-10-02 at the faster step time. G13's step-250 gate comes around 22:30.
 
 **Side observation (L1 arms, same table in §3).**
 - L1_correct is now truncating 25% of its rollouts (from 4%), with a mean length of 1010 tokens, but only 1.3% of rollouts are loops. Its truncations are long natural-language reasoning, not loops. Because they are masked, they get no gradient.
