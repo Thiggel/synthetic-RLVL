@@ -53,3 +53,25 @@ Before the switch, formal completions were *more* correct than natural-language 
 
 - Submit gates every 250 steps for both arms and refit every loop tick. Write the full report when both arms pass ≥ 1000 steps (correct-only ≈ 2026-10-01 18:00, cvf ≈ 2026-10-02 05:00).
 - If cvf also stalls in validity, the next arms are a shaped reward (`lines` / `frac_hard`) or a correct + λ·valid mix, to find where the trade-off turns.
+
+## Update 2026-10-01 07:40: correct-only @500 gate; the cvf arm now uses cvf × format_ok
+
+Figures: `figures/l1_convergence_{train,heldout}.png`, `figures/l1_format_shift.png` (rerun this tick).
+
+**Held-out, greedy, rescored with the training rewards**
+
+| correct-only step | gate correct (all 950) | gate correct (train benches) | gate correct (OOD dapo/knowledge) | gate valid | gen test correct | gen test valid |
+|---|---|---|---|---|---|---|
+| 0 | .224 | .284 | .056 | .007 | .913 | .786 |
+| 250 | .398 | .481 | .164 | 0 | .949 | 0 |
+| 500 | .422 | .509 | .180 | 0 | .968 | 0 |
+
+- The Dolci correctness gain transfers, including to the out-of-domain sources: .056 → .180. It is flattening: +.174 over the first 250 steps, +.024 over the next 250. Validity stays at exactly 0.
+- **The cvf arm switched reward at step 51** to cvf_fmt = cvf × format_ok, resuming from checkpoint-50. Plain cvf lets the policy drop or garble the `Answer:` line at no cost; G10 and G11 did exactly that (`reports/2026-09-28_stage2_gate.md`, 2026-10-01). Steps 1–50 had identical rewards under both, so the arm is one continuous run.
+- **cvf_fmt arm, training rollouts, steps 50–99, in 10-step bins**
+  - Reward cvf_fmt: .18 → .29, equal to cvf in every bin, i.e. no rollout lost reward to format alone.
+  - correct: .43 → .51.
+  - valid: .20 → .31.
+  - format_ok: .68 → .75.
+  - Length is stable at about 950 chars.
+- **Timing:** correct-only passes 1000 steps around 2026-10-01 17:00. The cvf arm restarted at step 50 and runs about 85 s/step, so it passes 1000 around 2026-10-02 04:00.

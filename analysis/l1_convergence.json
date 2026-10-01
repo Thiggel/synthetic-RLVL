@@ -194,6 +194,42 @@
       "n": 2000
      }
     }
+   ],
+   [
+    500,
+    {
+     "gate_train_benches": {
+      "correct": 0.5085714285714286,
+      "valid": 0.0,
+      "cvf": 0.0,
+      "n": 700
+     },
+     "gate_all": {
+      "correct": 0.42210526315789476,
+      "valid": 0.0,
+      "cvf": 0.0,
+      "n": 950
+     },
+     "gate_ood": {
+      "correct": 0.18,
+      "valid": 0.0,
+      "cvf": 0.0,
+      "n": 250
+     },
+     "gen_test": {
+      "correct": 0.9678824169842134,
+      "valid": 0.0,
+      "cvf": 0.0,
+      "n": 1837
+     },
+     "gen_test_eval": {
+      "valid": 0.0,
+      "answer_acc": 0.013,
+      "faithful": 0.0,
+      "grammatical": 0.0,
+      "n": 2000
+     }
+    }
    ]
   ],
   "cvf (x format_ok from step 51)": [
