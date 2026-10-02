@@ -58,7 +58,7 @@ BLOCK_RULES = {"imp", "contra", "cases", "all", "pick"}
 FORWARD = {0: ["lem", "refl", "calc"], 1: ["split", "or", "absurd", "inst", "some", "calc", "closed", "subst"],
            2: ["mp", "and", "not", "subst"]}
 _LINE = re.compile(r"^(\d+(?:\.\d+)*) (.*?) ; ([a-z]+)\b(.*)$")
-_ANS = re.compile(r"^ans (.+?) ; ")
+_ANS = re.compile(r"^\s*ans\s+(.+?)\s*;")
 _STEP = re.compile(r"^\s*(\d+(?:\.\d+)*)\s+(.*?)\s*;\s*(.*)$")
 
 
@@ -246,8 +246,10 @@ def main():
     def stage2(it, line):
         """An `ans` line is accepted only if the finished proof is Stage-2 valid with faithful premises
         (formal_rewards.components: grounded, ans agrees, >= 1 checked derived ancestor, not circular)."""
-        ans = _ANS.match(line).group(1)
-        c = components(it.rec, OPEN + it.body() + line + "</proof>\nAnswer: " + ans)
+        m = _ANS.match(line)
+        if not m:  # rlvl accepted an `ans` line without the `<value> ;` shape (crashed job 10249)
+            return "s2_invalid"
+        c = components(it.rec, OPEN + it.body() + line + "</proof>\nAnswer: " + m.group(1))
         if not c["valid"]:
             return "s2_circular" if c["circular"] else ("s2_no_derived" if c["n_ok"] < 1 else "s2_invalid")
         return "done" if c["prem_ok"] else "s2_prem"
@@ -270,7 +272,7 @@ def main():
                     line = node.cands.pop(0)
                     if line in it.repaired:
                         it.n_repaired_used += 1
-                    if line.startswith("ans "):
+                    if line.strip().startswith("ans ") and _ANS.match(line):
                         ans = _ANS.match(line).group(1)
                         finish(it, "found", OPEN + it.body() + line + "</proof>\nAnswer: " + ans)
                         break
