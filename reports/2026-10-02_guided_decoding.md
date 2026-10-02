@@ -54,4 +54,4 @@ Job 10249 (G14@750) crashed in `stage2`: rlvl accepted an `ans` line without the
 ## Takeaways for the plan
 
 - Guided decoding is a **test-time add-on that guarantees validity** and gives the best gate cvf so far (clean .163 with G14@750). It costs about 12× the sampled tokens of greedy decoding. It is worth using as the decoder of record for "valid-proof-or-abstain" reporting.
-- It does **not** fix correctness, so the RL and self-distillation work (better proposers) remains the main lever. The guided gain grows with proposer quality (e2 → G14: +.058 → +.048 absolute cvf at a higher base). It should be rerun on each new best checkpoint (EI round 3, G16, L1_cvf).
+- It does **not** fix correctness, so the RL and self-distillation work (better proposers) remains the main lever. The guided gain is roughly additive to proposer quality: about +.05 absolute cvf for both e2 (+.058) and G14 (+.048), on top of a higher base for G14. It should be rerun on each new best checkpoint (EI round 3, G16, L1_cvf).
