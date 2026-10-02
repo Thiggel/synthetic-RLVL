@@ -203,3 +203,32 @@ Why G12: it is the weakest arm.
 - The freed card was the only clean L40 on gruenau12: another user keeps a ~20 GB process on every other L40, and GRPO needs ~43 GB. Slurm hands out the lowest free GPU index, so the L1_correct gate (10003), the G13@400 gate (10021) and a 3-minute placeholder job were started first. G16 then got the free card (IDX3, 45.5 GB free). My gruenau12 total stayed at ≤ 5 of 10 GPUs.
 - G15 stays on a shared A100 on gruenau10 at ~340 s/step, about 2.3× slower than an L40 to itself. Its step-250 gate is about a day away.
 - G14 keeps running toward 1000 steps (step 464 at 10:00) to show whether the proof share recovers; it was .37 at 400–424.
+
+## 6. L1 update and first G15/G16 steps (2026-10-02 13:40)
+
+**L1, the question "when does each reward converge, and at what value".** Clean gate (713 items, greedy; `analysis/gate_clean_rescore.md`):
+
+| step | correct-only: correct | correct-only: valid | cvf: correct | cvf: valid | cvf: v·c |
+|---:|---:|---:|---:|---:|---:|
+| 250 | .438 | 0 | .269 | .039 | .022 |
+| 500 | .460 | 0 | .309 | .077 | .055 |
+| 750 | .446 | 0 | .265 | .157 | .101 |
+| 1000 | .481 | 0 | .201 | .400 | .161 |
+| 1250 | .494 | 0 | – | – | – |
+| 1500 | .509 | 0 | – | – | – |
+
+- **Correct-only.** Correctness rises fast to about .44 by step 250, then climbs slowly (+.07 over steps 250–1500). It has not fully plateaued, but the gains are small. Validity is 0 at every checkpoint: without a validity term the policy never writes a checkable proof. On training rollouts the convergence fit (`analysis/l1_convergence.json`) puts correct_dolci at about .46 (converged by its criterion at about step 600) and generator correctness at .96.
+- **cvf.** Validity is not converged at step 1000 and is still accelerating: clean valid .157 → .400 between steps 750 and 1000. On training rollouts, valid_dolci is at .277, with a fitted asymptote near 1, so it is still far from converged. Correctness falls at the same time (.309 → .201 clean), and v·c grows more slowly than validity. The policy learns to write valid proofs whose answers are wrong more often. That is consistent with formalizing an easier claim than the question asks (a faithfulness gap). At step 1000 the cvf policy has 2.5× more valid proofs than at step 750, but 0.2 lower clean correctness than the correct-only policy.
+- Gates at cvf@1250 and cvf@1500 are needed to see where validity saturates. submit_l1_gates.sh queues them when the checkpoints appear (the run is at step 1370).
+
+**G13@400** (le SFT, cvf_fmt, masked truncation): clean valid .115, v·c .066, correct .171. It is below G13@250 (.129 / .079 / .213) on every measure. Loops (.19 in rollouts) and truncation (.36) keep growing, so stopping G13 was right.
+
+**G15/G16 early steps** (`l1_format_shift.json`, Dolci training prompts):
+
+| arm | steps | Dolci proof share | Dolci correct | Dolci valid | loop share |
+|---|---|---|---|---|---|
+| G14 (le SFT) | 25–49 | .13 | .24 | – | – |
+| G15 (e2 SFT) | 50–74 | .98 | .235 | .10 | .010 |
+| G16 (e2 SFT + no-proof) | 75–99 | 1.00 | .214 | .131 | .002 |
+
+G15 has not fled into prose even without the no-proof penalty, unlike G14, which started from the le SFT. The e2 SFT's proof habit is stronger: its Dolci proof share at step 0 is .99 against .66 for le. Whether G15 drifts later decides whether the G16 penalty matters. G16 runs at about 160 s/step, a little faster than expected, but 1000 steps still need a second 48 h job.

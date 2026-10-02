@@ -988,6 +988,29 @@
    "n": 237
   }
  },
+ "grpo_formal_20260928/2b_le_G13_cvffmt/checkpoint-400/rl_gate_dolci": {
+  "all": {
+   "has_proof": 0.9905263157894737,
+   "valid": 0.10631578947368421,
+   "valid_correct": 0.06210526315789474,
+   "correct": 0.1568421052631579,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 0.9873772791023843,
+   "valid": 0.1150070126227209,
+   "valid_correct": 0.06591865357643759,
+   "correct": 0.17110799438990182,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 1.0,
+   "valid": 0.08016877637130802,
+   "valid_correct": 0.05063291139240506,
+   "correct": 0.11392405063291139,
+   "n": 237
+  }
+ },
  "grpo_formal_20260928/2b_le_G14_cvffmt_overlong/checkpoint-250/rl_gate_dolci": {
   "all": {
    "has_proof": 0.4,
@@ -1793,6 +1816,52 @@
    "n": 237
   }
  },
+ "grpo_formal_20260928/L1_correct/checkpoint-1250/rl_gate_dolci": {
+  "all": {
+   "has_proof": 0.0,
+   "valid": 0.0,
+   "valid_correct": 0.0,
+   "correct": 0.45052631578947366,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 0.0,
+   "valid": 0.0,
+   "valid_correct": 0.0,
+   "correct": 0.49368863955119213,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 0.0,
+   "valid": 0.0,
+   "valid_correct": 0.0,
+   "correct": 0.3206751054852321,
+   "n": 237
+  }
+ },
+ "grpo_formal_20260928/L1_correct/checkpoint-1500/rl_gate_dolci": {
+  "all": {
+   "has_proof": 0.0,
+   "valid": 0.0,
+   "valid_correct": 0.0,
+   "correct": 0.4652631578947368,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 0.0,
+   "valid": 0.0,
+   "valid_correct": 0.0,
+   "correct": 0.5091164095371669,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 0.0,
+   "valid": 0.0,
+   "valid_correct": 0.0,
+   "correct": 0.3333333333333333,
+   "n": 237
+  }
+ },
  "grpo_formal_20260928/L1_correct/checkpoint-250/rl_gate_dolci": {
   "all": {
    "has_proof": 0.0,
@@ -1928,6 +1997,29 @@
    "valid": 0.008438818565400843,
    "valid_correct": 0.004219409282700422,
    "correct": 0.1518987341772152,
+   "n": 237
+  }
+ },
+ "grpo_formal_20260928/L1_cvf/checkpoint-750/rl_gate_dolci": {
+  "all": {
+   "has_proof": 0.9989473684210526,
+   "valid": 0.12526315789473685,
+   "valid_correct": 0.08315789473684211,
+   "correct": 0.23473684210526316,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 0.9985974754558204,
+   "valid": 0.1570827489481066,
+   "valid_correct": 0.10098176718092566,
+   "correct": 0.2650771388499299,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 1.0,
+   "valid": 0.029535864978902954,
+   "valid_correct": 0.029535864978902954,
+   "correct": 0.14345991561181434,
    "n": 237
   }
  }
