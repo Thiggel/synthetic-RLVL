@@ -26,6 +26,9 @@ EI round 2 (2026-10-01): arm e2 = e with the harvest from a stronger, RL'd teach
 i.e. G10@500 + 100 cvf_fmt steps; same pool sizes, n=16, T=1, cvf reward, frozen checker, gate near-duplicates
 excluded). The 2x2 found EI drives gate validity (§8 of the report); e2 vs e asks whether a better teacher
 gives a better student.
+Ablation e2s (2026-10-02): e2 had a better teacher AND 52% more EI rows (6,776 from 2,512 prompts vs 4,457 from
+1,778). e2s = the e2 harvest cut to e's size: per bench a random subset of as many prompts as e kept, <= 4 proofs
+each, then random non-first proofs dropped down to e's row count per bench. e2s - e = teacher quality at fixed quantity.
 Writes <out-root>/<arm> (DatasetDict + mixture_manifest.json); existing arms are skipped. Run with .venv_rlvl_grpo.
 """
 from __future__ import annotations
@@ -52,17 +55,20 @@ HARVEST = [DATA / "rl_filter_20260930/G8final_cvf_n16.json.passing.jsonl",
            DATA / "rl_filter_20260930/G8final_cvf_n16_gsm8k.json.passing.jsonl"]
 HARVEST2 = [DATA / "rl_filter_20261001/G12c100_cvf_n16_dolci.json.passing.jsonl",
             DATA / "rl_filter_20261001/G12c100_cvf_n16_gsm8k.json.passing.jsonl"]
-EI_SRC = {"e": HARVEST, "le": HARVEST, "e2": HARVEST2}
+EI_SRC = {"e": HARVEST, "le": HARVEST, "e2": HARVEST2, "e2s": HARVEST2}
+MATCH = {"e2s": "e"}  # arm -> arm whose EI size (prompts per bench, rows) it copies
 REAL = ("dolci_wordprob", "dolci_math", "gsm8k_train")
 INIT = "formal_mixture_sft_20260925/qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407/final"
 GIVEN = re.compile(r'(?m)^\d+ .*? ; given "(.*)"\s*$')
 ASKS = re.compile(r"\?|\b(how (many|much|long|far|old|often)|what|which|find|calculate|compute|determine)\b", re.I)
 
 
-def ei_rows(paths: list[Path], max_per_prompt: int, repeat: int, cap: int, seed: int) -> tuple[list[dict], dict]:
+def ei_rows(paths: list[Path], max_per_prompt: int, repeat: int, cap: int, seed: int,
+            match: dict | None = None) -> tuple[list[dict], dict]:
     """Passing proofs on real prompts, grouped by prompt (shortest first). Of the per-prompt caps <= max_per_prompt
     and repeats <= repeat, take the largest cap, then the largest repeat, whose rows fit in `cap` (distinct proofs
-    before upweighting); if one proof per prompt is still too many, one proof each for a random subset of prompts."""
+    before upweighting); if one proof per prompt is still too many, one proof each for a random subset of prompts.
+    match = another arm's ei_stats: keep that many prompts per bench and cut to that many rows (see e2s)."""
     by_id: dict[str, dict[str, dict]] = collections.defaultdict(dict)
     stats: dict[str, collections.Counter] = collections.defaultdict(collections.Counter)
     for p in paths:
@@ -83,12 +89,27 @@ def ei_rows(paths: list[Path], max_per_prompt: int, repeat: int, cap: int, seed:
     groups = [[{"prompt": f"<formal>\n{proofs[t]['raw_prompt']}", "target": t, "source": "ei",
                 "family": f"ei_{proofs[t]['bench']}", "example_id": f"ei/{pid}", "mask_tool_results": False}
                for t in sorted(proofs, key=lambda x: (len(x), x))] for pid, proofs in sorted(by_id.items())]
+    rng = random.Random(seed)
+    if match:
+        by_bench = collections.defaultdict(list)
+        for g in groups:
+            by_bench[g[0]["family"][3:]].append(g)
+        groups = sorted((g for b, gs in by_bench.items() for g in rng.sample(gs, min(len(gs), match.get(b, {}).get("prompts", 0)))),
+                        key=lambda g: g[0]["example_id"])
+        repeat = 1
     fit = next(((k, r) for k in range(max_per_prompt, 0, -1) for r in range(repeat, 0, -1)
                 if r * sum(min(k, len(g)) for g in groups) <= cap), None)
     if fit is None:
         groups, fit = random.Random(seed).sample(groups, cap), (1, 1)
     k, r = fit
     rows = [x for g in groups for x in g[:k]]
+    if match:  # per bench, drop random non-first proofs down to the matched arm's row count
+        drop = set()
+        for bench in REAL:
+            extra = [(i, j) for i, g in enumerate(groups) if g[0]["family"][3:] == bench for j in range(1, min(k, len(g)))]
+            n = sum(min(k, len(g)) for g in groups if g[0]["family"][3:] == bench) - match.get(bench, {}).get("kept", 0)
+            drop |= set(rng.sample(extra, max(0, min(n, len(extra)))))
+        rows = [x for i, g in enumerate(groups) for j, x in enumerate(g[:k]) if (i, j) not in drop]
     for x in rows:
         stats[x["family"][3:]]["kept"] += 1
     for g in groups:
@@ -120,8 +141,11 @@ def main() -> None:
             missing = [str(p) for p in src if not p.is_file()]
             if missing:
                 raise SystemExit(f"missing harvest: {missing}")
+            match = None
+            if arm in MATCH:
+                match = json.loads((args.out_root / MATCH[arm] / "mixture_manifest.json").read_text())["ei_stats"]
             ei[arm], ei_stats[arm] = ei_rows(src, args.max_per_prompt, args.ei_repeat, args.n_ours - args.n_lib,
-                                             args.seed)
+                                             args.seed, match)
             print("EI", arm, json.dumps(ei_stats[arm]), flush=True)
     lib = load_synth(LIBEXT, args.n_lib)
     pool = SCALE / "pool/train_155500.jsonl"
@@ -137,7 +161,8 @@ def main() -> None:
              "l": lambda: lib + gen[:n - k],
              "e": lambda: ei["e"] + gen[:n - len(ei["e"])],
              "le": lambda: ei["le"] + lib + gen[:n - k - len(ei["le"])],
-             "e2": lambda: ei["e2"] + gen[:n - len(ei["e2"])]}
+             "e2": lambda: ei["e2"] + gen[:n - len(ei["e2"])],
+             "e2s": lambda: ei["e2s"] + gen[:n - len(ei["e2s"])]}
     for arm in arms:
         out = args.out_root / arm
         if out.exists():

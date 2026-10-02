@@ -11,6 +11,8 @@ docs/research_plan.md, Stage 2. One run = one arm:
   --arm cvf_fmt  cvf x format_ok (G10 drifted out of the Answer: format under cvf, then looped; L1_cvf from step 51)
   --no-mask-truncated --overlong-penalty 0.5  G14: keep completions cut at the length limit in the loss and
                    subtract 0.5 from their reward (TRL masks them by default; most are proof-line loops)
+  --no-proof-penalty 0.5  G16: also subtract 0.5 from answers without a <proof> block (G14 fled into informal prose,
+                   which scored 0 like a failed proof but could not be truncated)
   --prompt-filter  G11: train only on prompts whose sampled reward rate (scripts/rl_prompt_filter.py) is in
                    (lo, hi), i.e. prompts whose rollout groups are likely to have non-zero advantage
 Rewards: scripts/formal_rewards.py (the other components are logged with weight 0).
@@ -190,6 +192,8 @@ def main():
     ap.add_argument("--overlong-penalty", type=float, default=0.0,
                     help="subtract this from the reward of completions that reach --max-completion-length "
                          "(only has a gradient with --no-mask-truncated)")
+    ap.add_argument("--no-proof-penalty", type=float, default=0.0,
+                    help="subtract this from the reward of completions without a <proof> block (G16)")
     ap.add_argument("--vllm-mem", type=float, default=0.35)
     ap.add_argument("--save-steps", type=int, default=100)
     ap.add_argument("--seed", type=int, default=3407)
@@ -227,7 +231,7 @@ def main():
     world = int(os.environ.get("WORLD_SIZE", "1"))
     completions_per_step = args.prompts_per_step * args.num_generations
     grad_accum = max(1, completions_per_step // (args.per_device_batch * world))
-    funcs, weights = reward_funcs(args.arm, args.overlong_penalty, args.max_completion_length)
+    funcs, weights = reward_funcs(args.arm, args.overlong_penalty, args.max_completion_length, args.no_proof_penalty)
     cfg = GRPOConfig(
         output_dir=args.out_dir, learning_rate=args.lr, beta=args.beta, max_steps=args.max_steps,
         num_generations=args.num_generations, per_device_train_batch_size=args.per_device_batch,

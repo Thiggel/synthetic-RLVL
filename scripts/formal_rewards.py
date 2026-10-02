@@ -344,8 +344,20 @@ def make_truncated(max_len: int):
     return truncated
 
 
-def reward_funcs(arm: str, overlong_penalty: float = 0.0, max_len: int | None = None):
-    """[primary, *logged components, *per-domain components(, truncated)] and weights [1, 0, ...(, -penalty)]."""
+def make_no_proof():
+    """G16: 1 - has_proof. Under <formal> an answer without a proof is a format failure; with only the overlong
+    penalty, informal prose (0) beat a failed proof (0) on nothing and truncation (-penalty) on safety, and G14 learned
+    to drop the proof on hard Dolci prompts."""
+    has_proof = make_reward("has_proof")
+
+    def no_proof(prompts, completions, **kwargs):
+        return [1.0 - v for v in has_proof(prompts, completions, **kwargs)]
+    return no_proof
+
+
+def reward_funcs(arm: str, overlong_penalty: float = 0.0, max_len: int | None = None, no_proof_penalty: float = 0.0):
+    """[primary, *logged components, *per-domain components(, truncated)(, no_proof)] and weights
+    [1, 0, ...(, -overlong_penalty)(, -no_proof_penalty)]."""
     primary = ARMS[arm]
     funcs = [make_reward(n) for n in [primary] + [n for n in LOGGED if n != primary]]
     funcs += [make_bench_reward(n, g) for g in BENCH_GROUPS for n in BY_BENCH]
@@ -353,4 +365,7 @@ def reward_funcs(arm: str, overlong_penalty: float = 0.0, max_len: int | None = 
     if overlong_penalty:
         funcs.append(make_truncated(max_len))
         weights.append(-overlong_penalty)
+    if no_proof_penalty:
+        funcs.append(make_no_proof())
+        weights.append(-no_proof_penalty)
     return funcs, weights

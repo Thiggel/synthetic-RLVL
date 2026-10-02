@@ -367,6 +367,52 @@
    "n": 3792
   }
  },
+ "formal_mixture_sft_20260925/qwen35_2b_lc_libext_e2_lr5em6_seed3407/final/rl_gate_dolci": {
+  "all": {
+   "has_proof": 0.9778947368421053,
+   "valid": 0.15263157894736842,
+   "valid_correct": 0.07368421052631578,
+   "correct": 0.24421052631578946,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 0.9719495091164095,
+   "valid": 0.17110799438990182,
+   "valid_correct": 0.08555399719495091,
+   "correct": 0.27349228611500703,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 0.9957805907172996,
+   "valid": 0.0970464135021097,
+   "valid_correct": 0.0379746835443038,
+   "correct": 0.15611814345991562,
+   "n": 237
+  }
+ },
+ "formal_mixture_sft_20260925/qwen35_2b_lc_libext_e2_lr5em6_seed3407/final/rl_gate_dolci_k16": {
+  "all": {
+   "has_proof": 0.970328947368421,
+   "valid": 0.10414473684210526,
+   "valid_correct": 0.059539473684210524,
+   "correct": 0.23039473684210526,
+   "n": 15200
+  },
+  "clean": {
+   "has_proof": 0.9666900420757363,
+   "valid": 0.11421809256661991,
+   "valid_correct": 0.0651297335203366,
+   "correct": 0.25622370266479666,
+   "n": 11408
+  },
+  "contaminated": {
+   "has_proof": 0.9812763713080169,
+   "valid": 0.07383966244725738,
+   "valid_correct": 0.04272151898734177,
+   "correct": 0.15268987341772153,
+   "n": 3792
+  }
+ },
  "formal_mixture_sft_20260925/qwen35_2b_lc_libext_e_lr5em6_seed3407/final/rl_gate_dolci": {
   "all": {
    "has_proof": 0.9084210526315789,
@@ -917,6 +963,52 @@
    "valid_correct": 0.0058016877637130804,
    "correct": 0.127373417721519,
    "n": 3792
+  }
+ },
+ "grpo_formal_20260928/2b_le_G13_cvffmt/checkpoint-250/rl_gate_dolci": {
+  "all": {
+   "has_proof": 0.9694736842105263,
+   "valid": 0.10947368421052632,
+   "valid_correct": 0.06842105263157895,
+   "correct": 0.1831578947368421,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 0.9663394109396914,
+   "valid": 0.12903225806451613,
+   "valid_correct": 0.0785413744740533,
+   "correct": 0.2131837307152875,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 0.9789029535864979,
+   "valid": 0.05063291139240506,
+   "valid_correct": 0.0379746835443038,
+   "correct": 0.09282700421940929,
+   "n": 237
+  }
+ },
+ "grpo_formal_20260928/2b_le_G14_cvffmt_overlong/checkpoint-250/rl_gate_dolci": {
+  "all": {
+   "has_proof": 0.4,
+   "valid": 0.08526315789473685,
+   "valid_correct": 0.05368421052631579,
+   "correct": 0.27578947368421053,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 0.48667601683029454,
+   "valid": 0.09396914446002805,
+   "valid_correct": 0.056100981767180924,
+   "correct": 0.3127629733520337,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 0.13924050632911392,
+   "valid": 0.05907172995780591,
+   "valid_correct": 0.046413502109704644,
+   "correct": 0.16455696202531644,
+   "n": 237
   }
  },
  "grpo_formal_20260928/2b_p0_G0_correct_bal/checkpoint-100/rl_gate_dolci": {
@@ -1767,6 +1859,29 @@
    "valid": 0.0,
    "valid_correct": 0.0,
    "correct": 0.3206751054852321,
+   "n": 237
+  }
+ },
+ "grpo_formal_20260928/L1_cvf/checkpoint-1000/rl_gate_dolci": {
+  "all": {
+   "has_proof": 0.9989473684210526,
+   "valid": 0.3357894736842105,
+   "valid_correct": 0.12947368421052632,
+   "correct": 0.16526315789473683,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 0.9985974754558204,
+   "valid": 0.3997194950911641,
+   "valid_correct": 0.16129032258064516,
+   "correct": 0.2005610098176718,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 1.0,
+   "valid": 0.14345991561181434,
+   "valid_correct": 0.03375527426160337,
+   "correct": 0.05907172995780591,
    "n": 237
   }
  },

@@ -164,3 +164,42 @@ Why G12: it is the weakest arm.
 - L1_correct is now truncating 25% of its rollouts (from 4%), with a mean length of 1010 tokens, but only 1.3% of rollouts are loops. Its truncations are long natural-language reasoning, not loops. Because they are masked, they get no gradient.
 - L1_cvf's loop share keeps climbing, .047 → .182 by step 658, with 19% truncated.
 - Neither L1 arm was launched with the fix, and both keep running unchanged for comparability with the convergence question.
+
+## 5. G14 fixes the loops but abandons the proof on Dolci; G16 closes that exit (2026-10-02)
+
+**Held-out at step 250, clean gate (713 items) and generator test** (`analysis/gate_clean_rescore.md`, `<ckpt>/formal_eval/summary.json`):
+
+| policy | clean valid | clean valid·correct | clean correct | gate has_proof | gen_test valid | gen_test answer acc | gen_test tokens |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| le SFT (init of G13, G14) | .081 | .042 | .231 | .878 | | | |
+| G13@250 (cvf_fmt, truncation masked) | .129 | .079 | .213 | .966 | .750 | .851 | 379 |
+| G14@250 (+ unmasked, overlong −0.5) | .094 | .056 | **.313** | **.487** | .723 | .895 | 224 |
+| e2 SFT (init of G15, G16) | .171 | .086 | .273 | .972 | | | |
+
+- **G14 has the best clean correctness of any 2B policy so far (.313), but writes a proof on only 49% of gate items.** 570 of its 950 gate outputs contain no `<proof>`: 433 end in `Answer:`, 77 in `\boxed`, 60 otherwise. They are short informal solutions, mostly on dolci_math (278) and DAPO (147), the hard benches.
+- **The shift happens in training, within 25 steps.** Training rollouts on Dolci prompts, 25-step bins (`analysis/l1_format_shift.json`, figure `reports/figures/l1_format_shift.png`):
+
+| steps | G13 `<proof>` share | G14 `<proof>` share | G13 correct | G14 correct | G13 valid | G14 valid | G13 chars | G14 chars |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0–24 | .89 | .66 | .15 | .16 | .03 | .03 | 1771 | 1502 |
+| 25–49 | .86 | .13 | .14 | .16 | .04 | .04 | 1803 | 824 |
+| 100–124 | .92 | .29 | .16 | .21 | .06 | .05 | 1820 | 599 |
+| 250–274 | .98 | .26 | .16 | .21 | .08 | .07 | 2036 | 522 |
+| 400–424 | 1.00 | .37 | .17 | .24 | .09 | .08 | 2169 | 586 |
+
+  On generator prompts both arms keep 100% proofs and the same valid rate (.64–.76).
+- **Why: under G14's reward, prose is a safe harbour.** cvf_fmt scores 0 for both a failed proof and an answer without a proof; only truncation costs −0.5. On a hard Dolci prompt a long formal attempt risks the length limit, while three lines of prose cannot be truncated. The policy learns the cheapest exit, and prose also raises plain correctness (rollout correct .16 → .24). The reward is indifferent to it: cvf_fmt is ~.26 in both arms by step 400.
+- G13 shows the opposite failure: 100% proofs on Dolci, completions growing to 2,200 chars, and loops rising (§3). So masking keeps the format but loops, and the overlong penalty fixes loops but lets the policy leave the format.
+
+**G16 = G15 + `--no-proof-penalty 0.5`** (run `2b_e2_G16_cvffmt_overlong_noproof`, job 10026 on gruenau12, started 2026-10-02 ~10:00).
+- An answer without a `<proof>` block gets −0.5 like a truncated one. Under `<formal>` a missing proof is a format failure. The ordering becomes correct+valid proof (1) > failed proof (0) > prose = truncated (−0.5).
+- Code: `make_no_proof` and `reward_funcs(..., no_proof_penalty)` in `scripts/formal_rewards.py`; the `--no-proof-penalty` flag in `scripts/grpo_formal.py`.
+- It starts from the e2 SFT (EI round 2, the best SFT arm: clean valid .171). Everything else is the G14 recipe and the new-library checker.
+- **G15** (e2 SFT + G14 recipe, no proof penalty; job 10008 on gruenau10) is the matched control. At step 0 it writes proofs on 96% of Dolci rollouts. If it drifts like G14, G16 − G15 measures the effect of closing the exit.
+- What to read at step 250: Dolci `<proof>` share in training, then clean valid and valid·correct against e2 SFT (.171 / .086). Whether G16 keeps G14's correctness gain is open; it may hold correctness at e2's .273 instead.
+
+**GPU placement.**
+- G13 was stopped at step 439 (jobs 9720/9721 cancelled). Its question is answered: masked cvf_fmt keeps the format and grows loops. Checkpoint-400 is gated in job 10021, so the G13 trajectory is 250 → 400.
+- The freed card was the only clean L40 on gruenau12: another user keeps a ~20 GB process on every other L40, and GRPO needs ~43 GB. Slurm hands out the lowest free GPU index, so the L1_correct gate (10003), the G13@400 gate (10021) and a 3-minute placeholder job were started first. G16 then got the free card (IDX3, 45.5 GB free). My gruenau12 total stayed at ≤ 5 of 10 GPUs.
+- G15 stays on a shared A100 on gruenau10 at ~340 s/step, about 2.3× slower than an L40 to itself. Its step-250 gate is about a day away.
+- G14 keeps running toward 1000 steps (step 464 at 10:00) to show whether the proof share recovers; it was .37 at 400–424.
