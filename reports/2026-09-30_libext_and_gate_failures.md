@@ -310,3 +310,54 @@ EI round 1 harvested from G8 final, the L1 base after 1 GRPO epoch with cvf rewa
 
 - **Same recipe as e:** n=16, T=1, cvf_fmt filter, frozen old checker, gate-contaminated pool rows excluded, ≤ 4 shortest proofs per prompt, 7k cap, init = L1 base.
 - **Question:** does a stronger teacher give a better student, and by how much? If yes, iterate.
+
+## 9. 2026-10-02 08:50: EI round 2 (e2). A stronger, RL'd teacher doubles the student's gate validity
+
+e2 is arm e, except that the self-distilled proofs come from an RL'd teacher (G12 checkpoint-100 = G10@500 + 100 cvf_fmt steps) instead of G8 final. Everything else is unchanged: same harvest recipe (n=16, T=1, cvf filter, frozen old checker, gate near-duplicates excluded, ≤ 4 proofs per prompt), same init (L1 base) and same 20k-row budget (job 9786, eval 9787, new checker).
+
+The stronger teacher passes 2.4× more samples on GSM8K (30,084 vs 12,707 verified proofs) and covers more prompts. So e2 gets **6,776 EI rows from 2,512 prompts**, against e's 4,457 rows from 1,778. These rows replace generator rows, so e2 sees 7.3k generator rows to e's 9.5k.
+
+![libext arms incl. e2](figures/libext_ei_arms.png)
+
+| metric (clean = 713 items) | L1 base | e (teacher G8 final) | **e2 (teacher G12@100)** | G10@500 (≈ e2's teacher, RL'd) |
+|---|---:|---:|---:|---:|
+| gate greedy valid, clean | .014 | .105 | **.171** | .303 |
+| gate greedy valid·correct, clean | .004 | .055 | **.086** | .115 |
+| gate greedy correct, clean | .261 | .258 | **.274** | .202 |
+| gate T=1 valid / sample, clean | .006 | .058 | **.114** | – |
+| gate T=1 valid·correct / sample, clean | .003 | .034 | **.065** | – |
+| gate valid@16 (all) | .043 | .186 | **.338** | – |
+| gate valid·correct@16 (all) | .023 | .094 | **.151** | – |
+| gate mixed@8 (all; prompts GRPO can learn from) | .026 | .139 | **.251** | – |
+| generator test valid | .808 | .891 | .873 | – |
+| new-family test valid | .010 | .256 | .322 | – |
+
+The e2 − e contrast is a paired bootstrap over clean gate items with 95% CIs. It is significant on all eight gate metrics:
+
+| metric | e2 − e |
+|---|---|
+| greedy valid | **+.066** [.041, .093] |
+| greedy v·c | **+.031** [.014, .049] |
+| T=1 valid per sample | **+.057** [.046, .068] |
+| T=1 v·c per sample | **+.031** [.022, .041] |
+
+**What changed:**
+- **Gate validity roughly doubles** on every metric: T=1 per-sample validity ×2.0, valid@16 ×1.8.
+- **No bench gets worse.** e2 is up on every bench. The largest relative gains are on benches EI round 1 barely reached:
+  - math: .006 → .035
+  - dapo: .0004 → .010
+  - knowledge: .068 → .171
+
+  The RL'd teacher's harvest includes 56 Dolci-math rows (e: 11).
+- **Correctness goes up, not down.** Greedy clean correct is .274 (e: .258; L1 base: .261).
+  - e2's RL'd teacher lineage has lost correctness: G10@500 is at .202.
+  - The student keeps the teacher's proofs but not its correctness loss. Every distilled proof is checker-verified and answer-correct, and 6k Dolci rows anchor the plain answers.
+- **The student stays below the teacher on validity** (.171 vs ~.30) but is better on correctness. Round 1 was the other way round: the student e beat its teacher G8 final (.105 vs .060), because best-of-16 filtering gives the student the teacher's good tail. Round 2's teacher is strong enough that a 20k-row SFT recovers only about 56% of its greedy validity.
+
+**Confound.** e2 has a better teacher *and* 52% more EI rows from 41% more prompts. The gain cannot yet be split between proof quality and proof quantity. A cheap ablation would subsample e2's harvest to e's size (1,778 prompts, 4,457 rows). It goes in the queue once a gruenau12 slot frees up.
+
+**Implications:**
+- The RL → verify → distill → RL loop (research plan stage 3, AlphaZero-like) works. Each round's student is a better RL init than the last: mixed@8 is .026 → .139 → .251, the share of gate prompts where GRPO gets a learning signal.
+- **G15** (job 10008/10009 on gruenau10, A100) started 08:45: the G14 recipe from e2 final (cvf_fmt reward, truncated completions in the loss, overlong penalty 0.5, new checker, 1000 steps).
+  - Compare to G14 (from le) at matched steps.
+  - G15's best checkpoint becomes the teacher for EI round 3.

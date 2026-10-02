@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Continued-SFT arms c / l / e / le vs their base (2026-10-01; scripts/data/build_libext_ei_mixture.py).
+"""Continued-SFT arms c / l / e / le / e2 vs their base (2026-10-01; scripts/data/build_libext_ei_mixture.py).
 
 Question: does the Dolci gate (real prompts) gain validity from new lemma families (l), from the policy's own
 checker-passing proofs on real prompts (e, expert iteration), or from both (le), beyond what more SFT on fresh
@@ -12,6 +12,7 @@ Inputs, per run (scripts/slurm/jobs/sft_eval_suite.slurm, new lemma library):
 Missing runs/evals are skipped. Once c/l/e/le are all in, the 2x2 contrasts (EI and new families, each with and
 without the other, and their interaction) get paired-bootstrap 95% CIs over gate prompts, on all 950 and on the 713
 clean items (analysis/gate_contamination.md).
+EI round 2 (2026-10-02): e2 = e with the harvest from an RL'd teacher (G12 checkpoint-100); contrast e2 - e.
 Writes analysis/libext_ei_arms.{md,json}, reports/figures/libext_ei_arms.{png,pdf}.
 """
 from __future__ import annotations
@@ -27,9 +28,9 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 SFT = Path("/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925")
 RUNS = {"base": SFT / "qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407",
-        **{a: SFT / f"qwen35_2b_lc_libext_{a}_lr5em6_seed3407" for a in ("c", "l", "e", "le")}}
+        **{a: SFT / f"qwen35_2b_lc_libext_{a}_lr5em6_seed3407" for a in ("c", "l", "e", "le", "e2")}}
 LABEL = {"base": "base (L1 init)", "c": "c: +fresh gen", "l": "l: +new families", "e": "e: +EI proofs",
-         "le": "le: +both"}
+         "le": "le: +both", "e2": "e2: +EI from RL teacher"}
 BENCHES = ["dolci_wordprob", "dolci_math", "dolci_yesno", "dolci_dapo", "dolci_knowledge"]
 KS = ["@1", "@2", "@4", "@8", "@16"]
 REPO = Path(__file__).resolve().parents[2]
@@ -41,7 +42,8 @@ CONTRASTS = {"EI, no new families (e - c)": lambda x: x["e"] - x["c"],
              "EI, with new families (le - l)": lambda x: x["le"] - x["l"],
              "new families, no EI (l - c)": lambda x: x["l"] - x["c"],
              "new families, with EI (le - e)": lambda x: x["le"] - x["e"],
-             "interaction (le - e) - (l - c)": lambda x: x["le"] - x["e"] - x["l"] + x["c"]}
+             "interaction (le - e) - (l - c)": lambda x: x["le"] - x["e"] - x["l"] + x["c"],
+             "RL teacher for EI (e2 - e)": lambda x: x["e2"] - x["e"]}
 
 
 def load(run: Path) -> dict | None:
@@ -77,7 +79,7 @@ def contrasts(n_boot: int = 2000) -> dict:
     out = {}
     for evl in ("rl_gate_dolci", "rl_gate_dolci_k16"):
         for m in ("valid", "valid_correct"):
-            pp = {a: per_prompt(RUNS[a], evl, m) for a in ("c", "l", "e", "le")}
+            pp = {a: per_prompt(RUNS[a], evl, m) for a in ("c", "l", "e", "le", "e2")}
             for sub in ("all", "clean"):
                 ids = sorted(i for i in pp["c"] if sub == "all" or i in clean)
                 x = {a: np.array([v[i] for i in ids]) for a, v in pp.items()}
@@ -92,7 +94,7 @@ def contrasts(n_boot: int = 2000) -> dict:
 
 def main() -> None:
     res = {a: r for a, run in RUNS.items() if (r := load(run)) is not None}
-    con = contrasts() if all(a in res for a in ("c", "l", "e", "le")) else {}
+    con = contrasts() if all(a in res for a in ("c", "l", "e", "le", "e2")) else {}
     OUT_JSON.write_text(json.dumps(res | {"contrasts": con}, indent=1) + "\n")
     t = [("gate greedy valid", lambda r: r["greedy"]["valid"]),
          ("gate greedy valid·correct", lambda r: r["greedy"]["valid_correct"]),
@@ -107,7 +109,7 @@ def main() -> None:
          ("gen test answer acc", lambda r: r["gen_test"]["answer_acc"]),
          ("new-family test valid", lambda r: r["math_test"]["valid"])]
     t += [(f"T=1 valid / sample, {b[6:]}", lambda r, b=b: r["sample_per_bench"][b]["valid"]) for b in BENCHES]
-    lines = ["# Continued-SFT arms c / l / e / le vs base (new lemma library)", "",
+    lines = ["# Continued-SFT arms c / l / e / le / e2 vs base (new lemma library)", "",
              "| metric | " + " | ".join(LABEL[a] for a in res) + " |", "|---|" + "---:|" * len(res)]
     lines += [f"| {name} | " + " | ".join(f"{f(r):.4f}" for r in res.values()) + " |" for name, f in t]
     if con:
@@ -161,11 +163,11 @@ def main() -> None:
         ax.set_yticks(range(len(CONTRASTS)), list(CONTRASTS), fontsize=8)
         ax.invert_yaxis()
         ax.set_title("2x2 contrasts, 95% paired-bootstrap CI")
-        ax.legend(fontsize=7, loc="center right")
+        ax.legend(fontsize=7, loc="lower left")
     for ax in axes:
         ax.grid(alpha=.3)
     fig.suptitle("Continued SFT from the L1 base: new lemma families (l), self-distilled real-prompt proofs (e), "
-                 "both (le), control (c)")
+                 "both (le), control (c), EI from an RL'd teacher (e2)")
     fig.tight_layout()
     OUT_FIG.parent.mkdir(parents=True, exist_ok=True)
     for ext in ("png", "pdf"):

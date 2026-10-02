@@ -37,8 +37,9 @@ ARMS = {"L1 correct (old lib)": ("L1_correct", "grpo_L1_correct", "correct"),
         "L1 cvf (old lib)": ("L1_cvf", "grpo_L1_cvf", "cvf"),
         "G12 cvf_fmt (G10@500, old lib)": ("2b_lcfp32m_G12_cvffmt_from_G10_500", "grpo_G12", "cvf"),
         "G13 cvf_fmt (le SFT, new lib)": ("2b_le_G13_cvffmt", "grpo_G13", "cvf"),
-        "G14 = G13 + overlong penalty, unmasked": ("2b_le_G14_cvffmt_overlong", "grpo_G14", "cvf")}
-COLORS = ["tab:green", "tab:red", "tab:purple", "tab:blue", "tab:orange"]
+        "G14 = G13 + overlong penalty, unmasked": ("2b_le_G14_cvffmt_overlong", "grpo_G14", "cvf"),
+        "G15 = G14 recipe from e2 SFT": ("2b_e2_G15_cvffmt_overlong", "grpo_G15", "cvf")}
+COLORS = ["tab:green", "tab:red", "tab:purple", "tab:blue", "tab:orange", "tab:brown"]
 TRAINER = ("completions/clipped_ratio", "entropy", "frac_reward_zero_std", "completions/mean_length", "reward")
 BIN = 25
 LOOP_REPEATS = 8
