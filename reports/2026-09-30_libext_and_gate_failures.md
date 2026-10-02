@@ -361,3 +361,21 @@ The e2 − e contrast is a paired bootstrap over clean gate items with 95% CIs. 
 - **G15** (job 10008/10009 on gruenau10, A100) started 08:45: the G14 recipe from e2 final (cvf_fmt reward, truncated completions in the loss, overlong penalty 0.5, new checker, 1000 steps).
   - Compare to G14 (from le) at matched steps.
   - G15's best checkpoint becomes the teacher for EI round 3.
+
+## 10. 2026-10-02 22:00: e2s ablation. Teacher quality and harvest size both raise validity; only teacher quality raises v·c
+
+e2 differs from e in two ways: a better teacher (an RL'd policy, not the SFT model) and a larger harvest of verified proofs. Arm e2s trains on the e2 harvest subsampled to e's size, with the same recipe. That separates the two effects. Contrasts are paired bootstraps over gate prompts (`analysis/libext_ei_arms.md`, figure `reports/figures/libext_ei_arms.png`).
+
+| | gate greedy valid | v·c | correct | valid@16 |
+|---|---|---|---|---|
+| e | .085 | .046 | .219 | .186 |
+| e2s | .122 | .074 | .242 | .304 |
+| e2 | .153 | .074 | .244 | .338 |
+
+| contrast (clean subset) | valid | v·c | T=1 valid / sample |
+|---|---|---|---|
+| teacher quality at fixed size (e2s − e) | +.031 [+.006, +.056] | +.028 [+.011, +.046] | +.039 [+.030, +.049] |
+| harvest quantity (e2 − e2s) | +.035 [+.013, +.059] | +.003 [−.011, +.015] | +.018 [+.012, +.023] |
+
+- Teacher quality and harvest size each add about +.03 greedy validity. The +.028 v·c gain comes entirely from teacher quality: the extra proofs make the student produce more valid proofs, but not more valid proofs with the right answer.
+- Implication for EI round 3: a better teacher matters more than a bigger harvest. The candidate teacher is G15 or G16 (GRPO from e2), whichever is better at step 250 on the gate. The harvest can stay at e2's size.

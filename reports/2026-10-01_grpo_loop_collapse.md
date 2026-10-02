@@ -232,3 +232,19 @@ Why G12: it is the weakest arm.
 | G16 (e2 SFT + no-proof) | 75–99 | 1.00 | .214 | .131 | .002 |
 
 G15 has not fled into prose even without the no-proof penalty, unlike G14, which started from the le SFT. The e2 SFT's proof habit is stronger: its Dolci proof share at step 0 is .99 against .66 for le. Whether G15 drifts later decides whether the G16 penalty matters. G16 runs at about 160 s/step, a little faster than expected, but 1000 steps still need a second 48 h job.
+
+## 7. L1 at 1500 / 2000 steps (2026-10-02 22:00)
+
+Clean gate subset (713 items, greedy; `analysis/gate_clean_rescore.md`):
+
+| step | correct-only: correct | correct-only: valid | cvf: correct | cvf: valid | cvf: v·c |
+|---|---|---|---|---|---|
+| 1000 | .481 | 0 | .201 | .400 | .161 |
+| 1250 | .494 | 0 | .234 | .501 | .191 |
+| 1500 | .509 | 0 | .269 | .595 | .244 |
+| 1750 | .504 | 0 | – | – | – |
+| 2000 | .457 | 0 | – | – | – |
+
+- **Correct-only has converged.** Correctness peaked at .51 around steps 1500–1750 and fell to .46 at step 2000. Validity stays 0. The step-2000 drop (−.05) is larger than the step-to-step noise so far (±.015). It could be the start of overfitting; step 2250 will tell.
+- **cvf is still climbing on all three measures.** Validity rises by about .1 per 250 steps (.40 → .50 → .60). Correctness recovers from its step-1000 low (.20 → .23 → .27), so v·c grows faster than validity: .161 → .191 → .244. The fall in correctness around step 1000 was a transition, not a cost the run keeps paying. At this rate cvf could match the correct-only arm's .51 correctness only after several thousand more steps; the 4 queued chain links (to about step 3000) will show whether it gets there.
+- Training-rollout fits (`analysis/l1_convergence.md`): valid_dolci at .70 over the last 100 steps with a fitted asymptote near 1 (t95 ≈ 7800 steps), not converged. correct_dolci .19 (rollouts are sampled at T = 1, so they run below the greedy gate).
