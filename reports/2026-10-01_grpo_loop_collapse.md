@@ -242,9 +242,15 @@ Clean gate subset (713 items, greedy; `analysis/gate_clean_rescore.md`):
 | 1000 | .481 | 0 | .201 | .400 | .161 |
 | 1250 | .494 | 0 | .234 | .501 | .191 |
 | 1500 | .509 | 0 | .269 | .595 | .244 |
-| 1750 | .504 | 0 | – | – | – |
+| 1750 | .504 | 0 | .288 | .783 | .267 |
 | 2000 | .457 | 0 | – | – | – |
 
 - **Correct-only has converged.** Correctness peaked at .51 around steps 1500–1750 and fell to .46 at step 2000. Validity stays 0. The step-2000 drop (−.05) is larger than the step-to-step noise so far (±.015). It could be the start of overfitting; step 2250 will tell.
 - **cvf is still climbing on all three measures.** Validity rises by about .1 per 250 steps (.40 → .50 → .60). Correctness recovers from its step-1000 low (.20 → .23 → .27), so v·c grows faster than validity: .161 → .191 → .244. The fall in correctness around step 1000 was a transition, not a cost the run keeps paying. At this rate cvf could match the correct-only arm's .51 correctness only after several thousand more steps; the 4 queued chain links (to about step 3000) will show whether it gets there.
 - Training-rollout fits (`analysis/l1_convergence.md`): valid_dolci at .70 over the last 100 steps with a fitted asymptote near 1 (t95 ≈ 7800 steps), not converged. correct_dolci .19 (rollouts are sampled at T = 1, so they run below the greedy gate).
+
+### 7b. cvf at step 1750 (2026-10-03 01:00)
+
+- **cvf validity jumps from .595 to .783 in one 250-step interval**, about twice the earlier rate. Clean v·c rises to .267, and correctness keeps recovering (.269 → .288).
+- Out of distribution (the gate_ood benches, which no RL prompt comes from), validity is .74 but cvf only .02. The model now writes valid proofs there too, but almost all of them are wrong. Generator-test validity is .967.
+- The gap to the correct-only arm's correctness (.50) shrinks to about .21. Validity is still rising and not saturated, so the convergence point is still open. The next links (2000, 2250, …) are queued.
