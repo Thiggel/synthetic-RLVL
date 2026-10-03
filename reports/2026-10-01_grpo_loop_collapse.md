@@ -264,8 +264,10 @@ Clean gate subset (713 items, greedy; `analysis/gate_clean_rescore.md`):
 | G14@750 (le lineage) | .210 | .118 | .320 |
 | G15@250 | .210 | .091 | .302 |
 | G16@250 | .229 | .102 | .296 |
-| **G16@500** | **.358** | **.161** | .299 |
+| **G16@500** | **.358** | .161 | .299 |
+| **G14@1000 = final** | .311 | **.182** | .310 |
 
-- **G16's no-proof penalty keeps paying off.** From step 250 to 500, validity rose by .13 and v·c by .06, while correctness held at .30. G16@500 has the best clean v·c of any G run, greedy and unguided; it equals G14@750 under guided decoding (.160). G16 is the EI round-4 teacher candidate. Round 3 (teacher G16@250) is training now.
-- G14 finished all 1000 steps (`final`). Its step-1000 and `final` gates are running (job 10737). The resume-only checkpoint-950 was deleted.
+- **G16's no-proof penalty keeps paying off.** From step 250 to 500, validity rose by .13 and v·c by .06, while correctness held at .30. At step 500, G16 had the highest clean validity of any G run. With plain greedy decoding it matches G14@750 under guided decoding (.160 v·c). G16 is the EI round-4 teacher candidate. Round 3 (teacher G16@250) is training now.
+- **G14 finished all 1000 steps** (`final` = step 1000). Its last 250 steps lifted clean validity from .210 to .311 and v·c from .118 to .182, the best clean v·c of any G run so far, with correctness at .310. Both lineages keep improving; G16 has another ~500 steps to go. The resume-only checkpoint-950 was deleted.
+- **L1_cvf@2000: validity .900, v·c .286, correct .293** (clean). Validity is near saturation (.60 → .78 → .90 over steps 1500–2000) while correctness creeps up (+.005 per 250 steps). cvf's correctness still trails correct-only (.49) by about .20.
 - **L1_correct@2250: correct .489**, back up from .457 at step 2000. The step-2000 dip was noise, not the start of overfitting. Correctness-only has plateaued at about .49–.51 since step 1500, with validity at 0.
