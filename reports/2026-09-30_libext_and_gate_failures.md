@@ -379,3 +379,24 @@ e2 differs from e in two ways: a better teacher (an RL'd policy, not the SFT mod
 
 - Teacher quality and harvest size each add about +.03 greedy validity. The +.028 v·c gain comes entirely from teacher quality: the extra proofs make the student produce more valid proofs, but not more valid proofs with the right answer.
 - Implication for EI round 3: a better teacher matters more than a bigger harvest. The candidate teacher is G15 or G16 (GRPO from e2), whichever is better at step 250 on the gate. The harvest can stay at e2's size.
+
+## 11. 2026-10-03 11:30: EI round 3 (e3). Teacher G16@250 lifts validity a lot, v·c only a little
+
+e3 uses the e2 recipe with one change of teacher and one change of harvest shape. The teacher is G16@250 (GRPO from e2) instead of G12@100. The harvest keeps **one** verified, correct proof per prompt: 4,874 rows from 4,874 prompts. e2 had 6,776 rows from 2,512 prompts. Same figure as §5–§10 (`figures/libext_ei_arms.png`, now with e3). Contrasts are paired bootstraps over gate prompts (`analysis/libext_ei_arms.md`).
+
+| | gate greedy valid | v·c | correct | T=1 valid / sample | valid@16 | mixed@8 |
+|---|---|---|---|---|---|---|
+| e2 | .153 | .074 | .244 | .104 | .338 | .251 |
+| e3 | .227 | .088 | .267 | .160 | .556 | .418 |
+
+| contrast e3 − e2 | valid | v·c | T=1 valid / sample | T=1 v·c / sample |
+|---|---|---|---|---|
+| all items | +.075 [+.048, +.101] | +.015 [+.002, +.028] | +.056 [+.047, +.064] | +.008 [+.004, +.013] |
+| clean subset | +.065 [+.034, +.094] | +.013 [−.004, +.030] | +.051 [+.041, +.062] | +.006 [+.000, +.011] |
+
+Off-gate, e3 reaches T=1 math valid .120 (e2 .035), DAPO valid .064 (e2 .010), knowledge valid .241, new-family test valid .364 and generator test valid .892, so the generator skills are kept.
+
+- **The validity jump is large.** Valid@16 rises from .34 to .56, so more than half the gate prompts now have a valid proof within 16 samples. mixed@8, the share of prompts where GRPO gets a learning signal, rises from .25 to .42. The sequence over EI rounds is .026 → .139 → .251 → .418. e3 is the best RL init so far.
+- **v·c barely moves** (+.013 on the clean subset, CI touching 0). As in §10, the extra validity comes mostly on items where the answer is wrong. The student learns to write checkable proofs faster than it learns to write right ones.
+- **Confound.** Teacher and harvest shape changed together. 1 proof/prompt spreads the harvest over twice as many prompts with fewer near-duplicates. That alone could explain part of the validity gain (§10: harvest breadth raises validity, not v·c).
+- **Next (EI round 4).** The teacher is G16@750 (gate v·c .209, the best G run; §9 of `2026-10-01_grpo_loop_collapse.md`) or G16 final. A GRPO run from e3 tests whether the better init turns into higher v·c under RL. Cheap wins in v·c should come from the teacher and from RL, not from more SFT rows.
