@@ -324,4 +324,4 @@ Clean gate subset (713 items), greedy, `analysis/gate_clean_rescore.md`, figure 
 
 - G15 without the no-proof penalty is still climbing and still not abandoning the proof. At 400 steps it sits between G16@250 and G16@500 on validity and v·c. A linear interpolation of G16 to step 400 gives about .307 / .137, so G15 trails G16 by about .02 valid and .01 v·c at matched steps.
 - Correctness is .31 for G15 vs .30 for G16. The no-proof penalty does not cost correctness here.
-- The G14 failure (proof abandoned on Dolci) has not appeared in G15 by 400 steps. The e2 init writes proofs on 96% of Dolci rollouts, so there is less of an exit to take. The G16 − G15 gap may only open later, as it did for G14 after step 500.
+- The G14 failure (proof abandoned on Dolci) has not appeared in G15. G14 had already dropped to a gate `<proof>` share of .49 by step 250 (§5). G15 ckpt-500 writes a `<proof>` on 100% of the 950 gate items, the same as G16@500. Started from e2, which already writes proofs on 96% of Dolci rollouts, the no-proof penalty has nothing to fix so far. The small G16 lead in validity comes from elsewhere, or is noise.
