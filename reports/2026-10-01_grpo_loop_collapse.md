@@ -309,3 +309,19 @@ G14, G16 and all earlier L1 links never resumed, so their numbers stand.
 - G15@250 is really "e2 init + 150 steps". Read G15 checkpoint *k* as fresh step *k − 100*.
 
 **Fix** (`scripts/grpo_formal.py`): on resume, `GRPOTrainer` now gets the checkpoint directory as `model`, so `from_pretrained` applies the key mapping. A CPU check on L1_cvf/checkpoint-2000 shows exactly equal tensors (max diff 0.0), while the SFT base differs by 1e-4–3e-4. The raw resume load then matches nothing and leaves those weights alone. If no checkpoint with optimizer state survives, the script falls back to the newest checkpoint with weights + `trainer_state.json`; Adam restarts, with a 10-step warmup. This fallback is used now for both L1 runs.
+
+## 11. G15 at checkpoint 500 = 400 fresh steps (2026-10-03 13:55)
+
+Clean gate subset (713 items), greedy, `analysis/gate_clean_rescore.md`, figure `figures/gate_clean_rescore.pdf`. G15 checkpoints are read as fresh steps *k − 100* (§10).
+
+| run | fresh steps | clean valid | clean v·c | clean correct |
+|---|---|---|---|---|
+| e2 SFT (init) | 0 | .171 | .086 | .273 |
+| G15 ckpt-250 | 150 | .210 | .091 | .302 |
+| G15 ckpt-500 | 400 | .283 | .125 | .310 |
+| G16@250 | 250 | .229 | .102 | .296 |
+| G16@500 | 500 | .358 | .161 | .299 |
+
+- G15 without the no-proof penalty is still climbing and still not abandoning the proof. At 400 steps it sits between G16@250 and G16@500 on validity and v·c. A linear interpolation of G16 to step 400 gives about .307 / .137, so G15 trails G16 by about .02 valid and .01 v·c at matched steps.
+- Correctness is .31 for G15 vs .30 for G16. The no-proof penalty does not cost correctness here.
+- The G14 failure (proof abandoned on Dolci) has not appeared in G15 by 400 steps. The e2 init writes proofs on 96% of Dolci rollouts, so there is less of an exit to take. The G16 − G15 gap may only open later, as it did for G14 after step 500.

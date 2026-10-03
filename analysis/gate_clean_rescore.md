@@ -24,6 +24,8 @@ clean = 713 of 950 gate items without a near-duplicate (12-gram coverage >= 0.3)
 | qwen35_2b_lc_libext_e2_lr5em6_seed3407/final _k16 | 0.1041 | 0.1142 | 0.0738 | 0.0595 | 0.0651 | 0.230 | 0.256 | 0.153 |
 | qwen35_2b_lc_libext_e2s_lr5em6_seed3407/final  | 0.1221 | 0.1360 | 0.0802 | 0.0737 | 0.0827 | 0.242 | 0.278 | 0.135 |
 | qwen35_2b_lc_libext_e2s_lr5em6_seed3407/final _k16 | 0.0874 | 0.0967 | 0.0593 | 0.0536 | 0.0574 | 0.229 | 0.255 | 0.149 |
+| qwen35_2b_lc_libext_e3_lr5em6_seed3407/final  | 0.2274 | 0.2356 | 0.2025 | 0.0884 | 0.0982 | 0.267 | 0.299 | 0.173 |
+| qwen35_2b_lc_libext_e3_lr5em6_seed3407/final _k16 | 0.1597 | 0.1654 | 0.1424 | 0.0676 | 0.0710 | 0.246 | 0.274 | 0.161 |
 | qwen35_2b_lc_libext_e_lr5em6_seed3407/final  | 0.0853 | 0.1052 | 0.0253 | 0.0463 | 0.0547 | 0.219 | 0.258 | 0.101 |
 | qwen35_2b_lc_libext_e_lr5em6_seed3407/final _k16 | 0.0478 | 0.0578 | 0.0177 | 0.0292 | 0.0343 | 0.197 | 0.229 | 0.103 |
 | qwen35_2b_lc_libext_l_lr5em6_seed3407/final  | 0.0274 | 0.0323 | 0.0127 | 0.0095 | 0.0098 | 0.163 | 0.187 | 0.093 |
@@ -37,6 +39,7 @@ clean = 713 of 950 gate items without a near-duplicate (12-gram coverage >= 0.3)
 | qwen35_9b_dolci_rlvlgen_p00_lr5em6_seed3407  | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.259 | 0.279 | 0.198 |
 | qwen35_9b_dolci_rlvlgen_p50_lr5em6_seed3407  | 0.0316 | 0.0421 | 0.0000 | 0.0200 | 0.0266 | 0.316 | 0.348 | 0.219 |
 | 2b_e2_G15_cvffmt_overlong/checkpoint-250  | 0.1863 | 0.2104 | 0.1139 | 0.0800 | 0.0912 | 0.266 | 0.302 | 0.160 |
+| 2b_e2_G15_cvffmt_overlong/checkpoint-500  | 0.2632 | 0.2833 | 0.2025 | 0.1126 | 0.1248 | 0.279 | 0.310 | 0.186 |
 | 2b_e2_G16_cvffmt_overlong_noproof/checkpoint-250  | 0.2084 | 0.2286 | 0.1477 | 0.0895 | 0.1024 | 0.267 | 0.296 | 0.181 |
 | 2b_e2_G16_cvffmt_overlong_noproof/checkpoint-500  | 0.3568 | 0.3576 | 0.3544 | 0.1442 | 0.1613 | 0.276 | 0.299 | 0.207 |
 | 2b_e2_G16_cvffmt_overlong_noproof/checkpoint-750  | 0.6453 | 0.6438 | 0.6498 | 0.1979 | 0.2090 | 0.248 | 0.264 | 0.203 |

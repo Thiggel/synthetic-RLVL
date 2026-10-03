@@ -459,6 +459,52 @@
    "n": 3792
   }
  },
+ "formal_mixture_sft_20260925/qwen35_2b_lc_libext_e3_lr5em6_seed3407/final/rl_gate_dolci": {
+  "all": {
+   "has_proof": 0.9852631578947368,
+   "valid": 0.22736842105263158,
+   "valid_correct": 0.08842105263157894,
+   "correct": 0.2673684210526316,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 0.9803646563814866,
+   "valid": 0.23562412342215988,
+   "valid_correct": 0.09817671809256662,
+   "correct": 0.29873772791023845,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 1.0,
+   "valid": 0.20253164556962025,
+   "valid_correct": 0.05907172995780591,
+   "correct": 0.1729957805907173,
+   "n": 237
+  }
+ },
+ "formal_mixture_sft_20260925/qwen35_2b_lc_libext_e3_lr5em6_seed3407/final/rl_gate_dolci_k16": {
+  "all": {
+   "has_proof": 0.975,
+   "valid": 0.15967105263157894,
+   "valid_correct": 0.06763157894736842,
+   "correct": 0.24625,
+   "n": 15200
+  },
+  "clean": {
+   "has_proof": 0.9704593267882188,
+   "valid": 0.16541023842917252,
+   "valid_correct": 0.07100280504908836,
+   "correct": 0.27445652173913043,
+   "n": 11408
+  },
+  "contaminated": {
+   "has_proof": 0.9886603375527426,
+   "valid": 0.14240506329113925,
+   "valid_correct": 0.05748945147679325,
+   "correct": 0.16139240506329114,
+   "n": 3792
+  }
+ },
  "formal_mixture_sft_20260925/qwen35_2b_lc_libext_e_lr5em6_seed3407/final/rl_gate_dolci": {
   "all": {
    "has_proof": 0.9084210526315789,
@@ -755,6 +801,29 @@
    "valid": 0.11392405063291139,
    "valid_correct": 0.046413502109704644,
    "correct": 0.16033755274261605,
+   "n": 237
+  }
+ },
+ "grpo_formal_20260928/2b_e2_G15_cvffmt_overlong/checkpoint-500/rl_gate_dolci": {
+  "all": {
+   "has_proof": 1.0,
+   "valid": 0.2631578947368421,
+   "valid_correct": 0.11263157894736842,
+   "correct": 0.2789473684210526,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 1.0,
+   "valid": 0.28330995792426367,
+   "valid_correct": 0.12482468443197756,
+   "correct": 0.30995792426367463,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 1.0,
+   "valid": 0.20253164556962025,
+   "valid_correct": 0.0759493670886076,
+   "correct": 0.18565400843881857,
    "n": 237
   }
  },
