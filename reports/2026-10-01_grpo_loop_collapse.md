@@ -271,3 +271,19 @@ Clean gate subset (713 items, greedy; `analysis/gate_clean_rescore.md`):
 - **G14 finished all 1000 steps** (`final` = step 1000). Its last 250 steps lifted clean validity from .210 to .311 and v·c from .118 to .182, the best clean v·c of any G run so far, with correctness at .310. Both lineages keep improving; G16 has another ~500 steps to go. The resume-only checkpoint-950 was deleted.
 - **L1_cvf@2000: validity .900, v·c .286, correct .293** (clean). Validity is near saturation (.60 → .78 → .90 over steps 1500–2000) while correctness creeps up (+.005 per 250 steps). cvf's correctness still trails correct-only (.49) by about .20.
 - **L1_correct@2250: correct .489**, back up from .457 at step 2000. The step-2000 dip was noise, not the start of overfitting. Correctness-only has plateaued at about .49–.51 since step 1500, with validity at 0.
+
+## 9. G16 at step 750, L1_correct at 2500 (2026-10-03 09:40)
+
+Clean gate subset (713 items), greedy, Stage-2 checker (`analysis/gate_clean_rescore.md`, `figures/gate_clean_rescore.pdf`).
+
+| checkpoint | valid | v·c | correct |
+|---|---:|---:|---:|
+| G16@500 | .358 | .161 | .299 |
+| **G16@750** | **.644** | **.209** | .264 |
+| G14@1000 = final | .311 | .182 | .310 |
+| L1_cvf@2000 | .900 | .286 | .293 |
+| L1_correct@2500 | 0 | 0 | .485 |
+
+- **G16's validity jumped from .358 to .644 in 250 steps.** It now has the best clean v·c of any G run (.209, ahead of G14 final at .182), even though correctness fell from .299 to .264. This is the same pattern L1_cvf showed between steps 1500 and 2000: validity rises fast once the format takes hold, and correctness lags. The contaminated subset moves the same way (valid .650, correct .203), so the jump is not an artefact of the clean filter. G16@750 is now the EI round-4 teacher candidate.
+- **L1_correct@2500: correct .485.** That is within ±.03 of its value at every checkpoint since step 1250 (.494 / .509 / .504 / .457 / .489 / .485), so correctness-only converged at about .49 by roughly step 1250–1500.
+- L1_cvf@2250 is being gated (job 10791).
