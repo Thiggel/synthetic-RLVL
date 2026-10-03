@@ -122,6 +122,27 @@ def premise_numbers_ok(formula: str, quote: str) -> bool:
     return _numbers(formula, False) <= _numbers(quote, True) | FREE_NUMBERS
 
 
+def quote_ok(quote: str, prompt: str) -> bool:
+    """A quoted premise cites a clause of the prompt: >= 3 words, verbatim (case and whitespace aside).
+    L1_cvf (steps 900-2250) and G16 (late) learned premises like `integer_sum = solutions ; given "y"`
+    and `pr_rain = 0.25 ; given "0.25"`: a number or letter that occurs in the prompt passes
+    premise_numbers_ok and the substring grounding test while quoting nothing."""
+    q, p = " ".join(quote.lower().split()), " ".join(prompt.lower().split())
+    return len(q.split()) >= 3 and q in p
+
+
+def trusted_numbers_ok(proof: str) -> bool:
+    """Generator items: `know` / `def` lines state background facts (`days(t) = weeks(t) * 7`), never a
+    number beyond the unit constants and 0/1 (no gold proof of the generator test does). L1_cvf (2250)
+    stated the prompt's quantities as `pr_rain = 0.25 ; know`, which the faithfulness check never sees."""
+    units = _numbers(UNIT_CONSTANTS, False) | FREE_NUMBERS
+    for ln in proof.split("\n"):
+        m = _STEP.match(ln)
+        if m and m.group(3).split()[:1] in (["know"], ["def"]) and not _numbers(m.group(2), False) <= units:
+            return False
+    return True
+
+
 def format_ok(completion: str) -> bool:
     """One `</proof>`, followed only by the Answer: line. Late G5 (steps 60-99) ran on after
     </proof> (repeated </proof>, "Now, we write the final answer..." loops) and 83% had no Answer: line."""
@@ -213,6 +234,7 @@ def line_stats(prompt: str, completion: str) -> dict:
     # their numbers; unquoted ones (know, def) may use only numbers of the prompt.
     der_f = {formula[x] for x in anc if rule[x] not in TRUST or not (x in steps and steps[x].get("ok"))}
     prem_bad = sum(not premise_numbers_ok(formula[x], quote[x] if rule[x] in ("given", "obs") else prompt + UNIT_CONSTANTS)
+                   or (rule[x] in ("given", "obs") and not quote_ok(quote[x], prompt))
                    for x in anc if rule[x] in TRUST - {"assume"})
     return {"n_steps": len(order), "n_parsed": len(parsed), "n_ok": sum(ok.values()), "circular": int(circ),
             "n_taut": len(taut), "frac_parsed": len(parsed) / len(anc_f),
@@ -257,7 +279,8 @@ def components(rec: dict, completion: str) -> dict:
         sents, proof = json.loads(rec["sentences_json"]), extract(completion)["proof"] or ""
         gv = givens(proof)  # a `given` line GIVEN_RE cannot read is unfaithful, not unchecked
         n_any = sum(bool(GIVEN_ANY.match(ln.strip())) for ln in proof.split("\n"))
-        prem = float(len(gv) == n_any and all(faithful_given(f, q, sents) for _, f, q in gv))
+        prem = float(len(gv) == n_any and all(faithful_given(f, q, sents) for _, f, q in gv)
+                     and trusted_numbers_ok(proof))
     else:
         prem = float(ls["n_prem_bad"] == 0)
     out["prem_ok"] = prem
