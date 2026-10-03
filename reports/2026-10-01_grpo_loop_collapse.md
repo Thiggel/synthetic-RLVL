@@ -336,7 +336,7 @@ Clean gate subset (713 items), greedy, `analysis/gate_clean_rescore.md`, figure 
 | @750 | .644 | .209 | .264 |
 | final (= ckpt-1000) | .734 | .247 | .283 |
 
-On the gate, G16 final is the best G run by v·c. Validity keeps rising. Correctness dips at 750 and partly recovers, but stays below the e2 init (.273) only at 750.
+On the gate, G16 final is the best G run by v·c. Validity keeps rising. Correctness dips at 750 (.264, below the e2 init's .273) and recovers to .283 by the end.
 
 **Generator test set (in-distribution):** valid .711 → .75, answer accuracy .817 → .763 (750 → final). Faithfulness collapsed: the share of items whose `given` lines are all faithful fell from .855 to **.072**, and given recall to .007.
 
