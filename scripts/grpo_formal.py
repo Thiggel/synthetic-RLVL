@@ -250,11 +250,17 @@ def main():
     callbacks = [PruneOptimizerState(args.keep_every)] if args.resumable else []
     if args.stop_at:
         callbacks.append(StopAtDeadline(args.stop_at))
-    trainer = GRPOTrainer(model=args.model, reward_funcs=funcs, args=cfg, train_dataset=train,
-                          processing_class=tok, callbacks=callbacks or None)
     resume = [c for c in _ckpts(args.out_dir) if _resumable(c)] if args.resumable else []
+    if args.resumable and not resume:  # recovery: no optimizer state left, resume from weights + trainer state
+        resume = [c for c in _ckpts(args.out_dir)
+                  if (c / "trainer_state.json").is_file() and (c / "model.safetensors").is_file()]
     if resume:
         print(f"resuming from {resume[-1]}", flush=True)
+    # Load the policy weights from the checkpoint itself: Trainer's resume loads model.safetensors with a raw
+    # load_state_dict, and save_pretrained writes Qwen3.5 keys as `model.language_model.*` while the model expects
+    # `model.*`, so every key "misses" and the policy silently restarts from args.model (bug found 2026-10-03).
+    trainer = GRPOTrainer(model=str(resume[-1]) if resume else args.model, reward_funcs=funcs, args=cfg,
+                          train_dataset=train, processing_class=tok, callbacks=callbacks or None)
     trainer.train(resume_from_checkpoint=str(resume[-1]) if resume else None)
     if args.stop_at and trainer.state.global_step < args.max_steps:  # stopped at --stop-at: next job resumes
         print(f"stopped at step {trainer.state.global_step} of {args.max_steps}; not saving final", flush=True)

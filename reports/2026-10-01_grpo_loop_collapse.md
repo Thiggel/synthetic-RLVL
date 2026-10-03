@@ -287,3 +287,25 @@ Clean gate subset (713 items), greedy, Stage-2 checker (`analysis/gate_clean_res
 - **G16's validity jumped from .358 to .644 in 250 steps.** It now has the best clean v·c of any G run (.209, ahead of G14 final at .182), even though correctness fell from .299 to .264. This is the same pattern L1_cvf showed between steps 1500 and 2000: validity rises fast once the format takes hold, and correctness lags. The contaminated subset moves the same way (valid .650, correct .203), so the jump is not an artefact of the clean filter. G16@750 is now the EI round-4 teacher candidate.
 - **L1_correct@2500: correct .485.** That is within ±.03 of its value at every checkpoint since step 1250 (.494 / .509 / .504 / .457 / .489 / .485), so correctness-only converged at about .49 by roughly step 1250–1500.
 - L1_cvf@2250 is being gated (job 10791).
+
+## 10. Correction: resumed GRPO links restarted from the SFT weights (bug, fixed 2026-10-03 10:50)
+
+**The L1_cvf@2250 gate collapsed (clean valid .900 → .013, Dolci proofs became prose inside `<proof>`).** The cause is a resume bug, not training dynamics. On every walltime resume, `Trainer` loaded `model.safetensors` with a raw `load_state_dict(strict=False)`. `save_pretrained` writes Qwen3.5 keys as `model.language_model.*`, but the in-memory model expects `model.*`, so every key "missed" (the warning `There were missing keys in the checkpoint model loaded` is in each resumed link's log). The policy therefore silently restarted from the SFT init, while the step counter, optimizer state, data position and LR schedule continued. The training-log validity of L1_cvf dropped from about .89 to .21 at the first step of link 9648 (resumed at 2102).
+
+Affected links (every link that printed `resuming from`):
+
+| run | resumed at | effect | what we did |
+|---|---|---|---|
+| L1_cvf | 50 (link 9647) | weights reset to the SFT init at step 50, the same moment the reward switched to `cvf × format_ok` | negligible: the x-axis is shifted by ≤ 50 steps |
+| L1_cvf | 2102 (link 9648) | checkpoint 2250 = SFT init + 148 steps | stopped; ckpts 2250/2300 and completions > 2000 moved to `_resume_bug_20261003/`; resumed from checkpoint-2000 (weights + trainer state, fresh Adam) |
+| L1_correct | 1848 (link 7970) | checkpoints 2000 / 2250 / 2500 = SFT init + 152 / 402 / 652 steps | stopped; ckpts ≥ 2000 and completions > 1750 moved aside; resumed from checkpoint-1750 |
+| G15 | 100 (link 10009) | everything after step 100 is SFT init + (step − 100) | kept running: equivalent to a fresh run shifted by 100 steps (see below) |
+
+G14, G16 and all earlier L1 links never resumed, so their numbers stand.
+
+**Retractions:**
+- §8 and §9 said L1_correct's dip at step 2000 (.457) was noise and that it had plateaued at about .49 since step 1250. The dip was the reset. The post-reset gates (.457 / .489 / .485 at 152 / 402 / 652 steps after the reset) are effectively a second run from the SFT init. They show that correctness-only reaches about .49 within about 400 steps, which reproduces the original climb (.438 @250, .460 @500) but faster, because there is no warmup and the Adam state was warm. The genuine trajectory ends at checkpoint-1750 (.504), which is where it now resumes from.
+- §9 compared G16 with "L1_correct@2500"; that row is void. All G16 numbers stand.
+- G15@250 is really "e2 init + 150 steps". Read G15 checkpoint *k* as fresh step *k − 100*.
+
+**Fix** (`scripts/grpo_formal.py`): on resume, `GRPOTrainer` now gets the checkpoint directory as `model`, so `from_pretrained` applies the key mapping. A CPU check on L1_cvf/checkpoint-2000 shows exactly equal tensors (max diff 0.0), while the SFT base differs by 1e-4–3e-4. The raw resume load then matches nothing and leaves those weights alone. If no checkpoint with optimizer state survives, the script falls back to the newest checkpoint with weights + `trainer_state.json`; Adam restarts, with a 10-step warmup. This fallback is used now for both L1 runs.
