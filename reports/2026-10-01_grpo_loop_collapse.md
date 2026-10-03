@@ -437,3 +437,12 @@ The restarted cvf arm will answer where honest validity converges.
 | G16@750 | .623 | .295 | .113 | .248 | .701 | .654 | .886 |
 
 At step 750, the no-proof penalty doubles gate valid·prem (.147 → .295) and raises gate cvf by .034. It costs .032 gate correctness. On generator items both arms are close, with G16 slightly ahead. G15 is still improving on the gate between 500 and 750. Its final checkpoint, due in about 6 h, will show whether it catches up or plateaus.
+
+*Update 00:40 (2026-10-04): L1_cvf@1000 under the hardened reward.* This is the first gated checkpoint past the step where the old run started gaming the premise checks (~750). Both rows are greedy decodes rescored with d8840c1.
+
+| L1_cvf | gate valid | gate valid·prem | gate cvf | gate correct | gen valid·prem | gen cvf | gen correct |
+|---|---|---|---|---|---|---|---|
+| @750 (old reward) | .116 | .105 | .075 | .235 | .492 | .486 | .667 |
+| @1000 (hardened 751→) | .203 | .198 | .119 | .246 | .663 | .638 | .768 |
+
+Validity and correctness both rose between steps 750 and 1000. Gate valid and valid·prem are almost equal (.203 vs .198), so the new gate validity passes the premise checks rather than coming from gamed premises. On the OOD gate benches, valid rose from .048 to .196 while correct stayed at ~.03. There the model writes checked proofs without getting the answer. `l1_convergence_heldout.png` is regenerated.
