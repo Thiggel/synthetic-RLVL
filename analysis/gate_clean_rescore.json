@@ -2506,6 +2506,29 @@
    "n": 237
   }
  },
+ "grpo_formal_20260928/L1_cvf/checkpoint-2250/rl_gate_dolci": {
+  "all": {
+   "has_proof": 1.0,
+   "valid": 0.8505263157894737,
+   "valid_correct": 0.23789473684210527,
+   "correct": 0.2536842105263158,
+   "n": 950
+  },
+  "clean": {
+   "has_proof": 1.0,
+   "valid": 0.8401122019635343,
+   "valid_correct": 0.25245441795231416,
+   "correct": 0.270687237026648,
+   "n": 713
+  },
+  "contaminated": {
+   "has_proof": 1.0,
+   "valid": 0.8818565400843882,
+   "valid_correct": 0.1940928270042194,
+   "correct": 0.20253164556962025,
+   "n": 237
+  }
+ },
  "grpo_formal_20260928/L1_cvf/checkpoint-250/rl_gate_dolci": {
   "all": {
    "has_proof": 0.9526315789473684,

@@ -21,6 +21,13 @@ Held-out: greedy evals of the kept checkpoints (every 250 steps; scripts/submit_
 out-of-domain) and the in-domain generator test (the 1837 tool-free items of 2000). Both are rescored here
 with formal_rewards.components, i.e. with the training rewards. Step 0 is the SFT policy.
 
+Reward hacking (2026-10-03, reports/2026-10-01_grpo_loop_collapse.md §13): from step ~900 the cvf arm gamed the
+premise checks (`x; given` lines the faithfulness parser skipped, prompt numbers stated as `know`, Dolci premises
+quoting one token: `x = solutions ; given "y"`). The hardened reward (commit d8840c1) applies from step 751: the run
+was resumed from checkpoint-750 and steps 751-2300 moved to L1_cvf/_hacked_reward_20261003, plotted as a third
+arm. Held-out rescoring always uses the current (hardened) components; valid_prem = valid x prem_ok is the
+validity the cvf reward asks for (valid alone counts proofs whose premises quote nothing).
+
 Run with .venv_rlvl_grpo and the frozen checker the runs were trained with:
   S=/vol/tmp2/laitenbf/rlvl_data/checker_snapshot_pre_libext_20260930 PYTHONPATH=$S/gen:$S/rlvl_python
 Writes analysis/l1_convergence.json and reports/figures/l1_convergence_{train,heldout}.{png,pdf}.
@@ -45,9 +52,15 @@ RUNS = DATA / "grpo_formal_20260928"
 BASE = DATA / "formal_mixture_sft_20260925/qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407"
 GATE_TEST = DATA / "datasets/rl_gate_dolci_instruct_20260928/test.jsonl"
 GEN_TEST = DATA / "datasets/formal_mixture_20260925/pool/test.jsonl"
-ARMS = {"correct only": "L1_correct", "cvf (x format_ok from step 51)": "L1_cvf"}
-COLORS = {"correct only": "C0", "cvf (x format_ok from step 51)": "C3"}
+CVF = "cvf (x format_ok from 51, hardened premises from 751)"
+HACKED = "cvf, gamed premise checks (archived, steps 751-2300)"
+ARMS = {"correct only": "L1_correct", HACKED: "L1_cvf/_hacked_reward_20261003", CVF: "L1_cvf"}  # CVF drawn on top
+COLORS = {"correct only": "C0", CVF: "C3", HACKED: "C1"}
+# the archived arm shares steps <= 750 (and their checkpoints) with L1_cvf
+SHARED = {HACKED: ("L1_cvf", 750)}
 METRICS = ["correct", "valid", "cvf"]
+HO_METRICS = ["correct", "valid", "valid_prem", "cvf"]
+REWARD_VERSION = "d8840c1"  # formal_rewards commit the held-out caches were scored with
 DOMAINS = {"gen": "generator prompts", "dolci": "Dolci prompts (math, wordprob, yesno)"}
 TRAIN_BENCHES = {"dolci_math", "dolci_wordprob", "dolci_yesno"}
 BIN, MA, TOL, TAIL = 25, 100, 0.02, 250
@@ -123,7 +136,9 @@ def rescored(ckpt: Path, gate: Path, formal: Path, tests: tuple[dict, dict]) -> 
             and ff.is_file() and (ff.parent / "summary.json").is_file()):
         return None
     if cache.is_file() and cache.stat().st_mtime > max(gf.stat().st_mtime, ff.stat().st_mtime):
-        return json.loads(cache.read_text())
+        hit = json.loads(cache.read_text())
+        if hit.get("reward_version") == REWARD_VERSION:
+            return hit
     out = {}
     sums: dict[str, dict] = {}
     for ln in open(gf):
@@ -131,18 +146,19 @@ def rescored(ckpt: Path, gate: Path, formal: Path, tests: tuple[dict, dict]) -> 
         c = components(gate_test[g["id"]], g["generation"])
         grp = "gate_train_benches" if g["bench"] in TRAIN_BENCHES else "gate_ood"
         for k in (grp, "gate_all"):
-            acc = sums.setdefault(k, {m: 0.0 for m in METRICS + ["n"]})
+            acc = sums.setdefault(k, {m: 0.0 for m in HO_METRICS + ["n"]})
             _add(acc, c)
     for ln in open(ff):
         g = json.loads(ln)
         rec = gen_test.get(g["id"])
         if rec is None:  # tool items and non-number/yesno answers: not in the GRPO pool
             continue
-        _add(sums.setdefault("gen_test", {m: 0.0 for m in METRICS + ["n"]}), components(rec, g["generation"]))
+        _add(sums.setdefault("gen_test", {m: 0.0 for m in HO_METRICS + ["n"]}), components(rec, g["generation"]))
     for k, acc in sums.items():
-        out[k] = {m: acc[m] / acc["n"] for m in METRICS} | {"n": int(acc["n"])}
+        out[k] = {m: acc[m] / acc["n"] for m in HO_METRICS} | {"n": int(acc["n"])}
     summ = json.loads((ff.parent / "summary.json").read_text())["overall"]
     out["gen_test_eval"] = {k: summ[k] for k in ("valid", "answer_acc", "faithful", "grammatical", "n")}
+    out["reward_version"] = REWARD_VERSION
     cache.write_text(json.dumps(out, indent=1))
     return out
 
@@ -150,6 +166,7 @@ def rescored(ckpt: Path, gate: Path, formal: Path, tests: tuple[dict, dict]) -> 
 def _add(acc: dict, c: dict) -> None:
     acc["correct"] += c["correct"]
     acc["valid"] += c["valid"]
+    acc["valid_prem"] += c["valid"] * c["prem_ok"]
     acc["cvf"] += c["correct"] * c["valid"] * c["prem_ok"]
     acc["n"] += 1
 
@@ -189,7 +206,10 @@ def main() -> None:
     for arm, run in ARMS.items():
         pts = [(0, base)] if base else []
         d = RUNS / run
-        for c in sorted(list(d.glob("checkpoint-*")) + [d / "final"], key=_step_of):
+        cks = list(d.glob("checkpoint-*")) + [d / "final"]
+        if arm in SHARED:
+            cks += [c for c in (RUNS / SHARED[arm][0]).glob("checkpoint-*") if _step_of(c) <= SHARED[arm][1]]
+        for c in sorted(cks, key=_step_of):
             if c.is_dir():
                 v = rescored(c, c / "rl_gate_dolci", c / "formal_eval", tests)
                 if v:
@@ -268,9 +288,9 @@ def plot_heldout(res: dict) -> None:
     groups = [("gen_test", "in-domain generator test (1837 items)"),
               ("gate_train_benches", "Dolci gate, training benches (700 items)"),
               ("gate_ood", "Dolci gate, dapo + knowledge (250 items, OOD)")]
-    fig, axes = plt.subplots(3, 3, figsize=(16, 12))
+    fig, axes = plt.subplots(3, len(HO_METRICS), figsize=(21, 12))
     for i, (g, gname) in enumerate(groups):
-        for j, m in enumerate(METRICS):
+        for j, m in enumerate(HO_METRICS):
             ax = axes[i, j]
             for arm, pts in res["heldout"].items():
                 xs = [s for s, v in pts if g in v]
@@ -281,7 +301,9 @@ def plot_heldout(res: dict) -> None:
             ax.set_xlabel("GRPO step (0 = SFT policy)")
             ax.grid(alpha=.3)
             ax.legend(fontsize=7)
-    fig.suptitle("L1 held-out (greedy), rescored with the training rewards (frozen pre-libext checker)", fontsize=11)
+    fig.suptitle("L1 held-out (greedy), rescored with the hardened training rewards (d8840c1; frozen pre-libext checker)\n"
+                 "valid_prem = valid x premise check (faithful givens on generator items, >= 3-word prompt quotes on Dolci)",
+                 fontsize=11)
     fig.tight_layout()
     for ext in ("png", "pdf"):
         fig.savefig(f"{OUT_FIG}_heldout.{ext}", dpi=130)
@@ -303,7 +325,8 @@ def report(res: dict) -> None:
                       f"{p.get('level', float('nan')):.3f} | {p.get('t_plateau', '')} |")
     for arm, pts in res["heldout"].items():
         for s, v in pts:
-            print(arm, s, {g: {m: round(x[m], 3) for m in METRICS} for g, x in v.items() if g != "gen_test_eval"})
+            print(arm, s, {g: {m: round(x[m], 3) for m in HO_METRICS} for g, x in v.items()
+                           if isinstance(x, dict) and g != "gen_test_eval"})
 
 
 if __name__ == "__main__":
