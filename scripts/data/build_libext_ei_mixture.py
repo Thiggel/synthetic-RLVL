@@ -34,6 +34,9 @@ EI round 3 (2026-10-03): arm e3 = e2 with the harvest from G16 checkpoint-250 (G
 penalty from e2 final; better than G15@250 on the clean gate: valid .229 vs .210, v*c .102 vs .091). Since the teacher
 is a new-library model, the harvest is checked with the NEW checker snapshot (checker_snapshot_libext_20261001, a
 superset of the old one); same recipe and EI row cap otherwise, so e3 - e2 = the next teacher-quality step.
+EI round 4 (2026-10-03): arm e4 = e3 with the harvest from G16 checkpoint-750 (clean gate valid .644, v*c .209, the
+best G checkpoint before G16 learned the `x; given` faithfulness-check bypass between steps 900 and 950; G16 final
+scores higher on the gate but is not used as a teacher).
 Writes <out-root>/<arm> (DatasetDict + mixture_manifest.json); existing arms are skipped. Run with .venv_rlvl_grpo.
 """
 from __future__ import annotations
@@ -62,7 +65,9 @@ HARVEST2 = [DATA / "rl_filter_20261001/G12c100_cvf_n16_dolci.json.passing.jsonl"
             DATA / "rl_filter_20261001/G12c100_cvf_n16_gsm8k.json.passing.jsonl"]
 HARVEST3 = [DATA / "rl_filter_20261003/G16c250_cvf_n16_dolci.json.passing.jsonl",
             DATA / "rl_filter_20261003/G16c250_cvf_n16_gsm8k.json.passing.jsonl"]
-EI_SRC = {"e": HARVEST, "le": HARVEST, "e2": HARVEST2, "e2s": HARVEST2, "e3": HARVEST3}
+HARVEST4 = [DATA / "rl_filter_20261003/G16c750_cvf_n16_dolci.json.passing.jsonl",
+            DATA / "rl_filter_20261003/G16c750_cvf_n16_gsm8k.json.passing.jsonl"]
+EI_SRC = {"e": HARVEST, "le": HARVEST, "e2": HARVEST2, "e2s": HARVEST2, "e3": HARVEST3, "e4": HARVEST4}
 MATCH = {"e2s": "e"}  # arm -> arm whose EI size (prompts per bench, rows) it copies
 REAL = ("dolci_wordprob", "dolci_math", "gsm8k_train")
 INIT = "formal_mixture_sft_20260925/qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407/final"
@@ -170,7 +175,8 @@ def main() -> None:
              "le": lambda: ei["le"] + lib + gen[:n - k - len(ei["le"])],
              "e2": lambda: ei["e2"] + gen[:n - len(ei["e2"])],
              "e2s": lambda: ei["e2s"] + gen[:n - len(ei["e2s"])],
-             "e3": lambda: ei["e3"] + gen[:n - len(ei["e3"])]}
+             "e3": lambda: ei["e3"] + gen[:n - len(ei["e3"])],
+             "e4": lambda: ei["e4"] + gen[:n - len(ei["e4"])]}
     for arm in arms:
         out = args.out_root / arm
         if out.exists():
