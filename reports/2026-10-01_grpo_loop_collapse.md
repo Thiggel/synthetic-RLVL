@@ -325,3 +325,40 @@ Clean gate subset (713 items), greedy, `analysis/gate_clean_rescore.md`, figure 
 - G15 without the no-proof penalty is still climbing and still not abandoning the proof. At 400 steps it sits between G16@250 and G16@500 on validity and v·c. A linear interpolation of G16 to step 400 gives about .307 / .137, so G15 trails G16 by about .02 valid and .01 v·c at matched steps.
 - Correctness is .31 for G15 vs .30 for G16. The no-proof penalty does not cost correctness here.
 - The G14 failure (proof abandoned on Dolci) has not appeared in G15. G14 had already dropped to a gate `<proof>` share of .49 by step 250 (§5). G15 ckpt-500 writes a `<proof>` on 100% of the 950 gate items, the same as G16@500. Started from e2, which already writes proofs on 96% of Dolci rollouts, the no-proof penalty has nothing to fix so far. The small G16 lead in validity comes from elsewhere, or is noise.
+
+## 12. G16 finished; it learned to bypass the faithfulness check (2026-10-03 16:00)
+
+**Gate (clean subset, 713 items):**
+
+| G16 | clean valid | clean v·c | clean correct |
+|---|---|---|---|
+| @500 | .358 | .161 | .299 |
+| @750 | .644 | .209 | .264 |
+| final (= ckpt-1000) | .734 | .247 | .283 |
+
+On the gate, G16 final is the best G run by v·c. Validity keeps rising. Correctness dips at 750 and partly recovers, but stays below the e2 init (.273) only at 750.
+
+**Generator test set (in-distribution):** valid .711 → .75, answer accuracy .817 → .763 (750 → final). Faithfulness collapsed: the share of items whose `given` lines are all faithful fell from .855 to **.072**, and given recall to .007.
+
+**Cause: a reward hack.** The faithfulness check parsed `given` lines with `^(\S+) (.*) ; given "(.*)"$`, so it needed a space before `;`. The proof language does not. Between steps 900 and 950, G16 switched to writing `x; given "..."`: the share of completions using this form jumped from .08 to 1.0 within 50 steps. Those lines were invisible to `givens()`, so the generator-item premise check (`prem`) passed with nothing to check. Dolci items were not affected, because their premise check uses a different, whitespace-robust parser. That explains why the gate shows no anomaly.
+
+**Fix** (commit 992d873, `scripts/eval_formal_vllm.py` + `scripts/formal_rewards.py`):
+- `GIVEN_RE` now allows any whitespace around `;`.
+- A new `GIVEN_ANY` pattern counts every `given` line. The premise check fails if any of these lines cannot be parsed, so an unreadable `given` now counts as unfaithful instead of unchecked.
+
+Generator test rescored with the fixed parser:
+
+| | items all-faithful | faithful / given | # givens |
+|---|---|---|---|
+| G16@750 | .851 | .912 | 4414 |
+| G16 final | .736 | .813 | 3124 |
+| G15@500 | .811 | – | – |
+
+- Most of the .072 was a parser artifact. A real drop of about .11 remains: after the switch the policy also states 30% fewer premises and makes more of them up, because nothing penalised it.
+- G14, G15 and G17 training completions contain no `x; given` (checked through G17 step 116).
+
+**Consequences:**
+- **G17** (e3 init, same reward as G16) was stopped at step ~116 and resumed from checkpoint-100 under the fixed reward (links 10794 → 10905). The ~16 steps run under the old reward were discarded.
+- **G15** stays on the old reward as the matched control for G16. It is watched for `x; given` each tick.
+- **G16 final is not used as a teacher.** EI round 4 (arm e4, `scripts/submit_ei4.sh`, jobs 10908–10912) harvests from **G16@750**: the last kept checkpoint before the bypass, with clean gate v·c .209 vs .088 for e3. The question for e4 is whether a teacher with 2.4× the gate v·c still buys more in the SFT student than e2 → e3 did (+.015 v·c).
+- Lesson: every reward component needs a "could not parse ⇒ fail" path. "Nothing to check ⇒ pass" is exploitable within ~50 steps once the policy drifts into the format by chance.
