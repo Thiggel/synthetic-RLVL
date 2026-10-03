@@ -54,7 +54,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import rlvl  # noqa: E402  (PYTHONPATH must include RLVL-next/rlvl/python and RLVL-next/gen)
 from rlvlgen import toolsim  # noqa: E402
 
-GIVEN_RE = re.compile(r"^(\S+) (.*) ; given \"(.*)\"$")
+# whitespace around ";" is free in the proof language: G16 (2026-10-03, steps 900-950) learned to write `x; given "..."`,
+# which the old pattern (` ; given` only) did not match, so the faithfulness check passed with no givens to check
+GIVEN_RE = re.compile(r"^(\S+)\s+(.*?)\s*;\s*given\s*\"(.*)\"\s*$")
+GIVEN_ANY = re.compile(r"^\S+\s.*;\s*given\b")  # any `given` line, parseable by GIVEN_RE or not
 ANSWER_RE = re.compile(r"(?m)^Answer:[ \t]*(.*?)[ \t]*$")
 TAG_USER = "<formal>"
 ANSWER_TAG_RE = re.compile(r"<answer>\s*(.*?)\s*</answer>", re.S)

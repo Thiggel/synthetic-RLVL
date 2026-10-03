@@ -49,7 +49,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from eval_formal_bench_vllm import match, score  # noqa: E402
-from eval_formal_vllm import extract, faithful_given, givens  # noqa: E402
+from eval_formal_vllm import GIVEN_ANY, extract, faithful_given, givens  # noqa: E402
 
 _CACHE: OrderedDict = OrderedDict()
 _CACHE_MAX = 65536
@@ -255,7 +255,9 @@ def components(rec: dict, completion: str) -> dict:
     # items, which carry their sentences; the numeric check elsewhere (Dolci has no gold formalization)
     if rec.get("sentences_json"):
         sents, proof = json.loads(rec["sentences_json"]), extract(completion)["proof"] or ""
-        prem = float(all(faithful_given(f, q, sents) for _, f, q in givens(proof)))
+        gv = givens(proof)  # a `given` line GIVEN_RE cannot read is unfaithful, not unchecked
+        n_any = sum(bool(GIVEN_ANY.match(ln.strip())) for ln in proof.split("\n"))
+        prem = float(len(gv) == n_any and all(faithful_given(f, q, sents) for _, f, q in gv))
     else:
         prem = float(ls["n_prem_bad"] == 0)
     out["prem_ok"] = prem

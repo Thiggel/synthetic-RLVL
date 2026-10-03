@@ -40,9 +40,11 @@ clean = 713 of 950 gate items without a near-duplicate (12-gram coverage >= 0.3)
 | qwen35_9b_dolci_rlvlgen_p50_lr5em6_seed3407  | 0.0316 | 0.0421 | 0.0000 | 0.0200 | 0.0266 | 0.316 | 0.348 | 0.219 |
 | 2b_e2_G15_cvffmt_overlong/checkpoint-250  | 0.1863 | 0.2104 | 0.1139 | 0.0800 | 0.0912 | 0.266 | 0.302 | 0.160 |
 | 2b_e2_G15_cvffmt_overlong/checkpoint-500  | 0.2632 | 0.2833 | 0.2025 | 0.1126 | 0.1248 | 0.279 | 0.310 | 0.186 |
+| 2b_e2_G16_cvffmt_overlong_noproof/checkpoint-1000  | 0.7421 | 0.7279 | 0.7848 | 0.2232 | 0.2440 | 0.256 | 0.281 | 0.181 |
 | 2b_e2_G16_cvffmt_overlong_noproof/checkpoint-250  | 0.2084 | 0.2286 | 0.1477 | 0.0895 | 0.1024 | 0.267 | 0.296 | 0.181 |
 | 2b_e2_G16_cvffmt_overlong_noproof/checkpoint-500  | 0.3568 | 0.3576 | 0.3544 | 0.1442 | 0.1613 | 0.276 | 0.299 | 0.207 |
 | 2b_e2_G16_cvffmt_overlong_noproof/checkpoint-750  | 0.6453 | 0.6438 | 0.6498 | 0.1979 | 0.2090 | 0.248 | 0.264 | 0.203 |
+| 2b_e2_G16_cvffmt_overlong_noproof/final  | 0.7432 | 0.7335 | 0.7722 | 0.2263 | 0.2468 | 0.258 | 0.283 | 0.181 |
 | 2b_lcfp32m_G10_cvf_cont600/checkpoint-200  | 0.1242 | 0.1571 | 0.0253 | 0.0642 | 0.0799 | 0.236 | 0.262 | 0.156 |
 | 2b_lcfp32m_G10_cvf_cont600/checkpoint-400  | 0.2295 | 0.2721 | 0.1013 | 0.0979 | 0.1080 | 0.208 | 0.224 | 0.160 |
 | 2b_lcfp32m_G10_cvf_cont600/checkpoint-500  | 0.2642 | 0.3029 | 0.1477 | 0.1074 | 0.1150 | 0.186 | 0.202 | 0.139 |
