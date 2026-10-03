@@ -254,3 +254,18 @@ Clean gate subset (713 items, greedy; `analysis/gate_clean_rescore.md`):
 - **cvf validity jumps from .595 to .783 in one 250-step interval**, about twice the earlier rate. Clean v·c rises to .267, and correctness keeps recovering (.269 → .288).
 - Out of distribution (the gate_ood benches, which no RL prompt comes from), validity is .74 but cvf only .02. The model now writes valid proofs there too, but almost all of them are wrong. Generator-test validity is .967.
 - The gap to the correct-only arm's correctness (.50) shrinks to about .21. Validity is still rising and not saturated, so the convergence point is still open. The next links (2000, 2250, …) are queued.
+
+## 8. G16 at step 500, G14 finished, L1_correct at 2250 (2026-10-03 04:20)
+
+Clean gate subset (713 items, greedy; `analysis/gate_clean_rescore.md`):
+
+| checkpoint | valid | v·c | correct |
+|---|---:|---:|---:|
+| G14@750 (le lineage) | .210 | .118 | .320 |
+| G15@250 | .210 | .091 | .302 |
+| G16@250 | .229 | .102 | .296 |
+| **G16@500** | **.358** | **.161** | .299 |
+
+- **G16's no-proof penalty keeps paying off.** From step 250 to 500, validity rose by .13 and v·c by .06, while correctness held at .30. G16@500 has the best clean v·c of any G run, greedy and unguided; it equals G14@750 under guided decoding (.160). G16 is the EI round-4 teacher candidate. Round 3 (teacher G16@250) is training now.
+- G14 finished all 1000 steps (`final`). Its step-1000 and `final` gates are running (job 10737). The resume-only checkpoint-950 was deleted.
+- **L1_correct@2250: correct .489**, back up from .457 at step 2000. The step-2000 dip was noise, not the start of overfitting. Correctness-only has plateaued at about .49–.51 since step 1500, with validity at 0.
