@@ -36,7 +36,10 @@ is a new-library model, the harvest is checked with the NEW checker snapshot (ch
 superset of the old one); same recipe and EI row cap otherwise, so e3 - e2 = the next teacher-quality step.
 EI round 4 (2026-10-03): arm e4 = e3 with the harvest from G16 checkpoint-750 (clean gate valid .644, v*c .209, the
 best G checkpoint before G16 learned the `x; given` faithfulness-check bypass between steps 900 and 950; G16 final
-scores higher on the gate but is not used as a teacher).
+scores higher on the gate but is not used as a teacher). The harvest ran under the pre-d8840c1 reward, so e4 (and
+later arms, HARDENED) re-filter it with the hardened premise check: every `given` / `obs` line must parse as
+`N name = expr ; given "quote"` and quote >= 3 words of the prompt verbatim (formal_rewards.quote_ok; report §13 of
+2026-10-01_grpo_loop_collapse: one-token quotes and `x; given` lines were reward hacks).
 Writes <out-root>/<arm> (DatasetDict + mixture_manifest.json); existing arms are skipped. Run with .venv_rlvl_grpo.
 """
 from __future__ import annotations
@@ -72,11 +75,28 @@ MATCH = {"e2s": "e"}  # arm -> arm whose EI size (prompts per bench, rows) it co
 REAL = ("dolci_wordprob", "dolci_math", "gsm8k_train")
 INIT = "formal_mixture_sft_20260925/qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407/final"
 GIVEN = re.compile(r'(?m)^\d+ .*? ; given "(.*)"\s*$')
+PREMISE_LINE = re.compile(r"(?m)^.*;\s*(given|obs)\b.*$")
+PREMISE_OK = re.compile(r'^\d+ .*? ; (?:given|obs) "(.*)"\s*$')
+HARDENED = {"e4"}  # arms whose harvest is re-filtered with the hardened premise check (d8840c1)
 ASKS = re.compile(r"\?|\b(how (many|much|long|far|old|often)|what|which|find|calculate|compute|determine)\b", re.I)
 
 
+def quote_ok(quote: str, prompt: str) -> bool:
+    """= formal_rewards.quote_ok (d8840c1): >= 3 words, verbatim in the prompt (case and whitespace aside)."""
+    q, p = " ".join(quote.lower().split()), " ".join(prompt.lower().split())
+    return len(q.split()) >= 3 and q in p
+
+
+def premises_ok(proof: str, prompt: str) -> bool:
+    for m in PREMISE_LINE.finditer(proof):
+        g = PREMISE_OK.match(m.group(0))
+        if not g or not quote_ok(g.group(1), prompt):
+            return False
+    return True
+
+
 def ei_rows(paths: list[Path], max_per_prompt: int, repeat: int, cap: int, seed: int,
-            match: dict | None = None) -> tuple[list[dict], dict]:
+            match: dict | None = None, hardened: bool = False) -> tuple[list[dict], dict]:
     """Passing proofs on real prompts, grouped by prompt (shortest first). Of the per-prompt caps <= max_per_prompt
     and repeats <= repeat, take the largest cap, then the largest repeat, whose rows fit in `cap` (distinct proofs
     before upweighting); if one proof per prompt is still too many, one proof each for a random subset of prompts.
@@ -96,6 +116,9 @@ def ei_rows(paths: list[Path], max_per_prompt: int, repeat: int, cap: int, seed:
                 continue
             if any(ASKS.search(q) for q in GIVEN.findall(t)):
                 st["question_premise"] += 1
+                continue
+            if hardened and not premises_ok(t, r["raw_prompt"]):
+                st["premise_check_failed"] += 1
                 continue
             by_id[r["id"]].setdefault(t, r)
     groups = [[{"prompt": f"<formal>\n{proofs[t]['raw_prompt']}", "target": t, "source": "ei",
@@ -157,7 +180,7 @@ def main() -> None:
             if arm in MATCH:
                 match = json.loads((args.out_root / MATCH[arm] / "mixture_manifest.json").read_text())["ei_stats"]
             ei[arm], ei_stats[arm] = ei_rows(src, args.max_per_prompt, args.ei_repeat, args.n_ours - args.n_lib,
-                                             args.seed, match)
+                                             args.seed, match, hardened=arm in HARDENED)
             print("EI", arm, json.dumps(ei_stats[arm]), flush=True)
     lib = load_synth(LIBEXT, args.n_lib)
     pool = SCALE / "pool/train_155500.jsonl"

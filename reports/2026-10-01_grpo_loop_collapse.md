@@ -400,7 +400,7 @@ Generator-test faithfulness of L1_cvf with the fixed parser (share of items whos
 What the table and figure show:
 - **The gamed arm's gate validity is mostly hollow.** At 2250, valid .851 drops to valid·prem .186. On the generator test, valid .986 drops to .000.
 - **The peak of honest progress was around step 1750.** Gate valid·prem reached .626 there (cvf .202) before the quote exploit took over.
-- **G16@750 is the best honest policy so far.** Gate valid·prem .295 and gen cvf .654 justify keeping it as the EI round-4 teacher; harvested proofs pass the hardened check by construction, because harvesting now uses d8840c1.
+- **G16@750 is the best honest policy so far.** Gate valid·prem .295 and gen cvf .654 justify keeping it as the EI round-4 teacher. Its harvest ran under the old reward, so the e4 build re-filters it with the hardened premise check. Only 2490 of 7576 passing Dolci proofs (.33) survive, almost all losses being 1–2-word quotes, leaving 295 Dolci prompts (e3: 483). A faithful repair that extends unique 2-word quotes to a 3-word prompt span recovers only 630 more, so it is not used.
 
 **Restarts under d8840c1:**
 
