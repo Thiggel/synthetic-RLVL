@@ -427,3 +427,13 @@ The restarted cvf arm will answer where honest validity converges.
   - Built with the hardened re-filter. The premise check rejected 70% of the passing GSM8K proofs as well.
   - The cap no longer binds, so e4 keeps up to 4 proofs per prompt: 5,221 EI rows from 1,679 prompts. e3 had 4,874 rows from 4,874 prompts at 1 proof each.
   - So e4 − e3 confounds teacher quality with prompt diversity and with quote style (e4 rows always use ≥ 3-word quotes).
+
+*Update 21:40, G15 vs G16 at matched steps.* Both are rescored with the hardened checks: greedy decoding, frozen pre-libext checker, `scripts/analysis/l1_convergence.py::rescored`. G15 is the same recipe as G16 but without the no-proof penalty, and still runs on the old reward. It shows no `x; given` in its rollouts through step 815.
+
+| model | gate valid | gate valid·prem | gate cvf | gate correct | gen valid·prem | gen cvf | gen correct |
+|---|---|---|---|---|---|---|---|
+| G15@500 | .195 | .093 | .045 | .279 | .642 | .641 | .916 |
+| G15@750 | .346 | .147 | .079 | .280 | .608 | .605 | .873 |
+| G16@750 | .623 | .295 | .113 | .248 | .701 | .654 | .886 |
+
+At step 750, the no-proof penalty doubles gate valid·prem (.147 → .295) and raises gate cvf by .034. It costs .032 gate correctness. On generator items both arms are close, with G16 slightly ahead. G15 is still improving on the gate between 500 and 750. Its final checkpoint, due in about 6 h, will show whether it catches up or plateaus.
