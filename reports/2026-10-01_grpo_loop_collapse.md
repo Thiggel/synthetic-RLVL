@@ -418,3 +418,12 @@ G15 stays on the old reward to the end as G16's matched control; its rollouts so
 The restarted cvf arm will answer where honest validity converges.
 
 **Lesson, beyond §12:** every premise check must bind the formal claim to specific prompt text. A check that is satisfiable by any substring (a number, a single token) gets found within a few hundred steps.
+
+*Update 18:25:*
+- **L1_correct@2000:** gate correct .453 (training benches .557, OOD .160), generator test .947, validity 0. Gate correctness has held at .45–.47 since step 1500, so the correct-only arm has converged.
+- **L1_cvf resume is healthy under d8840c1:** the first 15 rollout steps (782–796) give cvf .26, valid .31, correct .43, prem_ok .75. The old run gave cvf .20–.32 over steps 700–800. Rollouts with `x; given` lines: .004.
+- **G17 restart, first 21 steps:** cvf .26.
+- **e4 mixture:**
+  - Built with the hardened re-filter. The premise check rejected 70% of the passing GSM8K proofs as well.
+  - The cap no longer binds, so e4 keeps up to 4 proofs per prompt: 5,221 EI rows from 1,679 prompts. e3 had 4,874 rows from 4,874 prompts at 1 proof each.
+  - So e4 − e3 confounds teacher quality with prompt diversity and with quote style (e4 rows always use ≥ 3-word quotes).
