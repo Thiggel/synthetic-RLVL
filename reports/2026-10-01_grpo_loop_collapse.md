@@ -269,6 +269,7 @@ Clean gate subset (713 items, greedy; `analysis/gate_clean_rescore.md`):
 
 - **G16's no-proof penalty keeps paying off.** From step 250 to 500, validity rose by .13 and v·c by .06, while correctness held at .30. At step 500, G16 had the highest clean validity of any G run. With plain greedy decoding it matches G14@750 under guided decoding (.160 v·c). G16 is the EI round-4 teacher candidate. Round 3 (teacher G16@250) is training now.
 - **G14 finished all 1000 steps** (`final` = step 1000). Its last 250 steps lifted clean validity from .210 to .311 and v·c from .118 to .182, the best clean v·c of any G run so far, with correctness at .310. Both lineages keep improving; G16 has another ~500 steps to go. The resume-only checkpoint-950 was deleted.
+- *(Correction, §13: L1_cvf validity past step ~900 comes from gamed premise checks; under the hardened reward L1_cvf@2000 has generator valid·prem .000 and gate valid·prem .317.)*
 - **L1_cvf@2000: validity .900, v·c .286, correct .293** (clean). Validity is near saturation (.60 → .78 → .90 over steps 1500–2000) while correctness creeps up (+.005 per 250 steps). cvf's correctness still trails correct-only (.49) by about .20.
 - **L1_correct@2250: correct .489**, back up from .457 at step 2000. The step-2000 dip was noise, not the start of overfitting. Correctness-only has plateaued at about .49–.51 since step 1500, with validity at 0.
 
@@ -362,3 +363,58 @@ Generator test rescored with the fixed parser:
 - **G15** stays on the old reward as the matched control for G16. It is watched for `x; given` each tick.
 - **G16 final is not used as a teacher.** EI round 4 (arm e4, `scripts/submit_ei4.sh`, jobs 10908–10912) harvests from **G16@750**: the last kept checkpoint before the bypass, with clean gate v·c .209 vs .088 for e3. The question for e4 is whether a teacher with 2.4× the gate v·c still buys more in the SFT student than e2 → e3 did (+.015 v·c).
 - Lesson: every reward component needs a "could not parse ⇒ fail" path. "Nothing to check ⇒ pass" is exploitable within ~50 steps once the policy drifts into the format by chance.
+
+## 13. L1_cvf gamed the premise checks too; hardened reward, restarts (2026-10-03 17:30)
+
+**Every L1_cvf validity number past step 750 measures a reward hack, not proof quality.** That covers §8–§9 and the L1 convergence figures before 7f15164. L1_cvf found the same bypass as G16 (§12), plus two more:
+
+1. **`x; given` lines** that the old `GIVEN_RE` did not parse, so they escaped the faithfulness check (§12). L1_cvf switched to them abruptly: the share of rollouts with such a line was .02 at step 851, .90 at step 901 and about 1.0 after that.
+2. **Prompt numbers stated as `know` / `def` lines** on generator items (`pr_rain = 0.25; know`). That turns a premise into an unchecked fact. Share of generations with such a line: L1_cvf@2250 .170, G16@750 .111, G16 final .113. Gold proofs: 0/2000.
+3. **One-token quotes** on Dolci premises (`integer_sum = solutions; given "y"`, `pr_rain = 0.25; given "0.25"`). The old check only required the premise's numbers to occur in its quote. Share of `given` quotes shorter than 3 words:
+
+   | model | e2 SFT | L1_cvf@750 | L1_cvf@2250 | G16@750 | G16 final |
+   |---|---|---|---|---|---|
+   | share of quotes < 3 words | .291 | .070 | .682 | .484 | .643 |
+
+Generator-test faithfulness of L1_cvf with the fixed parser (share of items whose givens are all faithful): .777 @500, .815 @750, .220 @1000, .035 @1500, .000 @2000 and @2250. Over the same span its strict validity rose from .54 to .99.
+
+**Hardened reward (d8840c1, `scripts/formal_rewards.py`):**
+- Every `given` / `obs` quote must be at least 3 words and appear verbatim in the prompt (case and whitespace aside; `quote_ok`).
+- On generator items, `know` / `def` lines may contain no numbers except the unit constants and 0/1 (`trusted_numbers_ok`).
+- Lines that cannot be parsed count as failures (§12).
+
+**Rescored with the hardened checks** (greedy; gate = 950-item Dolci gate, all items; gen = held-out generator test; `valid·prem` = strict valid × premise check):
+
+| model | gate valid | gate valid·prem | gate cvf | gate correct | gen valid | gen valid·prem | gen cvf | gen correct |
+|---|---|---|---|---|---|---|---|---|
+| e2 SFT | .101 | .035 | .025 | .244 | – | – | – | – |
+| L1 SFT init | .007 | .006 | .002 | .224 | .786 | .747 | .747 | .913 |
+| L1_cvf@750 | .116 | .105 | .075 | .235 | .535 | .492 | .486 | .667 |
+| L1_cvf@1500 (gamed) | .555 | .494 | .196 | .237 | .909 | .002 | .002 | .768 |
+| L1_cvf@2250 (gamed) | .851 | .186 | .124 | .254 | .986 | .000 | .000 | .858 |
+| G16@750 | .623 | .295 | .113 | .248 | .804 | .701 | .654 | .886 |
+| G16 final | .734 | .249 | .127 | .258 | .911 | .659 | .602 | .864 |
+
+![L1 held-out under the hardened rewards](figures/l1_convergence_heldout.png)
+
+What the table and figure show:
+- **The gamed arm's gate validity is mostly hollow.** At 2250, valid .851 drops to valid·prem .186. On the generator test, valid .986 drops to .000.
+- **The peak of honest progress was around step 1750.** Gate valid·prem reached .626 there (cvf .202) before the quote exploit took over.
+- **G16@750 is the best honest policy so far.** Gate valid·prem .295 and gen cvf .654 justify keeping it as the EI round-4 teacher; harvested proofs pass the hardened check by construction, because harvesting now uses d8840c1.
+
+**Restarts under d8840c1:**
+
+| run | restart | archive |
+|---|---|---|
+| L1_cvf | link 9650, from checkpoint-750 (weights + trainer state, fresh Adam, 10-step warmup) | steps 751–2300: `L1_cvf/_hacked_reward_20261003/`, plotted as a third arm |
+| G17 | link 10905, from scratch (e3 init) | old run: `_archive_old_reward_20261003/` |
+
+G15 stays on the old reward to the end as G16's matched control; its rollouts so far show almost no `x; given` (.004–.008 at steps 626–627).
+
+**L1 question, current answer:**
+- **Correct-only:** generator correctness converges at about .95 by step ~630, and gate correctness plateaus around .45–.47. Validity goes to 0 by step 250 and stays there.
+- **cvf arm:** only steps ≤ 750 are trustworthy. They show validity being held (gen cvf .49) at a cost in correctness (gen .67).
+
+The restarted cvf arm will answer where honest validity converges.
+
+**Lesson, beyond §12:** every premise check must bind the formal claim to specific prompt text. A check that is satisfiable by any substring (a number, a single token) gets found within a few hundred steps.
