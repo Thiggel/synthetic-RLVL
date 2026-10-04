@@ -13,6 +13,8 @@ valid_s2 = Stage-2 valid (rlvl strict + hardening + stated premise numbers); cvf
 | guided DFS + fallback | 0.520 | 0.207 | 0.067 | 3102 |
 | MCTS none/one | 0.470 | 0.060 | 0.060 | 6357 |
 | MCTS none/one + fallback | 0.490 | 0.207 | 0.060 | 6552 |
+| MCTS probe/probe | 0.523 | 0.073 | 0.073 | 6053 |
+| MCTS probe/probe + fallback | 0.540 | 0.203 | 0.073 | 6228 |
 
 Per bench: valid_s2 / correct / cvf
 
@@ -27,6 +29,9 @@ Per bench: valid_s2 / correct / cvf
 | guided DFS + fallback | 0.55 / 0.08 / 0.02 | 0.65 / 0.00 / 0.00 | 0.62 / 0.07 / 0.02 | 0.40 / 0.38 / 0.10 | 0.38 / 0.50 / 0.20 |
 | MCTS none/one | 0.53 / 0.00 / 0.00 | 0.72 / 0.00 / 0.00 | 0.50 / 0.02 / 0.02 | 0.30 / 0.12 / 0.12 | 0.30 / 0.17 / 0.17 |
 | MCTS none/one + fallback | 0.53 / 0.07 / 0.00 | 0.75 / 0.00 / 0.00 | 0.50 / 0.08 / 0.02 | 0.33 / 0.40 / 0.12 | 0.33 / 0.48 / 0.17 |
+| MCTS probe/probe | 0.55 / 0.02 / 0.02 | 0.68 / 0.00 / 0.00 | 0.60 / 0.02 / 0.02 | 0.30 / 0.08 / 0.08 | 0.48 / 0.25 / 0.25 |
+| MCTS probe/probe + fallback | 0.57 / 0.08 / 0.02 | 0.72 / 0.00 / 0.00 | 0.60 / 0.08 / 0.02 | 0.32 / 0.37 / 0.08 | 0.50 / 0.48 / 0.25 |
 
 - **guided DFS**: found 156/300; correct on found 0.128 vs greedy on the same items 0.128 (greedy on not-found items 0.292)
 - **MCTS none/one**: found 141/300; correct on found 0.128 vs greedy on the same items 0.128 (greedy on not-found items 0.277)
+- **MCTS probe/probe**: found 157/300; correct on found 0.140 vs greedy on the same items 0.146 (greedy on not-found items 0.273)

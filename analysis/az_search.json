@@ -296,6 +296,72 @@
     "correct": 0.48333333333333334,
     "cvf": 0.16666666666666666
    }
+  },
+  "MCTS probe/probe": {
+   "all": {
+    "valid_s2": 0.5233333333333333,
+    "correct": 0.07333333333333333,
+    "cvf": 0.07333333333333333,
+    "tokens": 6052.796666666667
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.55,
+    "correct": 0.016666666666666666,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.6833333333333333,
+    "correct": 0.0,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.6,
+    "correct": 0.016666666666666666,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.3,
+    "correct": 0.08333333333333333,
+    "cvf": 0.08333333333333333
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.48333333333333334,
+    "correct": 0.25,
+    "cvf": 0.25
+   }
+  },
+  "MCTS probe/probe + fallback": {
+   "all": {
+    "valid_s2": 0.54,
+    "correct": 0.20333333333333334,
+    "cvf": 0.07333333333333333,
+    "tokens": 6227.663333333333
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.5666666666666667,
+    "correct": 0.08333333333333333,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.7166666666666667,
+    "correct": 0.0,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.6,
+    "correct": 0.08333333333333333,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.31666666666666665,
+    "correct": 0.36666666666666664,
+    "cvf": 0.08333333333333333
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.5,
+    "correct": 0.48333333333333334,
+    "cvf": 0.25
+   }
   }
  },
  "found": {
@@ -310,6 +376,12 @@
    "correct_found": 0.1276595744680851,
    "greedy_correct_same": 0.1276595744680851,
    "greedy_correct_notfound": 0.27672955974842767
+  },
+  "MCTS probe/probe": {
+   "n_found": 157,
+   "correct_found": 0.14012738853503184,
+   "greedy_correct_same": 0.1464968152866242,
+   "greedy_correct_notfound": 0.2727272727272727
   }
  }
 }

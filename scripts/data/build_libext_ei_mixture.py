@@ -44,6 +44,9 @@ AlphaZero round 1 (2026-10-04, Stage 3): arm az1 = e4 + the proofs MCTS self-pla
 round-1 prompts (scripts/az/harvest_selfplay.py: gold terminal, kept only if correct * valid_s2 * prem_ok), half of them
 prompts the G16@750 teacher never solved in 16 samples. Same cap, recipe and hardened filter, so az1 - e4 = what
 search adds to sampling-based self-distillation (proofs on harder prompts).
+EI round 5 (2026-10-04): arm e5 = e4 + passing proofs from 32 samples of the e4 student itself on the same round-1
+prompts (gsm8k_train + 1,000 Dolci), the matched sampling control of az1: at ~matched tokens sampling pass@32 solved
+2x (mixed) to 4x (zero) more prompts than MCTS (analysis/az_vs_sampling.md), so e5 is the next self-distillation round.
 Writes <out-root>/<arm> (DatasetDict + mixture_manifest.json); existing arms are skipped. Run with .venv_rlvl_grpo.
 """
 from __future__ import annotations
@@ -75,15 +78,16 @@ HARVEST3 = [DATA / "rl_filter_20261003/G16c250_cvf_n16_dolci.json.passing.jsonl"
 HARVEST4 = [DATA / "rl_filter_20261003/G16c750_cvf_n16_dolci.json.passing.jsonl",
             DATA / "rl_filter_20261003/G16c750_cvf_n16_gsm8k.json.passing.jsonl"]
 AZ1 = [DATA / "az/selfplay_r1/harvest_r1.passing.jsonl"]
+E5S = [DATA / "az/selfplay_r1/sample_e4_n32.json.passing.jsonl", DATA / "az/selfplay_r1/sample_e4_n32_dolci.json.passing.jsonl"]
 EI_SRC = {"e": HARVEST, "le": HARVEST, "e2": HARVEST2, "e2s": HARVEST2, "e3": HARVEST3, "e4": HARVEST4,
-          "az1": HARVEST4 + AZ1}
+          "az1": HARVEST4 + AZ1, "e5": HARVEST4 + E5S}
 MATCH = {"e2s": "e"}  # arm -> arm whose EI size (prompts per bench, rows) it copies
 REAL = ("dolci_wordprob", "dolci_math", "gsm8k_train")
 INIT = "formal_mixture_sft_20260925/qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407/final"
 GIVEN = re.compile(r'(?m)^\d+ .*? ; given "(.*)"\s*$')
 PREMISE_LINE = re.compile(r"(?m)^.*;\s*(given|obs)\b.*$")
 PREMISE_OK = re.compile(r'^\d+ .*? ; (?:given|obs) "(.*)"\s*$')
-HARDENED = {"e4", "az1"}  # arms whose harvest is re-filtered with the hardened premise check (d8840c1)
+HARDENED = {"e4", "az1", "e5"}  # arms whose harvest is re-filtered with the hardened premise check (d8840c1)
 ASKS = re.compile(r"\?|\b(how (many|much|long|far|old|often)|what|which|find|calculate|compute|determine)\b", re.I)
 
 
@@ -206,7 +210,8 @@ def main() -> None:
              "e2s": lambda: ei["e2s"] + gen[:n - len(ei["e2s"])],
              "e3": lambda: ei["e3"] + gen[:n - len(ei["e3"])],
              "e4": lambda: ei["e4"] + gen[:n - len(ei["e4"])],
-             "az1": lambda: ei["az1"] + gen[:n - len(ei["az1"])]}
+             "az1": lambda: ei["az1"] + gen[:n - len(ei["az1"])],
+             "e5": lambda: ei["e5"] + gen[:n - len(ei["e5"])]}
     for arm in arms:
         out = args.out_root / arm
         if out.exists():

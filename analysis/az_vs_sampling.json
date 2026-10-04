@@ -1,0 +1,88 @@
+{
+ "results": {
+  "sampling pass@1": {
+   "all|mixed": {
+    "solved": 0.25420403587443946,
+    "n": 223
+   },
+   "all|zero": {
+    "solved": 0.009141156462585034,
+    "n": 147
+   },
+   "gsm8k_train|mixed": {
+    "solved": 0.25420403587443946,
+    "n": 223
+   },
+   "gsm8k_train|zero": {
+    "solved": 0.009141156462585034,
+    "n": 147
+   }
+  },
+  "sampling pass@8": {
+   "all|mixed": {
+    "solved": 0.42323102775947763,
+    "n": 223
+   },
+   "all|zero": {
+    "solved": 0.04477281803835117,
+    "n": 147
+   },
+   "gsm8k_train|mixed": {
+    "solved": 0.42323102775947763,
+    "n": 223
+   },
+   "gsm8k_train|zero": {
+    "solved": 0.04477281803835117,
+    "n": 147
+   }
+  },
+  "sampling pass@32": {
+   "all|mixed": {
+    "solved": 0.5022421524663677,
+    "n": 223
+   },
+   "all|zero": {
+    "solved": 0.07482993197278912,
+    "n": 147
+   },
+   "gsm8k_train|mixed": {
+    "solved": 0.5022421524663677,
+    "n": 223
+   },
+   "gsm8k_train|zero": {
+    "solved": 0.07482993197278912,
+    "n": 147
+   }
+  },
+  "MCTS (commit)": {
+   "all|mixed": {
+    "solved": 0.23766816143497757,
+    "n": 223
+   },
+   "all|zero": {
+    "solved": 0.02040816326530612,
+    "n": 147
+   },
+   "gsm8k_train|mixed": {
+    "solved": 0.23766816143497757,
+    "n": 223
+   },
+   "gsm8k_train|zero": {
+    "solved": 0.02040816326530612,
+    "n": 147
+   },
+   "tokens": 9237.427027027026
+  }
+ },
+ "head_to_head_zero": {
+  "MCTS (commit)": {
+   "zero_prompts": 147,
+   "search_only": 1,
+   "sampling_only": 9
+  }
+ },
+ "n_ids": 370,
+ "sampling_files": [
+  "/vol/tmp2/laitenbf/rlvl_data/az/selfplay_r1/sample_e4_n32.json"
+ ]
+}
