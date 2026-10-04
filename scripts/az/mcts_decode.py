@@ -77,6 +77,7 @@ class Item:
         self.gen_tokens = 0
         self.n_cands = 0
         self.fail = collections.Counter()
+        self.wrong_terminals = 0
         self.moves = []             # per committed move: the policy target
         self.leaf = None            # leaf awaiting expansion this round
         self.path = None
@@ -156,6 +157,10 @@ def main():
     ap.add_argument("--probe", default="/vol/tmp2/laitenbf/rlvl_data/az/value_probe_e4/probe_cvf.pt")
     ap.add_argument("--terminal", choices=("probe", "gold", "one"), default="probe",
                     help="value of a finished Stage-2-valid proof: probe (test time), gold cvf (self-play), 1 (search for any proof)")
+    ap.add_argument("--solve", action="store_true",
+                    help="data-generation mode (needs --terminal gold): no move commitment; a gold-wrong terminal is "
+                         "dead and backs up 0, the search continues from the root until a gold-correct terminal "
+                         "(found) or the expansion budget (budget)")
     ap.add_argument("--no-prune", action="store_true", help="ablation: no checker pruning before the terminal check")
     ap.add_argument("--max-expansions", type=int, default=64)
     ap.add_argument("--max-lines", type=int, default=48)
@@ -167,6 +172,8 @@ def main():
     ap.add_argument("--max-model-len", type=int, default=16384)
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
+    if args.solve and args.terminal != "gold":
+        ap.error("--solve needs --terminal gold")
     args.max_new_tokens = args.max_proof_tokens
     rng = random.Random(args.seed)
 
@@ -239,7 +246,7 @@ def main():
                 if it.root.dead or (it.root.expanded and not it.root.children and it.root.expansions >= 2):
                     finish(it, "exhausted")
                     break
-                if it.root.N - it.move_start >= args.sims and it.root.children:
+                if not args.solve and it.root.N - it.move_start >= args.sims and it.root.children:
                     commit(it)
                     continue
                 node, path = it.root, [it.root]
@@ -254,7 +261,8 @@ def main():
                     continue
                 if it.expansions >= args.max_expansions:
                     # out of budget: commit the best line found so far, if any
-                    best = max((c for c in it.root.children if c.terminal), key=lambda c: c.term_value, default=None)
+                    best = None if args.solve else max((c for c in it.root.children if c.terminal),
+                                                       key=lambda c: c.term_value, default=None)
                     if best is not None:
                         finish(it, "found", OPEN + "".join(best.lines) + "</proof>\nAnswer: " + _ANS.match(best.line).group(1))
                     else:
@@ -338,6 +346,12 @@ def main():
                 if term:
                     ch.terminal = True
                     ch.term_value = gold
+                    if args.solve and not it.done:
+                        if gold >= 1:
+                            finish(it, "found", OPEN + "".join(ch.lines) + "</proof>\nAnswer: " + _ANS.match(line).group(1))
+                        else:
+                            ch.dead = True
+                            it.wrong_terminals += 1
                     if args.terminal == "probe":
                         vq.append(ids_of(it, ch.lines)); vowners.append(ch)
                 node.children.append(ch)
@@ -365,7 +379,7 @@ def main():
                 else:
                     backup(path, 0.0)  # counts as a visit; the leaf is re-expanded on its next selection
                 continue
-            backup(path, node.v)
+            backup(path, 0.0 if args.solve and any(ch.terminal and ch.dead for ch in node.children) else node.v)
         n_done = sum(it.done for it in items)
         n_found = sum(it.status == "found" for it in items)
         print(f"[round {rounds}] leaves {len(need)} gen {tg:.1f}s check {tc:.1f}s ({len(jobs)} lines) value {tv:.1f}s "
@@ -387,7 +401,7 @@ def main():
                      generation=text, gen_tokens=it.gen_tokens,
                      proof_tokens=len(tok(text, add_special_tokens=False)["input_ids"]), finish_reason=it.status,
                      truncated=rec.get("truncated", False), found=it.status == "found", expansions=it.expansions,
-                     n_cands=it.n_cands, n_moves=len(it.moves), n_lines=text.count("\n"), fail=dict(it.fail))
+                     n_cands=it.n_cands, n_moves=len(it.moves), wrong_terminals=it.wrong_terminals, n_lines=text.count("\n"), fail=dict(it.fail))
             flat.append(r)
             f.write(json.dumps(r, default=str) + "\n")
             fs.write(json.dumps({"id": rec["id"], "cvf": r["cvf"], "correct": r["correct"], "moves": it.moves}) + "\n")
