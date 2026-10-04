@@ -50,6 +50,23 @@
    "correct": 0.2819
   }
  },
+ "e5 (SFT)": {
+  "step": 0,
+  "all": {
+   "n": 950,
+   "valid": 0.42,
+   "valid_prem": 0.2337,
+   "cvf": 0.0505,
+   "correct": 0.2589
+  },
+  "clean": {
+   "n": 713,
+   "valid": 0.3941,
+   "valid_prem": 0.2286,
+   "cvf": 0.0547,
+   "correct": 0.2819
+  }
+ },
  "G16 (from e2)@250": {
   "run": "G16 (from e2)",
   "step": 250,

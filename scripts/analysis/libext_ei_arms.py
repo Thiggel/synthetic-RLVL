@@ -18,6 +18,9 @@ EI round 3 (2026-10-03): e3 = e with the harvest from G16 checkpoint-250 (no-pro
 (4874 rows / prompts) vs e2's up to several per prompt (6776 rows / 2512 prompts): e3 - e2 mixes teacher and data shape.
 EI round 4 (2026-10-03): e4 = e with the harvest from G16 checkpoint-750, re-filtered with the hardened reward (premise
 numbers stated), up to 4 proofs per prompt (5221 rows / 1679 prompts): e4 - e3 mixes teacher, filter and data shape.
+EI round 5 (2026-10-04): e5 = e4's harvest + the e4 student's own passing samples (32 per prompt, hardened filter) on the
+round-1 self-play prompts (sampling beat MCTS at matched tokens, analysis/az_vs_sampling.md): e5 - e4 = one round of
+self-distillation.
 Writes analysis/libext_ei_arms.{md,json}, reports/figures/libext_ei_arms.{png,pdf}.
 """
 from __future__ import annotations
@@ -33,10 +36,11 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 SFT = Path("/vol/tmp2/laitenbf/rlvl_data/formal_mixture_sft_20260925")
 RUNS = {"base": SFT / "qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407",
-        **{a: SFT / f"qwen35_2b_lc_libext_{a}_lr5em6_seed3407" for a in ("c", "l", "e", "le", "e2", "e2s", "e3", "e4")}}
+        **{a: SFT / f"qwen35_2b_lc_libext_{a}_lr5em6_seed3407" for a in ("c", "l", "e", "le", "e2", "e2s", "e3", "e4", "e5")}}
 LABEL = {"base": "base (L1 init)", "c": "c: +fresh gen", "l": "l: +new families", "e": "e: +EI proofs",
          "le": "le: +both", "e2": "e2: +EI from RL teacher", "e2s": "e2s: e2 harvest cut to e size",
-         "e3": "e3: +EI from G16@250, 1/prompt", "e4": "e4: +EI from G16@750, hardened, <=4/prompt"}
+         "e3": "e3: +EI from G16@250, 1/prompt", "e4": "e4: +EI from G16@750, hardened, <=4/prompt",
+         "e5": "e5: e4 + e4 self-samples (n=32), hardened"}
 BENCHES = ["dolci_wordprob", "dolci_math", "dolci_yesno", "dolci_dapo", "dolci_knowledge"]
 KS = ["@1", "@2", "@4", "@8", "@16"]
 REPO = Path(__file__).resolve().parents[2]
@@ -53,7 +57,8 @@ CONTRASTS = {"EI, no new families (e - c)": lambda x: x["e"] - x["c"],
              "teacher quality at e's size (e2s - e)": lambda x: x["e2s"] - x["e"],
              "harvest quantity (e2 - e2s)": lambda x: x["e2"] - x["e2s"],
              "EI round 3 (e3 - e2)": lambda x: x["e3"] - x["e2"],
-             "EI round 4 (e4 - e3)": lambda x: x["e4"] - x["e3"]}
+             "EI round 4 (e4 - e3)": lambda x: x["e4"] - x["e3"],
+             "EI round 5 (e5 - e4)": lambda x: x["e5"] - x["e4"]}
 
 
 def load(run: Path) -> dict | None:
@@ -89,7 +94,7 @@ def contrasts(n_boot: int = 2000) -> dict:
     out = {}
     for evl in ("rl_gate_dolci", "rl_gate_dolci_k16"):
         for m in ("valid", "valid_correct"):
-            pp = {a: per_prompt(RUNS[a], evl, m) for a in ("c", "l", "e", "le", "e2", "e2s", "e3", "e4")}
+            pp = {a: per_prompt(RUNS[a], evl, m) for a in ("c", "l", "e", "le", "e2", "e2s", "e3", "e4", "e5")}
             for sub in ("all", "clean"):
                 ids = sorted(i for i in pp["c"] if sub == "all" or i in clean)
                 x = {a: np.array([v[i] for i in ids]) for a, v in pp.items()}
@@ -104,7 +109,7 @@ def contrasts(n_boot: int = 2000) -> dict:
 
 def main() -> None:
     res = {a: r for a, run in RUNS.items() if (r := load(run)) is not None}
-    con = contrasts() if all(a in res for a in ("c", "l", "e", "le", "e2", "e2s", "e3", "e4")) else {}
+    con = contrasts() if all(a in res for a in ("c", "l", "e", "le", "e2", "e2s", "e3", "e4", "e5")) else {}
     OUT_JSON.write_text(json.dumps(res | {"contrasts": con}, indent=1) + "\n")
     t = [("gate greedy valid", lambda r: r["greedy"]["valid"]),
          ("gate greedy valid·correct", lambda r: r["greedy"]["valid_correct"]),
