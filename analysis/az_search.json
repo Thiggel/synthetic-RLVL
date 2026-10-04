@@ -1,0 +1,315 @@
+{
+ "variants": {
+  "greedy": {
+   "all": {
+    "valid_s2": 0.18666666666666668,
+    "correct": 0.20666666666666667,
+    "cvf": 0.02,
+    "tokens": 250.82333333333332
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.23333333333333334,
+    "correct": 0.08333333333333333,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.21666666666666667,
+    "correct": 0.0,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.26666666666666666,
+    "correct": 0.06666666666666667,
+    "cvf": 0.0
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.13333333333333333,
+    "correct": 0.38333333333333336,
+    "cvf": 0.06666666666666667
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.08333333333333333,
+    "correct": 0.5,
+    "cvf": 0.016666666666666666
+   }
+  },
+  "k16 mean": {
+   "all": {
+    "valid_s2": 0.128125,
+    "correct": 0.20375,
+    "cvf": 0.017916666666666668,
+    "tokens": 216.95104166666667
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.14166666666666666,
+    "correct": 0.03854166666666667,
+    "cvf": 0.007291666666666667
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.15,
+    "correct": 0.004166666666666667,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.18958333333333333,
+    "correct": 0.052083333333333336,
+    "cvf": 0.0020833333333333333
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.10729166666666666,
+    "correct": 0.378125,
+    "cvf": 0.04895833333333333
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.052083333333333336,
+    "correct": 0.5458333333333333,
+    "cvf": 0.03125
+   }
+  },
+  "k16 majority": {
+   "all": {
+    "valid_s2": 0.12,
+    "correct": 0.24333333333333335,
+    "cvf": 0.013333333333333334,
+    "tokens": 3471.2166666666667
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.15,
+    "correct": 0.03333333333333333,
+    "cvf": 0.0
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.13333333333333333,
+    "correct": 0.0,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.21666666666666667,
+    "correct": 0.06666666666666667,
+    "cvf": 0.0
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.08333333333333333,
+    "correct": 0.43333333333333335,
+    "cvf": 0.05
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.016666666666666666,
+    "correct": 0.6833333333333333,
+    "cvf": 0.016666666666666666
+   }
+  },
+  "k16 first-valid": {
+   "all": {
+    "valid_s2": 0.54,
+    "correct": 0.19666666666666666,
+    "cvf": 0.09,
+    "tokens": 3471.2166666666667
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.5333333333333333,
+    "correct": 0.06666666666666667,
+    "cvf": 0.06666666666666667
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.8,
+    "correct": 0.0,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.55,
+    "correct": 0.05,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.4,
+    "correct": 0.35,
+    "cvf": 0.11666666666666667
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.4166666666666667,
+    "correct": 0.5166666666666667,
+    "cvf": 0.25
+   }
+  },
+  "k16 pass@16 (oracle)": {
+   "all": {
+    "valid_s2": 0.54,
+    "correct": 0.43666666666666665,
+    "cvf": 0.1,
+    "tokens": 3471.2166666666667
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.5333333333333333,
+    "correct": 0.26666666666666666,
+    "cvf": 0.06666666666666667
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.8,
+    "correct": 0.05,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.55,
+    "correct": 0.26666666666666666,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.4,
+    "correct": 0.6666666666666666,
+    "cvf": 0.15
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.4166666666666667,
+    "correct": 0.9333333333333333,
+    "cvf": 0.26666666666666666
+   }
+  },
+  "guided DFS": {
+   "all": {
+    "valid_s2": 0.52,
+    "correct": 0.06666666666666667,
+    "cvf": 0.06666666666666667,
+    "tokens": 2923.75
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.55,
+    "correct": 0.016666666666666666,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.65,
+    "correct": 0.0,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.6166666666666667,
+    "correct": 0.016666666666666666,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.4,
+    "correct": 0.1,
+    "cvf": 0.1
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.38333333333333336,
+    "correct": 0.2,
+    "cvf": 0.2
+   }
+  },
+  "guided DFS + fallback": {
+   "all": {
+    "valid_s2": 0.52,
+    "correct": 0.20666666666666667,
+    "cvf": 0.06666666666666667,
+    "tokens": 3102.16
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.55,
+    "correct": 0.08333333333333333,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.65,
+    "correct": 0.0,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.6166666666666667,
+    "correct": 0.06666666666666667,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.4,
+    "correct": 0.38333333333333336,
+    "cvf": 0.1
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.38333333333333336,
+    "correct": 0.5,
+    "cvf": 0.2
+   }
+  },
+  "MCTS none/one": {
+   "all": {
+    "valid_s2": 0.47,
+    "correct": 0.06,
+    "cvf": 0.06,
+    "tokens": 6357.166666666667
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.5333333333333333,
+    "correct": 0.0,
+    "cvf": 0.0
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.7166666666666667,
+    "correct": 0.0,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.5,
+    "correct": 0.016666666666666666,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.3,
+    "correct": 0.11666666666666667,
+    "cvf": 0.11666666666666667
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.3,
+    "correct": 0.16666666666666666,
+    "cvf": 0.16666666666666666
+   }
+  },
+  "MCTS none/one + fallback": {
+   "all": {
+    "valid_s2": 0.49,
+    "correct": 0.20666666666666667,
+    "cvf": 0.06,
+    "tokens": 6552.333333333333
+   },
+   "dolci_dapo": {
+    "valid_s2": 0.5333333333333333,
+    "correct": 0.06666666666666667,
+    "cvf": 0.0
+   },
+   "dolci_knowledge": {
+    "valid_s2": 0.75,
+    "correct": 0.0,
+    "cvf": 0.0
+   },
+   "dolci_math": {
+    "valid_s2": 0.5,
+    "correct": 0.08333333333333333,
+    "cvf": 0.016666666666666666
+   },
+   "dolci_wordprob": {
+    "valid_s2": 0.3333333333333333,
+    "correct": 0.4,
+    "cvf": 0.11666666666666667
+   },
+   "dolci_yesno": {
+    "valid_s2": 0.3333333333333333,
+    "correct": 0.48333333333333334,
+    "cvf": 0.16666666666666666
+   }
+  }
+ },
+ "found": {
+  "guided DFS": {
+   "n_found": 156,
+   "correct_found": 0.1282051282051282,
+   "greedy_correct_same": 0.1282051282051282,
+   "greedy_correct_notfound": 0.2916666666666667
+  },
+  "MCTS none/one": {
+   "n_found": 141,
+   "correct_found": 0.1276595744680851,
+   "greedy_correct_same": 0.1276595744680851,
+   "greedy_correct_notfound": 0.27672955974842767
+  }
+ }
+}
