@@ -462,3 +462,14 @@ Validity and correctness both rose between steps 750 and 1000. Gate valid and va
 - **G16@750 remains the best checkpoint by gate valid·prem (.295)**, so it stays the EI round-4 teacher. G15 final is the best honest end-of-run policy.
 
 L1_correct@2250: gate correct .458, gen correct .957, validity 0. This is unchanged from @2000, so correct-only stays converged.
+
+*Update 09:45 (2026-10-04): L1_cvf@1250, L1_correct@2500 (hardened rescore, old checker; `analysis/l1_convergence.json`, figures regenerated)*
+
+| L1_cvf | gate valid | gate valid·prem | gate cvf | gate correct | OOD valid·prem | gen valid·prem | gen cvf | gen correct |
+|---|---|---|---|---|---|---|---|---|
+| @1000 | .203 | .198 | .119 | .246 | .192 | .663 | .638 | .768 |
+| @1250 | .265 | .261 | .157 | .259 | .248 | .694 | .632 | .792 |
+
+- **L1_cvf keeps climbing on the hardened reward.** Gate cvf rose .075 → .119 → .157 over 750/1000/1250, with no sign of gaming: valid·prem is within .004 of valid, and `x; given` is not seen. Gate correctness is creeping up (.235 → .259). Gen-test correctness (.79) is still below the base (.91).
+- **L1_correct@2500:** gate correct .439 (2250: .458). It has been on a plateau at .44–.47 since step 1250, with validity 0.
+- At step 1250, the correctness gap between the two arms is .44 vs .26.
