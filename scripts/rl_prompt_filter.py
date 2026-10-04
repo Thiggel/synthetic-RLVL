@@ -42,6 +42,8 @@ def main():
     ap.add_argument("--gpu-mem", type=float, default=0.85)
     ap.add_argument("--exclude-ids", default=None,
                     help="contamination.json (scripts/analysis/gate_contamination.py): drop its pool_exclude_ids")
+    ap.add_argument("--ids", type=Path, default=None,
+                    help="jsonl with an `id` field (e.g. az/selfplay_r1/prompts_*.jsonl): keep only these prompts")
     args = ap.parse_args()
 
     from transformers import AutoTokenizer
@@ -50,6 +52,10 @@ def main():
     tok = AutoTokenizer.from_pretrained(args.model)
     exclude = set(json.loads(Path(args.exclude_ids).read_text())["pool_exclude_ids"]) if args.exclude_ids else None
     ds = build_dataset(tok, True, None, args.seed, args.benches.split(","), args.max_per_bench, exclude_ids=exclude)
+    if args.ids:
+        keep = {json.loads(line)["id"] for p in str(args.ids).split(",") for line in open(p)}
+        ds = ds.filter(lambda r: r["id"] in keep)
+        assert len(ds) == len(keep), (len(ds), len(keep))
     print(json.dumps({"benches": collections.Counter(ds["bench"]), "n": args.n}), flush=True)
     llm = LLM(args.model, gpu_memory_utilization=args.gpu_mem, max_model_len=8192, seed=args.seed)
     sp = SamplingParams(n=args.n, temperature=args.temperature, max_tokens=args.max_completion_length,
