@@ -402,3 +402,40 @@ Off-gate, e3 reaches T=1 math valid .120 (e2 .035), DAPO valid .064 (e2 .010), k
 - **Next (EI round 4).** The teacher is G16@750 (gate v·c .209, the best G run; §9 of `2026-10-01_grpo_loop_collapse.md`) or G16 final. A GRPO run from e3 tests whether the better init turns into higher v·c under RL. Cheap wins in v·c should come from the teacher and from RL, not from more SFT rows.
 
 **Launched 2026-10-03 11:45: G17** = the G16 recipe (cvf_fmt, truncated completions in the loss, overlong penalty 0.5, no-proof penalty 0.5, 1000 steps, new checker) from e3 final. Run `2b_e3_G17_cvffmt_overlong_noproof`, job 10793 (+ resume link 10794) on gruenau12. Gate evals every 250 steps via `scripts/submit_l1_gates.sh`. Compare to G16 at matched steps: G16@250 clean gate valid / v·c / correct .229 / .102 / .296 from e2 (§9 of `2026-10-01_grpo_loop_collapse.md`).
+
+## 12. 2026-10-04 08:45: EI round 4 (e4). Validity nearly doubles again, correct-and-valid barely moves
+
+e4 uses the e3 recipe with three changes. The teacher is G16@750 instead of G16@250. The harvest is re-filtered with the hardened reward (premise numbers stated in their quotes). The harvest keeps **up to 4** proofs per prompt: 5,221 rows from 1,679 prompts, against e3's 4,874 rows from 4,874 prompts. The figure (`figures/libext_ei_arms.png`) now includes e4, and `analysis/libext_ei_arms.md` has all contrasts.
+
+![EI arms](figures/libext_ei_arms.png)
+
+In the next table, valid is rlvl strict and v·c is valid·correct.
+
+| | gate greedy valid | v·c | correct | T=1 valid / sample | valid@16 | v·c@16 | mixed@8 |
+|---|---|---|---|---|---|---|---|
+| e2 | .153 | .074 | .244 | .104 | .338 | .151 | .251 |
+| e3 | .227 | .088 | .267 | .160 | .556 | .183 | .418 |
+| e4 | .415 | .105 | .257 | .305 | .786 | .258 | .645 |
+
+| contrast e4 − e3 | valid | v·c | T=1 valid / sample | T=1 v·c / sample |
+|---|---|---|---|---|
+| all items | +.187 [+.157, +.219] | +.017 [+.000, +.034] | +.146 [+.130, +.160] | +.015 [+.009, +.022] |
+| clean subset | +.160 [+.122, +.199] | +.011 [−.008, +.032] | +.126 [+.109, +.143] | +.015 [+.007, +.023] |
+
+The next table rescores the greedy gate generations with the GRPO reward (`formal_rewards.components`, new checker). valid·prem additionally requires the premise numbers to be stated. cvf = correct · valid · prem. The rows are e2/e3/e4 here and GRPO checkpoints at step 250; `analysis/libext_ei_hardened_gate.json`.
+
+| greedy gate, hardened | valid | valid·prem | cvf | correct |
+|---|---|---|---|---|
+| e2 (SFT) | .101 | .035 | .025 | .244 |
+| e3 (SFT) | .166 | .068 | .020 | .267 |
+| **e4 (SFT)** | .374 | **.194** | **.040** | .257 |
+| G16@250 (GRPO from e2) | .174 | .084 | .042 | .267 |
+| G17@250 (GRPO from e3) | .197 | .113 | .038 | .266 |
+| G16 final (GRPO from e2, 1000 steps) | .734 | .249 | .127 | .258 |
+
+- **Validity keeps compounding across EI rounds.** Over e→e2→e3→e4, valid@16 went .19→.34→.56→.79 and mixed@8 went .14→.25→.42→.64, so GRPO from e4 gets a learning signal on almost two thirds of the gate prompts. DAPO T=1 valid went .064→.273 and math .120→.361. The generator test is unchanged (.888 valid, .945 answer acc).
+- **Correctness does not follow.** v·c gains only +.011 on the clean subset (CI includes 0). Under the hardened reward, e4's greedy cvf is .040 with valid·prem .194. So ~80% of its premise-valid proofs carry a wrong answer. Gate correct is flat at .26 across all EI rounds. SFT on verified proofs teaches the proof *form* and does not improve the model's arithmetic or modeling.
+- **e4 alone matches 250 GRPO steps.** e4's SFT student equals G16@250 and G17@250 on cvf (.040 vs .042/.038) and beats them on valid·prem (.194 vs .084/.113). It does so for ~8 h of SFT on 2 GPUs. 1000 GRPO steps (G16 final) remain 3× better on cvf.
+- **G17@250 vs G16@250.** The better init (e3 vs e2) raises valid·prem (+.029) and leaves cvf unchanged at step 250. The matched comparison at 500/750/1000 is still pending.
+- **Confound.** e4 − e3 changes the teacher (G16@750 vs @250), the filter (hardened) and the harvest shape (≤4/prompt over 1,679 prompts vs 1/prompt over 4,874) at once. The hardened filter in particular explains why valid·prem rises faster than strict validity (e3: 30% of valid proofs pass prem, e4: 52%).
+- **Next.** GRPO (G16 recipe) from e4 will test whether the higher mixed@8 turns into a faster cvf climb than G17. I will queue it once a gruenau12 slot within the half-node cap is free. The bottleneck for cvf is correctness, which no EI round has moved. Two levers address it: a correctness-weighted EI filter (only keep prompts the teacher solves at pass@k ≥ ½) and the correct-only reward of L1_correct (gate correct .46).
