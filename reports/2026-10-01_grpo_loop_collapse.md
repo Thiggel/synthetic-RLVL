@@ -446,3 +446,19 @@ At step 750, the no-proof penalty doubles gate valid·prem (.147 → .295) and r
 | @1000 (hardened 751→) | .203 | .198 | .119 | .246 | .663 | .638 | .768 |
 
 Validity and correctness both rose between steps 750 and 1000. Gate valid and valid·prem are almost equal (.203 vs .198), so the new gate validity passes the premise checks rather than coming from gamed premises. On the OOD gate benches, valid rose from .048 to .196 while correct stayed at ~.03. There the model writes checked proofs without getting the answer. `l1_convergence_heldout.png` is regenerated.
+
+*Update 03:45 (2026-10-04): G15 finished; final G15 vs G16.* G15 ran all 1000 steps on the old reward and **never found the `x; given` bypass**: its share was 0 over steps 950–1000, while G16 switched to it within steps 900–950. The no-proof penalty is the only difference between the two runs. Both are rescored with the hardened checks (greedy, frozen pre-libext checker):
+
+| model | gate valid | gate valid·prem | gate cvf | gate correct | OOD valid·prem | gen valid | gen valid·prem | gen cvf | gen correct |
+|---|---|---|---|---|---|---|---|---|---|
+| G15@750 | .346 | .147 | .079 | .280 | – | .641 | .608 | .605 | .873 |
+| G15 final (1000) | .553 | .204 | .119 | .274 | .144 | .752 | .698 | .653 | .879 |
+| G16@750 | .623 | .295 | .113 | .248 | – | .804 | .701 | .654 | .886 |
+| G16 final (1000) | .734 | .249 | .127 | .258 | .180 | .911 | .659 | .602 | .864 |
+
+- At matched steps, the no-proof penalty speeds up gate validity: G16@750 valid·prem .295 vs G15@750 .147. By step 1000 G15 has mostly caught up on gate cvf (.119 vs .127).
+- G15 keeps +.016 gate correctness and a better gen cvf (.653 vs .602), because G16's last 50 steps were spent on the bypass.
+- Gate valid exceeds valid·prem by about .35 in G15 final and by .48 in G16 final. Most proofs that pass the strict checker on Dolci still fail the hardened premise-quote check (≥3-word verbatim quotes), even in the run that never hacked. On the gate, the premise check is the binding constraint.
+- **G16@750 remains the best checkpoint by gate valid·prem (.295)**, so it stays the EI round-4 teacher. G15 final is the best honest end-of-run policy.
+
+L1_correct@2250: gate correct .458, gen correct .957, validity 0. This is unchanged from @2000, so correct-only stays converged.
