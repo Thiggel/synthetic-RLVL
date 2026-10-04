@@ -136,8 +136,7 @@ def main():
             continue
         a = res[v]["all"]
         ax.scatter(a["tokens"], a["cvf"], color="C3" if not v.startswith(("greedy", "k16")) else "C0")
-        ax.annotate(v, (a["tokens"], a["cvf"]), fontsize=7)
-    ax.set_xscale("log")
+        ax.annotate(v, (a["tokens"], a["cvf"]), fontsize=7, rotation=20, xytext=(4, 2), textcoords="offset points")
     ax.set_xlabel("sampled tokens / item")
     ax.set_ylabel("cvf")
     ax.set_title("cvf vs compute")
