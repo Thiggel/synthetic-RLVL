@@ -40,6 +40,10 @@ scores higher on the gate but is not used as a teacher). The harvest ran under t
 later arms, HARDENED) re-filter it with the hardened premise check: every `given` / `obs` line must parse as
 `N name = expr ; given "quote"` and quote >= 3 words of the prompt verbatim (formal_rewards.quote_ok; report §13 of
 2026-10-01_grpo_loop_collapse: one-token quotes and `x; given` lines were reward hacks).
+AlphaZero round 1 (2026-10-04, Stage 3): arm az1 = e4 + the proofs MCTS self-play with the e4 student found on 2,000
+round-1 prompts (scripts/az/harvest_selfplay.py: gold terminal, kept only if correct * valid_s2 * prem_ok), half of them
+prompts the G16@750 teacher never solved in 16 samples. Same cap, recipe and hardened filter, so az1 - e4 = what
+search adds to sampling-based self-distillation (proofs on harder prompts).
 Writes <out-root>/<arm> (DatasetDict + mixture_manifest.json); existing arms are skipped. Run with .venv_rlvl_grpo.
 """
 from __future__ import annotations
@@ -70,14 +74,16 @@ HARVEST3 = [DATA / "rl_filter_20261003/G16c250_cvf_n16_dolci.json.passing.jsonl"
             DATA / "rl_filter_20261003/G16c250_cvf_n16_gsm8k.json.passing.jsonl"]
 HARVEST4 = [DATA / "rl_filter_20261003/G16c750_cvf_n16_dolci.json.passing.jsonl",
             DATA / "rl_filter_20261003/G16c750_cvf_n16_gsm8k.json.passing.jsonl"]
-EI_SRC = {"e": HARVEST, "le": HARVEST, "e2": HARVEST2, "e2s": HARVEST2, "e3": HARVEST3, "e4": HARVEST4}
+AZ1 = [DATA / "az/selfplay_r1/harvest_r1.passing.jsonl"]
+EI_SRC = {"e": HARVEST, "le": HARVEST, "e2": HARVEST2, "e2s": HARVEST2, "e3": HARVEST3, "e4": HARVEST4,
+          "az1": HARVEST4 + AZ1}
 MATCH = {"e2s": "e"}  # arm -> arm whose EI size (prompts per bench, rows) it copies
 REAL = ("dolci_wordprob", "dolci_math", "gsm8k_train")
 INIT = "formal_mixture_sft_20260925/qwen35_2b_p50_cont_lc_fp32m_lr5em6_seed3407/final"
 GIVEN = re.compile(r'(?m)^\d+ .*? ; given "(.*)"\s*$')
 PREMISE_LINE = re.compile(r"(?m)^.*;\s*(given|obs)\b.*$")
 PREMISE_OK = re.compile(r'^\d+ .*? ; (?:given|obs) "(.*)"\s*$')
-HARDENED = {"e4"}  # arms whose harvest is re-filtered with the hardened premise check (d8840c1)
+HARDENED = {"e4", "az1"}  # arms whose harvest is re-filtered with the hardened premise check (d8840c1)
 ASKS = re.compile(r"\?|\b(how (many|much|long|far|old|often)|what|which|find|calculate|compute|determine)\b", re.I)
 
 
@@ -199,7 +205,8 @@ def main() -> None:
              "e2": lambda: ei["e2"] + gen[:n - len(ei["e2"])],
              "e2s": lambda: ei["e2s"] + gen[:n - len(ei["e2s"])],
              "e3": lambda: ei["e3"] + gen[:n - len(ei["e3"])],
-             "e4": lambda: ei["e4"] + gen[:n - len(ei["e4"])]}
+             "e4": lambda: ei["e4"] + gen[:n - len(ei["e4"])],
+             "az1": lambda: ei["az1"] + gen[:n - len(ei["az1"])]}
     for arm in arms:
         out = args.out_root / arm
         if out.exists():
