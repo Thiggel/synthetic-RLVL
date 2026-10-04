@@ -107,7 +107,8 @@ class Value:
                 for j, i in enumerate(idx):  # right padding, as in value_probe.extract
                     x[j, :len(seqs[i])] = torch.tensor(seqs[i])
                     att[j, :len(seqs[i])] = 1
-                hs = self.model(input_ids=x.cuda(), attention_mask=att.cuda(), output_hidden_states=True).hidden_states[-1]
+                hs = self.model(input_ids=x.cuda(), attention_mask=att.cuda(), output_hidden_states=True,
+                                logits_to_keep=1).hidden_states[-1]
                 last = torch.tensor([len(seqs[i]) - 1 for i in idx], device=hs.device)
                 h = hs[torch.arange(len(idx), device=hs.device), last].float()
                 v = torch.sigmoid(h @ self.w + self.b).tolist()

@@ -81,8 +81,18 @@ def extract(d: pd.DataFrame, model_dir: str, mid_layer: int, max_len: int, batch
     assert len(nl) == 1
     rows = []  # (completion index, depth k, n_lines, feature_last, feature_mid)
     order = sorted(range(len(d)), key=lambda i: len(d.completion[i]))
-    for b in range(0, len(order), batch):
-        idx = order[b:b + batch]
+    # token-budget batches (len(batch) * longest <= batch * 1024); a batch that OOMs (GPUs shared with foreign
+    # processes on gruenau12) is split in half and retried
+    chunks, cur = [], []
+    for i in order:
+        if cur and (len(cur) + 1) * min(max_len, len(d.completion[i]) // 2 + 600) > batch * 1024:
+            chunks.append(cur)
+            cur = []
+        cur.append(i)
+    chunks.append(cur)
+    done = 0
+    while chunks:
+        idx = chunks.pop(0)
         seqs, marks = [], []
         for i in idx:
             p = tok(render_prompt(tok, d.user[i]), add_special_tokens=False)["input_ids"]
@@ -99,14 +109,22 @@ def extract(d: pd.DataFrame, model_dir: str, mid_layer: int, max_len: int, batch
         for j, s in enumerate(seqs):
             x[j, :len(s)] = torch.tensor(s)
             att[j, :len(s)] = 1
-        out = model(input_ids=x.cuda(), attention_mask=att.cuda(), output_hidden_states=True)
+        try:
+            out = model(input_ids=x.cuda(), attention_mask=att.cuda(), output_hidden_states=True, logits_to_keep=1)
+        except torch.OutOfMemoryError:
+            assert len(idx) > 1, "a single sequence does not fit"
+            torch.cuda.empty_cache()
+            chunks[:0] = [idx[:len(idx) // 2], idx[len(idx) // 2:]]
+            continue
         hs_last, hs_mid = out.hidden_states[-1].float(), out.hidden_states[mid_layer].float()
         for j, (i, pos) in enumerate(zip(idx, marks)):
             n = len(pos) - 1
             for k, q in enumerate(pos):
                 rows.append((i, k, n, hs_last[j, q].half().cpu(), hs_mid[j, q].half().cpu()))
-        if b // batch % 50 == 0:
-            print(f"extract {b}/{len(order)} ({len(rows)} positions)", flush=True)
+        del out, hs_last, hs_mid
+        done += 1
+        if done % 50 == 0:
+            print(f"extract batch {done}, {len(chunks)} left ({len(rows)} positions)", flush=True)
     return {"i": torch.tensor([r[0] for r in rows]), "k": torch.tensor([r[1] for r in rows]),
             "n": torch.tensor([r[2] for r in rows]), "last": torch.stack([r[3] for r in rows]),
             "mid": torch.stack([r[4] for r in rows])}
