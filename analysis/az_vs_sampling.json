@@ -2,12 +2,28 @@
  "results": {
   "sampling pass@1": {
    "all|mixed": {
-    "solved": 0.25420403587443946,
-    "n": 223
+    "solved": 0.20837418300653596,
+    "n": 765
    },
    "all|zero": {
-    "solved": 0.009141156462585034,
-    "n": 147
+    "solved": 0.006818181818181818,
+    "n": 605
+   },
+   "dolci_math|mixed": {
+    "solved": 0.1852436823104693,
+    "n": 277
+   },
+   "dolci_math|zero": {
+    "solved": 0.007707399103139013,
+    "n": 223
+   },
+   "dolci_wordprob|mixed": {
+    "solved": 0.19398584905660377,
+    "n": 265
+   },
+   "dolci_wordprob|zero": {
+    "solved": 0.0045212765957446804,
+    "n": 235
    },
    "gsm8k_train|mixed": {
     "solved": 0.25420403587443946,
@@ -20,12 +36,28 @@
   },
   "sampling pass@8": {
    "all|mixed": {
-    "solved": 0.42323102775947763,
-    "n": 223
+    "solved": 0.4352767056034737,
+    "n": 765
    },
    "all|zero": {
-    "solved": 0.04477281803835117,
-    "n": 147
+    "solved": 0.031688861828613066,
+    "n": 605
+   },
+   "dolci_math|mixed": {
+    "solved": 0.4933805067468625,
+    "n": 277
+   },
+   "dolci_math|zero": {
+    "solved": 0.03241483421015237,
+    "n": 223
+   },
+   "dolci_wordprob|mixed": {
+    "solved": 0.3846783404808044,
+    "n": 265
+   },
+   "dolci_wordprob|zero": {
+    "solved": 0.022815528194933207,
+    "n": 235
    },
    "gsm8k_train|mixed": {
     "solved": 0.42323102775947763,
@@ -38,12 +70,28 @@
   },
   "sampling pass@32": {
    "all|mixed": {
-    "solved": 0.5022421524663677,
-    "n": 223
+    "solved": 0.5725490196078431,
+    "n": 765
    },
    "all|zero": {
-    "solved": 0.07482993197278912,
-    "n": 147
+    "solved": 0.06776859504132231,
+    "n": 605
+   },
+   "dolci_math|mixed": {
+    "solved": 0.6750902527075813,
+    "n": 277
+   },
+   "dolci_math|zero": {
+    "solved": 0.06726457399103139,
+    "n": 223
+   },
+   "dolci_wordprob|mixed": {
+    "solved": 0.5245283018867924,
+    "n": 265
+   },
+   "dolci_wordprob|zero": {
+    "solved": 0.06382978723404255,
+    "n": 235
    },
    "gsm8k_train|mixed": {
     "solved": 0.5022421524663677,
@@ -56,12 +104,28 @@
   },
   "MCTS (commit)": {
    "all|mixed": {
-    "solved": 0.23766816143497757,
-    "n": 223
+    "solved": 0.27712418300653596,
+    "n": 765
    },
    "all|zero": {
-    "solved": 0.02040816326530612,
-    "n": 147
+    "solved": 0.01818181818181818,
+    "n": 605
+   },
+   "dolci_math|mixed": {
+    "solved": 0.35379061371841153,
+    "n": 277
+   },
+   "dolci_math|zero": {
+    "solved": 0.017937219730941704,
+    "n": 223
+   },
+   "dolci_wordprob|mixed": {
+    "solved": 0.23018867924528302,
+    "n": 265
+   },
+   "dolci_wordprob|zero": {
+    "solved": 0.01702127659574468,
+    "n": 235
    },
    "gsm8k_train|mixed": {
     "solved": 0.23766816143497757,
@@ -71,18 +135,43 @@
     "solved": 0.02040816326530612,
     "n": 147
    },
-   "tokens": 9237.427027027026
+   "tokens": 7720.483941605839
+  },
+  "MCTS (solve)": {
+   "all|zero": {
+    "solved": 0.01929260450160772,
+    "n": 311
+   },
+   "dolci_math|zero": {
+    "solved": 0.03278688524590164,
+    "n": 122
+   },
+   "dolci_wordprob|zero": {
+    "solved": 0.016,
+    "n": 125
+   },
+   "gsm8k_train|zero": {
+    "solved": 0.0,
+    "n": 64
+   },
+   "tokens": 9417.556270096464
   }
  },
  "head_to_head_zero": {
   "MCTS (commit)": {
-   "zero_prompts": 147,
-   "search_only": 1,
-   "sampling_only": 9
+   "zero_prompts": 605,
+   "search_only": 4,
+   "sampling_only": 34
+  },
+  "MCTS (solve)": {
+   "zero_prompts": 311,
+   "search_only": 3,
+   "sampling_only": 22
   }
  },
- "n_ids": 370,
+ "n_ids": 1370,
  "sampling_files": [
-  "/vol/tmp2/laitenbf/rlvl_data/az/selfplay_r1/sample_e4_n32.json"
+  "/vol/tmp2/laitenbf/rlvl_data/az/selfplay_r1/sample_e4_n32.json",
+  "/vol/tmp2/laitenbf/rlvl_data/az/selfplay_r1/sample_e4_n32_dolci.json"
  ]
 }
