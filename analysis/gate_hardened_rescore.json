@@ -67,6 +67,23 @@
    "correct": 0.2819
   }
  },
+ "e6 (SFT)": {
+  "step": 0,
+  "all": {
+   "n": 950,
+   "valid": 0.4305,
+   "valid_prem": 0.2747,
+   "cvf": 0.0495,
+   "correct": 0.2579
+  },
+  "clean": {
+   "n": 713,
+   "valid": 0.3899,
+   "valid_prem": 0.2595,
+   "cvf": 0.0505,
+   "correct": 0.2805
+  }
+ },
  "G16 (from e2)@250": {
   "run": "G16 (from e2)",
   "step": 250,
