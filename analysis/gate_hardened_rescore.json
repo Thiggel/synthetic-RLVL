@@ -192,5 +192,41 @@
    "cvf": 0.1501,
    "correct": 0.2286
   }
+ },
+ "G17 (from e3)@1000": {
+  "run": "G17 (from e3)",
+  "step": 1000,
+  "all": {
+   "n": 950,
+   "valid": 0.7768,
+   "valid_prem": 0.6632,
+   "cvf": 0.1863,
+   "correct": 0.2579
+  },
+  "clean": {
+   "n": 713,
+   "valid": 0.7602,
+   "valid_prem": 0.6536,
+   "cvf": 0.209,
+   "correct": 0.2749
+  }
+ },
+ "G18 (from e4)@250": {
+  "run": "G18 (from e4)",
+  "step": 250,
+  "all": {
+   "n": 950,
+   "valid": 0.7116,
+   "valid_prem": 0.5537,
+   "cvf": 0.1516,
+   "correct": 0.2579
+  },
+  "clean": {
+   "n": 713,
+   "valid": 0.6971,
+   "valid_prem": 0.561,
+   "cvf": 0.1739,
+   "correct": 0.2847
+  }
  }
 }
