@@ -168,3 +168,12 @@ Every finding, including negative results, goes into a report with figures, not 
   - Deviation: AZ-formal starts from e4 (`qwen35_2b_lc_libext_e4_lr5em6_seed3407/final`), not the Stage-1 best-X model. The Stage-1 model almost never produces in-system proofs on Dolci, so search would have nothing to prune. AZ-NL starts from the X=0 model.
   - The full G0–G4 grid is deferred. Running GRPO baselines: L1_correct / L1_cvf (correct-only vs correct·valid, 5k steps; these are G1 and G2 at 2B), G17, G18.
   - First build: a value head on e4 trained on logged GRPO completions (terminal cvf / correct). Then line-level PUCT reusing the checker pruning of `scripts/guided_decode.py`. Lesson from guided decoding (`reports/2026-10-02_guided_decoding.md`): pruning alone doubles validity but not correctness, so the value target must include correctness.
+- 2026-10-05: **Stage 3 switched to online AlphaZero with a jointly trained value head** (user: "i would really wish that we just let the model explore so that it finds solutions and thus learn a value head and model online, both ntp and value head on top of the hidden state").
+  - `scripts/az/az_train.py`: line-level PUCT self-play. Search and training share one process and one GPU: vLLM in colocate sleep mode, with weight sync after every iteration. The prior is the policy LM's line samples; the value is a linear head on the last hidden state (initialised from the e4 cvf probe). Terminal reward is gold cvf (correct · valid · premises stated). Checker-dead lines count as 0.
+  - Losses on each iteration's search data (plus a 2-iteration replay buffer):
+    - policy cross-entropy toward visit counts over sibling lines;
+    - value BCE on states: the trajectory outcome z mixed with the root Q, terminal children → gold, dead children → 0, visited children → Q;
+    - NTP on found correct proofs.
+  - Memory: bf16 weights on the GPU, with fp32 master weights and AdamW on the CPU (peak ≈ 23 GB; the gruenau L40s are shared).
+  - Init from e6 (6 EI rounds). Pool `rlvl_data/az/online_pool/pool.jsonl`: 7708 GSM8K-train / Dolci prompts on which e6 sometimes fails. Run: `rlvl_data/az/online_e6_r1`, chained 2-day jobs.
+  - Metrics: z, found rate, online value AUC (root value vs z), and the gate_subset_300 greedy eval every 4 iterations.

@@ -28,6 +28,7 @@ def main():
     ap.add_argument("--out", type=Path, default=DATA / "az/selfplay_r1")
     ap.add_argument("--shards", type=int, default=2)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--all", action="store_true", help="every mixed and zero prompt, no per-bench quota (online AZ pool)")
     args = ap.parse_args()
     rates = {}
     for f in ("G16c750_cvf_n16_gsm8k.json", "G16c750_cvf_n16_dolci.json"):
@@ -52,6 +53,7 @@ def main():
     for b, (nm, nz) in QUOTA.items():
         for k, n in (("mixed", nm), ("zero", nz)):
             p = pools[(b, k)]
+            n = len(p) if args.all else n
             rng.shuffle(p)
             rows += p[:n]
             print(b, k, f"{min(n, len(p))}/{len(p)}")
