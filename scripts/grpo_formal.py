@@ -195,6 +195,8 @@ def main():
     ap.add_argument("--no-proof-penalty", type=float, default=0.0,
                     help="subtract this from the reward of completions without a <proof> block (G16)")
     ap.add_argument("--vllm-mem", type=float, default=0.35)
+    ap.add_argument("--vllm-max-model-len", type=int, default=None,
+                    help="cap vLLM max_model_len (default: the model config's 262144, whose KV cache needs ~3 GiB)")
     ap.add_argument("--save-steps", type=int, default=100)
     ap.add_argument("--seed", type=int, default=3407)
     ap.add_argument("--report-to", default="none")
@@ -238,6 +240,7 @@ def main():
         gradient_accumulation_steps=grad_accum, max_completion_length=args.max_completion_length,
         temperature=args.temperature, mask_truncated_completions=not args.no_mask_truncated, reward_weights=weights,
         use_vllm=True, vllm_mode="colocate", vllm_gpu_memory_utilization=args.vllm_mem,
+        vllm_max_model_length=args.vllm_max_model_len,
         vllm_enable_sleep_mode=True, bf16=True, gradient_checkpointing=True, logging_steps=1,
         save_steps=args.save_steps, save_only_model=not args.resumable, seed=args.seed, report_to=args.report_to,
         log_completions=True, num_completions_to_print=2, lr_scheduler_type="constant_with_warmup",
