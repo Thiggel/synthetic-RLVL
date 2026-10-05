@@ -16,7 +16,9 @@ the model learns from it online, AlphaZero style:
             mix), for its children (a terminal: gold cvf; a dead line: 0; a child visited >= 2: its Q) - the
             correctness signal for partial proofs; plus NTP on every found correct proof (incl. "</proof>\\nAnswer").
   train     after every self-play batch: one pass over --train-moves moves sampled from the last --buffer-iters
-            batches, AdamW (backbone --lr, head --head-lr), then the new weights go to vLLM.
+            batches, AdamW (backbone --lr, head --head-lr, clipped separately), then the new weights go to vLLM. Only
+            --value-backbone-scale of the value gradient reaches the backbone: at 1.0 (run r1) the backbone bent to fit
+            the near-frozen head and the policy collapsed (gate valid .39 -> .15 in 12 iterations).
 
 Evaluation every --eval-every iterations on the 300-item gate subset (greedy, the same vLLM): valid_prem / cvf /
 correct, and the value head's AUC for cvf at the end of the proof and at its middle line (held-out prompts).
@@ -120,7 +122,10 @@ def main():
     ap.add_argument("--buffer-iters", type=int, default=2)
     ap.add_argument("--tok-budget", type=int, default=12288, help="padded tokens per micro-batch")
     ap.add_argument("--value-batch", type=int, default=16)
-    ap.add_argument("--max-grad-norm", type=float, default=1.0)
+    ap.add_argument("--max-grad-norm", type=float, default=1.0, help="backbone clip")
+    ap.add_argument("--max-head-grad-norm", type=float, default=1.0, help="value head clip (separate from the backbone)")
+    ap.add_argument("--value-backbone-scale", type=float, default=0.1,
+                    help="fraction of the value-loss gradient that reaches the backbone (1.0 = r1, which collapsed the policy)")
     ap.add_argument("--eval-every", type=int, default=4)
     ap.add_argument("--save-every", type=int, default=4)
     ap.add_argument("--gpu-mem", type=float, default=0.28)
@@ -555,6 +560,8 @@ def main():
                         vb.append(j); vp.append(p_); vt.append(t_)
                 if vb:
                     hv = h[torch.tensor(vb, device=h.device), torch.tensor(vp, device=h.device)].float()
+                    if args.value_backbone_scale != 1.0:  # the head sees h, the backbone gets scale * the value gradient
+                        hv = hv * args.value_backbone_scale + hv.detach() * (1 - args.value_backbone_scale)
                     logit = head(hv).squeeze(-1)
                     tv = torch.tensor(vt, device=h.device, dtype=torch.float32)
                     lv = torch.nn.functional.binary_cross_entropy_with_logits(logit, tv, reduction="sum") / n_val
@@ -564,7 +571,8 @@ def main():
                     stats["value_abs_err"] += (torch.sigmoid(logit) - tv).abs().sum().item()
                 loss.backward()
                 del h, loss
-            gn = torch.nn.utils.clip_grad_norm_(gpu_params + list(head.parameters()), args.max_grad_norm)
+            gn = torch.nn.utils.clip_grad_norm_(gpu_params, args.max_grad_norm)
+            gnh = torch.nn.utils.clip_grad_norm_(list(head.parameters()), args.max_head_grad_norm)
             for mp, gp in zip(master, gpu_params):
                 mp.grad = gp.grad.to("cpu").float() if gp.grad is not None else None
                 gp.grad = None
@@ -576,6 +584,7 @@ def main():
                 for mp, gp in zip(master, gpu_params):
                     gp.copy_(mp.to(gp.dtype), non_blocking=True)
             stats["grad_norm"] += float(gn) / n_steps
+            stats["head_grad_norm"] += float(gnh) / n_steps
             stats["opt_steps"] += 1
         torch.cuda.empty_cache()
         stats["value_abs_err"] /= max(1, stats["value_points"])
