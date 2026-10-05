@@ -163,11 +163,16 @@ def main():
     tok = AutoTokenizer.from_pretrained(args.model)
     # bf16 model on the GPU (search values + forward/backward); fp32 master weights and AdamW on the CPU, so that
     # the GPU holds only bf16 weights + grads + activations next to vLLM (gruenau L40s are shared)
-    model = AutoModelForCausalLM.from_pretrained(src, dtype=torch.bfloat16).cuda()
+    def retie(m):  # older `latest` saves wrote a bf16 lm_head next to the fp32 embedding, which transformers then unties
+        if m.config.get_text_config().tie_word_embeddings and m.lm_head.weight is not m.get_input_embeddings().weight:
+            m.lm_head.weight = m.get_input_embeddings().weight
+        return m
+
+    model = retie(AutoModelForCausalLM.from_pretrained(src, dtype=torch.bfloat16)).cuda()
     model.config.use_cache = False
     model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
     gpu_params = [p for p in model.parameters() if p.requires_grad]
-    cpu_model = AutoModelForCausalLM.from_pretrained(src, dtype=torch.float32)
+    cpu_model = retie(AutoModelForCausalLM.from_pretrained(src, dtype=torch.float32))
     master = [torch.nn.Parameter(q.detach().clone()) for q in cpu_model.parameters() if q.requires_grad]
     del cpu_model
     assert len(master) == len(gpu_params) and all(a.shape == b.shape for a, b in zip(master, gpu_params))
@@ -574,14 +579,19 @@ def main():
             stats["opt_steps"] += 1
         torch.cuda.empty_cache()
         stats["value_abs_err"] /= max(1, stats["value_points"])
+        for k in ("policy_loss", "value_loss"):  # mean over optimizer steps (logs before 2026-10-05 21:30 hold the sum)
+            stats[k] /= max(1, stats["opt_steps"])
         return dict(stats)
 
     def save(d: Path, full: bool):
         d.mkdir(parents=True, exist_ok=True)
         sd = {k: v.detach().to("cpu", torch.bfloat16) for k, v in model.state_dict().items()}
         if full:  # fp32 masters for --resume
-            names = [n for n, q in model.named_parameters() if q.requires_grad]
-            sd.update({n: mp.detach().float() for n, mp in zip(names, master)})
+            names = {}
+            for n, q in model.named_parameters(remove_duplicate=False):
+                names.setdefault(id(q), []).append(n)
+            for gp, mp in zip(gpu_params, master):  # every tied name gets the same fp32 master
+                sd.update({n: mp.detach().float() for n in names[id(gp)]})
         model.save_pretrained(d, state_dict=sd, safe_serialization=True)
         tok.save_pretrained(d)
         torch.save({"w": head.weight.detach()[0].cpu(), "b": head.bias.detach().cpu(), "feature": "last",
