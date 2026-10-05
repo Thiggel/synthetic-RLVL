@@ -148,6 +148,80 @@
     "sync_s": 0.5992777347564697,
     "iter_s": 1259.8061215877533,
     "gpu_max_alloc_gb": 23.146880626678467
+   },
+   {
+    "iter": 5,
+    "n": 256,
+    "z": 0.171875,
+    "found_any": 0.40234375,
+    "status": {
+     "exhausted": 3,
+     "budget": 150,
+     "found": 103
+    },
+    "z_bench": {
+     "gsm8k_train": 0.171875,
+     "dolci_math": 0.21875,
+     "dolci_wordprob": 0.125
+    },
+    "moves": 2123,
+    "found_correct": 44,
+    "value_auc_root_vs_z": 0.7160563964875417,
+    "mean_expansions": 51.69921875,
+    "mean_gen_tokens": 7944.08984375,
+    "rounds": 64,
+    "search_s": 1045.7104277610779,
+    "gen_s": 932.2505924701691,
+    "check_s": 5.618452310562134,
+    "value_s": 107.62687540054321,
+    "policy_loss": 0.06001944987829155,
+    "policy_tokens": 56293.0,
+    "value_loss": 0.5541057478694711,
+    "value_points": 3021.0,
+    "value_abs_err": 0.16189447268769663,
+    "grad_norm": 42.75840520858765,
+    "opt_steps": 16.0,
+    "train_s": 205.8377947807312,
+    "sync_s": 0.6965045928955078,
+    "iter_s": 1252.960605621338,
+    "gpu_max_alloc_gb": 23.146880626678467
+   },
+   {
+    "iter": 6,
+    "n": 256,
+    "z": 0.12890625,
+    "found_any": 0.30859375,
+    "status": {
+     "budget": 176,
+     "found": 79,
+     "exhausted": 1
+    },
+    "z_bench": {
+     "gsm8k_train": 0.15816326530612246,
+     "dolci_math": 0.05555555555555555,
+     "dolci_wordprob": 0.0
+    },
+    "moves": 2180,
+    "found_correct": 33,
+    "value_auc_root_vs_z": 0.7464689481908147,
+    "mean_expansions": 56.47265625,
+    "mean_gen_tokens": 8799.7265625,
+    "rounds": 64,
+    "search_s": 1161.1561191082,
+    "gen_s": 1030.2180247306824,
+    "check_s": 7.230402708053589,
+    "value_s": 123.47593450546265,
+    "policy_loss": 0.05838898300862638,
+    "policy_tokens": 56402.0,
+    "value_loss": 0.5694448187568923,
+    "value_points": 2993.0,
+    "value_abs_err": 0.14547122144655283,
+    "grad_norm": 22.945562541484833,
+    "opt_steps": 16.0,
+    "train_s": 234.43927836418152,
+    "sync_s": 0.6501903533935547,
+    "iter_s": 1396.9565603733063,
+    "gpu_max_alloc_gb": 23.146880626678467
    }
   ],
   "evals": [

@@ -281,5 +281,41 @@
    "cvf": 0.2314,
    "correct": 0.2959
   }
+ },
+ "G18 (from e4)@1000": {
+  "run": "G18 (from e4)",
+  "step": 1000,
+  "all": {
+   "n": 950,
+   "valid": 0.8421,
+   "valid_prem": 0.7263,
+   "cvf": 0.2295,
+   "correct": 0.2768
+  },
+  "clean": {
+   "n": 713,
+   "valid": 0.8275,
+   "valid_prem": 0.7195,
+   "cvf": 0.2595,
+   "correct": 0.31
+  }
+ },
+ "G19 (from e6, KL)@250": {
+  "run": "G19 (from e6, KL)",
+  "step": 250,
+  "all": {
+   "n": 950,
+   "valid": 0.5789,
+   "valid_prem": 0.4621,
+   "cvf": 0.1611,
+   "correct": 0.2874
+  },
+  "clean": {
+   "n": 713,
+   "valid": 0.5428,
+   "valid_prem": 0.4432,
+   "cvf": 0.1711,
+   "correct": 0.3086
+  }
  }
 }
