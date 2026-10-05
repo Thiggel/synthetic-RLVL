@@ -245,5 +245,23 @@
    "cvf": 0.1739,
    "correct": 0.2847
   }
+ },
+ "G18 (from e4)@500": {
+  "run": "G18 (from e4)",
+  "step": 500,
+  "all": {
+   "n": 950,
+   "valid": 0.6884,
+   "valid_prem": 0.5842,
+   "cvf": 0.2011,
+   "correct": 0.2705
+  },
+  "clean": {
+   "n": 713,
+   "valid": 0.6634,
+   "valid_prem": 0.568,
+   "cvf": 0.2188,
+   "correct": 0.2945
+  }
  }
 }
