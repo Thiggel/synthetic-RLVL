@@ -19,7 +19,8 @@ last=$(squeue -u laitenbf -h -o '%i %j' | awk '$2 ~ /^gate_/ {print $1}' | sort 
 for spec in "L1_correct:${OLD}" "L1_cvf:${OLD}" "2b_le_G13_cvffmt:${NEW}" "2b_le_G14_cvffmt_overlong:${NEW}" \
             "2b_e2_G15_cvffmt_overlong:${NEW}" "2b_e2_G16_cvffmt_overlong_noproof:${NEW}" \
             "2b_e3_G17_cvffmt_overlong_noproof:${NEW}" \
-            "2b_e4_G18_cvffmt_overlong_noproof:${NEW}"; do
+            "2b_e4_G18_cvffmt_overlong_noproof:${NEW}" \
+            "2b_e5_G19_cvffmt_overlong_noproof_kl02:${NEW}" "2b_e6_G19_cvffmt_overlong_noproof_kl02:${NEW}"; do
   arm=${spec%%:*} S=${spec#*:}
   if squeue -u laitenbf -h -n "gate_${arm}" | grep -q .; then echo "${arm}: gate job queued"; continue; fi
   todo=()
