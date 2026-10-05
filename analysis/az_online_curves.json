@@ -1,0 +1,85 @@
+{
+ "AZ online from e6 (r1)": {
+  "metrics": [
+   {
+    "iter": 1,
+    "n": 256,
+    "z": 0.18359375,
+    "found_any": 0.3984375,
+    "status": {
+     "found": 102,
+     "budget": 150,
+     "exhausted": 4
+    },
+    "z_bench": {
+     "dolci_wordprob": 0.08571428571428572,
+     "gsm8k_train": 0.22282608695652173,
+     "dolci_math": 0.08108108108108109
+    },
+    "moves": 2120,
+    "found_correct": 47,
+    "value_auc_root_vs_z": 0.696716527122379,
+    "mean_expansions": 51.6484375,
+    "mean_gen_tokens": 8017.95703125,
+    "rounds": 64,
+    "search_s": 1327.1424045562744,
+    "gen_s": 1188.39333152771,
+    "check_s": 5.374643564224243,
+    "value_s": 133.20462107658386,
+    "policy_loss": 0.055468858675716604,
+    "policy_tokens": 51931.0,
+    "value_loss": 0.5513501523673767,
+    "value_points": 2954.0,
+    "value_abs_err": 0.1598420664012311,
+    "grad_norm": 40.05264902114868,
+    "opt_steps": 16.0,
+    "train_s": 335.1575322151184,
+    "sync_s": 0.5304017066955566,
+    "iter_s": 1663.2221426963806,
+    "gpu_max_alloc_gb": 23.08341121673584
+   }
+  ],
+  "evals": [
+   {
+    "iter": 0,
+    "n": 300,
+    "valid": 0.39,
+    "valid_prem": 0.24333333333333335,
+    "cvf": 0.043333333333333335,
+    "correct": 0.22333333333333333,
+    "score_correct": 0.22333333333333333,
+    "value_auc_end": 0.6778343607611901,
+    "value_auc_mid": 0.7965692843741624,
+    "value_mean_end": 0.027923995274080272,
+    "eval_s": 74.23803853988647,
+    "bench": {
+     "dolci_math": {
+      "valid_prem": 0.3333333333333333,
+      "cvf": 0.0,
+      "correct": 0.016666666666666666
+     },
+     "dolci_dapo": {
+      "valid_prem": 0.36666666666666664,
+      "cvf": 0.016666666666666666,
+      "correct": 0.06666666666666667
+     },
+     "dolci_wordprob": {
+      "valid_prem": 0.26666666666666666,
+      "cvf": 0.16666666666666666,
+      "correct": 0.48333333333333334
+     },
+     "dolci_yesno": {
+      "valid_prem": 0.06666666666666667,
+      "cvf": 0.03333333333333333,
+      "correct": 0.55
+     },
+     "dolci_knowledge": {
+      "valid_prem": 0.18333333333333332,
+      "cvf": 0.0,
+      "correct": 0.0
+     }
+    }
+   }
+  ]
+ }
+}

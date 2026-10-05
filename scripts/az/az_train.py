@@ -581,6 +581,7 @@ def main():
         stats["value_abs_err"] /= max(1, stats["value_points"])
         for k in ("policy_loss", "value_loss"):  # mean over optimizer steps (logs before 2026-10-05 21:30 hold the sum)
             stats[k] /= max(1, stats["opt_steps"])
+        stats["stats_v"] = 2
         return dict(stats)
 
     def save(d: Path, full: bool):
