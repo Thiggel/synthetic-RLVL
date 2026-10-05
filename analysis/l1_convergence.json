@@ -955,6 +955,47 @@
      },
      "reward_version": "d8840c1"
     }
+   ],
+   [
+    4000,
+    {
+     "gate_train_benches": {
+      "correct": 0.51,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 700
+     },
+     "gate_all": {
+      "correct": 0.4073684210526316,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 950
+     },
+     "gate_ood": {
+      "correct": 0.12,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 250
+     },
+     "gen_test": {
+      "correct": 0.8938486663037561,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 1837
+     },
+     "gen_test_eval": {
+      "valid": 0.0,
+      "answer_acc": 0.0,
+      "faithful": 0.0,
+      "grammatical": 0.0,
+      "n": 2000
+     },
+     "reward_version": "d8840c1"
+    }
    ]
   ],
   "cvf, gamed premise checks (archived, steps 751-2300)": [
