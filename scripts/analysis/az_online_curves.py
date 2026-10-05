@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
 AZ = Path("/vol/tmp2/laitenbf/rlvl_data/az")
-RUNS = {"AZ online from e6 (r1)": AZ / "online_e6_r1"}
+RUNS = {"AZ online from e6 (r1, lr 1e-6)": AZ / "online_e6_r1", "AZ online from e6 (r2, lr 3e-6)": AZ / "online_e6_r2_lr3e6"}
 OUT = REPO / "analysis/az_online_curves.json"
 FIG = REPO / "reports/figures/az_online_curves"
 
