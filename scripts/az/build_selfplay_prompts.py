@@ -21,6 +21,7 @@ DATA = Path("/vol/tmp2/laitenbf/rlvl_data")
 FILT = DATA / "rl_filter_20261003"
 CONTAM = DATA / "datasets/rl_gate_dolci_instruct_20260928/contamination.json"
 QUOTA = {"gsm8k_train": (600, 400), "dolci_wordprob": (265, 235), "dolci_math": (277, 223)}  # (mixed, zero)
+GATE_BENCHES = ("dolci_math", "dolci_dapo", "dolci_wordprob", "dolci_yesno", "dolci_knowledge")
 
 
 def main():
@@ -29,6 +30,9 @@ def main():
     ap.add_argument("--shards", type=int, default=2)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--all", action="store_true", help="every mixed and zero prompt, no per-bench quota (online AZ pool)")
+    ap.add_argument("--gate-matched", type=int, default=0, metavar="N",
+                    help="online AZ pool matched to the gate: up to N prompts from each of the five gate benches, "
+                         "teacher-solved (rate 1) prompts dropped, prompts without a teacher rate kept as `unrated`")
     args = ap.parse_args()
     rates = {}
     for f in ("G16c750_cvf_n16_gsm8k.json", "G16c750_cvf_n16_dolci.json"):
@@ -36,8 +40,32 @@ def main():
     exclude = set(json.load(open(CONTAM))["pool_exclude_ids"])
     from transformers import AutoTokenizer
     tok = AutoTokenizer.from_pretrained(DATA / "formal_mixture_sft_20260925/qwen35_2b_lc_libext_e4_lr5em6_seed3407/final")
-    ds = build_dataset(tok, True, None, args.seed, list(QUOTA), exclude_ids=exclude)
+    benches = list(GATE_BENCHES) if args.gate_matched else list(QUOTA)
+    ds = build_dataset(tok, True, None, args.seed, benches, exclude_ids=exclude)
     rng = random.Random(args.seed)
+    if args.gate_matched:
+        by = {b: [] for b in benches}
+        for r in ds:
+            x = rates.get(r["id"])
+            if x is not None and x["rate"] == 1:
+                continue
+            k = "unrated" if x is None else "zero" if x["rate"] == 0 else "mixed"
+            by[r["bench"]].append({"bench": r["bench"], "group": "rl_train", "id": r["id"], "prompt": r["raw_prompt"],
+                                   "gold": r["gold"], "answer_type": r["answer_type"], "gold_label": r["gold"],
+                                   "system_answerable": r["system_answerable"],
+                                   "teacher_rate": None if x is None else x["rate"], "difficulty": k})
+        rows = []
+        for b, p in by.items():
+            rng.shuffle(p)
+            rows += p[:args.gate_matched]
+            print(b, f"{min(args.gate_matched, len(p))}/{len(p)}")
+        rng.shuffle(rows)
+        args.out.mkdir(parents=True, exist_ok=True)
+        with open(args.out / "pool.jsonl", "w") as f:
+            for r in rows:
+                f.write(json.dumps(r) + "\n")
+        print(len(rows), "prompts ->", args.out / "pool.jsonl")
+        return
     pools = {(b, k): [] for b in QUOTA for k in ("mixed", "zero")}
     for r in ds:
         x = rates.get(r["id"])

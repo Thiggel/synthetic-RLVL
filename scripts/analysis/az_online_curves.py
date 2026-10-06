@@ -27,6 +27,7 @@ RUNS = {"AZ online from e6 (r1, lr 1e-6)": AZ / "online_e6_r1", "AZ online from 
         "r7: ExIt, lr 3e-6": AZ / "online_e6_r7_exit_lr3e6",
         "r8: ExIt, 16 sims, 128 expansions": AZ / "online_e6_r8_exit_sims16_exp128",
         "r9: ExIt, lr 3e-6, value grad x0": AZ / "online_e6_r9_exit_lr3e6_vbs0"}
+        "r10: ExIt, gate-matched pool": AZ / "online_e6_r10_exit_gatepool"}
 OUT = REPO / "analysis/az_online_curves.json"
 FIG = REPO / "reports/figures/az_online_curves"
 
