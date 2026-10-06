@@ -2066,6 +2066,47 @@
      },
      "reward_version": "d8840c1"
     }
+   ],
+   [
+    3500,
+    {
+     "gate_train_benches": {
+      "correct": 0.37142857142857144,
+      "valid": 0.9057142857142857,
+      "valid_prem": 0.8442857142857143,
+      "cvf": 0.33714285714285713,
+      "n": 700
+     },
+     "gate_all": {
+      "correct": 0.28,
+      "valid": 0.911578947368421,
+      "valid_prem": 0.84,
+      "cvf": 0.2536842105263158,
+      "n": 950
+     },
+     "gate_ood": {
+      "correct": 0.024,
+      "valid": 0.928,
+      "valid_prem": 0.828,
+      "cvf": 0.02,
+      "n": 250
+     },
+     "gen_test": {
+      "correct": 0.8802395209580839,
+      "valid": 0.909635274904736,
+      "valid_prem": 0.864452912357104,
+      "cvf": 0.7980402830702232,
+      "n": 1837
+     },
+     "gen_test_eval": {
+      "valid": 0.765,
+      "answer_acc": 0.7675,
+      "faithful": 0.872,
+      "grammatical": 0.9575,
+      "n": 2000
+     },
+     "reward_version": "d8840c1"
+    }
    ]
   ]
  }
