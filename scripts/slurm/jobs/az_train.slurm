@@ -8,7 +8,8 @@
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --error=logs/%x_%j.err
 
-# Stage 3 online AlphaZero (scripts/az/az_train.py): MCTS self-play + joint policy/value-head training, one GPU.
+# Stage 3 online AlphaZero (scripts/az/az_train.py): MCTS self-play + joint policy/value-head training; one GPU, or
+# data parallel under torchrun with --gres=gpu:l40:N (N ranks, --mem about 60G + 50G per GPU).
 # Env: MODEL (init checkpoint), OUT_DIR, PROMPTS, ARGS (extra az_train.py flags), GPU_MEM (vLLM share, default 0.28).
 # Resumable: a chained job with the same name (--dependency=singleton) continues from OUT_DIR/latest.
 set -euo pipefail
@@ -23,5 +24,7 @@ export PYTHONPATH="${RLVL_PYTHONPATH:-$S/gen:$S/rlvl_python}"
 hash -r 2>/dev/null || true
 nvidia-smi -i "${CUDA_VISIBLE_DEVICES:-0}" --query-gpu=index,name,memory.total,memory.free --format=csv,noheader
 END_TS=$(( $(date +%s) + $(squeue -h -j "${SLURM_JOB_ID}" -o %L | awk -F'[-:]' '{ if (NF==4) print $1*86400+$2*3600+$3*60+$4; else if (NF==3) print $1*3600+$2*60+$3; else print $1*60+$2 }') ))
-python scripts/az/az_train.py --model "${MODEL}" --out-dir "${OUT_DIR}" --prompts "${PROMPTS}" \
+NGPU=$(tr ',' '\n' <<< "${CUDA_VISIBLE_DEVICES:-0}" | wc -l)
+LAUNCH=(python); (( NGPU > 1 )) && LAUNCH=(python -m torch.distributed.run --standalone --nproc_per_node "${NGPU}")
+"${LAUNCH[@]}" scripts/az/az_train.py --model "${MODEL}" --out-dir "${OUT_DIR}" --prompts "${PROMPTS}" \
   --gpu-mem "${GPU_MEM:-0.28}" --stop-at $(( END_TS - 20 * 60 )) --resume ${ARGS:-}
