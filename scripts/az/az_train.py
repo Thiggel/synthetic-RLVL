@@ -160,6 +160,7 @@ def main():
     ap.add_argument("--buffer-iters", type=int, default=2)
     ap.add_argument("--tok-budget", type=int, default=12288, help="padded tokens per micro-batch")
     ap.add_argument("--value-batch", type=int, default=16)
+    ap.add_argument("--value-tok-budget", type=int, default=32768, help="padded tokens per value-head forward")
     ap.add_argument("--max-grad-norm", type=float, default=1.0, help="backbone clip")
     ap.add_argument("--max-head-grad-norm", type=float, default=1.0, help="value head clip (separate from the backbone)")
     ap.add_argument("--value-backbone-scale", type=float, default=0.1,
@@ -298,8 +299,14 @@ def main():
         model.eval()
         res = [0.0] * len(seqs)
         order = sorted(range(len(seqs)), key=lambda i: len(seqs[i]))
-        for s in range(0, len(order), args.value_batch):
-            idx = order[s:s + args.value_batch]
+        batches, cur = [], []
+        for i in order:  # at most --value-batch sequences and --value-tok-budget padded tokens per forward
+            if cur and (len(cur) >= args.value_batch or (len(cur) + 1) * len(seqs[i]) > args.value_tok_budget):
+                batches.append(cur); cur = []
+            cur.append(i)
+        if cur:
+            batches.append(cur)
+        for idx in batches:
             x, att = pad([seqs[i] for i in idx])
             h = hidden(x, att)
             last = torch.tensor([len(seqs[i]) - 1 for i in idx], device=h.device)
