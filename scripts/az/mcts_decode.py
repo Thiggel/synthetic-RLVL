@@ -385,6 +385,9 @@ def main():
         print(f"[round {rounds}] leaves {len(need)} gen {tg:.1f}s check {tc:.1f}s ({len(jobs)} lines) value {tv:.1f}s "
               f"done {n_done}/{len(items)} found {n_found}", flush=True)
 
+    for it in items:  # the loop can end with items whose selection only revisited terminal leaves: close them as is
+        if not it.done:
+            finish(it, "stalled")
     elapsed = time.time() - t0
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
