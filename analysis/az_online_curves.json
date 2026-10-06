@@ -3204,6 +3204,123 @@
     "sync_s": 0.5745577812194824,
     "iter_s": 1256.971210718155,
     "gpu_max_alloc_gb": 22.109371185302734
+   },
+   {
+    "iter": 23,
+    "n": 256,
+    "z": 0.31640625,
+    "found_any": 0.546875,
+    "status": {
+     "budget": 112,
+     "found": 140,
+     "exhausted": 4
+    },
+    "z_bench": {
+     "gsm8k_train": 0.3675675675675676,
+     "dolci_wordprob": 0.18604651162790697,
+     "dolci_math": 0.17857142857142858
+    },
+    "moves": 2404,
+    "found_correct": 81,
+    "value_auc_root_vs_z": 0.7795894919617481,
+    "mean_expansions": 50.30078125,
+    "mean_gen_tokens": 8598.15625,
+    "rounds": 64,
+    "search_s": 1130.7856874465942,
+    "gen_s": 1000.6167366504669,
+    "check_s": 6.508936405181885,
+    "value_s": 123.41566514968872,
+    "policy_loss": 0.038970993147813715,
+    "policy_tokens": 58865.0,
+    "value_loss": 0.5738878054689849,
+    "value_points": 2817.0,
+    "value_abs_err": 0.17239728243079303,
+    "grad_norm": 7.279296875,
+    "head_grad_norm": 5.797055408358574,
+    "opt_steps": 16.0,
+    "stats_v": 2,
+    "train_s": 176.6058349609375,
+    "sync_s": 0.563387393951416,
+    "iter_s": 1308.513555765152,
+    "gpu_max_alloc_gb": 22.109371185302734
+   },
+   {
+    "iter": 24,
+    "n": 256,
+    "z": 0.28125,
+    "found_any": 0.4765625,
+    "status": {
+     "found": 122,
+     "budget": 128,
+     "exhausted": 6
+    },
+    "z_bench": {
+     "gsm8k_train": 0.30256410256410254,
+     "dolci_math": 0.14285714285714285,
+     "dolci_wordprob": 0.2727272727272727
+    },
+    "moves": 2338,
+    "found_correct": 72,
+    "value_auc_root_vs_z": 0.7963728124900022,
+    "mean_expansions": 51.34765625,
+    "mean_gen_tokens": 8913.0625,
+    "rounds": 64,
+    "search_s": 1148.6551594734192,
+    "gen_s": 1027.0047125816345,
+    "check_s": 6.751796245574951,
+    "value_s": 114.43455839157104,
+    "policy_loss": 0.027608231801423244,
+    "policy_tokens": 60099.0,
+    "value_loss": 0.5574120350938756,
+    "value_points": 2836.0,
+    "value_abs_err": 0.1641642385607714,
+    "grad_norm": 6.80859375,
+    "head_grad_norm": 3.574362590909004,
+    "opt_steps": 16.0,
+    "stats_v": 2,
+    "train_s": 175.03831362724304,
+    "sync_s": 0.6050312519073486,
+    "iter_s": 1324.8959963321686,
+    "gpu_max_alloc_gb": 22.109371185302734
+   },
+   {
+    "iter": 25,
+    "n": 256,
+    "z": 0.21484375,
+    "found_any": 0.49609375,
+    "status": {
+     "found": 127,
+     "budget": 126,
+     "exhausted": 3
+    },
+    "z_bench": {
+     "dolci_wordprob": 0.0625,
+     "gsm8k_train": 0.25396825396825395,
+     "dolci_math": 0.14285714285714285
+    },
+    "moves": 2272,
+    "found_correct": 55,
+    "value_auc_root_vs_z": 0.7967402085159385,
+    "mean_expansions": 49.015625,
+    "mean_gen_tokens": 8546.58203125,
+    "rounds": 64,
+    "search_s": 1102.3724455833435,
+    "gen_s": 978.6858773231506,
+    "check_s": 6.661387205123901,
+    "value_s": 116.78228211402893,
+    "policy_loss": 0.024810274691844825,
+    "policy_tokens": 59796.0,
+    "value_loss": 0.5690650565920805,
+    "value_points": 2883.0,
+    "value_abs_err": 0.1593685556736788,
+    "grad_norm": 5.0029296875,
+    "head_grad_norm": 3.5054716169834137,
+    "opt_steps": 16.0,
+    "stats_v": 2,
+    "train_s": 199.41493320465088,
+    "sync_s": 0.605780839920044,
+    "iter_s": 1303.036500453949,
+    "gpu_max_alloc_gb": 22.109371185302734
    }
   ],
   "evals": [
@@ -3442,6 +3559,46 @@
      },
      "dolci_knowledge": {
       "valid_prem": 0.21666666666666667,
+      "cvf": 0.0,
+      "correct": 0.0
+     }
+    }
+   },
+   {
+    "iter": 24,
+    "n": 300,
+    "valid": 0.4666666666666667,
+    "valid_prem": 0.37666666666666665,
+    "cvf": 0.05333333333333334,
+    "correct": 0.20666666666666667,
+    "score_correct": 0.20666666666666667,
+    "value_auc_end": 0.652068661971831,
+    "value_auc_mid": 0.9326584507042254,
+    "value_mean_end": 0.07828681331302505,
+    "eval_s": 31.69907784461975,
+    "bench": {
+     "dolci_math": {
+      "valid_prem": 0.55,
+      "cvf": 0.0,
+      "correct": 0.06666666666666667
+     },
+     "dolci_dapo": {
+      "valid_prem": 0.38333333333333336,
+      "cvf": 0.016666666666666666,
+      "correct": 0.05
+     },
+     "dolci_wordprob": {
+      "valid_prem": 0.48333333333333334,
+      "cvf": 0.18333333333333332,
+      "correct": 0.35
+     },
+     "dolci_yesno": {
+      "valid_prem": 0.15,
+      "cvf": 0.06666666666666667,
+      "correct": 0.5666666666666667
+     },
+     "dolci_knowledge": {
+      "valid_prem": 0.31666666666666665,
       "cvf": 0.0,
       "correct": 0.0
      }
@@ -4244,6 +4401,85 @@
     "sync_s": 0.680100679397583,
     "iter_s": 2001.7989947795868,
     "gpu_max_alloc_gb": 22.600377082824707
+   },
+   {
+    "iter": 10,
+    "n": 256,
+    "z": 0.3125,
+    "found_any": 0.57421875,
+    "status": {
+     "found": 147,
+     "budget": 101,
+     "exhausted": 6,
+     "null": 2
+    },
+    "z_bench": {
+     "gsm8k_train": 0.335,
+     "dolci_wordprob": 0.25,
+     "dolci_math": 0.20833333333333334
+    },
+    "moves": 2402,
+    "found_correct": 80,
+    "value_auc_root_vs_z": 0.7866627310948568,
+    "mean_expansions": 87.69921875,
+    "mean_gen_tokens": 13652.06640625,
+    "rounds": 128,
+    "search_s": 1946.7324738502502,
+    "gen_s": 1733.1532468795776,
+    "check_s": 10.485968589782715,
+    "value_s": 202.5334656238556,
+    "policy_loss": 0.03144889891700586,
+    "policy_tokens": 48165.0,
+    "value_loss": 0.5781249532665242,
+    "value_points": 3077.0,
+    "value_abs_err": 0.20140359790673068,
+    "grad_norm": 7.123046875,
+    "head_grad_norm": 6.789375975728035,
+    "opt_steps": 16.0,
+    "stats_v": 2,
+    "train_s": 172.9082441329956,
+    "sync_s": 0.708439826965332,
+    "iter_s": 2121.1405096054077,
+    "gpu_max_alloc_gb": 22.600377082824707
+   },
+   {
+    "iter": 11,
+    "n": 256,
+    "z": 0.29296875,
+    "found_any": 0.5859375,
+    "status": {
+     "budget": 99,
+     "found": 150,
+     "exhausted": 7
+    },
+    "z_bench": {
+     "gsm8k_train": 0.328125,
+     "dolci_wordprob": 0.12121212121212122,
+     "dolci_math": 0.25806451612903225
+    },
+    "moves": 2400,
+    "found_correct": 75,
+    "value_auc_root_vs_z": 0.7664460914657817,
+    "mean_expansions": 86.390625,
+    "mean_gen_tokens": 13384.890625,
+    "rounds": 128,
+    "search_s": 1891.8691442012787,
+    "gen_s": 1676.2514564990997,
+    "check_s": 10.462989807128906,
+    "value_s": 204.58296751976013,
+    "policy_loss": 0.03747492678303388,
+    "policy_tokens": 50765.0,
+    "value_loss": 0.5839702683879295,
+    "value_points": 3231.0,
+    "value_abs_err": 0.18733350589008974,
+    "grad_norm": 7.6318359375,
+    "head_grad_norm": 4.6157776564359665,
+    "opt_steps": 16.0,
+    "stats_v": 2,
+    "train_s": 179.98739886283875,
+    "sync_s": 0.6830155849456787,
+    "iter_s": 2073.369493484497,
+    "gpu_max_alloc_gb": 22.600377082824707
    }
   ],
   "evals": [
@@ -4888,6 +5124,88 @@
     "sync_s": 0.6820647716522217,
     "iter_s": 1424.4348685741425,
     "gpu_max_alloc_gb": 22.55648183822632
+   },
+   {
+    "iter": 3,
+    "n": 256,
+    "z": 0.08203125,
+    "found_any": 0.68359375,
+    "status": {
+     "found": 175,
+     "budget": 78,
+     "exhausted": 3
+    },
+    "z_bench": {
+     "dolci_wordprob": 0.13793103448275862,
+     "dolci_knowledge": 0.0,
+     "dolci_dapo": 0.018518518518518517,
+     "dolci_math": 0.12244897959183673,
+     "dolci_yesno": 0.2727272727272727
+    },
+    "moves": 1700,
+    "found_correct": 21,
+    "value_auc_root_vs_z": 0.7508424908424909,
+    "mean_expansions": 37.2890625,
+    "mean_gen_tokens": 4984.5859375,
+    "rounds": 64,
+    "search_s": 1175.2153997421265,
+    "gen_s": 1052.7598609924316,
+    "check_s": 5.919659614562988,
+    "value_s": 116.3923134803772,
+    "policy_loss": 0.011792676530603785,
+    "policy_tokens": 42767.0,
+    "value_loss": 0.2263110756102833,
+    "value_points": 3062.0,
+    "value_abs_err": 0.0692029769996523,
+    "grad_norm": 3.91064453125,
+    "head_grad_norm": 3.511703260242939,
+    "opt_steps": 16.0,
+    "stats_v": 2,
+    "train_s": 252.13998985290527,
+    "sync_s": 0.7016956806182861,
+    "iter_s": 1428.5442385673523,
+    "gpu_max_alloc_gb": 22.55648183822632
+   },
+   {
+    "iter": 4,
+    "n": 256,
+    "z": 0.06640625,
+    "found_any": 0.6796875,
+    "status": {
+     "found": 174,
+     "budget": 81,
+     "exhausted": 1
+    },
+    "z_bench": {
+     "dolci_knowledge": 0.0,
+     "dolci_yesno": 0.13636363636363635,
+     "dolci_dapo": 0.01639344262295082,
+     "dolci_math": 0.034482758620689655,
+     "dolci_wordprob": 0.1746031746031746
+    },
+    "moves": 1724,
+    "found_correct": 17,
+    "value_auc_root_vs_z": 0.8109713203463204,
+    "mean_expansions": 37.109375,
+    "mean_gen_tokens": 5178.8359375,
+    "rounds": 64,
+    "search_s": 1254.5622246265411,
+    "gen_s": 1121.6334171295166,
+    "check_s": 5.842944383621216,
+    "value_s": 126.94167613983154,
+    "policy_loss": 0.008400289045312093,
+    "policy_tokens": 43993.0,
+    "value_loss": 0.23109113334066933,
+    "value_points": 3000.0,
+    "value_abs_err": 0.07274917810161909,
+    "grad_norm": 3.9248046875,
+    "head_grad_norm": 4.596532970666885,
+    "opt_steps": 16.0,
+    "stats_v": 2,
+    "train_s": 259.4183187484741,
+    "sync_s": 0.6789484024047852,
+    "iter_s": 1515.3255729675293,
+    "gpu_max_alloc_gb": 22.55648183822632
    }
   ],
   "evals": [
@@ -4926,6 +5244,46 @@
      },
      "dolci_knowledge": {
       "valid_prem": 0.18333333333333332,
+      "cvf": 0.0,
+      "correct": 0.0
+     }
+    }
+   },
+   {
+    "iter": 4,
+    "n": 300,
+    "valid": 0.5333333333333333,
+    "valid_prem": 0.38666666666666666,
+    "cvf": 0.06,
+    "correct": 0.17333333333333334,
+    "score_correct": 0.17333333333333334,
+    "value_auc_end": 0.6379038613081166,
+    "value_auc_mid": 0.8289992119779354,
+    "value_mean_end": 0.029522954688485092,
+    "eval_s": 51.42912578582764,
+    "bench": {
+     "dolci_math": {
+      "valid_prem": 0.4166666666666667,
+      "cvf": 0.03333333333333333,
+      "correct": 0.08333333333333333
+     },
+     "dolci_dapo": {
+      "valid_prem": 0.45,
+      "cvf": 0.016666666666666666,
+      "correct": 0.016666666666666666
+     },
+     "dolci_wordprob": {
+      "valid_prem": 0.38333333333333336,
+      "cvf": 0.16666666666666666,
+      "correct": 0.38333333333333336
+     },
+     "dolci_yesno": {
+      "valid_prem": 0.2,
+      "cvf": 0.08333333333333333,
+      "correct": 0.38333333333333336
+     },
+     "dolci_knowledge": {
+      "valid_prem": 0.48333333333333334,
       "cvf": 0.0,
       "correct": 0.0
      }
