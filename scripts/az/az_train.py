@@ -150,6 +150,8 @@ def main():
                          "sum_a (pi~(a) - w_a) grad log pi(a): zero when the search adds no information")
     ap.add_argument("--max-bad", type=int, default=4, help="illegal sampled lines per move in the subset loss")
     ap.add_argument("--ntp-coef", type=float, default=0.25)
+    ap.add_argument("--neg-scale", type=float, default=1.0,
+                    help="subset loss: scale of the negative (w - pi) coefficients; 0 keeps only the push-ups")
     ap.add_argument("--value-coef", type=float, default=1.0)
     ap.add_argument("--value-target", choices=("z", "mix"), default="mix")
     ap.add_argument("--min-visits-q", type=int, default=2, help="children with >= this many visits get Q as value target")
@@ -681,6 +683,7 @@ def main():
                 pt = [math.exp(x - mx) for x in lps]
                 pt = [x / sum(pt) for x in pt]
                 coef = [w - q for w, q in zip(ws, pt)] + [-q for q in pt[len(ch):]] if any(ws) else [0.0] * len(lps)
+                coef = [x if x > 0 else args.neg_scale * x for x in coef]  # --neg-scale 0: positive part only
             else:
                 coef = ws
             s_tgt = m["z"] if args.value_target == "z" or m["root_q"] is None else (m["z"] + m["root_q"]) / 2
