@@ -14,7 +14,8 @@ ROOT=/vol/tmp2/laitenbf/rlvl_data/grpo_formal_20260928
 OLD=/vol/tmp2/laitenbf/rlvl_data/checker_snapshot_pre_libext_20260930
 NEW=/vol/tmp2/laitenbf/rlvl_data/checker_snapshot_libext_20261001
 CAP=${CAP:-5}
-used=$(( $(squeue -u laitenbf -h -t R -w gruenau12 | wc -l) + $(squeue -u laitenbf -h -t PD -o %j | grep -c '^gate_' || true) ))
+# count L40s, not jobs (the AZ DP runs hold 2)
+used=$(( $(squeue -u laitenbf -h -t R -w gruenau12 -o %b | awk -F: '{s += $NF} END {print s + 0}') + $(squeue -u laitenbf -h -t PD -o %j | grep -c '^gate_' || true) ))
 last=$(squeue -u laitenbf -h -o '%i %j' | awk '$2 ~ /^gate_/ {print $1}' | sort -n | tail -1)
 for spec in "L1_correct:${OLD}" "L1_cvf:${OLD}" "2b_le_G13_cvffmt:${NEW}" "2b_le_G14_cvffmt_overlong:${NEW}" \
             "2b_e2_G15_cvffmt_overlong:${NEW}" "2b_e2_G16_cvffmt_overlong_noproof:${NEW}" \
