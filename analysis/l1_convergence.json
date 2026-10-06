@@ -1078,6 +1078,47 @@
      },
      "reward_version": "d8840c1"
     }
+   ],
+   [
+    4750,
+    {
+     "gate_train_benches": {
+      "correct": 0.4514285714285714,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 700
+     },
+     "gate_all": {
+      "correct": 0.3494736842105263,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 950
+     },
+     "gate_ood": {
+      "correct": 0.064,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 250
+     },
+     "gen_test": {
+      "correct": 0.9477408818726184,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 1837
+     },
+     "gen_test_eval": {
+      "valid": 0.0,
+      "answer_acc": 0.0,
+      "faithful": 0.0,
+      "grammatical": 0.0,
+      "n": 2000
+     },
+     "reward_version": "d8840c1"
+    }
    ]
   ],
   "cvf, gamed premise checks (archived, steps 751-2300)": [
@@ -2103,6 +2144,47 @@
       "answer_acc": 0.7675,
       "faithful": 0.872,
       "grammatical": 0.9575,
+      "n": 2000
+     },
+     "reward_version": "d8840c1"
+    }
+   ],
+   [
+    3750,
+    {
+     "gate_train_benches": {
+      "correct": 0.38285714285714284,
+      "valid": 0.8685714285714285,
+      "valid_prem": 0.8057142857142857,
+      "cvf": 0.32857142857142857,
+      "n": 700
+     },
+     "gate_all": {
+      "correct": 0.28842105263157897,
+      "valid": 0.8726315789473684,
+      "valid_prem": 0.7978947368421052,
+      "cvf": 0.24526315789473685,
+      "n": 950
+     },
+     "gate_ood": {
+      "correct": 0.024,
+      "valid": 0.884,
+      "valid_prem": 0.776,
+      "cvf": 0.012,
+      "n": 250
+     },
+     "gen_test": {
+      "correct": 0.8840500816548721,
+      "valid": 0.9379422972237343,
+      "valid_prem": 0.8813282525857377,
+      "cvf": 0.8160043549265106,
+      "n": 1837
+     },
+     "gen_test_eval": {
+      "valid": 0.785,
+      "answer_acc": 0.774,
+      "faithful": 0.863,
+      "grammatical": 0.9635,
       "n": 2000
      },
      "reward_version": "d8840c1"
