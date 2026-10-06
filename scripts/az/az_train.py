@@ -113,6 +113,11 @@ def main():
     ap.add_argument("--lr", type=float, default=1e-6)
     ap.add_argument("--head-lr", type=float, default=1e-4)
     ap.add_argument("--policy-coef", type=float, default=1.0)
+    ap.add_argument("--policy-target", choices=("visits", "cq"), default="visits",
+                    help="visits: N(a)/sum N (r1-r4: with 8 sims the visits are flatter than the prior, the policy lost "
+                         "entropy control and correctness); cq: prior(a) * exp(sigma(completed Q(a))), Gumbel-AZ style")
+    ap.add_argument("--cq-scale", type=float, default=0.1, help="sigma(q) = cq_scale * (cq_visit + max N) * q")
+    ap.add_argument("--cq-visit", type=float, default=50.0)
     ap.add_argument("--ntp-coef", type=float, default=0.25)
     ap.add_argument("--value-coef", type=float, default=1.0)
     ap.add_argument("--value-target", choices=("z", "mix"), default="mix")
@@ -483,10 +488,21 @@ def main():
             pre = m["pre"]
             ch = m["children"]
             totN = sum(c["N"] for c in ch if not c["dead"])
+            if args.policy_target == "cq":  # completed Q: unvisited lines get the root value; dead lines weight 0
+                vmix = m["root_q"] if m["root_q"] is not None else m["v"]
+                beta = args.cq_scale * (args.cq_visit + max([c["N"] for c in ch] + [0]))
+                lg = [math.log(c["prior"]) + beta * (c["q"] if c["N"] and c["q"] is not None else vmix)
+                      if not c["dead"] and c["prior"] > 0 else None for c in ch]
+                mx = max([x for x in lg if x is not None], default=0.0)
+                ws = [math.exp(x - mx) if x is not None else 0.0 for x in lg]
+                ws = [x / sum(ws) for x in ws] if sum(ws) else ws
             s_tgt = m["z"] if args.value_target == "z" or m["root_q"] is None else (m["z"] + m["root_q"]) / 2
             first = True
-            for c in ch:
-                w = c["N"] / totN if totN and c["N"] and not c["dead"] else 0.0
+            for ci, c in enumerate(ch):
+                if args.policy_target == "cq":
+                    w = ws[ci]
+                else:
+                    w = c["N"] / totN if totN and c["N"] and not c["dead"] else 0.0
                 if c["terminal"]:
                     vt = c["term"]
                 elif c["dead"]:

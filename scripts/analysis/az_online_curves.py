@@ -22,7 +22,8 @@ import matplotlib.pyplot as plt  # noqa: E402
 REPO = Path(__file__).resolve().parents[2]
 AZ = Path("/vol/tmp2/laitenbf/rlvl_data/az")
 RUNS = {"AZ online from e6 (r1, lr 1e-6)": AZ / "online_e6_r1", "AZ online from e6 (r2, lr 3e-6)": AZ / "online_e6_r2_lr3e6",
-        "r3: value grad x0.1 into backbone": AZ / "online_e6_r3_vbs01", "r4: value head only (x0)": AZ / "online_e6_r4_vbs0"}
+        "r3: value grad x0.1 into backbone": AZ / "online_e6_r3_vbs01", "r4: value head only (x0)": AZ / "online_e6_r4_vbs0",
+        "r5: completed-Q policy target": AZ / "online_e6_r5_cq", "r6: ExIt policy (NTP on found only)": AZ / "online_e6_r6_exit"}
 OUT = REPO / "analysis/az_online_curves.json"
 FIG = REPO / "reports/figures/az_online_curves"
 
