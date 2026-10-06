@@ -1984,6 +1984,47 @@
      },
      "reward_version": "d8840c1"
     }
+   ],
+   [
+    3250,
+    {
+     "gate_train_benches": {
+      "correct": 0.35,
+      "valid": 0.8371428571428572,
+      "valid_prem": 0.78,
+      "cvf": 0.30857142857142855,
+      "n": 700
+     },
+     "gate_all": {
+      "correct": 0.26421052631578945,
+      "valid": 0.8115789473684211,
+      "valid_prem": 0.7505263157894737,
+      "cvf": 0.23157894736842105,
+      "n": 950
+     },
+     "gate_ood": {
+      "correct": 0.024,
+      "valid": 0.74,
+      "valid_prem": 0.668,
+      "cvf": 0.016,
+      "n": 250
+     },
+     "gen_test": {
+      "correct": 0.8573761567773543,
+      "valid": 0.9384866630375612,
+      "valid_prem": 0.8639085465432771,
+      "cvf": 0.7833424060968971,
+      "n": 1837
+     },
+     "gen_test_eval": {
+      "valid": 0.774,
+      "answer_acc": 0.688,
+      "faithful": 0.836,
+      "grammatical": 0.9535,
+      "n": 2000
+     },
+     "reward_version": "d8840c1"
+    }
    ]
   ]
  }

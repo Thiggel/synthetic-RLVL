@@ -317,5 +317,23 @@
    "cvf": 0.1711,
    "correct": 0.3086
   }
+ },
+ "G19 (from e6, KL)@500": {
+  "run": "G19 (from e6, KL)",
+  "step": 500,
+  "all": {
+   "n": 950,
+   "valid": 0.7263,
+   "valid_prem": 0.6221,
+   "cvf": 0.2105,
+   "correct": 0.2853
+  },
+  "clean": {
+   "n": 713,
+   "valid": 0.6999,
+   "valid_prem": 0.6017,
+   "cvf": 0.2258,
+   "correct": 0.2987
+  }
  }
 }
