@@ -1119,6 +1119,88 @@
      },
      "reward_version": "d8840c1"
     }
+   ],
+   [
+    5000,
+    {
+     "gate_train_benches": {
+      "correct": 0.4742857142857143,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 700
+     },
+     "gate_all": {
+      "correct": 0.3663157894736842,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 950
+     },
+     "gate_ood": {
+      "correct": 0.064,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 250
+     },
+     "gen_test": {
+      "correct": 0.9433859553620033,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 1837
+     },
+     "gen_test_eval": {
+      "valid": 0.0,
+      "answer_acc": 0.0,
+      "faithful": 0.0,
+      "grammatical": 0.0,
+      "n": 2000
+     },
+     "reward_version": "d8840c1"
+    }
+   ],
+   [
+    1000000000,
+    {
+     "gate_train_benches": {
+      "correct": 0.4857142857142857,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 700
+     },
+     "gate_all": {
+      "correct": 0.3778947368421053,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 950
+     },
+     "gate_ood": {
+      "correct": 0.076,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 250
+     },
+     "gen_test": {
+      "correct": 0.9433859553620033,
+      "valid": 0.0,
+      "valid_prem": 0.0,
+      "cvf": 0.0,
+      "n": 1837
+     },
+     "gen_test_eval": {
+      "valid": 0.0,
+      "answer_acc": 0.0,
+      "faithful": 0.0,
+      "grammatical": 0.0,
+      "n": 2000
+     },
+     "reward_version": "d8840c1"
+    }
    ]
   ],
   "cvf, gamed premise checks (archived, steps 751-2300)": [
