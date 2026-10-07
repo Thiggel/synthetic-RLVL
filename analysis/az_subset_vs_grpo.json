@@ -1,0 +1,58 @@
+{
+ "L1_correct/checkpoint-2500": {
+  "n": 300,
+  "valid_prem": 0.0,
+  "cvf": 0.0,
+  "correct": 0.36333333333333334,
+  "gen_tokens": 936.6733333333333
+ },
+ "L1_correct/checkpoint-4500": {
+  "n": 300,
+  "valid_prem": 0.0,
+  "cvf": 0.0,
+  "correct": 0.33,
+  "gen_tokens": 990.7633333333333
+ },
+ "L1_correct/final": {
+  "n": 300,
+  "valid_prem": 0.0,
+  "cvf": 0.0,
+  "correct": 0.32,
+  "gen_tokens": 1168.8766666666668
+ },
+ "L1_cvf/checkpoint-2500": {
+  "n": 300,
+  "valid_prem": 0.6,
+  "cvf": 0.15666666666666668,
+  "correct": 0.22,
+  "gen_tokens": 345.20666666666665
+ },
+ "L1_cvf/checkpoint-3500": {
+  "n": 300,
+  "valid_prem": 0.83,
+  "cvf": 0.21666666666666667,
+  "correct": 0.23,
+  "gen_tokens": 207.51666666666668
+ },
+ "L1_cvf/checkpoint-4500": {
+  "n": 300,
+  "valid_prem": 0.77,
+  "cvf": 0.21333333333333335,
+  "correct": 0.22666666666666666,
+  "gen_tokens": 238.49333333333334
+ },
+ "L1_cvf/checkpoint-4750": {
+  "n": 300,
+  "valid_prem": 0.8066666666666666,
+  "cvf": 0.22333333333333333,
+  "correct": 0.24333333333333335,
+  "gen_tokens": 217.12333333333333
+ },
+ "2b_e6_G19_cvffmt_overlong_noproof_kl02/final": {
+  "n": 300,
+  "valid_prem": 0.6466666666666666,
+  "cvf": 0.2,
+  "correct": 0.25333333333333335,
+  "gen_tokens": 127.41333333333333
+ }
+}
