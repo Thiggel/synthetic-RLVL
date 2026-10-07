@@ -30,7 +30,8 @@ RUNS = {"AZ online from e6 (r1, lr 1e-6)": AZ / "online_e6_r1", "AZ online from 
         "r10: ExIt, gate-matched pool": AZ / "online_e6_r10_exit_gatepool",
         "r11: Gumbel + subset loss, 2-GPU DP": AZ / "online_e6_r11_gumbel_dp2",
         "r12: Gumbel + subset + ExIt (ntp 4), 2-GPU DP": AZ / "online_e6_r12_gumbel_exit_dp2",
-        "r13: Gumbel + subset, positive part only": AZ / "online_e6_r13_gumbel_posonly"}
+        "r13: Gumbel + subset, positive part only": AZ / "online_e6_r13_gumbel_posonly",
+        "a1: r12 recipe, 4-GPU DP on alex, 512 prompts/iter": AZ / "online_e6_a1_gumbel_exit_dp4"}
 OUT = REPO / "analysis/az_online_curves.json"
 FIG = REPO / "reports/figures/az_online_curves"
 

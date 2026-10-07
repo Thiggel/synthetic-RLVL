@@ -2353,6 +2353,47 @@
      },
      "reward_version": "d8840c1"
     }
+   ],
+   [
+    4500,
+    {
+     "gate_train_benches": {
+      "correct": 0.37,
+      "valid": 0.8657142857142858,
+      "valid_prem": 0.7928571428571428,
+      "cvf": 0.3342857142857143,
+      "n": 700
+     },
+     "gate_all": {
+      "correct": 0.28,
+      "valid": 0.8736842105263158,
+      "valid_prem": 0.791578947368421,
+      "cvf": 0.25157894736842107,
+      "n": 950
+     },
+     "gate_ood": {
+      "correct": 0.028,
+      "valid": 0.896,
+      "valid_prem": 0.788,
+      "cvf": 0.02,
+      "n": 250
+     },
+     "gen_test": {
+      "correct": 0.8856831790963527,
+      "valid": 0.9515514425694066,
+      "valid_prem": 0.8922155688622755,
+      "cvf": 0.8279804028307022,
+      "n": 1837
+     },
+     "gen_test_eval": {
+      "valid": 0.7995,
+      "answer_acc": 0.7755,
+      "faithful": 0.8705,
+      "grammatical": 0.972,
+      "n": 2000
+     },
+     "reward_version": "d8840c1"
+    }
    ]
   ]
  }
