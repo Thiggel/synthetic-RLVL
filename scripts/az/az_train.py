@@ -28,6 +28,15 @@ target max(best gold terminal below it, its Q), a truncated line (--max-lines / 
 value instead of 0; policy target (completed Q) at nodes with >= --min-visits-policy visits. --widen-every n
 re-expands a node after n * (expansions so far) visits (progressive widening, up to --max-widen expansions).
 
+--token (run r16, 2026-10-08): token-level actions. A node is a token prefix at a decision point of the policy under the
+rlvl.Guide legal-token mask: the masked top-1 probability (vLLM top --top-lp log-probs, the mass outside them counted as
+legal) is below --decide-at, or the greedy token is illegal. An expansion takes the legal next tokens in order of policy
+probability (until --tok-cum of the legal mass, at most --tok-m; a widening adds --tok-widen more) and, per token, one
+greedy vLLM continuation that runs through the forced tokens up to the next decision point (or --chunk-tokens): the
+child's action is that token plus its forced continuation, its log-prob the chunk's. Lines completed inside a chunk go
+through the line checker of the line mode (a failing line cuts the chunk there: an illegal action, target 0 in the subset
+loss; an accepted `ans` line: a terminal). The value head is evaluated and trained at every decision point (mid-line too).
+
 Evaluation every --eval-every iterations on the 300-item gate subset (greedy, the same vLLM): valid_prem / cvf /
 correct, and the value head's AUC for cvf at the end of the proof and at its middle line (held-out prompts).
 Data parallel: under torchrun (WORLD_SIZE > 1) every rank runs its own vLLM (external_launcher, tp 1) and searches
@@ -61,7 +70,7 @@ from eval_formal_bench_vllm import fit_prompts, score  # noqa: E402
 from eval_formal_vllm import TAG_USER  # noqa: E402
 from formal_rewards import components  # noqa: E402
 from guided_decode import _ANS, OPEN, harden, precheck, verdict  # noqa: E402
-from mcts_decode import HARD, TNode, backup, c_cvf, mark_dead, puct_child, relaxed  # noqa: E402
+from mcts_decode import HARD, TNode, backup, c_cvf, puct_child, relaxed  # noqa: E402
 
 LINE_NORM = 32.0  # token sums of line log-probs are divided by this (a typical proof line), for a loss of O(1)
 
@@ -70,11 +79,14 @@ class Node(TNode):
     # token ids of prompt + OPEN + lines; of this node's own line; its sampled log-prob (vLLM, the search policy);
     # the illegal lines sampled at its expansions [(lids, lp)]; Gumbel noise as a root child; N at the start of the
     # current move (root children); a leaf awaiting expansion this round
-    __slots__ = ("ids", "lids", "lp", "bad", "g", "n0", "pend", "trunc")
+    # --token: the token ids of the unfinished line; the ranked legal next tokens [(id, log-prob)] at this decision
+    # point (None: not known yet); how many of them are expanded
+    __slots__ = ("ids", "lids", "lp", "bad", "g", "n0", "pend", "trunc", "part", "nxt", "ci")
 
     def __init__(self, *a, **kw):
         super().__init__(*a, **kw)
         self.lp, self.bad, self.g, self.n0, self.pend, self.trunc = None, [], None, 0, False, False
+        self.part, self.nxt, self.ci = [], None, 0
 
 
 class Episode:
@@ -141,6 +153,15 @@ def main():
     ap.add_argument("--min-visits-policy", type=int, default=4, help="--tree: nodes with a policy target")
     ap.add_argument("--widen-every", type=int, default=0, help="--tree: re-expand a node after n * expansions visits")
     ap.add_argument("--max-widen", type=int, default=3)
+    ap.add_argument("--token", action="store_true", help="token-level actions at the policy's decision points (r16)")
+    ap.add_argument("--decide-at", type=float, default=0.9, help="--token: decision point if masked top-1 < this")
+    ap.add_argument("--top-lp", type=int, default=20, help="--token: vLLM log-probs per position")
+    ap.add_argument("--chunk-tokens", type=int, default=48, help="--token: max greedy tokens per continuation")
+    ap.add_argument("--tok-cum", type=float, default=0.95, help="--token: expand legal tokens up to this policy mass")
+    ap.add_argument("--tok-m", type=int, default=8, help="--token: max tokens per first expansion (min 2)")
+    ap.add_argument("--tok-widen", type=int, default=4, help="--token: tokens added per widening")
+    ap.add_argument("--line-norm", type=float, default=LINE_NORM,
+                    help="policy coefficients are divided by this (a line's token count; ~4 for token chunks)")
     ap.add_argument("--move-temp", type=float, default=1.0)
     ap.add_argument("--dirichlet-alpha", type=float, default=0.3)
     ap.add_argument("--dirichlet-frac", type=float, default=0.25)
@@ -554,6 +575,192 @@ def main():
         if len(ch.lines) >= args.max_lines:
             finish(ep, "max_lines")
 
+    def exhausted(n):  # no more actions to sample at this node
+        if args.token:
+            return n.nxt is not None and n.ci >= len(n.nxt)
+        return n.expansions >= 2
+
+    def kill_up(node):  # mcts_decode.mark_dead with exhausted(): a node all of whose children are dead is dead too
+        while node is not None and node.expanded and not node.terminal and all(ch.dead for ch in node.children) \
+                and exhausted(node):
+            node.dead = True
+            node = node.parent
+
+    # ---- --token: token-level actions under the rlvl.Guide mask
+    voc = rlvl.vocab_of(tok) if args.token else None
+    sp_tok = SamplingParams(n=1, temperature=0.0, max_tokens=args.chunk_tokens, logprobs=args.top_lp,
+                            stop_token_ids=stop_ids, skip_special_tokens=True)
+
+    def guide_at(ep, ids):  # rlvl.Guide has no copy: replay the proof body
+        g = rlvl.Guide(ep.rec["prompt"], voc)
+        for t_ in ids[len(ep.prompt_ids) + len(open_ids):]:
+            if not g.advance(t_):
+                return None
+        return g
+
+    def lp_dict(d):
+        return {t_: x.logprob for t_, x in d.items()}
+
+    def masked(g, dist):  # ranked legal [(id, lp)] of a top-k dist, and the masked top-1 (unseen mass counted legal)
+        leg = sorted(((t_, lp) for t_, lp in dist.items() if g.is_allowed(t_) and lp > -1e9), key=lambda x: -x[1])
+        s_all = sum(math.exp(lp) for lp in dist.values())
+        s_leg = sum(math.exp(lp) for _, lp in leg)
+        return leg, (math.exp(leg[0][1]) / (s_leg + max(0.0, 1 - s_all)) if leg else 0.0)
+
+    def walk(g, toks, dists, free):
+        """Follow toks under the guide; stop at the first position >= free that is a decision point or illegal.
+        Returns (tokens taken, line-end offsets, ranked legal candidates there; None when the tokens ran out)."""
+        ends = []
+        for i, t_ in enumerate(toks):
+            if i >= free:
+                try:
+                    leg, top1 = masked(g, dists[i])
+                except BaseException as e:  # a Rust panic inside the guide (pyo3 PanicException): treat as dead end
+                    print(f"[guide panic] {type(e).__name__}: {e} after {g.text()[-200:]!r}", file=sys.stderr, flush=True)
+                    return i, ends, []
+                if top1 < args.decide_at or not g.is_allowed(t_):
+                    return i, ends, leg
+            if not g.advance(t_):
+                return i, ends, []
+            if is_nl(t_):
+                ends.append(i + 1)
+        return len(toks), ends, None
+
+    def judge(items):  # [(ep, prior lines, line)] -> [(keep, terminal, gold, why)], the line pipeline of the line mode
+        res, jobs = [None] * len(items), []
+        for j, (ep, pre, line) in enumerate(items):
+            why = precheck(line) or harden(ep.rec["prompt"], pre, line, args.max_know)
+            if why and args.reward == "c_cvf" and why not in HARD:
+                ep.fail["soft_" + why] += 1
+                why = None
+            if why:
+                res[j] = (False, False, 0.0, why)
+            else:
+                jobs.append(j)
+        reps = rlvl.check_batch([items[j][0].rec["prompt"] for j in jobs], ["".join(items[j][1]) + items[j][2] for j in jobs],
+                                strict=True) if jobs else []
+        for j, rep in zip(jobs, reps):
+            ep, pre, line = items[j]
+            if args.reward == "c_cvf":
+                res[j] = relaxed(ep.rec["prompt"], pre, line, rep, ep.rec)
+                continue
+            v = verdict(rep, line)
+            gold = 0.0
+            if v == "done":
+                m = _ANS.match(line)
+                c = components(ep.rec, OPEN + "".join(pre) + line + "</proof>\nAnswer: " + (m.group(1) if m else ""))
+                v = "done" if (m and c["valid"] and c["prem_ok"]) else "s2_invalid"
+                gold = float(c["correct"] * c["valid"] * c["prem_ok"])
+            res[j] = (v in ("ok", "done"), v == "done", gold, None if v in ("ok", "done") else v)
+        return res
+
+    def settle(pieces):
+        """pieces: (ep, node, chunk, per-token lps, line ends, next candidates, prior, in_place). Checks the lines the
+        chunk completes, then extends the node in place (a continuation of a node without candidates) or adds a child."""
+        items, spans = [], []
+        for ep, node, chunk, lps, ends, nxt, prior, inp in pieces:
+            seq, off, prev, lines = node.part + chunk, len(node.part), 0, []
+            for e in ends:
+                lines.append(tok.decode(seq[prev:off + e]))
+                prev = off + e
+            spans.append((len(items), lines, seq[prev:]))
+            items.extend((ep, node.lines + lines[:k], lines[k]) for k in range(len(lines)))
+        verd = judge(items)
+        for (ep, node, chunk, lps, ends, nxt, prior, inp), (i0, lines, part) in zip(pieces, spans):
+            cut, state, gold = len(chunk), "live", 0.0
+            for k in range(len(lines)):
+                keep, term, g_, why = verd[i0 + k]
+                if why:
+                    ep.fail[("soft_" if keep else "") + why] += 1
+                if not keep or term:
+                    cut, state, gold = ends[k], ("dead" if not keep else "terminal"), g_
+                    lines = lines[:k + 1]
+                    break
+            if state == "live" and len(part) >= args.max_line_tokens:
+                state = "dead"
+                ep.fail["line_too_long"] += 1
+            ch_ids, lp = chunk[:cut], sum(lps[:cut])
+            if inp:
+                tgt = node
+                tgt.lids, tgt.ids = tgt.lids + ch_ids, tgt.ids + ch_ids
+                if tgt.parent is not None:  # the root has no action
+                    tgt.lp = (tgt.lp or 0.0) + lp
+                tgt.lines = node.lines + lines
+            else:
+                if state == "dead":  # an illegal action: target 0 in the subset loss, no child
+                    node.bad.append((ch_ids, lp))
+                    continue
+                tgt = Node(node.lines + lines, node, prior, tok.decode(ch_ids))
+                tgt.lids, tgt.ids, tgt.lp = ch_ids, node.ids + ch_ids, lp
+                node.children.append(tgt)
+            tgt.part = part if state == "live" else []
+            tgt.nxt = nxt if state == "live" else []
+            if state == "dead":
+                tgt.dead = True
+            elif state == "terminal":
+                tgt.terminal, tgt.term_value, tgt.line = True, gold, lines[-1]
+                if ep.best is None or gold > ep.best.term_value:
+                    ep.best = tgt
+
+    def expand_tokens(leaves):
+        """--token expansion of this round's leaves. Returns (vLLM seconds, guide + checker seconds)."""
+        t_gen = t_chk = 0.0
+        cont = [(ep, node) for ep, node, _ in leaves if node.nxt is None]
+        if cont:  # A: no candidates yet (the root, a chunk cut at --chunk-tokens): run on to the first decision point
+            tg = time.time()
+            outs = llm.generate([TokensPrompt(prompt_token_ids=n.ids) for _, n in cont], sp_tok, use_tqdm=False)
+            t_gen += time.time() - tg
+            tc = time.time()
+            pieces = []
+            for (ep, node), o in zip(cont, outs):
+                s_ = o.outputs[0]
+                ep.gen_tokens += len(s_.token_ids)
+                toks, dists = list(s_.token_ids), [lp_dict(d) for d in (s_.logprobs or [])]
+                g = guide_at(ep, node.ids)
+                n, ends, nxt = walk(g, toks, dists, 0) if g is not None else (0, [], [])
+                if nxt is None and n == 0:
+                    nxt = []
+                pieces.append((ep, node, toks[:n], [dists[i][toks[i]] for i in range(n)], ends, nxt, None, True))
+            settle(pieces)
+            t_chk += time.time() - tc
+        jobs = []
+        for ep, node, _ in leaves:
+            node.expansions += 1
+            ep.expansions += 1
+            if node.dead or node.terminal or node.nxt is None or exhausted(node):
+                continue
+            cand = node.nxt
+            s_leg = sum(math.exp(lp) for _, lp in cand)
+            cum = sum(math.exp(lp) for _, lp in cand[:node.ci]) / s_leg
+            (lim, least), i, take = (args.tok_m, 2) if node.ci == 0 else (args.tok_widen, 1), node.ci, []
+            while i < len(cand) and len(take) < lim and (cum < args.tok_cum or len(take) < least):
+                take.append(cand[i])
+                cum += math.exp(cand[i][1]) / s_leg
+                i += 1
+            node.ci = i
+            ep.n_cands += len(take)
+            jobs.extend((ep, node, t_, lp, math.exp(lp) / s_leg) for t_, lp in take)
+        if jobs:  # B: one greedy continuation per (leaf, candidate token) up to the next decision point
+            tg = time.time()
+            outs = llm.generate([TokensPrompt(prompt_token_ids=n.ids + [t_]) for _, n, t_, _, _ in jobs], sp_tok,
+                                use_tqdm=False)
+            t_gen += time.time() - tg
+            tc = time.time()
+            pieces = []
+            for (ep, node, t_, lp, prior), o in zip(jobs, outs):
+                s_ = o.outputs[0]
+                ep.gen_tokens += len(s_.token_ids)
+                toks = [t_] + list(s_.token_ids)
+                dists = [{t_: lp}] + [lp_dict(d) for d in (s_.logprobs or [])]
+                g = guide_at(ep, node.ids)
+                n, ends, nxt = walk(g, toks, dists, 1) if g is not None else (0, [], [])
+                if n == 0:
+                    continue
+                pieces.append((ep, node, toks[:n], [dists[i][toks[i]] for i in range(n)], ends, nxt, prior, False))
+            settle(pieces)
+            t_chk += time.time() - tc
+        return t_gen, t_chk
+
     def self_play(recs):
         eps = [Episode(r, prompt_ids(r), open_ids) for r in recs]
         for ep in eps:
@@ -572,7 +779,7 @@ def main():
                         ep.root = ep.root.parent
                         ep.move_start = ep.root.N
                         new_move(ep)
-                    if ep.root.dead or (ep.root.expanded and not ep.root.children and ep.root.expansions >= 2):
+                    if ep.root.dead or (ep.root.expanded and not ep.root.children and exhausted(ep.root)):
                         if args.tree and ep.best is not None:
                             finish(ep, "found", ep.best)
                         else:
@@ -586,7 +793,7 @@ def main():
                     node, path = ep.root, [ep.root]
                     while node.expanded and node.children:
                         if args.widen_every and not node.pend and node.expansions < args.max_widen \
-                                and node.N >= args.widen_every * node.expansions:
+                                and node.N >= args.widen_every * node.expansions and not (args.token and exhausted(node)):
                             break  # progressive widening: sample this node again
                         nxt = select_child(ep, node)
                         if nxt is None:
@@ -615,13 +822,13 @@ def main():
                         node.trunc = node.dead = True  # truncated, not wrong: back up the parent's value
                         node.v = node.parent.v if node.parent is not None and node.parent.v is not None else 0.0
                         backup(path, node.v)
-                        mark_dead(node.parent)
+                        kill_up(node.parent)
                         continue
-                    if (node.expanded and node.expansions >= 2 and not any(not c.dead for c in node.children)) or \
+                    if (node.expanded and exhausted(node) and not any(not c.dead for c in node.children)) or \
                             len(node.ids) - len(ep.prompt_ids) >= args.max_proof_tokens:
                         node.dead = True
                         backup(path, 0.0)
-                        mark_dead(node.parent)
+                        kill_up(node.parent)
                         continue
                     node.pend = True
                     for n in path:  # virtual loss: a pending visit with value 0 steers the next leaf elsewhere
@@ -636,13 +843,17 @@ def main():
             rounds += 1
             leaves = [(ep, node, path) for ep in need for node, path in ep.pend]
             n_leaves += len(leaves)
+            if args.token:
+                a_, b_ = expand_tokens(leaves)
+                t_gen += a_
+                t_chk += b_
             tg = time.time()
-            outs = llm.generate([TokensPrompt(prompt_token_ids=node.ids) for _, node, _ in leaves],
+            outs = [] if args.token else llm.generate([TokensPrompt(prompt_token_ids=node.ids) for _, node, _ in leaves],
                                 [sp_line] * len(leaves), use_tqdm=False)
             t_gen += time.time() - tg
             tc = time.time()
             jobs, cands = [], {}
-            for (ep, node, _), o in zip(leaves, outs):
+            for (ep, node, _), o in zip([] if args.token else leaves, outs):
                 node.expansions += 1
                 ep.expansions += 1
                 counts, lids, lps = collections.Counter(), {}, {}
@@ -670,7 +881,7 @@ def main():
                         continue
                     jobs.append((ep, node, line))
             reps = rlvl.check_batch([j[0].rec["prompt"] for j in jobs], ["".join(j[1].lines) + j[2] for j in jobs],
-                                    strict=True)
+                                    strict=True) if jobs else []
             legal = collections.defaultdict(list)
             for (ep, node, line), rep in zip(jobs, reps):
                 if args.reward == "c_cvf":
@@ -705,10 +916,10 @@ def main():
             tv = time.time()
             vq, vowners = [], []
             for ep, node, _ in leaves:
-                counts, lids, lps = cands[id(node)]
+                counts, lids, lps = cands[id(node)] if not args.token else (collections.Counter(), {}, {})
                 new = legal.get(id(node), [])
                 tot = sum(counts[l] for l, _, _ in new) + sum(counts.get(ch.line, 0) for ch in node.children)
-                for ch in node.children:
+                for ch in ([] if args.token else node.children):
                     ch.prior = (ch.prior + counts.get(ch.line, 0) / max(1, tot)) / 2
                 for line, term, gold in new:
                     ch = Node(node.lines + [line], node, counts[line] / max(1, tot), line)
@@ -735,11 +946,18 @@ def main():
                     node.pend = False
                     for n in path:  # undo the virtual loss before the real backup
                         n.N -= 1
+                    if node.terminal:  # --token: a continuation in place reached an accepted `ans` line
+                        backup(path, node.term_value)
+                        continue
+                    if node.dead:  # --token: ... or a failing line
+                        backup(path, 0.0)
+                        kill_up(node.parent)
+                        continue
                     if not any(not ch.dead for ch in node.children):
-                        if node.expansions >= 2:
+                        if exhausted(node):
                             node.dead = True
                             backup(path, 0.0)
-                            mark_dead(node.parent)
+                            kill_up(node.parent)
                         else:
                             backup(path, 0.0)
                         continue
@@ -803,7 +1021,7 @@ def main():
                 ids = (pre + c["lids"])[:args.max_model_len]
                 e = {"ids": ids, "pol": [], "val": []}
                 if w != 0 and len(ids) > len(pre):
-                    e["pol"].append((len(pre), len(ids), args.policy_coef * w / LINE_NORM))
+                    e["pol"].append((len(pre), len(ids), args.policy_coef * w / args.line_norm))
                 if first:
                     e["val"].append((len(pre) - 1, s_tgt))
                     first = False
@@ -813,10 +1031,10 @@ def main():
             for (lids, _), w in zip(bad, coef[len(ch):]):  # illegal sampled lines: target 0
                 ids = (pre + lids)[:args.max_model_len]
                 if w != 0 and len(ids) > len(pre):
-                    ex.append({"ids": ids, "pol": [(len(pre), len(ids), args.policy_coef * w / LINE_NORM)], "val": []})
+                    ex.append({"ids": ids, "pol": [(len(pre), len(ids), args.policy_coef * w / args.line_norm)], "val": []})
         for ep in eps_found:
             full = ep["ids"][:args.max_model_len]
-            ex.append({"ids": full, "pol": [(ep["n_prompt"], len(full), args.ntp_coef / LINE_NORM)], "val": []})
+            ex.append({"ids": full, "pol": [(ep["n_prompt"], len(full), args.ntp_coef / args.line_norm)], "val": []})
         return ex
 
     def train_pass(moves, eps_found):
