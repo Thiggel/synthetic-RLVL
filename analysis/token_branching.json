@@ -1,0 +1,104 @@
+{
+ "e6 SFT (AZ init)": {
+  "proofs": 300,
+  "tokens_per_proof": 82.83333333333333,
+  "decisions_top1_lt_0.9_per_proof": 12.663333333333334,
+  "decisions_eff_ge_1.5_per_proof": 12.986666666666666,
+  "legal_median": 1871.0,
+  "forced_frac_legal_eq_1": 0.0039839034205231385,
+  "eff_mean": 2.2927007291590424,
+  "eff_p99": 21.810998420714938,
+  "n05_mean": 1.2775050301810864,
+  "illegal_mass_mean": 0.002125113310228651,
+  "illegal_mass_p99": 0.034595963954925306,
+  "by_kind": {
+   "line start": {
+    "n": 2182,
+    "share": 0.08780684104627767,
+    "legal_median": 200.0,
+    "eff_mean": 1.0180199545638262,
+    "decision_frac": 0.006416131989000917,
+    "illegal_mass_mean": 0.0009037808580861848
+   },
+   "formula": {
+    "n": 13943,
+    "share": 0.5610865191146881,
+    "legal_median": 33394.0,
+    "eff_mean": 3.251506300872995,
+    "decision_frac": 0.2407659757584451,
+    "illegal_mass_mean": 0.0020056198148228795
+   },
+   "rule name": {
+    "n": 4179,
+    "share": 0.16816901408450705,
+    "legal_median": 123.0,
+    "eff_mean": 1.0348247841061173,
+    "decision_frac": 0.029432878679109833,
+    "illegal_mass_mean": 0.0006128989015649055
+   },
+   "cites / quote": {
+    "n": 4546,
+    "share": 0.18293762575452716,
+    "legal_median": 16.0,
+    "eff_mean": 1.1201074467426977,
+    "decision_frac": 0.06709194896612407,
+    "illegal_mass_mean": 0.004467961799191107
+   }
+  },
+  "found_vs_failed_decisions": {
+   "found": 0.10043785184523278,
+   "failed": 0.19584156966102936
+  }
+ },
+ "r12 AZ iter 200": {
+  "proofs": 300,
+  "tokens_per_proof": 82.83333333333333,
+  "decisions_top1_lt_0.9_per_proof": 2.37,
+  "decisions_eff_ge_1.5_per_proof": 2.42,
+  "legal_median": 1871.0,
+  "forced_frac_legal_eq_1": 0.0039839034205231385,
+  "eff_mean": 1.4146889991827414,
+  "eff_p99": 3.917614526748475,
+  "n05_mean": 1.0513883299798792,
+  "illegal_mass_mean": 0.001460040016193505,
+  "illegal_mass_p99": 0.03135193169116951,
+  "by_kind": {
+   "line start": {
+    "n": 2182,
+    "share": 0.08780684104627767,
+    "legal_median": 200.0,
+    "eff_mean": 1.0039551742135877,
+    "decision_frac": 0.0032080659945004585,
+    "illegal_mass_mean": 0.015113709909341185
+   },
+   "formula": {
+    "n": 13943,
+    "share": 0.5610865191146881,
+    "legal_median": 33394.0,
+    "eff_mean": 1.7349269447218592,
+    "decision_frac": 0.04762246288460159,
+    "illegal_mass_mean": 0.00011029838446966161
+   },
+   "rule name": {
+    "n": 4179,
+    "share": 0.16816901408450705,
+    "legal_median": 123.0,
+    "eff_mean": 1.005447783405115,
+    "decision_frac": 0.004067958841828189,
+    "illegal_mass_mean": 0.0002575296624250519
+   },
+   "cites / quote": {
+    "n": 4546,
+    "share": 0.18293762575452716,
+    "legal_median": 16.0,
+    "eff_mean": 1.005837827199784,
+    "decision_frac": 0.005059392872855257,
+    "illegal_mass_mean": 0.00015173175237381242
+   }
+  },
+  "found_vs_failed_decisions": {
+   "found": 0.009918684657313912,
+   "failed": 0.04392708104546453
+  }
+ }
+}
