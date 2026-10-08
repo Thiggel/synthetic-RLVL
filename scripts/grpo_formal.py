@@ -9,6 +9,7 @@ docs/research_plan.md, Stage 2. One run = one arm:
                    --benches gen items), format and no circular given; G6g adds gen to the benches
   --arm cvf  G7: correct x valid x faithful premises, all-or-nothing (no partial credit to hack)
   --arm cvf_fmt  cvf x format_ok (G10 drifted out of the Answer: format under cvf, then looped; L1_cvf from step 51)
+  --arm c_cvf_fmt  G20: correct x format_ok x (0.5 + 0.5 valid x prem_ok), a correctness signal next to cvf
   --no-mask-truncated --overlong-penalty 0.5  G14: keep completions cut at the length limit in the loss and
                    subtract 0.5 from their reward (TRL masks them by default; most are proof-line loops)
   --no-proof-penalty 0.5  G16: also subtract 0.5 from answers without a <proof> block (G14 fled into informal prose,
@@ -171,7 +172,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
     ap.add_argument("--out-dir", required=True)
-    ap.add_argument("--arm", choices=["correct", "correct_x_valid", "gvc", "valid", "lines", "lines_fmt", "lines_raw", "frac", "frac_hard", "cvf", "cvf_fmt"], required=True)
+    ap.add_argument("--arm", choices=["correct", "correct_x_valid", "gvc", "valid", "lines", "lines_fmt", "lines_raw", "frac", "frac_hard", "cvf", "cvf_fmt", "c_cvf_fmt"], required=True)
     ap.add_argument("--no-tag", action="store_true", help="prompt without <formal> (G0, G1-NL)")
     ap.add_argument("--benches", default="dolci_math,dolci_dapo,dolci_wordprob,dolci_yesno",
                     help="also: gen = formal_mixture generator pool train (yes/no + numeric, no tools)")

@@ -31,6 +31,11 @@ Arms (the primary reward; the other components are logged with weight 0):
   cvf_fmt    cvf * format_ok. cvf ignores what follows </proof>; under it G10 drifted from `Answer: 3` to
              `Answer yes ; 3` (format_ok 0 on every rollout from step ~540, still rewarded) and then into
              `</proof>\n<formal>\n<prompt copy>` loops (2026-10-01, reports/2026-09-28_stage2_gate.md)
+  c_cvf_fmt  G20 (2026-10-08): correct * format_ok * (0.5 + 0.5 * valid * prem_ok) = (correct_fmt + cvf_fmt) / 2.
+             Under the product cvf a correct answer with an invalid proof scores 0 like a wrong one, so on prompts
+             where the policy is sometimes right but never valid there is no correctness signal at all; every cvf
+             run moved validity and none moved correctness (reports/2026-10-04_stage3_az.md, Result 16ag). A valid
+             proof of a wrong answer still scores 0 (no additive validity credit to hack)
   lines_raw  the literal formula on the same line counts, (n_parsed + n_ok) * (1 + correct),
              for comparison only (rewards length)
 Overlong penalty (grpo_formal.py --overlong-penalty p, with --no-mask-truncated; G14, 2026-10-01): an extra
@@ -331,6 +336,8 @@ def make_reward(name: str):
                 out.append(comp["correct"] * comp["valid"] * comp["prem_ok"])
             elif name == "cvf_fmt":
                 out.append(comp["correct"] * comp["valid"] * comp["prem_ok"] * comp["format_ok"])
+            elif name == "c_cvf_fmt":
+                out.append(comp["correct"] * comp["format_ok"] * (0.5 + 0.5 * comp["valid"] * comp["prem_ok"]))
             elif name == "gvc":
                 out.append((comp["grammatical"] + comp["valid"] + comp["correct"]) / 3.0)
             else:
@@ -342,7 +349,8 @@ def make_reward(name: str):
 
 ARMS = {"correct": "correct", "correct_x_valid": "correct_x_valid", "gvc": "gvc", "valid": "valid",
         "lines": "lines", "lines_fmt": "lines_fmt", "lines_raw": "lines_raw",
-        "frac": "frac", "frac_hard": "frac_hard", "cvf": "cvf", "cvf_fmt": "cvf_fmt"}
+        "frac": "frac", "frac_hard": "frac_hard", "cvf": "cvf", "cvf_fmt": "cvf_fmt",
+        "c_cvf_fmt": "c_cvf_fmt"}
 LOGGED = ["correct", "valid", "grammatical", "in_system", "has_proof", "valid_strict", "lines", "n_parsed", "n_ok",
           "n_steps", "circular", "n_taut", "format_ok", "valid_prem", "frac_parsed", "frac_ok", "n_prem_bad", "prem_ok", "frac",
           "cvf", "cvf_fmt"]
