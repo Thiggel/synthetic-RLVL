@@ -389,5 +389,23 @@
    "cvf": 0.122,
    "correct": 0.3338
   }
+ },
+ "G20 (from e6, KL, c_cvf_fmt)@500": {
+  "run": "G20 (from e6, KL, c_cvf_fmt)",
+  "step": 500,
+  "all": {
+   "n": 950,
+   "valid": 0.4674,
+   "valid_prem": 0.3558,
+   "cvf": 0.1474,
+   "correct": 0.3253
+  },
+  "clean": {
+   "n": 713,
+   "valid": 0.4558,
+   "valid_prem": 0.359,
+   "cvf": 0.1599,
+   "correct": 0.345
+  }
  }
 }
