@@ -4,6 +4,7 @@
 # Also G13 (2026-10-01: GRPO from the libext le SFT arm) and G14 (G13 + truncated completions in the loss with an
 # overlong penalty), with the new-library checker snapshot. G15 (2026-10-02): the G14 recipe from the e2 SFT arm (EI
 # round 2, teacher = an RL'd policy). G16: G15 + a no-proof penalty. G17: G16 recipe from e3 (EI round 3). G18: same from e4.
+# G20 (2026-10-08): the shaped c_cvf_fmt reward from e6.
 # Submits one grpo_gate_ckpts job per arm for the kept checkpoints missing either eval, unless one is queued.
 # Idempotent: rerun from each loop tick. The L40 cap on gruenau12 is CAP=5 of my jobs: once my running jobs there
 # plus pending gate jobs reach it, each new gate job waits (afterany) for the newest gate job. DEP=<dependency>
@@ -21,7 +22,8 @@ for spec in "L1_correct:${OLD}" "L1_cvf:${OLD}" "2b_le_G13_cvffmt:${NEW}" "2b_le
             "2b_e2_G15_cvffmt_overlong:${NEW}" "2b_e2_G16_cvffmt_overlong_noproof:${NEW}" \
             "2b_e3_G17_cvffmt_overlong_noproof:${NEW}" \
             "2b_e4_G18_cvffmt_overlong_noproof:${NEW}" \
-            "2b_e5_G19_cvffmt_overlong_noproof_kl02:${NEW}" "2b_e6_G19_cvffmt_overlong_noproof_kl02:${NEW}"; do
+            "2b_e5_G19_cvffmt_overlong_noproof_kl02:${NEW}" "2b_e6_G19_cvffmt_overlong_noproof_kl02:${NEW}" \
+            "2b_e6_G20_ccvffmt_overlong_noproof_kl02:${NEW}"; do
   arm=${spec%%:*} S=${spec#*:}
   if squeue -u laitenbf -h -n "gate_${arm}" | grep -q .; then echo "${arm}: gate job queued"; continue; fi
   todo=()
