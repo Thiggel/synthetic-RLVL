@@ -47,6 +47,34 @@ from formal_rewards import components  # noqa: E402
 from guided_decode import _ANS, OPEN, harden, precheck, verdict  # noqa: E402
 
 
+# --reward c_cvf (2026-10-08, the user's "correctness + validity" for AlphaZero): the tree keeps checker-invalid
+# lines, since a pruned tree only ever reaches valid proofs and the validity term would be constant. Dropped are only
+# lines that do not parse (or back/do/early close, a fatal checker error) and the Stage-2 hacks that add no proof
+# content; a premise with unstated numbers (h_prem_numbers), every line checker error and every `ans` line stay, and
+# are paid for at the terminal through valid * prem_ok.
+HARD = {"empty", "back_or_do", "early_close", "parse", "fatal", "back",
+        "h_dup_premise", "h_know_cap", "h_tautology", "h_ground_calc", "h_restate"}
+
+
+def c_cvf(c: dict) -> float:
+    """correct * (0.5 + 0.5 * valid * premise numbers stated): the additive reward of GRPO run G20."""
+    return float(c["correct"]) * (0.5 + 0.5 * float(c["valid"]) * float(c["prem_ok"]))
+
+
+def relaxed(prompt, prior_lines, line, rep, rec):
+    """--reward c_cvf: (keep, is_terminal, gold c_cvf, soft failure code or None) for a line that passed precheck."""
+    v = verdict(rep, line)
+    is_ans = line.strip().startswith("ans ")
+    m = _ANS.match(line) if is_ans else None
+    if v in HARD or rep.get("fatal") or (is_ans and not m):
+        return False, False, 0.0, v
+    if not m:
+        return True, False, 0.0, (None if v == "ok" else v)
+    c = components(rec, OPEN + "".join(prior_lines) + line + "</proof>\nAnswer: " + m.group(1))
+    ok = v == "done" and c["valid"] and c["prem_ok"]
+    return True, True, c_cvf(c), (None if ok else ("s2_invalid" if v == "done" else v))
+
+
 class TNode:
     __slots__ = ("lines", "parent", "children", "prior", "N", "W", "v", "expanded", "expansions", "terminal",
                  "term_value", "dead", "line")
@@ -162,6 +190,9 @@ def main():
                          "dead and backs up 0, the search continues from the root until a gold-correct terminal "
                          "(found) or the expansion budget (budget)")
     ap.add_argument("--no-prune", action="store_true", help="ablation: no checker pruning before the terminal check")
+    ap.add_argument("--reward", choices=("cvf", "c_cvf"), default="cvf",
+                    help="cvf: checker-pruned tree, terminal = correct*valid*prem_ok; c_cvf: relaxed tree (see HARD), "
+                         "gold terminal = correct*(0.5+0.5*valid*prem_ok)")
     ap.add_argument("--max-expansions", type=int, default=64)
     ap.add_argument("--max-lines", type=int, default=48)
     ap.add_argument("--max-line-tokens", type=int, default=192)
@@ -306,15 +337,24 @@ def main():
                 it.n_cands += 1
                 why = precheck(line) or (None if args.no_prune else
                                          harden(it.rec["prompt"], node.lines, line, args.max_know))
-                if why:
+                if why and (args.reward == "cvf" or why in HARD):
                     it.fail[why] += 1
                     continue
+                if why:
+                    it.fail["soft_" + why] += 1
                 jobs.append((it, line))
         tc = time.time()
         reps = rlvl.check_batch([j[0].rec["prompt"] for j in jobs], ["".join(j[0].leaf.lines) + j[1] for j in jobs],
                                 strict=True)
         legal = collections.defaultdict(list)  # id(item) -> [(line, terminal, gold cvf)]
         for (it, line), rep in zip(jobs, reps):
+            if args.reward == "c_cvf":
+                keep, term, gold, why = relaxed(it.rec["prompt"], it.leaf.lines, line, rep, it.rec)
+                if why:
+                    it.fail[why if not keep else "soft_" + why] += 1
+                if keep:
+                    legal[id(it)].append((line, term, 1.0 if args.terminal == "one" else gold if args.terminal == "gold" else 0.0))
+                continue
             v = verdict(rep, line)
             text = None
             if v == "done":
@@ -400,7 +440,7 @@ def main():
             text = it.result
             c = components(rec, text)
             r.update(score(rec, text), valid_s2=c["valid"], prem_ok=c["prem_ok"],
-                     cvf=c["correct"] * c["valid"] * c["prem_ok"], n_taut=c["n_taut"], circular=c["circular"],
+                     cvf=c["correct"] * c["valid"] * c["prem_ok"], c_cvf=c_cvf(c), n_taut=c["n_taut"], circular=c["circular"],
                      generation=text, gen_tokens=it.gen_tokens,
                      proof_tokens=len(tok(text, add_special_tokens=False)["input_ids"]), finish_reason=it.status,
                      truncated=rec.get("truncated", False), found=it.status == "found", expansions=it.expansions,
@@ -409,7 +449,7 @@ def main():
             f.write(json.dumps(r, default=str) + "\n")
             fs.write(json.dumps({"id": rec["id"], "cvf": r["cvf"], "correct": r["correct"], "moves": it.moves}) + "\n")
     found = [r for r in flat if r["found"]]
-    if not args.no_prune:
+    if not args.no_prune and args.reward == "cvf":
         assert all(r["valid"] and r["valid_s2"] and r["prem_ok"] for r in found), "a found proof failed the checker"
     fails = collections.Counter()
     for it in items:
@@ -422,6 +462,7 @@ def main():
                            "mean_gen_tokens": sum(r["gen_tokens"] for r in flat) / len(flat),
                            "valid_s2": sum(r["valid_s2"] for r in flat) / len(flat),
                            "cvf": sum(r["cvf"] for r in flat) / len(flat),
+                           "c_cvf": sum(r["c_cvf"] for r in flat) / len(flat),
                            "correct": sum(r["correct"] for r in flat) / len(flat),
                            "candidate_failures": dict(fails.most_common())},
                **aggregate(flat)}

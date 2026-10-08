@@ -9,7 +9,8 @@ the model learns from it online, AlphaZero style:
   search    line-level sampled PUCT (mcts_decode.py): K lines per expansion from vLLM (colocated, sleep mode, weights
             synced after every update), checker pruning (precheck / Stage-2 hardening / rlvl strict), leaf value =
             the live value head, terminal value = the gold reward cvf (correct * valid * premise numbers stated) as in
-            AlphaZero where the game result is known in self-play, Dirichlet noise on root priors, moves sampled by
+            AlphaZero where the game result is known in self-play (--reward c_cvf: correct * (0.5 + 0.5 * valid *
+            prem_ok) over a relaxed tree that keeps checker-invalid lines, mcts_decode.HARD), Dirichlet noise on root priors, moves sampled by
             visits^(1/move_temp). An episode ends with an accepted `ans` line (z = its gold cvf) or out of budget (z=0).
   targets   per committed move: the visit distribution over the legal sampled lines (policy target, cross-entropy on
             the line log-probability), value targets for the move's state (z, or (z + root Q)/2 with --value-target
@@ -53,7 +54,7 @@ from eval_formal_bench_vllm import fit_prompts, score  # noqa: E402
 from eval_formal_vllm import TAG_USER  # noqa: E402
 from formal_rewards import components  # noqa: E402
 from guided_decode import _ANS, OPEN, harden, precheck, verdict  # noqa: E402
-from mcts_decode import TNode, backup, mark_dead, puct_child  # noqa: E402
+from mcts_decode import HARD, TNode, backup, c_cvf, mark_dead, puct_child, relaxed  # noqa: E402
 
 LINE_NORM = 32.0  # token sums of line log-probs are divided by this (a typical proof line), for a loss of O(1)
 
@@ -110,6 +111,9 @@ def main():
     ap.add_argument("--iters", type=int, default=1000)
     ap.add_argument("--prompts-per-iter", type=int, default=256)
     ap.add_argument("--k", type=int, default=8)
+    ap.add_argument("--reward", choices=("cvf", "c_cvf"), default="cvf",
+                    help="terminal value: cvf over the checker-pruned tree, or c_cvf = correct*(0.5+0.5*valid*prem_ok) over "
+                         "a relaxed tree (invalid lines stay; mcts_decode.HARD). NTP is on z >= 1 (valid correct) either way")
     ap.add_argument("--temperature", type=float, default=1.0)
     ap.add_argument("--sims", type=int, default=8)
     ap.add_argument("--c-puct", type=float, default=1.5)
@@ -348,7 +352,7 @@ def main():
             c = components(rec, text)
             vp = float(c["valid"]) * float(c["prem_ok"])
             rows.append({"id": rec["id"], "bench": rec["bench"], "correct": float(c["correct"]), "valid": float(c["valid"]),
-                         "valid_prem": vp, "cvf": vp * float(c["correct"]),
+                         "valid_prem": vp, "cvf": vp * float(c["correct"]), "c_cvf": c_cvf(c),
                          "score_correct": float(score(rec, text).get("correct", 0))})
             gen = list(o.outputs[0].token_ids)
             vq_end.append((p + gen)[:args.max_model_len])
@@ -361,9 +365,9 @@ def main():
         rows = [r for p_ in parts for r in p_[0]]
         v_end = [v for p_ in parts for v in p_[1]]
         v_mid = [v for p_ in parts for v in p_[2]]
-        lab = [r["cvf"] for r in rows]
+        lab = [r["cvf"] if args.reward == "cvf" else r["c_cvf"] for r in rows]  # auc: label >= 0.5
         res = {"iter": it_no, "n": len(rows), **{m: sum(r[m] for r in rows) / len(rows)
-                                                 for m in ("valid", "valid_prem", "cvf", "correct", "score_correct")},
+                                                 for m in ("valid", "valid_prem", "cvf", "c_cvf", "correct", "score_correct")},
                "value_auc_end": auc(v_end, lab), "value_auc_mid": auc(v_mid, lab),
                "value_mean_end": sum(v_end) / len(v_end), "eval_s": time.time() - t}
         by = collections.defaultdict(list)
@@ -587,6 +591,9 @@ def main():
                         continue
                     ep.n_cands += 1
                     why = precheck(line) or harden(ep.rec["prompt"], node.lines, line, args.max_know)
+                    if why and args.reward == "c_cvf" and why not in HARD:
+                        ep.fail["soft_" + why] += 1
+                        why = None
                     if why:
                         ep.fail[why] += 1
                         if need_lp and lps[line] is not None:
@@ -597,6 +604,19 @@ def main():
                                     strict=True)
             legal = collections.defaultdict(list)
             for (ep, node, line), rep in zip(jobs, reps):
+                if args.reward == "c_cvf":
+                    keep, term, gold, why = relaxed(ep.rec["prompt"], node.lines, line, rep, ep.rec)
+                    if keep:
+                        legal[id(node)].append((line, term, gold))
+                        if why:
+                            ep.fail["soft_" + why] += 1
+                        continue
+                    v = why
+                    ep.fail[v] += 1
+                    lp_ = cands[id(node)][2][line]
+                    if need_lp and lp_ is not None:
+                        node.bad.append((cands[id(node)][1][line], lp_))
+                    continue
                 v = verdict(rep, line)
                 gold = 0.0
                 if v == "done":
@@ -827,7 +847,7 @@ def main():
         model.save_pretrained(d, state_dict=sd, safe_serialization=True)
         tok.save_pretrained(d)
         torch.save({"w": head.weight.detach()[0].cpu(), "b": head.bias.detach().cpu(), "feature": "last",
-                    "layer": -1, "target": "cvf"}, d / "value_head.pt")
+                    "layer": -1, "target": args.reward}, d / "value_head.pt")
         if full:
             torch.save({"backbone": opt.state_dict(), "head": opt_head.state_dict()}, d / "optim.pt")
             (d / "state.json").write_text(json.dumps(state))
@@ -898,6 +918,7 @@ def main():
         for ep in eps:
             by[ep.rec["bench"]].append(ep.z)
         met = {"iter": it_no, "n": len(eps), "z": sum(ep.z for ep in eps) / len(eps),
+               "z_valid_correct": sum(ep.z >= 1 for ep in eps) / len(eps), "z_correct": sum(ep.z >= .5 for ep in eps) / len(eps),
                "found_any": st.get("found", 0) / len(eps), "status": dict(st),
                "z_bench": {b: sum(v) / len(v) for b, v in by.items()},
                "moves": n_moves, "found_correct": n_found, "world": world,
