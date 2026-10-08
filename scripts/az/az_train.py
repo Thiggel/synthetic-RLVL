@@ -21,6 +21,13 @@ the model learns from it online, AlphaZero style:
             --value-backbone-scale of the value gradient reaches the backbone: at 1.0 (run r1) the backbone bent to fit
             the near-frozen head and the policy collapsed (gate valid .39 -> .15 in 12 iterations).
 
+--tree (run r15, 2026-10-08): no committed moves. Every simulation starts at the problem (one tree per prompt, as the
+test-time --solve of mcts_decode.py, HTPS / AlphaProof style), so the search backtracks to any depth; the episode ends at
+the first terminal with gold >= --solve-at or at --max-expansions. Every expanded node becomes a training state: value
+target max(best gold terminal below it, its Q), a truncated line (--max-lines / --max-proof-tokens) keeps its parent's
+value instead of 0; policy target (completed Q) at nodes with >= --min-visits-policy visits. --widen-every n
+re-expands a node after n * (expansions so far) visits (progressive widening, up to --max-widen expansions).
+
 Evaluation every --eval-every iterations on the 300-item gate subset (greedy, the same vLLM): valid_prem / cvf /
 correct, and the value head's AUC for cvf at the end of the proof and at its middle line (held-out prompts).
 Data parallel: under torchrun (WORLD_SIZE > 1) every rank runs its own vLLM (external_launcher, tp 1) and searches
@@ -63,11 +70,11 @@ class Node(TNode):
     # token ids of prompt + OPEN + lines; of this node's own line; its sampled log-prob (vLLM, the search policy);
     # the illegal lines sampled at its expansions [(lids, lp)]; Gumbel noise as a root child; N at the start of the
     # current move (root children); a leaf awaiting expansion this round
-    __slots__ = ("ids", "lids", "lp", "bad", "g", "n0", "pend")
+    __slots__ = ("ids", "lids", "lp", "bad", "g", "n0", "pend", "trunc")
 
     def __init__(self, *a, **kw):
         super().__init__(*a, **kw)
-        self.lp, self.bad, self.g, self.n0, self.pend = None, [], None, 0, False
+        self.lp, self.bad, self.g, self.n0, self.pend, self.trunc = None, [], None, 0, False, False
 
 
 class Episode:
@@ -82,6 +89,7 @@ class Episode:
         self.moves = []
         self.pend = []  # [(leaf, path)] awaiting expansion this round (virtual loss applied)
         self.final_node = None
+        self.best = None  # --tree: the terminal with the highest gold so far
         self.full, self.cur_sims = True, 0  # playout cap randomization: this move's search size
 
 
@@ -128,6 +136,11 @@ def main():
     ap.add_argument("--full-frac", type=float, default=0.25)
     ap.add_argument("--leaves-per-round", type=int, default=1,
                     help="leaves expanded per episode per vLLM call (virtual loss 0 on the pending paths)")
+    ap.add_argument("--tree", action="store_true", help="no committed moves: search from the problem until solved")
+    ap.add_argument("--solve-at", type=float, default=1.0, help="--tree: stop at a terminal with gold >= this")
+    ap.add_argument("--min-visits-policy", type=int, default=4, help="--tree: nodes with a policy target")
+    ap.add_argument("--widen-every", type=int, default=0, help="--tree: re-expand a node after n * expansions visits")
+    ap.add_argument("--max-widen", type=int, default=3)
     ap.add_argument("--move-temp", type=float, default=1.0)
     ap.add_argument("--dirichlet-alpha", type=float, default=0.3)
     ap.add_argument("--dirichlet-frac", type=float, default=0.25)
@@ -435,7 +448,7 @@ def main():
         live = [c for c in node.children if not c.dead]
         if not live:
             return None
-        if node is ep.root:  # sequential halving: the considered lines are those with the scheduled visit count
+        if node is ep.root and not args.tree:  # sequential halving: the considered lines are those with the scheduled visit count
             sc = gumbel_scores(node, live)
             seq = halving_seq(min(args.gumbel_m, len(live), max(1, ep.cur_sims)), max(1, ep.cur_sims))
             i = sims_done(ep)
@@ -452,8 +465,8 @@ def main():
         return max(zip(live, pi), key=lambda t: t[1] / z - t[0].N / (1 + tot))[0]
 
     def new_move(ep):  # playout cap randomization: full search (policy target) or cheap search (value only)
-        ep.full = args.cheap_sims is None or rng.random() < args.full_frac
-        ep.cur_sims = args.sims if ep.full else args.cheap_sims
+        ep.full = args.tree or args.cheap_sims is None or rng.random() < args.full_frac
+        ep.cur_sims = 10**9 if args.tree else args.sims if ep.full else args.cheap_sims
         for c in ep.root.children:
             c.n0 = c.N
 
@@ -464,6 +477,44 @@ def main():
             ep.z = node.term_value
         else:
             ep.result = OPEN + "".join(ep.root.lines)
+        if args.tree:
+            ep.moves = tree_moves(ep)
+
+    def tree_moves(ep):
+        """--tree: every expanded node is a training state. Value target: the best gold terminal below it, else its Q
+        (a truncated line: its parent's value; a dead line: 0)."""
+        tg = {}
+
+        def walk(n):
+            best = n.term_value if n.terminal else 0.0
+            for c in n.children:
+                best = max(best, walk(c))
+            q = n.q() if n.N else n.v
+            if n.terminal:
+                tg[id(n)] = n.term_value
+            elif n.trunc:
+                tg[id(n)] = n.v
+            elif n.dead:
+                tg[id(n)] = best
+            else:
+                tg[id(n)] = max(best, q) if q is not None else (best or None)
+            return best
+
+        walk(ep.root)
+        moves, todo = [], [ep.root]
+        while todo:  # breadth first: the problem's state is moves[0]
+            n = todo.pop(0)
+            todo.extend(c for c in n.children if c.expanded)
+            if not n.expanded or not (n.children or n.bad):
+                continue
+            live = any(not c.dead for c in n.children)
+            moves.append({"pre": n.ids, "root_q": tg[id(n)], "root_N": n.N, "v": n.v, "chosen": "", "z": tg[id(n)],
+                          "full": live and n.N >= args.min_visits_policy,
+                          "bad": n.bad[:args.max_bad] if args.policy_loss == "subset" else [],
+                          "children": [{"lids": c.lids, "line": c.line, "N": c.N, "q": tg[id(c)], "terminal": c.terminal,
+                                        "term": c.term_value, "dead": c.dead and not c.trunc, "prior": c.prior, "lp": c.lp}
+                                       for c in n.children]})
+        return moves
 
     def record_move(ep, root, chosen):
         ep.moves.append({"pre": root.ids, "root_q": root.q(), "root_N": root.N, "v": root.v, "chosen": chosen.line,
@@ -522,7 +573,10 @@ def main():
                         ep.move_start = ep.root.N
                         new_move(ep)
                     if ep.root.dead or (ep.root.expanded and not ep.root.children and ep.root.expansions >= 2):
-                        finish(ep, "exhausted")
+                        if args.tree and ep.best is not None:
+                            finish(ep, "found", ep.best)
+                        else:
+                            finish(ep, "exhausted")
                         break
                     if sims_done(ep) >= ep.cur_sims and ep.root.children:
                         if ep.pend:  # commit once this round's leaves are backed up
@@ -531,6 +585,9 @@ def main():
                         continue
                     node, path = ep.root, [ep.root]
                     while node.expanded and node.children:
+                        if args.widen_every and not node.pend and node.expansions < args.max_widen \
+                                and node.N >= args.widen_every * node.expansions:
+                            break  # progressive widening: sample this node again
                         nxt = select_child(ep, node)
                         if nxt is None:
                             break
@@ -544,13 +601,23 @@ def main():
                     if ep.expansions + len(ep.pend) >= args.max_expansions:
                         if ep.pend:
                             break
+                        if args.tree:
+                            finish(ep, "found" if ep.best is not None else "budget", ep.best)
+                            break
                         best = max((c for c in ep.root.children if c.terminal and not c.dead),
                                    key=lambda c: c.term_value, default=None)
                         if best is not None:
                             record_move(ep, ep.root, best)
                         finish(ep, "found" if best is not None else "budget", best)
                         break
-                    if (node.expanded and node.expansions >= 2) or \
+                    if args.tree and not node.expanded and (len(node.lines) >= args.max_lines or
+                                                            len(node.ids) - len(ep.prompt_ids) >= args.max_proof_tokens):
+                        node.trunc = node.dead = True  # truncated, not wrong: back up the parent's value
+                        node.v = node.parent.v if node.parent is not None and node.parent.v is not None else 0.0
+                        backup(path, node.v)
+                        mark_dead(node.parent)
+                        continue
+                    if (node.expanded and node.expansions >= 2 and not any(not c.dead for c in node.children)) or \
                             len(node.ids) - len(ep.prompt_ids) >= args.max_proof_tokens:
                         node.dead = True
                         backup(path, 0.0)
@@ -560,6 +627,8 @@ def main():
                     for n in path:  # virtual loss: a pending visit with value 0 steers the next leaf elsewhere
                         n.N += 1
                     ep.pend.append((node, path))
+                if args.tree and not ep.done and not ep.pend and guard >= 64:  # only terminals selected
+                    finish(ep, "found" if ep.best is not None else "stuck", ep.best)
                 if ep.pend:
                     need.append(ep)
             if not need:
@@ -648,6 +717,8 @@ def main():
                     ch.ids = node.ids + ch.lids
                     if term:
                         ch.terminal, ch.term_value = True, gold
+                        if ep.best is None or gold > ep.best.term_value:
+                            ep.best = ch
                     node.children.append(ch)
                 first = not node.expanded
                 node.expanded = True
@@ -674,6 +745,8 @@ def main():
                         continue
                     backup(path, node.v)
                 ep.pend = []
+                if args.tree and not ep.done and ep.best is not None and ep.best.term_value >= args.solve_at:
+                    finish(ep, "found", ep.best)
             if rounds % 8 == 0:
                 print(f"  [round {rounds}] leaves {len(leaves)} done {sum(e.done for e in eps)}/{len(eps)} "
                       f"found {sum(e.status == 'found' for e in eps)} gen {t_gen:.0f}s chk {t_chk:.0f}s val {t_val:.0f}s",
@@ -871,10 +944,10 @@ def main():
         v_root, z_root = [], []
         with open(out / "selfplay" / (f"iter_{it_no:04d}.jsonl" if world == 1 else f"iter_{it_no:04d}.r{rank}.jsonl"), "w") as f:
             for ep in eps:
-                for m in ep.moves:
-                    m["z"] = ep.z
+                for i, m in enumerate(ep.moves):
+                    m.setdefault("z", ep.z)  # --tree: the node's own target
                     moves.append(m)
-                    if m["v"] is not None:
+                    if m["v"] is not None and (i == 0 or not args.tree):
                         v_root.append(m["v"]); z_root.append(ep.z)
                 if ep.status == "found" and ep.z >= 1:
                     fn = ep.final_node
@@ -887,7 +960,7 @@ def main():
                                                "chosen": m["chosen"], "full": m["full"], "n_bad": len(m["bad"]),
                                                "children": [{k: c[k] for k in ("line", "N", "q", "terminal", "term",
                                                                                 "dead", "prior", "lp")} for c in m["children"]]}
-                                              for m in ep.moves]}) + "\n")
+                                              for m in ep.moves if not args.tree or m["root_N"] >= 2]}) + "\n")
         buffer.append((moves, found))
         pool_moves = [m for mv, _ in buffer for m in mv]
         pool_found = [e for _, fd in buffer for e in fd]
