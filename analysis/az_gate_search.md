@@ -12,3 +12,7 @@ valid = valid with premise numbers stated (greedy) / valid_s2 (MCTS); cvf = corr
 | r6 @12 (AZ ExIt) | MCTS, gold terminal | 0.657 | 0.120 | 0.067 | 0.017 | 0.250 | 0.267 | 0.000 |
 | G19 @750 (GRPO) | greedy | 0.600 | 0.190 | 0.050 | 0.017 | 0.317 | 0.567 | 0.000 |
 | G19 @750 (GRPO) | MCTS, gold terminal | 0.810 | 0.217 | 0.100 | 0.017 | 0.300 | 0.667 | 0.000 |
+| r10 @172 (ExIt, gate pool) | greedy | 0.690 | 0.183 | 0.050 | 0.017 | 0.200 | 0.617 | 0.033 |
+| r10 @172 (ExIt, gate pool) | MCTS, probe terminal | 0.873 | 0.217 | 0.083 | 0.017 | 0.283 | 0.683 | 0.017 |
+| r12 @160 (Gumbel + ExIt) | greedy | 0.483 | 0.203 | 0.050 | 0.017 | 0.233 | 0.717 | 0.000 |
+| r12 @160 (Gumbel + ExIt) | MCTS, probe terminal | 0.547 | 0.210 | 0.050 | 0.017 | 0.250 | 0.717 | 0.017 |
