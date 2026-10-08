@@ -2,7 +2,8 @@
 """Greedy Dolci-gate generations rescored with the hardened GRPO reward, EI SFT arms vs GRPO checkpoints (2026-10-04).
 
 Replaces the ad-hoc analysis/libext_ei_hardened_gate.json (e2/e3/e4 only). Every rl_gate_dolci/generations.jsonl of
-the EI SFT arms (e2..e6) and of the GRPO runs G16 (from e2), G17 (from e3), G18 (from e4), G19 (KL-anchored, from e5 or e6) is rescored with
+the EI SFT arms (e2..e6) and of the GRPO runs G16 (from e2), G17 (from e3), G18 (from e4), G19 (KL-anchored, from e5 or e6), G20 (G19 from e6 with
+the shaped c_cvf_fmt reward, 2026-10-08) is rescored with
 formal_rewards.components (new checker): valid = rlvl strict, valid_prem = valid with the premise numbers stated in
 their quotes (the cvf reward's validity), cvf = correct * valid_prem, correct = answer matches gold. On all 950 gate
 items and on the 713 clean ones (analysis/gate_contamination.md). Missing evals are skipped, so rerun as checkpoints
@@ -34,9 +35,10 @@ ARMS = {f"{a} (SFT)": SFT / f"qwen35_2b_lc_libext_{a}_lr5em6_seed3407/final" for
 RUNS = {"G16 (from e2)": GRPO / "2b_e2_G16_cvffmt_overlong_noproof",
         "G17 (from e3)": GRPO / "2b_e3_G17_cvffmt_overlong_noproof",
         "G18 (from e4)": GRPO / "2b_e4_G18_cvffmt_overlong_noproof",
-        **{f"G19 (from {a}, KL)": GRPO / f"2b_{a}_G19_cvffmt_overlong_noproof_kl02" for a in ("e5", "e6")}}
+        **{f"G19 (from {a}, KL)": GRPO / f"2b_{a}_G19_cvffmt_overlong_noproof_kl02" for a in ("e5", "e6")},
+        "G20 (from e6, KL, c_cvf_fmt)": GRPO / "2b_e6_G20_ccvffmt_overlong_noproof_kl02"}
 INIT = {"G16 (from e2)": "e2 (SFT)", "G17 (from e3)": "e3 (SFT)", "G18 (from e4)": "e4 (SFT)",
-        **{f"G19 (from {a}, KL)": f"{a} (SFT)" for a in ("e5", "e6")}}
+        **{f"G19 (from {a}, KL)": f"{a} (SFT)" for a in ("e5", "e6")}, "G20 (from e6, KL, c_cvf_fmt)": "e6 (SFT)"}
 METRICS = ("valid", "valid_prem", "cvf", "correct")
 OUT = REPO / "analysis/gate_hardened_rescore"
 OUT_FIG = REPO / "reports/figures/gate_hardened_rescore"
