@@ -83,6 +83,34 @@ export TMPDIR="${TMPDIR:-$SYNTHRLVL_SCRATCH_ROOT/tmp}"
 export TMP="${TMP:-$TMPDIR}"
 export TEMP="${TEMP:-$TMPDIR}"
 
+# 2026-10-13: $HPCVAULT/.venv_rlvl_posttrain is packed into a .tar.zst to stay
+# under the 200K-file vault quota (the venv alone is ~85K files). Unpack it in
+# place on first use: same path, so shebangs and pyvenv.cfg keep working. The
+# flock serializes concurrent array tasks, and the extract goes to a temp dir
+# first so no job ever sees a half-unpacked venv. Repack (see AGENTS.md) when
+# it will not be used for a while.
+_rlvl_vault="${HPCVAULT:-/home/vault/c107fa/c107fa12}"
+_rlvl_venv_tar="$_rlvl_vault/rlvl_envs/venv_rlvl_posttrain_20261013.tar.zst"
+if [[ ! -d "$_rlvl_vault/.venv_rlvl_posttrain" && -f "$_rlvl_venv_tar" ]]; then
+  (
+    exec 9>"$_rlvl_vault/rlvl_envs/.unpack.lock"
+    flock -w 3600 9
+    if [[ ! -d "$_rlvl_vault/.venv_rlvl_posttrain" ]]; then
+      _tmp="$(mktemp -d "$_rlvl_vault/.venv_rlvl_posttrain.unpack.XXXXXX")"
+      echo "[env.sh] unpacking $_rlvl_venv_tar (~85K files, a few minutes)" >&2
+      if tar --zstd -xf "$_rlvl_venv_tar" -C "$_tmp"; then
+        mv "$_tmp/.venv_rlvl_posttrain" "$_rlvl_vault/.venv_rlvl_posttrain"
+        rmdir "$_tmp"
+      else
+        rm -rf "$_tmp"
+        echo "[env.sh] unpacking the venv failed (vault file quota? check shownicerquota.pl)" >&2
+        exit 1
+      fi
+    fi
+  )
+fi
+unset _rlvl_vault _rlvl_venv_tar
+
 if [[ -n "${CUDA_VISIBLE_DEVICES:-}" ]]; then
   unset ROCR_VISIBLE_DEVICES || true
 fi

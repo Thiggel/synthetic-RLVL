@@ -33,6 +33,12 @@ Main Research Questions:
 - Preferred venv:
   - `$HPCVAULT/.venv_rlvl_posttrain`
   - fallback: `$WORK/.venv`
+- The posttrain venv is PACKED (2026-10-13, to stay under the 200K-file `$HPCVAULT` quota; the venv alone is ~85K files).
+  `scripts/env.sh` unpacks it automatically on first use (flock-guarded, a few minutes). To unpack by hand:
+  - check room first: `shownicerquota.pl` (vault needs ~85K free files and ~22G)
+  - `tar --zstd -xf $HPCVAULT/rlvl_envs/venv_rlvl_posttrain_20261013.tar.zst -C $HPCVAULT`
+  - this restores `$HPCVAULT/.venv_rlvl_posttrain` at its original path, so shebangs and `pyvenv.cfg` work unchanged
+  - when done for a while, repack: `cd $HPCVAULT && tar -I "zstd -T8 -3" -cf rlvl_envs/venv_rlvl_posttrain_$(date +%Y%m%d).tar.zst .venv_rlvl_posttrain && rm -rf .venv_rlvl_posttrain`
 - If `pytest` entrypoint is broken (stale shebang), run:
   - `${HPCVAULT}/.venv_rlvl_posttrain/bin/python -m pytest ...`
 

@@ -37,4 +37,8 @@ Every script:
 2. `source ./scripts/env.sh`.
 3. Activates `\$HPCVAULT/.venv_rlvl_posttrain` if available, otherwise `\$WORK/.venv`.
 
+Note (2026-10-13): `\$HPCVAULT/.venv_rlvl_posttrain` is packed in `\$HPCVAULT/rlvl_envs/venv_rlvl_posttrain_20261013.tar.zst`
+for the vault file quota. `scripts/env.sh` unpacks it on first use; by hand (see AGENTS.md, Environment):
+`tar --zstd -xf \$HPCVAULT/rlvl_envs/venv_rlvl_posttrain_20261013.tar.zst -C \$HPCVAULT`.
+
 This keeps submission transparent and avoids wrapper bash scripts or generated command files.
