@@ -1,0 +1,79 @@
+{
+ "rounds": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "prompt_yield_checked": [
+  0.12,
+  0.2,
+  0.25333333333333335,
+  0.3
+ ],
+ "prompt_yield_judge_ok": [
+  0.0,
+  0.013333333333333334,
+  0.04,
+  0.04
+ ],
+ "repilot_prompt_yield_checked": [
+  0.12666666666666668,
+  0.19999999999999998,
+  0.2866666666666667,
+  0.3066666666666667
+ ],
+ "repilot_judge_data_final": 0.04666666666666667,
+ "judge_issue_round": {
+  "0": {
+   "different_question": 19,
+   "no_verdict": 1,
+   "presolved": 5,
+   "extra_fact": 1,
+   "missing_fact": 2
+  },
+  "1": {
+   "different_question": 31,
+   "presolved": 12,
+   "extra_fact": 4
+  },
+  "2": {
+   "different_question": 21,
+   "presolved": 9,
+   "no_verdict": 1,
+   "missing_fact": 1,
+   "extra_fact": 3
+  },
+  "3": {
+   "different_question": 25,
+   "extra_fact": 1,
+   "presolved": 11,
+   "no_verdict": 1
+  }
+ },
+ "transitions_from_judged": {
+  "judged": 58,
+  "checker/lex/wrong": 51,
+  "ok": 1
+ },
+ "transitions_from_checker_fail": {
+  "checker/lex/wrong": 1610,
+  "judged": 62,
+  "ok": 10
+ },
+ "k_split": {
+  "K-type (nl judgment / world knowledge)": {
+   "n": 39,
+   "checked": 17,
+   "ok": 1
+  },
+  "in scope": {
+   "n": 111,
+   "checked": 28,
+   "ok": 5
+  }
+ },
+ "attempt_ok": 0.018333333333333333,
+ "wall_s": 5086.0073981285095,
+ "proj_gpu_h_train": 862.1912763694074
+}

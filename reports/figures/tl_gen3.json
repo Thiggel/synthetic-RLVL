@@ -1,0 +1,103 @@
+{
+ "n": 3000,
+ "gen_s": 12.8,
+ "themes": {
+  "R:rates": 733,
+  "R:gsm": 665,
+  "R:count": 344,
+  "R:prob": 469,
+  "R:graph": 352,
+  "R:mc": 437
+ },
+ "median_tokens": {
+  "R:rates": 200,
+  "R:gsm": 187,
+  "R:count": 147,
+  "R:prob": 149,
+  "R:graph": 267,
+  "R:mc": 488
+ },
+ "answers": {
+  "R:rates": {
+   "num": 733
+  },
+  "R:gsm": {
+   "num": 510,
+   "top": 80,
+   "bot": 75
+  },
+  "R:count": {
+   "num": 344
+  },
+  "R:prob": {
+   "num": 469
+  },
+  "R:graph": {
+   "top": 92,
+   "num": 167,
+   "bot": 93
+  },
+  "R:mc": {
+   "name": 437
+  }
+ },
+ "rules": {
+  "new": 11318,
+  "given": 10052,
+  "goal": 3000,
+  "=I": 2260,
+  "\u2227E": 678,
+  "=E": 5008,
+  "calc": 3992,
+  "ans": 3000,
+  "kb": 92,
+  "\u2192E": 92,
+  "\u2227I": 437,
+  "hyp": 93,
+  "\u00acI": 93
+ },
+ "lemmas": {
+  "2": 92
+ },
+ "symbols": {
+  "3": 724,
+  "16": 3041,
+  "70": 2217,
+  "92": 3061,
+  "90": 1522,
+  "14": 696,
+  "85": 666,
+  "31": 735,
+  "71": 1906
+ },
+ "question_openers": {
+  "What is the": 627,
+  "Which of the": 437,
+  "How many dollars": 245,
+  "Can one drive": 185,
+  "In how many": 180,
+  "How many more": 121,
+  "How many km": 83,
+  "How many hours": 73,
+  "If wind and": 43,
+  "If frost and": 40,
+  "If fog and": 39,
+  "How many stamps": 38,
+  "If hail and": 37,
+  "If thunder and": 37,
+  "How many cards": 37
+ },
+ "sentences_per_prompt": {
+  "3": 805,
+  "5": 456,
+  "2": 382,
+  "4": 699,
+  "9": 78,
+  "7": 171,
+  "6": 251,
+  "10": 37,
+  "8": 104,
+  "11": 14,
+  "12": 3
+ }
+}

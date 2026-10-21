@@ -1,0 +1,29 @@
+{
+ "68836 canonical": {
+  "cum": [
+   35,
+   53,
+   75,
+   87
+  ],
+  "prompts": 48
+ },
+ "68836 + offline lenient rescore": {
+  "cum": [
+   49,
+   70,
+   89,
+   105
+  ],
+  "prompts": 56
+ },
+ "68861 lenient in loop": {
+  "cum": [
+   49,
+   76,
+   93,
+   103
+  ],
+  "prompts": 55
+ }
+}

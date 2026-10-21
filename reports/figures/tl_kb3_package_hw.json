@@ -1,0 +1,107 @@
+[
+ {
+  "id": "dolci_wordprob/123128",
+  "with": 70,
+  "inlined": 312,
+  "same_value": true,
+  "sec": 0.06
+ },
+ {
+  "id": "dolci_math/45745",
+  "with": 35,
+  "inlined": 51,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_math/73414",
+  "with": 23,
+  "inlined": 33,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_math/41648",
+  "with": 27,
+  "inlined": 43,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_math/43131",
+  "with": 24,
+  "inlined": 32,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_math/40828",
+  "with": 20,
+  "inlined": 26,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_dapo/78975",
+  "with": 40,
+  "inlined": 58,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_wordprob/158585",
+  "with": 18,
+  "inlined": 31,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_math/45310",
+  "with": 42,
+  "inlined": 126,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_math/52178",
+  "with": 38,
+  "inlined": 122,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_dapo/78948",
+  "with": 60,
+  "inlined": 88,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_math/71188",
+  "with": 36,
+  "inlined": 35,
+  "same_value": true,
+  "sec": 0.03
+ },
+ {
+  "id": "dolci_math/44004",
+  "with": 34,
+  "inlined": 412,
+  "same_value": true,
+  "sec": 0.0
+ },
+ {
+  "id": "dolci_dapo/81163",
+  "with": 59,
+  "inlined": 270,
+  "same_value": true,
+  "sec": 0.04
+ },
+ {
+  "id": "dolci_dapo/80536",
+  "with": 234,
+  "inlined": 4314,
+  "same_value": true,
+  "sec": 0.5
+ }
+]

@@ -1,0 +1,123 @@
+{
+ "new": {
+  "dir": "gpt-oss-120b_kdef_jloop_dolci",
+  "prompts_by_round": [
+   15,
+   19,
+   21,
+   23
+  ],
+  "K_by_round": [
+   10,
+   11,
+   12,
+   13
+  ],
+  "notK_by_round": [
+   5,
+   8,
+   9,
+   10
+  ],
+  "by_family": {
+   "dolci_math": 5,
+   "dolci_dapo": 3,
+   "dolci_yesno": 15
+  },
+  "attempts_ok": 50,
+  "after_judged": {
+   "judged": 113,
+   "ok": 12,
+   "check": 46,
+   "lex": 29,
+   "unfaithful": 7,
+   "wrong": 3
+  },
+  "ok_attempts_substantive_flag": {
+   "false": 49,
+   "true": 1
+  },
+  "prompts": null
+ },
+ "old": {
+  "dir": "gpt-oss-120b_judgeloop_kbtags",
+  "prompts_by_round": [
+   0,
+   2,
+   6,
+   6
+  ],
+  "K_by_round": [
+   0,
+   1,
+   1,
+   1
+  ],
+  "notK_by_round": [
+   0,
+   1,
+   5,
+   5
+  ],
+  "by_family": {
+   "dolci_math": 3,
+   "dolci_dapo": 1,
+   "dolci_yesno": 2
+  },
+  "attempts_ok": 11,
+  "after_judged": {
+   "check": 44,
+   "judged": 58,
+   "wrong": 3,
+   "lex": 4,
+   "ok": 1
+  },
+  "ok_attempts_substantive_flag": {
+   "false": 11
+  },
+  "prompts": null
+ },
+ "rejudge": {
+  "rejudge_proofs": [
+   40,
+   50
+  ],
+  "robust_prompts": [
+   "dolci_dapo/78346",
+   "dolci_dapo/79999",
+   "dolci_math/20659",
+   "dolci_math/21339",
+   "dolci_math/23475",
+   "dolci_math/50489",
+   "dolci_math/74973",
+   "dolci_yesno/121796",
+   "dolci_yesno/123703",
+   "dolci_yesno/133216",
+   "dolci_yesno/133448",
+   "dolci_yesno/136845",
+   "dolci_yesno/138901",
+   "dolci_yesno/139174",
+   "dolci_yesno/144451",
+   "dolci_yesno/152598",
+   "dolci_yesno/152694",
+   "dolci_yesno/160487",
+   "dolci_yesno/166115",
+   "dolci_yesno/167083"
+  ],
+  "lost": [
+   "dolci_dapo/77782",
+   "dolci_yesno/129540",
+   "dolci_yesno/142501"
+  ],
+  "K": 12,
+  "repaired": [
+   9,
+   12
+  ],
+  "new_vs_posthoc": [
+   "dolci_yesno/139174",
+   "dolci_yesno/144451",
+   "dolci_yesno/160487"
+  ]
+ }
+}

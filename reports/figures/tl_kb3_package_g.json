@@ -1,0 +1,1540 @@
+{
+ "lemmas": [
+  {
+   "kb": 453,
+   "gloss": "the different orders of the elements of a list (equal elements are not told apart)",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 1.910811424255371
+  },
+  {
+   "kb": 454,
+   "gloss": "all lists of the given length whose elements are taken from the list (repetition allowed), in dictionary order",
+   "off": 0,
+   "yes": 178,
+   "unk": 22,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 6.644803762435913
+  },
+  {
+   "kb": 455,
+   "gloss": "all lists obtained by leaving out some elements of a list, keeping the order (2^n of them, counting repeats)",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.02808856964111328
+  },
+  {
+   "kb": 456,
+   "gloss": "all selections of k elements of a list, keeping the order (as positions: equal elements at different positions count as different selections)",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03592348098754883
+  },
+  {
+   "kb": 457,
+   "gloss": "the cyclic shifts of a list, starting with the list itself",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.11537432670593262
+  },
+  {
+   "kb": 458,
+   "gloss": "how many elements of a list are not related to any earlier element (for an equivalence: the number of classes, e.g. arrangements up to rotation)",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09172677993774414
+  },
+  {
+   "kb": 459,
+   "gloss": "the blocks of k consecutive elements of a list, from left to right",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.08064007759094238
+  },
+  {
+   "kb": 460,
+   "gloss": "the beginnings of a list, from the empty list to the whole list",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.08273935317993164
+  },
+  {
+   "kb": 461,
+   "gloss": "chance that an element of a list drawn with the given weights satisfies the predicate",
+   "off": 0,
+   "yes": 148,
+   "unk": 52,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.06867384910583496
+  },
+  {
+   "kb": 462,
+   "gloss": "expected value of a function on an element of a list drawn with the given weights",
+   "off": 0,
+   "yes": 146,
+   "unk": 54,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.08285140991210938
+  },
+  {
+   "kb": 463,
+   "gloss": "all pairs of an element of the first list and an element of the second, row by row",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.04639124870300293
+  },
+  {
+   "kb": 464,
+   "gloss": "all walks of n moves from a start, each move going to one of the places the function lists for the current place (a walk lists the places it visits, start included)",
+   "off": 0,
+   "yes": 180,
+   "unk": 20,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.20584726333618164
+  },
+  {
+   "kb": 465,
+   "gloss": "everything reachable from a start in at most n moves, each move going to one of the places the function lists",
+   "off": 0,
+   "yes": 173,
+   "unk": 27,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.38138532638549805
+  },
+  {
+   "kb": 466,
+   "gloss": "fewest moves from the first place to the second (n + 1 if more than n moves are needed)",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.135650634765625
+  },
+  {
+   "kb": 467,
+   "gloss": "a list without repeats has n! arrangements",
+   "off": 34,
+   "yes": 166,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.050451040267944336
+  },
+  {
+   "kb": 468,
+   "gloss": "the arrangements of a list are the lists with the same elements, as often",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.15837311744689941
+  },
+  {
+   "kb": 469,
+   "gloss": "arrangements of a list with repeats: n! divided by the factorials of the multiplicities",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.08003926277160645
+  },
+  {
+   "kb": 470,
+   "gloss": "there are n^k lists of length k from n elements",
+   "off": 19,
+   "yes": 181,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.022727489471435547
+  },
+  {
+   "kb": 471,
+   "gloss": "a list is one of the tuples iff all its elements come from the list",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.2675447463989258
+  },
+  {
+   "kb": 472,
+   "gloss": "tuples without repeats are counted by ordered selections",
+   "off": 65,
+   "yes": 135,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.8108048439025879
+  },
+  {
+   "kb": 473,
+   "gloss": "stars and bars: k whole numbers with sum n",
+   "off": 75,
+   "yes": 125,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 1.4547204971313477
+  },
+  {
+   "kb": 474,
+   "gloss": "a list of n elements has 2^n selections",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.014079570770263672
+  },
+  {
+   "kb": 475,
+   "gloss": "there are C(n, k) selections of k elements",
+   "off": 17,
+   "yes": 183,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.022978782653808594
+  },
+  {
+   "kb": 476,
+   "gloss": "the selections of every size add up to 2^n",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0386960506439209
+  },
+  {
+   "kb": 477,
+   "gloss": "a list of n elements has n rotations",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.011086463928222656
+  },
+  {
+   "kb": 478,
+   "gloss": "being a rotation is symmetric",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.055112600326538086
+  },
+  {
+   "kb": 479,
+   "gloss": "every rotation is an arrangement",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.2065722942352295
+  },
+  {
+   "kb": 480,
+   "gloss": "up to equality, the classes are the different elements",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05387091636657715
+  },
+  {
+   "kb": 481,
+   "gloss": "there are at most as many classes as elements",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.02878117561340332
+  },
+  {
+   "kb": 482,
+   "gloss": "necklaces of n beads in m colours (Burnside)",
+   "off": 43,
+   "yes": 157,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 1.0751900672912598
+  },
+  {
+   "kb": 483,
+   "gloss": "a list of n elements has n \u2212 k + 1 blocks of k",
+   "off": 67,
+   "yes": 133,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0239865779876709
+  },
+  {
+   "kb": 484,
+   "gloss": "every block of k consecutive elements has length k",
+   "off": 18,
+   "yes": 182,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.025126934051513672
+  },
+  {
+   "kb": 485,
+   "gloss": "a list of n elements has n + 1 beginnings",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.012569665908813477
+  },
+  {
+   "kb": 486,
+   "gloss": "the longest beginning is the list",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.00825357437133789
+  },
+  {
+   "kb": 487,
+   "gloss": "equal weights give the uniform chance",
+   "off": 63,
+   "yes": 137,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05272221565246582
+  },
+  {
+   "kb": 488,
+   "gloss": "the weighted chances of an event and its complement add up to 1",
+   "off": 57,
+   "yes": 143,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0850830078125
+  },
+  {
+   "kb": 489,
+   "gloss": "the chances of an event and its complement add up to 1",
+   "off": 41,
+   "yes": 159,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.04946112632751465
+  },
+  {
+   "kb": 490,
+   "gloss": "equal weights give the plain expected value",
+   "off": 66,
+   "yes": 134,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05483078956604004
+  },
+  {
+   "kb": 491,
+   "gloss": "expected value is additive",
+   "off": 49,
+   "yes": 151,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.1405024528503418
+  },
+  {
+   "kb": 492,
+   "gloss": "inclusion\u2013exclusion for two conditions",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07888102531433105
+  },
+  {
+   "kb": 493,
+   "gloss": "counting the complement",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03980112075805664
+  },
+  {
+   "kb": 494,
+   "gloss": "the product rule",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.021014928817749023
+  },
+  {
+   "kb": 495,
+   "gloss": "a pair is in the product iff both parts are in the lists",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07938623428344727
+  },
+  {
+   "kb": 496,
+   "gloss": "independent choices: the chances multiply",
+   "off": 77,
+   "yes": 123,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09836363792419434
+  },
+  {
+   "kb": 497,
+   "gloss": "independent choices: the expected values of the parts add",
+   "off": 73,
+   "yes": 127,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0984354019165039
+  },
+  {
+   "kb": 498,
+   "gloss": "joined lists: the lengths add up",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.026940345764160156
+  },
+  {
+   "kb": 499,
+   "gloss": "pigeonhole: more things than boxes means two share a box",
+   "off": 153,
+   "yes": 47,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.31849193572998047
+  },
+  {
+   "kb": 500,
+   "gloss": "walks of n + 1 moves: add up over the first move",
+   "off": 23,
+   "yes": 177,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.1448061466217041
+  },
+  {
+   "kb": 501,
+   "gloss": "every walk of n moves ends at a place reachable in n moves",
+   "off": 24,
+   "yes": 176,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.31887245178222656
+  },
+  {
+   "kb": 502,
+   "gloss": "reachable in at most n moves iff some walk of at most n moves ends there",
+   "off": 33,
+   "yes": 167,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.18120503425598145
+  },
+  {
+   "kb": 503,
+   "gloss": "zero moves are needed exactly to stay put",
+   "off": 28,
+   "yes": 172,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.04701685905456543
+  },
+  {
+   "kb": 504,
+   "gloss": "the target is reachable in the fewest moves",
+   "off": 112,
+   "yes": 88,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07214021682739258
+  },
+  {
+   "kb": 505,
+   "gloss": "fewer moves than the fewest do not reach the target",
+   "off": 154,
+   "yes": 46,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05866098403930664
+  },
+  {
+   "kb": 506,
+   "gloss": "ordered selections are selections times their orders",
+   "off": 23,
+   "yes": 177,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.022001028060913086
+  },
+  {
+   "kb": 507,
+   "gloss": "Pascal's rule",
+   "off": 22,
+   "yes": 178,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03247332572937012
+  }
+ ],
+ "wrong": [
+  {
+   "name": "n! arrangements despite repeats",
+   "prem": 2
+  },
+  {
+   "name": "n\u00b7k tuples",
+   "prem": 1
+  },
+  {
+   "name": "selections counted with order",
+   "prem": 4
+  },
+  {
+   "name": "stars and bars off by one",
+   "prem": 1
+  },
+  {
+   "name": "necklaces = n^k / k",
+   "prem": 1
+  },
+  {
+   "name": "every arrangement is a rotation",
+   "prem": 1
+  },
+  {
+   "name": "or-count = sum of counts",
+   "prem": 7
+  },
+  {
+   "name": "events on one draw independent",
+   "prem": 9
+  },
+  {
+   "name": "weights ignored",
+   "prem": 5
+  },
+  {
+   "name": "walks = (first degree)^n",
+   "prem": 5
+  },
+  {
+   "name": "one move iff a neighbour",
+   "prem": 1
+  },
+  {
+   "name": "pigeonhole with \u2264",
+   "prem": 1
+  },
+  {
+   "name": "Pascal, wrong",
+   "prem": 3
+  },
+  {
+   "name": "n \u2212 k blocks",
+   "prem": 1
+  },
+  {
+   "name": "classes = elements",
+   "prem": 2
+  }
+ ],
+ "enum": {
+  "perms_of (n!)": [
+   {
+    "n": 0,
+    "count": 1.0,
+    "sec": 7.867813110351562e-05
+   },
+   {
+    "n": 1,
+    "count": 1.0,
+    "sec": 8.487701416015625e-05
+   },
+   {
+    "n": 2,
+    "count": 2.0,
+    "sec": 9.226799011230469e-05
+   },
+   {
+    "n": 3,
+    "count": 6.0,
+    "sec": 0.00010251998901367188
+   },
+   {
+    "n": 4,
+    "count": 24.0,
+    "sec": 0.0001442432403564453
+   },
+   {
+    "n": 5,
+    "count": 120.0,
+    "sec": 0.00030159950256347656
+   },
+   {
+    "n": 6,
+    "count": 720.0,
+    "sec": 0.0013844966888427734
+   },
+   {
+    "n": 7,
+    "count": 5040.0,
+    "sec": 0.010312318801879883
+   },
+   {
+    "n": 8,
+    "count": 40320.0,
+    "sec": 0.09490966796875
+   },
+   {
+    "n": 9,
+    "count": null,
+    "sec": 0.00022149085998535156
+   }
+  ],
+  "tuples, 3 places (n\u00b3)": [
+   {
+    "n": 0,
+    "count": 0.0,
+    "sec": 0.0001010894775390625
+   },
+   {
+    "n": 1,
+    "count": 1.0,
+    "sec": 0.00010395050048828125
+   },
+   {
+    "n": 2,
+    "count": 8.0,
+    "sec": 9.512901306152344e-05
+   },
+   {
+    "n": 3,
+    "count": 27.0,
+    "sec": 9.775161743164062e-05
+   },
+   {
+    "n": 4,
+    "count": 64.0,
+    "sec": 0.00010919570922851562
+   },
+   {
+    "n": 5,
+    "count": 125.0,
+    "sec": 0.00012493133544921875
+   },
+   {
+    "n": 6,
+    "count": 216.0,
+    "sec": 0.00014853477478027344
+   },
+   {
+    "n": 7,
+    "count": 343.0,
+    "sec": 0.00020766258239746094
+   },
+   {
+    "n": 8,
+    "count": 512.0,
+    "sec": 0.00020456314086914062
+   },
+   {
+    "n": 9,
+    "count": 729.0,
+    "sec": 0.0002474784851074219
+   },
+   {
+    "n": 10,
+    "count": 1000.0,
+    "sec": 0.0002918243408203125
+   },
+   {
+    "n": 11,
+    "count": 1331.0,
+    "sec": 0.0003476142883300781
+   },
+   {
+    "n": 12,
+    "count": 1728.0,
+    "sec": 0.0004203319549560547
+   },
+   {
+    "n": 13,
+    "count": 2197.0,
+    "sec": 0.0005147457122802734
+   },
+   {
+    "n": 14,
+    "count": 2744.0,
+    "sec": 0.0006361007690429688
+   },
+   {
+    "n": 15,
+    "count": 3375.0,
+    "sec": 0.0009899139404296875
+   },
+   {
+    "n": 16,
+    "count": 4096.0,
+    "sec": 0.001201629638671875
+   },
+   {
+    "n": 17,
+    "count": 4913.0,
+    "sec": 0.0014071464538574219
+   },
+   {
+    "n": 18,
+    "count": 5832.0,
+    "sec": 0.0017817020416259766
+   },
+   {
+    "n": 19,
+    "count": 6859.0,
+    "sec": 0.0019385814666748047
+   },
+   {
+    "n": 20,
+    "count": 8000.0,
+    "sec": 0.0063648223876953125
+   },
+   {
+    "n": 21,
+    "count": 9261.0,
+    "sec": 0.0028259754180908203
+   },
+   {
+    "n": 22,
+    "count": 10648.0,
+    "sec": 0.0032105445861816406
+   },
+   {
+    "n": 23,
+    "count": 12167.0,
+    "sec": 0.0049896240234375
+   },
+   {
+    "n": 24,
+    "count": 13824.0,
+    "sec": 0.004605293273925781
+   },
+   {
+    "n": 25,
+    "count": 15625.0,
+    "sec": 0.0053784847259521484
+   },
+   {
+    "n": 26,
+    "count": 17576.0,
+    "sec": 0.006045341491699219
+   },
+   {
+    "n": 27,
+    "count": 19683.0,
+    "sec": 0.0067441463470458984
+   },
+   {
+    "n": 28,
+    "count": 21952.0,
+    "sec": 0.007334709167480469
+   },
+   {
+    "n": 29,
+    "count": 24389.0,
+    "sec": 0.008578062057495117
+   },
+   {
+    "n": 30,
+    "count": 27000.0,
+    "sec": 0.012715816497802734
+   },
+   {
+    "n": 31,
+    "count": 29791.0,
+    "sec": 0.00998997688293457
+   },
+   {
+    "n": 32,
+    "count": 32768.0,
+    "sec": 0.012084722518920898
+   },
+   {
+    "n": 33,
+    "count": 35937.0,
+    "sec": 0.012870073318481445
+   },
+   {
+    "n": 34,
+    "count": 39304.0,
+    "sec": 0.019260644912719727
+   },
+   {
+    "n": 35,
+    "count": 42875.0,
+    "sec": 0.014821767807006836
+   },
+   {
+    "n": 36,
+    "count": 46656.0,
+    "sec": 0.01658916473388672
+   },
+   {
+    "n": 37,
+    "count": 50653.0,
+    "sec": 0.022691726684570312
+   },
+   {
+    "n": 38,
+    "count": 54872.0,
+    "sec": 0.0190887451171875
+   },
+   {
+    "n": 39,
+    "count": 59319.0,
+    "sec": 0.02087235450744629
+   },
+   {
+    "n": 40,
+    "count": 64000.0,
+    "sec": 0.028606176376342773
+   }
+  ],
+  "sublists (2\u207f)": [
+   {
+    "n": 0,
+    "count": 1.0,
+    "sec": 0.00011444091796875
+   },
+   {
+    "n": 1,
+    "count": 2.0,
+    "sec": 7.772445678710938e-05
+   },
+   {
+    "n": 2,
+    "count": 4.0,
+    "sec": 7.605552673339844e-05
+   },
+   {
+    "n": 3,
+    "count": 8.0,
+    "sec": 7.867813110351562e-05
+   },
+   {
+    "n": 4,
+    "count": 16.0,
+    "sec": 8.320808410644531e-05
+   },
+   {
+    "n": 5,
+    "count": 32.0,
+    "sec": 9.632110595703125e-05
+   },
+   {
+    "n": 6,
+    "count": 64.0,
+    "sec": 9.918212890625e-05
+   },
+   {
+    "n": 7,
+    "count": 128.0,
+    "sec": 0.00011539459228515625
+   },
+   {
+    "n": 8,
+    "count": 256.0,
+    "sec": 0.00014519691467285156
+   },
+   {
+    "n": 9,
+    "count": 512.0,
+    "sec": 0.00019788742065429688
+   },
+   {
+    "n": 10,
+    "count": 1024.0,
+    "sec": 0.0003495216369628906
+   },
+   {
+    "n": 11,
+    "count": 2048.0,
+    "sec": 0.0007219314575195312
+   },
+   {
+    "n": 12,
+    "count": 4096.0,
+    "sec": 0.0016894340515136719
+   },
+   {
+    "n": 13,
+    "count": 8192.0,
+    "sec": 0.0027794837951660156
+   },
+   {
+    "n": 14,
+    "count": 16384.0,
+    "sec": 0.006854057312011719
+   },
+   {
+    "n": 15,
+    "count": 32768.0,
+    "sec": 0.016447067260742188
+   },
+   {
+    "n": 16,
+    "count": 65536.0,
+    "sec": 0.050423383712768555
+   },
+   {
+    "n": 17,
+    "count": null,
+    "sec": 0.00020647048950195312
+   }
+  ],
+  "combos, half (C(n, n/2))": [
+   {
+    "n": 0,
+    "count": 1.0,
+    "sec": 9.751319885253906e-05
+   },
+   {
+    "n": 1,
+    "count": 1.0,
+    "sec": 8.678436279296875e-05
+   },
+   {
+    "n": 2,
+    "count": 2.0,
+    "sec": 9.059906005859375e-05
+   },
+   {
+    "n": 3,
+    "count": 3.0,
+    "sec": 9.322166442871094e-05
+   },
+   {
+    "n": 4,
+    "count": 6.0,
+    "sec": 9.894371032714844e-05
+   },
+   {
+    "n": 5,
+    "count": 10.0,
+    "sec": 0.00010418891906738281
+   },
+   {
+    "n": 6,
+    "count": 20.0,
+    "sec": 0.00011777877807617188
+   },
+   {
+    "n": 7,
+    "count": 35.0,
+    "sec": 0.00013589859008789062
+   },
+   {
+    "n": 8,
+    "count": 70.0,
+    "sec": 0.00018596649169921875
+   },
+   {
+    "n": 9,
+    "count": 126.0,
+    "sec": 0.0002422332763671875
+   },
+   {
+    "n": 10,
+    "count": 252.0,
+    "sec": 0.0003941059112548828
+   },
+   {
+    "n": 11,
+    "count": 462.0,
+    "sec": 0.000652313232421875
+   },
+   {
+    "n": 12,
+    "count": 924.0,
+    "sec": 0.0013446807861328125
+   },
+   {
+    "n": 13,
+    "count": 1716.0,
+    "sec": 0.0025560855865478516
+   },
+   {
+    "n": 14,
+    "count": 3432.0,
+    "sec": 0.005560636520385742
+   },
+   {
+    "n": 15,
+    "count": 6435.0,
+    "sec": 0.011435508728027344
+   },
+   {
+    "n": 16,
+    "count": 12870.0,
+    "sec": 0.026123046875
+   },
+   {
+    "n": 17,
+    "count": 24310.0,
+    "sec": 0.05411028861999512
+   },
+   {
+    "n": 18,
+    "count": 48620.0,
+    "sec": 0.1251966953277588
+   },
+   {
+    "n": 19,
+    "count": 92378.0,
+    "sec": 0.26369500160217285
+   },
+   {
+    "n": 20,
+    "count": null,
+    "sec": 0.0002353191375732422
+   }
+  ],
+  "walks \u00b11, n moves (2\u207f)": [
+   {
+    "n": 0,
+    "count": 1.0,
+    "sec": 0.0001220703125
+   },
+   {
+    "n": 1,
+    "count": 2.0,
+    "sec": 0.0001933574676513672
+   },
+   {
+    "n": 2,
+    "count": 4.0,
+    "sec": 0.0003190040588378906
+   },
+   {
+    "n": 3,
+    "count": 8.0,
+    "sec": 0.0004749298095703125
+   },
+   {
+    "n": 4,
+    "count": 16.0,
+    "sec": 0.0006580352783203125
+   },
+   {
+    "n": 5,
+    "count": 32.0,
+    "sec": 0.0009148120880126953
+   },
+   {
+    "n": 6,
+    "count": 64.0,
+    "sec": 0.0011098384857177734
+   },
+   {
+    "n": 7,
+    "count": 128.0,
+    "sec": 0.0013239383697509766
+   },
+   {
+    "n": 8,
+    "count": 256.0,
+    "sec": 0.0016779899597167969
+   },
+   {
+    "n": 9,
+    "count": 512.0,
+    "sec": 0.0024979114532470703
+   },
+   {
+    "n": 10,
+    "count": 1024.0,
+    "sec": 0.003233194351196289
+   },
+   {
+    "n": 11,
+    "count": 2048.0,
+    "sec": 0.0054225921630859375
+   },
+   {
+    "n": 12,
+    "count": 4096.0,
+    "sec": 0.009122371673583984
+   },
+   {
+    "n": 13,
+    "count": 8192.0,
+    "sec": 0.017205238342285156
+   },
+   {
+    "n": 14,
+    "count": 16384.0,
+    "sec": 0.0338590145111084
+   },
+   {
+    "n": 15,
+    "count": 32768.0,
+    "sec": 0.06973695755004883
+   },
+   {
+    "n": 16,
+    "count": 65536.0,
+    "sec": 0.14934515953063965
+   },
+   {
+    "n": 17,
+    "count": null,
+    "sec": 0.005742311477661133
+   }
+  ],
+  "list_product n \u00d7 n (n\u00b2)": [
+   {
+    "n": 0,
+    "count": 0.0,
+    "sec": 0.0001289844512939453
+   },
+   {
+    "n": 1,
+    "count": 1.0,
+    "sec": 0.00011944770812988281
+   },
+   {
+    "n": 2,
+    "count": 4.0,
+    "sec": 0.000141143798828125
+   },
+   {
+    "n": 3,
+    "count": 9.0,
+    "sec": 0.00013947486877441406
+   },
+   {
+    "n": 4,
+    "count": 16.0,
+    "sec": 0.00013113021850585938
+   },
+   {
+    "n": 5,
+    "count": 25.0,
+    "sec": 0.00013589859008789062
+   },
+   {
+    "n": 6,
+    "count": 36.0,
+    "sec": 0.000141143798828125
+   },
+   {
+    "n": 7,
+    "count": 49.0,
+    "sec": 0.0001480579376220703
+   },
+   {
+    "n": 8,
+    "count": 64.0,
+    "sec": 0.0001633167266845703
+   },
+   {
+    "n": 9,
+    "count": 81.0,
+    "sec": 0.00016427040100097656
+   },
+   {
+    "n": 10,
+    "count": 100.0,
+    "sec": 0.00017690658569335938
+   },
+   {
+    "n": 11,
+    "count": 121.0,
+    "sec": 0.00018310546875
+   },
+   {
+    "n": 12,
+    "count": 144.0,
+    "sec": 0.0001926422119140625
+   },
+   {
+    "n": 13,
+    "count": 169.0,
+    "sec": 0.00019979476928710938
+   },
+   {
+    "n": 14,
+    "count": 196.0,
+    "sec": 0.0002200603485107422
+   },
+   {
+    "n": 15,
+    "count": 225.0,
+    "sec": 0.00021910667419433594
+   },
+   {
+    "n": 16,
+    "count": 256.0,
+    "sec": 0.00022459030151367188
+   },
+   {
+    "n": 17,
+    "count": 289.0,
+    "sec": 0.00023365020751953125
+   },
+   {
+    "n": 18,
+    "count": 324.0,
+    "sec": 0.0002465248107910156
+   },
+   {
+    "n": 19,
+    "count": 361.0,
+    "sec": 0.00025177001953125
+   },
+   {
+    "n": 20,
+    "count": 400.0,
+    "sec": 0.00025963783264160156
+   },
+   {
+    "n": 21,
+    "count": 441.0,
+    "sec": 0.0002701282501220703
+   },
+   {
+    "n": 22,
+    "count": 484.0,
+    "sec": 0.0002853870391845703
+   },
+   {
+    "n": 23,
+    "count": 529.0,
+    "sec": 0.00029158592224121094
+   },
+   {
+    "n": 24,
+    "count": 576.0,
+    "sec": 0.00029778480529785156
+   },
+   {
+    "n": 25,
+    "count": 625.0,
+    "sec": 0.0003135204315185547
+   },
+   {
+    "n": 26,
+    "count": 676.0,
+    "sec": 0.00031948089599609375
+   },
+   {
+    "n": 27,
+    "count": 729.0,
+    "sec": 0.0003294944763183594
+   },
+   {
+    "n": 28,
+    "count": 784.0,
+    "sec": 0.0004284381866455078
+   },
+   {
+    "n": 29,
+    "count": 841.0,
+    "sec": 0.0003604888916015625
+   },
+   {
+    "n": 30,
+    "count": 900.0,
+    "sec": 0.00041961669921875
+   },
+   {
+    "n": 31,
+    "count": 961.0,
+    "sec": 0.000392913818359375
+   },
+   {
+    "n": 32,
+    "count": 1024.0,
+    "sec": 0.0005414485931396484
+   },
+   {
+    "n": 33,
+    "count": 1089.0,
+    "sec": 0.00041031837463378906
+   },
+   {
+    "n": 34,
+    "count": 1156.0,
+    "sec": 0.00041174888610839844
+   },
+   {
+    "n": 35,
+    "count": 1225.0,
+    "sec": 0.00042748451232910156
+   },
+   {
+    "n": 36,
+    "count": 1296.0,
+    "sec": 0.0004298686981201172
+   },
+   {
+    "n": 37,
+    "count": 1369.0,
+    "sec": 0.00044727325439453125
+   },
+   {
+    "n": 38,
+    "count": 1444.0,
+    "sec": 0.0004513263702392578
+   },
+   {
+    "n": 39,
+    "count": 1521.0,
+    "sec": 0.00046634674072265625
+   },
+   {
+    "n": 40,
+    "count": 1600.0,
+    "sec": 0.0004787445068359375
+   }
+  ]
+ },
+ "grid": {
+  "moves": 5,
+  "ends": {
+   "(5, 0)": 1,
+   "(3, 0)": 25,
+   "(4, 1)": 5,
+   "(4, -1)": 5,
+   "(1, 0)": 100,
+   "(2, 1)": 50,
+   "(2, -1)": 50,
+   "(3, 2)": 10,
+   "(3, -2)": 10,
+   "(-1, 0)": 100,
+   "(0, 1)": 100,
+   "(0, -1)": 100,
+   "(1, 2)": 50,
+   "(1, -2)": 50,
+   "(2, 3)": 10,
+   "(2, -3)": 10,
+   "(-3, 0)": 25,
+   "(-2, 1)": 50,
+   "(-2, -1)": 50,
+   "(-1, 2)": 50,
+   "(-1, -2)": 50,
+   "(0, 3)": 25,
+   "(0, -3)": 25,
+   "(1, 4)": 5,
+   "(1, -4)": 5,
+   "(-5, 0)": 1,
+   "(-4, 1)": 5,
+   "(-4, -1)": 5,
+   "(-3, 2)": 10,
+   "(-3, -2)": 10,
+   "(-2, 3)": 10,
+   "(-2, -3)": 10,
+   "(-1, 4)": 5,
+   "(-1, -4)": 5,
+   "(0, 5)": 1,
+   "(0, -5)": 1
+  },
+  "walks": 1024,
+  "dist": {
+   "(-5, -5)": 6,
+   "(-5, -4)": 6,
+   "(-5, -3)": 6,
+   "(-5, -2)": 6,
+   "(-5, -1)": 6,
+   "(-5, 0)": 5,
+   "(-5, 1)": 6,
+   "(-5, 2)": 6,
+   "(-5, 3)": 6,
+   "(-5, 4)": 6,
+   "(-5, 5)": 6,
+   "(-4, -5)": 6,
+   "(-4, -4)": 6,
+   "(-4, -3)": 6,
+   "(-4, -2)": 6,
+   "(-4, -1)": 5,
+   "(-4, 0)": 4,
+   "(-4, 1)": 5,
+   "(-4, 2)": 6,
+   "(-4, 3)": 6,
+   "(-4, 4)": 6,
+   "(-4, 5)": 6,
+   "(-3, -5)": 6,
+   "(-3, -4)": 6,
+   "(-3, -3)": 6,
+   "(-3, -2)": 5,
+   "(-3, -1)": 4,
+   "(-3, 0)": 3,
+   "(-3, 1)": 4,
+   "(-3, 2)": 5,
+   "(-3, 3)": 6,
+   "(-3, 4)": 6,
+   "(-3, 5)": 6,
+   "(-2, -5)": 6,
+   "(-2, -4)": 6,
+   "(-2, -3)": 5,
+   "(-2, -2)": 4,
+   "(-2, -1)": 3,
+   "(-2, 0)": 2,
+   "(-2, 1)": 3,
+   "(-2, 2)": 4,
+   "(-2, 3)": 5,
+   "(-2, 4)": 6,
+   "(-2, 5)": 6,
+   "(-1, -5)": 6,
+   "(-1, -4)": 5,
+   "(-1, -3)": 4,
+   "(-1, -2)": 3,
+   "(-1, -1)": 2,
+   "(-1, 0)": 1,
+   "(-1, 1)": 2,
+   "(-1, 2)": 3,
+   "(-1, 3)": 4,
+   "(-1, 4)": 5,
+   "(-1, 5)": 6,
+   "(0, -5)": 5,
+   "(0, -4)": 4,
+   "(0, -3)": 3,
+   "(0, -2)": 2,
+   "(0, -1)": 1,
+   "(0, 0)": 0,
+   "(0, 1)": 1,
+   "(0, 2)": 2,
+   "(0, 3)": 3,
+   "(0, 4)": 4,
+   "(0, 5)": 5,
+   "(1, -5)": 6,
+   "(1, -4)": 5,
+   "(1, -3)": 4,
+   "(1, -2)": 3,
+   "(1, -1)": 2,
+   "(1, 0)": 1,
+   "(1, 1)": 2,
+   "(1, 2)": 3,
+   "(1, 3)": 4,
+   "(1, 4)": 5,
+   "(1, 5)": 6,
+   "(2, -5)": 6,
+   "(2, -4)": 6,
+   "(2, -3)": 5,
+   "(2, -2)": 4,
+   "(2, -1)": 3,
+   "(2, 0)": 2,
+   "(2, 1)": 3,
+   "(2, 2)": 4,
+   "(2, 3)": 5,
+   "(2, 4)": 6,
+   "(2, 5)": 6,
+   "(3, -5)": 6,
+   "(3, -4)": 6,
+   "(3, -3)": 6,
+   "(3, -2)": 5,
+   "(3, -1)": 4,
+   "(3, 0)": 3,
+   "(3, 1)": 4,
+   "(3, 2)": 5,
+   "(3, 3)": 6,
+   "(3, 4)": 6,
+   "(3, 5)": 6,
+   "(4, -5)": 6,
+   "(4, -4)": 6,
+   "(4, -3)": 6,
+   "(4, -2)": 6,
+   "(4, -1)": 5,
+   "(4, 0)": 4,
+   "(4, 1)": 5,
+   "(4, 2)": 6,
+   "(4, 3)": 6,
+   "(4, 4)": 6,
+   "(4, 5)": 6,
+   "(5, -5)": 6,
+   "(5, -4)": 6,
+   "(5, -3)": 6,
+   "(5, -2)": 6,
+   "(5, -1)": 6,
+   "(5, 0)": 5,
+   "(5, 1)": 6,
+   "(5, 2)": 6,
+   "(5, 3)": 6,
+   "(5, 4)": 6,
+   "(5, 5)": 6
+  }
+ }
+}

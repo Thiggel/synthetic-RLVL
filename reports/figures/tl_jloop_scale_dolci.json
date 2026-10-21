@@ -1,0 +1,245 @@
+{
+ "scale": {
+  "n_prompts": 598,
+  "by_family_n": {
+   "dolci_math": 200,
+   "dolci_yesno": 198,
+   "dolci_dapo": 200
+  },
+  "K_n": 138,
+  "prompts_by_round": [
+   43,
+   73,
+   84,
+   93
+  ],
+  "K_by_round": [
+   18,
+   29,
+   37,
+   43
+  ],
+  "notK_by_round": [
+   25,
+   44,
+   47,
+   50
+  ],
+  "fam_by_round": [
+   {
+    "dolci_yesno": 19,
+    "dolci_math": 16,
+    "dolci_dapo": 8
+   },
+   {
+    "dolci_yesno": 35,
+    "dolci_math": 21,
+    "dolci_dapo": 17
+   },
+   {
+    "dolci_math": 22,
+    "dolci_dapo": 19,
+    "dolci_yesno": 43
+   },
+   {
+    "dolci_math": 24,
+    "dolci_dapo": 20,
+    "dolci_yesno": 49
+   }
+  ],
+  "after_judged": {
+   "check": 194,
+   "judged": 390,
+   "lex": 93,
+   "ok": 35,
+   "unfaithful": 24,
+   "wrong": 16,
+   "no_proof": 1
+  },
+  "rejudge_proofs": [
+   152,
+   195
+  ],
+  "repaired": [
+   22,
+   35
+  ],
+  "in_loop_prompts": 93,
+  "robust_prompts": [
+   "dolci_dapo/77110",
+   "dolci_dapo/77680",
+   "dolci_dapo/78346",
+   "dolci_dapo/78547",
+   "dolci_dapo/78584",
+   "dolci_dapo/79944",
+   "dolci_dapo/79945",
+   "dolci_dapo/79999",
+   "dolci_dapo/80687",
+   "dolci_dapo/80948",
+   "dolci_dapo/81893",
+   "dolci_dapo/82252",
+   "dolci_dapo/82255",
+   "dolci_dapo/82584",
+   "dolci_dapo/82897",
+   "dolci_dapo/83452",
+   "dolci_math/21339",
+   "dolci_math/22556",
+   "dolci_math/23393",
+   "dolci_math/23408",
+   "dolci_math/23475",
+   "dolci_math/23949",
+   "dolci_math/24013",
+   "dolci_math/30039",
+   "dolci_math/35277",
+   "dolci_math/35761",
+   "dolci_math/41770",
+   "dolci_math/42430",
+   "dolci_math/43812",
+   "dolci_math/45276",
+   "dolci_math/46705",
+   "dolci_math/48361",
+   "dolci_math/50489",
+   "dolci_math/51244",
+   "dolci_math/51771",
+   "dolci_math/53261",
+   "dolci_math/72814",
+   "dolci_math/74973",
+   "dolci_yesno/121796",
+   "dolci_yesno/123703",
+   "dolci_yesno/126406",
+   "dolci_yesno/128706",
+   "dolci_yesno/129195",
+   "dolci_yesno/131213",
+   "dolci_yesno/132471",
+   "dolci_yesno/133216",
+   "dolci_yesno/133219",
+   "dolci_yesno/133448",
+   "dolci_yesno/133885",
+   "dolci_yesno/135408",
+   "dolci_yesno/136845",
+   "dolci_yesno/137311",
+   "dolci_yesno/138384",
+   "dolci_yesno/138901",
+   "dolci_yesno/139174",
+   "dolci_yesno/144105",
+   "dolci_yesno/146284",
+   "dolci_yesno/147386",
+   "dolci_yesno/152598",
+   "dolci_yesno/152694",
+   "dolci_yesno/156240",
+   "dolci_yesno/163982",
+   "dolci_yesno/164289",
+   "dolci_yesno/166115",
+   "dolci_yesno/166139",
+   "dolci_yesno/167067",
+   "dolci_yesno/167083",
+   "dolci_yesno/169258"
+  ],
+  "lost": [
+   "dolci_dapo/77304",
+   "dolci_dapo/78087",
+   "dolci_dapo/78440",
+   "dolci_dapo/80508",
+   "dolci_math/52291",
+   "dolci_math/68757",
+   "dolci_yesno/121628",
+   "dolci_yesno/122593",
+   "dolci_yesno/135085",
+   "dolci_yesno/138891",
+   "dolci_yesno/139900",
+   "dolci_yesno/140319",
+   "dolci_yesno/141205",
+   "dolci_yesno/141982",
+   "dolci_yesno/143388",
+   "dolci_yesno/144551",
+   "dolci_yesno/145005",
+   "dolci_yesno/149978",
+   "dolci_yesno/150070",
+   "dolci_yesno/150860",
+   "dolci_yesno/152275",
+   "dolci_yesno/155522",
+   "dolci_yesno/156019",
+   "dolci_yesno/168885",
+   "dolci_yesno/169709"
+  ],
+  "robust_by_family": {
+   "dolci_yesno": 30,
+   "dolci_dapo": 16,
+   "dolci_math": 22
+  },
+  "robust_K": 27,
+  "robust_notK": 41,
+  "gold": [
+   93,
+   100
+  ],
+  "substantive_flagged": 8,
+  "pilot_overlap": {
+   "pilot_in_run": 150,
+   "robust_on_pilot": 19,
+   "robust_71136": 20,
+   "both": 17,
+   "K_tag_agree": 1
+  },
+  "cost": {
+   "wall_s": 28340.280885457993,
+   "gen_tokens": 44191794,
+   "prompt_tokens": 295294504,
+   "calls": 9199
+  }
+ },
+ "pilot": {
+  "dir": "gpt-oss-120b_kdef_jloop_dolci",
+  "prompts_by_round": [
+   15,
+   19,
+   21,
+   23
+  ],
+  "K_by_round": [
+   10,
+   11,
+   12,
+   13
+  ],
+  "notK_by_round": [
+   5,
+   8,
+   9,
+   10
+  ],
+  "by_family": {
+   "dolci_math": 5,
+   "dolci_dapo": 3,
+   "dolci_yesno": 15
+  },
+  "attempts_ok": 50,
+  "after_judged": {
+   "judged": 113,
+   "ok": 12,
+   "check": 46,
+   "lex": 29,
+   "unfaithful": 7,
+   "wrong": 3
+  },
+  "ok_attempts_substantive_flag": {
+   "false": 49,
+   "true": 1
+  },
+  "prompts": null
+ },
+ "proof_pass_by_family": {
+  "dolci_math": [
+   62,
+   66
+  ],
+  "dolci_dapo": [
+   33,
+   41
+  ],
+  "dolci_yesno": [
+   57,
+   88
+  ]
+ }
+}

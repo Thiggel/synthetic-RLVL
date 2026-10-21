@@ -1,0 +1,49 @@
+{
+ "modes_by_pkg": {
+  "F": {
+   "unfold": 189,
+   "calc": 231,
+   "find": 427,
+   "yes/no": 413
+  },
+  "D": {
+   "unfold": 89,
+   "calc": 131,
+   "find": 480,
+   "yes/no": 360
+  },
+  "H": {
+   "unfold": 63,
+   "calc": 57,
+   "find": 0,
+   "yes/no": 0
+  },
+  "W": {
+   "unfold": 297,
+   "calc": 343,
+   "find": 0,
+   "yes/no": 0
+  },
+  "H/W": {
+   "unfold": 0,
+   "calc": 0,
+   "find": 291,
+   "yes/no": 249
+  }
+ },
+ "themes_by_pkg": {
+  "F": 63,
+  "D": 53,
+  "H": 6,
+  "W": 32,
+  "H/W": 27
+ },
+ "mixed_by_src": {
+  "gen2": 1832,
+  "H/W": 168,
+  "D": 342,
+  "F": 447,
+  "W": 140,
+  "H": 71
+ }
+}

@@ -1,0 +1,1327 @@
+{
+ "lemmas": [
+  {
+   "kb": 508,
+   "gloss": "the second argument if the condition holds, else the third",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.014006376266479492
+  },
+  {
+   "kb": 509,
+   "gloss": "the first n terms of the sequence that starts with the given terms and continues with the rule applied to all earlier terms",
+   "off": 0,
+   "yes": 178,
+   "unk": 22,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.1998274326324463
+  },
+  {
+   "kb": 510,
+   "gloss": "term n (counting from 1) of the sequence that starts with the given terms and continues with the rule applied to all earlier terms",
+   "off": 0,
+   "yes": 145,
+   "unk": 55,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.12221479415893555
+  },
+  {
+   "kb": 511,
+   "gloss": "term n (counting from 1) of the sequence that starts with the r given terms and continues with the rule applied to the last r terms",
+   "off": 0,
+   "yes": 136,
+   "unk": 64,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.16147780418395996
+  },
+  {
+   "kb": 512,
+   "gloss": "the start and the places after 1, 2, \u2026, n applications of a function",
+   "off": 0,
+   "yes": 184,
+   "unk": 16,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.06688046455383301
+  },
+  {
+   "kb": 514,
+   "gloss": "the running results of a fold: the start value and the value after each element",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.12248754501342773
+  },
+  {
+   "kb": 515,
+   "gloss": "consecutive terms of the list have a constant difference",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.3001384735107422
+  },
+  {
+   "kb": 516,
+   "gloss": "the terms of the list are nonzero and consecutive terms have a constant ratio",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.44451308250427246
+  },
+  {
+   "kb": 517,
+   "gloss": "term n of the arithmetic progression with first term a and difference d",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.02934861183166504
+  },
+  {
+   "kb": 518,
+   "gloss": "term n of the geometric progression with first term a and ratio r",
+   "off": 0,
+   "yes": 189,
+   "unk": 11,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0327754020690918
+  },
+  {
+   "kb": 520,
+   "gloss": "in the game with these moves from a position with finitely many reachable positions, the player to move can force a win within n of their own moves (a player who cannot move loses)",
+   "off": 0,
+   "yes": 181,
+   "unk": 19,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.4409019947052002
+  },
+  {
+   "kb": 522,
+   "gloss": "the first branch when the condition is true",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.007172107696533203
+  },
+  {
+   "kb": 523,
+   "gloss": "the second branch when the condition is false",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.007264137268066406
+  },
+  {
+   "kb": 524,
+   "gloss": "equal branches",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.006598711013793945
+  },
+  {
+   "kb": 525,
+   "gloss": "negated condition swaps the branches",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.010598182678222656
+  },
+  {
+   "kb": 526,
+   "gloss": "a function of a choice is the choice of the function values",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.023612022399902344
+  },
+  {
+   "kb": 527,
+   "gloss": "a choice between truth values",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.007477998733520508
+  },
+  {
+   "kb": 528,
+   "gloss": "the first n terms are n terms",
+   "off": 19,
+   "yes": 175,
+   "unk": 6,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.04169130325317383
+  },
+  {
+   "kb": 529,
+   "gloss": "the first terms are the given ones",
+   "off": 99,
+   "yes": 101,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03838324546813965
+  },
+  {
+   "kb": 530,
+   "gloss": "one more term: the rule applied to the terms before",
+   "off": 90,
+   "yes": 99,
+   "unk": 11,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.4434521198272705
+  },
+  {
+   "kb": 531,
+   "gloss": "the i-th of the first n terms is term i",
+   "off": 124,
+   "yes": 72,
+   "unk": 4,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.061292409896850586
+  },
+  {
+   "kb": 532,
+   "gloss": "a given term",
+   "off": 132,
+   "yes": 68,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.031271934509277344
+  },
+  {
+   "kb": 533,
+   "gloss": "a later term: the rule applied to the terms before",
+   "off": 80,
+   "yes": 107,
+   "unk": 13,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.24837350845336914
+  },
+  {
+   "kb": 534,
+   "gloss": "a given term of a window recurrence",
+   "off": 133,
+   "yes": 67,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.029359817504882812
+  },
+  {
+   "kb": 535,
+   "gloss": "a later term of a window recurrence: the rule applied to the r terms before",
+   "off": 76,
+   "yes": 124,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09307336807250977
+  },
+  {
+   "kb": 536,
+   "gloss": "a window recurrence is a sequence whose rule looks at the last r terms",
+   "off": 84,
+   "yes": 116,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.06685781478881836
+  },
+  {
+   "kb": 537,
+   "gloss": "a window recurrence whose window comes back after p steps has period p",
+   "off": 137,
+   "yes": 63,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 11.764150857925415
+  },
+  {
+   "kb": 538,
+   "gloss": "an orbit of n steps has n + 1 places",
+   "off": 19,
+   "yes": 181,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03863835334777832
+  },
+  {
+   "kb": 539,
+   "gloss": "place i + 1 of an orbit is the value after i steps",
+   "off": 103,
+   "yes": 97,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0426027774810791
+  },
+  {
+   "kb": 540,
+   "gloss": "an orbit one step longer",
+   "off": 19,
+   "yes": 181,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07225322723388672
+  },
+  {
+   "kb": 541,
+   "gloss": "an orbit ends at the value after n steps",
+   "off": 10,
+   "yes": 190,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.04761981964111328
+  },
+  {
+   "kb": 542,
+   "gloss": "m + n steps are n steps and then m steps",
+   "off": 24,
+   "yes": 176,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07428979873657227
+  },
+  {
+   "kb": 543,
+   "gloss": "a start that comes back after p steps: period p",
+   "off": 44,
+   "yes": 156,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 2.525804281234741
+  },
+  {
+   "kb": 544,
+   "gloss": "no steps when the condition holds at the start",
+   "off": 100,
+   "yes": 100,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.023099422454833984
+  },
+  {
+   "kb": 545,
+   "gloss": "one step more than from the next place",
+   "off": 184,
+   "yes": 16,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05542159080505371
+  },
+  {
+   "kb": 546,
+   "gloss": "the condition holds after the stopping time, which is at most any step where it holds",
+   "off": 99,
+   "yes": 101,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.06307387351989746
+  },
+  {
+   "kb": 547,
+   "gloss": "the condition fails before the stopping time",
+   "off": 187,
+   "yes": 13,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 6.848724603652954
+  },
+  {
+   "kb": 548,
+   "gloss": "a running fold has one more value than the list",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03894162178039551
+  },
+  {
+   "kb": 549,
+   "gloss": "a running fold starts with the start value",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03638744354248047
+  },
+  {
+   "kb": 550,
+   "gloss": "a running fold ends with the fold",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.04206371307373047
+  },
+  {
+   "kb": 551,
+   "gloss": "a running fold of a longer list",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07159042358398438
+  },
+  {
+   "kb": 552,
+   "gloss": "consecutive terms of an arithmetic progression differ by d",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03527665138244629
+  },
+  {
+   "kb": 553,
+   "gloss": "the next term of a geometric progression is r times the term",
+   "off": 55,
+   "yes": 145,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.035761356353759766
+  },
+  {
+   "kb": 554,
+   "gloss": "the first n terms of an arithmetic progression form one",
+   "off": 9,
+   "yes": 191,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07892203330993652
+  },
+  {
+   "kb": 555,
+   "gloss": "the first n terms of a geometric progression form one",
+   "off": 71,
+   "yes": 129,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07778525352478027
+  },
+  {
+   "kb": 556,
+   "gloss": "the terms of an arithmetic progression",
+   "off": 157,
+   "yes": 43,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.19411444664001465
+  },
+  {
+   "kb": 557,
+   "gloss": "the terms of a geometric progression",
+   "off": 163,
+   "yes": 37,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.22249388694763184
+  },
+  {
+   "kb": 558,
+   "gloss": "the sum of an arithmetic progression: n times the mean of the first and last term",
+   "off": 86,
+   "yes": 114,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.1979222297668457
+  },
+  {
+   "kb": 559,
+   "gloss": "the sum of the first n terms of an arithmetic progression",
+   "off": 18,
+   "yes": 182,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05882096290588379
+  },
+  {
+   "kb": 560,
+   "gloss": "the sum of the first n terms of a geometric progression",
+   "off": 53,
+   "yes": 147,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05756402015686035
+  },
+  {
+   "kb": 561,
+   "gloss": "three numbers in arithmetic progression: the middle one is the mean of the others",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05713772773742676
+  },
+  {
+   "kb": 562,
+   "gloss": "three numbers in geometric progression: the middle one squared is the product of the others",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09637975692749023
+  },
+  {
+   "kb": 563,
+   "gloss": "an arithmetic progression without its first term",
+   "off": 52,
+   "yes": 148,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.15210676193237305
+  },
+  {
+   "kb": 564,
+   "gloss": "the start is reachable",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.034978389739990234
+  },
+  {
+   "kb": 565,
+   "gloss": "a move from a reachable place stays reachable",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.1751723289489746
+  },
+  {
+   "kb": 566,
+   "gloss": "a place reachable in n moves is reachable",
+   "off": 15,
+   "yes": 185,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0982666015625
+  },
+  {
+   "kb": 567,
+   "gloss": "everything reachable is reachable in fewer moves than there are reachable places",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07217812538146973
+  },
+  {
+   "kb": 568,
+   "gloss": "a place reachable from a reachable place is reachable",
+   "off": 90,
+   "yes": 110,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07227253913879395
+  },
+  {
+   "kb": 569,
+   "gloss": "an invariant that holds at the start holds at every reachable place",
+   "off": 122,
+   "yes": 78,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.12340211868286133
+  },
+  {
+   "kb": 570,
+   "gloss": "a player who cannot move does not win",
+   "off": 153,
+   "yes": 47,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.031245946884155273
+  },
+  {
+   "kb": 571,
+   "gloss": "a win is a move after which every answer leaves a win",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.08720040321350098
+  },
+  {
+   "kb": 572,
+   "gloss": "no win within no moves",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.024674654006958008
+  },
+  {
+   "kb": 573,
+   "gloss": "a win within n + 1 moves",
+   "off": 17,
+   "yes": 183,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09498977661132812
+  },
+  {
+   "kb": 574,
+   "gloss": "a win within n moves is a win within n + 1 moves and a win",
+   "off": 151,
+   "yes": 49,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03362107276916504
+  },
+  {
+   "kb": 575,
+   "gloss": "taking 1 to k from a pile, the last to take wins: the first player wins unless the pile is a multiple of k + 1",
+   "off": 0,
+   "yes": 200,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0838158130645752
+  }
+ ],
+ "wrong": [
+  {
+   "name": "branches interchangeable",
+   "prem": 2
+  },
+  {
+   "name": "n + 1 terms",
+   "prem": 1
+  },
+  {
+   "name": "window shifted by one",
+   "prem": 1
+  },
+  {
+   "name": "every recurrence periodic",
+   "prem": 1
+  },
+  {
+   "name": "steps multiply",
+   "prem": 1
+  },
+  {
+   "name": "orbit place off by one",
+   "prem": 1
+  },
+  {
+   "name": "one step at least",
+   "prem": 1
+  },
+  {
+   "name": "running fold as long as list",
+   "prem": 1
+  },
+  {
+   "name": "difference = first term",
+   "prem": 1
+  },
+  {
+   "name": "GP sum with n + 1",
+   "prem": 1
+  },
+  {
+   "name": "AP sum for any list",
+   "prem": 3
+  },
+  {
+   "name": "geometric with zeros",
+   "prem": 4
+  },
+  {
+   "name": "win iff no move to a win (loopy games)",
+   "prem": 1
+  },
+  {
+   "name": "subtraction game modulo k",
+   "prem": 1
+  },
+  {
+   "name": "everything reachable in one move",
+   "prem": 6
+  },
+  {
+   "name": "a longer game wins nothing more",
+   "prem": 4
+  }
+ ],
+ "timing": {
+  "recur: Fibonacci mod 10 (period 60)": [
+   {
+    "n": 1,
+    "ok": true,
+    "sec": 0.00014448165893554688
+   },
+   {
+    "n": 10,
+    "ok": true,
+    "sec": 0.0006449222564697266
+   },
+   {
+    "n": 100,
+    "ok": true,
+    "sec": 0.003386259078979492
+   },
+   {
+    "n": 1000,
+    "ok": true,
+    "sec": 0.0033979415893554688
+   },
+   {
+    "n": 10000,
+    "ok": true,
+    "sec": 0.003720998764038086
+   },
+   {
+    "n": 100000,
+    "ok": true,
+    "sec": 0.0033884048461914062
+   },
+   {
+    "n": 1000000,
+    "ok": true,
+    "sec": 0.0033769607543945312
+   },
+   {
+    "n": 10000000,
+    "ok": true,
+    "sec": 0.0034279823303222656
+   },
+   {
+    "n": 100000000,
+    "ok": true,
+    "sec": 0.003428220748901367
+   },
+   {
+    "n": 1000000000,
+    "ok": true,
+    "sec": 0.003659963607788086
+   },
+   {
+    "n": 10000000000,
+    "ok": true,
+    "sec": 0.0034019947052001953
+   },
+   {
+    "n": 100000000000,
+    "ok": true,
+    "sec": 0.003423929214477539
+   },
+   {
+    "n": 1000000000000,
+    "ok": true,
+    "sec": 0.003431081771850586
+   },
+   {
+    "n": 10000000000000,
+    "ok": true,
+    "sec": 0.0037047863006591797
+   },
+   {
+    "n": 100000000000000,
+    "ok": true,
+    "sec": 0.0034241676330566406
+   },
+   {
+    "n": 1000000000000000,
+    "ok": true,
+    "sec": 0.003427743911743164
+   },
+   {
+    "n": 10000000000000000,
+    "ok": true,
+    "sec": 0.003419637680053711
+   },
+   {
+    "n": 100000000000000000,
+    "ok": true,
+    "sec": 0.0036525726318359375
+   },
+   {
+    "n": 1000000000000000000,
+    "ok": true,
+    "sec": 0.003437042236328125
+   }
+  ],
+  "recur: Fibonacci mod 997 (period 1996)": [
+   {
+    "n": 1,
+    "ok": true,
+    "sec": 0.00014495849609375
+   },
+   {
+    "n": 10,
+    "ok": true,
+    "sec": 0.000659942626953125
+   },
+   {
+    "n": 100,
+    "ok": true,
+    "sec": 0.00578618049621582
+   },
+   {
+    "n": 1000,
+    "ok": true,
+    "sec": 0.056653499603271484
+   },
+   {
+    "n": 10000,
+    "ok": true,
+    "sec": 0.11925745010375977
+   },
+   {
+    "n": 100000,
+    "ok": true,
+    "sec": 0.11223864555358887
+   },
+   {
+    "n": 1000000,
+    "ok": true,
+    "sec": 0.11179780960083008
+   },
+   {
+    "n": 10000000,
+    "ok": true,
+    "sec": 0.11157870292663574
+   },
+   {
+    "n": 100000000,
+    "ok": true,
+    "sec": 0.11135697364807129
+   },
+   {
+    "n": 1000000000,
+    "ok": true,
+    "sec": 0.11072254180908203
+   },
+   {
+    "n": 10000000000,
+    "ok": true,
+    "sec": 0.11182069778442383
+   },
+   {
+    "n": 100000000000,
+    "ok": true,
+    "sec": 0.11179637908935547
+   },
+   {
+    "n": 1000000000000,
+    "ok": true,
+    "sec": 0.11202526092529297
+   },
+   {
+    "n": 10000000000000,
+    "ok": true,
+    "sec": 0.11139965057373047
+   },
+   {
+    "n": 100000000000000,
+    "ok": true,
+    "sec": 0.11152076721191406
+   },
+   {
+    "n": 1000000000000000,
+    "ok": true,
+    "sec": 0.11156940460205078
+   },
+   {
+    "n": 10000000000000000,
+    "ok": true,
+    "sec": 0.11157846450805664
+   },
+   {
+    "n": 100000000000000000,
+    "ok": true,
+    "sec": 0.11142325401306152
+   },
+   {
+    "n": 1000000000000000000,
+    "ok": true,
+    "sec": 0.11066842079162598
+   }
+  ],
+  "recur: Fibonacci (no period)": [
+   {
+    "n": 1,
+    "ok": true,
+    "sec": 0.00016546249389648438
+   },
+   {
+    "n": 10,
+    "ok": true,
+    "sec": 0.0004687309265136719
+   },
+   {
+    "n": 100,
+    "ok": true,
+    "sec": 0.0040934085845947266
+   },
+   {
+    "n": 1000,
+    "ok": true,
+    "sec": 0.04182577133178711
+   },
+   {
+    "n": 10000,
+    "ok": false,
+    "sec": 0.2600564956665039
+   }
+  ],
+  "seq_term: mean of all earlier terms + 1": [
+   {
+    "n": 1,
+    "ok": true,
+    "sec": 0.0001380443572998047
+   },
+   {
+    "n": 10,
+    "ok": true,
+    "sec": 0.000850677490234375
+   },
+   {
+    "n": 100,
+    "ok": true,
+    "sec": 0.09971761703491211
+   },
+   {
+    "n": 1000,
+    "ok": false,
+    "sec": 1.6454999446868896
+   }
+  ],
+  "seq_term: number of earlier terms": [
+   {
+    "n": 1,
+    "ok": true,
+    "sec": 0.00012135505676269531
+   },
+   {
+    "n": 10,
+    "ok": true,
+    "sec": 0.00019097328186035156
+   },
+   {
+    "n": 100,
+    "ok": true,
+    "sec": 0.0023543834686279297
+   },
+   {
+    "n": 1000,
+    "ok": true,
+    "sec": 0.14313888549804688
+   },
+   {
+    "n": 10000,
+    "ok": false,
+    "sec": 0.0001633167266845703
+   }
+  ]
+ },
+ "game": {
+  "1": [
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false,
+   true,
+   false
+  ],
+  "2": [
+   false,
+   true,
+   true,
+   false,
+   true,
+   true,
+   false,
+   true,
+   true,
+   false,
+   true,
+   true,
+   false,
+   true,
+   true,
+   false,
+   true,
+   true,
+   false,
+   true,
+   true,
+   false,
+   true,
+   true,
+   false,
+   true,
+   true,
+   false,
+   true,
+   true,
+   false
+  ],
+  "3": [
+   false,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true
+  ],
+  "4": [
+   false,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   false
+  ],
+  "5": [
+   false,
+   true,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   true,
+   false
+  ],
+  "6": [
+   false,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true
+  ],
+  "{1,3,4}": [
+   false,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   false
+  ]
+ },
+ "collatz": {
+  "1": 0,
+  "2": 1,
+  "3": 7,
+  "4": 2,
+  "5": 5,
+  "6": 8,
+  "7": 16,
+  "8": 3,
+  "9": 19,
+  "10": 6,
+  "11": 14,
+  "12": 9,
+  "13": 9,
+  "14": 17,
+  "15": 17,
+  "16": 4,
+  "17": 12,
+  "18": 20,
+  "19": 20,
+  "20": 7,
+  "21": 7,
+  "22": 15,
+  "23": 15,
+  "24": 10,
+  "25": 23,
+  "26": 10,
+  "27": 111,
+  "28": 18,
+  "29": 18,
+  "30": 18,
+  "31": 106,
+  "32": 5,
+  "33": 26,
+  "34": 13,
+  "35": 13,
+  "36": 21,
+  "37": 21,
+  "38": 21,
+  "39": 34,
+  "40": 8,
+  "41": 109,
+  "42": 8,
+  "43": 29,
+  "44": 16,
+  "45": 16,
+  "46": 16,
+  "47": 104,
+  "48": 11,
+  "49": 24,
+  "50": 24,
+  "51": 24,
+  "52": 11,
+  "53": 11,
+  "54": 112,
+  "55": 112,
+  "56": 19,
+  "57": 32,
+  "58": 19,
+  "59": 32,
+  "60": 19,
+  "61": 19,
+  "62": 107,
+  "63": 107,
+  "64": 6,
+  "65": 27,
+  "66": 27,
+  "67": 27,
+  "68": 14,
+  "69": 14,
+  "70": 14,
+  "71": 102,
+  "72": 22,
+  "73": 115,
+  "74": 22,
+  "75": 14,
+  "76": 22,
+  "77": 22,
+  "78": 35,
+  "79": 35,
+  "80": 9,
+  "81": 22,
+  "82": 110,
+  "83": 110,
+  "84": 9,
+  "85": 9,
+  "86": 30,
+  "87": 30,
+  "88": 17,
+  "89": 30,
+  "90": 17,
+  "91": 92,
+  "92": 17,
+  "93": 17,
+  "94": 105,
+  "95": 105,
+  "96": 12,
+  "97": 118,
+  "98": 25,
+  "99": 25,
+  "100": 25
+ }
+}

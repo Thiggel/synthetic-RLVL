@@ -1,0 +1,214 @@
+{
+ "pilot200 v1 (KB v1/v2)": {
+  "dolci_dapo": {
+   "n": 50,
+   "prompt_yield_by_round": [
+    0.06,
+    0.08,
+    0.14,
+    0.2
+   ],
+   "attempt_ok_r0": 0.015,
+   "stages_r0": {
+    "check": 142,
+    "lex": 21,
+    "ok": 3,
+    "unfaithful": 32,
+    "wrong": 2
+   }
+  },
+  "dolci_math": {
+   "n": 50,
+   "prompt_yield_by_round": [
+    0.14,
+    0.18,
+    0.26,
+    0.28
+   ],
+   "attempt_ok_r0": 0.065,
+   "stages_r0": {
+    "check": 120,
+    "lex": 18,
+    "no_proof": 6,
+    "ok": 13,
+    "unfaithful": 37,
+    "wrong": 6
+   }
+  },
+  "dolci_yesno": {
+   "n": 50,
+   "prompt_yield_by_round": [
+    0.16,
+    0.42,
+    0.5,
+    0.56
+   ],
+   "attempt_ok_r0": 0.08,
+   "stages_r0": {
+    "check": 138,
+    "lex": 21,
+    "ok": 16,
+    "unfaithful": 15,
+    "wrong": 10
+   }
+  }
+ },
+ "pilot200 v2 (prompt v2)": {
+  "dolci_dapo": {
+   "n": 50,
+   "prompt_yield_by_round": [
+    0.0,
+    0.0,
+    0.06,
+    0.08
+   ],
+   "attempt_ok_r0": 0.0,
+   "stages_r0": {
+    "check": 146,
+    "lex": 24,
+    "no_proof": 2,
+    "unfaithful": 26,
+    "wrong": 2
+   }
+  },
+  "dolci_math": {
+   "n": 50,
+   "prompt_yield_by_round": [
+    0.04,
+    0.12,
+    0.16,
+    0.22
+   ],
+   "attempt_ok_r0": 0.025,
+   "stages_r0": {
+    "check": 141,
+    "lex": 17,
+    "no_proof": 2,
+    "ok": 5,
+    "unfaithful": 34,
+    "wrong": 1
+   }
+  }
+ },
+ "re-pilot (KB v3, filtered)": {
+  "dolci_dapo": {
+   "n": 50,
+   "prompt_yield_by_round": [
+    0.02,
+    0.08,
+    0.1,
+    0.1
+   ],
+   "attempt_ok_r0": 0.01,
+   "stages_r0": {
+    "check": 142,
+    "lex": 37,
+    "no_proof": 1,
+    "ok": 2,
+    "unfaithful": 16,
+    "wrong": 2
+   }
+  },
+  "dolci_math": {
+   "n": 50,
+   "prompt_yield_by_round": [
+    0.14,
+    0.22,
+    0.3,
+    0.34
+   ],
+   "attempt_ok_r0": 0.06,
+   "stages_r0": {
+    "check": 120,
+    "lex": 32,
+    "no_proof": 2,
+    "ok": 12,
+    "unfaithful": 31,
+    "wrong": 3
+   }
+  },
+  "dolci_yesno": {
+   "n": 50,
+   "prompt_yield_by_round": [
+    0.22,
+    0.3,
+    0.46,
+    0.48
+   ],
+   "attempt_ok_r0": 0.08,
+   "stages_r0": {
+    "check": 130,
+    "lex": 18,
+    "ok": 16,
+    "unfaithful": 14,
+    "wrong": 22
+   }
+  }
+ },
+ "judge": {
+  "pilot200 v1 (KB v1/v2)": {
+   "data_tier": {
+    "dolci_math": 11,
+    "dolci_dapo": 5,
+    "dolci_yesno": 3
+   },
+   "judge_and_data": {
+    "dolci_math": 2,
+    "dolci_dapo": 0,
+    "dolci_yesno": 1
+   },
+   "judge_proofs": 92,
+   "judge_pass_proofs": 4,
+   "issues": {
+    "different_question": 124,
+    "extra_fact": 11,
+    "presolved": 30,
+    "missing_fact": 6,
+    "wrong_fact": 2
+   }
+  },
+  "pilot200 v2 (prompt v2)": {
+   "data_tier": {
+    "dolci_math": 9,
+    "dolci_dapo": 2,
+    "dolci_yesno": 0
+   },
+   "judge_and_data": {
+    "dolci_math": 1,
+    "dolci_dapo": 0,
+    "dolci_yesno": 0
+   },
+   "judge_proofs": 24,
+   "judge_pass_proofs": 2,
+   "issues": {
+    "extra_fact": 3,
+    "different_question": 31,
+    "presolved": 10
+   }
+  },
+  "re-pilot (KB v3, filtered)": {
+   "data_tier": {
+    "dolci_math": 16,
+    "dolci_dapo": 4,
+    "dolci_yesno": 8
+   },
+   "judge_and_data": {
+    "dolci_math": 4,
+    "dolci_dapo": 0,
+    "dolci_yesno": 3
+   },
+   "judge_proofs": 86,
+   "judge_pass_proofs": 12,
+   "issues": {
+    "different_question": 85,
+    "presolved": 44,
+    "missing_fact": 1,
+    "extra_fact": 16
+   }
+  }
+ },
+ "gold_control": {
+  "samples": 200,
+  "same": 191
+ }
+}

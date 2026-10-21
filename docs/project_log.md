@@ -4198,3 +4198,1028 @@ Downstream benchmarks of the "Lead into Gold" paper now run for every checkpoint
 - **A frozen linear value probe on e4 states sees prompt difficulty (AUC .90), not correctness.** Within-prompt AUC for correct is .56, so a frozen-feature value cannot rank continuations of the same problem.
 - **Consequence:** Stage 3 moves to the training loop. Round-1 self-play runs gold-terminal MCTS on 2,000 RL-train prompts, mixed and zero-rate (jobs 11231/11232). Then SFT e4 → az1.
 - **Key measurement:** the found-correct rate on prompts where n=16 sampling never succeeds.
+
+## 2026-10-09 — TL line; binding plan moved to RLVL-next/PLAN.md
+
+- New line TL (59-symbol token logic, user 2026-10-08). Spec `RLVL-next/TLANG.md`; goals and plan `RLVL-next/PLAN.md` (binding; supersedes `docs/research_plan.md` and older plan docs, which now carry a SUPERSEDED banner; AGENTS.md "Active Plan" updated).
+- Done: language, KB, guide, checker, generator (53 themes), tokenizer extension, `tl/az.py` (MCTS + value head, prefix cache, rewards mul/add/half/gvc, `--guide free`, AdamW). Running: alex midtraining `tl_mid` 4513193, gruenau AZ throughput sweep 17129.
+
+### 2026-10-09 — TL midtraining v1 evaluated
+
+- **Run:** `tl_mid_0.8b_lr2em5_b64` (alex 4513193, 84 min).
+- **Result:** 0% → 97.5% valid∧correct free and 99.8% guided, on 1000 held-out generator prompts.
+- **Failures:** the free ones are arithmetic (`calc`, mean/sum) or right answer with one invalid step.
+- **Bug:** the first guided eval used a stale snapshot without the `calc` value filter, which caused digit loops; fixed by snapshot `tl_snapshot_20261009b`.
+- **Report:** `reports/2026-10-09_tl_midtraining.md`.
+- Correction, same day: the W4.0 sweep (17129) used live code with the guide fix. Its budget endings come from `max_len=256` with the smoke model. AZ settings: 1 leaf, 16–64 parallel games, max_len ≥ 512.
+
+### 2026-10-09 — TL replay sweep (W3.4) evaluated
+
+- **Runs:** r00 / r10 / r25 (= v1) / r45 Dolci replay on the same 120k TL traces (alex 4515233–35 + 4513193). Eval on gruenau with `post_eval_all.slurm`: TL free/guided, then Dolci held-out CE, then GSM8K at 2048 tokens.
+- **Result:** TL is flat across replay shares (free 0.975–0.980, guided ≥ 0.996). General ability rises monotonically:
+  - Dolci CE: 5.89 / 1.05 / 0.98 / 0.94 (base 1.12).
+  - GSM8K on the first 1000 items: 0.02 / 0.41 / 0.49 / 0.58 (base 0.60). r45 is within noise of base: −0.03 [−0.06, +0.01].
+- **Findings:**
+  - r00 answers every GSM8K question in TL, autoformalizing the problem (2% right).
+  - r10 speaks English but in 91% of answers fails to end its turn: it emits `assistant` / `</think>` and repeats until the cap.
+- **Decision:** W3.5 uses 45% replay. Proposed controls, not launched: 45% at r25's step count, and a Dolci-only fine-tune.
+- **Bug:** r00's GSM8K got `N=1000` from a leaked environment variable, so comparisons use the first 1000 items.
+- **Report:** `reports/2026-10-09_tl_replay_sweep.md`.
+
+### 2026-10-09 — TL W1.2 KB v2 kernel done
+- Kernel symbols (pairs, fold/range/iterate, nth/map/filter/append, chars) appended to the v1 numbering; checker + strict guide accept 9 stored proofs and reject 12 mutations; KV2 guide walks: 0 non-calc dead ends.
+- Guide fixes: pair inhabitation, declared arity, def dual parse, empty literals, `ans` by unification, `(`-type merged frame (exponential fork removed), applied-binder instances must be names/λ.
+- Open for W1.3: λ-valued defs cannot be unfolded → definitional lemmas per library symbol.
+
+## 2026-10-09 — TL W1.3: KB v2 library (RLVL-next/tl/library.py)
+- 65 symbols k27–k91 with defining lemmas kb 50–114 (append-only numbering): 58 definitions over earlier symbols + 7 characterising axioms (set_diff, set_of, set_filter, image, powerset, set_product, sqrt) with required fast evaluators. Domains: number theory, lists, sets, graphs (lists of pairs: reachability, distance, symmetric/reflexive/transitive, equivalence, order, connected, cycle, tree), functions on finite domains, counting/probability, geometry, everyday arithmetic.
+- `ground_eval` now decides equality/membership of nested lists and sets (three-valued).
+- Tests `tl.tests.test_library`: 72 worked examples; fast evaluators agree with the unfolded definitions (58 defs × 60 random inputs, 1278 agreeing, 0 fast-only); 3973 axiom instances satisfied; 6 stored library proofs + 6 rejected mutations (also strict-guide hand proofs); guide random walks over them: 0 non-calc dead ends.
+- Guide fix: open types from empty literals inside the last whole `@` instance of a lemma with type-variable annotations (`kb 96 @ k56([])`) are rejected. All TL suites + pyflakes pass.
+- Next: W2.2 generator themes from the library spec records.
+
+### 2026-10-09 — TL loss-head ablation (W3.3) evaluated
+- **Runs:** full (= v1) / rows60 / legal TL heads on the v1 r25 mix (alex 4517284–85). Eval on gruenau 17483 / 17485; the full row uses the `snapB` re-eval so all rows share checker snapshot b.
+- **Result** (TL free / TL guided / Dolci CE / GSM8K 1319 / GSM8K cap):
+  - full: 0.975 / 0.998 / 0.984 / 0.486 / 2.7%
+  - rows60: 0.987 / 0.998 / 0.980 / 0.525 / 2.9%
+  - legal: 0.000 / 0.997 / 0.981 / 0.506 / 16.8%
+- **Significance (McNemar):** rows60 vs full z = 3.0 on TL free and z = 2.9 on GSM8K.
+- **Findings:**
+  - legal free decoding fails on 998 of 1000 with "unterminated line": forced tokens get no gradient. Its GSM8K answers loop on `assistant` / `<think>` like r10's.
+- **Decision:** W3.5 uses rows60 + 45% replay.
+- **Report:** `reports/2026-10-09_tl_loss_head.md`; artifact https://claude.ai/artifact/EcCAEeSkFMGRWXFKYJjGrn.
+
+## 2026-10-09 — TL multiple choice (W1.5), generator v2 coverage (W2.2), =E soundness fix
+
+- **Multiple choice:** opaque option symbols k92 (option value) / k93 (option says), themes MC:value / MC:says. test_mc: 100 + 100 traces, 0 round-trip problems; options {3:19, 4:65, 5:16} / {3:43, 4:49, 5:8}. A raw benchmark item is accepted and a wrong option is rejected.
+- **Generator v2:** 150 themes. 1940 traces over the 97 new themes pass the checker and the strict guide. 3000 mixed traces cover every rule, every lemma except the skipped {48, 49, 97, 98, 101} and every symbol except k26. Tokens: median 194, p95 501. Audit: 14225 sentences, 0 ambiguous.
+- **No unfold traces** for antisymmetric / connected / image / sqrt / transitive: either the relation repeats under λ, or the symbol is axiom-defined.
+- **Checker soundness bug:** `=E` under a binder matched a closed λ-term without lifting its absolute bvar levels. It also substituted r unlifted, so it could capture a bound variable. Fixed by matching `shift(l, d)` and writing `shift(r, d)`, with a regression test (test_eq_capture). All TL suites pass.
+- **Running jobs are not affected:** the AZ snapshot on alex and the gruenau eval snapshot predate the fix. Every generated trace still checks under the fixed checker, so the training data never relied on the bug. A policy under RL on the old snapshot could in principle exploit it, so AZ evals from W4 on must be rechecked with the fixed checker.
+
+## 2026-10-10 — TL challenger format (W5.1)
+
+`RLVL-next/tl/challenge.py` defines the challenger role of the two-player ablation W5.A.
+
+**Prompt.** The challenger sees a word pool and ten empty slots. Every slot licenses the same capped numeral set: integers 0–999, and decimals with at most 2 places below 100.
+
+**Output.** It writes `new` / `given` / `goal` lines, its own derivation, and `ans`.
+
+**`pose()`.** Accepts a problem only if:
+- the proof checks;
+- slots are distinct;
+- at most 2 givens are unused by the answer;
+- every premise and the question verbalise and parse back to exactly their formula;
+- the English has at most 1200 characters;
+- the renumbered gold solver trace checks against the English prompt.
+
+Otherwise r_chal = 0. When posed, r_chal = 4p(1 − p) over the solver's success rate.
+
+**Generator traces as challenger data.** `to_challenger()` converts generator traces to the format.
+- v1: 300/300 convert; 295 are posed.
+- v2: 298/300 convert; 284 are posed.
+- Every rejection is a distractor-heavy trace with more than 2 unused givens.
+- Gold answers are unchanged.
+
+**Tests.** The strict guide accepts the challenger traces. Mutations are rejected: duplicate slot, pool slot, missing `ans`, more than 2 unused givens, numeral outside the cap.
+
+**Guide speed.** The guide now memoises numeral prefix sets for frozen numeral sets. Under the challenger prompt this cut guide time on 30 traces from 35 s to 2 s.
+
+**Not yet implemented.** The mode-collapse guards come with the W5.2 training loop: skeleton dedupe, coverage quota, and a 50% generator anchor.
+
+## 2026-10-10 — TL dialogue-game environment (W5.3)
+
+`RLVL-next/tl/dialogue.py` implements a Hintikka game on TL claims over small closed worlds.
+
+**Worlds and claims.**
+- A world has 2–4 entities, with predicates, relations and propositions, all given as English facts.
+- Claims are quantified formulas over the entities, drawn 50/50 true/false.
+- A claim is kept only if its English parses back to exactly that formula.
+
+**Rules.**
+- The verifier picks at ∨ / ∃ / →; the falsifier picks at ∧ / ∀.
+- ¬ swaps the roles.
+- At an atom, the world decides who wins.
+
+**Tests (`tl.tests.test_dialogue`).**
+- The minimax value equals the claim's truth on 400 games.
+- A perfect player beats a random one in all 300 games.
+- All world facts and claims round-trip through the verbaliser.
+- Positions render as closed TL formulas.
+
+**Open points.**
+- Games are short: 1–4 moves, mostly 1–2.
+- The training turn format (binding names to words with forced `new` lines) is fixed together with the W5.2/W5.3 runs, which need the AZ loop.
+
+## 2026-10-10 — TL realistic themes (W2.3)
+
+**What.** `RLVL-next/tl/gen3.py`: word problems in plain English (names like Ada and Ben, apples, trains, probabilities of rain, one-way roads between towns, club members, test scores) instead of pseudo-words. Six themes: R:gsm, R:rates, R:prob, R:graph, R:count, R:mc. Content words are bound by `new` at their first occurrence. Report: `reports/2026-10-10_tl_realistic_themes.md` (figure `figures/tl_gen3.png`).
+
+**Tests (`tl.tests.test_gen3`).**
+- 360 per-theme + 1500 mixed traces pass the checker and the strict constrained decoder.
+- Only English words are bound, each in the first sentence that contains it.
+- Story sentence → formula is a function: 4758 sentences, 0 ambiguous.
+- Answers are in range.
+
+**Findings.**
+- Graph yes/no was 2:1 yes, because many small road graphs are strongly connected; the answer is now drawn before the graph (now 92:93).
+- These themes exercise translation, not deduction: 9 rules dominate. Yes/no answers are 9%.
+
+**Next.** Add `--gen v3` to `build_sft` and a v3 eval split for W7.
+
+**Follow-up (same day).**
+- `tl.build_sft --gen v3 --v3-frac F` mixes realistic traces into the v2 stream.
+- Held-out realistic eval set: `rlvl_data/datasets/tl_eval_r3_20261010/tl_eval.jsonl`. It has 1000 problems across the six themes; median length 205 tokens.
+- Its prompts rebuild exactly from the stored text in `eval_hf`. It is meant as a transfer test for tl_mid3 and later checkpoints.
+
+## 2026-10-10 — TL guide: exponential type blow-up + instance dead end fixed
+
+- Symptom: the tl_mid3 (W3.5) guided eval on the realistic r3 set hung (CPU 100 %, GPU 0 %, no batch after > 1 h). An instrumented debug job (17592) showed one row whose `allowed()` time doubled every 4 tokens (1.5 s → 56 s from step 206 to 226), on a model-generated line `13 goal 7 : ? x1 : ℝ . k43(k65(k66(k68(k69(k65(…`.
+- Cause: the list-of-pairs symbols k65/k66/k68/k69 nested as each other's first argument bind α := α × α at each level, so the fully walked expected type is a binary tree of size 2^depth; `walk` / `type_vars` / `_occurs` / `_inh` traverse it without sharing.
+- Fix: `TYPE_MAX = 48` node cap on an argument's expected type (early-exit count), applied where candidates are offered (so no dead ends) and at each `,`. The largest argument type in 900 generator traces is 6 nodes. Adversarial nesting walks: worst `allowed()` 15 ms (before: 469 s).
+- The rerun of the walk tests also exposed a pre-existing dead end (an internal open type inside a ground-typed last `@` instance); `_open_instance_ok` now runs for every completed last instance.
+- Tests: new `test_nested_pair_types`; full suite + extra walk seeds pass; pyflakes clean. Snapshot e = d + fix. Reruns: 17604 (r3 guided), 17605 (v1 free + guided).
+
+## 2026-10-10 — W3.5 tl_mid3 evals; W3.6 mid4 launched
+
+- tl_mid3 v∧c free / guided: v1 0.971 / 0.994, v2 0.959 / 0.992; realistic r3 (unseen style) 0.049 / 0.113 (free answers right 0.487 without a valid proof). GSM8K 0.561 (= r45; +0.036 [+0.008, +0.064] vs h60), Dolci CE 0.940. Table `analysis/tl_mid3.md`, figure `reports/figures/tl_mid3.png`, script `scripts/analysis/tl_mid3.py`.
+- r3 guided failures: the model formalises in v2 conventions (e.g. `new … : c1 : 𝔼` then `c1 = 17`); the guide blocks the ill-typed lines, and greedy decoding without backtracking ends in a calc dead end (334) or nests until the 2048 cap (401). Free errors: type mismatch 277, `new: no such word` 255, trailing tokens 218.
+- Eval/train overlap: 12 (v1) and 42 (v2) of 1000 eval prompts occur in their train sets. Realistic themes have a small text space: in the first v4 build 84 r3 eval texts appeared in 493 train rows, and 245 rows matched its own eval → removed (120,000 → 119,301 TL rows).
+- W3.6 mid4 (mid3 recipe + 25% gen3 traces, `tl_mid_v4_20261010`, snapshot e): alex 4519901. Baseline r45 / h60 evals on v2 + r3: gruenau 17641 / 17642.
+
+## 2026-10-10 — W3.5 report: baselines on v2 / r3
+
+- r45 / h60 (v1 data) on v2 v∧c free/guided 0.560/0.578 and 0.566/0.606; mid3 0.959/0.992.
+- r3 (realistic, held out) guided: r45 0.107, h60 0.049, mid3 0.113. Nobody transfers. All three fail by getting stuck: calc dead ends (22–38%) and 2048-cap loops (34–52%). No guided row is invalid.
+- Free mode often gets the answer right (0.26–0.65 per theme) but not the proof.
+- GSM8K: mid3 = r45 = 0.561 (CI ±0.03); mid3 − h60 = +0.036 [+0.008, +0.064]. At 45% replay the rows60 head's GSM8K gain does not add on top.
+- Report `reports/2026-10-10_tl_mid3.md` + `reports/figures/tl_mid3.png`; artifact https://claude.ai/artifact/HpFHncPdXRkkFAn3aGrT13.
+
+## 2026-10-10 — W3.6 midtraining v4 (+25% realistic traces) and W3.7 launch
+
+**W3.6 result.** Adding 25% gen3 realistic traces to the mid3 recipe takes r3 from 0.049 to 0.905 (free) and from 0.113 to 0.991
+(guided). v1, v2, GSM8K and Dolci CE are unchanged.
+
+**Caveat.** r3 is no longer held out for mid4.
+- 56% of r3 rows repeat a training template once numbers and names are masked.
+- 98% of r3 rows use only sentence templates seen in training.
+- Rows with a new template score 0.862 free.
+
+So the r3 jump is coverage, not transfer. W7 is still the real transfer test.
+
+**Free-mode errors.** All of mid4's free r3 errors are rejected `calc` steps.
+
+**Eval bug: GSM8K stop token.**
+- `gsm8k_eval.py` stopped only on `<|endoftext|>`, but SFT targets end with `<|im_end|>`.
+- mid4 opens new turns on 37% of rows, which is why 25% of rows hit the cap. Accuracy is not affected.
+- Fixed: the eval now also stops on `<|im_end|>`. The mid3/mid4 rerun is gruenau 17739.
+
+**W3.7 (mid5) launched.** This tests the user's suggestion: 25% synthetic share, as in synthetic-RLVL.
+- Data: the mid4 data mix at 25% TL / 75% Dolci (32,549 + 98,181 rows).
+- Job: alex 4520580.
+
+Report: `reports/2026-10-10_tl_mid4.md`.
+- GSM8K rerun with the `<|im_end|>` stop (gruenau 17739): mid3 0.561 (cap 2.1%), mid4 0.555 (cap 1.4%, 180 mean tokens, down from 632). This confirms the bug affected length only.
+
+## 2026-10-10 — W3.7 mid5 (25% TL / 75% Dolci) and the W3.8 Dolci-only control
+
+**The 25% TL ratio is nearly enough for TL.**
+- v∧c free / guided: r3 0.867 / 0.982, v2 0.902 / 0.968.
+- Against mid4 (55% TL) that is −0.03 to −0.07 free and −0.01 to −0.03 guided.
+
+**It does not buy general ability.**
+- GSM8K 0.563 vs 0.555 (n.s.).
+- Dolci CE 0.931 vs 0.941.
+- Every midtrained run sits at about 0.56 GSM8K vs base_ext 0.600, whatever its TL share.
+
+**Less realistic data, same generalisation.** On r3 templates unseen in training, mid5 scores 0.856 vs mid4's 0.862, with 3.7× fewer
+realistic rows.
+
+**Next: W3.8, the Dolci-only control (alex 4521541).** It checks whether the GSM8K gap comes from the Dolci SFT itself.
+
+Report: `reports/2026-10-10_tl_mid5.md`.
+
+## 2026-10-10 — W3.8 Dolci-only control
+
+**Result.** d0 (98k Dolci rows, 0% TL) scores 0.585 on GSM8K, against base_ext 0.600 and mid5/mid3/mid4 at 0.563/0.561/0.555.
+
+**Where the ~0.04 midtraining drop comes from.**
+- About −0.016 is the Dolci SFT (n.s.).
+- About −0.02 to −0.03 is the TL data, and it is the same at 25% and 55% TL.
+
+**Dolci CE:** d0 0.927 < mid5 0.931 < mid3/4 0.940.
+
+**Caveat:** single seed.
+
+Report: `reports/2026-10-10_tl_d0.md`.
+
+## 2026-10-10 — TL W4.1 prep: AZ eval-only baseline of mid4
+- gruenau 17842 (`rlvl_data/tl/az_eval.slurm`, snapshot e): mid4 + fresh value head, first 200 rows of v1 and r3, guided/free, sims 0/64.
+- Greedy r: v1 guided 1.000, v1 free 0.975, r3 guided 0.990, r3 free 0.915. MCTS 64: 1.000 in all four cells (search backs up the verifier reward at terminals, so this is oracle-assisted).
+- Cost per problem with 64 sims: guided 2.6 / 3.7 s, free 16.8 / 26.7 s (free: every token is a decision, 255 vs 114 per r3 problem).
+- Conclusion: guided self-play on the v1 generator is saturated; W4.1 needs free decoding, harder problems, or GSM8K-in-TL (W7). Decision left to the user.
+- Report `reports/2026-10-10_tl_az0.md`, figure `reports/figures/tl_az0.png`, script `scripts/analysis/tl_az0.py`, HTML https://claude.ai/artifact/AYBUXZyZVciQyA6rvCcmSi
+
+## 2026-10-10 — TL W4.1: Dolci-TL prompt set + mid4 headroom probe
+- Built `rlvl_data/datasets/tl_dolci_20261010` (RLVL-next `tl/build_dolci.py`): Dolci-Instruct-RL single-turn prompts with checkable gold (subsets of `build_rl_gate_set.py`: math 38,585 / dapo 5,550 / wordprob 1,156 / yes-no 480 train). Gold becomes TL answer tokens (canonical value term, ⊤ / ⊥). Knowledge subset dropped (no TL answer term). Eval = the 845 non-knowledge rl_gate rows, shuffled; no text overlap with train.
+- `tl/az.py`: `--train-data` (self-play prompts from a jsonl), `--train-families`, gold from `gold_toks`, per-family self-play r. Test `tl/tests/test_dolci.py` ok; snapshot `tl/tl_snapshot_20261010f`.
+- Running: AZ eval-only of mid4 on 200 Dolci-TL eval rows, guided (17917) and free (17918), sims 0 / 64 → `rlvl_data/tl/evals/az0/mid4/dolci_{full,free}`.
+- Greedy probe (n=200): guided r 0.035 (wordprob 0.02, math 0.016, dapo 0, yes/no 0.11), free r 0.010. Guided runs hit the 1536-token budget 62% of the time. Yes/no wins are hacks (the premise is the goal itself, so ⊤ is a guess). AZ is trained on the numeric subsets: 17950 `runs/az_dolci_g_mul_num`.
+
+### 2026-10-11 — TL W4.1: throughput fix + relaunch
+- Cancelled 17917/17918 (sims-64 probes, projected ≈12.7 h > 12 h limit) and AZ 17950 (still in iteration 1 after 2.5 h); the 17950 run dir only held its it0 eval, identical to the mid4 sims-0 probe, and was removed.
+- New: probes 18077 (guided) / 18078 (free), 64 Dolci-TL eval rows, sims 16 and 64, `--leaves 4` → `rlvl_data/tl/evals/az0/mid4_l4/`; AZ 18079 `runs/az_dolci_g_mul_num_l4` (guided, mul, sims 16 × 4 leaves, max-len 1024, 32 games/iter, math/dapo/wordprob only).
+- Profile + fast moves: model forwards dominate (Python/launch bound); new opt-in `--fast-prior p` / `--chunk` in tl.az. At p = 0.99, 83 % of mid4's decisions are fast → 4.8× faster search (test_az_fast, 16 rows). AZ variant 18196 `runs/az_dolci_g_mul_num_f99` on gruenau11 (fast-prior 0.99, chunk 128); 18079 kept as every-move baseline.
+- H100 crash: fla blocks the gated-delta-rule backward on Hopper + Triton 3.5 (#640). Added the opt-in TileLang overlay `pyext_tilelang` (+ CUDA 13 nvcc wheels; gruenau11 has no toolkit). GDN grad check vs fp32 reference: rel err ≤ 0.5 % → PASS. Fast-move AZ relaunched as 18264.
+- 18264 it1 OK on H100 with TileLang backward: self-play 745 s + train 19 s per iter (vs ≈1.5 h/iter est. for every-move 18079); 345 fast vs 59 searched decisions per game; self-play r 0/32, valid 1/32, dead_end 0.41, budget 0.56; loss_v 0.82, loss_p 1.45, grad_norm 38 (pre-clip).
+- 2026-10-11 ~04:30 — 18264 it2–4: fast (prior ≥ 0.99) decisions/game 345 → 128 → 128 → 42, searched 59 → 202 → 211 → 359; self-play 745 → 2102 → 1970 → 2706 s. loss_v 0.82 → 0.29 → 0.014 → 0.0002 (value ≈ 0 everywhere: reward almost always 0), loss_p ≈ 1.31 flat; r 0, 1/32, 0, 0. Read: with a flat value, the policy target is the noisy 16-sim visit distribution (Dirichlet ε 0.25), so the policy sharpness erodes (prior drift) with no learning signal. 18079 (every move searched) it1: 9412 s self-play, r 0/32, dead 0.25. Decision point: it10 greedy eval (sims0, 200 rows; it0 r 0.035, valid 0.16) — if it drops, add a policy-target fix (KataGo policy-target pruning or Gumbel-style completed-Q target, which equals the prior when Q is flat).
+
+### 2026-10-11 ~05:20 — opt-in completed-Q policy target (tl/az.py), not launched
+- Added `--policy-target {visits,completed}` (default visits = unchanged), `--c-visit 50 --c-scale 0.1`.
+  completed: π = softmax(log P0 + (c_visit + max N)·c_scale·q), q = (Q+1)/2, unvisited edges get the prior-weighted
+  mean q of visited ones; no min-max rescale, so flat Q ⇒ π = P0 (un-noised prior): counters the prior drift seen
+  in 18264 it2–4 (value ≈ 0 everywhere, target = noise-shaped 16-sim visits).
+- tests/test_az_target.py ok; test_az_game, test_dolci ok. tests/test_az.py is stale (pre-guide Namespace, 10-09), fails independently.
+- Launch only if the 18264 it10 greedy eval drops below it0 (r 0.035 / valid 0.16); then on the free H100 slot, new snapshot.
+
+### 2026-10-11 ~05:45 — 18264 it5 drift confirmed; completed-Q arm launched (18647)
+- 18264 fast moves per game: it1 345 → it2 128 → it3 128 → it4 42 → it5 6.25 (decisions 363); r 0 since it3, lv ≈ 3e-4.
+  Root prior max fell below 0.99 almost everywhere: policy sharpness eroded by training on noise-shaped 16-sim visits.
+- Launched 18647 `runs/az_dolci_g_mul_num_f99_cq` (gruenau11 IDX1, H100): same args as 18264 + `--policy-target completed`,
+  snapshot tl_snapshot_20261011b. Comparison arm; 18264 continues as the visits baseline. gruenau11 now 2/4 (cap).
+
+### 2026-10-11 ~07:00 — 18264 crashed (guide RecursionError); fix; baseline relaunched as 18764
+- 18264 died in self-play it6: guide `_Ctx.give`/`g_W` recursion through ~490 nested `¬`/`−` (W frames) —
+  degenerate output of the drifted policy (fast 6/game at it5). No checkpoint (save-every 10); log it0–5 kept.
+- Fix: guide `_successors` treats a token whose step raises RecursionError as illegal; `Game.final` scores a
+  proof the parsers cannot recurse through as failed. New test tests/test_az_deep.py (forced `¬`/`−` chains
+  past depth 1100 end as terminals); test_az_target/game/dolci/guide ok. Snapshot tl_snapshot_20261011c.
+- Relaunched baseline 18764 `runs/az_dolci_g_mul_num_f99_v2` (same args as 18264, gruenau11 IDX2).
+- 18647 (completed-Q, snapshot 20261011b, no fix) kept: it2 fast 273/game vs 128 for the visits baseline —
+  sharpness holding; restart with the fix only if it hits the same crash. 18079 (snapshot without fix) kept too.
+
+### 2026-10-11 ~07:35 — drift replicates; completed-Q holds sharpness (figure)
+- Figure reports/figures/2026-10-11_tl_az_dolci_drift.png (script rlvl_data/tl/analysis/plot_az_dolci.py).
+- Visits target, fast 0.99: relaunch 18764 repeats the drift (fast/game 345 → 147 → 91 by it3; 18264 had 345 → 128 → 128 → 42 → 6).
+- Completed-Q 18647: fast/game 351 → 273 → 290 → 280 → 255 → 262 (it1–6), ~60–75 searched decisions/game, ~14 min/iter (vs 25–45).
+- All runs: value loss → 1e-4–1e-5 by it4 (value head learns "always lose", z = −1); self-play reward 0–1/32 everywhere.
+  So far no learning signal in any arm; the eval at it10 decides whether greedy quality held (it0: r 0.035, valid 0.165).
+
+### 2026-10-11 ~09:00 — 18647 (completed-Q) it10 greedy eval: quality held
+- Dolci-TL eval n=200, sims0: it0 r 0.035 / valid 0.165 / dead 0.21 → it10 r 0.045 / valid 0.15 / dead 0.18
+  (math 0.016 → 0.032, wordprob 0.02 → 0.04, yesno 0.111 = 0.111, dapo 0). Within noise (7 → 9 correct): no degradation,
+  no gain yet. Self-play fast/game stays 335–358 at it8–9.
+- Visits baseline 18764 at it6: fast 25.6/game (drift again); 18079 (all moves searched) at it7, r 0.
+- Probes 18077/18078 (64 rows, sims 16 then 64, 12 h limit) still on sims16 after 8 h (GPU 100%); sims64 will not fit.
+
+### 2026-10-11 ~09:35 — completed-Q run 18647 crashed at it13 (RecursionError, old snapshot b); resumed as 19216
+- 18647 (az_dolci_g_mul_num_f99_cq, snapshot 20261011b without the deep-nesting fix) died in self-play it13 with RecursionError (guide `_successors` → terms `is_value_term`). Snapshot 20261011c covers this path.
+- Resumed from `runs/az_dolci_g_mul_num_f99_cq/latest` (it10: model + value head) as 19216 `az_dolci_g_mul_num_f99_cq_r10`, snapshot c, same args, gruenau11 H100 IDX1.
+- Caveats: optimizer state and replay buffer reset, iteration counter restarts (r10 it0 = cq it10). In figures, offset by +10.
+
+### 2026-10-11 ~11:05 — 18079 (all moves searched) crashed in it10 (same RecursionError); relaunched as 19464
+- 18079 ran snapshot 20261010f without the deep-nesting fix; RecursionError in guide `g_W` during self-play it10, before the first checkpoint (save-every 10), so nothing to resume. Self-play r = 0 at it1–9, valid 0–1/32, value loss → 1e-6.
+- Dir renamed to `runs/az_dolci_g_mul_num_l4_crashed_it10`. Relaunched from mid4 as 19464 `az_dolci_g_mul_num_l4_v2`: same args, snapshot 20261011c, `--save-every 5`. gruenau12 L40.
+- 18764 (visits, fast 0.99) it10 eval not yet in; 19216 (completed-Q resumed) at r10-it2: fast 291 → 189 per game.
+
+### 2026-10-11 ~11:20 — probe 18077 (sims-16 MCTS eval, full guide) OOM-killed after 10 h with no output; replaced by 19481
+- 18077 (64 rows, sims 16 then 64, leaves 4, eval-parallel 64, max-len 1536, 64G RAM, old snapshot e without fast-prior): host-RAM OOM kill at 10.1 h, log.jsonl empty (results are written only when all games finish).
+- Replacement 19481 (tag mid4_f99): same 64 rows, guide full, sims 0 and 16, leaves 4, fast-prior 0.99, chunk 128, eval-parallel 32, max-len 1024 (as the training runs), 128G RAM, snapshot 20261011c. Question: does MCTS (untrained value head) find more correct answers than greedy at equal model?
+- 18078 (free-mode twin) still running, 1.8 h to its 12 h limit, nothing written.
+
+### 2026-10-11 ~11:30 — it10 greedy eval: visit-count target degrades the model, completed-Q target holds it
+| run (n = 200 Dolci-TL eval, sims 0) | r | valid | dead end | budget | dolci_math | yesno | wordprob |
+|---|---|---|---|---|---|---|---|
+| mid4, it0 | 0.035 | 0.16 | 0.215 | 0.625 | 0.016 | 0.111 | 0.02 |
+| visits, fast 0.99 (18764), it10 | 0.015 | 0.07 | 0.155 | 0.775 | 0.016 | 0.044 | 0.00 |
+| completed-Q, fast 0.99 (18647), it10 | 0.045 | 0.15 | 0.18 | 0.67 | 0.032 | 0.111 | 0.04 |
+- Valid 0.07 vs 0.15: two-proportion z = 2.6. The visits target halves the valid rate within 10 iterations, consistent with the prior drift (fast moves/game 345 → 1.4 at it10; more budget-outs, longer outputs 838 vs 706 tokens). The completed-Q target keeps the model at it0 quality; no gain yet (self-play r = 0 in all runs).
+- 16803 (az_e6_r14_ccvf, old line) ended by itself ("stopping before the walltime", done); not touched.
+- ~11:40: cancelled 18764 (visits baseline; result recorded, `latest` = it10 kept). Its H100 now runs 19514 `az_dolci_f_mul_num_f99_cq`: **free decoding** (no guide), completed-Q target, otherwise as 19216 (mul, sims 16 × 4 leaves, fast 0.99, max-len 1024, 32 games/iter, math/dapo/wordprob), save-every 5. Guided vs free, both completed-Q: 19216 vs 19514.
+
+### 2026-10-11 ~11:50 — free vs guided decoding at it0 (mid4, greedy, n = 200 Dolci-TL eval, max-len 1024)
+| mode | r (mul) | correct answer | valid | grammatical | end: complete / budget / dead end | tokens |
+|---|---|---|---|---|---|---|
+| guided (19216's it0 = 18647 it0) | 0.035 | 0.035 | 0.165 | 0.165 | 33 / 125 / 42 | 706 |
+| free (19514 it0) | 0.005 | 0.125 | 0.01 | 0.325 | 171 / 29 / 0 | 365 |
+- Per family, correct (free vs guided): yesno 0.33 vs 0.11, wordprob 0.14 vs 0.02, math 0.03 vs 0.02, dapo 0.02 vs 0.00.
+- Free mode often states the right answer, but the derivation does not check: invented `kb` lemmas that assert the goal (e.g. `kb … : (x2 + x3 = 1) → … = 2`, then `→E`, `ans`), unchecked `calc` steps, yes/no answered ⊤ straight after `goal`. Under `mul` (valid × correct) these score 0, as intended.
+- Guided mode finishes only 33/200 (budget 125, dead end 42): the guide prevents unsupported steps, and the model mostly fails to reach an answer within 1024 tokens.
+- Reading: the model has some answer knowledge (wordprob, yes/no ≈ guessing) that it cannot yet turn into checked derivations. Search and RL have to connect the two; the free completed-Q run 19514 tests whether self-play finds valid derivations without the guide.
+
+### 2026-10-11 ~12:05 — probe 19481: MCTS (16 sims × 4 leaves, untrained value head) vs greedy, mid4, guided, 64 Dolci-TL eval rows, max-len 1024
+| | r | valid | dead end | budget | complete | tokens | time |
+|---|---|---|---|---|---|---|---|
+| greedy (sims 0) | 0.0625 (4/64) | 0.125 | 0.19 | 0.69 | 0.12 | 764 | 3.4 min |
+| MCTS sims 16, fast 0.99 | 0.094 (6/64) | 0.156 | 0.06 | 0.78 | 0.16 | 838 | 42 min |
+- Paired: search solves a superset (4 shared + 2 search-only, both dolci_yesno; 0 greedy-only). It mostly avoids dead ends (12 → 4), but 7 of the 12 greedy dead ends turn into budget-outs, not answers. 42/64 rows hit the 1024-token budget under both.
+- Reading: with constrained decoding, search helps a little and only at the margin. The binding limit is length (budget-outs), not dead ends. Next diagnostic: greedy guided at max-len 2048 / 4096 on the 200 eval rows (tags mid4_len2048 / mid4_len4096) to see whether budget-outs become answers.
+
+### 2026-10-11 ~12:25 — TL AZ Dolci: max-len probe len2048 (19596) — length is not the bottleneck
+- Greedy guided mid4, Dolci eval 200 rows, max-len 2048: r 0.03, valid 0.16, dead_end 0.21, budget 0.63, mean tokens 1357 — same as max-len 1024 (r 0.035, valid 0.165). Doubling the budget converts ~nothing into solutions.
+- Budget-outs (126): median statement length first 3 ≈ 4.7 tok → last 3 ≈ 645 tok (max 674); complete runs 4.7 → 8.7, dead ends 4.7 → 18. Only 24/126 are exact statement loops (last 10 statements ≤ half distinct).
+- Runaway shapes: (a) goal/witness terms with ever-deeper λ-nesting and growing function types (`k 25 (λ x46 : ℝ → (ℝ → … ℝ)) . k 25 (…`), (b) valid `=E`/`∧E` cycles re-deriving growing equalities/conjunctions, (c) short repeated tails.
+- Conclusion: the failure mode under the guide is degenerate derivation (formula blow-up / cycles), not the token budget. Candidate fixes (design change, not applied): per-statement length cap or repeated-statement ban in the guide, or a length-aware reward/value. len4096 (19597) still running as a confirmation.
+
+### 2026-10-11 ~12:55 — TL AZ Dolci: len4096 probe (19597) confirms
+- Greedy guided mid4, 200 rows, max-len 4096: r 0.035 (7/200; one extra yes/no vs 2048), valid 0.16, dead_end 0.20, budget 0.64, mean tokens 2696, 49 min.
+- Budget-out final statements (formula tokens after `:`, mean of last 3) median 645 at 2048 → 1327 at 4096 (max 674 → 1356): the last statement grows to fill whatever budget is left. Budget-outs are runaway single statements, so more length only buys a longer runaway.
+
+### 2026-10-11 ~13:00 — TL AZ Dolci: completed-Q guided run at it20 (19216, resumed from it10)
+- Greedy guided eval 200 rows: it0 0.035 → it10 0.045 → it20 0.03 (valid 0.16, dead_end 0.155, budget 0.685). Flat within noise (±0.013 SE); no drift (fast moves/game stays ~350) but no learning either.
+- Correction to earlier "all self-play r = 0": guided completed-Q self-play has sporadic solves, 1/32 at it4, it6 (first run) and it15, it16, it18 (resumed run; all dolci_math). Free completed-Q (19514): 0/32 at every iteration through it8. Signal is ~1 % of games — rare, as expected before any search-driven ramp.
+- 19464 (visits, all moves searched): still in its first self-play iteration ~1 h after its it0 eval (full search on every move is very slow).
+
+### 2026-10-11 ~13:05 — 18078 (old free-mode MCTS probe, 64 sims, eval-parallel 64) hit its 12 h limit with no output; replaced by 19730
+- 19730 = free-decoding counterpart of 19481: mid4, 64 Dolci-TL eval rows, sims 0 and 16, leaves 4, fast-prior 0.99, chunk 128, eval-parallel 32, max-len 1024, 128G, snapshot 20261011c → evals/az0/mid4_f99/dolci_free. Question: does MCTS help without the guide (free mode had correct 0.125 but valid 0.01 greedy)?
+
+### 2026-10-11 ~13:10 — TL AZ Dolci: free completed-Q (19514) it10 eval
+- Greedy free eval 200 rows, it0 → it10: r 0.005 → 0.01, valid 0.01 → 0.02, correct 0.125 → 0.15, grammatical 0.325 → 0.21, budget-outs 0.145 → 0.455, tokens 365 → 610.
+- With zero self-play reward the free run drifts toward longer, less grammatical outputs (budget-outs ×3) — the completed-Q target only anchors the prior on searched moves, and with fast-prior 0.99 most free moves are unsearched. Watch whether this continues at it20; if so the free arm needs a length/grammar term or shorter max-len.
+
+### 2026-10-11 ~13:15 — probe 19730: MCTS vs greedy, FREE decoding, mid4, same 64 Dolci-TL rows (sims 16 × 4 leaves, fast-prior 0.99, max-len 1024)
+| | r | valid | correct | grammatical | budget | tokens | searched dec./game | time |
+|---|---|---|---|---|---|---|---|---|
+| greedy | 0.000 | 0.016 | 0.109 | 0.33 | 0.11 | 362 | – | 1.3 min |
+| sims 16 | 0.016 | 0.031 | 0.141 | 0.33 | 0.13 | 401 | 50 | 13 min |
+- Search adds one valid+correct row (a yes/no) and 3 correct answers (−1); tiny. Compare guided (19481): greedy 4/64 → search 6/64. Untrained-value MCTS gives +1–2 solves per 64 in both modes; guided is the stronger base for self-play signal. Free mode's problem remains validity (invented kb lemmas / unchecked calc), which search with an untrained value head cannot see until a terminal reward.
+- ~13:25: launched 19770 `az_dolci_g_mul_num_f99_cq_s64` (gruenau12 L40, 128G): as 19216 (guided, completed-Q, mul, fast 0.99, leaves 4, 32 games/iter, math/dapo/wordprob, max-len 1024) but **sims 64** instead of 16, from mid4, snapshot 20261011c, save-every 5. Question (user: "searching along the tree with mcts and constrained decoding may find solutions fast"): does 4× search raise the self-play solve rate above the ~1 % of sims 16?
+
+### 2026-10-11 ~14:40 — TL AZ Dolci status
+- Free completed-Q (19514) it20 greedy eval: r 0.005, valid 0.01, correct 0.135, grammatical 0.255, budget 0.455, tokens 618 → the it0→it10 length drift stopped (it10: budget 0.455, tokens 610) but there is still no learning; self-play 0/32 at all 20 iterations.
+- Guided completed-Q (19216, resumed): self-play solves 1/32 sporadically (latest at overall it27); next eval at it30.
+- 19464 (visits, all moves searched): it1 self-play 0/32, 9393 s per iteration (2.6 h) — ~12× slower than fast-prior 0.99 runs.
+- 19770 (guided completed-Q, sims 64): it0 eval r 0.03 (same model as mid4, different eval seed/batching); first self-play iteration still running after 1.4 h.
+
+### 2026-10-11 ~15:15 — TL AZ Dolci: guided completed-Q (19216) at overall it30
+- Greedy guided eval 200 rows: r 0.035 / 0.045 / 0.03 / 0.025 at it0/10/20/30; valid 0.165 / 0.15 / 0.16 / 0.12; budget 0.625 → 0.705; tokens 706 → 780. Flat to slightly down (valid −0.045, z ≈ 1.3) — no learning after 30 iterations (≈ 960 self-play games, ~1 % solved).
+- 19464 (visits, all searched): it2 0/32 (3313 s; it1 was 9393 s). 19514 (free): 0/32 through it23. 19770 (sims 64): first self-play iteration still running at ~1 h 50 min after its it0 eval (process alive, 100 % CPU; tree search is CPU-bound).
+- Figures refreshed: reports/figures/2026-10-11_tl_az_dolci_{drift,eval}.png.
+
+### 2026-10-11 ~15:30 — report: TL AZ on Dolci-TL (W4.1), first 30 iterations
+- Report `reports/2026-10-11_tl_az_dolci.md` (HTML https://claude.ai/artifact/7t5Rzzv5sQFuhZZBdDHyEr), figures `figures/2026-10-11_tl_az_dolci_{drift,eval}.png` (drift legend moved below the panels).
+- Correction: guided completed-Q self-play solves (1/32) were at overall iterations 5, 7, 16, 17, 19, 23, 27, 30 (8 of 30; earlier entries said it4/it6/it15/it16/it18, off by one).
+
+### 2026-10-11 ~15:30 — 19770 (guided completed-Q, sims 64) it1
+- Self-play it1: r 0/32, valid 1/32, budget 0.78, dead end 0.19, 80 searched + 352 fast decisions/game; 7346 s self-play (2.0 h on L40) vs ~12–25 min/iter for sims 16 on H100. 19216 (sims 16) at overall it31: 1/32 solved again.
+
+### 2026-10-11 ~16:25 — free completed-Q (19514) it30 eval: still degrading
+- Greedy free eval 200 rows it0/10/20/30: r 0.005/0.01/0.005/0.0, valid 0.01/0.02/0.01/0.0, correct 0.125/0.15/0.135/0.125, grammatical 0.325/0.21/0.255/0.155, budget 0.145/0.455/0.455/0.60, tokens 365/610/618/713. Self-play 0/32 at all 29 iterations.
+- With no reward, the free arm only drifts (longer, less grammatical; the answer-knowledge "correct" rate stays ~0.13). Kept running per the user's "if not we just wait"; candidate to give its H100 to a guided arm if it stays at 0 through it40.
+
+### 2026-10-11 ~16:50 — 19770 (sims 64) it2: first self-play solve
+- Self-play it2: r 1/32, valid 2/32. Same ~1 % rate as sims 16 so far (2 iterations; too few to compare). 19216 at overall it37, 19514 it33 (0/32 throughout), 19464 it4 (0/32 throughout).
+
+### 2026-10-11 ~17:35 — guided completed-Q (19216) at overall it40: still flat
+- Greedy guided eval 200 rows it0/10/20/30/40: r 0.035/0.045/0.03/0.025/0.025; valid 0.165/0.15/0.16/0.12/0.15; budget 0.625/0.67/0.685/0.705/0.67. No learning after 40 iterations (~1,280 games, 10 solved). 19514 (free) 0/32 through it37; 19464 (all searched) 0/32 through it5; 19770 (sims 64) 1/32 at it2.
+
+### 2026-10-11 ~18:05 — free completed-Q (19514) it40 eval
+- Greedy free eval it40: r 0.01, valid 0.02, correct 0.145, grammatical 0.25, budget 0.425, tokens 587 — back to it10/it20 levels, so the it30 dip was noise; the free arm fluctuates around r ≈ 0.005–0.01 with no learning (self-play 0/32 through it39). Kept running: without a design change there is no better use of the H100 (a new guided arm would duplicate 19216).
+
+### 2026-10-11 ~19:50 — free completed-Q (19514) it50 eval
+- Greedy free eval it50: r 0.01, valid 0.025, correct 0.15, grammatical 0.26, budget 0.42, tokens 582 — same as it40; self-play still 0/32 through it49. Stable, no learning, no further degradation.
+
+### 2026-10-11 ~20:00 — guided completed-Q (19216) at overall it50: flat
+- Greedy guided eval overall it50 (local it40): r 0.035, valid 0.15, budget 0.675, tokens 754, per family yesno 0.089 / wordprob 0.04 / math 0.016 / dapo 0. The overall eval series it10…it50 is r 0.045, 0.03, 0.025, 0.025, 0.035 and valid 0.15, 0.16, 0.12, 0.15, 0.15: noise around the mid4 start, with no trend.
+- Self-play after the resume (overall it11–50, 1,280 games): 9 single solves (overall it16, 17, 19, 23, 27, 30, 31, 39, 46), all 1/32. At about 0.7 % solve rate and 32 games/iter, the policy target gets a nonzero-value game roughly every 4–5 iterations, which completed-Q cannot turn into a measurable eval shift. Still running per "if not we just wait"; 7-day limit.
+
+### 2026-10-11 ~21:40 — visits arm (19464) it1–9: drift reproduced with every move searched
+- Self-play 0/32 for it1–9 (dead_end 0.19–0.41, 2,500–3,900 s/iter after the 9,393 s first iteration). loss_v 0.82 → 1e-6 (value collapses to the constant −1); loss_p 0.94 → 1.32 and rising, the same signature as the earlier 16-sim visits run: with a flat value the visit target is noise around the prior and the policy loses sharpness. Its it10 eval will show whether greedy validity has dropped as before. (Correction: the 21:34 watcher exit was not an squeue hiccup but the free arm's it60 eval, logged below.)
+
+### 2026-10-11 ~21:45 — free completed-Q (19514) it60 eval
+- Greedy free eval it60: r 0, valid 0, correct 0.15, grammatical 0.175, budget 0.575, tokens 699 — back down, like it30. The free series r 0.005/0.01/0.005/0/0.01/0.01/0 and budget 0.145 → 0.42–0.60 oscillate with the budget share: when more answers run past max-len, grammaticality drops. No learning (self-play 0/32 for all 60 iterations).
+
+### 2026-10-11 ~21:55 — visits arm (19464) it10 eval: drift reproduced
+- Greedy guided eval it10: r 0.025, valid 0.065 (it0 0.16), dead_end 0.115, budget 0.82 (0.64), tokens 868 (722). Searching every move (no fast moves) does not prevent prior drift under the visit-count target: validity more than halves and more answers run to max-len, matching the earlier 16-sim visits run. Completed-Q (19216) held valid at 0.15 over the same span. The arm's question is answered; keep it running unless the GPU is wanted for a new arm (decision for the user).
+
+### 2026-10-11 ~22:30 — guided completed-Q (19216) overall it60 eval
+- r 0.035, valid 0.155, budget 0.69, tokens 763 (yesno 0.11 / wordprob 0.02 / math 0.016 / dapo 0). Same as it50; overall series r .035 .045 .03 .025 .025 .035 .035. Flat; no new self-play solves since it46.
+
+### 2026-10-11 ~23:25 — free (19514) it70 eval; guided (19216) solve at overall it63
+- Free greedy eval it70: r 0.01, valid 0.015, grammatical 0.265, budget 0.445, tokens 598 — oscillation continues (it60 r 0, budget 0.575). Self-play 0/32 through it69.
+- 19216 self-play solved 1/32 at overall it63 (first since it46).
+
+### 2026-10-12 ~00:55 — guided completed-Q (19216) overall it70 eval
+- r 0.03, valid 0.165, budget 0.63, tokens 712 (yesno 0.089 / wordprob 0.02 / math 0.016 / dapo 0). Overall series it0–70: r .035 .045 .03 .025 .025 .035 .035 .03. Flat; still running (7-day limit).
+- 2026-10-12 ~01:15 — free (19514) it80 eval: r 0.01, valid 0.015, grammatical 0.29, budget 0.385, tokens 555. Same band; self-play 0/32 through it79.
+
+### 2026-10-12 ~01:45 — 64-sim guided completed-Q (19770) it9: 3/32 solved
+- Self-play it9: r 3/32 (math 2/27, wordprob 1/2), valid 0.094, dead_end 0.094; first multi-solve iteration of any Dolci AZ arm. Totals it1–9: 4 solves / 288 games (1.4 %) vs 19216 (16 sims) ≈ 0.7 %. Self-play valid it1–9: .03 .06 .03 .03 .03 .06 .09 .06 .09 (16-sim arm ≈ 0–.06). loss_p 0.75 → 0.52–0.59 (sharpening, not drifting). One iteration is not a trend (3/32 vs base ~1 %: p ≈ 0.04); it10 greedy eval next (~1.3 h).
+
+### 2026-10-12 ~02:35 — 64-sim guided completed-Q (19770) it10 eval
+- Greedy guided eval it10: r 0.04, valid 0.155, dead_end 0.22, budget 0.625, tokens 713 (it0: 0.03 / 0.15 / 0.215 / 0.635 / 717); per family yesno 0.11, math 0.032, wordprob 0.02, dapo 0. +2 correct of 200, within noise (SE ≈ 0.013). Self-play it10 back to 0/32 after it9's 3/32. Totals it1–10: 4 / 320 games (1.25 %).
+- 2026-10-12 ~03:25 (TL AZ):
+  - **Free completed-Q arm (19514), it90 eval:** r 0.005, valid 0.005, budget 0.455, tokens 607. Still flat, with self-play at 0/32 through it91.
+  - **Guided 16-sim arm (19216):** overall it79 solved 2/32 (math), its first multi-solve iteration. Self-play valid was 0.0625 and dead_end 0.28.
+- 2026-10-12 ~03:35 (TL AZ): 19216 (guided, 16 sims), eval at overall it80.
+  - Greedy eval: r 0.03, valid 0.14, budget 0.69, tokens 764.
+  - By family: yesno 0.089, wordprob 0.02, math 0.016, dapo 0.
+  - Flat: eval r has stayed between 0.025 and 0.045 since it0. Budget is creeping up from about 0.62 to 0.69.
+- 2026-10-12 ~04:55 (TL AZ): 19216 solved 1/32 at overall it85. Its solves so far, by overall iteration: 5, 7, 16, 17, 19, 23, 27, 30, 31, 39, 46, 63, 79 (2/32), 85.
+- 2026-10-12 ~05:25 (TL AZ): free arm (19514) it100 eval: r 0, valid 0, budget 0.60, tokens 730. Self-play is still 0/32 at it102. Over 100 iterations of free decoding there has been no learning signal.
+- 2026-10-12 ~06:00 (TL AZ):
+  - **Visits arm (19464), it20 eval:** r 0.02, valid 0.06, budget 0.79, tokens 844 (it10: 0.025 / 0.065 / 0.82). The drift has plateaued below the it0 level (valid 0.16). Self-play is still 0/32 through it20.
+  - **64-sim arm (19770):** it13 solved 1/32. Its total is now 5/416 (1.2 %).
+- 2026-10-12 ~06:15 (TL AZ): 19216 (guided, 16 sims), eval at overall it90.
+  - Greedy eval: r 0.035, valid 0.175 (the highest of the run so far), budget 0.62, tokens 715.
+  - Still flat on r. The it80 budget creep (0.69) reverted.
+- 2026-10-12 ~07:00 (TL AZ):
+  - **Free arm (19514), it110 eval:** r 0, valid 0.005, budget 0.55.
+  - **19216:** overall it93 solved 1/32 (math).
+  - **19770:** it14 solved 1/32 (math). Its total is now 6/448 (1.3 %).
+- 2026-10-12 ~08:55 (TL AZ): 19216 (guided, 16 sims), eval at overall it100.
+  - Greedy eval: r 0.045 (ties its it10 best), valid 0.15, budget 0.635, tokens 712.
+  - **yesno (n = 45):** 7/45 = 0.156, the family's high. The series by eval was 0.111, .089, .067, .067, .089, .111, .089, .089, .111, .156.
+  - **wordprob and math:** unchanged since it20.
+  - A possible slow drift up on yesno, but 2–3 rows of change is not distinguishable from noise yet. Self-play has had no solves since it93.
+- 2026-10-12 ~09:05 (TL AZ): free arm (19514) it120 eval: r 0.01, valid 0.015, budget 0.465. Still at noise, with self-play at 0/32 through it122.
+- 2026-10-12 ~10:35 (TL AZ): free arm it130 eval: r 0, valid 0.005, budget 0.515. 19216 solved 1/32 (math) at overall it106. Its solves are now at overall it 5, 7, 16, 17, 19, 23, 27, 30, 31, 39, 46, 63, 79 (2/32), 85, 93, 106.
+- 2026-10-12 ~11:35 (TL AZ): 19216 eval at overall it110: r 0.04, valid 0.155, budget 0.59 (the run's lowest), tokens 675; yesno 0.133. Still flat. The last two evals (0.045, 0.04) are at the top of the band, and budget is trending slightly down.
+- 2026-10-12 ~12:40 (TL AZ): free arm it140 eval: r 0.005, valid 0.01, budget 0.48. Still noise, with self-play at 0/32 through it141.
+- 2026-10-12 ~13:55 (TL AZ): visits arm (19464) it30 eval: r 0.025, valid 0.06, budget 0.805, tokens 856. The plateau is unchanged since it10, with valid stuck at about 40 % of the it0 level (0.16). Self-play has solved 0/32 in all 30 iterations. Freeing its L40 is still the user's decision.
+- 2026-10-12 ~14:10 (TL AZ): 19216 eval at overall it120: r 0.045, valid 0.155, budget 0.645; yesno 0.133, wordprob 0.04. The last 3 evals average 0.043, against 0.032 over it10–90. That is a possible slight upward drift, but it amounts to about +2 rows of 200, so it is not yet significant.
+- 2026-10-12 ~14:30 (TL AZ): 64-sim arm (19770) it20 eval: r 0.03, valid 0.17, budget 0.665, tokens 750 (it0 0.03/0.15, it10 0.04/0.155). Flat, like the 16-sim arm. Self-play solves at it2, it9 (3), it13, it14, it20 make 7/672 (1.0 %); loss_p is about 0.5. Doubling the solve rate with 4× the sims has not moved greedy eval within 20 iterations.
+- 2026-10-12 ~15:00 (TL AZ): free it150 eval r 0.005 / valid 0.01 (0 solves in 4,800 games). Added section 7d to reports/2026-10-11_tl_az_dolci.md; HTML republished as v6. Log recount for 19216: 23 solves in 3,552 games since the resume (0.65 %). 19770 has 7 solves in 640 games (1.1 %).
+- 2026-10-12 ~16:00 (TL AZ): the user approved the guide limits and freeing the visits run's L40. Added opt-in guide limits in guide.py (`start(..., line_max, no_repeat)`) and az.py (`--line-max`, `--no-repeat`); new test `test_limits`; the whole test_guide suite passes. Calibration on generator traces: line lengths have p50 13–14, p99.9 69–173, max 322 (gen2), against runaway statements of 645+ tokens, so the cap is set to 128 (0 of 360 traces refused). The repeat ban refuses 18/120 gen3, 4/120 gen and 2/120 gen2 traces, all at redundant restatements (a second `=I : t = t` chain start, or `calc j : x = v` repeating line j before `ans`), so it is kept strict. Cancelled 19464 after its it30 eval and deleted its `latest` checkpoint (logs and evals kept). Launched 46581 az_dolci_g_mul_num_f99_cq_lim (as 19216 + --line-max 128 --no-repeat, from mid4, snapshot tl_snapshot_20261012, L40 128G, save-every 5). Its it0 eval will show the limits' effect on the untrained mid4 greedy policy (mid4 without limits: r 0.03, valid 0.15, budget 0.635).
+- 2026-10-12 ~16:05 (alex): /home/hpc is 91.3G / 104.9G (87 %). This project's dirs there (synthetic-RLVL 1.4G, premise-RLVL 0.7G, RLVL 0.4G, workspace-RLVL 0.3G) total ≈3G, so cleaning them cannot fix the quota. The bulk is other projects: FOMO 26G, textjepa-0824 20G, textjepa-rope 19G, sequence-editing 10G, autoformalization 3.7G. Left untouched pending the user's go. Vault is at 874/1049G (83 %).
+
+- 2026-10-12 ~16:30 — guide-limit it0 diagnosis (46581 vs s64 it0, same 200 rows): limits turn 125/127 budget runaways into dead ends and cut decode length 717→183 tokens; 95/176 dead ends are line-cap hits. Cost is 8 valid proofs lost (0 gained), all from repeat-ban refusals: 4 at duplicate `given` formulas, 4 at redundant derived lines. The ban fires only at ⏎, so greedy cannot recover but MCTS can. Keeping the ban strict; fallback is to exempt `given` if self-play solve rate trails s64 at it20. Report §7e + figures/tl_guide_limits_it0.png; script rlvl_data/tl/analysis/plot_guide_limits.py.
+
+- 2026-10-12 ~16:50 — s64 it20 eval r 0.03 / valid 0.17 (it0 0.03/0.15): flat; self-play 7 rewarded solves in 640 games. r10 overall it130 eval r 0.045 / valid 0.165, flat since it100; 23 solves in ~3.8k games. lim (46581) at it4: 0/128 self-play solves, 94 % dead ends, ~195 tokens/game. free (19514) it163: 0 rewarded solves; 22 games hit the correct answer with invalid proofs.
+
+- 2026-10-12 ~17:40 — BUG: lim arm 46581 hung after it4 (no log for 51 min, 100 % CPU in Python). Cause: kb._pow (TL symbol k9, x^y) bounded the exponent (≤ 20) but not the base, so nested powers in a calc line (`((9 ^ 20) ^ 20) ^ 20 …`) compute numbers with billions of digits (5 levels 1.7 s, 6 levels > 60 s). Fix: refuse results above POW_BITS = 4096 bits (no value). Regression test test_pow_bound; check/guide/library/gen/gen2/gen3/dolci/az_game tests pass. 46581 cancelled, outputs kept in runs/az_dolci_g_mul_num_f99_cq_lim_hung46581; relaunched from scratch as 47835 on snapshot tl_snapshot_20261012b. s64/r10/free run on the old snapshot and could hit the same hang; they're left running and watched for stalls.
+
+- 2026-10-12 ~17:45 — s64 (19770) is very likely hung the same way: last log write 14:26 (it20; iterations take ~75 min), GPU 0 %, no I/O, main thread at 100 % CPU. It has `latest` at it20. Proposed: cancel 19770 and resume from runs/az_dolci_g_mul_num_f99_cq_s64/latest as az_dolci_g_mul_num_f99_cq_s64_r20 on tl_snapshot_20261012b (overall it = log it + 20). The cancel was blocked by the permission classifier, so this waits for the user. lim relaunched as 47835 (running).
+
+- 2026-10-12 ~18:40 — lim 47835 (relaunched with the pow fix) at it9: 3 rewarded self-play solves in 288 games (1.0 %, about the same rate as s64's 1.1 %), at about 6 min per iteration against about 75 min for s64 and about 40 min for r10. So the guide limits give similar solves per game at roughly 10x more games per hour. 96 % of games end in dead ends. s64 19770 is still hung (no log since 14:26) and waits for the user's go to cancel and resume.
+
+- 2026-10-12 ~19:15 — **r10 (19216, gruenau11 GPU 3) is hung as well.** Nothing logged since 18:40 (it127, overall it137); GPU at 0 % in 10 samples over 20 s, 100 % CPU, no read/write I/O. Same signature as s64, so most likely the same unbounded `^` checker bug (r10 runs on the old snapshot). Cancelling needs the user's go (the s64 cancel was denied), so it stays as is. lim 47835 it10 eval: r 0.02, valid 0.12, dead end 0.855 (it0: 0.015 / 0.11). Self-play by it16: 5 solves in 512 games. free 19514 is alive (it176, log 19:02).
+
+- 2026-10-12 ~19:45 — Pre-registered lim check at it20: lim and s64 both have 6 self-play solves in its 0–19, so lim matches s64 per game, using 1.7 h of compute against 23.6 h. The `given`-exemption fallback is not triggered. lim it20 eval: r 0.025, valid 0.125 (s64 it20: 0.03 / 0.17; the gap was already there at it0). r10 and s64 are still hung and wait for the user's go.
+
+- 2026-10-12 ~20:45 — lim 47835 it30 eval: r 0.035 (its best so far; s64's best was 0.03 at it20), valid 0.12, dead end 0.855. Self-play by it36: 9 solves in 1152 games. free 19514 it180 eval: r 0, valid 0.005. r10 and s64 are still hung, waiting for the user.
+
+- 2026-10-12 ~23:50 — lim evals at it40/50/60/70 are flat at r 0.02–0.035 and valid 0.105–0.125, with 15 self-play solves in 2272 games (0.7 %). The rewarded proofs are too rare so far to move the greedy policy. free 19514 at it200: 0 self-play solves in 6400 games; eval r 0, valid 0.005, yet 0.17 of answers are correct with invalid proofs. s64 and r10 are still hung, waiting for the user.
+
+- 2026-10-13 ~08:15 — With the user's go, cancelled the hung s64 19770 and r10 19216 and resumed both on tl_snapshot_20261012b (pow fix; no guide limits). s64 → `az_dolci_g_mul_num_f99_cq_s64_r20` (56889, gruenau12 L40, from s64/latest = it20, 280 iters). r10 → `az_dolci_g_mul_num_f99_cq_r130` (56893, gruenau11 H100, from r10/latest = log it120 = overall it130, 170 iters). The first r130 submission (56890) landed on Slurm IDX0, which another user occupies outside Slurm, and exited with "no free GPU". It was moved to IDX1 via hold.slurm.
+
+**2026-10-13 08:30 (TL AZ, diagnosis).** Why the Dolci AZ evals stay flat: z = 2r − 1, so failed games give z = −1, and with ≈1 % rewarded games the value head fits v ≈ −1 everywhere (loss_v 1e-7 in free, 1e-4 in lim). The completed-Q target has no min-max rescaling, so a flat v gives π ≈ P0 (the network's own prior) at almost every position. The policy loss (0.5–0.8) is then mostly the prior's own entropy, with ≈ 0 gradient. A rewarded game only reaches the policy where a real terminal fell inside the search tree. Its outcome enters training only through z on the value head (≈1 positive in 100 buffer games). Training takes 2–5 % of each iteration (8 steps × 16 games at lr 1e-6); MCTS self-play takes the rest. Proposed fix (user idea): a joint loss with a self-imitation / ExIt term on a success buffer, plus value rebalancing.
+
+**2026-10-13 08:55 (TL AZ, --sil implemented).** Added the joint expert-iteration term to tl/az.py (snapshot tl_snapshot_20261013). Rewarded games go into a deduplicated buffer (out/successes.jsonl, seedable with --sil-init). Each step adds λ · −log p(played symbol) over all their decisions, fast ones included, plus sil_value · (z − v)². `--sims 0` self-play now samples a ~ P0, which gives a sampling control. Also fixed the stale tests/test_az.py; test_az, test_az_game and test_az_target pass. GPU smoke 56987 (mid4 final, generator prompts): sampling reached r 0.875 / 1.0 at 15–17 s per 16-game iteration; loss_sil 0.003; 30 successes saved; the MCTS run seeded from the file loaded them (wins 31). Smoke checkpoints deleted. Arms awaiting the user's go: lim + --sil 1 (train-steps 32, lr 5e-6), and sampling + --sil 1.
+
+## 2026-10-13 ~14:15: `--sil` arms launched on the user's go; flat AZ arms cancelled
+- The user cancelled 47835 (lim, it240, eval r 0.015→0.04), 19514 (free, it274, eval r about 0), 56893 (r130, eval r 0.04) and 56889 (s64_r20, it3). None of them moved past the it0 eval ±2 SE.
+- Launched from mid4 final on `tl_snapshot_20261013`, with the lim settings plus `--sil 1 --sil-batch 8 --train-steps 32 --lr 5e-6`:
+  - 57922 `az_dolci_g_mul_num_f99_cq_lim_sil`: MCTS, 16 sims, 300 iters.
+  - 57923 `az_dolci_g_mul_num_samp_sil`: sampling self-play, sims 0, 1000 iters.
+- Report: `reports/2026-10-11_tl_az_dolci.md` (Update 2026-10-13); HTML v10.
+- ~14:22: 57923 OOMed in its first train step: another user's process took 28 GB on its card (IDX3, bus 03) outside Slurm. Relaunched as 57938 on IDX0 (bus 43, empty), same name; the dead run dir was moved to `_oom57923`.
+- 15:20: The lr 5e-6 `--sil` arms collapsed. MCTS 57922 at it10 had eval valid 0.005 (it0 0.11) with 0 wins, so the cause is the AZ update size, not sil. Sampling 57938 had valid 0.015 at it20. Both cancelled. Relaunched at lr 1e-6 (lim's stable value), all else unchanged: 58113 `..._lim_sil_lr1e6` (MCTS) and 58114 `..._samp_sil_lr1e6` (sampling). Stop rule: eval valid < 0.06 on two consecutive evals.
+
+## 2026-10-13 16:15 — TL AZ: checker hang → SIGALRM cap; sampling arm resumed (58209)
+- 58114 (sampling + sil, lr 1e-6) stalled after it41 (16:05:51): GPU idle, main thread spinning on CPU. That points to `check`/`answer_of` never returning on one terminal; py-spy was blocked by ptrace.
+- `tl/az.py`: `CHECK_SECONDS = 30` SIGALRM cap around terminal scoring. On timeout the game fails (z = −1, end `check_timeout`) and its tokens are printed to the .out (`check timeout:`); a `check_timeout` rate was added to the stats. A test was added, and the suite passes.
+- Snapshot `tl_snapshot_20261013b`. Cancelled 58114 and resumed it as 58209 (`az_dolci_g_mul_num_samp_sil_lr1e6_r40`, IDX1) from the it40 `latest` with `--sil-init successes_it41.jsonl` (26 wins).
+- 58113 (MCTS + sil, lr 1e-6) is at the it10 eval on the old snapshot. If it hangs, it will be resumed on 20261013b.
+
+## 2026-10-13 17:05 — TL AZ sil arms flat; sampling arm replays memorised wins
+- 58113 (MCTS + sil, lr 1e-6) evals: it0/10/20 r 0.015/0.035/0.025, valid 0.11/0.09/0.105; 6 wins.
+- 58209 (sampling + sil, resumed it40) evals: it40–80 r 0.025–0.03, valid 0.12–0.145. Self-play is rewarded on about 2 % of games, but 28 rewarded games since it40 added one new buffer entry, so the policy replays memorised winning lines and does not generalise.
+- No check timeouts so far. Both arms keep running (stop rule not hit).
+
+## 2026-10-13 17:40 — correction: "replayed wins" = same prompt stream after resume
+- `grng = Random(seed + 1)` drives the prompt draws. Resume 58209 kept seed 0, so global it41–80 re-drew the original it1–40 prompts, which already had their wins buffered (dedup key = prompt id + tokens). After it82 the prompts are fresh, and the buffer went 28 → 45 distinct prompts by it99. The 17:05 memorisation claim is withdrawn.
+- Rule from now on: resumes pass `--seed <resume it>`.
+
+## 2026-10-13 19:30 — TL 9B line: S0 harness, search profile, LoRA/DDP in az.py
+- S0 (vLLM guided sampling, `tl/vllm_guide.py`): greedy = HF on 45/64; mid4 0.8B pass_vc@1/64 = 0.027/0.165, valid@64 0.64 (fails S2 gate). Fixes: VLLM_USE_FLASHINFER_SAMPLER=0, dead-end EOS.
+- MCTS profile (bench_az_search, 58332): model forward 74 % of play(); ~16 leaf rows per forward. 9B AZ needs large leaf batches (parallel games with refill). Forward-scaling bench 58339 on H100 running.
+- az.py: --lora/--dtype/--grad-ckpt/torchrun DP; test_az_lora ok. fla+Triton blocks GDN backward on Hopper -> train on L40/Blackwell.
+- Report §7e update 19:30 (figure tl_s0_passk_and_search_split.png). All TL CPU test modules pass after the guide hang fix.
+
+## 2026-10-13 21:30 — TL search engine: trie layout for leaf batches
+- `TreeEngine.forward_trie` (az.py `--tree --trie`): per-game trie of leaf paths, ancestor-masked attention + GDN; test_trie ok (gap to full forward no larger than the dense layout's).
+- 0.8B, same L40, max-len 256 (58405): trie 357 leaf rows/s (239 s) vs HF 184 (455 s) vs dense tree 278 (338 s); 64 games x 8 leaves 466 rows/s. Guide (CPU) is now 19-23 % of search time.
+- Token counts on real trees (58403): path/trie 1.21x (4 leaves), 1.36x (8), 1.59x (16); dense/trie 2.0-3.4x; mean path 16 tokens/row.
+- Old-code 9B (58367, H100 NVL, max-len 1024): HF 1670 s vs dense tree 3049 s. 9B trie vs HF on one card: 58431.
+
+## 2026-10-13 23:45 — trie engine confirmed at 9B; overlap dropped
+- 9B, same H100: trie 387 rows/s vs HF 188 (2.06×), peak mem 22.2 G vs 28.0 G (58431). Chunk 1024: 467 rows/s at n32 and 555 at n64 (58436).
+- `--overlap` (guide in a thread during the forward) was slower in all 4 configs (0.8B 647→317, 746→633; 9B 467→269, 555→489) because of the GIL. Reverted.
+- Guide is 21–35 % of search time; cProfile puts 138/171 s in `_Ctx.feed` (trial-feeding ~60 tokens per node).
+- 9B midtrain alex 4556917 started 22:47, 6.3 s/step × 3396 steps.
+- Report §7e update 23:30 with figures/tl_search_engines.png.
+
+## 2026-10-14 01:45 — 9B AZ smoke passes
+- 58466 OOM: `TreeEngine.forward_trie` lacked `no_grad`, so with trainable LoRA the eager warm-up kept autograd state (~11.6 GiB). Also `--eval-parallel` defaulted to 64 slots. Fixed: `@torch.no_grad()` on `forward_trie`, grad-free `_priors`, `--eval-parallel 32` in the smoke.
+- 58491 NCCL watchdog abort: one rank waited >10 min in the post-self-play gather. Fixed: process-group timeout 3 h; per-rank self-play seconds printed.
+- 58533 pass: 2 iterations, save (LoRA 693 MB) and reload OK. Memory peaks: self-play 23–24 GiB, train 26.5 GiB.
+- Speed: 920 s / 32 games / GPU on a calm L40 (base model, max_len 1024, 33–39 % budget-outs). The rank on the externally loaded card C4 was 1.9× slower. Train step 10.6 s.
+- Figure `reports/figures/tl_az9_smoke.png`; report §7e update 01:45.
+
+## 2026-10-14 05:20 — 9B midtrain done, S2 gate submitted
+
+alex 4556917 finished at 05:10 (6.25 h, train loss 0.3985, eval loss 0.325). Final (17.9 GB) rsynced to /vol/tmp2/laitenbf/rlvl_data/tl/mid/tl_mid4_9b_lr1em5_b64_h60/final, size verified. No checkpoint-* left on alex. S2 gate = s0_vllm_guide.slurm on gruenau12 (job 58835): HF/vLLM greedy equivalence on 64 rows, then pass@1..64 on 200 Dolci-TL eval rows. Pass thresholds: pass@1 >= ~0.10, pass@64 >= ~0.40.
+
+## 2026-10-14 05:50 — S2 gate: two fixes, equivalence done, pass@64 rerunning
+
+- 58835/58836 OOM in the HF greedy reference: az.load defaults to fp32 (9B = ~36 GB). dump_hf_greedy.py now takes PARALLEL and DTYPE (argv 7/8); s0_vllm_guide.slurm passes HF_PAR / HF_DTYPE (9B: 8, bfloat16).
+- 58837: HF greedy 9B (bf16) on 64 rows: r 0.031, valid 0.109, dead_end 0.89 (0.8B: r 0.016, valid 0.063). S0 equivalence HF vs vLLM greedy: 46/64 identical, r 0.031 / 0.031, first differing tokens 20..239 (bf16 numerics).
+- 58837 pass@64 crashed: guide.calc_target rendered a calc value with > 4300 digits (Python int->str limit) inside the vLLM logits processor. Fix: values with > 4·CALC_MAX = 384 bits return () (unwritable within CALC_MAX anyway, so no numeral is allowed after `=`). Regression test tests/test_guide.py::test_calc_huge_value (old guide reproduces the ValueError, new passes); test_guide + test_check all ok. Backup guide.py.bak_20261014a.
+- pass@1..64 (N 200, K 64) rerun with SKIP_EQ=1 as job 58848.
+
+## 2026-10-14 06:30 — S2 gate fails: 9B ≈ 0.8B, dead ends are runaway formalization lines
+
+- 58848 (vLLM + guide, N 200 Dolci-TL eval prompts, K 64, T 1, max_len 1024, line cap 128): 9B pass_vc@1 0.0277, @64 0.155; pass_valid@1 0.096, @64 0.575; dead end 90.4 %. 0.8B midtrain: 0.0271 / 0.165 / 0.108 / 0.64 / 89.1 %. Gate thresholds (0.10 / 0.40) missed by both.
+- Dead-end analysis (scratchpad/deadend.py): rule of dying line given 38 % / goal 28 % / calc 19 % / = 10 % / kb 3 % (9B); 66 % at the 128-token line cap (0.8B 53 %); median term depth 11 vs 6; median line index 5. Per family v+c: wordprob 5.8 %, yesno 3.5 %, math 1.6 %, dapo 0 %.
+- Figure reports/figures/tl_gate9_pass_deadends.png; report §7e update 06:30. 9B AZ not launched; waiting for a decision on the next step (formalization data / guide caps / subset AZ).
+- 06:50 cap sizing (read-only, scratchpad/caps.py): a given/goal cap of 64 tokens + depth 4 loses 0/354 9B v+c samples (0.8B 3/347) and saves 29 % of generated tokens (0.8B 20 %). At 48 tokens it loses 2/354. Not implemented; waiting on the decision.
+
+## 2026-10-14 07:20 — old 0.8B AZ arms cancelled (hung)
+
+- 58113 / 58209: no log output since 10-13 19:48 / 17:28, single process at 100 % CPU; py-spy denied (ptrace). Cancelled. Eval r flat 0.015-0.035 (it 0-60), valid ~0.11, dead end ~0.86. Run dirs kept (2.9 G each).
+- 07:55 check.py: Fourier-Motzkin (infeasible + calc T-bounds) now tests len(rest)+|pos|·|neg| > 4000 before building the pairs (same result; 1000×1000 big-fraction case 29 s → 0.00 s). Candidate for the arm hang, unproven. Backup rlvl_data/tl/check.py.bak_20261014a; regression test test_fm_blowup.
+- 18:10 TL strict reward: check.faithful (inconsistent_givens / trivial_goal / no_given), opt-in --strict-reward in az.py + vllm_guide.py, tests test_faithful + test_strict_reward (test_check, test_guide, test_az_game, test_dolci, test_az_deep, test_gen, test_gen3, test_challenge, test_az_target pass; test_gen2 also passes, ~10+ min). Gate re-score (rlvl_data/tl/s0/strict_rescore.json, fig tl_gate9_strict.png): 9B pass@64 0.155 -> 0.110 (31 -> 22 prompts), 0.8B 0.165 -> 0.135 (33 -> 27). Remaining holes: goal copies a given, answer restated as a given, invented consistent givens -> needs back-translation judge.
+- 23:00 TL formalization: user picked a local formalizer (gpt-oss-120b unless a better one of that size) and OK'd an offline proof engine. Downloading gpt-oss-120b (~65 GB) + Qwen3.5-122B-A10B-FP8 (127 GB) to /vol/tmp2/laitenbf/hub; building tl/formalize.py; pilot 200 prompts × both models on gruenau11 (≤ 2 GPUs).
+- 2026-10-15 04:30 formalization pilot finished: gpt-oss 63406 (1.0 h) and Qwen 63420 (4.6 h), both TP 2 on gruenau11. Re-checked with scratchpad/refilter.py → <dir>/refilter.json + accepted_data_tier.json; model comparison with scratchpad/compare_pilots.py → rlvl_data/tl/formalize/pilot_compare.json + reports/figures/tl_formalize_pilot.png.
+  - Checker-accepted (v1) / v2 / data-tier prompts: gpt-oss 83 / 69 / 47; Qwen 73 / 71 / 54; union of data tiers 69.
+  - GPU-h 2.0 vs 9.1; projected for the 45.8k train set 460 vs 2,094.
+  - Prover headroom (scratchpad/prover_pot.py): prompts with a header-clean, right-answer, derivation-failed proof and no accepted one: 67 for gpt-oss, 72 for Qwen.
+  - check.substantive answer_given now follows given/def equality chains (Qwen dapo/83929). Regression case added to SHALLOW; test_check and test_formalize pass. Backups rlvl_data/tl/{check.py,test_check.py}.bak_20261015a.
+  - Report §7e 04:30; PLAN change log 2026-10-15.
+
+## 2026-10-15 06:00 back-translation judge v1/v2; formalize prompt fix; re-pilot
+- `tl/judge.py` + `tl/tests/test_judge.py` (statement, parse_verdict incl. `<|constrain|>JSON` fallback, gold_items, summarize, back_sys, back_user KB glosses); Slurm `rlvl_data/tl/judge.slurm` (env MODEL TP RUNS GOLD SAMPLES TAG).
+- Jobs: 65755 judge v1 (172 s, 0.096 GPU-h), 65809 judge v2 (144 s, 0.08 GPU-h); outputs `rlvl_data/tl/formalize/judge_gpt-oss-120b_pilot{,_v2}/`, comparison `judge_v1_v2_compare.json` (scratchpad `judge_cmp.py`), figure `reports/figures/tl_judge_v1_v2.png`.
+- v1 → v2: gold false rejects 13 → 7 /100; hand agreement 11 → 12 /14; v2 still passes one attempt of 79351 and rejects honest 74973 (sample noise at T 0.7).
+- Formalize prompt: INSTRUCTIONS 2–3 rewritten (relations as givens of their sentence; goal = the asked quantity; no solution formula in goal/given/def) + WORD_EXAMPLE (168130, gpt-oss pilot attempt 1 round 3); `--drop-families`; test `test_word_example`. Backups: `rlvl_data/tl/formalize.py.bak_20261015a`, `formalize.slurm.bak_20261015a` (DROP env added), `report_bak_20261015a.md`, `PLAN.md.bak_20261015a`.
+- Re-pilot 65852 (gpt-oss-120b, TAG pilot200_v2, DROP dolci_yesno, 149 prompts) → judge 65854 (afterok, GOLD 0).
+
+## 2026-10-15 06:45 re-pilot analysis; translation standard; judge v3; wordprob-only formalization
+- Re-pilot (prompt v2) vs pilot (prompt v1), same 149 prompts: checker-ok prompts 44 vs 54, data tier 37 vs 43, formula goals 64/84 vs 70/111 (prompt v2 did not change the goal form). Script scratchpad `repilot_cmp.py` → `formalize/repilot_v2_compare.json`, `reports/figures/tl_formalize_v2_repilot.png`.
+- 06:00 standard withdrawn; "translation" standard adopted (see PLAN 2026-10-15 ~06:45). Hand labels: `formalize/hand_labels_translation.json` (20 good, 19 bad, 5 excluded).
+- Judge v3 = `tl/judge.py` CMP_SYS presolved bullet rewritten (backup `rlvl_data/tl/judge.py.bak_20261015b`); job 66063 (3.3 min, TP 2). v2 → v3: good 7 → 18 /20, bad 19 → 19 /19, old labels 12 → 14 /14, gold false rejects 7 → 5 /100. Fresh spot check of 16 v3 passes: about 12–13 of 14 distinct statements good; Qwen 168130 (inverse relation) missed. Script `judge_v3_cmp.py` → `formalize/judge_v2_v3_compare.json`, `reports/figures/tl_judge_v3.png`.
+- Yield by family (judge v3 ∧ data): wordprob 22/50 (gpt-oss), 24/50 (Qwen); math 2, 1; dapo 0, 0. Math/dapo checker-ok proofs plant answers/divisors (TL lacks the vocabulary).
+- `tl/formalize.py` step 3 rewritten to the translation standard (backup `rlvl_data/tl/formalize.py.bak_20261015b`); test_formalize passes.
+- Job 66082: gpt-oss-120b, TAG wordprob_all, N 4000, DROP dolci_math,dolci_dapo,dolci_yesno, TP 2 on gruenau11 → `formalize/gpt-oss-120b_wordprob_all/`.
+- Report §7e 06:45; PLAN change log.
+
+## 2026-10-15 08:50 decision: extend TL to all of Dolci
+User: "I think we need to extend TL so it can represent everything in dolci." Plan: census of the constructs Dolci needs (math/dapo/yesno/wordprob), TL extension design (TLANG.md §12), implementation + tests, then formalization re-pilot on math/dapo/yesno. Job 66082 (wordprob-only formalization) continues.
+
+## 2026-10-15 09:30 KB v3: census, kb 24 soundness fix, radicals + intervals in calc
+- Census `tl/census.py` (job 66745): 1,987/2,000 parsed; package need (train-weighted) A 60 %, B 36 %, C 20 %, E 18 %, G 17 %, J 9 %, F 6 %, D 4 %, K 1 %, H 0.1 %; TL v1 alone 7 %. `scratchpad/census_fig.py` → `rlvl_data/tl/census/gpt-oss-120b_v1/packages.json`, figure `reports/figures/tl_dolci_census.png`. TLANG §12 order updated.
+- Soundness: kb 24 `k9(x1 , x2 + 1) = x1 × k9(x1 , x2)` was unconditional; with kb 23 it proves 1 = 0 (x1 = 0, x2 = −1). Now `(0 ≤ x2) →`; gen.py th_L24 emits the premise; exploit proof rejected.
+- New `tl/radicals.py`, `tl/realeval.py`; hook in `tl/kb.py` ground_eval (app fold, arithmetic fold, < ≤ = decisions on closed real terms). `tl/tests/test_realeval.py` 4/4. Full regression of older suites running.
+- Report §7e 09:30; PLAN change log.
+
+## 2026-10-15 10:15 KB v3 package A (predicate operators)
+- `tl/library.py` k94–k103 / kb 115–124 (count_all, sum_all, prod_all, is_finite, least, greatest, infimum, supremum, the, solutions) + extra lemmas kb 125–127; next free k104 / kb 128.
+- New `tl/finite.py` (candidate box from φ, each candidate decided by ground_eval; MAX_CAND 10⁵, MAX_QUANT 10⁴, MAX_SEARCH 10⁵; ≈ 53 µs/candidate); `tl/kb.py` ground_eval routes closed ∀/∃ through `finite.decide_quant`. finite imports kb lazily (`_kb()`), fixing the import cycle.
+- New `tl/tests/test_package_a.py` 9/9. Figure `reports/figures/tl_kb3_package_a.png` (+ .json; scratchpad `fig_pkg_a.py`, `replot_pkg_a.py`).
+- Regression fixes: gen2 V themes skip k ≥ 94; test_gen2 skip sets; test_formalize counts tl_mid_v4 gold traces citing kb 24 as stale (2/300; tl_eval 7/1000 → regenerate tl_mid_v5 before new SFT); test_library numbering allows the opaque k92/k93 gap, is_finite exempt from the unfold check. Full regression byg13shbf running.
+- TLANG §12 layer 4 + package A marked done; report §7e 10:15; PLAN change log ~10:15.
+
+## 2026-10-15 11:05 KB v3 package B (numbers)
+- `tl/library.py` k104–k119 / kb 128–143: is_rational (∃ def; evaluator via `realeval.exact`), numerator / denominator (characterising axioms), is_nat, from_digits (k24 fold), digits (characterising axiom), padic_val, totient, c_add, c_sub, c_mul, c_div, c_pow (k25), c_abs (py None; unfolds to a closed radical), conj, pow_mod (py three-argument pow). Next free k120 / kb 144. Backup `rlvl_data/tl/library.py.bak_20261015c`.
+- `unfold` accepts `_settled` results (closed value, closed real term with exact radical value, k16 pair of these); test_library uses `_settled`.
+- `tl/kb.py` `_pow`: exponent bound 20 → POW_BITS (4096), result guard unchanged (backup `kb.py.bak_20261015c`).
+- New `tl/tests/test_package_b.py` 6/6 (values + stays, 4500 axiom instances, definitions vs Python complex, is_rational 126 ⊤ / 74 ⊥ with witnesses, calc incl. pow_mod(7, 2026, 100) = 49). test_library 71 definitions / 3973 axiom instances; test_gen2 skip sets extended to k < 120 / kb < 144.
+- Figure `reports/figures/tl_kb3_package_b.png` (+ .json; scratchpad `fig_pkg_b.py`): B = 35.8 % of train, 12 % of train only needs integer domains; evaluator cost ≤ 0.04 s at 3000 digits.
+- Previous regression byg13shbf: all suites rc 0 (test_library fixed afterwards). Fresh full regression bc4tctsm3 running.
+- TLANG §12 B done; report §7e 11:05; PLAN change log ~11:05.
+
+## 2026-10-15 10:50 KB v3 package C1 (analysis)
+- Stamp correction: the two entries above headed "10:15" (package A) and "11:05" (package B) were written at about 09:50 and 10:05; the report blocks now carry 09:50 / 10:05.
+- `tl/library.py` k120–k132 / kb 144–156 + extra lemmas kb 157–166: exp, ln, sin, cos, pi (bare constant), tan, atan, asin, acos, log (base first), cbrt, cis, c_arg (cis / c_arg moved here from B). Axioms characterise the functions (addition laws, 1 + x ≤ exp x, sin² + cos² = 1, sin x ≤ x, x cos x ≤ sin x on (0, π/2), sin π = 0 ∧ 3 < π < 4, inverse functions by range). Next free k133 / kb 167.
+- `tl/realeval.py`: `pi_linear` (a + rπ, a in ℚ(√…)), exact table values via `radicals.cos_pi`, exact inverse trig on table values, exact rational logs (b^n = x^d), cbrt on cubes, exp∘ln; otherwise certified intervals with adaptive precision. Undefined inputs stay unevaluated.
+- New `tl/tests/test_package_c.py` 6/6 (50 exact values, 304 interval comparisons, 11 stays, 2641 axiom instances with 780 proved and 1523 perturbed refuted, calc in the checker). Figure `reports/figures/tl_kb3_package_c.png` (census topics; comparison cost 0.4–9 ms).
+- Regression bcq0eb5p5: 14 suites green after fixing test_package_a (asserted the full EXTRA list; now only entries < 128).
+- Report §7e 10:50; PLAN change log ~10:50; TLANG §12 C1 done.
+
+## 2026-10-15 11:10 KB v3 package C2 (limits and calculus)
+- `tl/library.py` k133–k147 / kb 167–181 + EXTRA kb 182–251 (backup `rlvl_data/tl/library.py.bak_20261015f`). ε-δ definitions for tends_at (punctured) / tends_right / tends_infty / tends_seq (whole n); continuous_at, differentiable_at, series_converges; lim_* by the conditional axiom tends_* → lim = L (sound: limits are unique); deriv / series / inf_prod through lim_*; integral by FTC (model: oriented Riemann integral, 0 if not integrable). Next free k148 / kb 252.
+- 70 lemmas: identities 182–189, limits at a point 190–200, at ∞ and sequences 201–212, derivatives 213–233, integrals 234–239, series 240–251.
+- New `tl/tests/test_package_c2.py` 5/5: numeric Kleene model (tends_* at h 1e-5..1e-7, ∞ at 1e5..1e7 with Richardson, derivative quotients, Simpson n = 400, series partial sums 4000/8000 + Richardson; inner quantifiers over a local grid), 17-function pool, 85 % guided premise targets. 75 formulas: 2602 premise-true instances, 2578 confirmed, 24 undecided, 0 counterexamples, 6.9 s; identities 475 ⊤ / 725 numeric / 840 perturbed refuted; 15/15 wrong rules refuted. A first control (series_converges(a , n0) → tends_seq(a , 0) for non-integer n0) is false but unrefutable with this pool, so it was swapped for "the harmonic series converges".
+- Updated tests: test_library (EXTRA 182–251, `ℝ → ℝ` generator), test_gen2 skip sets (kb < 252, k < 148), test_package_c (C1 EXTRA only), test_package_a (EXTRA < 128).
+- Regression bbzi5hlo8: 15 suites rc 0 (test_gen2 849 s).
+- Figure `reports/figures/tl_kb3_package_c2.png` (+ .json; scratchpad `stats_pkg_c2.py`, `fig_pkg_c2.py`). Report §7e 11:10; PLAN change log ~11:10; TLANG §12 C2 done.
+
+## 2026-10-15 11:40 — Dolci word problems: full formalization + judge v3
+- Job 66082 formalized all 1,155 train word problems (gpt-oss-120b, TP 2, 4.6 h, 56 M gen tokens). Refilter: verified 578, data tier 532.
+- Judge v3 (job 67672, 2 samples, 11 min): 981/1,365 proofs pass both samples. Judge ∧ data = 426 prompts (37 %) vs ≈ 45 % from the pilot. Issues: different_question 270, presolved 242, wrong_fact 51, extra_fact 40, missing_fact 31.
+- Figure `reports/figures/tl_wordprob_all_yield.png` (+ .json; scratchpad `fig_wordprob_all.py`). Report §7e 11:40; PLAN change log ~11:40.
+
+## 2026-10-15 12:05 — KB v3 package E1 (plane geometry)
+- `tl/library.py`: k148–k180 / kb 252–284 + EXTRA kb 285–354 (70 lemmas). `_settled` also accepts `realeval.pi_linear` results. regular_polygon indexes cyclically (ground_eval does not short-circuit `⊥ ∧ stuck`). Backup `rlvl_data/tl/library.py.bak_20261015h`.
+- New `tl/tests/test_package_e.py` (6 s): 51 exact values, 9 stuck terms, definitions vs. float geometry, 103 formulas in the three-valued model (0 counterexamples), 16/16 wrong rules refuted.
+- Updated tests: test_library (EXTRA 285–354, `[( ℝ × ℝ )]` generator), test_package_c2 (C2_EXTRA < 285), test_gen2 skip sets (kb < 355, k < 181).
+- Regression bbdg1jady: 16 suites rc 0 (test_library rerun after the generator fix; test_gen2 935 s).
+- Figure `reports/figures/tl_kb3_package_e1.png` (+ .json; scratchpad `stats_pkg_e.py`, `fig_pkg_e.py`). Report §7e 12:05; PLAN ~12:05; TLANG §12 E1 done.
+
+## 2026-10-15 13:27 — KB v3 package E2 (3D vectors, measures, area_of, length_of)
+- `tl/library.py`: k181–k204 / kb 355–378 + EXTRA kb 379–452 (74 lemmas). 3D vectors as `[ℝ]`; measure formulas; `area_of`/`length_of` over predicates are axioms only and are never evaluated. Backup `rlvl_data/tl/library.py.bak_20261015j`.
+- New `tl/tests/test_package_e2.py` (195 s): exact values, stuck terms, numeric area/length harness, wrong-rule controls.
+- Updated tests: test_package_e (E_EXTRA < 379), test_library (EXTRA, definitions = len − 37), test_gen2 skip sets (kb < 453, k < 205).
+- Regression: all 17 suites rc 0 at 13:26 (test_gen2 963 s, test_gen3 219 s, test_package_e2 195 s, test_gen 169 s).
+- Figure `reports/figures/tl_kb3_package_e2.png` (+ .json; scratchpad `stats_pkg_e2.py`, `fig_pkg_e2.py`). Report §7e 13:00; PLAN ~13:00; TLANG §12 E2 done.
+
+## 2026-10-15 14:18 — KB v3 package G (combinatorics, finite chance, walks)
+- `tl/library.py`: k205–k218 / kb 453–466 + EXTRA kb 467–507 (perms_of, tuples, sublists, combos, rotations, num_classes, windows, prefixes, wprob, wexpect, list_product, walks / fn_reach / fn_dist over move functions `α → [α]`). Library entries now carry a `cost` field; `unfold` refuses cost None or > 5000. Backup `rlvl_data/tl/library.py.bak_20261015k`.
+- New `tl/tests/test_package_g.py` (19 s): exact values, stuck terms, fast evaluator vs. unfold, lemma instances (membership premises restated as `k54(λ y . …, builder(xs))`), 15/15 wrong rules refuted.
+- Regression blvpmpzs1: all 18 suites rc 0 at 14:16 (test_gen2 1022 s, test_gen3 235 s, test_package_e2 200 s, test_gen 181 s).
+- Figure `reports/figures/tl_kb3_package_g.png` (+ .json; scratchpad `stats_pkg_g.py`, `fig_pkg_g.py`). Report §7e 14:00; PLAN ~14:00; TLANG §12 G done.
+
+## 2026-10-15 15:42 — KB v3 package J (processes, sequences, games)
+- `tl/library.py`: k219–k232 / kb 508–521 + EXTRA kb 522–575 (54 lemmas): ite, seq_list / seq_term / recur, orbit, steps_until, scan, is_arith / is_geom / ap_term / gp_term, reach_all, forced_win, win_pos. Caps J_SEQ 2100, J_STEPS 2·10⁴, J_WORK 2·10⁷ bits, J_REACH 2·10⁴, 4096-bit numbers; window recurrences detect periods; games by retrograde analysis; the last 64 move-graph searches are memoised. Backup `rlvl_data/tl/library.py.bak_20261015l`.
+- New `tl/tests/test_package_j.py` (6/6, 34 s): 32 exact values, 7 stuck terms, fast vs. unfold 382 agree / 18 refused / 0 disagree, least-based symbols vs. closed formulas (393 cases, 0 mismatches), 65 formulas × 200 instances (9,804 confirmed, 0 counterexamples), 16/16 wrong rules refuted.
+- Updated tests: test_library (EXTRA 522–575, rargs for move functions, definition count, exemptions), test_gen2 skip sets (kb < 576, k < 233).
+- test_library went from >10 min (first caps) to 52 s (retrograde games + search memo).
+- Regression bk059h5uy: all 19 suites rc 0 at 15:40 (test_gen2 1031 s; test_tree 154 s in the tf5 venv, since system python3 has no torch).
+- Figure `reports/figures/tl_kb3_package_j.png` (+ .json; scratchpad `stats_pkg_j.py`, `fig_pkg_j.py`). Report §7e 15:25; PLAN ~15:25; TLANG §12 J done.
+
+## 2026-10-15 16:47 — KB v3 package F (matrices, polynomial values, exact real roots)
+- `tl/library.py`: k233–k253 / kb 576–596 + EXTRA kb 597–640 (44 lemmas). The symbols are transpose, mat_add, mat_scale, mat_mul, mat_vec, identity, mat_pow, trace, submatrix, sign_perm, det (Leibniz), inverse (cofactors), rank (largest nonzero minor), charpoly, poly_eval, poly_deriv, root_mult (via `least`), real_roots (axiom), root_k, eigenvalues and singular_values. Fast evaluators use exact elimination over ℚ up to 64 × 64. Backups `rlvl_data/tl/{library,kb,realeval,test_library,test_gen2,TLANG.md}.bak_20261015f`.
+- New `tl/algebraic.py` (292 lines, no sympy): Yun squarefree split, the rational-root test, and Sturm isolation up to degree 24 and 4096-bit coefficients. An irrational root becomes `root_k(g , i)` with g monic, squarefree and free of rational roots. `realeval` compares, floors, rounds and takes |·| of root_k terms through certified intervals. √ of a rational non-square stays `sqrt(q)`.
+- New `tl/tests/test_package_f.py` (6/6, 22 s):
+  - 53 exact values, 8 stuck terms and 18 Dolci golds;
+  - fast vs. unfold: 443 agree, 77 refused, 80 by the definition only, 0 disagree;
+  - real_roots vs. its axiom on 417 polynomials;
+  - 63 formulas × 150 instances: 7,176 confirmed, 0 counterexamples;
+  - 14/14 wrong rules refuted.
+- Updated tests:
+  - test_library: EXTRA 597–640, a `[ [ ℝ ] ]` matrix generator, the definition count `len − 39`, and root_mult / root_k exempted from the unfold check;
+  - test_gen2 skip sets: kb < 641, k < 254.
+- Dolci check (scratchpad `f_dolci.py`): 2424 train prompts have a literal matrix, 2423 are formalised by template, and 2421 reproduce the gold answer (17 s of calc). The two misses are a float tie-break (21798) and round-half-to-even (38720).
+- Regression bzgy2mdp4: all 25 suites rc 0 at 16:44 (test_gen2 1054 s). test_library passed on rerun after the generator fix. test_trie and test_tree need the tf5 venv (torch).
+- Figure `reports/figures/tl_kb3_package_f.png` (+ .json; scratchpad `stats_pkg_f.py`, `fig_pkg_f.py`). Report §7e 16:45; PLAN ~16:45; TLANG §12 F done (Dolci line corrected to 2421/2423).
+
+## 2026-10-15 18:23 — KB v3 package D (polynomial arithmetic, complex roots) done
+- New symbols k254–k264 / kb 641–651: coef, degree, leading, poly_add, poly_mul, poly_pow, poly_comp, poly_quo, poly_rem, c_poly_eval, roots. `roots` is the only axiom (∀-characterisation by the product form); the rest are definitions. EXTRA lemmas kb 652–693 (42). Next free k265 / kb 694.
+- Evaluation: exact ℚ arithmetic with a 400-coefficient cap (powers and compositions of degree ≥ 400 refused). `roots` gives exact real roots (F's algebraic) plus non-real pairs from rational quadratic factors (Durand–Kerner, rounded, confirmed by exact division; the cofactor must have only real roots); otherwise unevaluated (e.g. x³ − 2). c_poly_eval has exact fast paths (rational/real points; a + bi with a, b² rational via the remainder mod the minimal quadratic) and a cost cap (unfold at a root_k point had taken 34–40 s).
+- New `tl/tests/test_package_d.py` (6/6, 42 s in the regression): 38 exact values, 11 stuck terms, 29 hand-formalised Dolci golds (10 remainders, 8 coefficients, 5 complex-root, 6 irregular second-root prompts); fast vs. unfold 532 agree / 55 refused / 13 definition only / 0 disagree; roots vs. its axiom on 276 polynomials (556 roots, 3 unsupported; product form 996 exact + 108 float; p(root) = 0 exactly for all 556); 52 formulas × 150 instances: 6,734 confirmed, 0 counterexamples; 14/14 wrong rules refuted.
+- Updated tests: test_library EXTRA 652–693 and definition count (40 without definition); test_gen2 skips D until it has generator themes.
+- Dolci check (scratchpad `d_dolci.py`): 670 "second largest root" train prompts; 648 reproduce the gold (4.4 s of calc), 21 skipped (coefficients from a two-equation linear system), 1 differs (31032: −4(10b + 3)³, gold counts the triple root with multiplicity; counting multiplicity everywhere would match only 602 and break 47 others).
+- Regression b16lbw8mt: all 26 suites rc 0 at 18:22 (test_gen2 1093 s); test_trie fails under system python3 (no torch) and passed on the tf5 venv (28 s); `regress_d.sh` now runs trie and tree on the venv.
+- Figure `reports/figures/tl_kb3_package_d.png` (+ .json; scratchpad `stats_pkg_d.py`, `fig_pkg_d.py`). Report §7e 18:23; PLAN ~18:23; TLANG §12 D done.
+
+## 2026-10-15 22:16 — calc front end (cap 256) + KB v3 packages H and W done; gen4 ported
+- User asked why one calc line is limited to 90 tokens. Calc conclusions are now capped at 256 tokens (`CALC_MAX`; generator `CALC_CAP` 250; previously 96 / 90). The 12-digit numeral cap applies only to unforced values.
+- Calc front end: it substitutes cited definitions (`n = t`, `∀ x . n(x) = t`), splits cited conjunctions and accepts conjunction conclusions, and discharges a cited `P → Q` when P is entailed. It takes ≤ 3 hints `@ t` (0 ≤ t × t) and multiplies the first 8 cited inequalities pairwise (`CALC_PRODUCTS`). New `tl/tests/test_calc_front.py` (10/10).
+- New symbols k265–k302 / kb 694–731:
+  - H (statistics): median, modes, variance, sample_variance, stdev, range_of.
+  - W (word problems): increase_by, decrease_by, percent_change, as_percent, share, compound.
+  - W (calendar): is_leap, days_in_month, day_number, weekday_of.
+  - W (units): 22 unit numerals.
+  - Package I was merged into W. EXTRA lemmas kb 732–758. Next free k303 / kb 759.
+- New `tl/tests/test_package_hw.py`: 40 exact values, 11 stuck terms; fast vs. unfold 555 agree / 45 refused / 0 disagree; 3000 dates against `datetime`; 65 formulas × 150 instances with 0 counterexamples; 16/16 wrong rules refuted; 15 hand-formalised Dolci golds.
+- Length (15 Dolci question terms): with H/W symbols, 1.6× shorter at the median and up to 18.4× (80536: 234 vs 4314 tokens). With H/W, 15/15 fit one calc line at 256; with the definitions inlined, 11/15.
+- Guide fixes: calc lines are excluded from the terms-aux checks, and ∃I is offered on ∃ subformulas of cited lines.
+- c_poly_eval hang (test_gen4 ran 2 h):
+  - Cause: `k263(cs, c1000)` at an opaque point had cost 8⁴ = 4096 < G_UNFOLD, so the nested c_mul / c_add unfoldings never settled.
+  - Fix: `_c_poly_eval_cost` refuses unless the point is a k16 pair. The fast path is now exact at every a + b i with a, b² ∈ ℚ, giving (r1 a + r0 , r1 b).
+  - Package D check: 541 agree / 4 definition only / 0 disagree; 1200 draws ran without a hang.
+- gen4 / test_gen4 ported to the real tl. test_mixed now asserts only the F/D items; gen2's rarest lemmas (2–7 hits per 3000 gen2 traces) missed when 30 % of draws were new themes (kb 82/83/90/94/102 in one run, kb 114 in another), and test_gen2 covers them.
+- Real-tree regression: 29/29 rc 0.
+  - Shard 1: gen2 1045 s, gen3 285 s, gen 217 s.
+  - Shard 2: 25 suites.
+  - test_gen4 1082 s: 2320 theme traces, 3000 mixed with median 240 / p95 650 / max 2200 tokens, 12,966 sentences with 0 ambiguous.
+- Backup before the port: `backups/tl_pre_hw_20261015_2138/`. Figure `reports/figures/tl_kb3_package_hw.png` (+ .json). Report §7e 22:16; PLAN ~22:16; TLANG §3, §6, §12. Package K is waiting on the user (a / b / c).
+
+## 2026-10-15 23:41 — gen4 themes for KB v3 packages H and W; calendar wording fixed
+- 65 new gen4 themes: 6 H symbols (V:), 32 W symbols including 22 unit constants (weight 0.1), and 27 H/W lemmas (U:). `test_package_hw.SKIP = ()`; the `instance(kb, rng)` sampler is shared with test_lemma_instances.
+- gen2 handles arity-0 symbols: `K(k)` instead of `app(K(k))`, and `np` renders constants from TPL without the numeric hint (k302 "an inch", not "an inch (2.54)").
+- library: k279 day_number and k280 weekday_of templates now state the numbering (0 = Monday) and the day/month/year order. The old "the weekday of the date d / m / y" was ambiguous.
+- Tests:
+  - test_gen4 EXIT 0, 1291 s: 3620 traces over 181 new themes; mixed 3000 with median 223 / p95 671 / max 2093 tokens; new-theme share 0.39; nothing missing; 15,086 sentences, 0 ambiguous.
+  - test_gen2 EXIT 0 (1113 s, sampling unchanged); test_library EXIT 0; test_package_hw EXIT 0.
+  - The real tl is identical to the scratch tree.
+- Backup: `backups/tl_pre_hwgen_20261015_2345/`. Figure: `reports/figures/tl_gen4_hw.png` (+ .json). Report §7e 23:41; PLAN ~23:41.
+
+## 2026-10-16 00:22 — domain-filtered KB in the formalize prompt (TLANG §12 item 4); re-pilot submitted
+- The whole KB v3 listing is 173,200 chars / 81,827 gpt-oss tokens; the full system prompt is 91,810 tokens, more than the pilot's max-model-len 65,536.
+- New `tl/kbselect.py`:
+  - 13 package ranges tile k1–k302. A lemma belongs to the package of its newest symbol (core 123, E1 101, E2 98, C2 77, J 66, F 65, D 53, G 48, W 46, C1 30, B 21, H 18, A 12).
+  - Selection: core + A, plus census construct → packages, plus "missing" keywords → packages. The symbols a listed lemma mentions are listed too.
+  - `kb_text()` with no packages is identical to the old full listing.
+- `tl/formalize.py`: `--kb tags|all`, `--tags census.jsonl`. Rows without a tag are tagged in-job with census.SYS. There is one system prompt per package set, and records carry `kb`.
+- Census (2,000 prompts, 13 untagged, 73 package sets): system prompt median 25.3k / p90 38.6k / max 57.2k tokens. Package shares: B 34 %, C1 17 %, E1 16 %, G 13 %, J 9 %, F 7 %, W 4 %, D 4 %, C2 3 %, E2 1.3 %, H 0.2 %.
+- Tests: test_kbselect (new) ok; test_formalize 8/8 ok. Backup `RLVL-next/backups/tl_pre_kbsel_2026-10-16/` (formalize.py, test_formalize.py, formalize.slurm).
+- `formalize.slurm`: new MAXLEN / KB / TAGS env pass-throughs.
+- Re-pilot (item 5): job 68802 on gruenau12, 4×L40 (gruenau11 H100s were partly used outside Slurm). N=200 with wordprob dropped gives the 150 math/dapo/yesno rows. max-model-len 131072, 4 attempts, 3 rounds. Output `rlvl_data/tl/formalize/gpt-oss-120b_repilot_kbtags`.
+- Figure `reports/figures/tl_kbselect.png` (+ .json). Report §7e 00:22.
+
+## 2026-10-16 00:55 — the back-translation judge gets the filtered KB too
+- tl/judge.py put the whole KB v3 (181k chars) into its back-translation system prompt, with max-model-len 32768, so it would also have failed on KB v3.
+- The judge now lists core + A + the packages of the kN symbols the statement mentions (`kbselect.used_packages`). There is one system prompt per package set, and rows carry `kb`. The default max-model-len is now 65536.
+- Example: core + A + H gives 38k chars, against 181k for the whole KB.
+- test_judge (now with the filtered prompt check) and test_kbselect pass in the scratch and real trees. Backup in `backups/tl_pre_kbsel_2026-10-16/` (judge.py, test_judge.py, kbselect_v1.py).
+- Re-pilot 68802, round 0: 600 calls, 30 ok (5.0 % of attempts), stages lex 87 / check 392 / unfaithful 61 / wrong 27 / no_proof 3. 22 package sets; system prompt tokens min 22.3k / median 33.4k (over the sets) / max 91.8k (1 untagged row, whole KB).
+
+## 2026-10-16 02:12 — re-pilot with KB v3 and the filtered KB: judge results (TLANG §12 item 5 done)
+- Formalize job 68802 (gpt-oss-120b, `--kb tags`, 131k context, 4×L40 on gruenau12) on the 150 pilot200 rows (math, dapo, yesno). Checker yield after round 3: 34 / 10 / 48 %. Pilot v1: 28 / 20 / 56 %, with a laxer in-job check.
+- Judge v3 job 68806 (2 samples): 12 of 86 checked proofs pass; gold control 191/200.
+- Faithful yield (judge ∧ data tier): 7 of 150 prompts (math 4, yesno 3, dapo 0). v1 had 3, v2 had 1.
+- KB v3 use: 5 of 86 checked proofs (k245 ×4, k228 ×1). One faithful prompt, dolci_math/21339 (matrix rank, package F).
+- Judge rejections: different_question 85, presolved 44, extra_fact 16, missing_fact 1. Data tier: yesno copy_goal 33.
+- Conclusion: the formalizer games the checker with trivial statements; the KB is no longer the main limit. Next candidates: package-specific few-shots, judge-in-the-loop repair, clearer checker messages.
+- Figure: reports/figures/tl_repilot_kbtags.png (+ .json). Script: scratchpad repilot_fig.py.
+
+## 2026-10-16 04:50 — TL formalize: judge-in-the-loop repair, no gain
+- Added `--judge-samples` to `tl/formalize.py` (judge v3 per checker-ok proof; rejected proofs get a judge-feedback repair turn), plus `judge.prepare`/`judge.chains`, with tests.
+- Job 68811 (gruenau11, 2×H100 NVL, gpt-oss-120b, --kb tags, judge 2 samples), same 150 prompts as the re-pilot: checker ok 30.0 %, checker + judge ok 4.0 % (6/150; dapo 1, math 3, yesno 2; all 6 in the data tier). Re-pilot post-hoc: 7/150.
+- Repairs after judge feedback: 1/110 to ok, 58 judged again, 51 to checker failures. Rejections: different_question 96, presolved 37, extra 9, missing 3, no verdict 3.
+- Hand audit: 12/12 rejections correct; of 6 accepted prompts, 3 faithful, 1 marginal, 2 borderline presolved (formula in defs).
+- Scope: 39/150 prompts tagged nl_judgment/world_knowledge (39 of 50 yesno); in-scope judge-ok 5/111.
+- Figure: reports/figures/tl_judgeloop_kbtags.png; report §7e 04:50 block.
+
+## 2026-10-16 06:21 — TL formalize: real-Dolci few-shots + glued-numeral licensing, pilot launched
+- tl/prompt.py: words that are not numbers now license their digit runs (`8a` → 8, `(-1,4)` → 1, 4, `\times223` → 223). Post-hoc on the judgeloop + repilot records it rescues 2/188 numeral failures; the rest are genuinely unstated numbers (world knowledge such as a cube's 8 vertices, computed values).
+- tl/formalize.py: DOLCI_EXAMPLES = 5 hand-written real Dolci math proofs (41914 xor count k94 → 42, 40613 even-divisor sum k95 → 1092, 40912 least n k98 → 12, 41645 integer pairs k94 over ℝ×ℝ → 6, 53894 triangle k178 → 28), all checked / faithful / substantive / gold-correct; `--shots dolci` appends them; SHOT_IDS kept out of the eval rows (none were in the 150-prompt sample). formalize.slurm: SHOTS env.
+- Tests: test_check.test_glued_numerals, test_formalize.test_dolci_examples; full scratch regression (15 suites) green before the port. Backups: RLVL-next/backups/2026-10-16_fewshots/.
+- Pilot: job 68836 (gruenau11, TP=2), same 150 prompts as the repilot / judgeloop, KB=tags, JUDGE=0, SHOTS=dolci → gpt-oss-120b_fewshots_dolci; judge v3 post hoc against the repilot's 7/150.
+
+## 2026-10-16 08:05 — few-shots post hoc + lenient front-end
+- Few-shots pilot 68836 (`--shots dolci`), judge v3 post hoc (68852): 8/150 judged prompts (dapo 1, math 5, yesno 2; in-scope 7, K 1/39) vs re-pilot 7; data tier 28 = 28; proofs judge-ok 16/87 vs 11/86. Goal-line k94 6→46, k98 2→13, k95 1→5, but 0 of them checker-ok: they fail on spelling.
+- Failure census (check/lex stage): redundant parens 287/297, n-ary chains 157/198, binder names 42/49 (spelling 486/544), lex/symbol 345/345 (coincidence: 329+16 vs 317+28), ans-cites-goal 164/128, calc not entailed 126/110.
+- NEW tl/lenient.py: normalize() re-reads lines that fail the canonical parse with ordinary precedence (→ right < ∨ < ∧ < rel < +− < ×÷), relation chains → ∧, any parens, lexically scoped binder names → x<depth+1>, juxtaposition application; prints canonically; canonical lines untouched. Wired into formalize.judge (j["normalized"]). Tests tl/tests/test_lenient.py (1018 proofs / 12396 lines fixed points, 15 respellings, 5 rejects, judge rescue); test_formalize, test_judge green. Backup backups/2026-10-16_lenient/.
+- Offline re-score (S/rescore_lenient.py): re-pilot 715 normalized, ok proofs 86→132, check→ok/unfaithful/wrong 46/47/35, data prompts 28→34; few-shots 774, 87→133, 46/59/68, 28→36; none lost. Judge v3 on rescued (68860): 22/46 and 25/46 pass; judged prompts 7→9, 8→10 (dapo/78346, yesno/141205, math/26372; all gold-correct, audited).
+- Figure reports/figures/tl_fewshots_dolci.{png,json}; report §7e block 08:05.
+- Next: in-loop pilot with lenient + dolci shots on the same 150 prompts.
+
+## 2026-10-16 09:45 — lenient-in-loop pilot judged; package K (`given 0`) ported; K pilot started
+- Job 68861 (lenient front-end in the formalize loop, dolci shots, same 150 prompts): 103/600 ok attempts (49/76/93/103 by round), 55 ok prompts, data tier 35, judge v3 (job 68877) 9 prompts (dapo 1, math 6, yesno 2), 22/103 proofs same. The offline lenient rescore of 68836 gives 105 / 56 / 36 / 10, so in-loop adds nothing. Yesno data tier is 5/23, limited by copy_goal (28).
+- Package K ported to RLVL-next/tl as `given 0 : φ` background knowledge (backup backups/2026-10-16_given0/; 13 suites green; tests tl/tests/test_given0.py; TLANG §12 K updated).
+- K pilot job 68879 (TAG=given0_dolci, same command as 68861) is running on gruenau11 TP 2.
+- Figure reports/figures/tl_lenloop_dolci.{png,json}; comparison formalize/lenloop_compare.json; report §7e block 09:45.
+
+## 2026-10-16 11:15 — K pilot (`given 0`) judged: checker/data tier up, judged yield flat
+- K pilot 68879 vs 68861 (same 150 prompts). K prompts (39 yes/no): ok attempts 25 → 52, ok prompts 18 → 26; data-tier yesno 5 → 24, all 35 → 49.
+- Judge v3 68887: judged prompts 9 → 10 (K 1 → 3). Only 1 of 31 `given 0` proofs passes both samples (dolci_yesno/133216); 22 get different_question (predicates anchored on arbitrary words, bridge carries everything).
+- Corrected the 09:45 claims (non-K generations differ, 11/444 identical; there is no wordprob in this pilot). Report §7e block 11:15, figure tl_given0_dolci.png.
+
+## 2026-10-16 12:12 — K naming shots (`--k-shots`) pilot launched
+- Lever 1 from the 11:15 judgment: K prompts get a naming rule (bind symbols to the content words of premise / hypothesis /
+  review, never to framing words) plus 3 hand-written real Dolci yes/no proofs (161374 NLI yes, 140154 NLI no, 125083
+  review yes; each checks, faithful, substantive, correct, `given 0` used once, ids added to SHOT_IDS so the 150 eval rows
+  are unchanged). Gated by `formalize.py --k-shots` / `KSHOTS=1` (default off; earlier runs reproducible).
+- Tests: `test_given0.test_k_examples`; formalize-related suites pass in scratch and real; backups `RLVL-next/backups/2026-10-16_kshots/`.
+- Pilot 68889 (same env as 68879 + KSHOTS=1) on gruenau12 4×L40 TP 4: gruenau11 H100s 0–2 were busy with another
+  user's non-Slurm training; first gpt-oss run on L40 (MXFP4 Marlin). Judge v3 68890 chained (afterany).
+- New metric (scratch anchors.py): share of `new s , w` anchors in checker-ok K yes/no proofs on framing words —
+  given0 26/119 = 22 %, lenloop 10/41 = 24 %.
+
+## 2026-10-16 14:10 — K naming shots (`--k-shots`) pilot 68889 + judge 68890: judged yield 10 → 18 prompts
+
+- 3 worked yes/no `given 0` examples + K_NAMING rule on K prompts only. Same 150 prompts as 68879 (but L40 TP4 vs H100 TP2).
+- K prompts: round-0 ok 15 → 54, final ok 52 → 93. Data tier 49 → 55 prompts (yes/no 24 → 32). Judged prompts 10 → 18 (K 3 → 9).
+- `given 0` users "same" in both judge samples: 1/31 → 10/70 (8 prompts). Framing-word anchors 21.8 % → 12.1 %.
+- Most accepted bridges are single premise→goal implications (bridge carries the judgment); 136845/152694 use relational transitivity.
+- New main yes/no data-tier loss: copy_goal (23). Report §7e 14:15, figure figures/tl_kshots_dolci.png.
+
+## 2026-10-16 15:12 — correction: "review" anchors are legitimate
+
+- All 13 "review" anchors in 68889 yes/no ok proofs come from 5 product-review sentiment prompts, where the review is the judged entity (`positive(review)`). 3 of them are judge-accepted. Excluding "review" from the framing set: 16.0 % (68879) → 6.1 % (68889). Report §7e 14:15 updated.
+
+## 2026-10-16 16:14 — copy_goal analysis + `--data-repair` prepared (scratch only)
+
+- 68889 copy_goal: 23 attempts on 11 yes/no prompts (6 K), all `given p(c); goal ? p(c); ans` (gold ⊤ 19, ⊥ 4). 5 of the 11 prompts reach data tier through another attempt, 6 are lost. Cause: the repair loop stops at stage ok, so substantive failures never get feedback.
+- Prepared in the scratch tree (S/m6/tl, not ported): `judge(..., data=True)` → stage `trivial` when check.substantive fails, SUBSTANTIVE_GLOSS repair message, flag `--data-repair`; test `test_given0.test_data_repair`; test_given0 and test_formalize pass. Port + KSHOTS default awaits the user's go on the next pilot.
+
+## 2026-10-16 17:11 — K naming shots default + `--data-repair` ported; pilot 70227 launched
+
+- User: "Yes to the naming examples". `--k-shots` is now default on (argparse BooleanOptionalAction, `--no-k-shots` for the old prompt); slurm KSHOTS defaults to 1, new DREPAIR switch (0/1).
+- `--data-repair` ported from scratch (backup RLVL-next/backups/2026-10-16_datarepair/): stage `trivial` + SUBSTANTIVE_GLOSS repair message. test_given0 (incl. test_data_repair) and test_formalize pass on the real tree.
+- Pilot 70227 `gpt-oss-120b_kdef_drepair_dolci`: same 150 prompts / env as 68889 + DREPAIR=1, gruenau12 L40 TP4 (same hardware as 68889). Round 0 is unaffected by data repair, so its K ok count replicates the k-shots effect; later rounds measure data repair.
+
+## 2026-10-16 18:55 — pilot 70227 (k-shots default + data repair) + judge 71041
+
+- The naming-examples effect replicates (round-0 K ok+trivial 56 vs 54; judged K prompts 9/39 in both runs; framing anchors without "review" 6.1 % → 3.4 %).
+- Data repair: 35 attempts / 20 prompts marked trivial (mostly copy_goal); 14 repaired to ok (13 K). Data tier 55 → 61 prompts.
+- Judged prompts unchanged at 18: only 1 of 14 repaired proofs is judged "same". Repairs evade the syntactic copy_goal check by changing the question (153737 "is the restaurant a restaurant"; 141028 "reported" instead of "aggravating factor").
+- Lesson: repair or reward keyed to a cheap filter teaches evasion; gate repair and reward on the judge. Next: judge-in-the-loop repair (feed the judge's `why`); keep `--data-repair` off by default until then.
+- Report 18:55 block; figure reports/figures/tl_kdef_drepair_dolci.png; formalize/kdef_compare.json, kdef_anchors.json.
+
+## 2026-10-16 19:00 — correction to the 18:55 entry
+
+- Judge-in-the-loop repair is not new: `--judge-samples` exists and was tested at 04:50 (job 68811, no gain: 1 of 110 judge-rejected attempts repaired). The 18:55 report block now frames it as a re-test on top of `given 0` + naming examples, with a weak prior.
+
+## 2026-10-16 19:05 — judge-loop re-test launched
+
+- Formalize job 71136 (`gpt-oss-120b_kdef_jloop_dolci`): gruenau12, L40, TP 4 (IDX 0-3); same 150 prompts as 68889/70227; k-shots default; `--judge-samples 2`; no data repair.
+- Question: does judge feedback repair now that K prompts can be stated (`given 0` + naming examples)? 68811 (04:50, before both) repaired 1 of 110.
+
+## 2026-10-16 20:45 — judge loop + given 0 + k-shots: 20 robust prompts vs 18 post hoc
+Pilot 71136 (`--k-shots --judge-samples 2`, 150 prompts, gruenau12 TP4 L40) gives 23 judge-ok prompts in the loop (15/19/21/23 by round; K 13). The independent re-judge 72029 (v3, 2 fresh samples; gold 97/100) passes 40 of 50 proofs and 20 of 23 prompts (with the data tier). Robust prompts: K 12 / not K 8; yesno 13 / math 5 / dapo 2. 17 of them are in the 68889 ∪ 70227 post-hoc set; new: dolci_yesno/139174, 144451, 160487. Judge-feedback repair: 12 of 210 rejected attempts become judge-ok in the next round (old 68811: 1 of 110), and 9 of the 12 survive the re-judge. Cost: 6039 s and 10.6 M generated tokens (about 0.65 M of them judge), vs 6610 s / 9.4 M for 68889. Modest gain from one run, within run-to-run variation. Recommendation: use `--judge-samples 2` plus a post-hoc re-judge for data generation; scale up rather than add more repair signals. Report §7e 20:45, figure `figures/tl_jloop_kshots_dolci.png`.
+
+## 2026-10-16 21:55 — scale-up formalize job 72637
+Job 72637 (`formalize/gpt-oss-120b_jloop_scale800_dolci/`): the 71136 setting (k-shots default, `--judge-samples 2`, SHOTS=dolci, KB=tags, no data repair) on N=800 with dolci_wordprob dropped (about 600 prompts). gruenau12 L40 TP 4 (bus 03/43/44/45). Expected about 6–7 h. Post-hoc re-judge (v3, 2 samples) planned when it finishes.
+
+## 2026-10-17 02:55 — 72637 progress; re-judge 75183 queued
+72637 round 0: 2392 calls, 6357 s, 75 ok attempts / 43 judge-ok prompts. Round 1: 7595 s, 73 judge-ok prompts (yesno 35 / math 21 / dapo 17; 12 % vs 13 % in 71136 at the same round). Independent re-judge 75183 (judge.slurm, v3, 2 samples, gold 100, TP4 L40 gruenau12) queued with afterok:72637 → `formalize/judge_gpt-oss-120b_jloop_scale800/`.
+
+## 2026-10-17 06:00 — judge loop at scale (72637 + re-judge 75183)
+- 72637 (598 Dolci prompts, k-shots + `--judge-samples 2`, TP4 L40, 7.9 h, 44.2 M gen tokens): in-loop judge-ok prompts 43/73/84/93 by round (15.6 %, pilot 15.3 %).
+- Re-judge 75183 (v3, 2 samples): 152/195 proofs pass, gold 93/100; robust prompts 68/93 (11.4 % of 598): math 22, dapo 16, yesno 30; K 27/138, not K 41/460. 146 data-tier proofs.
+- Overstatement 93 → 68, 19 of the 25 lost prompts are yes/no; 28 of 43 failing proofs split 1:1. Judge repair 35/753, 22 robust. Pilot subset: 19 vs 20 robust (17 shared).
+- Report block 06:00 in reports/2026-10-11_tl_az_dolci.md, figure figures/tl_jloop_scale_dolci.png.
+
+## 2026-10-17 07:02 — proof-count filter (offline, 72637 + 75183)
+- Requiring >=2 accepted proofs per prompt: 59 prompts, 49 robust (83%), loses 19 robust; >=3: 30 prompts, 29 robust (97%), loses 39. Proof count = good confidence weight, poor filter; keep post-hoc re-judge. Noted in report block 06:00.
+
+## 2026-10-17 12:59 — S2 re-gate: small formal FT of mid4 submitted (user: "Small fine tune then pass check")
+- Data `rlvl_data/datasets/tl_ft_formal_20261017` (builder: scratch `build_formal_sft.py`, manifest in the dir). Candidates: judge-robust proofs (all re-judge samples "same", not substantive) = 146 scale800 (72637/75183) + 981 wordprob_all (66082 + judge v3). Each proof is replayed through the current gate guide (line_max 128, no_repeat, strict reward). Before that, the `calc` premise lists are sorted ascending (the guide's canonical order; the checker accepts any order). That recovers 147 of 197 illegal replays. Kept 95 + 942 → 464 prompts / 921 proofs (≤3 per prompt). 846 of them are word problems; only 75 are math/dapo/yesno. Dropped: 39 `given 0` proofs (the gate has no background sentence), 50 illegal (128-token line cap, guide-forbidden calc premise), 1 unfaithful. No text overlap with eval[:200].
+- Mix: formal train 818 ×4 + 3000 tlgen + 3000 Dolci replay from tl_mid_v4 = 9272 rows. Eval = 103 held-out formal proofs + 200 v4 eval rows.
+- FT gruenau 79728 (1 H100): `rlvl_data/tl/ft_continue.slurm` + `ft_continue.py` (synthetic-RLVL trainer, rows60 head, fp32, lr 1e-5, b64, 1 epoch ≈145 steps). Without the wrapper, `--tl-root` would re-initialise mid4's learned symbol embeddings from glosses; the wrapper turns that step into a no-op.
+- Baseline gate gruenau 79729: mid4 on current code with `--strict-reward` (s0_vllm_guide.slurm gains `STRICT`, backup `.bak_20261017`) → `tl/s0/strict_20261017/mid4`. The FT gate follows after 79728.
+
+## 2026-10-17 17:20 — S2 re-gate result: small formal FT (ft1) helps significantly, gate not passed
+- FT 79728 → `rlvl_data/tl/mid/tl_ft1_0.8b_mid4_formal_lr1em5/final` (464 prompts / 921 strict-replayed formal proofs, 846 of them wordprob; ×4 + 3000 tlgen + 3000 Dolci replay; lr 1e-5, 145 steps; eval_loss 0.0431 → 0.0418).
+- Mid4 baseline 79729 crashed in the guide's `exi` witness collection (it instantiated before the type check; a predicate-typed binder applied to a non-λ subterm raised TLError). Fixed in `tl/guide.py` (type first, both inside try; backup `rlvl_data/tl/guide.py.bak_20261017`), snapshot `rlvl_data/tl/tree_20261017`.
+- Strict gate (vLLM + guide, eval[:200], K 64): mid4 79782 pass@1 0.024 / pass@64 0.145 (29 solved); ft1 79793 **0.040 / 0.230** (46 solved). Paired: both 21, only ft1 25, only mid4 8, sign test p = 0.0046. Gain mostly wordprob (0.013/0.160 → 0.096/0.320); dapo 0 → 2 prompts; yesno pass@1 0.064 → 0.045. Gate 0.10 / 0.40 not passed.
+- ft1 gate 4× slower (2.1 vs 8.3 samples/s): offline guide replay (scratch `time_guide.py`, `pass64/guide_times.json`) shows 2 samples (dolci_math/39994, `calc : k24(k201 , 207143330 , k23(2 , k287)) = …`) at ≈1465 s each = 66 % of ft1 guide time. Without them, 0.119 vs 0.090 s/sample. No evaluation-cost cap exists in the calc guide path (CALC_MAX caps only the conclusion length).
+- Report: 2026-10-11_tl_az_dolci.md §7e block 17:20; figures 2026-10-17_ft1_regate.png, 2026-10-17_guide_times.png; comparison `tl/s0/strict_20261017/compare_mid4_vs_ft1.json`.
+- Next (proposed): calc evaluation cost budget in the guide (dead end over budget, with a test); then grow judged formal data for math/dapo/yesno or start AZ from ft1.
+
+## 2026-10-17 17:34 — Correction: cause of the 1465 s guide step
+- The 17:20 entry says the slow `calc` folds over a range of about 2e8. That is wrong. `k287` = 12, so the range is [2 … 12] (and `k23` ranges are capped at 1000). The cost comes from the fold function: `k201(r, h)` = π r² + π r √(r² + h²) (cone surface area) is quadratic in the accumulator, so 11 fold steps from 207143330 square an exact term with π and nested radicals each time. A 60 s cProfile shows 494k unfoldings and 3.6 M ground_eval calls under calc_value → kb._fold.
+- So the fix needs a total evaluation budget per top-level term (steps or term/numeral size), not a range cap. Report block corrected in place (marked).
+
+## 2026-10-17 18:00 — more judged formal proofs (math/dapo/yesno) + calc budget calibration
+- User chose option 1 ("collect more … proofs and train again"). New prompts `datasets/tl_dolci_formalize_20261017/` (all previously formalized ids excluded, seed 20261017): chunk A 759 / chunk B 740 prompts after shot-id removal (math 610, dapo 610, yesno 279; yesno now exhausted).
+- Jobs: formalize 81911 (gruenau12, 4 L40, PICKFREE) and 81912 (gruenau11, 2 H100), scale-up 72637 settings + MAXLEN 131072 (93.8k-token system prompt crashed 81851); re-judges 81913/81914 afterok. 81850 died on an L40 filled outside Slurm → `PICKFREE`/`DATA` options in formalize.slurm/judge.slurm (backups .bak_20261017).
+- calc budget: `TL_EVAL_BUDGET` (default off) in scratch tree only (kb.ground_eval step cap → EvalBudget; guide calc_target → dead end; calc_value re-raises). Calibrating on 25 600 gate samples + test scripts.
+
+## 2026-10-17 18:55 — calc evaluation budget ready (default off; proposed 2e6 for gate/AZ jobs)
+- `TL_EVAL_BUDGET` caps nested ground-evaluation steps per calc evaluation (kb/check/guide); over budget → `EvalBudget` → checker rejects the line, guide offers no value. Sound, deterministic, off by default.
+- New `tl/tests/test_eval_budget.py` (4/4). Snapshot `tl/tree_20261017b` + `budget.patch`; real library untouched until 81911–81914 end.
+- Gate-sample calibration (2×12800, budget 2e6): max valid peak 60,818, max correct 324; only 4 samples hit the cap (≈6–11 s each instead of up to 1465 s).
+- Tests: largest evaluations are KB self-tests / generators (package_g 15.6M fails under 2e6; gen2 42M and gen4 pass by skipping; package_a 1.9M passes) → budget is a job setting, not for tests/data generation.
+- Report §7e block 18:55 + figure `2026-10-17_eval_budget_calib.png`.
+
+## 2026-10-18 05:40 — more_A/B collection done; FT2 trained; package K wiring gap found and fixed (scratch tree); FT3 queued
+- more_A/B (81911/81912 + judges 81913/81914): 469 checker-ok → 378 judge-robust proofs on 174 prompts (math 93, dapo 47, yesno 34); gold controls 378 same / 14 different / 8 unparsed. Figure `figures/tl_more_ab_collection.png`.
+- FT2 data `datasets/tl_ft_formal_20261018`: math 42→196, dapo 23→91, yesno 10→21 proofs; FT2 job 85472 done (held-out loss 0.063). Gates: 85507 (tree_20261017b, like-for-like) and 85515 (tree_20261018k, `ft2_k`).
+- Gap: `given 0` was legal only in formalize. The gate, AZ, eval_hf and the FT builders built `Prompt(text)` without background, so 31/44 new yes/no proofs were illegal at `given 0`. Fix in `rlvl_data/tl/tree_20261018k` (`prompt_of`, `@ 0` render line, wiring in vllm_guide/az/eval_hf, test_background_wiring). The real library is unchanged until no job imports it.
+- FT3 data `datasets/tl_ft_formal_20261018k`: yesno 21→72, 1205 proofs on 638 prompts; FT3 job 85512 (gruenau11), with an auto-gate under the K tree.
+- alex /home/hpc at 87 % and atuin files at 88 % (group); the large consumers are other projects (FOMO, textjepa-*), and ours is small. Nothing pruned; flagged to the user.
+
+## 2026-10-18 07:00 — gates: FT2 = FT1; FT3 yes/no gain is an unchecked-background shortcut
+- Strict gate pass@1 / pass@64: ft1 0.040 / 0.230, ft2 0.042 / 0.210 (p = 0.49 vs ft1), ft2 under the K tree 0.041 / 0.220, ft3 0.096 / 0.330 (p = 2e-5 vs ft1). FT3's gain is in yes/no (0.264 / 0.822, 37/45).
+- 66 % of FT3's correct yes/no proofs use `given 0 : ∀x. A(x) → (¬)B(x)` with B the goal predicate: an unchecked axiom whose sign is the answer. 37/50 FT3 training yes/no proofs have the same form (from the judged formalize data). Without them, yes/no pass@1 is 0.090; non-yes/no ft3 is 0.048 / 0.187.
+- The budget + K wiring are ported to the real tl (backup backups/2026-10-18_budget_k); the full test suite is running.
+- Decision needed before AZ uses package K: how background facts are verified. Options: (1) an LLM truth check per distinct background line (cached), required for reward; (2) no reward on yes/no proofs whose background names the goal predicate (kills legit NLI bridges too); (3) keep K out of AZ and report yes/no separately. Recommended: (1), with yes/no reported separately until it exists.
+
+## 2026-10-18 07:35 — ported library test suite
+- 41/45 tests pass on the real tl after the budget + K port. Failures: test_az_fast (needs model path), test_az_lockstep (triton segfault) — both identical on the pre-port library; test_az_lora (no peft in vllm venv); test_az_cache (benchmark, 3000 s cap). No port regression found.
+- Still waiting on the user's call on verifying `given 0` lines before AZ with package K.
+
+## 2026-10-18 09:38 — sizing the background truth check (option 1)
+- FT3 gate (45 yes/no prompts × 64 samples): 1710 generations use `given 0`; 831 distinct background line strings; rewarded proofs use 86 distinct strings / 181 distinct (prompt, line) pairs. A cached per-(prompt, line) LLM check is a few hundred to ~1k judge calls per gate — cheap. (Predicate symbols are prompt-local, so the cache key must include the prompt and the `new` bindings.)
+
+## 2026-10-18 10:45 — LLM verifier re-scoring of the S0 gate
+- verify_gate.py (job 86390, 19 min, 2 H100) ran the background-aware back-translation judge on all 1990 distinct rewarded gate statements of mid4/FT1/FT2/FT2-k/FT3, plus controls.
+- Yes/no: 1 of 1205 statements passes, and it is trivial. The proofs formalize a different question ("the", "a" and "Is" bound as symbols). The `given 0` bridge only makes the nonsense checkable; just 6 rejections are due to a false background claim.
+- Word problems: 474/684 pass; math 56/92.
+- Verified pass@1: mid4 0.006, FT1 0.022, FT2 0.024, FT2-k 0.024, FT3 0.030 (FT3 gate was 0.096).
+- Sign tests: FT1 > mid4 is significant (16–1); FT2 and FT3 vs FT1 are not.
+- Controls: gold 89/100, flips 0/481. Hand-written K shots pass only 1/3, because honest bridges get rejected as extra_fact. The verifier needs calibration on honest background proofs before it can be an AZ reward gate.
+- Report §7e, 10:45 block; figure reports/figures/tl_verify_gate.png.
+
+## 2026-10-18 11:15 — Verifier calibration done; v2 chosen as reward gate
+- Held-out blind test (40 fresh honest statements, labelled before scoring): every variant except v3 passes 0/14 bad; recall on good is 1–8/16.
+- v6 rubric compare (same question + facts supported) has the worst recall (test 1/16). On good items 28/64 chains say "different question", because the back-translation of a bare formal goal doesn't pose a question. The bottleneck is the back-translator.
+- Choice: v2 (holistic judge, 2 samples, all must pass): 6/16 good on dev and on test, 0 bad on both, 1/248 flips, 0/100 nonsense. v3 passes 4/13 hand-labelled bad jloop items.
+- Report §7e block 11:15 + figure `figures/tl_verify_calib.png`. Labels: `rlvl_data/tl/s0/vcalib_20261018/blind40_labels.json`, `blindtest40_labels.json`.
+
+## 2026-10-18 11:40 — Gate re-scored with v2 verifier (job 86721)
+- Scratch judge default CMP_BG = v2 (backup judge.py.bak_1120; old prompt CMP_BG_V1; calibrate_verify V1 points to it).
+- Verified pass@1 v1 → v2: mid4 0.006 → 0.005, FT1 0.022 → 0.022, FT2 0.024 → 0.024, FT2-k 0.024 → 0.024, FT3 0.030 → 0.031. Yes/no stays ≈ 0 (different_question dominates). Controls: gold 89/100, kshot 1/3, flip 0/481. Output s0/verify_v2_20261018/.
+
+## 2026-10-18 11:55 — FT data re-verified with v2; FT4 queued
+- verify_ft.py (job 86846, 8.6 min, 2 H100): 1491 judge-v3 FT candidates / 1268 distinct statements. v2 pass: wordprob 912/981, math 279/285, dapo 113/128, yes/no without background 21/26, yes/no with background 46/71.
+- build_formal_sft4.py → `datasets/tl_ft_formal_20261018v`: 1106 proofs on 587 prompts (FT3: 1205 / 638); yes/no 72 → 46, wordprob 846 → 792, math 196 → 191, dapo 91 → 77.
+- FT4 = mid4 + that data, same recipe as FT3 (job 86927, gruenau11, 1 H100) → watcher auto-submits the strict gate (gruenau12, tree_20261018k) to s0/strict_20261018/ft4. verify_gate.py gained ft4 + `--runs` (slurm env VRUNS).
+
+## 2026-10-18 12:52 — FT4 gate crash (job 87000) and resubmit
+- The FT4 gate generated for 44 min, then crashed while scoring: replaying one sampled proof in a fresh guide raised `TLError: illegal token '2'`. The guide inside the vLLM engine had allowed that token. The likely cause is path-dependent guide caches combined with TL_EVAL_BUDGET, but this is unconfirmed.
+- Fix in scratch tree `tl/tree_20261018m` (a copy of k). `score` now catches TLError: the sample is scored as failed (`end=replay_error`) and the proof is printed. Raw token ids are written to `pass64.raw.jsonl` before scoring. Tested on a forced illegal sequence.
+- Resubmitted as job 87267 (gruenau12, 1 L40). A watcher chains the v2 verify (VRUNS=ft4, gruenau11, 2 H100).
+
+## 2026-10-18 14:00 — FT4 gate done; verify moved to gruenau12
+- The FT4 gate (job 87267, tree m) had 0 replay errors, so the 87000 crash looks rare or nondeterministic.
+- Strict gate pass@1 is 0.065 vs FT3 0.096; pass@64 0.325 vs 0.33. The drop is almost entirely yes/no: 0.264 → 0.134 (valid@1 0.373 → 0.226). dapo, math and wordprob are flat (±0.015). This is expected: FT4 dropped the v2-rejected yes/no background proofs (72 → 46).
+- The v2 verify on the H100s (job 87613) hit OOM: the gruenau11 cards are full outside Slurm. Resubmitted as job 87627 on gruenau12: 5 L40 allocated, PICKFREE uses the 4 empty ones, TP=4.
+
+## 2026-10-18 14:10 — FT4 verified result
+- v2 verify of the FT4 gate (job 87627, 4 L40, 524 s). Verified pass@1 is 0.027 vs FT3 0.031; paired diff −0.003 [−0.009, +0.002], not significant. Verified pass@64 is 0.095 vs 0.115 (19 vs 23 prompts solved). Gate pass@1 is 0.065 vs 0.096: the drop is the yes/no proofs that pass the checker but not v2.
+- Conclusion: v2-filtering the FT data removes fake wins but adds no faithful skill. Next is AZ from FT3 with the cached v2 gate in the reward; FT4 is the fallback.
+- Report block 14:10, figure `figures/tl_ft4_verified.png` (script `rlvl_data/tl/fig_ft4_verified.py`).
+
+## 2026-10-18 15:10 — LLM-verifier gate in the AZ reward: built + smoke-tested
+- tree_20261018az: tl.vgate (cache keyed by sha1(example_id, statement), seeded with 4545 v2 verdicts), tl.verify_server (gpt-oss-120b judge v2, queue/ + cache.jsonl + heartbeat), az.py --vgate-dir/--vgate-seeds/--vgate-wait/--vgate-drop/--vgate-eval-wait/--vgate-stale. Unknown statements pend (no waiting), judge fail = incorrect reward; eval adds r_verified.
+- Smoke 3 (87836): pending never resolved (Gate.wait with 0 s never refreshed). Fixed: refresh in wait + every rank at the start of gate_games. Smoke 4 (87869): resolved 1/8 then 6/3 = server verdicts; wins 1 → 7; eval r_verified OK. Smoke dirs deleted.
+- Server placement blocked: Slurm IDX = minor; free cards are g11 IDX3, g12 IDX2/6; caps + no holds give only busy cards (87872/87873 exited "fewer than 1 free cards"). Watcher polls every 2 min.
+
+## 2026-10-18 17:05 — AZ from FT3 with the verifier gate launched
+- gruenau12 IDX0-4 freed at 17:00. Judge server 88217 (l40:4 IDX0-3, TP4, dir runs/az_dolci_ft3_vgate_all_vg; heartbeat now touched before model load) + AZ 88218 `az_dolci_ft3_vgate_all` (l40:1 IDX4; FT3, all families, sims 0 + SIL, lr 1e-6, strict, line-max 128, no-repeat, iters 960, TL_EVAL_BUDGET 2e6, 3 v2 seed files).
+- it0 eval (200 prompts, sampling): r .125, r_verified .045 (40 s verify). ~52 s/iteration.
+
+## 2026-10-18 19:10 — AZ+verifier gate at it 110
+- Gate: 144 checker-rewarded self-play games, judge 112 pass / 32 fail, 0 dropped. Eval (200×1): r .09–.13, r_verified .03–.045, flat. Figure reports/figures/tl_az_vgate.png (rlvl_data/tl/analyze_az_vgate.py, tf5 venv).
+
+## 2026-10-18 21:45 — AZ + verifier gate at it247: flat
+
+- `az_dolci_ft3_vgate_all` (88218) + judge server (88217) healthy. Gate: 232 pass / 65 fail / 0 dropped.
+- Eval flat: mean r .108/.107 and r_verified .039/.037 over its 10–120 / 130–240 (start .125/.045).
+- Self-play reward per 50 iterations .043 → .031 (SE ≈ .005); ~89% of games end in a guide dead end.
+- Added a self-play panel to `analyze_az_vgate.py`; report §7e block 21:45. Decision point at ~it400: if still flat, switch to the FT4 fallback and/or address dead ends / sparse reward.
+
+## 2026-10-19 00:20 — AZ + verifier gate at it381: flat; next-step options
+
+- Eval mean r .108/.107/.105, r_verified .039/.037/.038 over its 10–120 / 130–240 / 250–380 (start .125/.045). Gate 402 pass / 108 fail / 0 dropped.
+- Correction: the 21:45 self-play "downward drift" was noise (later windows .052/.044/.047).
+- Eval dead ends ~60% (117/200 at it270; only 11 exact repeats → mostly lines that cannot be validly closed); self-play ~89%.
+- Run continues to 960 (~07:30). Options for the user: (1) retry a line on dead end in self-play (recommended), (2) LR 5e-6 ablation, (3) FT4 start (low priority).
+
+## 2026-10-19 07:15 — AZ with verifier gate stopped at it737 (user)
+- User: "Yeah then let's stop it, what would you do next?" scancel 88218, stop file → server 88217 exited cleanly. latest checkpoint = it736.
+- Eval means by thirds (10–240 / 250–490 / 500–730): checker r .107/.100/.087 (drop ≈7 SE, real), verified r .038/.036/.034 (FT3 it0 .125/.045); dead end .61/.58/.58; budget-outs .10/.12/.125; tokens 291→305. Self-play r ~.04, dead end ~88% throughout. Gate 787 pass / 200 fail / 0 dropped.
+- Earlier ETA "~07:30" was wrong (iterations slowed to ~70 s).
+- Conclusion: no learning; bottleneck = dead ends (~1.3 rewarded games/iteration). Proposed next: (1) offline FT3 eval with dead-end line retry (k=4), (2) if it lifts, AZ with retry + LR 5e-6, (3) FT4 low priority. Awaiting user confirmation.
+- Report §7e block 07:15 + figure tl_az_vgate.png (final).
+
+## 2026-10-19 08:25 — token-level MCTS with rollouts, first eval test (64 Dolci-TL eval problems, FT3)
+- Code tree `tl/tree_20261019roll` adds rollouts (`--rollout N`; `tree.fork`); runner `roll_eval.slurm`; analysis `analyze_roll.py` → `reports/figures/tl_roll_cmp64.png`.
+- Results (checker r / verified r / dead end / sec per game):
+  - greedy: .109 / .031 / .625 / 0.6
+  - search 2×4 without rollouts: .094 / .031 / .641 / 1.6
+  - search 2×4 with rollouts ≤ 40: .172 / .031 / .625 / 31.9
+- Rollouts end as follows: line closes 59%, game dies 16%, cap 25%.
+- The extra checker wins are vacuous yes/no formalizations; the judge failed all of them.
+- Dead ends are unchanged; 23 of 40 are runaway lines (line cap 128). The rollout cap scores 0, the same as a closed line, so the search cannot see runaways.
+- 4×8 config: OOM at 64 parallel games (job 91048); rerun as job 91231 with 32.
+- Proposed (not done): rollouts run to the line close or to the line cap (−1), with line cap 64.
+
+## 2026-10-19 11:50 — rollout MCTS 4×8 (64 problems)
+- Results: checker r .281, verified r .063 (4/64; every other config 2/64), dead end .531, out of tokens .141, 131 s per game.
+- Word problems: 8 of 17 pass the checker, 4 of those pass the judge. Yes/no wins: all 10 fail the judge.
+- Runaway lines are still 22 of 34 dead ends.
+- OOM fixed by chunking rollout forwards by B·S² in `tree_20261019roll/tl/az.py`.
+
+## 2026-10-19 23:30 — deep64: best-of-k sampling beats MCTS at matched compute
+- max-len 2048; 64 eval problems; 4 seeded samp64 runs (256 samples/problem) pooled with unbiased pass@k (`passk_roll.py`).
+- Checker: best-of-256 .391 at 146 s/problem; best-of-64 .322 at 36 s; MCTS r40_s4l8 .281 at 169 s (identical to its 1024-token run). Search ≈ 10× less compute-efficient.
+- Judge-verified best-of-k flat at .094 (6/64) from k=64; seeds 1–3 are lower bounds (792 statements queued; judge blocked on GPUs).
+- r40_s4l8 rollouts: 63% line close, 23% cap, 14% die, 0.07% finished → no value head = search only avoids dead ends.
+- samp64_s2 first attempt (93960) thrashed at the 64G cgroup limit for 3 h; rerun on gruenau11 (94467, eval-parallel 64, 96G) took 39 min per seed.
+- Running: rfull_s4l8 (92950), r40_s8l16 (92964).
+
+## 2026-10-20 05:45 — deep64 judging done; correction
+- Judge 95349 (gruenau11, util 0.69) OOMed on its first batch (hallepat processes share card C1); 95356 at util 0.6 judged all 792 queued statements in 18 min (141 pass), then exited.
+- Corrected verified numbers: best-of-k sampling verified .034 (k1) → .115 (k64) → .156 (k256), still rising. The earlier "flat at .094" was an artifact of unjudged proofs. MCTS r40_s4l8 verified .062 at the same compute.
+- Search lanes 92950/92964 at 16.5 h, no output yet; they hit the 24 h limit ~13:10 (time-limit extension denied).
+
+## 2026-10-20 12:50 — deep64b rfull_s4l8 hedge OOM-killed, rest relaunched
+Hedge 95523 (rfull_s4l8, eval-parallel 32, --mem 64G) was OOM-killed after 16/64 games (12 checker-solved, incl. dolci_math/44358 which 0/256 samples solved). Relaunched the remaining 48 problems (evals/roll/deep64c_rest.jsonl) as 96297: TAG deep64c, eval-parallel 16, --mem 160G, --eval-seed 1, partial log evals/roll/deep64c/rfull_s4l8.partial.jsonl. Final rfull_s4l8 numbers = deep64b partial (16) + deep64c (48). r40_s8l16 hedge 95524 at 32/64 (12 solved vs sampling k256 13.0 on the same problems).
+
+## 2026-10-20 19:00 — search evals stalled on CPU (idle GPU); guide timeout added, rest relaunched
+95524 (r40_s8l16, 35/64 done, last game 13:50) and 96297 (rfull relaunch, last game 16:28) ran at 100% CPU with 0% GPU on their card for hours. Most likely a blow-up inside the guide's legal-next-symbol computation (State.allowed has no wall clock; the terminal check has a 30 s cap). New tree tree_20261020guard: Game.node calls guarded_allowed() with GUIDE_SECONDS=20 (over it → terminal "guide_timeout", z=-1, prefix printed; steps > 2 s logged as "slow guide step"), and faulthandler on SIGUSR1 for stack dumps. Cancelled both; relaunched the unfinished problems as TAG deep64d (eval-seed 2): 96985 r40_s8l16 (29 problems), 96986 rfull_s4l8 (44). Final numbers = deep64b + deep64c + deep64d partial logs. Finished games so far: r40_s8l16 12/35 checker-solved (sampling k256 on the same problems 13.0); rfull_s4l8 12/20 (sampling 11.0; dolci_math/44358 solved by search, 0/256 by sampling).
+
+## 2026-10-20 18:35 — deep64e: search evals relaunched with TL_EVAL_BUDGET=2000000
+The guide's slow steps (~7–8 s each, under the 20 s guard) come from unbounded exact KB evaluation in calc lines with nested KB terms. deep_eval.slurm never set TL_EVAL_BUDGET (the AZ training slurms use 2000000, which cut runaway evaluation from 1465 s to ≈10 s and cut nothing valid, report 2026-10-17 18:55). Cancelled 96985/96986 (deep64d, 0 games) and relaunched the remaining problems with the budget and the guard tree: 96998 r40_s8l16 (29 problems, evals/roll/deep64e_r40_s8l16_rest.jsonl), 96999 rfull_s4l8 (44 problems, 160G, eval-parallel 16), TAG deep64e, tree_20261020guard, eval-seed 3, partial logs in evals/roll/deep64e/. Caveat for the comparison: the best-of-k sampling baseline (deep64 samp64 x4) ran without the budget.
+
+## 2026-10-21 01:12 — r40_s8l16 complete: wider search still loses to sampling
+- r40_s8l16 (8 sims × 16 leaves, rollouts ≤ 40) finished (96998; pooled deep64b 35 + deep64e 29 via combine_search.py): checker 18/64 (.281), verified 3/64 (.047), ~750 s/problem (last 29 problems only). Best-of-64 sampling: .322 / .115 at 37 s. Report §7e block 2026-10-21 01:12, figure tl_search_vs_sampling_20261021.png.
+- Judge-confirmed share of checker solves: sampling .36–.40, search .17–.22. Both search-only solves (dolci_dapo/83475, dolci_math/44358) judged wrong.
+- Judge 97835 (TP 1, util 0.6) failed loading gpt-oss-120b (OOM on one card); 97842 (TP 1, util 0.9, max-len 32768) judged 16 statements in 71 s (1 pass).
+- rfull_s4l8 (96999) at 31/64. deep_eval.slurm now defaults TL_EVAL_BUDGET=2000000.
+
+## 2026-10-21 07:37 — rollouts to game end (rfull_s4l8) finished: search still loses to sampling
+- MCTS 4×8 with rollouts until the game ends, 64 Dolci eval problems, pooled from deep64b/c/e (job 96999 done 07:33; judge 98373 checked the last 5 proofs by 07:37).
+- Checker .313 (20), verified .078 (5), ~1064 s/problem (last 44 problems). Best-of-64 sampling: .322 / .115 in 37 s; best-of-8 already beats it on verified (.083, 5 s).
+- Ends: complete 24, dead end 38, budget 2. Rollouts: 94% die, 2% budget, 3.7% reach a finished proof.
+- Only search-only solve (dolci_math/44358) judged wrong; no misses where sampling solves ≥25%.
+- Depth/width sweep conclusion: no tested setting beats checker-selected sampling at matched compute. Missing piece is a value estimate. Report §7e block 2026-10-21 07:37; figure tl_search_vs_sampling_20261021.png.
+
+## 2026-10-21 09:59 — Faithful AlphaZero, step 1: value-head data on train problems
+User (2026-10-21): run real AlphaZero (search + a value head trained as in AZ) plus the later sample-efficiency fixes; train
+the value head on balanced data first. Plan: (1) sample 32 guided FT3 games on each of 1,536 TRAIN problems (family mix as
+the eval split; 101 train rows sharing ≥ 50% of their word 8-grams with an eval row dropped), label z = +1 for checker win
+AND v2-judge pass, else −1; (2) train V on the positions of mixed-outcome problems, test held-out problems (AUC overall /
+within problem / by depth, and the sibling test: at the first move where a winning and a losing game of the same problem
+part, does V rank the winner's next state higher?); (3) MCTS with leaf values (no rollouts) on deep64 vs best-of-k
+sampling; (4) if search wins, the AZ loop with sims > 0.
+Code: tree `rlvl_data/tl/tree_20261021az` (tl/value_data.py, tl/value_train.py; az.py adds --value-head, --value-trunk-scale,
+--fpu parent, --cap-p/--cap-sims playout-cap randomization). Jobs 98564 (gruenau12), 98566 + 98572 (gruenau11), out
+`rlvl_data/tl/value/data20261021/games_s*.jsonl`, ~0.58 s/game, ~2.7 h.
+
+## 2026-10-21 14:20 — Faithful AlphaZero, step 2: value head offline test; step 3 launched
+
+- Value heads (frozen FT3 hidden → AZ MLP head) trained on 259 k positions from 1,537 train problems with judge-verified z (`rlvl_data/tl/value/v1`, job 99003). Variants w256, w256_bal, w1024, w256_fail.
+- AZ MSE on tanh saturated at V = −1 under sparse wins (smoke AUC .50, zero gradient). Switched to BCE on P(win) = (V+1)/2 (KataGo-style). Step 4 must do the same in az.py.
+- Held out (90 problems, 31 mixed): AUC all .88–.91, within-problem .68 (.54 in the first fifth of the proof → .80 in the last). Sibling test at the win/loss split: value .47–.52 vs prior .56; after 8/32/64 decisions .60/.66/.69. Over-confident at the top (pred .95 → actual .75). More width does not help; held-out loss flat from epoch 3.
+- Figure `reports/figures/tl_value_v1_offline.png`, analysis script `scratchpad/vanalysis.py` → `value/v1/analysis.json`.
+- Step 3: job 99290 (gruenau11 IDX0) runs leaf-value MCTS (w256_bal, rollout 0, FPU parent) at 16 and 64 sims × 8 leaves on deep64, `evals/roll/deep64v/`.
+- fla backward on H100 fails with the current Triton (#640) → AZ training on L40 / separate venv.

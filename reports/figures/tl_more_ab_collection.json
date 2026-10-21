@@ -1,0 +1,66 @@
+{
+ "n_prompts": {
+  "dolci_dapo": 610,
+  "dolci_math": 610,
+  "dolci_yesno": 279
+ },
+ "ok_prompts": {
+  "dolci_math": 103,
+  "dolci_dapo": 59,
+  "dolci_yesno": 50
+ },
+ "ok_proofs": {
+  "dolci_math": 263,
+  "dolci_yesno": 90,
+  "dolci_dapo": 116
+ },
+ "robust_proofs": {
+  "dolci_math": 229,
+  "dolci_yesno": 52,
+  "dolci_dapo": 97
+ },
+ "robust_prompts": {
+  "dolci_math": 93,
+  "dolci_dapo": 47,
+  "dolci_yesno": 34
+ },
+ "ok_first_round": {
+  "dolci_math": {
+   "0": 67,
+   "1": 18,
+   "2": 11,
+   "3": 7
+  },
+  "dolci_dapo": {
+   "0": 29,
+   "1": 13,
+   "2": 11,
+   "3": 6
+  },
+  "dolci_yesno": {
+   "0": 20,
+   "1": 12,
+   "2": 11,
+   "3": 7
+  }
+ },
+ "replay": {
+  "dolci_math|complete|": 200,
+  "dolci_math|illegal|": 23,
+  "dolci_yesno|illegal|given0": 31,
+  "dolci_yesno|illegal|": 2,
+  "dolci_dapo|complete|": 82,
+  "dolci_dapo|illegal|": 15,
+  "dolci_yesno|complete|": 11
+ },
+ "kept_new": {
+  "dolci_math": 154,
+  "dolci_dapo": 68,
+  "dolci_yesno": 11
+ },
+ "ft1": {
+  "dolci_math": 42,
+  "dolci_dapo": 23,
+  "dolci_yesno": 10
+ }
+}

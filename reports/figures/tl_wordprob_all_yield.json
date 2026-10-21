@@ -1,0 +1,30 @@
+{
+ "n": 1155,
+ "verified": [
+  293,
+  435,
+  520,
+  578
+ ],
+ "data": [
+  273,
+  399,
+  480,
+  532
+ ],
+ "judge_and_data": [
+  224,
+  334,
+  392,
+  426
+ ],
+ "issues": {
+  "different_question": 270,
+  "presolved": 242,
+  "wrong_fact": 51,
+  "extra_fact": 40,
+  "missing_fact": 31
+ },
+ "proofs": 1365,
+ "proofs_pass_all": 981
+}

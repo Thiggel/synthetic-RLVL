@@ -1,0 +1,1251 @@
+{
+ "lemmas": [
+  {
+   "kb": 252,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the dot product of two plane vectors"
+  },
+  {
+   "kb": 253,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the cross product of two plane vectors (signed area of their parallelogram, positive counterclockwise)"
+  },
+  {
+   "kb": 254,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "a plane vector multiplied by a number"
+  },
+  {
+   "kb": 255,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the midpoint of two points"
+  },
+  {
+   "kb": 256,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the three points lie on one line"
+  },
+  {
+   "kb": 257,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the second point lies on the segment from the first to the third (endpoints included)"
+  },
+  {
+   "kb": 258,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "line AB is parallel to line CD (or the same line)"
+  },
+  {
+   "kb": 259,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "line AB is perpendicular to line CD"
+  },
+  {
+   "kb": 260,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "an angle given in degrees, in radians"
+  },
+  {
+   "kb": 261,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the angle ABC at the middle point, in radians from 0 to \u03c0"
+  },
+  {
+   "kb": 262,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "a point rotated counterclockwise about a centre by an angle in radians"
+  },
+  {
+   "kb": 263,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the foot of the perpendicular from a point to line AB"
+  },
+  {
+   "kb": 264,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the mirror image of a point in line AB"
+  },
+  {
+   "kb": 265,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the mirror image of a point through a centre"
+  },
+  {
+   "kb": 266,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the point where line AB meets line CD (lines not parallel)"
+  },
+  {
+   "kb": 267,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the distance from a point to line AB"
+  },
+  {
+   "kb": 268,
+   "prem": 203,
+   "yes": 200,
+   "unk": 3,
+   "bad": false,
+   "structured": false,
+   "gloss": "line AB touches the circle with the given centre and radius"
+  },
+  {
+   "kb": 269,
+   "prem": 201,
+   "yes": 200,
+   "unk": 1,
+   "bad": false,
+   "structured": false,
+   "gloss": "two different circles (centre, radius) touch each other, externally or internally"
+  },
+  {
+   "kb": 270,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the perpendicular bisector of segment AB, as two points on it"
+  },
+  {
+   "kb": 271,
+   "prem": 201,
+   "yes": 200,
+   "unk": 1,
+   "bad": false,
+   "structured": false,
+   "gloss": "the bisector of the angle ABC (less than \u03c0), as two points on it: B and a point inside the angle"
+  },
+  {
+   "kb": 272,
+   "prem": 202,
+   "yes": 200,
+   "unk": 2,
+   "bad": false,
+   "structured": false,
+   "gloss": "the centre of the circle through the three corners of a triangle"
+  },
+  {
+   "kb": 273,
+   "prem": 202,
+   "yes": 200,
+   "unk": 2,
+   "bad": false,
+   "structured": false,
+   "gloss": "the radius of the circle through the three corners of a triangle"
+  },
+  {
+   "kb": 274,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the centroid of a triangle (where the medians meet)"
+  },
+  {
+   "kb": 275,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the centre of the circle inscribed in a triangle (where the angle bisectors meet)"
+  },
+  {
+   "kb": 276,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the radius of the circle inscribed in a triangle"
+  },
+  {
+   "kb": 277,
+   "prem": 202,
+   "yes": 200,
+   "unk": 2,
+   "bad": false,
+   "structured": false,
+   "gloss": "the orthocentre of a triangle (where the altitudes meet)"
+  },
+  {
+   "kb": 278,
+   "prem": 203,
+   "yes": 200,
+   "unk": 3,
+   "bad": false,
+   "structured": false,
+   "gloss": "the four points lie on one circle (the first three not on a line)"
+  },
+  {
+   "kb": 279,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the inverse of a point in the circle with the given centre and radius"
+  },
+  {
+   "kb": 280,
+   "prem": 201,
+   "yes": 200,
+   "unk": 1,
+   "bad": false,
+   "structured": false,
+   "gloss": "the polar line of a point with respect to the circle with the given centre and radius, as two points on it"
+  },
+  {
+   "kb": 281,
+   "prem": 201,
+   "yes": 200,
+   "unk": 1,
+   "bad": false,
+   "structured": false,
+   "gloss": "the second point where line AB meets the circle through A with the given centre (A itself if the line is tangent)"
+  },
+  {
+   "kb": 282,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the area of a polygon given by its corners in order (shoelace formula)"
+  },
+  {
+   "kb": 283,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the corners in order form a convex polygon (at least 3 corners, no three on a line)"
+  },
+  {
+   "kb": 284,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the corners in order form a regular polygon"
+  },
+  {
+   "kb": 285,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "a rotation preserves distances"
+  },
+  {
+   "kb": 286,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "two rotations about one centre add their angles"
+  },
+  {
+   "kb": 287,
+   "prem": 202,
+   "yes": 200,
+   "unk": 2,
+   "bad": false,
+   "structured": false,
+   "gloss": "a rotation preserves angles"
+  },
+  {
+   "kb": 288,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "a rotation preserves areas"
+  },
+  {
+   "kb": 289,
+   "prem": 204,
+   "yes": 200,
+   "unk": 4,
+   "bad": false,
+   "structured": false,
+   "gloss": "rotating a triangle rotates its circumcentre (coordinates may be chosen freely)"
+  },
+  {
+   "kb": 290,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "rotating a figure rotates the foot of a perpendicular"
+  },
+  {
+   "kb": 291,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "a translation preserves distances"
+  },
+  {
+   "kb": 292,
+   "prem": 201,
+   "yes": 200,
+   "unk": 1,
+   "bad": false,
+   "structured": false,
+   "gloss": "a translation preserves angles"
+  },
+  {
+   "kb": 293,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "translating a triangle translates its circumcentre"
+  },
+  {
+   "kb": 294,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the angle between a point and its rotation is the rotation angle (0 to \u03c0)"
+  },
+  {
+   "kb": 295,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "reflecting twice in a line gives the point back"
+  },
+  {
+   "kb": 296,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "a reflection in a line preserves distances"
+  },
+  {
+   "kb": 297,
+   "prem": 201,
+   "yes": 200,
+   "unk": 1,
+   "bad": false,
+   "structured": false,
+   "gloss": "a reflection in a line preserves angles"
+  },
+  {
+   "kb": 298,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "a point and its mirror image in a line have the foot of the perpendicular as midpoint"
+  },
+  {
+   "kb": 299,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "a point and its reflection through a centre have the centre as midpoint"
+  },
+  {
+   "kb": 300,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the foot of the perpendicular lies on the line, at a right angle"
+  },
+  {
+   "kb": 301,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the perpendicular is the shortest way to a line"
+  },
+  {
+   "kb": 302,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the distance from a point to a line by the cross product"
+  },
+  {
+   "kb": 303,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the squared distance is the dot product of the difference with itself"
+  },
+  {
+   "kb": 304,
+   "prem": 202,
+   "yes": 200,
+   "unk": 2,
+   "bad": false,
+   "structured": false,
+   "gloss": "the angle ABC equals the angle CBA"
+  },
+  {
+   "kb": 305,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "law of cosines"
+  },
+  {
+   "kb": 306,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "Pythagoras' theorem"
+  },
+  {
+   "kb": 307,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the angles of a triangle add up to \u03c0"
+  },
+  {
+   "kb": 308,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the area of a triangle is half the product of two sides and the sine of their angle"
+  },
+  {
+   "kb": 309,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "Heron's formula"
+  },
+  {
+   "kb": 310,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the area of a triangle is half base times height"
+  },
+  {
+   "kb": 311,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the length of a median (Apollonius' theorem)"
+  },
+  {
+   "kb": 312,
+   "prem": 201,
+   "yes": 200,
+   "unk": 1,
+   "bad": false,
+   "structured": true,
+   "gloss": "a point is on a segment exactly when the distances to the ends add up to its length"
+  },
+  {
+   "kb": 313,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "three distinct points are collinear exactly when the angle is 0 or \u03c0"
+  },
+  {
+   "kb": 314,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "two lines perpendicular to the same line are parallel"
+  },
+  {
+   "kb": 315,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the intersection of two lines lies on both"
+  },
+  {
+   "kb": 316,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the circumcentre is equally far from the three corners"
+  },
+  {
+   "kb": 317,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the incircle touches the three sides"
+  },
+  {
+   "kb": 318,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the incentre lies on the angle bisectors"
+  },
+  {
+   "kb": 319,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the orthocentre lies on the altitudes"
+  },
+  {
+   "kb": 320,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the centroid is two thirds of the way along each median"
+  },
+  {
+   "kb": 321,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "Euler line: circumcentre, centroid and orthocentre are collinear, HG = 2 GO"
+  },
+  {
+   "kb": 322,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "Euler's formula OI\u00b2 = R\u00b2 \u2212 2Rr"
+  },
+  {
+   "kb": 323,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "law of sines"
+  },
+  {
+   "kb": 324,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the area of a triangle is abc / 4R"
+  },
+  {
+   "kb": 325,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the area of a triangle is the inradius times half the perimeter"
+  },
+  {
+   "kb": 326,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "angle bisector theorem"
+  },
+  {
+   "kb": 327,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "a point on an angle bisector is equally far from the two sides"
+  },
+  {
+   "kb": 328,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the perpendicular bisector is the set of points equally far from both ends"
+  },
+  {
+   "kb": 329,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the midline of a triangle is parallel to the third side and half as long"
+  },
+  {
+   "kb": 330,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "Thales' theorem and its converse: the angle in a semicircle is right"
+  },
+  {
+   "kb": 331,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "inscribed angles on the same side of a chord are equal"
+  },
+  {
+   "kb": 332,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the central angle is twice the inscribed angle on the same side"
+  },
+  {
+   "kb": 333,
+   "prem": 204,
+   "yes": 200,
+   "unk": 4,
+   "bad": false,
+   "structured": true,
+   "gloss": "a convex quadrilateral is cyclic exactly when opposite angles add up to \u03c0"
+  },
+  {
+   "kb": 334,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "Ptolemy's theorem"
+  },
+  {
+   "kb": 335,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "power of a point: PX \u00b7 PY (signed) is PO\u00b2 \u2212 r\u00b2 for a line through P meeting the circle at X and Y"
+  },
+  {
+   "kb": 336,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "a line through a point of a circle is tangent exactly when it is perpendicular to the radius"
+  },
+  {
+   "kb": 337,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the length of a tangent segment"
+  },
+  {
+   "kb": 338,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the two tangent segments from a point to a circle are equally long"
+  },
+  {
+   "kb": 339,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "circles whose centres are r1 + r2 apart touch externally, at the point dividing the centres in ratio r1 : r2"
+  },
+  {
+   "kb": 340,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the second intersection lies on the circle and the line"
+  },
+  {
+   "kb": 341,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "inverting twice gives the point back"
+  },
+  {
+   "kb": 342,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "a point and its inverse lie on one ray from the centre, with OP \u00b7 OP\u2032 = r\u00b2"
+  },
+  {
+   "kb": 343,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the distance between two inverted points"
+  },
+  {
+   "kb": 344,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "inversion fixes the points of the circle"
+  },
+  {
+   "kb": 345,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the polar of P is the line of the points X with (X \u2212 O) \u00b7 (P \u2212 O) = r\u00b2"
+  },
+  {
+   "kb": 346,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "La Hire: Q is on the polar of P exactly when P is on the polar of Q"
+  },
+  {
+   "kb": 347,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the polar of a point on the circle is the tangent there"
+  },
+  {
+   "kb": 348,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the polar of an outside point passes through the points of tangency"
+  },
+  {
+   "kb": 349,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": false,
+   "gloss": "the area of a triangle as a polygon"
+  },
+  {
+   "kb": 350,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "a diagonal splits a convex quadrilateral into two triangles"
+  },
+  {
+   "kb": 351,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the angles of a convex polygon with n corners add up to (n \u2212 2)\u03c0"
+  },
+  {
+   "kb": 352,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "each angle of a regular polygon with n corners is (n \u2212 2)\u03c0 / n"
+  },
+  {
+   "kb": 353,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the corners of a regular polygon lie on one circle"
+  },
+  {
+   "kb": 354,
+   "prem": 200,
+   "yes": 200,
+   "unk": 0,
+   "bad": false,
+   "structured": true,
+   "gloss": "the side of a regular n-gon is 2R sin(\u03c0 / n)"
+  }
+ ],
+ "defs": [
+  {
+   "k": 148,
+   "name": "dot",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 149,
+   "name": "cross",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 150,
+   "name": "scale",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 151,
+   "name": "midpoint",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 152,
+   "name": "collinear",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 153,
+   "name": "between",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 154,
+   "name": "parallel",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 155,
+   "name": "perpendicular",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 156,
+   "name": "deg",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 157,
+   "name": "angle",
+   "val": 153,
+   "stuck": 47
+  },
+  {
+   "k": 158,
+   "name": "rotate",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 159,
+   "name": "foot",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 160,
+   "name": "reflect_line",
+   "val": 199,
+   "stuck": 1
+  },
+  {
+   "k": 161,
+   "name": "reflect_point",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 162,
+   "name": "line_meet",
+   "val": 197,
+   "stuck": 3
+  },
+  {
+   "k": 163,
+   "name": "line_dist",
+   "val": 199,
+   "stuck": 1
+  },
+  {
+   "k": 164,
+   "name": "tangent_line",
+   "val": 199,
+   "stuck": 1
+  },
+  {
+   "k": 165,
+   "name": "tangent_circles",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 166,
+   "name": "perp_bisector",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 167,
+   "name": "angle_bisector",
+   "val": 198,
+   "stuck": 2
+  },
+  {
+   "k": 168,
+   "name": "circumcenter",
+   "val": 197,
+   "stuck": 3
+  },
+  {
+   "k": 169,
+   "name": "circumradius",
+   "val": 194,
+   "stuck": 6
+  },
+  {
+   "k": 170,
+   "name": "centroid",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 171,
+   "name": "incenter",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 172,
+   "name": "inradius",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 173,
+   "name": "orthocenter",
+   "val": 195,
+   "stuck": 5
+  },
+  {
+   "k": 174,
+   "name": "concyclic",
+   "val": 195,
+   "stuck": 5
+  },
+  {
+   "k": 175,
+   "name": "invert",
+   "val": 199,
+   "stuck": 1
+  },
+  {
+   "k": 176,
+   "name": "polar",
+   "val": 198,
+   "stuck": 2
+  },
+  {
+   "k": 177,
+   "name": "second_meet",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 178,
+   "name": "polygon_area",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 179,
+   "name": "convex_polygon",
+   "val": 200,
+   "stuck": 0
+  },
+  {
+   "k": 180,
+   "name": "regular_polygon",
+   "val": 200,
+   "stuck": 0
+  }
+ ],
+ "wrong": [
+  {
+   "i": 0,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 1,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 2,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 3,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 4,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 5,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 6,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 7,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 8,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 9,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 10,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 11,
+   "prem": 5,
+   "refuted": true
+  },
+  {
+   "i": 12,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 13,
+   "prem": 3,
+   "refuted": true
+  },
+  {
+   "i": 14,
+   "prem": 1,
+   "refuted": true
+  },
+  {
+   "i": 15,
+   "prem": 1,
+   "refuted": true
+  }
+ ],
+ "centres": {
+  "circumcenter": {
+   "exact": "k 1 6 ( 3 , 1 . 3 7 5 )",
+   "float": [
+    3.0,
+    1.375
+   ]
+  },
+  "circumradius": {
+   "exact": "k 8 6 ( 1 0 . 8 9 0 6 2 5 )",
+   "float": 3.3000946956110213
+  },
+  "centroid": {
+   "exact": "k 1 6 ( 7 \u00f7 3 , 4 \u00f7 3 )",
+   "float": [
+    2.3333333333333335,
+    1.3333333333333333
+   ]
+  },
+  "incenter": {
+   "exact": "k 1 6 ( ( 1 \u00f7 ( k 8 6 ( 4 1 ) + ( k 8 6 ( 1 7 ) + 6 ) ) ) \u00d7 ( 0 + ( ( k 8 6 ( 1 7 ) \u00d7 6 ) + 6 ) ) , ( 1 \u00f7 ( k 8 6 ( 4 1 ) + ( k 8 6 ( 1 7 ) + 6 ) ) ) \u00d7 2 4 )",
+   "float": [
+    1.8599906940924056,
+    1.4522368500791223
+   ]
+  },
+  "inradius": {
+   "exact": "2 4 \u00f7 ( k 8 6 ( 4 1 ) + ( k 8 6 ( 1 7 ) + 6 ) )",
+   "float": 1.4522368500791225
+  },
+  "orthocenter": {
+   "exact": "k 1 6 ( 1 , 1 . 2 5 )",
+   "float": [
+    1.0,
+    1.25
+   ]
+  }
+ }
+}

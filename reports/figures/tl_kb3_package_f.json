@@ -1,0 +1,1923 @@
+{
+ "lemmas": [
+  {
+   "kb": 576,
+   "gloss": "the transpose of a matrix given by its rows (row i is the i-th entry of every row)",
+   "off": 0,
+   "yes": 148,
+   "unk": 2,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07208013534545898
+  },
+  {
+   "kb": 577,
+   "gloss": "the sum of two matrices of the same shape",
+   "off": 0,
+   "yes": 117,
+   "unk": 33,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.19625353813171387
+  },
+  {
+   "kb": 578,
+   "gloss": "a matrix with every entry multiplied by a number",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09114480018615723
+  },
+  {
+   "kb": 579,
+   "gloss": "the product of two matrices (the columns of the first are as many as the rows of the second)",
+   "off": 0,
+   "yes": 139,
+   "unk": 11,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.33175182342529297
+  },
+  {
+   "kb": 580,
+   "gloss": "a matrix times a column vector",
+   "off": 0,
+   "yes": 111,
+   "unk": 39,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.20341825485229492
+  },
+  {
+   "kb": 581,
+   "gloss": "the n \u00d7 n identity matrix",
+   "off": 0,
+   "yes": 122,
+   "unk": 28,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.030026674270629883
+  },
+  {
+   "kb": 582,
+   "gloss": "a square matrix to a natural power (the identity for power 0)",
+   "off": 0,
+   "yes": 106,
+   "unk": 44,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.12578129768371582
+  },
+  {
+   "kb": 583,
+   "gloss": "the sum of the diagonal entries of a square matrix",
+   "off": 0,
+   "yes": 128,
+   "unk": 22,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.06865334510803223
+  },
+  {
+   "kb": 584,
+   "gloss": "the matrix of the entries in the given rows and columns (positions counting from 1, in the order given)",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0527803897857666
+  },
+  {
+   "kb": 585,
+   "gloss": "the sign of an arrangement of numbers: 1 for an even number of pairs out of order, \u22121 for an odd number",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.046280622482299805
+  },
+  {
+   "kb": 586,
+   "gloss": "the determinant of a square matrix (1 for the empty matrix)",
+   "off": 0,
+   "yes": 132,
+   "unk": 18,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.3554825782775879
+  },
+  {
+   "kb": 587,
+   "gloss": "the inverse of a square matrix with nonzero determinant",
+   "off": 0,
+   "yes": 83,
+   "unk": 67,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 1.532484769821167
+  },
+  {
+   "kb": 588,
+   "gloss": "the rank of a matrix: the size of its largest square submatrix with nonzero determinant",
+   "off": 0,
+   "yes": 146,
+   "unk": 4,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.5286030769348145
+  },
+  {
+   "kb": 589,
+   "gloss": "the characteristic polynomial det(t I \u2212 A) of a square matrix, as coefficients from the constant term up (the last is 1)",
+   "off": 0,
+   "yes": 120,
+   "unk": 30,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.3729081153869629
+  },
+  {
+   "kb": 590,
+   "gloss": "the value of a polynomial (coefficients from the constant term up) at a number",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.046253204345703125
+  },
+  {
+   "kb": 591,
+   "gloss": "the derivative of a polynomial (coefficients from the constant term up)",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.041245460510253906
+  },
+  {
+   "kb": 594,
+   "gloss": "the i-th smallest real root of a nonzero polynomial, counting multiplicity",
+   "off": 0,
+   "yes": 94,
+   "unk": 56,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.11066126823425293
+  },
+  {
+   "kb": 595,
+   "gloss": "the real eigenvalues of a square matrix, from smallest to largest, each as often as its algebraic multiplicity",
+   "off": 0,
+   "yes": 126,
+   "unk": 24,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.30051684379577637
+  },
+  {
+   "kb": 596,
+   "gloss": "the singular values of a matrix, from largest to smallest (as many as the smaller of its numbers of rows and columns)",
+   "off": 0,
+   "yes": 147,
+   "unk": 3,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.9593048095703125
+  },
+  {
+   "kb": 597,
+   "gloss": "a matrix and its transpose have the same determinant",
+   "off": 51,
+   "yes": 98,
+   "unk": 1,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05529642105102539
+  },
+  {
+   "kb": 598,
+   "gloss": "the determinant of a product is the product of the determinants",
+   "off": 71,
+   "yes": 79,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.10772895812988281
+  },
+  {
+   "kb": 599,
+   "gloss": "the identity matrix has determinant 1",
+   "off": 29,
+   "yes": 121,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.013705730438232422
+  },
+  {
+   "kb": 600,
+   "gloss": "scaling an n \u00d7 n matrix by c scales its determinant by c to the n",
+   "off": 60,
+   "yes": 90,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.4930305480957031
+  },
+  {
+   "kb": 601,
+   "gloss": "the determinant of the inverse is the reciprocal of the determinant",
+   "off": 90,
+   "yes": 60,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.11309456825256348
+  },
+  {
+   "kb": 602,
+   "gloss": "a square matrix of less than full rank has determinant 0",
+   "off": 125,
+   "yes": 25,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05676102638244629
+  },
+  {
+   "kb": 603,
+   "gloss": "a square matrix of full rank has a nonzero determinant",
+   "off": 80,
+   "yes": 70,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.06862139701843262
+  },
+  {
+   "kb": 604,
+   "gloss": "the trace of a sum is the sum of the traces",
+   "off": 63,
+   "yes": 85,
+   "unk": 2,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.1080775260925293
+  },
+  {
+   "kb": 605,
+   "gloss": "the trace of c times a matrix is c times its trace",
+   "off": 55,
+   "yes": 93,
+   "unk": 2,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07698988914489746
+  },
+  {
+   "kb": 606,
+   "gloss": "trace(AB) = trace(BA)",
+   "off": 56,
+   "yes": 94,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.10362744331359863
+  },
+  {
+   "kb": 607,
+   "gloss": "a matrix and its transpose have the same trace",
+   "off": 48,
+   "yes": 101,
+   "unk": 1,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.04443669319152832
+  },
+  {
+   "kb": 608,
+   "gloss": "the matrix product is associative",
+   "off": 27,
+   "yes": 122,
+   "unk": 1,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.20308756828308105
+  },
+  {
+   "kb": 609,
+   "gloss": "the matrix product distributes over the sum",
+   "off": 57,
+   "yes": 92,
+   "unk": 1,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.20506572723388672
+  },
+  {
+   "kb": 610,
+   "gloss": "the transpose of a product is the product of the transposes in reverse order",
+   "off": 18,
+   "yes": 129,
+   "unk": 3,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.10770535469055176
+  },
+  {
+   "kb": 611,
+   "gloss": "transposing twice gives the matrix back",
+   "off": 5,
+   "yes": 145,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07968330383300781
+  },
+  {
+   "kb": 612,
+   "gloss": "the identity matrix is neutral for the product",
+   "off": 9,
+   "yes": 141,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.12892913818359375
+  },
+  {
+   "kb": 613,
+   "gloss": "a matrix times a vector is the product with the vector as a column",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.057077646255493164
+  },
+  {
+   "kb": 614,
+   "gloss": "a matrix times its inverse is the identity",
+   "off": 80,
+   "yes": 70,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.1692061424255371
+  },
+  {
+   "kb": 615,
+   "gloss": "the inverse of the inverse is the matrix",
+   "off": 71,
+   "yes": 79,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.10434460639953613
+  },
+  {
+   "kb": 616,
+   "gloss": "the rank is at most the number of rows and the number of columns",
+   "off": 2,
+   "yes": 148,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09681439399719238
+  },
+  {
+   "kb": 617,
+   "gloss": "a matrix and its transpose have the same rank",
+   "off": 5,
+   "yes": 145,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.10203862190246582
+  },
+  {
+   "kb": 618,
+   "gloss": "the rank of a product is at most the rank of each factor",
+   "off": 18,
+   "yes": 128,
+   "unk": 4,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.12393665313720703
+  },
+  {
+   "kb": 619,
+   "gloss": "the constant term of the characteristic polynomial is (\u22121)^n times the determinant",
+   "off": 47,
+   "yes": 102,
+   "unk": 1,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09589886665344238
+  },
+  {
+   "kb": 620,
+   "gloss": "the second-highest coefficient of the characteristic polynomial is minus the trace",
+   "off": 56,
+   "yes": 93,
+   "unk": 1,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0863943099975586
+  },
+  {
+   "kb": 621,
+   "gloss": "the characteristic polynomial of an n \u00d7 n matrix is monic of degree n",
+   "off": 47,
+   "yes": 102,
+   "unk": 1,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.12118148803710938
+  },
+  {
+   "kb": 622,
+   "gloss": "a matrix is a root of its characteristic polynomial (Cayley-Hamilton)",
+   "off": 45,
+   "yes": 105,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.43085527420043945
+  },
+  {
+   "kb": 623,
+   "gloss": "when all eigenvalues are real, their sum is the trace",
+   "off": 13,
+   "yes": 122,
+   "unk": 15,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 3.373694658279419
+  },
+  {
+   "kb": 624,
+   "gloss": "when all eigenvalues are real, their product is the determinant",
+   "off": 9,
+   "yes": 125,
+   "unk": 16,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 3.6071865558624268
+  },
+  {
+   "kb": 625,
+   "gloss": "every eigenvalue is a root of the characteristic polynomial",
+   "off": 57,
+   "yes": 92,
+   "unk": 1,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.24062085151672363
+  },
+  {
+   "kb": 626,
+   "gloss": "the determinant of a triangular matrix is the product of its diagonal",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.14138007164001465
+  },
+  {
+   "kb": 627,
+   "gloss": "the eigenvalues of a triangular matrix are its diagonal entries",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.22551655769348145
+  },
+  {
+   "kb": 628,
+   "gloss": "a matrix has as many singular values as the smaller of its numbers of rows and columns",
+   "off": 5,
+   "yes": 145,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.7649126052856445
+  },
+  {
+   "kb": 629,
+   "gloss": "singular values are not negative",
+   "off": 8,
+   "yes": 142,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.84177565574646
+  },
+  {
+   "kb": 630,
+   "gloss": "the number of nonzero singular values is the rank",
+   "off": 2,
+   "yes": 148,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.8310356140136719
+  },
+  {
+   "kb": 631,
+   "gloss": "powers of a matrix add their exponents",
+   "off": 89,
+   "yes": 61,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.08968281745910645
+  },
+  {
+   "kb": 632,
+   "gloss": "the power 0 of a matrix is the identity",
+   "off": 56,
+   "yes": 94,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0462946891784668
+  },
+  {
+   "kb": 633,
+   "gloss": "the determinant of a power is the power of the determinant",
+   "off": 73,
+   "yes": 77,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0636451244354248
+  },
+  {
+   "kb": 634,
+   "gloss": "every real root is a root",
+   "off": 10,
+   "yes": 140,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.19760704040527344
+  },
+  {
+   "kb": 635,
+   "gloss": "a nonzero polynomial has at most as many real roots as its degree",
+   "off": 5,
+   "yes": 145,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.10531139373779297
+  },
+  {
+   "kb": 636,
+   "gloss": "the real roots come from smallest to largest",
+   "off": 12,
+   "yes": 138,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.20064687728881836
+  },
+  {
+   "kb": 637,
+   "gloss": "a root of a polynomial is among its real roots",
+   "off": 75,
+   "yes": 75,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.14263176918029785
+  },
+  {
+   "kb": 638,
+   "gloss": "a multiple root is a root of the derivative",
+   "off": 91,
+   "yes": 59,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.148360013961792
+  },
+  {
+   "kb": 639,
+   "gloss": "Taylor's formula for a quadratic",
+   "off": 118,
+   "yes": 32,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03108048439025879
+  },
+  {
+   "kb": 640,
+   "gloss": "a number is a root of multiplicity 0 exactly when it is not a root",
+   "off": 5,
+   "yes": 145,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.14668965339660645
+  }
+ ],
+ "wrong": [
+  {
+   "name": "det additive",
+   "prem": 2
+  },
+  {
+   "name": "trace multiplicative",
+   "prem": 1
+  },
+  {
+   "name": "product commutative",
+   "prem": 1
+  },
+  {
+   "name": "rank additive",
+   "prem": 1
+  },
+  {
+   "name": "transpose keeps the order",
+   "prem": 1
+  },
+  {
+   "name": "det(cA) = c det A",
+   "prem": 7
+  },
+  {
+   "name": "det of the inverse = det",
+   "prem": 1
+  },
+  {
+   "name": "charpoly constant = det",
+   "prem": 4
+  },
+  {
+   "name": "eigenvalues = diagonal",
+   "prem": 1
+  },
+  {
+   "name": "singular values = |eigenvalues|",
+   "prem": 2
+  },
+  {
+   "name": "as many real roots as the degree",
+   "prem": 6
+  },
+  {
+   "name": "every root a root of the derivative",
+   "prem": 1
+  },
+  {
+   "name": "exponents multiply to add",
+   "prem": 1
+  },
+  {
+   "name": "rank = nonzero eigenvalues",
+   "prem": 3
+  }
+ ],
+ "timing": {
+  "det": [
+   {
+    "n": 1,
+    "sec": 2.4080276489257812e-05,
+    "ok": 3
+   },
+   {
+    "n": 2,
+    "sec": 6.310145060221355e-05,
+    "ok": 3
+   },
+   {
+    "n": 3,
+    "sec": 0.0001246929168701172,
+    "ok": 3
+   },
+   {
+    "n": 4,
+    "sec": 0.0001758734385172526,
+    "ok": 3
+   },
+   {
+    "n": 6,
+    "sec": 0.00046483675638834637,
+    "ok": 3
+   },
+   {
+    "n": 8,
+    "sec": 0.0009243488311767578,
+    "ok": 3
+   },
+   {
+    "n": 12,
+    "sec": 0.002554178237915039,
+    "ok": 3
+   },
+   {
+    "n": 16,
+    "sec": 0.00566411018371582,
+    "ok": 3
+   },
+   {
+    "n": 24,
+    "sec": 0.018213431040445965,
+    "ok": 3
+   },
+   {
+    "n": 32,
+    "sec": 0.04430452982584635,
+    "ok": 3
+   }
+  ],
+  "rank": [
+   {
+    "n": 1,
+    "sec": 2.4318695068359375e-05,
+    "ok": 3
+   },
+   {
+    "n": 2,
+    "sec": 6.500879923502605e-05,
+    "ok": 3
+   },
+   {
+    "n": 3,
+    "sec": 9.894371032714844e-05,
+    "ok": 3
+   },
+   {
+    "n": 4,
+    "sec": 0.00020400683085123697,
+    "ok": 3
+   },
+   {
+    "n": 6,
+    "sec": 0.00047143300374348957,
+    "ok": 3
+   },
+   {
+    "n": 8,
+    "sec": 0.0009427070617675781,
+    "ok": 3
+   },
+   {
+    "n": 12,
+    "sec": 0.0025078455607096353,
+    "ok": 3
+   },
+   {
+    "n": 16,
+    "sec": 0.005435069402058919,
+    "ok": 3
+   },
+   {
+    "n": 24,
+    "sec": 0.01775511105855306,
+    "ok": 3
+   },
+   {
+    "n": 32,
+    "sec": 0.04404743512471517,
+    "ok": 3
+   }
+  ],
+  "inverse": [
+   {
+    "n": 1,
+    "sec": 4.1325887044270836e-05,
+    "ok": 3
+   },
+   {
+    "n": 2,
+    "sec": 0.00010498364766438802,
+    "ok": 3
+   },
+   {
+    "n": 3,
+    "sec": 0.00022419293721516928,
+    "ok": 3
+   },
+   {
+    "n": 4,
+    "sec": 0.00042366981506347656,
+    "ok": 3
+   },
+   {
+    "n": 6,
+    "sec": 0.001234610875447591,
+    "ok": 3
+   },
+   {
+    "n": 8,
+    "sec": 0.0025250116984049478,
+    "ok": 3
+   },
+   {
+    "n": 12,
+    "sec": 0.008223692576090494,
+    "ok": 3
+   },
+   {
+    "n": 16,
+    "sec": 0.019171635309855144,
+    "ok": 3
+   },
+   {
+    "n": 24,
+    "sec": 0.07190140088399251,
+    "ok": 3
+   },
+   {
+    "n": 32,
+    "sec": 0.18298467000325522,
+    "ok": 3
+   }
+  ],
+  "charpoly": [
+   {
+    "n": 1,
+    "sec": 0.00012826919555664062,
+    "ok": 3
+   },
+   {
+    "n": 2,
+    "sec": 0.00013566017150878906,
+    "ok": 3
+   },
+   {
+    "n": 3,
+    "sec": 0.00041611989339192707,
+    "ok": 3
+   },
+   {
+    "n": 4,
+    "sec": 0.0010544459025065105,
+    "ok": 3
+   },
+   {
+    "n": 6,
+    "sec": 0.004463036855061849,
+    "ok": 3
+   },
+   {
+    "n": 8,
+    "sec": 0.013162453969319662,
+    "ok": 3
+   },
+   {
+    "n": 12,
+    "sec": 0.0663764476776123,
+    "ok": 3
+   },
+   {
+    "n": 16,
+    "sec": 0.20727904637654623,
+    "ok": 3
+   },
+   {
+    "n": 24,
+    "sec": 1.0455302397410076,
+    "ok": 3
+   },
+   {
+    "n": 32,
+    "sec": 3.288445552190145,
+    "ok": 3
+   }
+  ],
+  "eigenvalues": [
+   {
+    "n": 1,
+    "sec": 0.00014503796895345053,
+    "ok": 3
+   },
+   {
+    "n": 2,
+    "sec": 0.0006303787231445312,
+    "ok": 3
+   },
+   {
+    "n": 3,
+    "sec": 0.0016399224599202473,
+    "ok": 3
+   },
+   {
+    "n": 4,
+    "sec": 0.002945979436238607,
+    "ok": 3
+   },
+   {
+    "n": 6,
+    "sec": 0.011791626612345377,
+    "ok": 3
+   },
+   {
+    "n": 8,
+    "sec": 0.020946741104125977,
+    "ok": 3
+   },
+   {
+    "n": 12,
+    "sec": 0.14884146054585776,
+    "ok": 3
+   },
+   {
+    "n": 16,
+    "sec": 0.7363396485646566,
+    "ok": 3
+   },
+   {
+    "n": 24,
+    "sec": 12.389797846476236,
+    "ok": 3
+   },
+   {
+    "n": 32,
+    "sec": 3.3224968115488687,
+    "ok": 0
+   }
+  ],
+  "singular_values": [
+   {
+    "n": 1,
+    "sec": 0.00041611989339192707,
+    "ok": 3
+   },
+   {
+    "n": 2,
+    "sec": 0.00501402219136556,
+    "ok": 3
+   },
+   {
+    "n": 3,
+    "sec": 0.014341115951538086,
+    "ok": 3
+   },
+   {
+    "n": 4,
+    "sec": 0.035992940266927086,
+    "ok": 3
+   },
+   {
+    "n": 6,
+    "sec": 0.1129132906595866,
+    "ok": 3
+   },
+   {
+    "n": 8,
+    "sec": 0.3057397206624349,
+    "ok": 3
+   },
+   {
+    "n": 12,
+    "sec": 1.7312702337900798,
+    "ok": 3
+   },
+   {
+    "n": 16,
+    "sec": 2.0393404960632324,
+    "ok": 0
+   },
+   {
+    "n": 24,
+    "sec": 37.83001295725504,
+    "ok": 0
+   }
+  ]
+ },
+ "unfold": {
+  "det": [
+   {
+    "n": 1,
+    "sec": 0.0003991127014160156,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 2,
+    "sec": 0.0005459785461425781,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 3,
+    "sec": 0.002151966094970703,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 4,
+    "sec": 0.012463569641113281,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 5,
+    "sec": 7.152557373046875e-06,
+    "ok": false,
+    "same": false
+   },
+   {
+    "n": 6,
+    "sec": 5.4836273193359375e-06,
+    "ok": false,
+    "same": false
+   }
+  ],
+  "rank": [
+   {
+    "n": 1,
+    "sec": 0.0006961822509765625,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 2,
+    "sec": 0.00209808349609375,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 3,
+    "sec": 0.004208564758300781,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 4,
+    "sec": 1.0013580322265625e-05,
+    "ok": false,
+    "same": false
+   },
+   {
+    "n": 5,
+    "sec": 9.298324584960938e-06,
+    "ok": false,
+    "same": false
+   },
+   {
+    "n": 6,
+    "sec": 1.0251998901367188e-05,
+    "ok": false,
+    "same": false
+   }
+  ],
+  "inverse": [
+   {
+    "n": 1,
+    "sec": 0.0003695487976074219,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 2,
+    "sec": 0.001401662826538086,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 3,
+    "sec": 0.004487514495849609,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 4,
+    "sec": 8.821487426757812e-06,
+    "ok": false,
+    "same": false
+   },
+   {
+    "n": 5,
+    "sec": 5.9604644775390625e-06,
+    "ok": false,
+    "same": false
+   },
+   {
+    "n": 6,
+    "sec": 5.9604644775390625e-06,
+    "ok": false,
+    "same": false
+   }
+  ],
+  "charpoly": [
+   {
+    "n": 1,
+    "sec": 0.00041174888610839844,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 2,
+    "sec": 0.0008006095886230469,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 3,
+    "sec": 0.0022268295288085938,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 4,
+    "sec": 0.004529237747192383,
+    "ok": true,
+    "same": true
+   },
+   {
+    "n": 5,
+    "sec": 1.049041748046875e-05,
+    "ok": false,
+    "same": false
+   },
+   {
+    "n": 6,
+    "sec": 9.5367431640625e-06,
+    "ok": false,
+    "same": false
+   }
+  ]
+ },
+ "roots": [
+  {
+   "deg": 1,
+   "sec": 0.00027680397033691406,
+   "real": 1,
+   "irrational": 0
+  },
+  {
+   "deg": 1,
+   "sec": 0.0002758502960205078,
+   "real": 1,
+   "irrational": 0
+  },
+  {
+   "deg": 1,
+   "sec": 0.0003070831298828125,
+   "real": 1,
+   "irrational": 0
+  },
+  {
+   "deg": 1,
+   "sec": 9.036064147949219e-05,
+   "real": 1,
+   "irrational": 0
+  },
+  {
+   "deg": 1,
+   "sec": 0.0002808570861816406,
+   "real": 1,
+   "irrational": 0
+  },
+  {
+   "deg": 2,
+   "sec": 0.0004374980926513672,
+   "real": 2,
+   "irrational": 0
+  },
+  {
+   "deg": 2,
+   "sec": 0.0006222724914550781,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 2,
+   "sec": 0.0005815029144287109,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 2,
+   "sec": 0.0005991458892822266,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 2,
+   "sec": 0.0004062652587890625,
+   "real": 2,
+   "irrational": 0
+  },
+  {
+   "deg": 3,
+   "sec": 0.0006012916564941406,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 3,
+   "sec": 0.0005981922149658203,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 3,
+   "sec": 0.0009529590606689453,
+   "real": 3,
+   "irrational": 2
+  },
+  {
+   "deg": 3,
+   "sec": 0.0006113052368164062,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 3,
+   "sec": 0.0005865097045898438,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 4,
+   "sec": 0.0012392997741699219,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 4,
+   "sec": 0.001043558120727539,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 4,
+   "sec": 0.0009531974792480469,
+   "real": 2,
+   "irrational": 1
+  },
+  {
+   "deg": 4,
+   "sec": 0.0006785392761230469,
+   "real": 0,
+   "irrational": 0
+  },
+  {
+   "deg": 4,
+   "sec": 0.0012004375457763672,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 5,
+   "sec": 0.0009925365447998047,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 5,
+   "sec": 0.002069711685180664,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 5,
+   "sec": 0.0018875598907470703,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 5,
+   "sec": 0.0009701251983642578,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 5,
+   "sec": 0.0010523796081542969,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 6,
+   "sec": 0.0019698143005371094,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 6,
+   "sec": 0.0017714500427246094,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 6,
+   "sec": 0.0019795894622802734,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 6,
+   "sec": 0.0017712116241455078,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 6,
+   "sec": 0.001753091812133789,
+   "real": 2,
+   "irrational": 1
+  },
+  {
+   "deg": 7,
+   "sec": 0.001734018325805664,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 7,
+   "sec": 0.004019975662231445,
+   "real": 5,
+   "irrational": 5
+  },
+  {
+   "deg": 7,
+   "sec": 0.001705169677734375,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 7,
+   "sec": 0.0016825199127197266,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 7,
+   "sec": 0.0018315315246582031,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 8,
+   "sec": 0.0028600692749023438,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 8,
+   "sec": 0.0027472972869873047,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 8,
+   "sec": 0.003128528594970703,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 8,
+   "sec": 0.002814769744873047,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 8,
+   "sec": 0.002725362777709961,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 9,
+   "sec": 0.0027408599853515625,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 9,
+   "sec": 0.002336263656616211,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 9,
+   "sec": 0.002429962158203125,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 9,
+   "sec": 0.002537965774536133,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 9,
+   "sec": 0.004806995391845703,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 10,
+   "sec": 0.0050907135009765625,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 10,
+   "sec": 0.006722688674926758,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 10,
+   "sec": 0.005042076110839844,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 10,
+   "sec": 0.004465341567993164,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 10,
+   "sec": 0.005037069320678711,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 11,
+   "sec": 0.0040607452392578125,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 11,
+   "sec": 0.0061490535736083984,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 11,
+   "sec": 0.006592750549316406,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 11,
+   "sec": 0.006833791732788086,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 11,
+   "sec": 0.004229307174682617,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 12,
+   "sec": 0.011494159698486328,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 12,
+   "sec": 0.012179136276245117,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 12,
+   "sec": 0.006629228591918945,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 12,
+   "sec": 0.00607609748840332,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 12,
+   "sec": 0.006159782409667969,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 13,
+   "sec": 0.008358955383300781,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 13,
+   "sec": 0.0077495574951171875,
+   "real": 3,
+   "irrational": 2
+  },
+  {
+   "deg": 13,
+   "sec": 0.009637594223022461,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 13,
+   "sec": 0.010900735855102539,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 13,
+   "sec": 0.010886907577514648,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 14,
+   "sec": 0.009051799774169922,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 14,
+   "sec": 0.008136272430419922,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 14,
+   "sec": 0.011714458465576172,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 14,
+   "sec": 0.011507749557495117,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 14,
+   "sec": 0.005647897720336914,
+   "real": 0,
+   "irrational": 0
+  },
+  {
+   "deg": 15,
+   "sec": 0.00927114486694336,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 15,
+   "sec": 0.008771181106567383,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 15,
+   "sec": 0.01258087158203125,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 15,
+   "sec": 0.012970447540283203,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 15,
+   "sec": 0.01458597183227539,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 16,
+   "sec": 0.019177913665771484,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 16,
+   "sec": 0.009673118591308594,
+   "real": 0,
+   "irrational": 0
+  },
+  {
+   "deg": 16,
+   "sec": 0.01531529426574707,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 16,
+   "sec": 0.01690220832824707,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 16,
+   "sec": 0.013762474060058594,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 17,
+   "sec": 0.01886749267578125,
+   "real": 3,
+   "irrational": 2
+  },
+  {
+   "deg": 17,
+   "sec": 0.020377635955810547,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 17,
+   "sec": 0.018155336380004883,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 17,
+   "sec": 0.02518939971923828,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 17,
+   "sec": 0.019257545471191406,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 18,
+   "sec": 0.030681371688842773,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 18,
+   "sec": 0.031838178634643555,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 18,
+   "sec": 0.013309001922607422,
+   "real": 0,
+   "irrational": 0
+  },
+  {
+   "deg": 18,
+   "sec": 0.0313413143157959,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 18,
+   "sec": 0.021796703338623047,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 19,
+   "sec": 0.017961978912353516,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 19,
+   "sec": 0.025066137313842773,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 19,
+   "sec": 0.0179293155670166,
+   "real": 5,
+   "irrational": 3
+  },
+  {
+   "deg": 19,
+   "sec": 0.04775261878967285,
+   "real": 5,
+   "irrational": 5
+  },
+  {
+   "deg": 19,
+   "sec": 0.015867948532104492,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 20,
+   "sec": 0.03275322914123535,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 20,
+   "sec": 0.03695964813232422,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 20,
+   "sec": 0.022103309631347656,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 20,
+   "sec": 0.0358576774597168,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 20,
+   "sec": 0.03747081756591797,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 21,
+   "sec": 0.03367805480957031,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 21,
+   "sec": 0.04447436332702637,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 21,
+   "sec": 0.037294626235961914,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 21,
+   "sec": 0.0265347957611084,
+   "real": 1,
+   "irrational": 1
+  },
+  {
+   "deg": 21,
+   "sec": 0.04168558120727539,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 22,
+   "sec": 0.06295156478881836,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 22,
+   "sec": 0.06099367141723633,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 22,
+   "sec": 0.04981565475463867,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 22,
+   "sec": 0.0298306941986084,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 22,
+   "sec": 0.029503345489501953,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 23,
+   "sec": 0.05750536918640137,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 23,
+   "sec": 0.050093889236450195,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 23,
+   "sec": 0.05027604103088379,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 23,
+   "sec": 0.06140613555908203,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 23,
+   "sec": 0.05608797073364258,
+   "real": 3,
+   "irrational": 3
+  },
+  {
+   "deg": 24,
+   "sec": 0.06040143966674805,
+   "real": 4,
+   "irrational": 3
+  },
+  {
+   "deg": 24,
+   "sec": 0.06127047538757324,
+   "real": 4,
+   "irrational": 4
+  },
+  {
+   "deg": 24,
+   "sec": 0.07240509986877441,
+   "real": 4,
+   "irrational": 3
+  },
+  {
+   "deg": 24,
+   "sec": 0.04315066337585449,
+   "real": 2,
+   "irrational": 2
+  },
+  {
+   "deg": 24,
+   "sec": 0.04309535026550293,
+   "real": 2,
+   "irrational": 2
+  }
+ ],
+ "dolci": {
+  "inv": {
+   "sec": 0.6969809532165527,
+   "ok": 335,
+   "wrong": 2
+  },
+  "pow": {
+   "sec": 0.25529980659484863,
+   "ok": 287
+  },
+  "rank": {
+   "sec": 0.3360774517059326,
+   "ok": 663
+  },
+  "prod": {
+   "sec": 0.40998053550720215,
+   "ok": 311
+  },
+  "det_mod": {
+   "sec": 0.0938420295715332,
+   "ok": 259
+  },
+  "svd_diff": {
+   "sec": 3.8724751472473145,
+   "ok": 82
+  },
+  "eig_abssum": {
+   "sec": 1.4177954196929932,
+   "ok": 145
+  },
+  "eig_maxabs": {
+   "sec": 1.4913251399993896,
+   "ok": 176
+  },
+  "svd_sum": {
+   "sec": 5.113218307495117,
+   "ok": 92
+  },
+  "svd_max": {
+   "sec": 2.935473918914795,
+   "ok": 71
+  },
+  "other": {
+   "skip": 1
+  }
+ }
+}

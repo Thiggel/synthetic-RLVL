@@ -1,0 +1,193 @@
+{
+ "repilot": {
+  "errors": {
+   "lex / symbol": 345,
+   "redundant parentheses": 287,
+   "other": 206,
+   "ans cites goal": 164,
+   "n-ary chain": 157,
+   "other rule step": 145,
+   "index bookkeeping": 128,
+   "calc not entailed": 126,
+   "numeral not in sentence": 99,
+   "binder name": 42
+  },
+  "errors_after_lenient": {
+   "other rule step": 306,
+   "ans cites goal": 225,
+   "calc not entailed": 216,
+   "other": 182,
+   "index bookkeeping": 150,
+   "numeral not in sentence": 107,
+   "binder name": 27,
+   "lex / symbol": 12,
+   "redundant parentheses": 9,
+   "n-ary chain": 8
+  },
+  "tiers": {
+   "canonical": {
+    "checker": 46,
+    "data": 28,
+    "judged": 7
+   },
+   "lenient": {
+    "checker": 53,
+    "data": 34,
+    "judged": 9
+   }
+  },
+  "judged_in_scope": {
+   "canonical": 5,
+   "lenient": 6
+  },
+  "judged_K": {
+   "canonical": 2,
+   "lenient": 3
+  },
+  "n_K": 37,
+  "judged_prompts": {
+   "canonical": [
+    "dolci_math/21339",
+    "dolci_math/23475",
+    "dolci_math/50489",
+    "dolci_math/74973",
+    "dolci_yesno/121796",
+    "dolci_yesno/139174",
+    "dolci_yesno/167083"
+   ],
+   "lenient": [
+    "dolci_dapo/78346",
+    "dolci_math/21339",
+    "dolci_math/23475",
+    "dolci_math/50489",
+    "dolci_math/74973",
+    "dolci_yesno/121796",
+    "dolci_yesno/139174",
+    "dolci_yesno/141205",
+    "dolci_yesno/167083"
+   ]
+  },
+  "goal_preds": {
+   "k178": 11,
+   "k94": 6,
+   "k98": 2
+  },
+  "goal_preds_ok": {
+   "k178": 0,
+   "k94": 0,
+   "k98": 0
+  },
+  "judge_issues": {
+   "different_question": 85,
+   "presolved": 44,
+   "extra_fact": 16,
+   "missing_fact": 1
+  },
+  "lenient_judge_issues": {
+   "different_question": 30,
+   "extra_fact": 10,
+   "presolved": 8
+  },
+  "rescued": 46,
+  "rescued_judged": 22
+ },
+ "few-shots": {
+  "errors": {
+   "lex / symbol": 345,
+   "redundant parentheses": 297,
+   "n-ary chain": 198,
+   "other": 195,
+   "other rule step": 182,
+   "index bookkeeping": 130,
+   "ans cites goal": 128,
+   "calc not entailed": 110,
+   "numeral not in sentence": 71,
+   "binder name": 49
+  },
+  "errors_after_lenient": {
+   "other rule step": 361,
+   "ans cites goal": 186,
+   "calc not entailed": 184,
+   "other": 182,
+   "index bookkeeping": 151,
+   "numeral not in sentence": 83,
+   "binder name": 24,
+   "lex / symbol": 18,
+   "redundant parentheses": 15,
+   "n-ary chain": 11
+  },
+  "tiers": {
+   "canonical": {
+    "checker": 48,
+    "data": 28,
+    "judged": 8
+   },
+   "lenient": {
+    "checker": 56,
+    "data": 36,
+    "judged": 10
+   }
+  },
+  "judged_in_scope": {
+   "canonical": 7,
+   "lenient": 9
+  },
+  "judged_K": {
+   "canonical": 1,
+   "lenient": 1
+  },
+  "n_K": 39,
+  "judged_prompts": {
+   "canonical": [
+    "dolci_dapo/79999",
+    "dolci_math/21339",
+    "dolci_math/23475",
+    "dolci_math/50489",
+    "dolci_math/50812",
+    "dolci_math/74973",
+    "dolci_yesno/121796",
+    "dolci_yesno/142501"
+   ],
+   "lenient": [
+    "dolci_dapo/78346",
+    "dolci_dapo/79999",
+    "dolci_math/21339",
+    "dolci_math/23475",
+    "dolci_math/26372",
+    "dolci_math/50489",
+    "dolci_math/50812",
+    "dolci_math/74973",
+    "dolci_yesno/121796",
+    "dolci_yesno/142501"
+   ]
+  },
+  "goal_preds": {
+   "k178": 11,
+   "k94": 46,
+   "k95": 5,
+   "k98": 13
+  },
+  "goal_preds_ok": {
+   "k178": 3,
+   "k94": 0,
+   "k95": 0,
+   "k98": 0
+  },
+  "judge_issues": {
+   "different_question": 88,
+   "presolved": 37,
+   "extra_fact": 10,
+   "missing_fact": 2,
+   "?": 1
+  },
+  "lenient_judge_issues": {
+   "different_question": 20,
+   "presolved": 9,
+   "extra_fact": 5,
+   "wrong_fact": 2,
+   "missing_fact": 1
+  },
+  "rescued": 46,
+  "rescued_judged": 25
+ }
+}

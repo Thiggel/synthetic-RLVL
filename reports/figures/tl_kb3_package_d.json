@@ -1,0 +1,3746 @@
+{
+ "lemmas": [
+  {
+   "kb": 641,
+   "gloss": "the coefficient of x^i in a polynomial (coefficients from the constant term up; 0 for any other i)",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05384182929992676
+  },
+  {
+   "kb": 642,
+   "gloss": "the degree of a nonzero polynomial: the highest power with a nonzero coefficient",
+   "off": 0,
+   "yes": 144,
+   "unk": 6,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05731940269470215
+  },
+  {
+   "kb": 643,
+   "gloss": "the leading coefficient of a nonzero polynomial",
+   "off": 0,
+   "yes": 147,
+   "unk": 3,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03200244903564453
+  },
+  {
+   "kb": 644,
+   "gloss": "the sum of two polynomials (as long as the longer one)",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.10480046272277832
+  },
+  {
+   "kb": 645,
+   "gloss": "the product of two polynomials (of length m + n \u2212 1)",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.35601019859313965
+  },
+  {
+   "kb": 646,
+   "gloss": "a polynomial to a whole-number power",
+   "off": 0,
+   "yes": 124,
+   "unk": 26,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.055869102478027344
+  },
+  {
+   "kb": 647,
+   "gloss": "the composition p(q(x)) of two polynomials",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.1686394214630127
+  },
+  {
+   "kb": 648,
+   "gloss": "the quotient of polynomial long division by a nonzero polynomial",
+   "off": 0,
+   "yes": 142,
+   "unk": 8,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.39260220527648926
+  },
+  {
+   "kb": 649,
+   "gloss": "the remainder of polynomial long division by a nonzero polynomial (as many coefficients as the divisor's degree)",
+   "off": 0,
+   "yes": 145,
+   "unk": 5,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.15601181983947754
+  },
+  {
+   "kb": 650,
+   "gloss": "the value of a polynomial with real coefficients at a complex number",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.5329914093017578
+  },
+  {
+   "kb": 652,
+   "gloss": "inside the list a coefficient is the entry",
+   "off": 70,
+   "yes": 80,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.032425642013549805
+  },
+  {
+   "kb": 653,
+   "gloss": "beyond the list every coefficient is 0",
+   "off": 97,
+   "yes": 53,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.022571325302124023
+  },
+  {
+   "kb": 654,
+   "gloss": "the degree is below the length of the list",
+   "off": 14,
+   "yes": 136,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.04621553421020508
+  },
+  {
+   "kb": 655,
+   "gloss": "the leading coefficient is not 0",
+   "off": 6,
+   "yes": 144,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.03661680221557617
+  },
+  {
+   "kb": 656,
+   "gloss": "every coefficient above the degree is 0",
+   "off": 106,
+   "yes": 44,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.04858803749084473
+  },
+  {
+   "kb": 657,
+   "gloss": "a polynomial's value is the sum of its terms",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07098007202148438
+  },
+  {
+   "kb": 658,
+   "gloss": "the sum of polynomials does not depend on the order",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05013632774353027
+  },
+  {
+   "kb": 659,
+   "gloss": "polynomials add coefficientwise",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.08231258392333984
+  },
+  {
+   "kb": 660,
+   "gloss": "the value of a sum is the sum of the values",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07130217552185059
+  },
+  {
+   "kb": 661,
+   "gloss": "the degree of a sum is at most the larger degree",
+   "off": 32,
+   "yes": 118,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.12141966819763184
+  },
+  {
+   "kb": 662,
+   "gloss": "the degree of a sum of polynomials of different degrees is the larger degree",
+   "off": 40,
+   "yes": 110,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09325385093688965
+  },
+  {
+   "kb": 663,
+   "gloss": "the product of polynomials does not depend on the order",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05975151062011719
+  },
+  {
+   "kb": 664,
+   "gloss": "the product of polynomials is associative",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.14840984344482422
+  },
+  {
+   "kb": 665,
+   "gloss": "the product of polynomials distributes over the sum",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.13744115829467773
+  },
+  {
+   "kb": 666,
+   "gloss": "the value of a product is the product of the values",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.10250687599182129
+  },
+  {
+   "kb": 667,
+   "gloss": "the degree of a product is the sum of the degrees",
+   "off": 22,
+   "yes": 128,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09457993507385254
+  },
+  {
+   "kb": 668,
+   "gloss": "the leading coefficient of a product is the product of the leading coefficients",
+   "off": 21,
+   "yes": 129,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09778141975402832
+  },
+  {
+   "kb": 669,
+   "gloss": "the constant term of a product is the product of the constant terms",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.06454205513000488
+  },
+  {
+   "kb": 670,
+   "gloss": "the value of a power is the power of the value",
+   "off": 29,
+   "yes": 121,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07691836357116699
+  },
+  {
+   "kb": 671,
+   "gloss": "the binomial theorem",
+   "off": 37,
+   "yes": 113,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.5804836750030518
+  },
+  {
+   "kb": 672,
+   "gloss": "the degree of a power is the exponent times the degree",
+   "off": 39,
+   "yes": 111,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.05855727195739746
+  },
+  {
+   "kb": 673,
+   "gloss": "the value of a composition is the composition of the values",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.10242486000061035
+  },
+  {
+   "kb": 674,
+   "gloss": "the degree of a composition is the product of the degrees",
+   "off": 50,
+   "yes": 100,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.1130075454711914
+  },
+  {
+   "kb": 675,
+   "gloss": "dividend = divisor \u00d7 quotient + remainder",
+   "off": 8,
+   "yes": 142,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.13326430320739746
+  },
+  {
+   "kb": 676,
+   "gloss": "the remainder has a smaller degree than the divisor",
+   "off": 60,
+   "yes": 90,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.09148073196411133
+  },
+  {
+   "kb": 677,
+   "gloss": "the remainder on division by x \u2212 a is the value at a",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.2615165710449219
+  },
+  {
+   "kb": 678,
+   "gloss": "the factor theorem: x \u2212 a divides a polynomial with root a",
+   "off": 23,
+   "yes": 127,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0670003890991211
+  },
+  {
+   "kb": 679,
+   "gloss": "the degree of the quotient is the difference of the degrees",
+   "off": 63,
+   "yes": 87,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.0929110050201416
+  },
+  {
+   "kb": 680,
+   "gloss": "dividing by a constant divides every coefficient",
+   "off": 26,
+   "yes": 124,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.290024995803833
+  },
+  {
+   "kb": 681,
+   "gloss": "at a real number the complex value is the real value",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.07602190971374512
+  },
+  {
+   "kb": 682,
+   "gloss": "a real polynomial at the conjugate is the conjugate of its value",
+   "off": 0,
+   "yes": 150,
+   "unk": 0,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.3368823528289795
+  },
+  {
+   "kb": 683,
+   "gloss": "the complex value of a product is the product of the values",
+   "off": 0,
+   "yes": 145,
+   "unk": 5,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 1.0295889377593994
+  },
+  {
+   "kb": 684,
+   "gloss": "every listed complex root is a root",
+   "off": 5,
+   "yes": 140,
+   "unk": 5,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.2393808364868164
+  },
+  {
+   "kb": 685,
+   "gloss": "a nonzero polynomial has as many complex roots as its degree (fundamental theorem of algebra)",
+   "off": 11,
+   "yes": 136,
+   "unk": 3,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.17552947998046875
+  },
+  {
+   "kb": 686,
+   "gloss": "Vieta: the roots add up to \u2212 a_(n\u22121) / a_n",
+   "off": 12,
+   "yes": 123,
+   "unk": 15,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 3.749976873397827
+  },
+  {
+   "kb": 687,
+   "gloss": "the imaginary parts of the roots of a real polynomial add up to 0",
+   "off": 5,
+   "yes": 142,
+   "unk": 3,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.16629409790039062
+  },
+  {
+   "kb": 688,
+   "gloss": "Vieta: the product of the roots is (\u22121)^n a_0 / a_n",
+   "off": 6,
+   "yes": 131,
+   "unk": 13,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 2.983403444290161
+  },
+  {
+   "kb": 689,
+   "gloss": "Newton: the squares of the roots add up to (a_(n\u22121) / a_n)\u00b2 \u2212 2 a_(n\u22122) / a_n",
+   "off": 4,
+   "yes": 127,
+   "unk": 19,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 1.6652591228485107
+  },
+  {
+   "kb": 690,
+   "gloss": "the real roots are the complex roots with imaginary part 0",
+   "off": 9,
+   "yes": 140,
+   "unk": 1,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.16072368621826172
+  },
+  {
+   "kb": 691,
+   "gloss": "the conjugate of a root of a real polynomial is a root",
+   "off": 6,
+   "yes": 143,
+   "unk": 1,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.6467347145080566
+  },
+  {
+   "kb": 692,
+   "gloss": "the quadratic formula for x\u00b2 + b x + c with negative discriminant",
+   "off": 73,
+   "yes": 69,
+   "unk": 8,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.04776597023010254
+  },
+  {
+   "kb": 693,
+   "gloss": "the quadratic formula for x\u00b2 + b x + c with real roots",
+   "off": 68,
+   "yes": 79,
+   "unk": 3,
+   "bad": 0,
+   "first_bad": null,
+   "sec": 0.08933258056640625
+  }
+ ],
+ "wrong": [
+  {
+   "name": "degree of a sum = the larger degree",
+   "prem": 12
+  },
+  {
+   "name": "degrees multiply",
+   "prem": 1
+  },
+  {
+   "name": "composition commutes",
+   "prem": 1
+  },
+  {
+   "name": "remainder theorem at \u2212 a",
+   "prem": 3
+  },
+  {
+   "name": "Vieta sum without the sign",
+   "prem": 1
+  },
+  {
+   "name": "Vieta product without (\u22121)\u207f",
+   "prem": 4
+  },
+  {
+   "name": "conjugation does not matter",
+   "prem": 1
+  },
+  {
+   "name": "binomial with a\u1d4f",
+   "prem": 2
+  },
+  {
+   "name": "the quotient keeps the degree",
+   "prem": 1
+  },
+  {
+   "name": "the value of a sum is the product",
+   "prem": 1
+  },
+  {
+   "name": "leading coefficients add",
+   "prem": 1
+  },
+  {
+   "name": "every root is real",
+   "prem": 2
+  },
+  {
+   "name": "coefficients multiply",
+   "prem": 1
+  },
+  {
+   "name": "\u03a3 z\u00b2 = (\u03a3 z)\u00b2",
+   "prem": 2
+  }
+ ],
+ "roots_check": [
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 4
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 2
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 4
+  },
+  {
+   "deg": 5,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 2
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 2
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "nonreal": 2
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 4
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 4
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 2
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 6,
+   "nonreal": 6
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 4
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 2
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "nonreal": 4
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 2
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 2
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 2
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "nonreal": 2
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  },
+  {
+   "deg": 0,
+   "nonreal": 0
+  }
+ ],
+ "timing": {
+  "poly_mul": [
+   {
+    "deg": 1,
+    "fast": 5.984306335449219e-05,
+    "unfold": 0.0005767345428466797,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 2,
+    "fast": 8.559226989746094e-05,
+    "unfold": 0.0019791126251220703,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 4,
+    "fast": 0.0001747608184814453,
+    "unfold": 0.0068776607513427734,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 8,
+    "fast": 0.0004699230194091797,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 16,
+    "fast": 0.001283884048461914,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 32,
+    "fast": 0.004325151443481445,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 64,
+    "fast": 0.01583576202392578,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   }
+  ],
+  "poly_pow": [
+   {
+    "deg": 1,
+    "fast": 8.416175842285156e-05,
+    "unfold": 0.00020623207092285156,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 2,
+    "fast": 0.0001556873321533203,
+    "unfold": 0.0004127025604248047,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 4,
+    "fast": 0.00037980079650878906,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 8,
+    "fast": 0.0010933876037597656,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 16,
+    "fast": 0.0037953853607177734,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 32,
+    "fast": 0.013815879821777344,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 64,
+    "fast": 0.05304837226867676,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   }
+  ],
+  "poly_comp": [
+   {
+    "deg": 1,
+    "fast": 6.413459777832031e-05,
+    "unfold": 0.00018739700317382812,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 2,
+    "fast": 0.00015020370483398438,
+    "unfold": 0.0003829002380371094,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 4,
+    "fast": 0.0010657310485839844,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 8,
+    "fast": 0.017693758010864258,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 16,
+    "fast": 0.4343295097351074,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 32,
+    "fast": 0.0002951622009277344,
+    "unfold": null,
+    "same": true,
+    "fast_ok": false
+   },
+   {
+    "deg": 64,
+    "fast": 0.0005240440368652344,
+    "unfold": null,
+    "same": true,
+    "fast_ok": false
+   }
+  ],
+  "poly_quo": [
+   {
+    "deg": 1,
+    "fast": 7.414817810058594e-05,
+    "unfold": 0.0018754005432128906,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 2,
+    "fast": 0.00012183189392089844,
+    "unfold": 0.00458979606628418,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 4,
+    "fast": 0.00018453598022460938,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 8,
+    "fast": 0.00046539306640625,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 16,
+    "fast": 0.0012769699096679688,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 32,
+    "fast": 0.0045757293701171875,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 64,
+    "fast": 0.01655411720275879,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   }
+  ],
+  "poly_rem": [
+   {
+    "deg": 1,
+    "fast": 8.368492126464844e-05,
+    "unfold": 0.00037026405334472656,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 2,
+    "fast": 0.00015544891357421875,
+    "unfold": 0.0009489059448242188,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 4,
+    "fast": 0.0002849102020263672,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 8,
+    "fast": 0.0007419586181640625,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 16,
+    "fast": 0.0026187896728515625,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 32,
+    "fast": 0.009082555770874023,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   },
+   {
+    "deg": 64,
+    "fast": 0.04239773750305176,
+    "unfold": null,
+    "same": true,
+    "fast_ok": true
+   }
+  ]
+ },
+ "roots": [
+  {
+   "deg": 1,
+   "family": "factors",
+   "sec": 0.0002758502960205078,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "factors",
+   "sec": 0.00026607513427734375,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "factors",
+   "sec": 0.00026988983154296875,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "factors",
+   "sec": 0.0003407001495361328,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "factors",
+   "sec": 0.0002086162567138672,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "factors",
+   "sec": 0.00022530555725097656,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "factors",
+   "sec": 0.00024199485778808594,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "factors",
+   "sec": 0.0001900196075439453,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "random",
+   "sec": 0.0003948211669921875,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "random",
+   "sec": 0.00027751922607421875,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "random",
+   "sec": 0.00038933753967285156,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "random",
+   "sec": 0.00022459030151367188,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "random",
+   "sec": 0.00046753883361816406,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "random",
+   "sec": 0.00025010108947753906,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "random",
+   "sec": 0.0004699230194091797,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 1,
+   "family": "random",
+   "sec": 0.0002238750457763672,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "factors",
+   "sec": 0.0007920265197753906,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "factors",
+   "sec": 0.0004904270172119141,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "factors",
+   "sec": 0.0007870197296142578,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "factors",
+   "sec": 0.0004646778106689453,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "factors",
+   "sec": 0.0008351802825927734,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "factors",
+   "sec": 0.00041985511779785156,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "factors",
+   "sec": 0.00025916099548339844,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 2,
+   "family": "factors",
+   "sec": 0.00047016143798828125,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "random",
+   "sec": 0.0016703605651855469,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "random",
+   "sec": 0.0007622241973876953,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 2,
+   "family": "random",
+   "sec": 0.0014901161193847656,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "random",
+   "sec": 0.0016069412231445312,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "random",
+   "sec": 0.0015797615051269531,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "random",
+   "sec": 0.0007674694061279297,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 2,
+   "family": "random",
+   "sec": 0.00031113624572753906,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 2,
+   "family": "random",
+   "sec": 0.00047898292541503906,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 3,
+   "family": "factors",
+   "sec": 0.0015039443969726562,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "factors",
+   "sec": 0.0007259845733642578,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "factors",
+   "sec": 0.0013737678527832031,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "factors",
+   "sec": 0.0017840862274169922,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "factors",
+   "sec": 0.0009505748748779297,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 3,
+   "family": "factors",
+   "sec": 0.0013418197631835938,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "factors",
+   "sec": 0.0007801055908203125,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "factors",
+   "sec": 0.0006554126739501953,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "random",
+   "sec": 0.0009999275207519531,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "random",
+   "sec": 0.0014743804931640625,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "random",
+   "sec": 0.0010936260223388672,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "random",
+   "sec": 0.002656698226928711,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "random",
+   "sec": 0.0010330677032470703,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 3,
+   "family": "random",
+   "sec": 0.001020669937133789,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "random",
+   "sec": 0.0017383098602294922,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 3,
+   "family": "random",
+   "sec": 0.0015413761138916016,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "factors",
+   "sec": 0.0018122196197509766,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 4,
+   "family": "factors",
+   "sec": 0.0022525787353515625,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "factors",
+   "sec": 0.002385377883911133,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "factors",
+   "sec": 0.002279520034790039,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "factors",
+   "sec": 0.0012259483337402344,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "factors",
+   "sec": 0.002389669418334961,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "factors",
+   "sec": 0.0026924610137939453,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "factors",
+   "sec": 0.0012898445129394531,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "random",
+   "sec": 0.0031538009643554688,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "random",
+   "sec": 0.0017504692077636719,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "random",
+   "sec": 0.00298309326171875,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "random",
+   "sec": 0.002130270004272461,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "random",
+   "sec": 0.003201007843017578,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "random",
+   "sec": 0.0029077529907226562,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "random",
+   "sec": 0.0019011497497558594,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 4,
+   "family": "random",
+   "sec": 0.002973794937133789,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "family": "factors",
+   "sec": 0.0016031265258789062,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "family": "factors",
+   "sec": 0.002879619598388672,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "family": "factors",
+   "sec": 0.001626729965209961,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 5,
+   "family": "factors",
+   "sec": 0.0018036365509033203,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 5,
+   "family": "factors",
+   "sec": 0.002173900604248047,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 5,
+   "family": "factors",
+   "sec": 0.001984834671020508,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "family": "factors",
+   "sec": 0.0017476081848144531,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 5,
+   "family": "factors",
+   "sec": 0.0020940303802490234,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "family": "random",
+   "sec": 0.002825498580932617,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "family": "random",
+   "sec": 0.002643585205078125,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "family": "random",
+   "sec": 0.0029096603393554688,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "family": "random",
+   "sec": 0.0030670166015625,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "family": "random",
+   "sec": 0.004677295684814453,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "family": "random",
+   "sec": 0.00264739990234375,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "family": "random",
+   "sec": 0.0028231143951416016,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 5,
+   "family": "random",
+   "sec": 0.0027506351470947266,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "factors",
+   "sec": 0.005541801452636719,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 6,
+   "family": "factors",
+   "sec": 0.005738258361816406,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "factors",
+   "sec": 0.002146482467651367,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 6,
+   "family": "factors",
+   "sec": 0.007100105285644531,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "factors",
+   "sec": 0.004293203353881836,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 6,
+   "family": "factors",
+   "sec": 0.0013098716735839844,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 6,
+   "family": "factors",
+   "sec": 0.004328727722167969,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 6,
+   "family": "factors",
+   "sec": 0.005045890808105469,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "random",
+   "sec": 0.0069026947021484375,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "random",
+   "sec": 0.005297183990478516,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "random",
+   "sec": 0.005086421966552734,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "random",
+   "sec": 0.0071828365325927734,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "random",
+   "sec": 0.0034699440002441406,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "random",
+   "sec": 0.003046751022338867,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "random",
+   "sec": 0.007437944412231445,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 6,
+   "family": "random",
+   "sec": 0.004929780960083008,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "factors",
+   "sec": 0.0024247169494628906,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 7,
+   "family": "factors",
+   "sec": 0.0029506683349609375,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "factors",
+   "sec": 0.0037615299224853516,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "factors",
+   "sec": 0.002840280532836914,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "factors",
+   "sec": 0.0017116069793701172,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 7,
+   "family": "factors",
+   "sec": 0.002366304397583008,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "factors",
+   "sec": 0.002015352249145508,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 7,
+   "family": "factors",
+   "sec": 0.005875825881958008,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 7,
+   "family": "random",
+   "sec": 0.008883237838745117,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "random",
+   "sec": 0.004777193069458008,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "random",
+   "sec": 0.004425525665283203,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "random",
+   "sec": 0.0075533390045166016,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "random",
+   "sec": 0.00813436508178711,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "random",
+   "sec": 0.007301807403564453,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "random",
+   "sec": 0.004607677459716797,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 7,
+   "family": "random",
+   "sec": 0.005009651184082031,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "factors",
+   "sec": 0.008022308349609375,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 8,
+   "family": "factors",
+   "sec": 0.002964496612548828,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "factors",
+   "sec": 0.0033338069915771484,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 8,
+   "family": "factors",
+   "sec": 0.0044155120849609375,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "factors",
+   "sec": 0.003280162811279297,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "factors",
+   "sec": 0.011541128158569336,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "factors",
+   "sec": 0.009837150573730469,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "factors",
+   "sec": 0.006796360015869141,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 8,
+   "family": "random",
+   "sec": 0.0071980953216552734,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "random",
+   "sec": 0.007008790969848633,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "random",
+   "sec": 0.00998377799987793,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "random",
+   "sec": 0.004740715026855469,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "random",
+   "sec": 0.007397890090942383,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "random",
+   "sec": 0.00455927848815918,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "random",
+   "sec": 0.011595726013183594,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 8,
+   "family": "random",
+   "sec": 0.00778651237487793,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 9,
+   "family": "factors",
+   "sec": 0.004030704498291016,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 9,
+   "family": "factors",
+   "sec": 0.0034933090209960938,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 9,
+   "family": "factors",
+   "sec": 0.003145456314086914,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 9,
+   "family": "factors",
+   "sec": 0.005175590515136719,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 9,
+   "family": "factors",
+   "sec": 0.0026819705963134766,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 9,
+   "family": "factors",
+   "sec": 0.006273746490478516,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 9,
+   "family": "factors",
+   "sec": 0.003813028335571289,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 9,
+   "family": "factors",
+   "sec": 0.004374027252197266,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 9,
+   "family": "random",
+   "sec": 0.013375043869018555,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 9,
+   "family": "random",
+   "sec": 0.012180805206298828,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 9,
+   "family": "random",
+   "sec": 0.0068972110748291016,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 9,
+   "family": "random",
+   "sec": 0.010823965072631836,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 9,
+   "family": "random",
+   "sec": 0.012023687362670898,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 9,
+   "family": "random",
+   "sec": 0.007314443588256836,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 9,
+   "family": "random",
+   "sec": 0.007178544998168945,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 9,
+   "family": "random",
+   "sec": 0.008475542068481445,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 10,
+   "family": "factors",
+   "sec": 0.013712167739868164,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 10,
+   "family": "factors",
+   "sec": 0.009008169174194336,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 10,
+   "family": "factors",
+   "sec": 0.006144046783447266,
+   "ok": true,
+   "nonreal": 6
+  },
+  {
+   "deg": 10,
+   "family": "factors",
+   "sec": 0.004084110260009766,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 10,
+   "family": "factors",
+   "sec": 0.0035250186920166016,
+   "ok": true,
+   "nonreal": 6
+  },
+  {
+   "deg": 10,
+   "family": "factors",
+   "sec": 0.0037412643432617188,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 10,
+   "family": "factors",
+   "sec": 0.013822317123413086,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 10,
+   "family": "factors",
+   "sec": 0.003993511199951172,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 10,
+   "family": "random",
+   "sec": 0.007822751998901367,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 10,
+   "family": "random",
+   "sec": 0.01213693618774414,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 10,
+   "family": "random",
+   "sec": 0.01100778579711914,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 10,
+   "family": "random",
+   "sec": 0.007086277008056641,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 10,
+   "family": "random",
+   "sec": 0.011065959930419922,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 10,
+   "family": "random",
+   "sec": 0.006757497787475586,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 10,
+   "family": "random",
+   "sec": 0.012305736541748047,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 10,
+   "family": "random",
+   "sec": 0.010820388793945312,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 11,
+   "family": "factors",
+   "sec": 0.014643192291259766,
+   "ok": true,
+   "nonreal": 6
+  },
+  {
+   "deg": 11,
+   "family": "factors",
+   "sec": 0.009972333908081055,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 11,
+   "family": "factors",
+   "sec": 0.019322872161865234,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 11,
+   "family": "factors",
+   "sec": 0.045035600662231445,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 11,
+   "family": "factors",
+   "sec": 0.008143186569213867,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 11,
+   "family": "factors",
+   "sec": 0.013245105743408203,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 11,
+   "family": "factors",
+   "sec": 0.026407480239868164,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 11,
+   "family": "factors",
+   "sec": 0.007271289825439453,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 11,
+   "family": "random",
+   "sec": 0.016135692596435547,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 11,
+   "family": "random",
+   "sec": 0.016431331634521484,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 11,
+   "family": "random",
+   "sec": 0.01611804962158203,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 11,
+   "family": "random",
+   "sec": 0.010327816009521484,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 11,
+   "family": "random",
+   "sec": 0.006377696990966797,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 11,
+   "family": "random",
+   "sec": 0.012781143188476562,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 11,
+   "family": "random",
+   "sec": 0.01142263412475586,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 11,
+   "family": "random",
+   "sec": 0.011038780212402344,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 12,
+   "family": "factors",
+   "sec": 0.005385637283325195,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 12,
+   "family": "factors",
+   "sec": 0.0038504600524902344,
+   "ok": true,
+   "nonreal": 8
+  },
+  {
+   "deg": 12,
+   "family": "factors",
+   "sec": 0.009750843048095703,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 12,
+   "family": "factors",
+   "sec": 0.006816387176513672,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 12,
+   "family": "factors",
+   "sec": 0.017271995544433594,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 12,
+   "family": "factors",
+   "sec": 0.010831832885742188,
+   "ok": true,
+   "nonreal": 6
+  },
+  {
+   "deg": 12,
+   "family": "factors",
+   "sec": 0.00693202018737793,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 12,
+   "family": "factors",
+   "sec": 0.010974407196044922,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 12,
+   "family": "random",
+   "sec": 0.030153274536132812,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 12,
+   "family": "random",
+   "sec": 0.013031005859375,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 12,
+   "family": "random",
+   "sec": 0.015478849411010742,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 12,
+   "family": "random",
+   "sec": 0.01629638671875,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 12,
+   "family": "random",
+   "sec": 0.013473033905029297,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 12,
+   "family": "random",
+   "sec": 0.010164976119995117,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 12,
+   "family": "random",
+   "sec": 0.018904685974121094,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 12,
+   "family": "random",
+   "sec": 0.016326189041137695,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 13,
+   "family": "factors",
+   "sec": 0.00619053840637207,
+   "ok": true,
+   "nonreal": 6
+  },
+  {
+   "deg": 13,
+   "family": "factors",
+   "sec": 0.011799335479736328,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 13,
+   "family": "factors",
+   "sec": 0.034638404846191406,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 13,
+   "family": "factors",
+   "sec": 0.018317222595214844,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 13,
+   "family": "factors",
+   "sec": 0.010067462921142578,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 13,
+   "family": "factors",
+   "sec": 0.010256528854370117,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 13,
+   "family": "factors",
+   "sec": 0.006476640701293945,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 13,
+   "family": "factors",
+   "sec": 0.00932931900024414,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 13,
+   "family": "random",
+   "sec": 0.010768890380859375,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 13,
+   "family": "random",
+   "sec": 0.024728775024414062,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 13,
+   "family": "random",
+   "sec": 0.015159845352172852,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 13,
+   "family": "random",
+   "sec": 0.010214567184448242,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 13,
+   "family": "random",
+   "sec": 0.015574932098388672,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 13,
+   "family": "random",
+   "sec": 0.01558995246887207,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 13,
+   "family": "random",
+   "sec": 0.0161440372467041,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 13,
+   "family": "random",
+   "sec": 0.024163484573364258,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "factors",
+   "sec": 0.007746219635009766,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 14,
+   "family": "factors",
+   "sec": 0.02466440200805664,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 14,
+   "family": "factors",
+   "sec": 0.0055658817291259766,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 14,
+   "family": "factors",
+   "sec": 0.0165250301361084,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 14,
+   "family": "factors",
+   "sec": 0.010105371475219727,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "factors",
+   "sec": 0.01093292236328125,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "factors",
+   "sec": 0.00801539421081543,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "factors",
+   "sec": 0.013150691986083984,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 14,
+   "family": "random",
+   "sec": 0.017368555068969727,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "random",
+   "sec": 0.022161006927490234,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "random",
+   "sec": 0.017065048217773438,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "random",
+   "sec": 0.02170419692993164,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "random",
+   "sec": 0.02315378189086914,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "random",
+   "sec": 0.028823137283325195,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "random",
+   "sec": 0.016780614852905273,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 14,
+   "family": "random",
+   "sec": 0.022098541259765625,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 15,
+   "family": "factors",
+   "sec": 0.011266946792602539,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 15,
+   "family": "factors",
+   "sec": 0.01467132568359375,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 15,
+   "family": "factors",
+   "sec": 0.021872520446777344,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 15,
+   "family": "factors",
+   "sec": 0.01105356216430664,
+   "ok": true,
+   "nonreal": 6
+  },
+  {
+   "deg": 15,
+   "family": "factors",
+   "sec": 0.009295940399169922,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 15,
+   "family": "factors",
+   "sec": 0.007292032241821289,
+   "ok": true,
+   "nonreal": 6
+  },
+  {
+   "deg": 15,
+   "family": "factors",
+   "sec": 0.009145259857177734,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 15,
+   "family": "factors",
+   "sec": 0.007607936859130859,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 15,
+   "family": "random",
+   "sec": 0.021666526794433594,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 15,
+   "family": "random",
+   "sec": 0.03728795051574707,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 15,
+   "family": "random",
+   "sec": 0.039067983627319336,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 15,
+   "family": "random",
+   "sec": 0.025380373001098633,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 15,
+   "family": "random",
+   "sec": 0.03310275077819824,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 15,
+   "family": "random",
+   "sec": 0.031950950622558594,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 15,
+   "family": "random",
+   "sec": 0.014541387557983398,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 15,
+   "family": "random",
+   "sec": 0.02401876449584961,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 16,
+   "family": "factors",
+   "sec": 0.017301082611083984,
+   "ok": true,
+   "nonreal": 6
+  },
+  {
+   "deg": 16,
+   "family": "factors",
+   "sec": 0.0664830207824707,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 16,
+   "family": "factors",
+   "sec": 0.014059066772460938,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 16,
+   "family": "factors",
+   "sec": 0.006133079528808594,
+   "ok": true,
+   "nonreal": 6
+  },
+  {
+   "deg": 16,
+   "family": "factors",
+   "sec": 0.024151086807250977,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 16,
+   "family": "factors",
+   "sec": 0.06576156616210938,
+   "ok": true,
+   "nonreal": 4
+  },
+  {
+   "deg": 16,
+   "family": "factors",
+   "sec": 0.010556936264038086,
+   "ok": true,
+   "nonreal": 0
+  },
+  {
+   "deg": 16,
+   "family": "factors",
+   "sec": 0.016039609909057617,
+   "ok": true,
+   "nonreal": 2
+  },
+  {
+   "deg": 16,
+   "family": "random",
+   "sec": 0.023864030838012695,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 16,
+   "family": "random",
+   "sec": 0.054076194763183594,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 16,
+   "family": "random",
+   "sec": 0.03815627098083496,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 16,
+   "family": "random",
+   "sec": 0.023915529251098633,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 16,
+   "family": "random",
+   "sec": 0.047545671463012695,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 16,
+   "family": "random",
+   "sec": 0.03463006019592285,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 16,
+   "family": "random",
+   "sec": 0.03500699996948242,
+   "ok": false,
+   "nonreal": 0
+  },
+  {
+   "deg": 16,
+   "family": "random",
+   "sec": 0.059438228607177734,
+   "ok": false,
+   "nonreal": 0
+  }
+ ],
+ "dolci": {
+  "sec": 4.397289514541626,
+  "ok": 648,
+  "skip": 21,
+  "stuck": 1
+ },
+ "dolci_hand": 29
+}

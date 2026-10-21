@@ -1,0 +1,61 @@
+{
+ "68861 no given 0": {
+  "K (39 prompts)": {
+   "cum": [
+    11,
+    17,
+    22,
+    25
+   ],
+   "prompts": 18
+  },
+  "not K (111 prompts)": {
+   "cum": [
+    38,
+    59,
+    71,
+    78
+   ],
+   "prompts": 37
+  },
+  "data": {
+   "dolci_dapo": 14,
+   "dolci_math": 16,
+   "dolci_yesno": 5,
+   "all": 35
+  }
+ },
+ "68879 given 0": {
+  "K (39 prompts)": {
+   "cum": [
+    15,
+    31,
+    44,
+    52
+   ],
+   "prompts": 26
+  },
+  "not K (111 prompts)": {
+   "cum": [
+    30,
+    49,
+    61,
+    69
+   ],
+   "prompts": 33
+  },
+  "data": {
+   "dolci_dapo": 13,
+   "dolci_math": 12,
+   "dolci_yesno": 24,
+   "all": 49
+  },
+  "given0_users": {
+   "check": 201,
+   "ok": 31,
+   "unfaithful": 69,
+   "wrong": 40
+  },
+  "background_answer": 19
+ }
+}

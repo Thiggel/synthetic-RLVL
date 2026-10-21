@@ -1,0 +1,696 @@
+{
+ "lemmas": [
+  {
+   "kb": 168,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 170,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 172,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 174,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 178,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.07
+  },
+  {
+   "kb": 182,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 183,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 184,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 185,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 186,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 187,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 188,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 189,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 190,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 191,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 192,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 193,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 194,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 195,
+   "prem": 14,
+   "yes": 14,
+   "unk": 0,
+   "bad": false,
+   "s": 0.05
+  },
+  {
+   "kb": 196,
+   "prem": 1,
+   "yes": 1,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 197,
+   "prem": 40,
+   "yes": 37,
+   "unk": 3,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 198,
+   "prem": 40,
+   "yes": 39,
+   "unk": 1,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 199,
+   "prem": 40,
+   "yes": 39,
+   "unk": 1,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 200,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 201,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.01
+  },
+  {
+   "kb": 202,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.01
+  },
+  {
+   "kb": 203,
+   "prem": 22,
+   "yes": 22,
+   "unk": 0,
+   "bad": false,
+   "s": 0.02
+  },
+  {
+   "kb": 204,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 205,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 206,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.01
+  },
+  {
+   "kb": 207,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.01
+  },
+  {
+   "kb": 208,
+   "prem": 22,
+   "yes": 22,
+   "unk": 0,
+   "bad": false,
+   "s": 0.02
+  },
+  {
+   "kb": 209,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 210,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 211,
+   "prem": 1,
+   "yes": 1,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 212,
+   "prem": 3,
+   "yes": 3,
+   "unk": 0,
+   "bad": false,
+   "s": 0.05
+  },
+  {
+   "kb": 213,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 214,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 215,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.01
+  },
+  {
+   "kb": 216,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.01
+  },
+  {
+   "kb": 217,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.01
+  },
+  {
+   "kb": 218,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.01
+  },
+  {
+   "kb": 219,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.01
+  },
+  {
+   "kb": 220,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 221,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 222,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 223,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 224,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 225,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 226,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 227,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 228,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 229,
+   "prem": 5,
+   "yes": 5,
+   "unk": 0,
+   "bad": false,
+   "s": 0.02
+  },
+  {
+   "kb": 230,
+   "prem": 8,
+   "yes": 8,
+   "unk": 0,
+   "bad": false,
+   "s": 0.02
+  },
+  {
+   "kb": 231,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.14
+  },
+  {
+   "kb": 232,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.13
+  },
+  {
+   "kb": 233,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.03
+  },
+  {
+   "kb": 234,
+   "prem": 7,
+   "yes": 7,
+   "unk": 0,
+   "bad": false,
+   "s": 0.05
+  },
+  {
+   "kb": 235,
+   "prem": 40,
+   "yes": 34,
+   "unk": 6,
+   "bad": false,
+   "s": 0.03
+  },
+  {
+   "kb": 236,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.1
+  },
+  {
+   "kb": 237,
+   "prem": 40,
+   "yes": 35,
+   "unk": 5,
+   "bad": false,
+   "s": 0.06
+  },
+  {
+   "kb": 238,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.06
+  },
+  {
+   "kb": 239,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.05
+  },
+  {
+   "kb": 240,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 241,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.0
+  },
+  {
+   "kb": 242,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.27
+  },
+  {
+   "kb": 243,
+   "prem": 1,
+   "yes": 1,
+   "unk": 0,
+   "bad": false,
+   "s": 0.04
+  },
+  {
+   "kb": 244,
+   "prem": 11,
+   "yes": 11,
+   "unk": 0,
+   "bad": false,
+   "s": 1.7
+  },
+  {
+   "kb": 245,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.38
+  },
+  {
+   "kb": 246,
+   "prem": 40,
+   "yes": 38,
+   "unk": 2,
+   "bad": false,
+   "s": 0.26
+  },
+  {
+   "kb": 247,
+   "prem": 40,
+   "yes": 34,
+   "unk": 6,
+   "bad": false,
+   "s": 0.65
+  },
+  {
+   "kb": 248,
+   "prem": 32,
+   "yes": 32,
+   "unk": 0,
+   "bad": false,
+   "s": 0.01
+  },
+  {
+   "kb": 249,
+   "prem": 2,
+   "yes": 2,
+   "unk": 0,
+   "bad": false,
+   "s": 0.03
+  },
+  {
+   "kb": 250,
+   "prem": 33,
+   "yes": 33,
+   "unk": 0,
+   "bad": false,
+   "s": 2.1
+  },
+  {
+   "kb": 251,
+   "prem": 40,
+   "yes": 40,
+   "unk": 0,
+   "bad": false,
+   "s": 0.5
+  }
+ ],
+ "wrong": [
+  {
+   "src": "\u2200 x1 : \u211d . k142(\u03bb x2 : \u211d . k122(x2) , x1) \u2227 (k143(\u03bb x2 : \u211d . k122(x2) , x1) = \u2212 k123(x1))",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "\u2200 x1 : \u211d \u2192 \u211d . \u2200 x2 : \u211d \u2192 \u211d . \u2200 x3 : \u211d . (k142(x1 , x3) \u2227 k142(x2 , x3)) \u2192 (k143(\u03bb x4 : \u211d . x1(x4) \u00d7 x2(x4) , x3) = (k143(x1 , x3) \u00d7 k143(x2 , x3)))",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "\u2200 x1 : \u211d \u2192 \u211d . \u2200 x2 : \u211d \u2192 \u211d . \u2200 x3 : \u211d . (k142(x2 , x3) \u2227 k142(x1 , x2(x3))) \u2192 (k143(\u03bb x4 : \u211d . x1(x2(x4)) , x3) = k143(x1 , x2(x3)))",
+   "prem": 2,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "\u2200 x1 : \u211d \u2192 \u211d . \u2200 x2 : \u211d \u2192 \u211d . \u2200 x3 : \u211d . (k142(x1 , x3) \u2227 (k142(x2 , x3) \u2227 \u00ac (x2(x3) = 0))) \u2192 (k143(\u03bb x4 : \u211d . x1(x4) \u00f7 x2(x4) , x3) = (((k143(x1 , x3) \u00d7 x2(x3)) + (x1(x3) \u00d7 k143(x2 , x3))) \u00f7 k9(x2(x3) , 2)))",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "k145(\u03bb x1 : \u211d . 1 \u00f7 k9(x1 , 2) , 1) = (k9(k124 , 2) \u00f7 8)",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "\u2200 x1 : \u211d . (k6(x1) < 1) \u2192 (k145(\u03bb x2 : \u211d . k9(x1 , x2) , 0) = (1 \u00f7 (1 + x1)))",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "\u2200 x1 : \u211d . k146(\u03bb x2 : \u211d . 1 \u00f7 k9(x2 , x1) , 1) = (0 < x1)",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "k133(\u03bb x1 : \u211d . k122(x1) \u00f7 x1 , 0 , 0)",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "\u2200 x1 : \u211d \u2192 \u211d . \u2200 x2 : \u211d . \u2200 x3 : \u211d . k144(x1 , x2 , x3) = k144(x1 , x3 , x2)",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "\u2200 x1 : \u211d \u2192 \u211d . \u2200 x2 : \u211d . k141(x1 , x2)",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "\u2200 x1 : \u211d \u2192 \u211d . \u2200 x2 : \u211d . k141(x1 , x2) \u2192 k142(x1 , x2)",
+   "prem": 20,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "\u2200 x1 : \u211d \u2192 \u211d . \u2200 x2 : \u211d \u2192 \u211d . \u2200 x3 : \u211d . \u2200 x4 : \u211d . ((x3 \u2264 x4) \u2227 (\u2200 x5 : \u211d . ((x3 \u2264 x5) \u2227 (x5 \u2264 x4)) \u2192 (k141(x1 , x5) \u2227 (k142(x2 , x5) \u2227 (k143(x2 , x5) = x1(x5)))))) \u2192 (k144(x1 , x3 , x4) = (x2(x3) \u2212 x2(x4)))",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.02
+  },
+  {
+   "src": "\u2200 x1 : \u211d \u2192 \u211d . \u2200 x2 : \u211d \u2192 \u211d . \u2200 x3 : \u211d . ((k142(x1 , x3) \u2227 k142(x2 , x3)) \u2227 (((x1(x3) = 0) \u2227 (x2(x3) = 0)) \u2227 \u00ac (k143(x1 , x3) = 0))) \u2192 k133(\u03bb x4 : \u211d . x1(x4) \u00f7 x2(x4) , x3 , k143(x2 , x3) \u00f7 k143(x1 , x3))",
+   "prem": 2,
+   "refuted": true,
+   "s": 0.02
+  },
+  {
+   "src": "k146(\u03bb x1 : \u211d . 1 \u00f7 x1 , 1)",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  },
+  {
+   "src": "k137(\u03bb x1 : \u211d . k122(x1) , 0)",
+   "prem": 1,
+   "refuted": true,
+   "s": 0.0
+  }
+ ]
+}

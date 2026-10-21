@@ -19,11 +19,12 @@ Main Research Questions:
 
 ## Active Plan
 
-- Current active research plan:
-  - `docs/formal_logic_cot_research_plan_2026-05-19.md`
+- Current active research plan (binding since 2026-10-09):
+  - `/vol/home-vol2/ml/laitenbf/RLVL-next/PLAN.md` (TL token-logic line; spec in `RLVL-next/TLANG.md`)
+- Superseded plans (history only): `docs/research_plan.md`, `docs/formal_logic_cot_research_plan_2026-05-19.md`
 - Archived RL validity-reward state:
   - `docs/old_rl_validity_reward_direction_2026-05-19.md`
-- Current depth-scaling implementation plan:
+- Old depth-scaling plan (history only):
   - `docs/hfsa_depth_scaling_plan_2026-05-19.md`
 
 ## Environment
